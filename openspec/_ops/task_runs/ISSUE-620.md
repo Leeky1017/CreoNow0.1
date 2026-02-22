@@ -20,7 +20,7 @@
 
 ## Status
 
-- CURRENT: 分支已 push，PR `#621` 已创建；本地 `pnpm install --frozen-lockfile` 与 `pnpm test:unit` 已验证 `PASS`。OpenSpec change 与 Rulebook task 已归档（`a7f98c58b123fa8c5ecd2058c6e5915e96daed20`）。待开启 auto-merge 并等待 required checks 全绿后合并收口。
+- CURRENT: 分支已 push，PR `#621` 已创建；`agent_pr_preflight` 本地验证 `PASS`。待开启 auto-merge 并等待 required checks 全绿后合并收口。
 
 ## Next Actions
 
@@ -148,6 +148,20 @@
 - Verification:
   - `pnpm -C apps/desktop exec vitest run --config tests/unit/main/vitest.node.config.ts tests/unit/main/index.app-ready-catch.test.ts tests/unit/main/window-load-catch.test.ts` -> PASS
 
+### 2026-02-22 Preflight typecheck unblock (contract timer mocks)
+
+- Change:
+  - commit: `dabc4f85` (`test: fix timer mock typing for contract suite (#620)`)
+- Verification:
+  - `pnpm typecheck` -> PASS
+
+### 2026-02-22 PR preflight (PASS)
+
+- Command:
+  - `python3 scripts/agent_pr_preflight.py`
+- Key output:
+  - `contract:check` / `cross-module:check` / `test:unit` all PASS
+
 ### 2026-02-22 Archive OpenSpec change + Rulebook task
 
 - Change:
@@ -170,7 +184,7 @@
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: a7f98c58b123fa8c5ecd2058c6e5915e96daed20
+- Reviewed-HEAD-SHA: dabc4f858ad5cfcf1a434502cf90fe9100d5e4c9
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
