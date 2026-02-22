@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-02-22 19:37
+更新时间：2026-02-22 21:12
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -106,7 +106,7 @@
 - ISSUE-606 当前状态：Phase 1 已完成并归档；活跃阶段剩余 Phase 2/3/4。
 - ISSUE-613 当前状态：PR `#614` 已合并，Issue 已关闭，Rulebook task 已归档。
 - ISSUE-608 当前状态：已修复 ISSUE-606 文档中的治理收口漂移、i18n 门禁语义冲突与 Scenario 映射缺口。
-- ISSUE-617 当前状态：新增 backend lane 的 8 个 change 已创建（proposal/tasks）；spec delta 与后续实现按执行顺序推进。
+- ISSUE-617 当前状态：backend lane 8 个 change 持续推进中；`issue-617-global-hardening-baseline` 已完成 Specification/TDD Mapping 与 Dependency Sync Check（N/A），治理脚手架由 `ISSUE-620` 持续维护。
 
 ## 维护规则
 

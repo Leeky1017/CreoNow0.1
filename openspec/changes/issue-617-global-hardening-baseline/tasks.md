@@ -1,17 +1,17 @@
-更新时间：2026-02-22 19:37
+更新时间：2026-02-22 21:12
 
 ## 1. Specification
 
-- [ ] 1.1 审阅并确认需求边界（仅基础防护：SQLite PRAGMA / 全局异常捕获 / 窗口安全 / 原子写）
-- [ ] 1.2 审阅并确认错误路径与边界路径（崩溃/断电/锁冲突/越权导航/写入中断）
-- [ ] 1.3 审阅并确认验收阈值与不可变契约（错误不泄漏 stack；停机链路可追溯；落盘不损坏）
-- [ ] 1.4 若存在上游依赖，先完成依赖同步检查（Dependency Sync Check）并记录“无漂移/已更新”；无依赖则标注 N/A（本 change：N/A）
+- [x] 1.1 审阅并确认需求边界（仅基础防护：SQLite PRAGMA / 全局异常捕获 / 窗口安全 / 原子写）
+- [x] 1.2 审阅并确认错误路径与边界路径（崩溃/断电/锁冲突/越权导航/写入中断）
+- [x] 1.3 审阅并确认验收阈值与不可变契约（错误不泄漏 stack；停机链路可追溯；落盘不损坏）
+- [x] 1.4 若存在上游依赖，先完成依赖同步检查（Dependency Sync Check）并记录“无漂移/已更新”；无依赖则标注 N/A（本 change：N/A）
 
 ## 2. TDD Mapping（先测前提）
 
-- [ ] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
-- [ ] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
-- [ ] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+- [x] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
+- [x] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
+- [x] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
 
 ### Scenario -> 测试映射
 
@@ -41,5 +41,5 @@
 ## 6. Evidence
 
 - [ ] 6.1 记录 RUN_LOG（含 Red 失败证据、Green 通过证据与关键命令输出）
-- [ ] 6.2 记录 Dependency Sync Check 的输入、核对结论与后续动作（无漂移/已更新）
+- [x] 6.2 记录 Dependency Sync Check 的输入、核对结论与后续动作（无漂移/已更新）
 - [ ] 6.3 记录 Main Session Audit（Audit-Owner/Reviewed-HEAD-SHA=签字提交 HEAD^/三项 PASS/Blocking-Issues=0/Decision=ACCEPT），并确认签字提交仅变更当前任务 RUN_LOG
