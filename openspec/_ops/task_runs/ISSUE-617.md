@@ -13,6 +13,13 @@
 - RUN_LOG: `openspec/_ops/task_runs/ISSUE-617.md`
 - Notion export vault (local): `/tmp/notion_cn_backend_vault/**`
 
+## Plan
+
+- Export Notion page tree to local Markdown vault
+- Compile pages into executable OpenSpec changes (proposal/tasks/spec deltas)
+- Update `openspec/changes/EXECUTION_ORDER.md` with ISSUE-617 backend lane
+- Deliver via PR auto-merge (required checks all green)
+
 ## Runs
 
 ### 2026-02-22 Notion export (doctor + sync)
