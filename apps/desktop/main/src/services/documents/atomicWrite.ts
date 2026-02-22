@@ -28,7 +28,7 @@ function getErrorCode(error: unknown): string | undefined {
   return undefined;
 }
 
-function shouldIgnoreDirectorySyncError(error: unknown): boolean {
+function shouldIgnoreFsyncError(error: unknown): boolean {
   const code = getErrorCode(error);
   if (typeof code === "string" && DIR_FSYNC_IGNORE_CODES.has(code)) {
     return true;
@@ -42,7 +42,7 @@ async function syncDirectory(directoryPath: string): Promise<void> {
   try {
     handle = await fs.open(directoryPath, "r");
   } catch (error) {
-    if (shouldIgnoreDirectorySyncError(error)) {
+    if (shouldIgnoreFsyncError(error)) {
       return;
     }
     throw error;
@@ -51,7 +51,7 @@ async function syncDirectory(directoryPath: string): Promise<void> {
   try {
     await handle.sync();
   } catch (error) {
-    if (shouldIgnoreDirectorySyncError(error)) {
+    if (shouldIgnoreFsyncError(error)) {
       return;
     }
     throw error;
@@ -77,9 +77,15 @@ export async function atomicWrite(args: AtomicWriteArgs): Promise<void> {
   try {
     await args.writeTemp(tempPath);
 
-    const tempFileHandle = await fs.open(tempPath, "r");
+    const tempFileHandle = await fs.open(tempPath, "r+");
     try {
-      await tempFileHandle.sync();
+      try {
+        await tempFileHandle.sync();
+      } catch (error) {
+        if (!shouldIgnoreFsyncError(error)) {
+          throw error;
+        }
+      }
     } finally {
       await tempFileHandle.close();
     }
