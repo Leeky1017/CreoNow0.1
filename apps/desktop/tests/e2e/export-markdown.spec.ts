@@ -7,6 +7,23 @@ import { fileURLToPath } from "node:url";
 
 import { createProjectViaWelcomeAndWaitForEditor } from "./_helpers/projectReadiness";
 
+async function readMainLogTail(args: {
+  userDataDir: string;
+  maxLines?: number;
+}): Promise<string> {
+  const maxLines = args.maxLines ?? 80;
+  const logPath = path.join(args.userDataDir, "logs", "main.log");
+  try {
+    const content = await fs.readFile(logPath, "utf8");
+    const lines = content.trim().split(/\r?\n/u).filter(Boolean);
+    return lines.slice(-maxLines).join("\n");
+  } catch (error) {
+    return `main.log unavailable: ${
+      error instanceof Error ? error.message : String(error)
+    }`;
+  }
+}
+
 async function createIsolatedUserDataDir(): Promise<string> {
   const base = path.join(os.tmpdir(), "CreoNow E2E 世界 ");
   const dir = await fs.mkdtemp(base);
@@ -97,10 +114,42 @@ test("export: markdown writes deterministic file under userData exports", async 
   // Click Export button to start export
   await page.getByTestId("export-submit").click();
 
-  // Wait for success view
-  await expect(page.getByTestId("export-success")).toBeVisible({
-    timeout: 10000,
-  });
+  // Wait for success (or a surfaced error) and print diagnostics on failure.
+  try {
+    await expect(page.getByTestId("export-success")).toBeVisible({
+      timeout: 10_000,
+    });
+  } catch (error) {
+    const errorVisible = await page.getByTestId("export-error").isVisible();
+    if (errorVisible) {
+      const code = await page.getByTestId("export-error-code").textContent();
+      const message = await page
+        .getByTestId("export-error-message")
+        .textContent();
+      const mainLogTail = await readMainLogTail({ userDataDir });
+      throw new Error(
+        [
+          "Export failed:",
+          `${code ?? "<missing code>"}: ${message ?? "<missing message>"}`,
+          "--- main.log tail ---",
+          mainLogTail,
+          "--- original error ---",
+          error instanceof Error ? error.message : String(error),
+        ].join("\n"),
+      );
+    }
+
+    const mainLogTail = await readMainLogTail({ userDataDir });
+    throw new Error(
+      [
+        "Export did not reach success view within timeout.",
+        "--- main.log tail ---",
+        mainLogTail,
+        "--- original error ---",
+        error instanceof Error ? error.message : String(error),
+      ].join("\n"),
+    );
+  }
 
   // Verify result fields are displayed
   await expect(page.getByTestId("export-success-relative-path")).toBeVisible();
