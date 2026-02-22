@@ -84,10 +84,19 @@
   - Commit SHA: `0dd0f5e2...`
   - PR: `https://github.com/Leeky1017/CreoNow/pull/611`
 
+### 2026-02-22 CI Unblock (Windows E2E)
+
+- Context:
+  - Required check `ci` depends on `windows-e2e` (workflow: `.github/workflows/ci.yml`).
+  - `windows-e2e` was failing on `layout-panels.spec.ts` width assertion (expected `240`, got `180/182`).
+- Change:
+  - Make width probe prefer inline style `width` over `getBoundingClientRect()` in `apps/desktop/tests/e2e/layout-panels.spec.ts`.
+- Exit code: `0`
+
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 20de2ee54bc47d6bf3a9293b20f9ad2356edf606
+- Reviewed-HEAD-SHA: 3bd6e36621dab822b2062956e88be5514c2372b1
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
