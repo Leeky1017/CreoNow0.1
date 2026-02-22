@@ -19,9 +19,18 @@ async function createIsolatedUserDataDir(): Promise<string> {
 }
 
 async function getWidth(page: Page, testId: string): Promise<number> {
-  return await page
-    .getByTestId(testId)
-    .evaluate((el) => el.getBoundingClientRect().width);
+  return await page.getByTestId(testId).evaluate((el) => {
+    if (el instanceof HTMLElement) {
+      // Prefer the explicit state-driven width to avoid platform/DPI differences
+      // when reading bounding boxes in Electron on Windows.
+      const raw = el.style.width;
+      const parsed = Number.parseFloat(raw);
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+    return el.getBoundingClientRect().width;
+  });
 }
 
 async function dragBy(
