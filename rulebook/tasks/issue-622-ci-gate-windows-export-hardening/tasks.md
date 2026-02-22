@@ -1,3 +1,5 @@
+更新时间：2026-02-22 23:31
+
 ## 1. Specification
 
 - [ ] 1.1 确认 required checks 契约（`ci` / `openspec-log-guard` / `merge-serial`）与当前 `.github/workflows/ci.yml` 的实际行为

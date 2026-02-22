@@ -1,5 +1,7 @@
 # Proposal: issue-622-ci-gate-windows-export-hardening
 
+更新时间：2026-02-22 23:31
+
 ## Why
 当前 required check `ci` 存在可被绕过的门禁漏洞：当 `needs` 中任一 job 失败时，gate job `ci` 会被标记为 `SKIPPED`，而 GitHub 仍将其视为满足 required check，从而允许带失败 CI 的 PR 合并。这违反 `docs/delivery-skill.md` 的“门禁全绿”契约，并会掩盖真实回归。
 
