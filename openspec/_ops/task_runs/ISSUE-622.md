@@ -81,12 +81,14 @@
 - Command:
   - `python3 scripts/agent_pr_preflight.py`
 - Key output:
-  - (pending)
+  - FAIL: `scripts/check_doc_timestamps.py` blocked by missing `更新时间：YYYY-MM-DD HH:mm`
+  - Fix: commit `e776613e` (`docs: add timestamps for issue-622 rulebook task (#622)`)
+  - PASS: (pending)
 
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 908ce40cd23dd87da61f394fb2611d1f07d52fe4
+- Reviewed-HEAD-SHA: e776613ee5d65c880fd10bc4ff225e44ad064508
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
