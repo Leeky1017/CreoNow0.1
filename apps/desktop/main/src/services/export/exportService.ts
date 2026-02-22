@@ -8,6 +8,7 @@ import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 
 import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
+import { atomicWrite } from "../documents/atomicWrite";
 import { createDocumentService } from "../documents/documentService";
 
 type Ok<T> = { ok: true; data: T };
@@ -194,8 +195,12 @@ export function createExportService(deps: {
         title: doc.data.title,
         body: doc.data.contentMd,
       });
-      await fs.mkdir(path.dirname(absPath), { recursive: true });
-      await fs.writeFile(absPath, markdown, "utf8");
+      await atomicWrite({
+        targetPath: absPath,
+        writeTemp: async (tempPath) => {
+          await fs.writeFile(tempPath, markdown, "utf8");
+        },
+      });
 
       const bytesWritten = Buffer.byteLength(markdown, "utf8");
       deps.logger.info("export_succeeded", {
@@ -263,8 +268,12 @@ export function createExportService(deps: {
         title: doc.data.title,
         body: doc.data.contentText,
       });
-      await fs.mkdir(path.dirname(absPath), { recursive: true });
-      await fs.writeFile(absPath, text, "utf8");
+      await atomicWrite({
+        targetPath: absPath,
+        writeTemp: async (tempPath) => {
+          await fs.writeFile(tempPath, text, "utf8");
+        },
+      });
 
       const bytesWritten = Buffer.byteLength(text, "utf8");
       deps.logger.info("export_succeeded", {
@@ -325,35 +334,48 @@ export function createExportService(deps: {
         return ipcError("NOT_FOUND", "No documents found for project export");
       }
 
-      await fs.mkdir(path.dirname(absPath), { recursive: true });
-      const stream = createWriteStream(absPath);
-
       let bytesWritten = 0;
+      let sourceReadFailure: ServiceResult<ExportResult> | null = null;
       try {
-        for (let i = 0; i < orderedItems.length; i += 1) {
-          const item = orderedItems[i];
-          const read = docSvc.read({ projectId, documentId: item.documentId });
-          if (!read.ok) {
-            stream.destroy();
-            await fs.rm(absPath, { force: true });
-            return read;
-          }
+        await atomicWrite({
+          targetPath: absPath,
+          writeTemp: async (tempPath) => {
+            const stream = createWriteStream(tempPath);
 
-          const section =
-            i === 0
-              ? `# ${read.data.title}\n\n${read.data.contentMd}`
-              : `\n\n---\n\n# ${read.data.title}\n\n${read.data.contentMd}`;
-          await writeUtf8Chunk(stream, section);
-          bytesWritten += Buffer.byteLength(section, "utf8");
+            try {
+              for (let i = 0; i < orderedItems.length; i += 1) {
+                const item = orderedItems[i];
+                const read = docSvc.read({
+                  projectId,
+                  documentId: item.documentId,
+                });
+                if (!read.ok) {
+                  sourceReadFailure = read;
+                  throw new Error("project_export_source_read_failed");
+                }
+
+                const section =
+                  i === 0
+                    ? `# ${read.data.title}\n\n${read.data.contentMd}`
+                    : `\n\n---\n\n# ${read.data.title}\n\n${read.data.contentMd}`;
+                await writeUtf8Chunk(stream, section);
+                bytesWritten += Buffer.byteLength(section, "utf8");
+              }
+
+              await writeUtf8Chunk(stream, "\n");
+              bytesWritten += 1;
+              await endStream(stream);
+            } catch (error) {
+              stream.destroy();
+              throw error;
+            }
+          },
+        });
+      } catch (error) {
+        if (sourceReadFailure) {
+          return sourceReadFailure;
         }
-
-        await writeUtf8Chunk(stream, "\n");
-        bytesWritten += 1;
-        await endStream(stream);
-      } catch (streamError) {
-        stream.destroy();
-        await fs.rm(absPath, { force: true });
-        throw streamError;
+        throw error;
       }
 
       deps.logger.info("export_succeeded", {
@@ -417,42 +439,43 @@ export function createExportService(deps: {
         return doc;
       }
 
-      await fs.mkdir(path.dirname(absPath), { recursive: true });
+      let bytesWritten = 0;
+      await atomicWrite({
+        targetPath: absPath,
+        writeTemp: async (tempPath) => {
+          bytesWritten = await new Promise<number>((resolve, reject) => {
+            const pdfDoc = new PDFDocument({
+              size: "A4",
+              margins: { top: 72, bottom: 72, left: 72, right: 72 },
+            });
 
-      // Create PDF document
-      const bytesWritten = await new Promise<number>((resolve, reject) => {
-        const pdfDoc = new PDFDocument({
-          size: "A4",
-          margins: { top: 72, bottom: 72, left: 72, right: 72 },
-        });
+            const stream = createWriteStream(tempPath);
+            let size = 0;
 
-        const stream = createWriteStream(absPath);
-        let size = 0;
+            stream.on("error", reject);
+            stream.on("finish", () => resolve(size));
 
-        stream.on("error", reject);
-        stream.on("finish", () => resolve(size));
+            pdfDoc.on("data", (chunk: Buffer) => {
+              size += chunk.length;
+            });
+            pdfDoc.on("error", reject);
 
-        pdfDoc.on("data", (chunk: Buffer) => {
-          size += chunk.length;
-        });
-        pdfDoc.on("error", reject);
+            pdfDoc.pipe(stream);
 
-        pdfDoc.pipe(stream);
+            pdfDoc
+              .font("Helvetica-Bold")
+              .fontSize(24)
+              .text(doc.data.title, { align: "left" });
+            pdfDoc.moveDown(2);
 
-        // Add title
-        pdfDoc
-          .font("Helvetica-Bold")
-          .fontSize(24)
-          .text(doc.data.title, { align: "left" });
-        pdfDoc.moveDown(2);
+            pdfDoc.font("Helvetica").fontSize(12).text(doc.data.contentText, {
+              align: "left",
+              lineGap: 4,
+            });
 
-        // Add content (plain text)
-        pdfDoc.font("Helvetica").fontSize(12).text(doc.data.contentText, {
-          align: "left",
-          lineGap: 4,
-        });
-
-        pdfDoc.end();
+            pdfDoc.end();
+          });
+        },
       });
 
       deps.logger.info("export_succeeded", {
@@ -516,8 +539,6 @@ export function createExportService(deps: {
         return docData;
       }
 
-      await fs.mkdir(path.dirname(absPath), { recursive: true });
-
       // Parse content and create DOCX paragraphs
       const paragraphs: Paragraph[] = [];
 
@@ -549,7 +570,12 @@ export function createExportService(deps: {
       });
 
       const buffer = await Packer.toBuffer(docx);
-      await fs.writeFile(absPath, buffer);
+      await atomicWrite({
+        targetPath: absPath,
+        writeTemp: async (tempPath) => {
+          await fs.writeFile(tempPath, buffer);
+        },
+      });
 
       const bytesWritten = buffer.length;
       deps.logger.info("export_succeeded", {
