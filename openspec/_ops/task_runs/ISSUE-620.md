@@ -20,7 +20,7 @@
 
 ## Status
 
-- CURRENT: 治理脚手架文档已提交（`566af46387d342d0ef055b0412c79b5d7f2dc672`）；由于网络 DNS 故障无法 push/创建 PR，待恢复后继续 auto-merge 门禁流程。
+- CURRENT: 治理脚手架文档已提交（`566af46387d342d0ef055b0412c79b5d7f2dc672`、`f84c57c1a7de1114ea927b2f8b1147e0bd1faf9f`）；四个 Scenario 对应测试在本地已验证 `PASS`。由于网络 DNS 故障仍无法 push/创建 PR，待恢复后继续 auto-merge 门禁流程。
 
 ## Next Actions
 
@@ -86,6 +86,24 @@
   - push failure: `fatal: unable to access 'https://github.com/Leeky1017/CreoNow.git/': Could not resolve host: github.com`
 - Impact:
   - remote branch、PR 创建与 required checks 观测均被阻断。
+
+### 2026-02-22 Local Test Toolchain + Green Verification
+
+- Command:
+  - `pnpm exec tsx /home/leeky/work/CreoNow/.worktrees/issue-620-global-hardening-baseline/apps/desktop/main/src/db/__tests__/recommended-pragmas.test.ts`
+  - `pnpm install --frozen-lockfile`
+  - `node --import tsx /home/leeky/work/CreoNow/.worktrees/issue-620-global-hardening-baseline/apps/desktop/main/src/db/__tests__/recommended-pragmas.test.ts`
+  - `node --import tsx /home/leeky/work/CreoNow/.worktrees/issue-620-global-hardening-baseline/apps/desktop/main/src/__tests__/global-exception-handlers.contract.test.ts`
+  - `node --import tsx /home/leeky/work/CreoNow/.worktrees/issue-620-global-hardening-baseline/apps/desktop/main/src/__tests__/browser-window-security.contract.test.ts`
+  - `node --import tsx /home/leeky/work/CreoNow/.worktrees/issue-620-global-hardening-baseline/apps/desktop/main/src/services/documents/__tests__/atomic-write.contract.test.ts`
+- Key output:
+  - `pnpm exec tsx`: `ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL Command \"tsx\" not found`
+  - `pnpm install --frozen-lockfile`: failed with `EAI_AGAIN registry.npmjs.org` (network)
+  - fallback verifier (`node --import tsx`):
+    - `PASS .../recommended-pragmas.test.ts`
+    - `PASS .../global-exception-handlers.contract.test.ts`
+    - `PASS .../browser-window-security.contract.test.ts`
+    - `PASS .../atomic-write.contract.test.ts`
 
 ### 2026-02-22 GitHub Connectivity Blocker
 
