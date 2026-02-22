@@ -1,5 +1,4 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
-import React from "react";
 import { fireEvent, render, cleanup } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -117,4 +116,3 @@ describe("WB-P2-S2 NavigationController boundary", () => {
     expect(source).not.toContain("resetPanelWidth");
   });
 });
-

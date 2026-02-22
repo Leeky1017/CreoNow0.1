@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import React from "react";
 import { render, screen } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
