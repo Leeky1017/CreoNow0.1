@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-02-22 13:16
+更新时间：2026-02-22 15:31
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -54,7 +54,8 @@
 
 - ISSUE-604 当前状态：已归档至 `openspec/changes/archive/issue-604-windows-frameless-titlebar`，并从活跃执行顺序移除。
 - ISSUE-606 当前状态：已完成“按 Phase 重组 changes 文档”，共 4 个 phase changes。
-- 本次提交仅交付规范重组与治理收敛，不包含运行时代码实现。
+- ISSUE-613 当前状态：Wave A（Phase 1）已完成 Red→Green（5 个 guard tests 全绿）与治理证据落盘，等待 PR `#614` 门禁合并。
+- 本次提交交付 Phase 1 运行时代码实现（AI overlay tokenization + primitive replacement）与对应测试门禁，不包含 Phase 2/3/4 范围实现。
 - ISSUE-608 当前状态：已修复 ISSUE-606 文档中的治理收口漂移、i18n 门禁语义冲突与 Scenario 映射缺口。
 
 ## 维护规则

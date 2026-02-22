@@ -40,14 +40,14 @@ export function SkillPicker(props: {
       <div
         role="presentation"
         onClick={() => props.onOpenChange(false)}
-        className="fixed inset-0 z-20"
+        className="fixed inset-0 z-[var(--z-dropdown)]"
       />
 
       <div
         role="dialog"
         aria-label="SKILL"
         onClick={(e) => e.stopPropagation()}
-        className="absolute bottom-full left-0 right-0 mb-1 p-2.5 z-30 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[0_18px_48px_rgba(0,0,0,0.45)]"
+        className="absolute bottom-full left-0 right-0 mb-1 p-2.5 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)]"
       >
         <div className="flex items-center justify-between">
           <Text size="label" color="muted">

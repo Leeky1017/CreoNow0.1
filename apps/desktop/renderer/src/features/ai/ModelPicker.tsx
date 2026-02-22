@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Input, Text } from "../../components/primitives";
+import { Button, Input, Text } from "../../components/primitives";
 
 export type AiModel = string;
 
@@ -80,13 +80,17 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
   const renderItem = (model: AiModelOption): JSX.Element => {
     const selected = model.id === props.selectedModel;
     return (
-      <button
+      <Button
         key={model.id}
+        variant="ghost"
+        size="sm"
+        fullWidth
         type="button"
         onClick={() => props.onSelectModel(model.id)}
         className={`
-          w-full px-2.5 py-1.5 text-left flex items-center justify-between
-          hover:bg-[var(--color-bg-hover)] transition-colors rounded-[var(--radius-sm)]
+          !h-auto !px-2.5 !py-1.5 !justify-start !rounded-[var(--radius-sm)] !text-left
+          text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+          [&>span]:w-full [&>span]:items-center [&>span]:justify-between
           ${selected ? "bg-[var(--color-bg-selected)]" : ""}
         `}
       >
@@ -114,7 +118,7 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
             <polyline points="20 6 9 17 4 12" />
           </svg>
         )}
-      </button>
+      </Button>
     );
   };
 
@@ -123,13 +127,13 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
       <div
         role="presentation"
         onClick={() => props.onOpenChange(false)}
-        className="fixed inset-0 z-20"
+        className="fixed inset-0 z-[var(--z-dropdown)]"
       />
       <div
         role="dialog"
         aria-label="Select Model"
         onClick={(e) => e.stopPropagation()}
-        className="absolute bottom-full left-0 right-0 mb-1 z-30 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[0_18px_48px_rgba(0,0,0,0.45)] overflow-hidden"
+        className="absolute bottom-full left-0 right-0 mb-1 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
         <div className="px-2.5 py-2 border-b border-[var(--color-border-default)] flex flex-col gap-2">
           <div className="flex items-center gap-2">

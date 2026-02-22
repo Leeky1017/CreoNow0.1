@@ -1,6 +1,6 @@
 # 提案：issue-606-phase-1-stop-bleeding
 
-更新时间：2026-02-22 11:36
+更新时间：2026-02-22 14:37
 
 ## 背景
 
@@ -29,24 +29,31 @@ CN 前端已具备 Design Token 与 Primitives 基础，但执行层存在系统
 
 - 上游依赖：
   - `openspec/specs/workbench/spec.md`（当前主规范基线）
-  - `openspec/changes/issue-604-windows-frameless-titlebar`（同模块活跃变更，需避免语义冲突）
+  - `openspec/changes/archive/issue-604-windows-frameless-titlebar/specs/workbench/spec.md`（已归档变更，作为窗口标题栏语义基线）
 - 下游依赖：
-  - issue-606 后续 Phase 2/3/4 实施变更（待分别建档）
+  - `openspec/changes/issue-606-phase-2-shell-decomposition`
+  - `openspec/changes/issue-606-phase-3-quality-uplift`
+  - `openspec/changes/issue-606-phase-4-polish-and-delivery`
 
 ## 依赖同步检查（Dependency Sync Check）
 
 - 核对输入：
   - `openspec/specs/workbench/spec.md`
-  - `openspec/changes/issue-604-windows-frameless-titlebar/specs/workbench/spec.md`
+  - `openspec/changes/archive/issue-604-windows-frameless-titlebar/specs/workbench/spec.md`
+  - `openspec/changes/issue-606-phase-2-shell-decomposition/proposal.md`
+  - `openspec/changes/issue-606-phase-3-quality-uplift/proposal.md`
+  - `openspec/changes/issue-606-phase-4-polish-and-delivery/proposal.md`
+  - `openspec/changes/EXECUTION_ORDER.md`
   - `/tmp/cn_notion_vault/CN前端开发/CN 前端开发.md`
   - `/tmp/cn_notion_vault/CN前端开发/CN 前端开发/Design Token 系统.md`
   - `/tmp/cn_notion_vault/CN前端开发/CN 前端开发/视觉审计（Visual Audit）.md`
   - `/tmp/cn_notion_vault/CN前端开发/CN 前端开发/组件架构（Component Architecture）.md`
 - 核对项：
   - Phase 1 仅保留“止血”范围，不提前引入 Phase 2/3/4 动作。
-  - 与 issue-604 的 Windows 标题栏场景不冲突，不覆盖其窗口控制语义。
+  - 与 issue-604（已归档）的 Windows 标题栏场景不冲突，不覆盖其窗口控制语义。
+  - 下游 Phase 2/3/4 变更目录与执行顺序文档均已存在并保持依赖关系一致。
   - “Token 清扫 + 原生元素替换 + Z-index 统一”与 Notion 原文结论一致。
-- 结论：`NO_DRIFT`
+- 结论：`UPDATED`（已修正 issue-604 archive 依赖引用与下游状态描述，当前无新增漂移）
 
 ## 来源映射
 
