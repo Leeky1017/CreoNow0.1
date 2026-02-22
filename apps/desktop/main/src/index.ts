@@ -5,7 +5,9 @@ import { fileURLToPath } from "node:url";
 import { BrowserWindow, app, ipcMain, safeStorage } from "electron";
 
 import type { IpcResponse } from "@shared/types/ipc-generated";
+import { applyBrowserWindowSecurityPolicy } from "./browserWindowSecurity";
 import { initDb, type DbInitOk } from "./db/init";
+import { registerGlobalExceptionHandlers } from "./globalExceptionHandlers";
 import { registerAiIpcHandlers } from "./ipc/ai";
 import { registerAiProxyIpcHandlers } from "./ipc/aiProxy";
 import { registerContextIpcHandlers } from "./ipc/context";
@@ -116,6 +118,13 @@ export function createMainWindow(logger: Logger): BrowserWindow {
       sandbox: true,
     },
   });
+
+  applyBrowserWindowSecurityPolicy({
+    windowLike: win,
+    logger,
+    devServerUrl: process.env.VITE_DEV_SERVER_URL,
+  });
+
   if (isWindows) {
     win.setAutoHideMenuBar(true);
     win.setMenuBarVisibility(false);
@@ -435,6 +444,16 @@ app
     const userDataDir = app.getPath("userData");
     const logger = createMainLogger(userDataDir);
     logger.info("app_ready", { user_data_dir: "<userData>" });
+
+    registerGlobalExceptionHandlers({
+      processLike: process,
+      appLike: app,
+      logger,
+      shutdownTimeoutMs: parsePositiveInteger(
+        process.env.CREONOW_FATAL_SHUTDOWN_TIMEOUT_MS,
+        10_000,
+      ),
+    });
 
     const dbRes = initDb({ userDataDir, logger });
     const db: DbInitOk["db"] | null = dbRes.ok ? dbRes.db : null;
