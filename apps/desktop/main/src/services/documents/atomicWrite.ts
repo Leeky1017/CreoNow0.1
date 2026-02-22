@@ -2,7 +2,14 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const DIR_FSYNC_IGNORE_CODES = new Set(["EINVAL", "ENOTSUP", "EPERM"]);
+const DIR_FSYNC_IGNORE_CODES = new Set([
+  "EINVAL",
+  "ENOTSUP",
+  "EPERM",
+  "EBADF",
+  "EACCES",
+  "EISDIR",
+]);
 
 type AtomicWriteArgs = {
   targetPath: string;
@@ -21,14 +28,21 @@ function getErrorCode(error: unknown): string | undefined {
   return undefined;
 }
 
+function shouldIgnoreDirectorySyncError(error: unknown): boolean {
+  const code = getErrorCode(error);
+  if (typeof code === "string" && DIR_FSYNC_IGNORE_CODES.has(code)) {
+    return true;
+  }
+  return process.platform === "win32";
+}
+
 async function syncDirectory(directoryPath: string): Promise<void> {
   let handle: fs.FileHandle | null = null;
 
   try {
     handle = await fs.open(directoryPath, "r");
   } catch (error) {
-    const code = getErrorCode(error);
-    if (typeof code === "string" && DIR_FSYNC_IGNORE_CODES.has(code)) {
+    if (shouldIgnoreDirectorySyncError(error)) {
       return;
     }
     throw error;
@@ -37,8 +51,7 @@ async function syncDirectory(directoryPath: string): Promise<void> {
   try {
     await handle.sync();
   } catch (error) {
-    const code = getErrorCode(error);
-    if (typeof code === "string" && DIR_FSYNC_IGNORE_CODES.has(code)) {
+    if (shouldIgnoreDirectorySyncError(error)) {
       return;
     }
     throw error;
