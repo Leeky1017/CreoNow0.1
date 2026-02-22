@@ -1,4 +1,4 @@
-import { Text } from "../../components/primitives";
+import { Button, Text } from "../../components/primitives";
 
 /**
 
@@ -44,7 +44,7 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
       <div
         role="presentation"
         onClick={() => props.onOpenChange(false)}
-        className="fixed inset-0 z-20"
+        className="fixed inset-0 z-[var(--z-dropdown)]"
       />
 
       {/* Popup - positioned above the button */}
@@ -53,7 +53,7 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
         role="dialog"
         aria-label="Select Mode"
         onClick={(e) => e.stopPropagation()}
-        className="absolute bottom-full left-0 right-0 mb-1 z-30 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[0_18px_48px_rgba(0,0,0,0.45)] overflow-hidden"
+        className="absolute bottom-full left-0 right-0 mb-1 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
         <div className="px-2.5 py-2 border-b border-[var(--color-border-default)]">
           <Text size="tiny" color="muted" className="uppercase tracking-wide">
@@ -66,18 +66,18 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
             const selected = mode.id === props.selectedMode;
 
             return (
-              <button
+              <Button
                 key={mode.id}
+                variant="ghost"
+                size="sm"
+                fullWidth
                 type="button"
                 onClick={() => props.onSelectMode(mode.id)}
                 className={`
-
-                  w-full px-2.5 py-1.5 text-left flex items-center justify-between
-
-                  hover:bg-[var(--color-bg-hover)] transition-colors
-
+                  !h-auto !px-2.5 !py-1.5 !justify-start !text-left !rounded-[var(--radius-sm)]
+                  text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+                  [&>span]:w-full [&>span]:items-center [&>span]:justify-between
                   ${selected ? "bg-[var(--color-bg-selected)]" : ""}
-
                 `}
               >
                 <div>
@@ -103,7 +103,7 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 )}
-              </button>
+              </Button>
             );
           })}
         </div>

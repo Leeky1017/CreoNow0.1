@@ -150,7 +150,7 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
       <div
         role="presentation"
         onClick={() => props.onOpenChange(false)}
-        className="fixed inset-0 z-20"
+        className="fixed inset-0 z-[var(--z-dropdown)]"
       />
 
       {/* Dropdown panel */}
@@ -159,7 +159,7 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
         role="dialog"
         aria-label="Chat History"
         onClick={(e) => e.stopPropagation()}
-        className="absolute top-full right-0 mt-1 w-64 z-30 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[0_18px_48px_rgba(0,0,0,0.45)] overflow-hidden"
+        className="absolute top-full right-0 mt-1 w-64 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
         {/* Header */}
 
