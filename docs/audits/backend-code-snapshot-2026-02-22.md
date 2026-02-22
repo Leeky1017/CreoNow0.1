@@ -45,7 +45,13 @@ app.whenReady().then(() => {
   const dbRes = initDb({ userDataDir, logger });
   const db = dbRes.ok ? dbRes.db : null;
 
-  registerIpcHandlers({ db, logger, userDataDir, builtinSkillsDir: resolveBuiltinSkillsDir(__dirname), env: process.env });
+  registerIpcHandlers({
+    db,
+    logger,
+    userDataDir,
+    builtinSkillsDir: resolveBuiltinSkillsDir(__dirname),
+    env: process.env,
+  });
   createMainWindow(logger);
 });
 ```
