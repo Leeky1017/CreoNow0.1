@@ -60,13 +60,13 @@ function createHarness(timeoutMs = 75): Harness {
     exit: (code) => {
       exitCodes.push(code);
     },
-    setTimeoutFn: (callback, delay) => {
+    setTimeoutFn: ((callback: () => void, delay?: number) => {
       const normalized = typeof delay === "number" ? delay : 0;
       const handle: TimerHandle = { id: timers.length };
       timers.push({ callback, timeoutMs: normalized, cleared: false });
       return handle as unknown as ReturnType<typeof setTimeout>;
-    },
-    clearTimeoutFn: (timer) => {
+    }) as unknown as typeof setTimeout,
+    clearTimeoutFn: ((timer: unknown) => {
       const timerId = (timer as unknown as TimerHandle).id;
       if (typeof timerId !== "number") {
         return;
@@ -75,7 +75,7 @@ function createHarness(timeoutMs = 75): Harness {
       if (target) {
         target.cleared = true;
       }
-    },
+    }) as unknown as typeof clearTimeout,
   });
 
   return {
