@@ -3,6 +3,7 @@
 - Issue: #604
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/604
 - Branch: `task/604-windows-frameless-titlebar`
+- Closeout Branch: `closeout/issue-604-windows-frameless-titlebar`（Issue 已关闭后的治理收尾分支）
 - PR: https://github.com/Leeky1017/CreoNow/pull/605
 - Scope:
   - `apps/desktop/main/src/index.ts`
@@ -12,8 +13,8 @@
   - `apps/desktop/renderer/src/App.tsx`
   - `apps/desktop/renderer/src/styles/main.css`
   - `packages/shared/types/ipc-generated.ts`
-  - `openspec/changes/issue-604-windows-frameless-titlebar/**`
-  - `rulebook/tasks/issue-604-windows-frameless-titlebar/**`
+  - `openspec/changes/archive/issue-604-windows-frameless-titlebar/**`
+  - `rulebook/tasks/archive/2026-02-22-issue-604-windows-frameless-titlebar/**`
 
 ## Plan
 
@@ -25,7 +26,8 @@
 - [x] 提交代码与治理文件
 - [x] 创建 PR，开启 auto-merge，等待 required checks
 - [x] Main session signing commit（仅 RUN_LOG）
-- [ ] 合并后同步控制面 `main` 并清理 worktree
+- [x] 合并后同步控制面 `main` 并清理 worktree
+- [x] Issue 已关闭后通过 non-task closeout 分支完成 OpenSpec/Rulebook 归档收尾
 
 ## Runs
 
@@ -120,6 +122,36 @@
   - targeted verification after fix: `3 passed`
   - code commit: `2b9786edc2c49112b8e342f930daeb76b7640688`
 
+### 2026-02-22 Closed-Issue Closeout（非 task 分支）
+
+- Command:
+  - `gh issue view 604 --json number,state,closedAt,url,title`
+  - `gh pr view 605 --json number,state,mergedAt,url,baseRefName,headRefName,title`
+  - `git switch -c closeout/issue-604-windows-frameless-titlebar`
+  - `git mv openspec/changes/issue-604-windows-frameless-titlebar openspec/changes/archive/issue-604-windows-frameless-titlebar`
+  - `rulebook task archive issue-604-windows-frameless-titlebar`
+  - 同步更新 `openspec/changes/EXECUTION_ORDER.md` 与 archive 下 tasks/metadata
+- Exit code: `0`
+- Key output:
+  - Issue `#604` state: `CLOSED`（`closedAt=2026-02-21T07:25:33Z`）
+  - PR `#605` state: `MERGED`（`mergedAt=2026-02-21T07:25:32Z`）
+  - Rulebook archive: `✅ Task issue-604-windows-frameless-titlebar archived successfully`
+  - Closeout docs commit: `16434b7381d90d3b12a3431b02e1b8003464fa97`
+
+### 2026-02-22 Closeout Validation
+
+- Command:
+  - `find openspec/changes -mindepth 1 -maxdepth 1 -type d | grep -v '/archive$' | grep -v '/_template$'`
+  - `find openspec/changes/archive -maxdepth 2 -type d | grep issue-604-windows-frameless-titlebar`
+  - `find rulebook/tasks -maxdepth 3 -type d | grep issue-604-windows-frameless-titlebar`
+  - `ls -d .worktrees/issue-604-windows-frameless-titlebar 2>/dev/null && echo PRESENT || echo ABSENT`
+- Exit code: `0`
+- Key output:
+  - Active changes = `4`（仅保留 issue-606 四个 phase）
+  - `openspec/changes/archive/issue-604-windows-frameless-titlebar` 存在且 active 路径已移除
+  - `rulebook/tasks/archive/2026-02-22-issue-604-windows-frameless-titlebar` 存在且 active 路径已移除
+  - worktree check: `ABSENT`
+
 ## Dependency Sync Check
 
 - Inputs reviewed:
@@ -131,7 +163,7 @@
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 2b9786edc2c49112b8e342f930daeb76b7640688
+- Reviewed-HEAD-SHA: 16434b7381d90d3b12a3431b02e1b8003464fa97
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
