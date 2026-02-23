@@ -38,6 +38,9 @@ export type { CardProps, CardVariant } from "./Card";
 export { ListItem } from "./ListItem";
 export type { ListItemProps } from "./ListItem";
 
+export { ScrollArea } from "./ScrollArea";
+export type { ScrollAreaProps } from "./ScrollArea";
+
 // Typography
 export { Text } from "./Text";
 export type { TextProps, TextSize, TextColor } from "./Text";

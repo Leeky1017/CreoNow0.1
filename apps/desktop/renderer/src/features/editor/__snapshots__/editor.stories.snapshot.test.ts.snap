@@ -1,0 +1,1384 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write button story states > editor-toolbar-default 1`] = `
+<div
+  class="w-full max-w-[800px]"
+>
+  <div
+    class="border border-[var(--color-border-default)] rounded-[var(--radius-md)]"
+  >
+    <div
+      class="flex items-center gap-0.5 border-b border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1.5 "
+      data-testid="editor-toolbar"
+    >
+      <button
+        aria-label="Bold"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+        
+      "
+        data-testid="toolbar-bold"
+        title="Bold (Ctrl+B)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+          />
+          <path
+            d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Italic"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+        
+      "
+        data-testid="toolbar-italic"
+        title="Italic (Ctrl+I)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <line
+            x1="19"
+            x2="10"
+            y1="4"
+            y2="4"
+          />
+          <line
+            x1="14"
+            x2="5"
+            y1="20"
+            y2="20"
+          />
+          <line
+            x1="15"
+            x2="9"
+            y1="4"
+            y2="20"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Underline"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+        
+      "
+        data-testid="toolbar-underline"
+        title="Underline (Ctrl+U)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M6 4v6a6 6 0 0 0 12 0V4"
+          />
+          <line
+            x1="4"
+            x2="20"
+            y1="20"
+            y2="20"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Strikethrough"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+        
+      "
+        data-testid="toolbar-strike"
+        title="Strikethrough (Ctrl+Shift+X)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M16 4H9a3 3 0 0 0-2.83 4"
+          />
+          <path
+            d="M14 12a4 4 0 0 1 0 8H6"
+          />
+          <line
+            x1="4"
+            x2="20"
+            y1="12"
+            y2="12"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Inline Code"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+        
+      "
+        data-testid="toolbar-code"
+        title="Inline Code (Ctrl+E)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <polyline
+            points="16 18 22 12 16 6"
+          />
+          <polyline
+            points="8 6 2 12 8 18"
+          />
+        </svg>
+      </button>
+      <div
+        class="mx-1 h-4 w-px bg-[var(--color-border-default)]"
+      />
+      <button
+        aria-label="Heading 1"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-h1"
+        title="Heading 1 (Ctrl+1)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M4 12h8"
+          />
+          <path
+            d="M4 18V6"
+          />
+          <path
+            d="M12 18V6"
+          />
+          <path
+            d="M17 12l3-2v8"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Heading 2"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-h2"
+        title="Heading 2 (Ctrl+2)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M4 12h8"
+          />
+          <path
+            d="M4 18V6"
+          />
+          <path
+            d="M12 18V6"
+          />
+          <path
+            d="M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Heading 3"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-h3"
+        title="Heading 3 (Ctrl+3)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M4 12h8"
+          />
+          <path
+            d="M4 18V6"
+          />
+          <path
+            d="M12 18V6"
+          />
+          <path
+            d="M17.5 10.5c1.7-1 3.5 0 3.5 1.5a2 2 0 0 1-2 2"
+          />
+          <path
+            d="M17 17.5c2 1.5 4 .3 4-1.5a2 2 0 0 0-2-2"
+          />
+        </svg>
+      </button>
+      <div
+        class="mx-1 h-4 w-px bg-[var(--color-border-default)]"
+      />
+      <button
+        aria-label="Bullet List"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-bullet-list"
+        title="Bullet List (Ctrl+Shift+8)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <line
+            x1="9"
+            x2="20"
+            y1="6"
+            y2="6"
+          />
+          <line
+            x1="9"
+            x2="20"
+            y1="12"
+            y2="12"
+          />
+          <line
+            x1="9"
+            x2="20"
+            y1="18"
+            y2="18"
+          />
+          <circle
+            cx="4"
+            cy="6"
+            fill="currentColor"
+            r="1"
+          />
+          <circle
+            cx="4"
+            cy="12"
+            fill="currentColor"
+            r="1"
+          />
+          <circle
+            cx="4"
+            cy="18"
+            fill="currentColor"
+            r="1"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Numbered List"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-ordered-list"
+        title="Numbered List (Ctrl+Shift+7)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <line
+            x1="10"
+            x2="21"
+            y1="6"
+            y2="6"
+          />
+          <line
+            x1="10"
+            x2="21"
+            y1="12"
+            y2="12"
+          />
+          <line
+            x1="10"
+            x2="21"
+            y1="18"
+            y2="18"
+          />
+          <path
+            d="M4 6h1v4"
+          />
+          <path
+            d="M4 10h2"
+          />
+          <path
+            d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"
+          />
+        </svg>
+      </button>
+      <div
+        class="mx-1 h-4 w-px bg-[var(--color-border-default)]"
+      />
+      <button
+        aria-label="Quote"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-blockquote"
+        title="Quote (Ctrl+Shift+B)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"
+          />
+          <path
+            d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Code Block"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-code-block"
+        title="Code Block (Ctrl+Alt+C)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <rect
+            height="18"
+            rx="2"
+            width="18"
+            x="3"
+            y="3"
+          />
+          <polyline
+            points="9 8 5 12 9 16"
+          />
+          <polyline
+            points="15 8 19 12 15 16"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Horizontal Rule"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-hr"
+        title="Horizontal Rule"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <line
+            x1="3"
+            x2="21"
+            y1="12"
+            y2="12"
+          />
+        </svg>
+      </button>
+      <div
+        class="mx-1 h-4 w-px bg-[var(--color-border-default)]"
+      />
+      <button
+        aria-label="Undo"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-not-allowed opacity-40
+      "
+        data-testid="toolbar-undo"
+        disabled=""
+        title="Undo (Ctrl+Z)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M3 7v6h6"
+          />
+          <path
+            d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Redo"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-not-allowed opacity-40
+      "
+        data-testid="toolbar-redo"
+        disabled=""
+        title="Redo (Ctrl+Y)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M21 7v6h-6"
+          />
+          <path
+            d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      class="p-4 min-h-[200px] text-[var(--color-fg-default)]"
+    >
+      <div
+        class="prose prose-sm max-w-none"
+      >
+        <p>
+          Start typing here...
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write button story states > editor-toolbar-formatted 1`] = `
+<div
+  class="w-full max-w-[800px]"
+>
+  <div
+    class="border border-[var(--color-border-default)] rounded-[var(--radius-md)]"
+  >
+    <div
+      class="flex items-center gap-0.5 border-b border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1.5 "
+      data-testid="editor-toolbar"
+    >
+      <button
+        aria-label="Bold"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+        
+      "
+        data-testid="toolbar-bold"
+        title="Bold (Ctrl+B)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2.5"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+          />
+          <path
+            d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Italic"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+        
+      "
+        data-testid="toolbar-italic"
+        title="Italic (Ctrl+I)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <line
+            x1="19"
+            x2="10"
+            y1="4"
+            y2="4"
+          />
+          <line
+            x1="14"
+            x2="5"
+            y1="20"
+            y2="20"
+          />
+          <line
+            x1="15"
+            x2="9"
+            y1="4"
+            y2="20"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Underline"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+        
+      "
+        data-testid="toolbar-underline"
+        title="Underline (Ctrl+U)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M6 4v6a6 6 0 0 0 12 0V4"
+          />
+          <line
+            x1="4"
+            x2="20"
+            y1="20"
+            y2="20"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Strikethrough"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+        
+      "
+        data-testid="toolbar-strike"
+        title="Strikethrough (Ctrl+Shift+X)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M16 4H9a3 3 0 0 0-2.83 4"
+          />
+          <path
+            d="M14 12a4 4 0 0 1 0 8H6"
+          />
+          <line
+            x1="4"
+            x2="20"
+            y1="12"
+            y2="12"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Inline Code"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+        
+      "
+        data-testid="toolbar-code"
+        title="Inline Code (Ctrl+E)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <polyline
+            points="16 18 22 12 16 6"
+          />
+          <polyline
+            points="8 6 2 12 8 18"
+          />
+        </svg>
+      </button>
+      <div
+        class="mx-1 h-4 w-px bg-[var(--color-border-default)]"
+      />
+      <button
+        aria-label="Heading 1"
+        aria-pressed="true"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-h1"
+        title="Heading 1 (Ctrl+1)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M4 12h8"
+          />
+          <path
+            d="M4 18V6"
+          />
+          <path
+            d="M12 18V6"
+          />
+          <path
+            d="M17 12l3-2v8"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Heading 2"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-h2"
+        title="Heading 2 (Ctrl+2)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M4 12h8"
+          />
+          <path
+            d="M4 18V6"
+          />
+          <path
+            d="M12 18V6"
+          />
+          <path
+            d="M21 18h-4c0-4 4-3 4-6 0-1.5-2-2.5-4-1"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Heading 3"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-h3"
+        title="Heading 3 (Ctrl+3)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M4 12h8"
+          />
+          <path
+            d="M4 18V6"
+          />
+          <path
+            d="M12 18V6"
+          />
+          <path
+            d="M17.5 10.5c1.7-1 3.5 0 3.5 1.5a2 2 0 0 1-2 2"
+          />
+          <path
+            d="M17 17.5c2 1.5 4 .3 4-1.5a2 2 0 0 0-2-2"
+          />
+        </svg>
+      </button>
+      <div
+        class="mx-1 h-4 w-px bg-[var(--color-border-default)]"
+      />
+      <button
+        aria-label="Bullet List"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-bullet-list"
+        title="Bullet List (Ctrl+Shift+8)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <line
+            x1="9"
+            x2="20"
+            y1="6"
+            y2="6"
+          />
+          <line
+            x1="9"
+            x2="20"
+            y1="12"
+            y2="12"
+          />
+          <line
+            x1="9"
+            x2="20"
+            y1="18"
+            y2="18"
+          />
+          <circle
+            cx="4"
+            cy="6"
+            fill="currentColor"
+            r="1"
+          />
+          <circle
+            cx="4"
+            cy="12"
+            fill="currentColor"
+            r="1"
+          />
+          <circle
+            cx="4"
+            cy="18"
+            fill="currentColor"
+            r="1"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Numbered List"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-ordered-list"
+        title="Numbered List (Ctrl+Shift+7)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <line
+            x1="10"
+            x2="21"
+            y1="6"
+            y2="6"
+          />
+          <line
+            x1="10"
+            x2="21"
+            y1="12"
+            y2="12"
+          />
+          <line
+            x1="10"
+            x2="21"
+            y1="18"
+            y2="18"
+          />
+          <path
+            d="M4 6h1v4"
+          />
+          <path
+            d="M4 10h2"
+          />
+          <path
+            d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"
+          />
+        </svg>
+      </button>
+      <div
+        class="mx-1 h-4 w-px bg-[var(--color-border-default)]"
+      />
+      <button
+        aria-label="Quote"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-blockquote"
+        title="Quote (Ctrl+Shift+B)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"
+          />
+          <path
+            d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Code Block"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-code-block"
+        title="Code Block (Ctrl+Alt+C)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <rect
+            height="18"
+            rx="2"
+            width="18"
+            x="3"
+            y="3"
+          />
+          <polyline
+            points="9 8 5 12 9 16"
+          />
+          <polyline
+            points="15 8 19 12 15 16"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Horizontal Rule"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-pointer
+      "
+        data-testid="toolbar-hr"
+        title="Horizontal Rule"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <line
+            x1="3"
+            x2="21"
+            y1="12"
+            y2="12"
+          />
+        </svg>
+      </button>
+      <div
+        class="mx-1 h-4 w-px bg-[var(--color-border-default)]"
+      />
+      <button
+        aria-label="Undo"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-not-allowed opacity-40
+      "
+        data-testid="toolbar-undo"
+        disabled=""
+        title="Undo (Ctrl+Z)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M3 7v6h6"
+          />
+          <path
+            d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"
+          />
+        </svg>
+      </button>
+      <button
+        aria-label="Redo"
+        aria-pressed="false"
+        class="
+        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+        cursor-not-allowed opacity-40
+      "
+        data-testid="toolbar-redo"
+        disabled=""
+        title="Redo (Ctrl+Y)"
+        type="button"
+      >
+        <svg
+          fill="none"
+          height="16"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="16"
+        >
+          <path
+            d="M21 7v6h-6"
+          />
+          <path
+            d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"
+          />
+        </svg>
+      </button>
+    </div>
+    <div
+      class="p-4 min-h-[200px] text-[var(--color-fg-default)]"
+    >
+      <div
+        class="prose prose-sm max-w-none"
+      >
+        <h1>
+          Heading 1
+        </h1>
+        <p>
+          This is a paragraph with 
+          <strong>
+            bold
+          </strong>
+          , 
+          <em>
+            italic
+          </em>
+          , and 
+          <code>
+            inline code
+          </code>
+          .
+        </p>
+        <h2>
+          Heading 2
+        </h2>
+        <ul>
+          <li>
+            <p>
+              Bullet item 1
+            </p>
+          </li>
+          <li>
+            <p>
+              Bullet item 2
+            </p>
+          </li>
+        </ul>
+        <h3>
+          Heading 3
+        </h3>
+        <ol>
+          <li>
+            <p>
+              Numbered item 1
+            </p>
+          </li>
+          <li>
+            <p>
+              Numbered item 2
+            </p>
+          </li>
+        </ol>
+        <blockquote>
+          <p>
+            This is a blockquote.
+          </p>
+        </blockquote>
+        <pre>
+          <code>
+            const code = "block";
+          </code>
+        </pre>
+        <hr />
+        <p>
+          End of content.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write button story states > editor-toolbar-no-editor 1`] = `
+<div
+  class="w-full max-w-[800px]"
+>
+  <div
+    class="border border-[var(--color-border-default)] rounded-[var(--radius-md)]"
+  >
+    <div
+      class="p-4 min-h-[100px] text-[var(--color-fg-muted)]"
+    >
+      Toolbar returns null when no editor is provided.
+    </div>
+  </div>
+</div>
+`;
+
+exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write button story states > editor-write-button-disabled 1`] = `
+<div
+  class="relative h-[240px] w-[480px] rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-4"
+>
+  <div
+    class="text-sm text-[var(--color-fg-muted)]"
+  >
+    Hover editor region to show floating actions.
+  </div>
+  <div
+    class="pointer-events-none absolute bottom-3 right-3 z-[var(--z-dropdown)]"
+    data-testid="write-button-group"
+  >
+    <button
+      class="
+          pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
+          cursor-not-allowed border-[var(--color-border-default)] bg-[var(--color-bg-raised)] text-[var(--color-fg-muted)] opacity-70
+        "
+      data-testid="write-button-trigger"
+      disabled=""
+      title="触发续写技能"
+      type="button"
+    >
+      续写
+    </button>
+  </div>
+</div>
+`;
+
+exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write button story states > editor-write-button-running 1`] = `
+<div
+  class="relative h-[240px] w-[480px] rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-4"
+>
+  <div
+    class="text-sm text-[var(--color-fg-muted)]"
+  >
+    Hover editor region to show floating actions.
+  </div>
+  <div
+    class="pointer-events-none absolute bottom-3 right-3 z-[var(--z-dropdown)]"
+    data-testid="write-button-group"
+  >
+    <button
+      class="
+          pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
+          cursor-not-allowed border-[var(--color-border-default)] bg-[var(--color-bg-raised)] text-[var(--color-fg-muted)] opacity-70
+        "
+      data-testid="write-button-trigger"
+      disabled=""
+      title="生成中..."
+      type="button"
+    >
+      续写中...
+    </button>
+  </div>
+</div>
+`;
+
+exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write button story states > editor-write-button-visible 1`] = `
+<div
+  class="relative h-[240px] w-[480px] rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-4"
+>
+  <div
+    class="text-sm text-[var(--color-fg-muted)]"
+  >
+    Hover editor region to show floating actions.
+  </div>
+  <div
+    class="pointer-events-none absolute bottom-3 right-3 z-[var(--z-dropdown)]"
+    data-testid="write-button-group"
+  >
+    <button
+      class="
+          pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
+          cursor-pointer border-[var(--color-border-accent)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+        "
+      data-testid="write-button-trigger"
+      title="触发续写技能"
+      type="button"
+    >
+      续写
+    </button>
+  </div>
+</div>
+`;

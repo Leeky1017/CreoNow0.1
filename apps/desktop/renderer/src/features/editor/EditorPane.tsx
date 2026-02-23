@@ -10,7 +10,7 @@ import { useOptionalAiStore } from "../../stores/aiStore";
 import { useEditorStore } from "../../stores/editorStore";
 import { useVersionStore } from "../../stores/versionStore";
 import { useAutosave } from "./useAutosave";
-import { Button, Text } from "../../components/primitives";
+import { Button, ScrollArea, Text } from "../../components/primitives";
 import { EditorToolbar } from "./EditorToolbar";
 import {
   EditorBubbleMenu,
@@ -28,6 +28,10 @@ import {
   type SlashCommandId,
 } from "./slashCommands";
 import { dispatchEditorSkillShortcut } from "./skillShortcutDispatcher";
+import {
+  resolveEditorLineHeightToken,
+  resolveEditorScaleFactor,
+} from "./typography";
 
 const IS_VITEST_RUNTIME =
   typeof process !== "undefined" && Boolean(process.env.VITEST);
@@ -920,6 +924,22 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
     );
   }
 
+  const locale =
+    (typeof document !== "undefined" && document.documentElement.lang) ||
+    (typeof navigator !== "undefined" ? navigator.language : null);
+  const scalePercent =
+    typeof window !== "undefined"
+      ? Math.round((window.devicePixelRatio || 1) * 100)
+      : 100;
+  const editorLineHeightToken = resolveEditorLineHeightToken(locale);
+  const editorScaleFactor = resolveEditorScaleFactor(scalePercent);
+  const editorTypographyVars = {
+    "--editor-line-height": editorLineHeightToken,
+    "--editor-scale-factor": editorScaleFactor,
+    "--editor-font-size":
+      "calc(var(--text-editor-size) * var(--editor-scale-factor))",
+  } as React.CSSProperties;
+
   return (
     <div
       data-testid="editor-pane"
@@ -986,11 +1006,18 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
       />
       <div
         data-testid="editor-content-region"
-        className="relative flex-1 overflow-y-auto"
+        className="relative flex-1 min-h-0 font-[var(--font-family-body)] text-[length:var(--editor-font-size)] leading-[var(--editor-line-height)]"
+        style={editorTypographyVars}
         onMouseEnter={() => setWriteHovering(true)}
         onMouseLeave={() => setWriteHovering(false)}
       >
-        <EditorContent editor={editor} className="h-full" />
+        <ScrollArea
+          data-testid="editor-content-scroll"
+          viewportTestId="editor-content-scroll-viewport"
+          className="h-full"
+        >
+          <EditorContent editor={editor} className="h-full" />
+        </ScrollArea>
         <EntityCompletionPanel
           session={entityCompletionSession}
           onSelectCandidate={applyEntityCompletionCandidate}

@@ -1,4 +1,5 @@
 import React from "react";
+import { ScrollArea } from "../../components/primitives";
 
 // ============================================================================
 // Types
@@ -1061,7 +1062,12 @@ export function OutlinePanel({
       )}
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto py-2">
+      <ScrollArea
+        data-testid="outline-scroll"
+        viewportTestId="outline-scroll-viewport"
+        className="flex-1 min-h-0"
+        viewportClassName="h-full w-full overflow-y-auto py-2"
+      >
         {items.length === 0 ? (
           <EmptyState />
         ) : visibleItems.length === 0 && searchQuery ? (
@@ -1102,7 +1108,7 @@ export function OutlinePanel({
             ))}
           </div>
         )}
-      </div>
+      </ScrollArea>
 
       {/* Scroll sync indicator */}
       {scrollSyncEnabled && (

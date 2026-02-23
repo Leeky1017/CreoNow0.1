@@ -6,6 +6,7 @@ import {
 import { AiPanel } from "../../features/ai/AiPanel";
 import { InfoPanel, QualityPanel } from "../../features/rightpanel";
 import { OpenSettingsContext } from "../../contexts/OpenSettingsContext";
+import { ScrollArea } from "../primitives";
 
 export { useOpenSettings } from "../../contexts/OpenSettingsContext";
 
@@ -142,7 +143,13 @@ export function RightPanel(props: {
         </div>
 
         {/* Tab content */}
-        <div className="flex-1 min-h-0 overflow-auto">{renderContent()}</div>
+        <ScrollArea
+          data-testid="right-panel-scroll"
+          viewportTestId="right-panel-scroll-viewport"
+          className="flex-1 min-h-0"
+        >
+          {renderContent()}
+        </ScrollArea>
       </aside>
     </OpenSettingsContext.Provider>
   );

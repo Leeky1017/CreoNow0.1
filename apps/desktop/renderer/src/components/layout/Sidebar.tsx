@@ -6,8 +6,13 @@ import { OutlinePanelContainer } from "../../features/outline/OutlinePanelContai
 import { ProjectSwitcher } from "../../features/projects/ProjectSwitcher";
 import { SearchPanel } from "../../features/search/SearchPanel";
 import { VersionHistoryContainer } from "../../features/version-history/VersionHistoryContainer";
+import { ScrollArea } from "../primitives";
 import { LAYOUT_DEFAULTS, type LeftPanelType } from "../../stores/layoutStore";
 import type { ProjectListItem } from "../../stores/projectStore";
+import {
+  readPrefersReducedMotion,
+  resolveReducedMotionDuration,
+} from "../../lib/motion/reducedMotion";
 
 /**
  * Left panel header showing the current view name.
@@ -56,12 +61,19 @@ export function Sidebar(props: {
   onCreateProject?: () => void;
   onOpenVersionHistoryDocument?: (documentId: string) => void;
 }): JSX.Element {
+  const prefersReducedMotion = readPrefersReducedMotion();
+  const widthTransitionDuration = resolveReducedMotionDuration(
+    prefersReducedMotion,
+    "var(--duration-slow)",
+  );
+  const widthTransition = `width ${widthTransitionDuration} var(--ease-default)`;
+
   if (props.collapsed) {
     return (
       <aside
         data-testid="layout-sidebar"
         className="hidden w-0"
-        style={{ transition: "width var(--duration-slow) ease" }}
+        style={{ transition: widthTransition }}
       />
     );
   }
@@ -149,7 +161,7 @@ export function Sidebar(props: {
         width: props.width,
         minWidth: LAYOUT_DEFAULTS.sidebar.min,
         maxWidth: LAYOUT_DEFAULTS.sidebar.max,
-        transition: "width var(--duration-slow) ease",
+        transition: widthTransition,
       }}
     >
       <div
@@ -164,7 +176,13 @@ export function Sidebar(props: {
         />
       </div>
       <LeftPanelHeader title={PANEL_TITLES[props.activePanel]} />
-      <div className="flex-1 min-h-0 overflow-auto">{renderPanelContent()}</div>
+      <ScrollArea
+        data-testid="sidebar-scroll"
+        viewportTestId="sidebar-scroll-viewport"
+        className="flex-1 min-h-0"
+      >
+        {renderPanelContent()}
+      </ScrollArea>
     </aside>
   );
 }

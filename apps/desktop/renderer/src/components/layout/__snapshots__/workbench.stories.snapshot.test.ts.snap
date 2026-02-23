@@ -1,0 +1,1369 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + right panel key story states > icon-bar-default 1`] = `
+<div
+  style="display: flex; height: 400px;"
+>
+  <div
+    style="display: flex; height: 100%;"
+  >
+    <div
+      class=""
+    >
+      <div
+        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full"
+        data-testid="icon-bar"
+        style="width: 48px;"
+      >
+        <div
+          class="flex flex-col items-center gap-1"
+        >
+          <button
+            aria-label="Files"
+            aria-pressed="true"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-[var(--color-accent)] bg-transparent text-[var(--color-fg-default)]"
+            data-testid="icon-bar-files"
+            title="Files"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-folder-open"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Search"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-search"
+            title="Search"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-search"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m21 21-4.34-4.34"
+              />
+              <circle
+                cx="11"
+                cy="11"
+                r="8"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Outline"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-outline"
+            title="Outline"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-list"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 5h.01"
+              />
+              <path
+                d="M3 12h.01"
+              />
+              <path
+                d="M3 19h.01"
+              />
+              <path
+                d="M8 5h13"
+              />
+              <path
+                d="M8 12h13"
+              />
+              <path
+                d="M8 19h13"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Version History"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-version-history"
+            title="Version History"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-history"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+              />
+              <path
+                d="M3 3v5h5"
+              />
+              <path
+                d="M12 7v5l4 2"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Memory"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-memory"
+            title="Memory"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-brain"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 18V5"
+              />
+              <path
+                d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"
+              />
+              <path
+                d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"
+              />
+              <path
+                d="M17.997 5.125a4 4 0 0 1 2.526 5.77"
+              />
+              <path
+                d="M18 18a4 4 0 0 0 2-7.464"
+              />
+              <path
+                d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"
+              />
+              <path
+                d="M6 18a4 4 0 0 1-2-7.464"
+              />
+              <path
+                d="M6.003 5.125a4 4 0 0 0-2.526 5.77"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Characters"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-characters"
+            title="Characters"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-user"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
+              />
+              <circle
+                cx="12"
+                cy="7"
+                r="4"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Knowledge Graph"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-knowledge-graph"
+            title="Knowledge Graph"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-network"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="6"
+                rx="1"
+                width="6"
+                x="16"
+                y="16"
+              />
+              <rect
+                height="6"
+                rx="1"
+                width="6"
+                x="2"
+                y="16"
+              />
+              <rect
+                height="6"
+                rx="1"
+                width="6"
+                x="9"
+                y="2"
+              />
+              <path
+                d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"
+              />
+              <path
+                d="M12 12V8"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          class="flex-1"
+        />
+        <div
+          class="flex flex-col items-center gap-1"
+        >
+          <button
+            aria-label="Settings"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-settings"
+            title="Settings"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-settings"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="3"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      style="flex: 1 1 0%; background-color: var(--color-bg-base); display: flex; align-items: center; justify-content: center; color: var(--color-fg-muted); font-size: 14px;"
+    >
+      Main Content Area
+    </div>
+  </div>
+</div>
+`;
+
+exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + right panel key story states > icon-bar-kg-active 1`] = `
+<div
+  style="display: flex; height: 400px;"
+>
+  <div
+    style="display: flex; height: 100%;"
+  >
+    <div
+      class=""
+    >
+      <div
+        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full"
+        data-testid="icon-bar"
+        style="width: 48px;"
+      >
+        <div
+          class="flex flex-col items-center gap-1"
+        >
+          <button
+            aria-label="Files"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-files"
+            title="Files"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-folder-open"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Search"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-search"
+            title="Search"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-search"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m21 21-4.34-4.34"
+              />
+              <circle
+                cx="11"
+                cy="11"
+                r="8"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Outline"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-outline"
+            title="Outline"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-list"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 5h.01"
+              />
+              <path
+                d="M3 12h.01"
+              />
+              <path
+                d="M3 19h.01"
+              />
+              <path
+                d="M8 5h13"
+              />
+              <path
+                d="M8 12h13"
+              />
+              <path
+                d="M8 19h13"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Version History"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-version-history"
+            title="Version History"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-history"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+              />
+              <path
+                d="M3 3v5h5"
+              />
+              <path
+                d="M12 7v5l4 2"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Memory"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-memory"
+            title="Memory"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-brain"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 18V5"
+              />
+              <path
+                d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"
+              />
+              <path
+                d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"
+              />
+              <path
+                d="M17.997 5.125a4 4 0 0 1 2.526 5.77"
+              />
+              <path
+                d="M18 18a4 4 0 0 0 2-7.464"
+              />
+              <path
+                d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"
+              />
+              <path
+                d="M6 18a4 4 0 0 1-2-7.464"
+              />
+              <path
+                d="M6.003 5.125a4 4 0 0 0-2.526 5.77"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Characters"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-characters"
+            title="Characters"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-user"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
+              />
+              <circle
+                cx="12"
+                cy="7"
+                r="4"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Knowledge Graph"
+            aria-pressed="true"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-[var(--color-accent)] bg-transparent text-[var(--color-fg-default)]"
+            data-testid="icon-bar-knowledge-graph"
+            title="Knowledge Graph"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-network"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="6"
+                rx="1"
+                width="6"
+                x="16"
+                y="16"
+              />
+              <rect
+                height="6"
+                rx="1"
+                width="6"
+                x="2"
+                y="16"
+              />
+              <rect
+                height="6"
+                rx="1"
+                width="6"
+                x="9"
+                y="2"
+              />
+              <path
+                d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"
+              />
+              <path
+                d="M12 12V8"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          class="flex-1"
+        />
+        <div
+          class="flex flex-col items-center gap-1"
+        >
+          <button
+            aria-label="Settings"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-settings"
+            title="Settings"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-settings"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="3"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      style="flex: 1 1 0%; background-color: var(--color-bg-base); display: flex; align-items: center; justify-content: center; color: var(--color-fg-muted); font-size: 14px;"
+    >
+      Main Content Area
+    </div>
+  </div>
+</div>
+`;
+
+exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + right panel key story states > icon-bar-search-hover 1`] = `
+<div
+  style="display: flex; height: 400px;"
+>
+  <div
+    style="display: flex; height: 100%;"
+  >
+    <div
+      class="[&_[data-testid='icon-bar-search']]:bg-[var(--color-bg-hover)] [&_[data-testid='icon-bar-search']]:text-[var(--color-fg-default)]"
+    >
+      <div
+        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full"
+        data-testid="icon-bar"
+        style="width: 48px;"
+      >
+        <div
+          class="flex flex-col items-center gap-1"
+        >
+          <button
+            aria-label="Files"
+            aria-pressed="true"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-[var(--color-accent)] bg-transparent text-[var(--color-fg-default)]"
+            data-testid="icon-bar-files"
+            title="Files"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-folder-open"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Search"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-search"
+            title="Search"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-search"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m21 21-4.34-4.34"
+              />
+              <circle
+                cx="11"
+                cy="11"
+                r="8"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Outline"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-outline"
+            title="Outline"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-list"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 5h.01"
+              />
+              <path
+                d="M3 12h.01"
+              />
+              <path
+                d="M3 19h.01"
+              />
+              <path
+                d="M8 5h13"
+              />
+              <path
+                d="M8 12h13"
+              />
+              <path
+                d="M8 19h13"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Version History"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-version-history"
+            title="Version History"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-history"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+              />
+              <path
+                d="M3 3v5h5"
+              />
+              <path
+                d="M12 7v5l4 2"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Memory"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-memory"
+            title="Memory"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-brain"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 18V5"
+              />
+              <path
+                d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"
+              />
+              <path
+                d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"
+              />
+              <path
+                d="M17.997 5.125a4 4 0 0 1 2.526 5.77"
+              />
+              <path
+                d="M18 18a4 4 0 0 0 2-7.464"
+              />
+              <path
+                d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"
+              />
+              <path
+                d="M6 18a4 4 0 0 1-2-7.464"
+              />
+              <path
+                d="M6.003 5.125a4 4 0 0 0-2.526 5.77"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Characters"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-characters"
+            title="Characters"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-user"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"
+              />
+              <circle
+                cx="12"
+                cy="7"
+                r="4"
+              />
+            </svg>
+          </button>
+          <button
+            aria-label="Knowledge Graph"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-knowledge-graph"
+            title="Knowledge Graph"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-network"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                height="6"
+                rx="1"
+                width="6"
+                x="16"
+                y="16"
+              />
+              <rect
+                height="6"
+                rx="1"
+                width="6"
+                x="2"
+                y="16"
+              />
+              <rect
+                height="6"
+                rx="1"
+                width="6"
+                x="9"
+                y="2"
+              />
+              <path
+                d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"
+              />
+              <path
+                d="M12 12V8"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          class="flex-1"
+        />
+        <div
+          class="flex flex-col items-center gap-1"
+        >
+          <button
+            aria-label="Settings"
+            aria-pressed="false"
+            class="w-10 h-10 flex items-center justify-center rounded-[var(--radius-sm)] bg-transparent text-[var(--color-fg-muted)] cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-l-2 border-l-transparent"
+            data-testid="icon-bar-settings"
+            title="Settings"
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              class="lucide lucide-settings"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"
+              />
+              <circle
+                cx="12"
+                cy="12"
+                r="3"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      style="flex: 1 1 0%; background-color: var(--color-bg-base); display: flex; align-items: center; justify-content: center; color: var(--color-fg-muted); font-size: 14px;"
+    >
+      Main Content Area
+    </div>
+  </div>
+</div>
+`;
+
+exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + right panel key story states > right-panel-ai 1`] = `
+<div
+  style="display: flex; height: 420px;"
+>
+  <div
+    style="flex: 1 1 0%; background-color: var(--color-bg-base); display: flex; align-items: center; justify-content: center; color: var(--color-fg-muted); font-size: 14px;"
+  >
+    Main Content Area
+  </div>
+  <aside
+    class="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
+    data-testid="layout-panel"
+    style="width: 320px; min-width: 280px; max-width: 480px;"
+  >
+    <div
+      class="flex items-center gap-1 px-2 py-2 border-b border-[var(--color-separator)]"
+    >
+      <button
+        aria-pressed="true"
+        class="text-xs px-3 py-1.5 rounded-[var(--radius-md)] border cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-[var(--color-border-focus)] bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]"
+        data-testid="right-panel-tab-ai"
+        type="button"
+      >
+        AI
+      </button>
+      <button
+        aria-pressed="false"
+        class="text-xs px-3 py-1.5 rounded-[var(--radius-md)] border cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-transparent bg-transparent text-[var(--color-fg-muted)]"
+        data-testid="right-panel-tab-info"
+        type="button"
+      >
+        Info
+      </button>
+      <button
+        aria-pressed="false"
+        class="text-xs px-3 py-1.5 rounded-[var(--radius-md)] border cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-transparent bg-transparent text-[var(--color-fg-muted)]"
+        data-testid="right-panel-tab-quality"
+        type="button"
+      >
+        Quality
+      </button>
+      <div
+        class="flex-1"
+      />
+    </div>
+    <div
+      class="relative min-h-0 min-w-0 flex-1 min-h-0"
+      data-slot="scroll-area"
+      data-testid="right-panel-scroll"
+    >
+      <div
+        class="h-full w-full min-h-0 min-w-0 overflow-auto"
+        data-slot="scroll-area-viewport"
+        data-testid="right-panel-scroll-viewport"
+      >
+        <section
+          class="flex flex-col h-full min-h-0 bg-[var(--color-bg-surface)]"
+          data-testid="ai-panel"
+        >
+          <header
+            class="flex items-center h-8 px-2 border-b border-[var(--color-separator)] shrink-0"
+          >
+            <div
+              class="ml-auto flex items-center gap-1 relative"
+            >
+              <button
+                class="w-5 h-5 flex items-center justify-center rounded transition-colors text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+                data-testid="ai-history-toggle"
+                title="History"
+                type="button"
+              >
+                <svg
+                  fill="none"
+                  height="12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="12"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                  />
+                  <polyline
+                    points="12 6 12 12 16 14"
+                  />
+                </svg>
+              </button>
+              <button
+                class="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] rounded transition-colors"
+                data-testid="ai-new-chat"
+                title="New Chat"
+                type="button"
+              >
+                <svg
+                  fill="none"
+                  height="12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="12"
+                >
+                  <line
+                    x1="12"
+                    x2="12"
+                    y1="5"
+                    y2="19"
+                  />
+                  <line
+                    x1="5"
+                    x2="19"
+                    y1="12"
+                    y2="12"
+                  />
+                </svg>
+              </button>
+            </div>
+          </header>
+          <div
+            class="flex-1 flex flex-col min-h-0"
+          >
+            <div
+              class="flex-1 overflow-y-auto p-3 space-y-4"
+            >
+              <div
+                class="flex-1 flex items-center justify-center text-center py-12"
+                data-testid="ai-output"
+              >
+                <span
+                  class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)]"
+                >
+                  选中文本或输入指令，开始与 AI 协作
+                </span>
+              </div>
+            </div>
+            <div
+              class="shrink-0 px-1.5 pb-1.5 pt-2 border-t border-[var(--color-separator)]"
+            >
+              <div
+                class="relative border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] focus-within:border-[var(--color-border-focus)]"
+              >
+                <textarea
+                  class="w-full min-h-[60px] max-h-[160px] px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
+                  data-testid="ai-input"
+                  placeholder="Ask the AI to help with your writing..."
+                />
+                <div
+                  class="flex items-center justify-between px-2 pb-2"
+                >
+                  <div
+                    class="flex items-center gap-1"
+                  >
+                    <button
+                      class="
+        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        transition-colors cursor-pointer
+        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+      "
+                      type="button"
+                    >
+                      Ask
+                    </button>
+                    <button
+                      class="
+        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        transition-colors cursor-pointer
+        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+      "
+                      type="button"
+                    >
+                      Loading
+                    </button>
+                    <button
+                      class="
+        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        transition-colors cursor-pointer
+        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+      "
+                      data-testid="ai-candidate-count"
+                      type="button"
+                    >
+                      1x
+                    </button>
+                    <button
+                      class="
+        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        transition-colors cursor-pointer
+        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+      "
+                      data-testid="ai-skills-toggle"
+                      type="button"
+                    >
+                      Loading
+                    </button>
+                  </div>
+                  <button
+                    class="w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    data-testid="ai-send-stop"
+                    disabled=""
+                    title="Send message"
+                    type="button"
+                  >
+                    <svg
+                      fill="none"
+                      height="16"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16"
+                    >
+                      <line
+                        x1="12"
+                        x2="12"
+                        y1="19"
+                        y2="5"
+                      />
+                      <polyline
+                        points="5 12 12 5 19 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <style>
+            
+
+        .typing-cursor::after {
+
+          content: '';
+
+          display: inline-block;
+
+          width: 6px;
+
+          height: 14px;
+
+          background-color: var(--color-fg-default);
+
+          margin-left: 2px;
+
+          vertical-align: text-bottom;
+
+          animation: blink 1s step-end infinite;
+
+        }
+
+
+
+        @keyframes blink {
+
+          0%, 100% { opacity: 1; }
+
+          50% { opacity: 0; }
+
+        }
+
+      
+          </style>
+        </section>
+      </div>
+    </div>
+  </aside>
+</div>
+`;
+
+exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + right panel key story states > right-panel-collapsed 1`] = `
+<div
+  style="display: flex; height: 420px;"
+>
+  <div
+    style="flex: 1 1 0%; background-color: var(--color-bg-base); display: flex; align-items: center; justify-content: center; color: var(--color-fg-muted); font-size: 14px;"
+  >
+    Main Content Area
+  </div>
+  <aside
+    class="hidden w-0"
+    data-testid="layout-panel"
+  />
+</div>
+`;
+
+exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + right panel key story states > right-panel-info 1`] = `
+<div
+  style="display: flex; height: 420px;"
+>
+  <div
+    style="flex: 1 1 0%; background-color: var(--color-bg-base); display: flex; align-items: center; justify-content: center; color: var(--color-fg-muted); font-size: 14px;"
+  >
+    Main Content Area
+  </div>
+  <aside
+    class="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
+    data-testid="layout-panel"
+    style="width: 320px; min-width: 280px; max-width: 480px;"
+  >
+    <div
+      class="flex items-center gap-1 px-2 py-2 border-b border-[var(--color-separator)]"
+    >
+      <button
+        aria-pressed="false"
+        class="text-xs px-3 py-1.5 rounded-[var(--radius-md)] border cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-transparent bg-transparent text-[var(--color-fg-muted)]"
+        data-testid="right-panel-tab-ai"
+        type="button"
+      >
+        AI
+      </button>
+      <button
+        aria-pressed="true"
+        class="text-xs px-3 py-1.5 rounded-[var(--radius-md)] border cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-[var(--color-border-focus)] bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]"
+        data-testid="right-panel-tab-info"
+        type="button"
+      >
+        Info
+      </button>
+      <button
+        aria-pressed="false"
+        class="text-xs px-3 py-1.5 rounded-[var(--radius-md)] border cursor-pointer transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] border-transparent bg-transparent text-[var(--color-fg-muted)]"
+        data-testid="right-panel-tab-quality"
+        type="button"
+      >
+        Quality
+      </button>
+      <div
+        class="flex-1"
+      />
+    </div>
+    <div
+      class="relative min-h-0 min-w-0 flex-1 min-h-0"
+      data-slot="scroll-area"
+      data-testid="right-panel-scroll"
+    >
+      <div
+        class="h-full w-full min-h-0 min-w-0 overflow-auto"
+        data-slot="scroll-area-viewport"
+        data-testid="right-panel-scroll-viewport"
+      >
+        <div
+          class="flex flex-col gap-4 p-4 h-full overflow-auto"
+          data-testid="info-panel"
+        >
+          <h3
+            class="font-[var(--font-family-ui)] text-sm font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] font-bold text-[15px]"
+          >
+            Info
+          </h3>
+          <div
+            class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-6 p-3 rounded-[var(--radius-md)]"
+          >
+            <span
+              class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
+              data-testid="info-panel-no-document"
+            >
+              No document selected
+            </span>
+          </div>
+          <section>
+            <h4
+              class="font-[var(--font-family-ui)] text-[13px] font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] mb-2 font-semibold text-[13px]"
+            >
+              Today's Progress
+            </h4>
+            <div
+              class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-6 p-3 rounded-[var(--radius-md)]"
+            >
+              <span
+                class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
+              >
+                Loading...
+              </span>
+            </div>
+          </section>
+          <button
+            class="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
+            disabled=""
+            type="button"
+          >
+            查看版本历史
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+`;

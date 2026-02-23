@@ -254,6 +254,10 @@
   --text-editor-size: 16px;
   --text-editor-weight: 400;
   --text-editor-line-height: 1.8;
+  --text-editor-line-height-cjk: 1.95;
+  --text-scale-factor-default: 1;
+  --text-scale-factor-125: 1.25;
+  --text-scale-factor-150: 1.5;
 
   /* 辅助信息 */
   --text-caption-size: 12px;

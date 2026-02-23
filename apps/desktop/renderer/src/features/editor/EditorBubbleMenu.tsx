@@ -7,6 +7,10 @@ import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
 import { captureSelectionRef } from "../ai/applySelection";
 import { useEditorStore } from "../../stores/editorStore";
 import { useOptionalAiStore } from "../../stores/aiStore";
+import {
+  readPrefersReducedMotion,
+  resolveReducedMotionDurationPair,
+} from "../../lib/motion/reducedMotion";
 
 export const EDITOR_INLINE_BUBBLE_MENU_PLUGIN_KEY = "cn-editor-inline-bubble";
 const BUBBLE_AI_SKILLS = [
@@ -267,6 +271,11 @@ export function EditorBubbleMenu(props: {
     return shouldShowBubble ? bubbleContent : null;
   }
 
+  const bubbleDurations = resolveReducedMotionDurationPair(
+    readPrefersReducedMotion(),
+    [100, 100],
+  );
+
   return (
     <BubbleMenu
       editor={editor}
@@ -274,7 +283,7 @@ export function EditorBubbleMenu(props: {
       shouldShow={() => shouldShowBubble}
       tippyOptions={{
         placement,
-        duration: [100, 100],
+        duration: bubbleDurations,
         zIndex: 400,
         appendTo: () => document.body,
         popperOptions: {

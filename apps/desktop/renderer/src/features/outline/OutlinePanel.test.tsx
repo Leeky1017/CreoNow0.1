@@ -46,6 +46,12 @@ describe("OutlinePanel", () => {
     expect(activeItem).toHaveAttribute("aria-selected", "true");
   });
 
+  it("[ED-SCROLL-01] 大纲滚动区域应由 ScrollArea viewport 承载", () => {
+    render(<OutlinePanel items={SAMPLE_ITEMS} />);
+
+    expect(screen.getByTestId("outline-scroll-viewport")).toBeInTheDocument();
+  });
+
   // ==========================================================================
   // P0: Single Node Collapse
   // ==========================================================================

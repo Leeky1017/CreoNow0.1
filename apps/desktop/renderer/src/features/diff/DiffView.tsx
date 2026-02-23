@@ -1,5 +1,6 @@
 import React from "react";
 import { Text } from "../../components/primitives";
+import { ScrollArea } from "../../components/primitives";
 
 /**
  * Line type in a unified diff.
@@ -200,10 +201,12 @@ export function UnifiedDiffView(props: {
   }
 
   return (
-    <div
-      ref={scrollRef}
+    <ScrollArea
       data-testid={testId}
-      className="flex-1 overflow-y-auto font-[var(--font-family-mono)] text-[13px] leading-6"
+      viewportTestId={`${testId}-scroll-viewport`}
+      viewportRef={scrollRef}
+      className="flex-1 font-[var(--font-family-mono)] text-[13px] leading-6"
+      viewportClassName="h-full w-full overflow-y-auto"
     >
       {props.lines.map((line, index) => {
         if (line.type === "header") {
@@ -306,7 +309,7 @@ export function UnifiedDiffView(props: {
           </div>
         );
       })}
-    </div>
+    </ScrollArea>
   );
 }
 

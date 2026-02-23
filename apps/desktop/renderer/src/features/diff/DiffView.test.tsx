@@ -70,7 +70,7 @@ describe("DiffView", () => {
 
     it("容器应该有 overflow 限制", () => {
       const diffText = `@@ -1,3 +1,3 @@
- Context
+Context
 -Old
 +New`;
 
@@ -80,6 +80,16 @@ describe("DiffView", () => {
       const panel = screen.getByTestId("ai-diff").parentElement;
       expect(panel).toHaveClass("max-h-[300px]");
       expect(panel).toHaveClass("overflow-hidden");
+    });
+
+    it("[ED-SCROLL-02] Diff 内容滚动区域应由 ScrollArea viewport 承载", () => {
+      const diffText = `@@ -1,2 +1,2 @@
+-old
++new`;
+
+      render(<DiffView diffText={diffText} />);
+
+      expect(screen.getByTestId("ai-diff-scroll-viewport")).toBeInTheDocument();
     });
   });
 

@@ -48,7 +48,7 @@ export function InlineFormatButton({
       onClick={onClick}
       className={`
         flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)]
+        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
         ${isActive ? "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]" : "text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]"}
         ${disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer"}
         ${className ?? ""}

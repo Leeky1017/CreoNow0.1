@@ -171,6 +171,12 @@ describe("Sidebar", () => {
   // 样式测试
   // ===========================================================================
   describe("样式", () => {
+    it("[WB-SCROLL-01] 侧栏滚动区域应由 ScrollArea viewport 承载", () => {
+      renderWithWrapper();
+
+      expect(screen.getByTestId("sidebar-scroll-viewport")).toBeInTheDocument();
+    });
+
     it("应该有右边框分隔线", () => {
       renderWithWrapper();
 
