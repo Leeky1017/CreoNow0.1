@@ -175,6 +175,7 @@ function toQueueStatus(args: {
 export function createSkillScheduler(args?: {
   globalConcurrencyLimit?: number;
   sessionQueueLimit?: number;
+  slotRecoveryTimeoutMs?: number;
   logger?: SchedulerLogger;
 }): SkillScheduler {
   const globalConcurrencyLimit = Math.max(
@@ -185,6 +186,19 @@ export function createSkillScheduler(args?: {
     1,
     Math.floor(args?.sessionQueueLimit ?? 20),
   );
+  const slotRecoveryTimeoutMs = (() => {
+    const DEFAULT_SLOT_RECOVERY_TIMEOUT_MS = 125_000;
+    const raw = args?.slotRecoveryTimeoutMs;
+    if (
+      typeof raw !== "number" ||
+      !Number.isFinite(raw) ||
+      !Number.isInteger(raw) ||
+      raw <= 0
+    ) {
+      return DEFAULT_SLOT_RECOVERY_TIMEOUT_MS;
+    }
+    return Math.max(1, raw);
+  })();
 
   const sessions = new Map<string, SessionQueueState>();
   const readySessionQueue: string[] = [];
@@ -312,6 +326,7 @@ export function createSkillScheduler(args?: {
 
     let resolved = false;
     let finalized = false;
+    let slotRecoveryTimer: ReturnType<typeof setTimeout> | null = null;
     let responseState: ResponseSettleState = { kind: "pending" };
     let completionState: CompletionSettleState = { kind: "pending" };
     const resolveResultOnce = (result: ServiceResult<unknown>): void => {
@@ -326,6 +341,10 @@ export function createSkillScheduler(args?: {
         return;
       }
       finalized = true;
+      if (slotRecoveryTimer) {
+        clearTimeout(slotRecoveryTimer);
+        slotRecoveryTimer = null;
+      }
       finalizeTask(sessionKey, task, terminal);
     };
     const resolveWithResponsePriority = (
@@ -384,6 +403,14 @@ export function createSkillScheduler(args?: {
       .then((result) => {
         responseState = { kind: "settled", result };
         if (result.ok && completionState.kind === "pending") {
+          if (!slotRecoveryTimer) {
+            slotRecoveryTimer = setTimeout(() => {
+              if (finalized || completionState.kind !== "pending") {
+                return;
+              }
+              finalizeOnce("timeout");
+            }, slotRecoveryTimeoutMs);
+          }
           queueMicrotask(() => {
             resolveWithResponsePriority(result);
             settleTerminalIfPossible();
