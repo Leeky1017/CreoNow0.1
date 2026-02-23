@@ -20,14 +20,14 @@
 
 ## Status
 
-- CURRENT: Rulebook task 已通过 validate；已补齐 change 跨模块 delta spec 覆盖（ipc/skill-system/context-engine）并修复 Dependency Sync Check 口径不一致；PR `#628` 已创建并回填真实 PR URL（待开启 auto-merge 并等待 required checks 全绿收口）。
+- CURRENT: Rulebook task 已通过 validate；已补齐 change 跨模块 delta spec 覆盖（ipc/skill-system/context-engine）并修复 Dependency Sync Check 口径不一致；PR `#628` 已创建并回填真实 PR URL；auto-merge 已开启（merge method: MERGE，待 required checks 全绿自动合并）。
 
 ## Next Actions
 
 - [ ] 确认是否需要 rename change 目录 `issue-617-scoped-lifecycle-and-abort` -> `issue-627-scoped-lifecycle-and-abort`（仅在门禁/治理必须时执行）
 - [x] 若 PR 触及 active change 内容或 rename，必须同步更新 `openspec/changes/EXECUTION_ORDER.md`（含更新时间）
 - [x] PR 创建后回填 RUN_LOG 的 PR URL（禁止占位符）
-- [ ] 开启 auto-merge 并跟踪 required checks：`ci` / `openspec-log-guard` / `merge-serial`
+- [x] 开启 auto-merge 并跟踪 required checks：`ci` / `openspec-log-guard` / `merge-serial`
 - [ ] 最终收口前补齐 Main Session Audit（并以“签字提交仅改 RUN_LOG”的方式满足 `openspec-log-guard`）
 
 ## Plan
@@ -38,7 +38,8 @@
 - [x] 修复 Dependency Sync Check 一致性（proposal/tasks/EXECUTION_ORDER 口径）
 - [x] 更新 proposal Owner 审阅为可执行状态说明（待 Owner 确认）
 - [x] 建立 PR（#628）并回填 RUN_LOG PR URL
-- [ ] 开启 auto-merge 并完成 required checks 全绿收口
+- [x] 开启 auto-merge（merge method: MERGE）
+- [ ] 完成 required checks 全绿并自动合并收口
 
 ## Runs
 
@@ -88,6 +89,15 @@
   - commit: `daecb460`
   - push: `* [new branch] task/627-scoped-lifecycle-and-abort -> task/627-scoped-lifecycle-and-abort`
   - PR: https://github.com/Leeky1017/CreoNow/pull/628
+
+### 2026-02-23 Enable auto-merge (PR #628)
+
+- Command:
+  - `gh pr merge 628 --auto --merge`
+  - `gh pr view 628 --json mergeStateStatus,autoMergeRequest`
+- Key output:
+  - autoMergeRequest: `enabledAt=2026-02-23T15:46:21Z`, `mergeMethod=MERGE`
+  - mergeStateStatus: `BLOCKED`（waiting required checks）
 
 ## Findings: Spec gaps / contradictions
 
