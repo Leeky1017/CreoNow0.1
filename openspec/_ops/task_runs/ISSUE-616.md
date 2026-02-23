@@ -43,8 +43,8 @@
   - `gh issue view`: `1`
 - Key output:
   - current branch: `task/616-issue-606-phase-2-shell-decomposition`
-  - HEAD: `cf1d4b5cf132baeb5c8436396a5e03ff1d69ea94`
-  - workspace: modified only governance packet files (`ISSUE-616.md` + Rulebook task docs)
+  - HEAD: `cd2ba4283804346b4b73a05ac16b7ab609fea650`
+  - workspace: clean
   - `error connecting to api.github.com`
 - Note:
   - Admission 的 Issue OPEN 状态无法在本沙箱联网验证，需主会话在可联网环境补录。
@@ -150,6 +150,16 @@
 - Note:
   - 扩展验证命令在当前 worktree 均通过；preflight 仍受 PR URL 与主会话签字提交前置条件阻断。
 
+### 2026-02-23 Push/PR Network Blocker
+
+- Command:
+  - `git push origin task/616-issue-606-phase-2-shell-decomposition`
+- Exit code: `128`
+- Key output:
+  - `fatal: unable to access 'https://github.com/Leeky1017/CreoNow.git/': Could not resolve host: github.com`
+- Note:
+  - 当前沙箱 DNS/外网不可达，无法完成 PR 创建、auto-merge 与 control-plane main 收口。
+
 ## Dependency Sync Check
 
 - Inputs reviewed:
@@ -166,7 +176,7 @@
 
 - Draft-Status: PREPARED-BY-MATE-GOVERNANCE (awaiting main-session signing commit)
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: cf1d4b5cf132baeb5c8436396a5e03ff1d69ea94
+- Reviewed-HEAD-SHA: cd2ba4283804346b4b73a05ac16b7ab609fea650
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: FAIL
