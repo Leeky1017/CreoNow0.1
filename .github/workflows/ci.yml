@@ -189,7 +189,7 @@ jobs:
 
   ci:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: ${{ always() && github.event_name == 'pull_request' }}
     needs:
       - doc-timestamp-gate
       - lint-and-typecheck
@@ -205,4 +205,26 @@ jobs:
     timeout-minutes: 2
     steps:
       - name: CI gate
-        run: echo "All required CI jobs passed."
+        env:
+          NEEDS_CONTEXT: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+
+          needs = json.loads(os.environ["NEEDS_CONTEXT"])
+          non_success = {
+            name: meta.get("result", "unknown")
+            for name, meta in needs.items()
+            if meta.get("result") != "success"
+          }
+
+          if non_success:
+            print("❌ ci gate blocked: prerequisite jobs not in success state:")
+            for name, result in sorted(non_success.items()):
+              print(f"  - {name}: {result}")
+            sys.exit(1)
+
+          print("✅ All required CI jobs passed.")
+          PY

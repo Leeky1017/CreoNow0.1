@@ -7,6 +7,7 @@ import { getLoadablePath } from "sqlite-vec";
 import type { IpcError } from "@shared/types/ipc-generated";
 import type { Logger } from "../logging/logger";
 import { getDbPaths, redactUserDataPath } from "./paths";
+import { applyRecommendedPragmas } from "./recommendedPragmas";
 import {
   createDbInitIpcError,
   diagnoseDbInitFailure,
@@ -221,6 +222,7 @@ export function initDb(args: {
 
     conn.pragma("foreign_keys = ON");
     conn.pragma("journal_mode = WAL");
+    applyRecommendedPragmas(conn);
 
     const current = ensureSchemaVersion(conn);
     schemaVersion = current;
