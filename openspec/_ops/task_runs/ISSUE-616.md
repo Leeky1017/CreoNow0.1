@@ -3,7 +3,7 @@
 - Issue: #616
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/616
 - Branch: `task/616-issue-606-phase-2-shell-decomposition`
-- PR: BLOCKED (sandbox cannot reach GitHub API; lead/main-session to backfill real PR URL)
+- PR: https://github.com/Leeky1017/CreoNow/pull/625
 - Scope:
   - `openspec/changes/archive/issue-606-phase-2-shell-decomposition/**`
   - `openspec/changes/archive/issue-606-phase-1-stop-bleeding/**`
@@ -25,7 +25,7 @@
 - [x] Red 证据：通过提交序列确认“先测后实现”（历史 Red 输出待主会话补齐可选）
 - [x] Green：核心 shell/service/lint 用例运行通过
 - [x] Refactor：验证拆分后 shell 组件职责与 service 收敛结果
-- [ ] Fresh Verification（完整 preflight + required checks 对齐）通过
+- [x] Fresh Verification（完整 preflight + required checks 对齐）通过
 - [ ] PR 开启 auto-merge，等待 `ci` / `openspec-log-guard` / `merge-serial` 全绿
 - [ ] 合并后同步控制面 `main` 并清理 worktree；归档 Rulebook task
 
@@ -207,6 +207,56 @@
 - Note:
   - 当前唯一阻断为 RUN_LOG `- PR:` 需回填真实 PR URL；完成 PR 创建并签字提交后重新校验。
 
+### 2026-02-23 Mainline Sync + Conflict Resolution（Main Session）
+
+- Command:
+  - `git merge --no-ff origin/main`
+  - `git add openspec/changes/EXECUTION_ORDER.md`
+  - `git commit -m "merge: sync origin/main into issue-616 branch (#616)" -m "Co-authored-by: Codex <noreply@openai.com>"`
+- Exit code:
+  - `git merge`: `1`（冲突）
+  - `git commit`: `0`
+- Key output:
+  - 唯一冲突文件：`openspec/changes/EXECUTION_ORDER.md`
+  - 合并提交：`bf909748301f768a0c2b2c477edeb952ee76f29b`
+  - 冲突解法：保留 backend lane 7 个活跃 change，并将 ISSUE-606 lane 更新为 Phase 2 已归档后仅保留 Phase 3/4
+
+### 2026-02-23 Fresh Verification（Post-merge, Main Session）
+
+- Command:
+  - `pnpm -C apps/desktop exec vitest run renderer/src/components/layout/__tests__/layout-shell-boundary.test.tsx renderer/src/components/layout/__tests__/navigation-controller.test.tsx renderer/src/components/layout/__tests__/panel-orchestrator.test.tsx renderer/src/components/layout/__tests__/viewport-allocation.test.tsx renderer/src/services/__tests__/ipc-boundary-lint.test.ts renderer/src/services/__tests__/project-service.test.ts renderer/src/services/__tests__/service-error-normalization.test.ts tests/lint/renderer-viewport-ownership.test.ts`
+  - `pnpm exec node --import tsx scripts/test-discovery-consistency-gate.ts`
+  - `pnpm typecheck`
+  - `pnpm lint`
+  - `pnpm exec node --import tsx scripts/contract-generate.ts && git diff --exit-code packages/shared/types/ipc-generated.ts`
+  - `pnpm exec node --import tsx scripts/cross-module-contract-gate.ts`
+  - `python3 scripts/check_doc_timestamps.py`
+- Exit code:
+  - 所有命令：`0`
+- Key output:
+  - `Test Files 7 passed (7)`
+  - `Tests 18 passed (18)`
+  - `[discovery-gate] unit discovered=198 executed=198`
+  - `[discovery-gate] integration discovered=88 executed=88`
+  - `[discovery-gate] PASS`
+  - `[CROSS_MODULE_GATE] PASS`
+  - `OK: validated timestamps for 1 governed markdown file(s)`
+
+### 2026-02-23 PR Live Status（After Push）
+
+- Command:
+  - `git push origin task/616-issue-606-phase-2-shell-decomposition`
+  - `gh pr view 625 --json mergeStateStatus,mergeable,statusCheckRollup,url`
+  - `gh run view 22307017733 --log-failed`
+- Exit code:
+  - `git push`: `0`
+  - `gh pr view`: `0`
+  - `gh run view`: `0`
+- Key output:
+  - PR `#625` 状态：`mergeable=MERGEABLE`，`mergeStateStatus=BLOCKED`（等待 checks）
+  - `openspec-log-guard` 失败原因为旧审计字段：`Reviewed-HEAD-SHA mismatch`
+  - 需要主会话签字提交刷新 `Reviewed-HEAD-SHA == HEAD^`（本次提交执行）
+
 ## Dependency Sync Check
 
 - Inputs reviewed:
@@ -221,11 +271,11 @@
 
 ## Main Session Audit
 
-- Draft-Status: PREPARED-BY-MATE-GOVERNANCE (awaiting main-session signing commit)
+- Draft-Status: SIGNED-BY-MAIN-SESSION
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: cd2ba4283804346b4b73a05ac16b7ab609fea650
+- Reviewed-HEAD-SHA: bf909748301f768a0c2b2c477edeb952ee76f29b
 - Spec-Compliance: PASS
 - Code-Quality: PASS
-- Fresh-Verification: FAIL
-- Blocking-Issues: 3
-- Decision: REJECT
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
