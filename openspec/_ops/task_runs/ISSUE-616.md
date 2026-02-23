@@ -257,6 +257,27 @@
   - `openspec-log-guard` 失败原因为旧审计字段：`Reviewed-HEAD-SHA mismatch`
   - 需要主会话签字提交刷新 `Reviewed-HEAD-SHA == HEAD^`（本次提交执行）
 
+### 2026-02-23 Preflight Formatting Gate Remediation
+
+- Command:
+  - `scripts/agent_pr_preflight.sh`
+  - `pnpm exec prettier --write apps/desktop/renderer/src/components/layout/AppShell.tsx apps/desktop/renderer/src/components/layout/LayoutShell.tsx apps/desktop/renderer/src/components/layout/NavigationController.tsx apps/desktop/renderer/src/components/layout/PanelOrchestrator.tsx apps/desktop/renderer/src/components/layout/__tests__/panel-orchestrator.test.tsx apps/desktop/renderer/src/components/layout/__tests__/viewport-allocation.test.tsx apps/desktop/renderer/src/services/projectService.ts apps/desktop/renderer/src/services/serviceErrorNormalization.ts apps/desktop/tests/unit/test-runner-discovery.spec.ts rulebook/tasks/archive/2026-02-23-issue-616-issue-606-phase-2-shell-decomposition/proposal.md`
+  - `git commit -m "style: apply preflight prettier fixes for issue-616 (#616)" -m "Co-authored-by: Codex <noreply@openai.com>"`
+  - `pnpm -C apps/desktop exec vitest run renderer/src/components/layout/__tests__/layout-shell-boundary.test.tsx renderer/src/components/layout/__tests__/navigation-controller.test.tsx renderer/src/components/layout/__tests__/panel-orchestrator.test.tsx renderer/src/components/layout/__tests__/viewport-allocation.test.tsx renderer/src/services/__tests__/ipc-boundary-lint.test.ts renderer/src/services/__tests__/project-service.test.ts renderer/src/services/__tests__/service-error-normalization.test.ts tests/lint/renderer-viewport-ownership.test.ts`
+  - `pnpm exec node --import tsx scripts/test-discovery-consistency-gate.ts`
+  - `scripts/agent_pr_preflight.sh`
+- Exit code:
+  - `preflight (before format)`: `1`
+  - `prettier --write`: `0`
+  - `vitest`: `0`
+  - `discovery-gate`: `0`
+  - `preflight (after format)`: `1`（仅剩 `Reviewed-HEAD-SHA` 指针滞后）
+- Key output:
+  - 初次 preflight 阻断：`Code style issues found in 10 files`
+  - 格式化后 `Test Files 7 passed (7) / Tests 18 passed (18)`
+  - 格式化后 `[discovery-gate] PASS`
+  - 最终 preflight 唯一剩余项：`[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch`
+
 ## Dependency Sync Check
 
 - Inputs reviewed:
@@ -273,7 +294,7 @@
 
 - Draft-Status: SIGNED-BY-MAIN-SESSION
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: bf909748301f768a0c2b2c477edeb952ee76f29b
+- Reviewed-HEAD-SHA: b8fc5ed23056e23bc5a2055ec952fe5fefefeb18
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
