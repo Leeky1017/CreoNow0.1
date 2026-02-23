@@ -1,4 +1,4 @@
-更新时间：2026-02-23 16:08
+更新时间：2026-02-23 16:12
 
 ## 1. Specification
 
@@ -29,7 +29,7 @@
 ## 5. Refactor（保持绿灯）
 
 - [x] 5.1 去重与整理壳层与 service 的边界，保持测试全绿
-- [ ] 5.2 回归 type/lint/unit/contract/cross-module（与 required checks 对齐）
+- [x] 5.2 回归 type/lint/unit/contract/cross-module（与 required checks 对齐）
 
 ## 6. Evidence
 
