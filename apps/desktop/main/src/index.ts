@@ -37,6 +37,7 @@ import { createJudgeQualityService } from "./services/ai/judgeQualityService";
 import { createKgRecognitionRuntime } from "./services/kg/kgRecognitionRuntime";
 import { createStateExtractor } from "./services/kg/stateExtractor";
 import { createCreonowWatchService } from "./services/context/watchService";
+import { createUtilityProcessFoundation } from "./services/utilityprocess/utilityProcessFoundation";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -261,6 +262,11 @@ function registerIpcHandlers(deps: {
     ipcMain,
     logger: deps.logger,
     defaultTimeoutMs: 30_000,
+  });
+  const utilityProcessFoundation = createUtilityProcessFoundation();
+  deps.logger.info("utility_process_foundation_ready", {
+    compute_role: utilityProcessFoundation.compute.getRole(),
+    data_role: utilityProcessFoundation.data.getRole(),
   });
   const projectSessionBinding = createProjectSessionBindingRegistry();
   app.on("web-contents-created", (_event, webContents) => {
