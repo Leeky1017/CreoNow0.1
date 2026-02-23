@@ -83,6 +83,8 @@ Context
     });
 
     it("[ED-SCROLL-02] Diff 内容滚动区域应由 ScrollArea viewport 承载", () => {
+      const onAcceptClick = vi.fn();
+      const onRejectClick = vi.fn();
       const onJumpClick = vi.fn();
       const longDiffBody = Array.from({ length: 140 }, (_, index) => {
         if (index % 3 === 0) return `+added ${index}`;
@@ -94,6 +96,12 @@ Context
       render(
         <div className="flex min-h-0 flex-col">
           <div data-testid="diff-action-bar" className="sticky top-0">
+            <button type="button" onClick={onAcceptClick}>
+              Accept current change
+            </button>
+            <button type="button" onClick={onRejectClick}>
+              Reject current change
+            </button>
             <button type="button" onClick={onJumpClick}>
               Jump to next change
             </button>
@@ -103,17 +111,29 @@ Context
       );
 
       const viewport = screen.getByTestId("ai-diff-scroll-viewport");
+      const acceptButton = screen.getByRole("button", {
+        name: "Accept current change",
+      });
+      const rejectButton = screen.getByRole("button", {
+        name: "Reject current change",
+      });
       const actionButton = screen.getByRole("button", {
         name: "Jump to next change",
       });
 
       expect(viewport).toBeInTheDocument();
       expect(viewport.className).toContain("overflow-y-auto");
+      expect(viewport).not.toContainElement(acceptButton);
+      expect(viewport).not.toContainElement(rejectButton);
       expect(viewport).not.toContainElement(actionButton);
 
       fireEvent.scroll(viewport, { target: { scrollTop: 720 } });
+      fireEvent.click(acceptButton);
+      fireEvent.click(rejectButton);
       fireEvent.click(actionButton);
 
+      expect(onAcceptClick).toHaveBeenCalledTimes(1);
+      expect(onRejectClick).toHaveBeenCalledTimes(1);
       expect(onJumpClick).toHaveBeenCalledTimes(1);
     });
   });

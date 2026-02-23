@@ -10,6 +10,8 @@ const {
   FocusVisibleBold,
   ReducedMotionDefault,
   DarkModeDefault,
+  FontScale125,
+  FontScale150,
   NoEditor,
   WithFormattedContent,
 } = composeStories(toolbarStories);
@@ -29,6 +31,8 @@ runStorySnapshotSuite({
     ["editor-toolbar-focus-visible", FocusVisibleBold],
     ["editor-toolbar-reduced-motion", ReducedMotionDefault],
     ["editor-toolbar-dark-mode", DarkModeDefault],
+    ["editor-toolbar-font-scale-125", FontScale125],
+    ["editor-toolbar-font-scale-150", FontScale150],
     ["editor-toolbar-no-editor", NoEditor],
     ["editor-write-button-visible", WriteButtonVisible],
     ["editor-write-button-disabled", WriteButtonDisabled],

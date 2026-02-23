@@ -15,6 +15,10 @@ const DESIGN_TOKEN_PATH = resolve(
 );
 const TYPOGRAPHY_HELPER_PATH = resolve(CURRENT_DIR, "typography.ts");
 const EDITOR_PANE_PATH = resolve(CURRENT_DIR, "EditorPane.tsx");
+const EDITOR_TOOLBAR_STORIES_PATH = resolve(
+  CURRENT_DIR,
+  "EditorToolbar.stories.tsx",
+);
 
 function read(path: string): string {
   return readFileSync(path, "utf8");
@@ -66,5 +70,14 @@ describe("editor typography contracts", () => {
     expect(editorPaneSource).toContain("leading-[var(--editor-line-height)]");
     expect(editorPaneSource).not.toContain("line-clamp");
     expect(editorPaneSource).not.toContain("truncate");
+  });
+
+  it("[ED-TYPO-02] toolbar stories should keep 125%/150% font-scale baselines", () => {
+    const storySource = read(EDITOR_TOOLBAR_STORIES_PATH);
+
+    expect(storySource).toContain("export const FontScale125");
+    expect(storySource).toContain('fontSize: "125%"');
+    expect(storySource).toContain("export const FontScale150");
+    expect(storySource).toContain('fontSize: "150%"');
   });
 });

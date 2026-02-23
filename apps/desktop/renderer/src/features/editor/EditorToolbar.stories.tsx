@@ -135,6 +135,40 @@ export const DarkModeDefault: Story = {
 };
 
 /**
+ * System font scale 125% baseline for ED-TYPO-02 visual guard.
+ */
+export const FontScale125: Story = {
+  render: () => {
+    const scaleStyle: CSSProperties = {
+      fontSize: "125%",
+      lineHeight: "1.8",
+    };
+    return (
+      <div style={scaleStyle}>
+        <ToolbarWithEditor />
+      </div>
+    );
+  },
+};
+
+/**
+ * System font scale 150% baseline for ED-TYPO-02 visual guard.
+ */
+export const FontScale150: Story = {
+  render: () => {
+    const scaleStyle: CSSProperties = {
+      fontSize: "150%",
+      lineHeight: "1.8",
+    };
+    return (
+      <div style={scaleStyle}>
+        <ToolbarWithEditor />
+      </div>
+    );
+  },
+};
+
+/**
  * Toolbar without an editor (null state).
  */
 export const NoEditor: Story = {

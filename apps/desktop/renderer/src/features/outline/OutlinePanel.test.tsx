@@ -47,29 +47,41 @@ describe("OutlinePanel", () => {
   });
 
   it("[ED-SCROLL-01] 大纲滚动区域应由 ScrollArea viewport 承载", () => {
+    const onNavigate = vi.fn();
     const longItems: OutlineItem[] = Array.from({ length: 180 }, (_, index) => ({
       id: `outline-${index}`,
       title: `Heading ${index}`,
       level: (["h1", "h2", "h3"] as const)[index % 3],
     }));
-    render(<OutlinePanel items={longItems} />);
+    render(<OutlinePanel items={longItems} onNavigate={onNavigate} />);
 
     const viewport = screen.getByTestId("outline-scroll-viewport");
     const searchInput = screen.getByTestId("outline-search-input");
     const expandAllButton = screen.getByRole("button", {
       name: "Expand all outline items",
     });
+    const collapseAllButton = screen.getByRole("button", {
+      name: "Collapse all outline items",
+    });
 
     expect(viewport).toBeInTheDocument();
     expect(viewport.className).toContain("overflow-y-auto");
     expect(viewport).not.toContainElement(searchInput);
     expect(viewport).not.toContainElement(expandAllButton);
+    expect(viewport).not.toContainElement(collapseAllButton);
 
     fireEvent.scroll(viewport, { target: { scrollTop: 640 } });
     fireEvent.change(searchInput, { target: { value: "Heading 120" } });
+    fireEvent.click(expandAllButton);
+    fireEvent.click(collapseAllButton);
+
+    const panel = screen.getByTestId("outline-panel");
+    panel.focus();
+    fireEvent.keyDown(panel, { key: "ArrowDown" });
 
     expect(searchInput).toHaveValue("Heading 120");
     expect(screen.getByText("Heading 120")).toBeInTheDocument();
+    expect(onNavigate).toHaveBeenCalledWith("outline-120");
   });
 
   // ==========================================================================
