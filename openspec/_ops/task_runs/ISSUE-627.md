@@ -5,7 +5,7 @@
 - Issue: #627
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/627
 - Branch: `task/627-scoped-lifecycle-and-abort`
-- PR:
+- PR: https://github.com/Leeky1017/CreoNow/pull/628
 
 ## Scope
 
@@ -20,13 +20,14 @@
 
 ## Status
 
-- CURRENT: Rulebook task 已通过 validate；RUN_LOG 已建立（PR URL 待 PR 创建后回填真实链接）；已补齐 change 跨模块 delta spec 覆盖（ipc/skill-system/context-engine）并修复 Dependency Sync Check 口径不一致。
+- CURRENT: Rulebook task 已通过 validate；已补齐 change 跨模块 delta spec 覆盖（ipc/skill-system/context-engine）并修复 Dependency Sync Check 口径不一致；PR `#628` 已创建并回填真实 PR URL（待开启 auto-merge 并等待 required checks 全绿收口）。
 
 ## Next Actions
 
 - [ ] 确认是否需要 rename change 目录 `issue-617-scoped-lifecycle-and-abort` -> `issue-627-scoped-lifecycle-and-abort`（仅在门禁/治理必须时执行）
-- [ ] 若 PR 触及 active change 内容或 rename，必须同步更新 `openspec/changes/EXECUTION_ORDER.md`（含更新时间）
-- [ ] PR 创建后回填 RUN_LOG 的 PR URL（禁止占位符）
+- [x] 若 PR 触及 active change 内容或 rename，必须同步更新 `openspec/changes/EXECUTION_ORDER.md`（含更新时间）
+- [x] PR 创建后回填 RUN_LOG 的 PR URL（禁止占位符）
+- [ ] 开启 auto-merge 并跟踪 required checks：`ci` / `openspec-log-guard` / `merge-serial`
 - [ ] 最终收口前补齐 Main Session Audit（并以“签字提交仅改 RUN_LOG”的方式满足 `openspec-log-guard`）
 
 ## Plan
@@ -36,7 +37,8 @@
 - [x] 补齐跨模块 delta specs（ipc/skill-system/context-engine）或显式 de-scope
 - [x] 修复 Dependency Sync Check 一致性（proposal/tasks/EXECUTION_ORDER 口径）
 - [x] 更新 proposal Owner 审阅为可执行状态说明（待 Owner 确认）
-- [ ] 建立 PR（待实施阶段）并完成 required checks 全绿收口
+- [x] 建立 PR（#628）并回填 RUN_LOG PR URL
+- [ ] 开启 auto-merge 并完成 required checks 全绿收口
 
 ## Runs
 
@@ -75,6 +77,17 @@
   - update governance consistency:
     - `openspec/changes/issue-617-scoped-lifecycle-and-abort/proposal.md` Dependency Sync Check：`PENDING` -> `PASS`；补齐 inputs；Owner 审阅增加明确待确认项；显式 de-scope BoundedMap
     - `openspec/changes/issue-617-scoped-lifecycle-and-abort/tasks.md` 1.4：无上游依赖也需记录 `PASS`（与 `openspec/changes/EXECUTION_ORDER.md` 口径一致）
+
+### 2026-02-23 Sync EXECUTION_ORDER + Push + Create PR (#628)
+
+- Command:
+  - `git commit -m "docs: sync EXECUTION_ORDER after doc patch (#627)" ...`
+  - `git push -u origin task/627-scoped-lifecycle-and-abort`
+  - `gh pr create --title "Docs: unblock scoped lifecycle + abort governance (#627)" ...`
+- Key output:
+  - commit: `daecb460`
+  - push: `* [new branch] task/627-scoped-lifecycle-and-abort -> task/627-scoped-lifecycle-and-abort`
+  - PR: https://github.com/Leeky1017/CreoNow/pull/628
 
 ## Findings: Spec gaps / contradictions
 
