@@ -34,11 +34,16 @@ assert.match(
   "perf discovery root is required",
 );
 
-// S3: unit discovery must include desktop unit + main source tests [ADDED]
+// S3: unit discovery must include desktop unit + lint + main source tests [ADDED]
 assert.match(
   runnerScript,
   /apps\/desktop\/tests\/unit/,
   "unit discovery root is required",
+);
+assert.match(
+  runnerScript,
+  /apps\/desktop\/tests\/lint/,
+  "lint discovery root is required",
 );
 assert.match(
   runnerScript,
@@ -83,7 +88,11 @@ const unitPlan = await runnerModule.buildUnitExecutionPlan();
 const unitTsxSentinel = "apps/desktop/tests/unit/test-runner-discovery.spec.ts";
 const mainTsxSentinel =
   "apps/desktop/main/src/services/context/__tests__/rulesFetcher.test.ts";
+const lintVitestSentinel =
+  "apps/desktop/tests/lint/renderer-viewport-ownership.test.ts";
 const unitVitestSentinel = "tests/unit/main/window-load-catch.test.ts";
+const lintVitestExecutionSentinel =
+  "tests/lint/renderer-viewport-ownership.test.ts";
 
 assert.equal(
   unitPlan.buckets.tsxFiles.some((file) => file.endsWith(unitTsxSentinel)),
@@ -101,6 +110,11 @@ assert.equal(
   ),
   true,
   "vitest bucket should include tests/unit main vitest suites",
+);
+assert.equal(
+  unitPlan.buckets.vitestFiles.some((file) => file.endsWith(lintVitestSentinel)),
+  true,
+  "vitest bucket should include tests/lint viewport ownership suite",
 );
 
 const tsxExecutionTargets = unitPlan.commands
@@ -131,4 +145,9 @@ assert.equal(
   (vitestExecution?.args ?? []).includes(unitVitestSentinel),
   true,
   "unit vitest suites should be part of execution plan",
+);
+assert.equal(
+  (vitestExecution?.args ?? []).includes(lintVitestExecutionSentinel),
+  true,
+  "lint vitest suites should be part of execution plan",
 );
