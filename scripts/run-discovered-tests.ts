@@ -107,6 +107,7 @@ function runCommand(command: string, args: string[], cwd: string): void {
 export async function discoverUnitBuckets(): Promise<DiscoveredBuckets> {
   const roots = [
     path.join(REPO_ROOT, "apps/desktop/tests/unit"),
+    path.join(REPO_ROOT, "apps/desktop/tests/lint"),
     path.join(REPO_ROOT, "apps/desktop/main/src"),
   ];
 

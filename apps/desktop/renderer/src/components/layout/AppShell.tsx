@@ -3,10 +3,15 @@ import { useTranslation } from "react-i18next";
 
 import { useLayoutStore, LAYOUT_DEFAULTS } from "../../stores/layoutStore";
 import { IconBar } from "./IconBar";
+import { LayoutShell } from "./LayoutShell";
+import { NavigationController } from "./NavigationController";
+import {
+  PanelOrchestrator,
+  usePanelVisibilityActions,
+} from "./PanelOrchestrator";
 import { RightPanel } from "./RightPanel";
 import { Sidebar } from "./Sidebar";
 import { StatusBar } from "./StatusBar";
-import { Resizer } from "./Resizer";
 import { CommandPalette } from "../../features/commandPalette/CommandPalette";
 import type {
   CommandItem,
@@ -44,14 +49,7 @@ import {
 } from "../../lib/diff/unifiedDiff";
 import { runFireAndForget } from "../../lib/fireAndForget";
 import { invoke } from "../../lib/ipcClient";
-import { useDebouncedCallback } from "../../hooks/useDebouncedCallback";
-import {
-  clamp,
-  computePanelMax,
-  computeSidebarMax,
-  extractZenModeContent,
-  getModKey,
-} from "./appShellLayoutHelpers";
+import { extractZenModeContent, getModKey } from "./appShellLayoutHelpers";
 import "../../i18n";
 
 let hasWarnedInvalidZenContent = false;
@@ -164,22 +162,15 @@ export function AppShell(): JSX.Element {
   const compareMode = useEditorStore((s) => s.compareMode);
   const compareVersionId = useEditorStore((s) => s.compareVersionId);
   const documentId = useEditorStore((s) => s.documentId);
-  const sidebarWidth = useLayoutStore((s) => s.sidebarWidth);
-  const panelWidth = useLayoutStore((s) => s.panelWidth);
   const sidebarCollapsed = useLayoutStore((s) => s.sidebarCollapsed);
   const panelCollapsed = useLayoutStore((s) => s.panelCollapsed);
   const zenMode = useLayoutStore((s) => s.zenMode);
   const activeLeftPanel = useLayoutStore((s) => s.activeLeftPanel);
+  const panelVisibility = usePanelVisibilityActions();
 
-  const setSidebarWidth = useLayoutStore((s) => s.setSidebarWidth);
-  const setPanelWidth = useLayoutStore((s) => s.setPanelWidth);
-  const setSidebarCollapsed = useLayoutStore((s) => s.setSidebarCollapsed);
-  const setPanelCollapsed = useLayoutStore((s) => s.setPanelCollapsed);
   const setZenMode = useLayoutStore((s) => s.setZenMode);
   const setActiveLeftPanel = useLayoutStore((s) => s.setActiveLeftPanel);
   const setActiveRightPanel = useLayoutStore((s) => s.setActiveRightPanel);
-  const resetSidebarWidth = useLayoutStore((s) => s.resetSidebarWidth);
-  const resetPanelWidth = useLayoutStore((s) => s.resetPanelWidth);
   const setCompareMode = useEditorStore((s) => s.setCompareMode);
 
   const aiProposal = useAiStore((s) => s.proposal);
@@ -325,9 +316,22 @@ export function AppShell(): JSX.Element {
   const openVersionHistoryPanel = React.useCallback(() => {
     setActiveLeftPanel("versionHistory");
     if (sidebarCollapsed) {
-      setSidebarCollapsed(false);
+      panelVisibility.expandSidebar();
     }
-  }, [setActiveLeftPanel, setSidebarCollapsed, sidebarCollapsed]);
+  }, [panelVisibility, setActiveLeftPanel, sidebarCollapsed]);
+
+  const toggleSidebarVisibility = React.useCallback(() => {
+    panelVisibility.toggleSidebar();
+  }, [panelVisibility]);
+
+  const toggleRightPanelVisibility = React.useCallback(() => {
+    if (panelCollapsed) {
+      setActiveRightPanel("ai");
+      panelVisibility.expandRightPanel();
+      return;
+    }
+    panelVisibility.collapseRightPanel();
+  }, [panelCollapsed, panelVisibility, setActiveRightPanel]);
 
   const openVersionHistoryForDocument = React.useCallback(
     (documentId: string) => {
@@ -377,128 +381,25 @@ export function AppShell(): JSX.Element {
     });
   }, [bootstrapEditor, bootstrapFiles, currentProjectId]);
 
-  const debouncedToggleSidebar = useDebouncedCallback(
-    React.useCallback(() => {
-      setSidebarCollapsed(!sidebarCollapsed);
-    }, [setSidebarCollapsed, sidebarCollapsed]),
-    300,
-  );
-
-  const debouncedTogglePanel = useDebouncedCallback(
-    React.useCallback(() => {
-      if (panelCollapsed) {
-        setActiveRightPanel("ai");
-      } else {
-        setPanelCollapsed(true);
-      }
-    }, [panelCollapsed, setActiveRightPanel, setPanelCollapsed]),
-    300,
-  );
-
-  React.useEffect(() => {
-    function onKeyDown(e: KeyboardEvent): void {
-      // F11: Toggle Zen Mode
-      if (e.key === "F11") {
-        if (e.repeat) {
-          return;
-        }
-        e.preventDefault();
-        setZenMode(!zenMode);
-        return;
-      }
-
-      // ESC in zen mode: Exit zen mode
-      if (zenMode && e.key === "Escape") {
-        e.preventDefault();
-        setZenMode(false);
-        return;
-      }
-
-      // Zen mode is pure writing immersion: block non-exit shortcuts to keep
-      // AI/panel entry points inaccessible until user exits.
-      if (zenMode) {
-        return;
-      }
-
-      const mod = e.metaKey || e.ctrlKey;
-      if (!mod) {
-        return;
-      }
-
-      // Cmd/Ctrl+P: Command Palette
-      if (e.key.toLowerCase() === "p") {
-        e.preventDefault();
-        setRecentCommandIds(readRecentCommandIds());
-        setCommandPaletteKey((k) => k + 1); // Force remount for fresh state
-        setCommandPaletteOpen(true);
-        return;
-      }
-
-      // Cmd/Ctrl+\: Toggle Sidebar (NOT Cmd+B per DESIGN_DECISIONS.md)
-      if (e.key === "\\") {
-        e.preventDefault();
-        debouncedToggleSidebar();
-        return;
-      }
-
-      // Cmd/Ctrl+L: Toggle Right Panel
-      if (e.key.toLowerCase() === "l") {
-        e.preventDefault();
-        debouncedTogglePanel();
-        return;
-      }
-
-      // Cmd/Ctrl+,: Open Settings
-      if (e.key === ",") {
-        e.preventDefault();
-        setSettingsDialogOpen(true);
-        return;
-      }
-
-      // Cmd/Ctrl+Shift+N: Create New Project
-      if (e.shiftKey && e.key.toLowerCase() === "n") {
-        e.preventDefault();
-        setCreateProjectDialogOpen(true);
-        return;
-      }
-
-      // Cmd/Ctrl+N: Create New Document (only if project is open)
-      if (e.key.toLowerCase() === "n" && !e.shiftKey && currentProjectId) {
-        e.preventDefault();
-        void createDocument({ projectId: currentProjectId });
-        return;
-      }
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [
-    createDocument,
-    currentProjectId,
-    debouncedTogglePanel,
-    debouncedToggleSidebar,
-    setZenMode,
-    zenMode,
-  ]);
-
-  const effectiveSidebarWidth = sidebarCollapsed ? 0 : sidebarWidth;
-  const effectivePanelWidth = panelCollapsed ? 0 : panelWidth;
+  const openCommandPalette = React.useCallback(() => {
+    setRecentCommandIds(readRecentCommandIds());
+    setCommandPaletteKey((k) => k + 1); // Force remount for fresh state
+    setCommandPaletteOpen(true);
+  }, []);
 
   // Callbacks for CommandPalette
   const layoutActions = React.useMemo<CommandPaletteLayoutActions>(
     () => ({
-      onToggleSidebar: () => setSidebarCollapsed(!sidebarCollapsed),
-      onToggleRightPanel: () => setPanelCollapsed(!panelCollapsed),
+      onToggleSidebar: toggleSidebarVisibility,
+      onToggleRightPanel: toggleRightPanelVisibility,
       onToggleZenMode: () => setZenMode(!zenMode),
       onOpenVersionHistory: openVersionHistoryPanel,
     }),
     [
       openVersionHistoryPanel,
-      panelCollapsed,
-      setPanelCollapsed,
-      setSidebarCollapsed,
       setZenMode,
-      sidebarCollapsed,
+      toggleRightPanelVisibility,
+      toggleSidebarVisibility,
       zenMode,
     ],
   );
@@ -574,7 +475,7 @@ export function AppShell(): JSX.Element {
         group: "command",
         category: "command",
         onSelect: () => {
-          setSidebarCollapsed(!sidebarCollapsed);
+          toggleSidebarVisibility();
           setCommandPaletteOpen(false);
         },
       },
@@ -585,7 +486,7 @@ export function AppShell(): JSX.Element {
         group: "command",
         category: "command",
         onSelect: () => {
-          setPanelCollapsed(!panelCollapsed);
+          toggleRightPanelVisibility();
           setCommandPaletteOpen(false);
         },
       },
@@ -700,13 +601,11 @@ export function AppShell(): JSX.Element {
     modKey,
     openEditorDocument,
     openVersionHistoryPanel,
-    panelCollapsed,
     recentCommandIds,
     setCurrentDocument,
-    setPanelCollapsed,
-    setSidebarCollapsed,
     setZenMode,
-    sidebarCollapsed,
+    toggleRightPanelVisibility,
+    toggleSidebarVisibility,
     withRecentTracking,
     zenMode,
   ]);
@@ -805,122 +704,116 @@ export function AppShell(): JSX.Element {
   }
 
   return (
-    <div
-      data-testid="app-shell"
-      className="flex h-full bg-[var(--color-bg-base)]"
-    >
-      <IconBar
+    <>
+      <NavigationController
+        zenMode={zenMode}
+        canCreateDocument={Boolean(currentProjectId)}
+        onToggleSidebar={toggleSidebarVisibility}
+        onToggleRightPanel={toggleRightPanelVisibility}
+        onToggleZenMode={() => setZenMode(!zenMode)}
+        onExitZenMode={() => setZenMode(false)}
+        onOpenCommandPalette={openCommandPalette}
         onOpenSettings={() => setSettingsDialogOpen(true)}
-        settingsOpen={settingsDialogOpen}
+        onOpenCreateProject={() => setCreateProjectDialogOpen(true)}
+        onCreateDocument={() => {
+          if (!currentProjectId) {
+            return;
+          }
+          void createDocument({ projectId: currentProjectId });
+        }}
       />
 
-      <div className="flex flex-1 flex-col">
-        <div className="flex flex-1 min-w-0">
-          <Sidebar
-            width={effectiveSidebarWidth}
-            collapsed={sidebarCollapsed}
-            projectId={currentProjectId}
-            activePanel={activeLeftPanel}
-            currentProjectId={currentProjectId}
-            projects={projectItems}
-            onSwitchProject={handleSwitchProject}
-            onCreateProject={() => setCreateProjectDialogOpen(true)}
-            onOpenVersionHistoryDocument={openVersionHistoryForDocument}
+      <PanelOrchestrator>
+        {(layout) => (
+          <LayoutShell
+            testId="app-shell"
+            activityBar={
+              <IconBar
+                onOpenSettings={() => setSettingsDialogOpen(true)}
+                settingsOpen={settingsDialogOpen}
+              />
+            }
+            left={
+              <Sidebar
+                width={layout.effectiveSidebarWidth}
+                collapsed={layout.sidebarCollapsed}
+                projectId={currentProjectId}
+                activePanel={activeLeftPanel}
+                currentProjectId={currentProjectId}
+                projects={projectItems}
+                onSwitchProject={handleSwitchProject}
+                onCreateProject={() => setCreateProjectDialogOpen(true)}
+                onOpenVersionHistoryDocument={openVersionHistoryForDocument}
+              />
+            }
+            leftResizer={layout.sidebarResizer}
+            main={
+              <main
+                className={`flex flex-1 bg-[var(--color-bg-base)] text-[var(--color-fg-muted)] text-[13px] ${
+                  currentProject
+                    ? "items-stretch justify-stretch"
+                    : projectItems.length > 0
+                      ? "items-stretch justify-stretch"
+                      : "items-center justify-center"
+                }`}
+                style={{ minWidth: LAYOUT_DEFAULTS.mainMinWidth }}
+              >
+                {renderMainContent()}
+              </main>
+            }
+            rightResizer={layout.panelResizer}
+            right={
+              <RightPanel
+                width={layout.effectivePanelWidth}
+                collapsed={layout.panelCollapsed}
+                onOpenSettings={() => setSettingsDialogOpen(true)}
+                onOpenVersionHistory={openVersionHistoryPanel}
+                onCollapse={layout.panelVisibility.collapseRightPanel}
+              />
+            }
+            bottomBar={<StatusBar />}
+            overlays={
+              <>
+                <CommandPalette
+                  key={commandPaletteKey}
+                  open={commandPaletteOpen}
+                  onOpenChange={setCommandPaletteOpen}
+                  commands={commandPaletteCommands}
+                  layoutActions={layoutActions}
+                  dialogActions={dialogActionCallbacks}
+                  documentActions={documentActionCallbacks}
+                />
+
+                {/* Dialogs */}
+                <SettingsDialog
+                  open={settingsDialogOpen}
+                  onOpenChange={setSettingsDialogOpen}
+                />
+
+                <ExportDialog
+                  open={exportDialogOpen}
+                  onOpenChange={setExportDialogOpen}
+                  projectId={currentProjectId}
+                  documentId={documentId}
+                  documentTitle={t("workbench.export.currentDocument")}
+                />
+
+                <CreateProjectDialog
+                  open={createProjectDialogOpen}
+                  onOpenChange={setCreateProjectDialogOpen}
+                />
+
+                {/* Zen Mode Overlay */}
+                <ZenModeOverlay
+                  open={zenMode}
+                  onExit={() => setZenMode(false)}
+                />
+                {!compareMode ? <SystemDialog {...dialogProps} /> : null}
+              </>
+            }
           />
-
-          {!sidebarCollapsed ? (
-            <Resizer
-              testId="resize-handle-sidebar"
-              onDrag={(deltaX, startWidth) => {
-                const nextRaw = startWidth + deltaX;
-                const max = computeSidebarMax(
-                  window.innerWidth,
-                  panelWidth,
-                  panelCollapsed,
-                );
-                return clamp(nextRaw, LAYOUT_DEFAULTS.sidebar.min, max);
-              }}
-              onCommit={(nextWidth) => setSidebarWidth(nextWidth)}
-              onDoubleClick={() => resetSidebarWidth()}
-              getStartWidth={() => sidebarWidth}
-            />
-          ) : null}
-
-          <main
-            className={`flex flex-1 bg-[var(--color-bg-base)] text-[var(--color-fg-muted)] text-[13px] ${
-              currentProject
-                ? "items-stretch justify-stretch"
-                : projectItems.length > 0
-                  ? "items-stretch justify-stretch"
-                  : "items-center justify-center"
-            }`}
-            style={{ minWidth: LAYOUT_DEFAULTS.mainMinWidth }}
-          >
-            {renderMainContent()}
-          </main>
-
-          {!panelCollapsed ? (
-            <Resizer
-              testId="resize-handle-panel"
-              onDrag={(deltaX, startWidth) => {
-                const nextRaw = startWidth - deltaX;
-                const max = computePanelMax(
-                  window.innerWidth,
-                  sidebarWidth,
-                  sidebarCollapsed,
-                );
-                return clamp(nextRaw, LAYOUT_DEFAULTS.panel.min, max);
-              }}
-              onCommit={(nextWidth) => setPanelWidth(nextWidth)}
-              onDoubleClick={() => resetPanelWidth()}
-              getStartWidth={() => panelWidth}
-            />
-          ) : null}
-
-          <RightPanel
-            width={effectivePanelWidth}
-            collapsed={panelCollapsed}
-            onOpenSettings={() => setSettingsDialogOpen(true)}
-            onOpenVersionHistory={openVersionHistoryPanel}
-            onCollapse={() => setPanelCollapsed(true)}
-          />
-        </div>
-
-        <StatusBar />
-      </div>
-
-      <CommandPalette
-        key={commandPaletteKey}
-        open={commandPaletteOpen}
-        onOpenChange={setCommandPaletteOpen}
-        commands={commandPaletteCommands}
-        layoutActions={layoutActions}
-        dialogActions={dialogActionCallbacks}
-        documentActions={documentActionCallbacks}
-      />
-
-      {/* Dialogs */}
-      <SettingsDialog
-        open={settingsDialogOpen}
-        onOpenChange={setSettingsDialogOpen}
-      />
-
-      <ExportDialog
-        open={exportDialogOpen}
-        onOpenChange={setExportDialogOpen}
-        projectId={currentProjectId}
-        documentId={documentId}
-        documentTitle={t("workbench.export.currentDocument")}
-      />
-
-      <CreateProjectDialog
-        open={createProjectDialogOpen}
-        onOpenChange={setCreateProjectDialogOpen}
-      />
-
-      {/* Zen Mode Overlay */}
-      <ZenModeOverlay open={zenMode} onExit={() => setZenMode(false)} />
-      {!compareMode ? <SystemDialog {...dialogProps} /> : null}
-    </div>
+        )}
+      </PanelOrchestrator>
+    </>
   );
 }

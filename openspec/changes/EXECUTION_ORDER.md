@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-02-23 19:55
+更新时间：2026-02-23 21:08
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -9,7 +9,7 @@
 - 当前活跃 change 数量为 **9**。
 - 执行模式：**多 Lane 混合模式（Lane 内实现落地串行、Lane 间并行推进）**。
 - 规则：
-  - ISSUE-606 Workbench lane：Phase 1 已归档后，后续实现阶段按依赖执行：Phase 2 -> Phase 3 -> Phase 4。
+  - ISSUE-606 Workbench lane：Phase 1、Phase 2 已归档，后续实现阶段按依赖执行：Phase 3 -> Phase 4。
   - ISSUE-617 Backend lane：基础设施与治理类 change 可并行起草；实现落地时遵循“依赖优先”（UtilityProcess/ScopedLifecycle 先于 KG/RAG/Skill）。
   - 任一 change 开始 Red 前，必须完成该 change 的依赖同步检查（Dependency Sync Check）。
 
@@ -17,20 +17,15 @@
 
 ### ISSUE-606 Workbench Lane
 
-1. `issue-606-phase-2-shell-decomposition`
-
-- Phase 2 拆弹：AppShell 三拆（LayoutShell/NavigationController/PanelOrchestrator）+ IPC 入口收敛。
-- 依赖：`issue-606-phase-1-stop-bleeding`。
-
-2. `issue-606-phase-3-quality-uplift`
+1. `issue-606-phase-3-quality-uplift`
 
 - Phase 3 提质：ScrollArea 统一、motion token 契约、Typography 与 a11y/test 策略。
-- 依赖：`issue-606-phase-1-stop-bleeding`、`issue-606-phase-2-shell-decomposition`。
+- 依赖：`issue-606-phase-1-stop-bleeding`、`issue-606-phase-2-shell-decomposition`（已归档）。
 
-3. `issue-606-phase-4-polish-and-delivery`
+2. `issue-606-phase-4-polish-and-delivery`
 
 - Phase 4 精磨：视觉审计闭环、参考对标、交付物治理、CI/CD 与 i18n 渐进策略。
-- 依赖：`issue-606-phase-1-stop-bleeding`、`issue-606-phase-2-shell-decomposition`、`issue-606-phase-3-quality-uplift`。
+- 依赖：`issue-606-phase-1-stop-bleeding`、`issue-606-phase-2-shell-decomposition`（已归档）、`issue-606-phase-3-quality-uplift`。
 
 ### ISSUE-617 Backend Lane
 
@@ -67,8 +62,8 @@
 ## 依赖说明
 
 - `issue-606-phase-1-stop-bleeding`：已归档至 `openspec/changes/archive/issue-606-phase-1-stop-bleeding`，作为后续阶段基线。
-- `issue-606-phase-2-shell-decomposition`：依赖 Phase 1（已归档）输出的视觉/组件治理基线。
-- `issue-606-phase-3-quality-uplift`：依赖 Phase 1+2 输出的壳层边界与样式治理基线。
+- `issue-606-phase-2-shell-decomposition`：已归档至 `openspec/changes/archive/issue-606-phase-2-shell-decomposition`，提供壳层边界与 IPC 收敛基线。
+- `issue-606-phase-3-quality-uplift`：依赖 Phase 1+2 的稳定壳层/样式治理基线。
 - `issue-606-phase-4-polish-and-delivery`：依赖 Phase 1+2+3 的稳定实现基线与验证资产。
 - `issue-617-utilityprocess-foundation`：已归档至 `openspec/changes/archive/issue-617-utilityprocess-foundation`，作为 backend lane 的基础设施基线（Compute/Data）。
 - `issue-617-scoped-lifecycle-and-abort`：backend lane 的资源回收与取消语义前置依赖。
@@ -82,7 +77,7 @@
 
 - 文档波次（已完成）：Phase 1~4 并行重组。
 - 实施波次（后续）：
-  - Workbench lane：Wave B Phase 2 -> Wave C Phase 3 -> Wave D Phase 4
+  - Workbench lane：Wave C Phase 3 -> Wave D Phase 4
   - Backend lane：
     - Wave 1（可并行）：backend test gates 基线起草
     - Wave 2（优先落地）：utilityprocess foundation + scoped lifecycle/abort
@@ -92,8 +87,9 @@
 ## 进度快照
 
 - ISSUE-604 当前状态：已归档至 `openspec/changes/archive/issue-604-windows-frameless-titlebar`，并从活跃执行顺序移除。
-- ISSUE-606 当前状态：Phase 1 已完成并归档；活跃阶段剩余 Phase 2/3/4。
+- ISSUE-606 当前状态：Phase 1、Phase 2 已完成并归档；活跃阶段剩余 Phase 3/4。
 - ISSUE-613 当前状态：PR `#614` 已合并，Issue 已关闭，Rulebook task 已归档。
+- ISSUE-616 当前状态：Phase 2 closeout PR `#625` 在审，合并后执行顺序以本文件为准。
 - ISSUE-608 当前状态：已修复 ISSUE-606 文档中的治理收口漂移、i18n 门禁语义冲突与 Scenario 映射缺口。
 - ISSUE-617 当前状态：`issue-617-utilityprocess-foundation` 已完成并归档至 `openspec/changes/archive/issue-617-utilityprocess-foundation`；backend lane 其余 6 个 change 持续推进中，`issue-617-global-hardening-baseline` 亦已归档（Issue `#620`）。
 
