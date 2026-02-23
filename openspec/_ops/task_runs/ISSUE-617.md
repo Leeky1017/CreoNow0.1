@@ -183,6 +183,15 @@
   - branch pushed: `origin/task/617-utilityprocess-foundation`
   - PR created: `https://github.com/Leeky1017/CreoNow/pull/624`
 
+### 2026-02-23 Preflight retry and formatting recovery
+
+- Command:
+  - `python3 scripts/agent_pr_preflight.py`
+  - `pnpm exec prettier --write apps/desktop/main/src/services/utilityprocess/backgroundTaskRunner.ts apps/desktop/main/src/services/utilityprocess/dbReadWriteSeparation.ts`
+- Key output:
+  - preflight reached workspace stage and failed on Prettier check for two utilityprocess files
+  - formatting fixed; prepared a follow-up signing commit refresh
+
 ## Dependency Sync Check (issue-617-utilityprocess-foundation)
 
 - Inputs reviewed:
@@ -220,7 +229,7 @@ Current signoff below is for utilityprocess delivery PR `#624`.
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 79d910db26622e801823b6cee13cc67d8ebdc4b1
+- Reviewed-HEAD-SHA: bd5ddecb73e64e40211111795bdb85eb1e04582b
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
