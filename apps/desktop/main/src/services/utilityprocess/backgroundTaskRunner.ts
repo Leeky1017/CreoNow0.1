@@ -58,7 +58,9 @@ export function createBackgroundTaskRunner(): BackgroundTaskRunner {
   const inflight = new Map<number, InflightCrashResolver>();
 
   return {
-    async run<T>(args: BackgroundTaskRunArgs<T>): Promise<BackgroundTaskResult<T>> {
+    async run<T>(
+      args: BackgroundTaskRunArgs<T>,
+    ): Promise<BackgroundTaskResult<T>> {
       sequence += 1;
       const taskId = sequence;
 

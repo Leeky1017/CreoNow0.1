@@ -50,7 +50,8 @@ export function openUtilityProcessDb(args: {
   role: DbExecutionRole;
   fileMustExist?: boolean;
 }): Database.Database {
-  const BetterSqlite3 = require("better-sqlite3") as typeof import("better-sqlite3");
+  const BetterSqlite3 =
+    require("better-sqlite3") as typeof import("better-sqlite3");
   const readonly = READ_ONLY_ROLES.has(args.role);
   const db = new BetterSqlite3(args.dbPath, {
     readonly,
