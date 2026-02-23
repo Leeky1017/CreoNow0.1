@@ -4,6 +4,7 @@
 
 - Issue: #617
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/617
+- Branch: `task/617-utilityprocess-foundation`
 - Branch (decomposition closeout): `task/617-cn-backend-notion-changes`
 - Branch (current delivery): `task/617-utilityprocess-foundation`
 - PR: https://github.com/Leeky1017/CreoNow/pull/624
@@ -192,6 +193,23 @@
   - preflight reached workspace stage and failed on Prettier check for two utilityprocess files
   - formatting fixed; prepared a follow-up signing commit refresh
 
+### 2026-02-23 P2 takeover remediation (team-led handoff + local lead fix)
+
+- Command:
+  - `pnpm exec eslint apps/desktop/main/src/services/utilityprocess/dbReadWriteSeparation.ts`
+  - `node --import tsx apps/desktop/main/src/services/utilityprocess/__tests__/background-task-runner.contract.test.ts`
+  - `node --import tsx apps/desktop/main/src/services/utilityprocess/__tests__/utility-process-supervisor.contract.test.ts`
+  - `node --import tsx apps/desktop/main/src/services/utilityprocess/__tests__/db-readwrite-separation.contract.test.ts`
+  - `bash -lc 'RUN_LOG=openspec/_ops/task_runs/ISSUE-617.md; grep -q "^- Issue:" "$RUN_LOG" && grep -q "^- Branch:" "$RUN_LOG" && grep -q "^- PR:" "$RUN_LOG" && grep -q "^## Plan" "$RUN_LOG" && grep -q "^## Runs" "$RUN_LOG" && python3 scripts/validate_main_session_audit_ci.py "$RUN_LOG"'`
+  - `python3 scripts/agent_pr_preflight.py`
+  - `pnpm -C apps/desktop rebuild:native`
+  - `pnpm test:unit`
+- Key output:
+  - fixed lint blocker by replacing `typeof import("better-sqlite3")` type assertion with constructor alias in `dbReadWriteSeparation.ts`
+  - utilityprocess contract tests (S1/S2/S3) all exit `0`
+  - RUN_LOG required fields check + `validate_main_session_audit_ci.py` pass after adding canonical `- Branch:` field
+  - local full preflight/unit remains environment-blocked by `better-sqlite3` ABI mismatch (`NODE_MODULE_VERSION 143` vs Node `127`) in this runtime; remote CI remains authoritative for merge gate
+
 ## Dependency Sync Check (issue-617-utilityprocess-foundation)
 
 - Inputs reviewed:
@@ -229,7 +247,7 @@ Current signoff below is for utilityprocess delivery PR `#624`.
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: dcab67d481cee174ed6aed66d4837e08fa6a58e3
+- Reviewed-HEAD-SHA: a2dd646a31c2eb3b70d5a524e8c6ff31a72c1729
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
