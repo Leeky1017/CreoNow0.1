@@ -1,11 +1,13 @@
 # ISSUE-626
 
+更新时间：2026-02-23 23:28
+
 ## Links
 
 - Issue: #626
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/626
 - Branch: `task/626-phase-3-quality-uplift`
-- PR: 未创建（创建后回填真实 pull URL，再进入 preflight/合并流程）
+- PR: `BLOCKED_BY_NETWORK`（当前运行环境无法连接 `api.github.com`，尚未获得可回填的真实 PR URL）
 
 ## Scope
 
@@ -51,6 +53,14 @@
 - Notes:
   - 依赖同步结论与 change proposal 中记录一致。
   - 若上游 spec/token baseline 在实现中发生变化，先更新 proposal/spec/tasks（必要时同步 `EXECUTION_ORDER.md`）再继续 Red/Green。
+
+## Delivery Gate Status
+
+- Issue freshness (`#626`): `BLOCKED_BY_NETWORK`（`gh issue view` 三次重试均失败）
+- PR URL: `BLOCKED_BY_NETWORK`（`gh pr view` 失败，暂无 URL）
+- Required checks (`ci` / `openspec-log-guard` / `merge-serial`): `NOT_STARTED`（需 PR 创建后触发）
+- Auto-merge: `NOT_ENABLED`（需 PR 创建后设置）
+- Main sync (`HEAD == origin/main` after merge): `NOT_REACHED`
 
 ## Runs
 
@@ -109,7 +119,6 @@
   - `✅ Task issue-626-phase-3-quality-uplift is valid`
   - warning: `No spec files found (specs/*/spec.md)`
   - `OK: validated timestamps for 2 governed markdown file(s)`
-  - 已人工复核 ISSUE-626 PR 字段，不使用占位词
 
 ### 2026-02-23 Editor Phase-3 Red Evidence (ED-TYPO/TEST)
 
@@ -137,12 +146,125 @@
 - 变更点：
   - 为键盘路径测试补齐场景标识：`[ED-A11Y-01]`，确保 Scenario→测试映射可追踪。
 
-### TEMPLATE: <YYYY-MM-DD Run Title>
+### 2026-02-23 Rulebook + Timestamp Re-validate (gov-new)
 
 - Command:
-  - `<command>`
-- Exit code: `<code>`
+  - `rulebook task validate issue-626-phase-3-quality-uplift`
+  - `python3 scripts/check_doc_timestamps.py --files rulebook/tasks/issue-626-phase-3-quality-uplift/proposal.md rulebook/tasks/issue-626-phase-3-quality-uplift/tasks.md openspec/_ops/task_runs/ISSUE-626.md`
+- Exit code:
+  - `validate`: `0`
+  - `timestamp gate`: `0`
 - Key output:
-  - `<key output>`
-- Note:
-  - `<why this run matters>`
+  - `✅ Task issue-626-phase-3-quality-uplift is valid`
+  - warning: `No spec files found (specs/*/spec.md)`
+  - `OK: validated timestamps for 2 governed markdown file(s)`
+
+### 2026-02-23 GitHub Issue Freshness Retry (network blocked)
+
+- Command:
+  - `for i in 1 2 3; do gh issue view 626 --json number,state,url; sleep 10; done`
+- Exit code: `0`（loop 脚本执行完成；3 次 `gh` 子命令均失败）
+- Key output:
+  - `[attempt 1/2/3] error connecting to api.github.com`
+  - `check your internet connection or https://githubstatus.com`
+
+### 2026-02-23 PR/Gate Probe (network blocked)
+
+- Command:
+  - `gh pr view --json number,url,state,mergeStateStatus,autoMergeRequest,headRefName,baseRefName`
+- Exit code: `1`
+- Key output:
+  - `error connecting to api.github.com`
+  - 无法获取 PR URL、auto-merge 状态、required checks 汇总
+
+### 2026-02-23 Branch/Main Snapshot (pre-merge)
+
+- Command:
+  - `git rev-parse --short HEAD`
+  - `git rev-parse --short origin/main`
+  - `git status --short --branch`
+- Exit code: `0`
+- Key output:
+  - `HEAD=9ffe9dc2`, `origin/main=5272d507`
+  - 分支状态：`task/626-phase-3-quality-uplift...origin/main [ahead 4]`
+  - 结论：当前尚未完成 PR 合并，`HEAD != origin/main`
+
+### 2026-02-23 Snapshot Harness Refactor Verification
+
+- Command:
+  - `pnpm -C apps/desktop exec vitest run renderer/src/features/editor/editor.stories.snapshot.test.ts renderer/src/features/kg/kg-views.stories.snapshot.test.ts`
+- Exit code: `0`
+- Key output:
+  - `Test Files 2 passed (2)`
+  - `Tests 2 passed (2)`
+  - `ED-TEST-01` 快照入口通过共享 harness 执行并保持快照稳定。
+
+### 2026-02-23 Snapshot Harness Lint Verification
+
+- Command:
+  - `pnpm -C apps/desktop exec eslint renderer/src/features/editor/editor.stories.snapshot.test.ts renderer/src/features/kg/kg-views.stories.snapshot.test.ts renderer/src/test-utils/storySnapshotHarness.tsx`
+- Exit code: `0`
+- Key output:
+  - 无 lint error/warning 输出。
+
+### 2026-02-23 Rulebook + Timestamp Re-validate (post-refactor)
+
+- Command:
+  - `rulebook task validate issue-626-phase-3-quality-uplift`
+  - `python3 scripts/check_doc_timestamps.py --files rulebook/tasks/issue-626-phase-3-quality-uplift/proposal.md rulebook/tasks/issue-626-phase-3-quality-uplift/tasks.md openspec/_ops/task_runs/ISSUE-626.md`
+- Exit code:
+  - `validate`: `0`
+  - `timestamp gate`: `0`
+- Key output:
+  - `✅ Task issue-626-phase-3-quality-uplift is valid`
+  - warning: `No spec files found (specs/*/spec.md)`
+  - `OK: validated timestamps for 2 governed markdown file(s)`
+
+### 2026-02-23 Branch/Main Snapshot (post-refactor, pre-commit)
+
+- Command:
+  - `git rev-parse --short HEAD`
+  - `git rev-parse --short origin/main`
+  - `git status --short --branch`
+- Exit code: `0`
+- Key output:
+  - `HEAD=c3557b2e`, `origin/main=5272d507`
+  - 分支状态：`task/626-phase-3-quality-uplift...origin/main [ahead 5]`
+  - 结论：当前仍为 pre-merge 阶段，后续需主会话完成 PR 与门禁收口。
+
+### 2026-02-23 Finalizer Focused Verification (v3)
+
+- Command:
+  - `pnpm -C apps/desktop exec vitest run renderer/src/features/editor/editor.stories.snapshot.test.ts renderer/src/features/kg/kg-views.stories.snapshot.test.ts`
+  - `pnpm -C apps/desktop exec eslint renderer/src/features/editor/editor.stories.snapshot.test.ts renderer/src/features/kg/kg-views.stories.snapshot.test.ts renderer/src/test-utils/storySnapshotHarness.tsx`
+  - `rulebook task validate issue-626-phase-3-quality-uplift`
+  - `python3 scripts/check_doc_timestamps.py --files rulebook/tasks/issue-626-phase-3-quality-uplift/proposal.md rulebook/tasks/issue-626-phase-3-quality-uplift/tasks.md openspec/_ops/task_runs/ISSUE-626.md`
+- Exit code:
+  - `vitest`: `0`
+  - `eslint`: `0`
+  - `rulebook validate`: `0`
+  - `timestamp gate`: `0`
+- Key output:
+  - `Test Files 2 passed (2)` / `Tests 2 passed (2)`
+  - 快照套件改为共享 `storySnapshotHarness` 后仍保持绿灯。
+  - `✅ Task issue-626-phase-3-quality-uplift is valid`
+  - `OK: validated timestamps for 2 governed markdown file(s)`
+
+### 2026-02-23 Snapshot Harness Wire-up (v3 touched files)
+
+- `apps/desktop/renderer/src/features/editor/editor.stories.snapshot.test.ts`
+- `apps/desktop/renderer/src/features/kg/kg-views.stories.snapshot.test.ts`
+- `apps/desktop/renderer/src/test-utils/storySnapshotHarness.tsx`
+- 变更点：
+  - 抽取共享 Story snapshot 执行器，保留现有 snapshot 名称与场景覆盖。
+  - Editor 保持 `ED-TEST-01` 场景标识；KG 套件沿用现有断言集。
+
+## Main Session Audit
+
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: `NOT_SIGNED`
+- Spec-Compliance: `FAIL`（PR/门禁状态尚未可验证）
+- Code-Quality: `PASS`（Rulebook validate + 文档时间戳校验通过）
+- Fresh-Verification: `FAIL`（GitHub API 不可达，无法完成 fresh gate verification）
+- Blocking-Issues: `1`
+- Decision: `REJECT`
