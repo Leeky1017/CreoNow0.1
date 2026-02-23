@@ -5,6 +5,7 @@ export interface ScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
   viewportClassName?: string;
   viewportTestId?: string;
   viewportRef?: React.Ref<HTMLDivElement>;
+  "data-testid"?: string;
 }
 
 function joinClasses(...parts: Array<string | undefined>): string {
@@ -24,11 +25,11 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
       viewportClassName,
       viewportTestId,
       viewportRef,
+      "data-testid": rootTestId,
       ...rest
     },
     ref,
   ) {
-    const rootTestId = rest["data-testid"];
     const computedViewportTestId =
       viewportTestId ??
       (typeof rootTestId === "string" ? `${rootTestId}-viewport` : undefined);
@@ -37,6 +38,7 @@ export const ScrollArea = React.forwardRef<HTMLDivElement, ScrollAreaProps>(
       <div
         {...rest}
         ref={ref}
+        data-testid={rootTestId}
         data-slot="scroll-area"
         className={joinClasses("relative min-h-0 min-w-0", className)}
       >

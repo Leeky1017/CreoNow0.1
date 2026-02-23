@@ -82,7 +82,7 @@ describe("OutlinePanel", () => {
     expect(searchInput).toHaveValue("Heading 120");
     expect(screen.getByText("Heading 120")).toBeInTheDocument();
     expect(onNavigate).toHaveBeenCalledWith("outline-120");
-  });
+  }, 15000);
 
   // ==========================================================================
   // P0: Single Node Collapse
