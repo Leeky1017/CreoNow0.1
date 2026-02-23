@@ -278,6 +278,24 @@
   - 格式化后 `[discovery-gate] PASS`
   - 最终 preflight 唯一剩余项：`[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch`
 
+### 2026-02-23 Auto-merge Rebase Drift Recovery
+
+- Command:
+  - `gh pr view 625 --json mergeStateStatus,mergeable,statusCheckRollup`
+  - `git fetch origin --prune`
+  - `git merge --no-ff origin/main`
+  - `git add openspec/changes/EXECUTION_ORDER.md`
+  - `git commit -m "merge: resync issue-616 branch with latest main (#616)" -m "Co-authored-by: Codex <noreply@openai.com>"`
+- Exit code:
+  - `gh pr view`: `0`
+  - `git merge`: `1`（冲突）
+  - `git commit`: `0`
+- Key output:
+  - checks 全绿后 PR 再次变为 `mergeable=CONFLICTING`、`mergeStateStatus=DIRTY`
+  - 冲突仍限定在 `openspec/changes/EXECUTION_ORDER.md`
+  - resync 合并提交：`d67e6b3a3d7bcaaf2b39fd0c365d46fb113e83f0`
+  - 冲突处置：保留主干对 `issue-617-utilityprocess-foundation` 归档进展并保留 ISSUE-616 closeout 进度快照
+
 ## Dependency Sync Check
 
 - Inputs reviewed:
@@ -294,7 +312,7 @@
 
 - Draft-Status: SIGNED-BY-MAIN-SESSION
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: b8fc5ed23056e23bc5a2055ec952fe5fefefeb18
+- Reviewed-HEAD-SHA: d67e6b3a3d7bcaaf2b39fd0c365d46fb113e83f0
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
