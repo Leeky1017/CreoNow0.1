@@ -1,13 +1,13 @@
 # ISSUE-630
 
-更新时间：2026-02-24 02:36
+更新时间：2026-02-24 03:10
 
 ## Links
 
 - Issue: #630
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/630
 - Branch: `task/630-scoped-lifecycle-s1-s3-s4`
-- PR: (not created yet)
+- PR: https://github.com/Leeky1017/CreoNow/pull/631
 
 ## Scope
 
@@ -22,15 +22,16 @@
 
 ## Status
 
-- CURRENT: 正在搭建治理脚手架（RUN_LOG + Rulebook task），等待合入实现分支并补齐验证证据。
+- CURRENT: 已完成治理脚手架（RUN_LOG + Rulebook task）；已集成 S3 slot-recovery（commit `98b03799`）；PR `#631` 已创建，等待集成 S1/S4 并补齐验证与最终签字提交。
 
 ## Plan
 
 - [x] 创建 RUN_LOG（本文件）
 - [x] 创建并 validate Rulebook task：`issue-630-scoped-lifecycle-s1-s3-s4`
-- [ ] 集成实现分支（S1/S3/S4）
+- [ ] 集成实现分支（S1/S3/S4；S3 已完成）
 - [ ] 本地跑关键验证（按门禁对应脚本）
-- [ ] 创建 PR（title: `Implement scoped lifecycle S1/S3/S4 (#630)`；body 含 `Closes #630`）并开启 auto-merge
+- [x] 创建 PR（title: `Implement scoped lifecycle S1/S3/S4 (#630)`；body 含 `Closes #630`）
+- [ ] 开启 auto-merge 并跟踪 required checks 全绿
 - [ ] 最终签字提交：仅修改 RUN_LOG，补齐 `## Main Session Audit` 且 `Reviewed-HEAD-SHA == HEAD^`
 
 ## Runs
@@ -49,3 +50,20 @@
   - `✅ Task issue-630-scoped-lifecycle-s1-s3-s4 created successfully`
   - `✅ Task issue-630-scoped-lifecycle-s1-s3-s4 is valid`
   - `OK: validated timestamps for 2 governed markdown file(s)`
+
+### 2026-02-24 Integrate S3 slot recovery + open PR (#631)
+
+- Command:
+  - `git fetch origin --prune`
+  - `git show --stat 8a10a7cf --oneline`
+  - `git cherry-pick 8a10a7cf`
+  - `node --import tsx apps/desktop/main/src/services/skills/__tests__/skill-scheduler.slot-recovery.contract.test.ts`
+  - `git push -u origin task/630-scoped-lifecycle-s1-s3-s4`
+  - `gh pr create --title "Implement scoped lifecycle S1/S3/S4 (#630)" --body-file /tmp/pr-630-body.md --base main --head task/630-scoped-lifecycle-s1-s3-s4`
+  - `gh pr view 631 --json mergeStateStatus,mergeable,url`
+- Exit code: `0`
+- Key output:
+  - cherry-pick commit: `98b03799`
+  - local contract test: exit `0`
+  - PR: https://github.com/Leeky1017/CreoNow/pull/631
+  - mergeable: `MERGEABLE`；mergeStateStatus: `BLOCKED`
