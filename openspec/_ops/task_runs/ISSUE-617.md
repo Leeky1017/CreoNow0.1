@@ -154,6 +154,7 @@
 - Command:
   - `gh issue view 617 --json number,state,title,url,closedAt` (retry x3)
   - `git fetch origin main`
+  - `git push -u origin task/617-utilityprocess-foundation`
   - `pnpm install --frozen-lockfile`
 - Key output:
   - GitHub blocked: `error connecting to api.github.com` / `Could not resolve host: github.com`
