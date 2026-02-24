@@ -1,6 +1,6 @@
 # ISSUE-638
 
-更新时间：2026-02-24 13:04
+更新时间：2026-02-24 13:52
 
 ## Links
 
@@ -212,6 +212,31 @@
   - `[OK] rag-offload.compute.contract`
 - Notes:
   - `rag:context:retrieve` 在 compute runner `execute(signal)` 路径下使用 runtime signal；aborted signal 会在语义检索前短路并返回 `CANCELED`。
+
+### 2026-02-24 BE-EMR-S2 Red（production embedding IPC compute runtime）
+
+- Command:
+  - `node --import tsx apps/desktop/main/src/ipc/__tests__/embedding-generate-runtime.contract.test.ts`
+- Exit code: `1`
+- Key output:
+  - `AssertionError [ERR_ASSERTION]: embedding encode must run inside compute runner`
+  - `false !== true`
+
+### 2026-02-24 BE-EMR-S2 Green（production embedding IPC compute runtime）
+
+- Command:
+  - `node --import tsx apps/desktop/main/src/ipc/__tests__/embedding-generate-runtime.contract.test.ts && echo "[OK] embedding-generate-runtime.contract"`
+  - `node --import tsx apps/desktop/main/src/ipc/__tests__/rag-retrieve-runtime.contract.test.ts && echo "[OK] rag-retrieve-runtime.contract"`
+- Exit code:
+  - `embedding-generate-runtime.contract`: `0`
+  - `rag-retrieve-runtime.contract`: `0`
+- Key output:
+  - `[OK] embedding-generate-runtime.contract`
+  - `[OK] rag-retrieve-runtime.contract`
+- Notes:
+  - `registerEmbeddingIpcHandlers` 在提供 `computeRunner` 时通过 compute runner 执行 `embedding:text:generate` 的 encode 路径，并透传 caller `AbortSignal`。
+  - `apps/desktop/main/src/index.ts` 已为 `registerEmbeddingIpcHandlers` 注入 `utilityProcessFoundation.compute`。
+  - 未注入 `computeRunner` 时保留原同步 encode 路径与错误码行为。
 
 ## Dependency Sync Check
 
