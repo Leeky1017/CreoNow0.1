@@ -1,6 +1,6 @@
 # ISSUE-641
 
-更新时间：2026-02-24 21:21
+更新时间：2026-02-24 21:25
 
 ## Links
 
@@ -48,7 +48,7 @@
 
 - Draft-Status: SIGNED
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: ef77d780c276f2dd73d9895365ca891c5852d753
+- Reviewed-HEAD-SHA: 2f08a5fca2072942f227337543150b7fec4eef29
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
@@ -125,3 +125,24 @@
 - Exit code: `0`
 - Key output:
   - `https://github.com/Leeky1017/CreoNow/pull/643`
+
+### 2026-02-24 Preflight rerun (format gate blocked)
+
+- Command:
+  - `./scripts/agent_pr_preflight.sh`
+- Exit code: `1`
+- Key output:
+  - `PRE-FLIGHT FAILED: command failed: pnpm exec prettier --check ...`
+  - `[warn] Code style issues found in 5 files. Run Prettier with --write to fix.`
+
+### 2026-02-24 Format remediation for preflight gate
+
+- Command:
+  - `pnpm exec prettier --write apps/desktop/main/src/services/workbench/phase4-delivery-gate.ts apps/desktop/tests/e2e/visual/phase4-baseline-capture.spec.ts rulebook/tasks/issue-641-issue-606-phase-4-polish-and-delivery/.metadata.json rulebook/tasks/issue-641-issue-606-phase-4-polish-and-delivery/tasks.md scripts/phase4-governance.ts`
+- Exit code: `0`
+- Key output:
+  - `phase4-delivery-gate.ts ...`
+  - `phase4-baseline-capture.spec.ts ...`
+  - `issue-641.../.metadata.json ...`
+  - `issue-641.../tasks.md ...`
+  - `scripts/phase4-governance.ts ...`
