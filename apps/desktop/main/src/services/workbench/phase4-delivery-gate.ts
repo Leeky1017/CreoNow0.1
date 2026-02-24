@@ -24,9 +24,39 @@ export function evaluateVisualAuditClosure(
   items: readonly Phase4VisualAuditItem[],
 ): { ok: boolean; blockers: Phase4AuditBlocker[] } {
   const blockers: Phase4AuditBlocker[] = [];
+  const seenIds = new Set<string>();
 
   for (const item of items) {
-    const itemId = item.id || "UNKNOWN";
+    const normalizedId = item.id.trim();
+    const itemId = normalizedId || "UNKNOWN";
+    if (!normalizedId) {
+      blockers.push({
+        itemId,
+        reason: "missing id",
+      });
+    } else if (seenIds.has(normalizedId)) {
+      blockers.push({
+        itemId,
+        reason: "duplicate id",
+      });
+    } else {
+      seenIds.add(normalizedId);
+    }
+
+    if (!item.owner.trim()) {
+      blockers.push({
+        itemId,
+        reason: "missing owner",
+      });
+    }
+
+    if (!item.dueAt.trim()) {
+      blockers.push({
+        itemId,
+        reason: "missing dueAt",
+      });
+    }
+
     const remediationAction = item.remediationAction?.trim();
     if (!remediationAction) {
       blockers.push({
