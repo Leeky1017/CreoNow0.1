@@ -82,6 +82,7 @@
 - ISSUE-637 当前状态：交付 PR `#640` 已自动合并到 `main`，`issue-617-kg-query-engine-refactor` 实现已落地主干，待后续 change closeout。
 - ISSUE-638 当前状态：承接 `issue-617-embedding-rag-offload` 收口，交付 PR `#642` 已开启 auto-merge；当前 `mergeStateStatus=DIRTY`，需先完成分支同步并重跑 required checks。
 - ISSUE-641 当前状态：治理基线已启动（Rulebook + RUN_LOG），Issue freshness 在线校验受网络限制待补证。
+- ISSUE-644 当前状态：承接 `issue-617-skill-runtime-hardening` 实施，交付 PR `#645` 已创建并等待 required checks + auto-merge。
 - ISSUE-613 当前状态：PR `#614` 已合并，Issue 已关闭，Rulebook task 已归档。
 - ISSUE-616 当前状态：Phase 2 closeout PR `#625` 已合并，执行顺序以本文件为准。
 - ISSUE-608 当前状态：已修复 ISSUE-606 文档中的治理收口漂移、i18n 门禁语义冲突与 Scenario 映射缺口。
