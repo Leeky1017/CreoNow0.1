@@ -36,3 +36,35 @@ function buildCompleteCaptureEntries(): Phase4BaselineCaptureEntry[] {
   assert.equal(gate.ok, true);
   assert.deepEqual(gate.missing, []);
 }
+
+// WB-P4-S3: baseline/after paths must include date-layered directory
+{
+  const entries = buildCompleteCaptureEntries().map((entry) => ({
+    ...entry,
+    baselinePath: `baseline/${entry.screen}.${entry.state}.${entry.theme}.png`,
+  }));
+
+  const gate = evaluateBaselineCaptureCompleteness(entries);
+
+  assert.equal(gate.ok, false);
+  assert.equal(
+    gate.missing.some((missing) => missing.reason === "invalid-baseline-path"),
+    true,
+  );
+}
+
+// WB-P4-S3: duplicated capture entries should block acceptance
+{
+  const entries = buildCompleteCaptureEntries();
+  entries.push({
+    ...entries[0],
+  });
+
+  const gate = evaluateBaselineCaptureCompleteness(entries);
+
+  assert.equal(gate.ok, false);
+  assert.equal(
+    gate.missing.some((missing) => missing.reason === "duplicate-entry"),
+    true,
+  );
+}

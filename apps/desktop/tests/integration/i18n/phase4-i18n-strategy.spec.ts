@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import {
-  flattenLocaleKeys,
+  buildLocaleKeyIndex,
   validateI18nSubmissionGate,
   type Phase4I18nSubmission,
 } from "../../../../../scripts/phase4-governance";
@@ -26,7 +26,7 @@ const enLocale = JSON.parse(
   ),
 ) as LocaleTree;
 
-const localeKeys = flattenLocaleKeys({
+const localeKeyIndex = buildLocaleKeyIndex({
   "zh-CN": zhLocale,
   "en-US": enLocale,
 });
@@ -42,7 +42,8 @@ const localeKeys = flattenLocaleKeys({
         i18nKey: "workbench.commandPalette.searchPlaceholder",
       },
     ],
-    localeKeys,
+    localeKeyIndex,
+    requiredLocales: ["zh-CN", "en-US"],
     formattingRequirements: ["date", "number"],
     intlCalls: ["Intl.DateTimeFormat", "Intl.NumberFormat"],
     hardcodedFormattingPatterns: [],
@@ -63,7 +64,8 @@ const localeKeys = flattenLocaleKeys({
         rawLiteral: "设置页新增标题",
       },
     ],
-    localeKeys,
+    localeKeyIndex,
+    requiredLocales: ["zh-CN", "en-US"],
     formattingRequirements: ["date"],
     intlCalls: [],
     hardcodedFormattingPatterns: ["YYYY-MM-DD"],
@@ -78,6 +80,36 @@ const localeKeys = flattenLocaleKeys({
   );
   assert.equal(
     result.errors.some((error) => error.code === "I18N_INTL_MISSING"),
+    true,
+    JSON.stringify(result.errors, null, 2),
+  );
+}
+
+// PM-P4-S8
+// locale key 在 required locales 中不完整时触发阻断
+{
+  const localeGapSubmission: Phase4I18nSubmission = {
+    uiChanges: [
+      {
+        componentPath:
+          "apps/desktop/renderer/src/features/settings/SettingsPanel.tsx",
+        i18nKey: "phase4.governance.localeGap",
+      },
+    ],
+    localeKeyIndex: {
+      "zh-CN": [...localeKeyIndex["zh-CN"], "phase4.governance.localeGap"],
+      "en-US": localeKeyIndex["en-US"],
+    },
+    requiredLocales: ["zh-CN", "en-US"],
+    formattingRequirements: ["date"],
+    intlCalls: ["Intl.DateTimeFormat"],
+    hardcodedFormattingPatterns: [],
+  };
+
+  const result = validateI18nSubmissionGate(localeGapSubmission);
+  assert.equal(result.ok, false);
+  assert.equal(
+    result.errors.some((error) => error.code === "I18N_KEY_LOCALE_GAP"),
     true,
     JSON.stringify(result.errors, null, 2),
   );

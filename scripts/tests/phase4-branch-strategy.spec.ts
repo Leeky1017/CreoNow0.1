@@ -52,6 +52,30 @@ import {
   );
 }
 
+// PM-P4-S3
+// 执行分支未回合并治理分支时阻断交付
+{
+  const notMergedBackPlan: Phase4BranchStrategyInput = {
+    governanceBranch: "task/635-issue-606-phase-4-polish-and-delivery",
+    now: "2026-02-24T02:30:00.000Z",
+    executionBranches: [
+      {
+        name: "feat/project-qa-dashboard",
+        createdAt: "2026-02-22T03:00:00.000Z",
+        targetBranch: "task/635-issue-606-phase-4-polish-and-delivery",
+      },
+    ],
+  };
+
+  const result = validateBranchLifecyclePolicy(notMergedBackPlan);
+  assert.equal(result.ok, false);
+  assert.equal(
+    result.errors.some((error) => error.code === "BRANCH_NOT_MERGED_BACK"),
+    true,
+    JSON.stringify(result.errors, null, 2),
+  );
+}
+
 // PM-P4-S3 edge case
 // createdAt 晚于 mergedAt/now 时必须阻断
 {

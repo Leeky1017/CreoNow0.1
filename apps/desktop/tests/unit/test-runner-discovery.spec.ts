@@ -169,9 +169,17 @@ const integrationSentinel =
   "apps/desktop/tests/integration/runtime-governance-consistency.test.ts";
 const perfSentinel =
   "apps/desktop/tests/perf/project-lifecycle.benchmark.test.ts";
-const visualSentinel =
-  "apps/desktop/tests/e2e/visual/phase4-baseline-capture.spec.ts";
-const scriptSentinel = "scripts/tests/phase4-ci-gates.spec.ts";
+const phase4IntegrationSentinels = [
+  "apps/desktop/tests/integration/workbench/phase4-visual-audit.spec.ts",
+  "apps/desktop/tests/e2e/visual/phase4-baseline-capture.spec.ts",
+  "apps/desktop/tests/e2e/visual/phase4-visual-diff.spec.ts",
+  "apps/desktop/tests/perf/phase4-benchmark.spec.ts",
+  "apps/desktop/tests/integration/governance/phase4-deliverables.spec.ts",
+  "apps/desktop/tests/integration/i18n/phase4-i18n-strategy.spec.ts",
+  "scripts/tests/phase4-branch-strategy.spec.ts",
+  "scripts/tests/phase4-ci-gates.spec.ts",
+  "scripts/tests/phase4-scenario-evidence-chain.spec.ts",
+] as const;
 
 assert.match(
   runnerScript,
@@ -194,16 +202,13 @@ assert.equal(
   true,
   "integration discovery should include perf suites",
 );
-assert.equal(
-  integrationPlan.files.some((file) => file.endsWith(visualSentinel)),
-  true,
-  "integration discovery should include phase4 visual suites",
-);
-assert.equal(
-  integrationPlan.files.some((file) => file.endsWith(scriptSentinel)),
-  true,
-  "integration discovery should include scripts/tests suites",
-);
+for (const sentinel of phase4IntegrationSentinels) {
+  assert.equal(
+    integrationPlan.files.some((file) => file.endsWith(sentinel)),
+    true,
+    `integration discovery should include ${sentinel}`,
+  );
+}
 
 const integrationExecutionTargets = integrationPlan.commands
   .filter(
@@ -214,13 +219,10 @@ const integrationExecutionTargets = integrationPlan.commands
   )
   .map((command) => command.args[2] ?? "");
 
-assert.equal(
-  integrationExecutionTargets.some((file) => file.endsWith(visualSentinel)),
-  true,
-  "integration execution plan should run phase4 visual suites",
-);
-assert.equal(
-  integrationExecutionTargets.some((file) => file.endsWith(scriptSentinel)),
-  true,
-  "integration execution plan should run scripts/tests suites",
-);
+for (const sentinel of phase4IntegrationSentinels) {
+  assert.equal(
+    integrationExecutionTargets.some((file) => file.endsWith(sentinel)),
+    true,
+    `integration execution plan should run ${sentinel}`,
+  );
+}

@@ -41,3 +41,16 @@ import { evaluatePhase4Benchmark } from "../../main/src/services/workbench/phase
     true,
   );
 }
+
+// WB-P4-S6: non-finite benchmark values should fail deterministically
+{
+  const evaluation = evaluatePhase4Benchmark({
+    commandPaletteInvokeMs: Number.NaN,
+    workspaceInteractionMs: 90,
+    mainContentWidthPx: 480,
+    mainContentMinWidthPx: 400,
+  });
+
+  assert.equal(evaluation.status, "FAIL");
+  assert.equal(evaluation.needsNextPolishRound, true);
+}

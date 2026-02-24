@@ -1,6 +1,6 @@
 # ISSUE-635
 
-更新时间：2026-02-24 11:46
+更新时间：2026-02-24 16:40
 
 ## Links
 
@@ -268,3 +268,58 @@
 - Key output:
   - `c3d47ef0..6c61b8be task/635-issue-606-phase-4-polish-and-delivery -> task/635-issue-606-phase-4-polish-and-delivery`
   - `6c61b8befae990bd09e1cd52e82bd98d50e06ef2`
+
+### 2026-02-24 Scenario evidence command matrix rebuild (issue-641 support)
+
+- Command:
+  - `python3 - <<'PY'`
+  - `from pathlib import Path`
+  - `import re`
+  - `tasks = Path('openspec/changes/issue-606-phase-4-polish-and-delivery/tasks.md').read_text()`
+  - `scenario_ids = re.findall(r'\\|\\s*((?:WB|PM)-P4-S\\d+)\\s*\\|', tasks)`
+  - `print(f\"phase4-scenarios={len(set(scenario_ids))}\")`
+  - `PY`
+  - `pnpm exec node --import tsx/esm scripts/tests/phase4-scenario-evidence-chain.spec.ts`
+  - `pnpm exec node --import tsx/esm scripts/test-discovery-consistency-gate.ts`
+  - `pnpm exec node --import tsx/esm apps/desktop/tests/unit/test-runner-discovery.spec.ts`
+- Exit code: `0`
+- Key output:
+  - `phase4-scenarios=14`
+  - `[phase4-evidence-chain] scenarios=14 mappings=14 command-index=13`
+  - `[discovery-gate] unit discovered=209 executed=209`
+  - `[discovery-gate] integration discovered=101 executed=101`
+  - `[discovery-gate] PASS`
+  - discovery sentinel assertions passed (phase4 integration suites + scripts/tests 全量纳入执行计划)
+- Notes:
+  - 本地 `pnpm exec tsx ...` 在当前 sandbox 出现 `listen EPERM /tmp/tsx-1000/*.pipe`，本次使用 `node --import tsx/esm` 完成同脚本验证；规范命令仍保留为 `pnpm exec tsx ...`。
+
+#### Scenario Evidence Command Matrix
+
+- Red-Command WB-P4-S1: `RED-WB-REPLAY` => `cd /tmp/creonow-635-wb-red-75b1fde7 && pnpm exec tsx apps/desktop/tests/integration/workbench/phase4-visual-audit.spec.ts`
+- Red-Command WB-P4-S2: `RED-WB-REPLAY` => `cd /tmp/creonow-635-wb-red-75b1fde7 && pnpm exec tsx apps/desktop/tests/integration/workbench/phase4-visual-audit.spec.ts`
+- Red-Command WB-P4-S3: `RED-WB-REPLAY` => `cd /tmp/creonow-635-wb-red-75b1fde7 && pnpm exec tsx apps/desktop/tests/integration/workbench/phase4-visual-audit.spec.ts`
+- Red-Command WB-P4-S4: `RED-WB-REPLAY` => `cd /tmp/creonow-635-wb-red-75b1fde7 && pnpm exec tsx apps/desktop/tests/integration/workbench/phase4-visual-audit.spec.ts`
+- Red-Command WB-P4-S5: `RED-WB-REPLAY` => `cd /tmp/creonow-635-wb-red-75b1fde7 && pnpm exec tsx apps/desktop/tests/integration/workbench/phase4-visual-audit.spec.ts`
+- Red-Command WB-P4-S6: `RED-WB-REPLAY` => `cd /tmp/creonow-635-wb-red-75b1fde7 && pnpm exec tsx apps/desktop/tests/integration/workbench/phase4-visual-audit.spec.ts`
+- Red-Command PM-P4-S1: `RED-PM-DELIVERABLES` => `pnpm exec tsx apps/desktop/tests/integration/governance/phase4-deliverables.spec.ts`
+- Red-Command PM-P4-S2: `RED-PM-DELIVERABLES` => `pnpm exec tsx apps/desktop/tests/integration/governance/phase4-deliverables.spec.ts`
+- Red-Command PM-P4-S3: `RED-PM-BRANCH` => `pnpm exec tsx scripts/tests/phase4-branch-strategy.spec.ts`
+- Red-Command PM-P4-S4: `RED-PM-BRANCH` => `pnpm exec tsx scripts/tests/phase4-branch-strategy.spec.ts`
+- Red-Command PM-P4-S5: `RED-PM-CI` => `pnpm exec tsx scripts/tests/phase4-ci-gates.spec.ts`
+- Red-Command PM-P4-S6: `RED-PM-CI` => `pnpm exec tsx scripts/tests/phase4-ci-gates.spec.ts`
+- Red-Command PM-P4-S7: `RED-PM-I18N` => `pnpm exec tsx apps/desktop/tests/integration/i18n/phase4-i18n-strategy.spec.ts`
+- Red-Command PM-P4-S8: `RED-PM-I18N` => `pnpm exec tsx apps/desktop/tests/integration/i18n/phase4-i18n-strategy.spec.ts`
+- Green-Command WB-P4-S1: `GREEN-WB-AUDIT` => `pnpm exec tsx apps/desktop/tests/integration/workbench/phase4-visual-audit.spec.ts`
+- Green-Command WB-P4-S2: `GREEN-WB-AUDIT` => `pnpm exec tsx apps/desktop/tests/integration/workbench/phase4-visual-audit.spec.ts`
+- Green-Command WB-P4-S3: `GREEN-WB-BASELINE` => `pnpm exec tsx apps/desktop/tests/e2e/visual/phase4-baseline-capture.spec.ts`
+- Green-Command WB-P4-S4: `GREEN-WB-DIFF` => `pnpm exec tsx apps/desktop/tests/e2e/visual/phase4-visual-diff.spec.ts`
+- Green-Command WB-P4-S5: `GREEN-WB-BENCHMARK` => `pnpm exec tsx apps/desktop/tests/perf/phase4-benchmark.spec.ts`
+- Green-Command WB-P4-S6: `GREEN-WB-BENCHMARK` => `pnpm exec tsx apps/desktop/tests/perf/phase4-benchmark.spec.ts`
+- Green-Command PM-P4-S1: `GREEN-PM-DELIVERABLES` => `pnpm exec tsx apps/desktop/tests/integration/governance/phase4-deliverables.spec.ts`
+- Green-Command PM-P4-S2: `GREEN-PM-DELIVERABLES` => `pnpm exec tsx apps/desktop/tests/integration/governance/phase4-deliverables.spec.ts`
+- Green-Command PM-P4-S3: `GREEN-PM-BRANCH` => `pnpm exec tsx scripts/tests/phase4-branch-strategy.spec.ts`
+- Green-Command PM-P4-S4: `GREEN-PM-BRANCH` => `pnpm exec tsx scripts/tests/phase4-branch-strategy.spec.ts`
+- Green-Command PM-P4-S5: `GREEN-PM-CI` => `pnpm exec tsx scripts/tests/phase4-ci-gates.spec.ts`
+- Green-Command PM-P4-S6: `GREEN-PM-CI` => `pnpm exec tsx scripts/tests/phase4-ci-gates.spec.ts`
+- Green-Command PM-P4-S7: `GREEN-PM-I18N` => `pnpm exec tsx apps/desktop/tests/integration/i18n/phase4-i18n-strategy.spec.ts`
+- Green-Command PM-P4-S8: `GREEN-PM-I18N` => `pnpm exec tsx apps/desktop/tests/integration/i18n/phase4-i18n-strategy.spec.ts`

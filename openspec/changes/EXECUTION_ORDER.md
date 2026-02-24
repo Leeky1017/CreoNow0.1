@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-02-24 12:56
+更新时间：2026-02-24 13:08
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -78,8 +78,9 @@
 
 - ISSUE-604 当前状态：已归档至 `openspec/changes/archive/issue-604-windows-frameless-titlebar`，并从活跃执行顺序移除。
 - ISSUE-606 当前状态：Phase 1、Phase 2、Phase 3 已完成并归档（Phase 3 路径：`openspec/changes/archive/issue-606-phase-3-quality-uplift`）；活跃阶段剩余 Phase 4。
-- ISSUE-635 当前状态：承接 `issue-606-phase-4-polish-and-delivery` 收口，交付 PR `#639` 已创建，等待 required checks 与 auto-merge 完成。
-- ISSUE-637 当前状态：承接 `issue-617-kg-query-engine-refactor` 收口，交付 PR `#640` 已创建并开启 auto-merge，等待 required checks 通过后自动合并。
+- ISSUE-635 当前状态：交付 PR `#639` 已自动合并到 `main`，`issue-606-phase-4-polish-and-delivery` 进入后续治理收口阶段。
+- ISSUE-637 当前状态：交付 PR `#640` 已自动合并到 `main`，`issue-617-kg-query-engine-refactor` 实现已落地主干，待后续 change closeout。
+- ISSUE-641 当前状态：治理基线已启动（Rulebook + RUN_LOG），Issue freshness 在线校验受网络限制待补证。
 - ISSUE-613 当前状态：PR `#614` 已合并，Issue 已关闭，Rulebook task 已归档。
 - ISSUE-616 当前状态：Phase 2 closeout PR `#625` 已合并，执行顺序以本文件为准。
 - ISSUE-608 当前状态：已修复 ISSUE-606 文档中的治理收口漂移、i18n 门禁语义冲突与 Scenario 映射缺口。
