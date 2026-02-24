@@ -1,6 +1,6 @@
 # ISSUE-637
 
-更新时间：2026-02-24 12:58
+更新时间：2026-02-24 13:48
 
 ## Links
 
@@ -172,10 +172,44 @@
   - first preflight failed: `[OPENSPEC_CHANGE] active change content updated but openspec/changes/EXECUTION_ORDER.md not updated in this PR`
   - after syncing `EXECUTION_ORDER.md` preflight failed with `[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch`，按门禁要求执行 RUN_LOG-only 重新签字
 
+### 2026-02-24 Lint-ratchet remediation commit (mate delivery)
+
+- Command:
+  - `git show --stat --oneline d25f6c987fc2d76a830eddb1930886c27d638636`
+- Key output:
+  - commit: `d25f6c987fc2d76a830eddb1930886c27d638636`
+  - changed files: `1`（`apps/desktop/main/src/services/kg/kgCoreService.ts`）
+  - 变更性质：`queryPath` 逻辑提取为辅助函数，降低复杂度 warning，不改动外部契约
+
+### 2026-02-24 Cross-audit refresh for d25f6c98 (Team Mode)
+
+- Command:
+  - `team spawn_subagent_once audit-spec-on-d25f6c98`
+  - `team spawn_subagent_once audit-quality-on-d25f6c98`
+- Key output:
+  - Spec 审计：要求按主会话门禁执行 RUN_LOG-only 重新签字（`Reviewed-HEAD-SHA` 需对齐当前 code commit）
+  - Quality 审计：`NO_FINDINGS`（无新增行为回归/无 lint ratchet 回归），仅提示可选残余测试覆盖点
+
+### 2026-02-24 Post-refactor targeted verification
+
+- Command:
+  - `for t in apps/desktop/main/src/services/kg/__tests__/kg-cte-query.subgraph.contract.test.ts apps/desktop/main/src/services/kg/__tests__/kg-cte-query.path.contract.test.ts apps/desktop/main/src/services/kg/__tests__/kg-validate.iterative.contract.test.ts apps/desktop/main/src/services/kg/__tests__/entity-matcher.aho-corasick.contract.test.ts; do echo "RUN $t"; pnpm exec node --import tsx "$t"; echo "PASS $t"; done`
+  - `pnpm -C apps/desktop exec eslint main/src/services/kg/kgCoreService.ts`
+- Key output:
+  - S1/S2/S3/S4 对应关键测试：全部 PASS
+  - ESLint: `0` errors，warning `2`（`max-lines-per-function`、`entityUpdate complexity`；无新增 `queryPath` complexity warning）
+
+### 2026-02-24 Preflight re-sign preparation
+
+- Command:
+  - `python3 scripts/agent_pr_preflight.py`
+- Key output:
+  - expected failure before re-sign: `[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch`（新 code commit 后需刷新 RUN_LOG 审计签字）
+
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 5145450687fd34dc6092b35059d9001fedfeab6b
+- Reviewed-HEAD-SHA: d25f6c987fc2d76a830eddb1930886c27d638636
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
