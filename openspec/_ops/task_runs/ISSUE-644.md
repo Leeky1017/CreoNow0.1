@@ -1,6 +1,6 @@
 # ISSUE-644
 
-更新时间：2026-02-24 22:20
+更新时间：2026-02-24 22:39
 
 ## Links
 
@@ -129,10 +129,33 @@
 - Key output:
   - preflight 报告的格式阻断已消除，功能验证回归通过。
 
+### 2026-02-24 Main Session Audit refresh（scheduler race fix 后续）
+
+- Preflight fail:
+  - Command:
+    - `python3 scripts/agent_pr_preflight.py`
+  - Exit code:
+    - `1`
+  - Key output:
+    - `[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch: audit=dd4edfa121cbc35c0ec56d08d78a71d77ea0a299, head=669dbd2a1a0cffefa038b5d6872437551fd95229`
+- Testing / verification:
+  - Command:
+    - `git rev-parse HEAD`
+    - `python3 scripts/check_doc_timestamps.py --files openspec/_ops/task_runs/ISSUE-644.md`
+  - Exit code:
+    - `git rev-parse HEAD`: `0`
+    - `timestamp gate`: `0`
+  - Key output:
+    - `HEAD(before signing commit)=902597120d22b9683447c59a810d3701a3135d9d`
+    - `OK: no governed markdown files to validate`
+- Preflight pass / current status:
+  - 当前阻断仅剩 `Reviewed-HEAD-SHA` 与签字提交 `HEAD^` 对齐。
+  - 本次 RUN_LOG-only 签字提交将 `Reviewed-HEAD-SHA` 更新为签字提交前 HEAD（`902597120d22b9683447c59a810d3701a3135d9d`）。
+
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: dd4edfa121cbc35c0ec56d08d78a71d77ea0a299
+- Reviewed-HEAD-SHA: 902597120d22b9683447c59a810d3701a3135d9d
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
