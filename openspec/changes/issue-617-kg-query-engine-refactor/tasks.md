@@ -1,17 +1,26 @@
-更新时间：2026-02-22 19:37
+更新时间：2026-02-24 11:31
 
 ## 1. Specification
 
-- [ ] 1.1 审阅并确认需求边界（KG 查询层：subgraph/path/validate/matcher；ComputeProcess 执行）
-- [ ] 1.2 审阅并确认错误路径与边界路径（超时/取消、maxDepth/maxVisited、循环关系、负载过高降级）
-- [ ] 1.3 审阅并确认验收阈值与不可变契约（结果语义不变；性能阈值可验证；无栈溢出）
-- [ ] 1.4 若存在上游依赖，先完成依赖同步检查（Dependency Sync Check）并记录“无漂移/已更新”；无依赖则标注 N/A
+- [x] 1.1 审阅并确认需求边界（KG 查询层：subgraph/path/validate/matcher；ComputeProcess 执行）
+- [x] 1.2 审阅并确认错误路径与边界路径（超时/取消、maxDepth/maxVisited、循环关系、负载过高降级）
+- [x] 1.3 审阅并确认验收阈值与不可变契约（结果语义不变；性能阈值可验证；无栈溢出）
+- [x] 1.4 若存在上游依赖，先完成依赖同步检查（Dependency Sync Check）并记录“无漂移/已更新”；无依赖则标注 N/A
 
 ## 2. TDD Mapping（先测前提）
 
-- [ ] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
-- [ ] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
-- [ ] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+- [x] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
+- [x] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
+- [x] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+
+### 依赖同步检查（Dependency Sync Check）记录
+
+- 结论：`NO_DRIFT`
+- 核对输入：
+  - `openspec/changes/archive/issue-617-utilityprocess-foundation/**`
+  - `openspec/changes/archive/issue-617-scoped-lifecycle-and-abort/**`
+  - `openspec/changes/issue-617-kg-query-engine-refactor/{proposal.md,specs/knowledge-graph/spec.md,tasks.md}`
+  - `openspec/changes/EXECUTION_ORDER.md`
 
 ### Scenario -> 测试映射
 
