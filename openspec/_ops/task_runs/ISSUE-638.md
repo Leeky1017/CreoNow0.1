@@ -1,6 +1,6 @@
 # ISSUE-638
 
-更新时间：2026-02-24 21:27
+更新时间：2026-02-24 22:31
 
 ## Links
 
@@ -333,6 +333,22 @@
   - `All matched files use Prettier code style!`
   - `OK: validated timestamps for 3 governed markdown file(s)`
 
+### 2026-02-24 Main Session Audit re-sign（after lint-refactor commit）
+
+- Command:
+  - `./scripts/agent_pr_preflight.sh`
+  - `git rev-parse HEAD`
+  - `git rev-parse HEAD^`
+- Exit code:
+  - `preflight`: `1`
+  - `git rev-parse`: `0`
+- Key output:
+  - `PRE-FLIGHT FAILED: [MAIN_AUDIT] Reviewed-HEAD-SHA mismatch: audit=79bbf0a14f4a9ad47959d28200a7903cfb7933bc, head=87b8338c70228a1877afef1cc744ac0f17d9fe2a`
+  - `9b8e94398ab9d2df0006398c30217f177aec8892`
+  - `87b8338c70228a1877afef1cc744ac0f17d9fe2a`
+- Follow-up:
+  - 将 `Main Session Audit.Reviewed-HEAD-SHA` 更新为 `9b8e94398ab9d2df0006398c30217f177aec8892`，并创建 RUN_LOG-only 签字提交后重跑 preflight。
+
 ## Dependency Sync Check
 
 - 检查时间：2026-02-24 14:05
@@ -365,7 +381,7 @@
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 79bbf0a14f4a9ad47959d28200a7903cfb7933bc
+- Reviewed-HEAD-SHA: 9b8e94398ab9d2df0006398c30217f177aec8892
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
