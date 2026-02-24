@@ -13,16 +13,14 @@ export const PHASE4_REQUIRED_CHECKS = [
   "openspec-log-guard",
   "merge-serial",
 ] as const;
-export type Phase4RequiredCheckName = (typeof PHASE4_REQUIRED_CHECKS)[number];
 
-const REQUIRED_CHECK_WORKFLOW_FILES: Record<
-  Phase4RequiredCheckName,
-  string
-> = {
-  ci: "ci.yml",
-  "openspec-log-guard": "openspec-log-guard.yml",
-  "merge-serial": "merge-serial.yml",
-};
+export const PHASE4_REQUIRED_CI_STAGE_CHECKS = [
+  "lint",
+  "typecheck",
+  "unit-test",
+  "build",
+  "e2e-smoke",
+] as const;
 
 type DeliverableStatus = "draft" | "reviewing" | "accepted";
 type AdrStatus = "Proposed" | "Accepted" | "Deprecated" | "Superseded";
@@ -49,6 +47,7 @@ const DELIVERABLE_STATUSES = new Set<DeliverableStatus>([
   "reviewing",
   "accepted",
 ]);
+
 const ADR_STATUSES = new Set<AdrStatus>([
   "Proposed",
   "Accepted",
@@ -87,20 +86,32 @@ function buildResult(errors: ValidationError[]): ValidationResult {
   };
 }
 
-function isIsoTimestamp(value: string): boolean {
-  return Number.isNaN(Date.parse(value)) === false;
-}
-
-function hasText(value: unknown): value is string {
-  return typeof value === "string" && value.trim().length > 0;
-}
-
 function addError(
   errors: ValidationError[],
   code: string,
   message: string,
 ): void {
   errors.push({ code, message });
+}
+
+function hasText(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function parseTimestamp(value: string): number | null {
+  const parsed = Date.parse(value);
+  if (Number.isNaN(parsed)) {
+    return null;
+  }
+  return parsed;
+}
+
+function isIsoTimestamp(value: string): boolean {
+  return parseTimestamp(value) !== null;
+}
+
+function isAcceptedAdrStatus(status: AdrStatus): boolean {
+  return status === "Accepted";
 }
 
 export function validateDeliverablesAndAdr(
@@ -128,6 +139,7 @@ export function validateDeliverablesAndAdr(
         `deliverable ${deliverable.id} has invalid status`,
       );
     }
+
     if (!isIsoTimestamp(deliverable.updatedAt)) {
       addError(
         errors,
@@ -135,6 +147,7 @@ export function validateDeliverablesAndAdr(
         `deliverable ${deliverable.id} must carry ISO timestamp`,
       );
     }
+
     if (!hasText(deliverable.owner)) {
       addError(
         errors,
@@ -150,15 +163,13 @@ export function validateDeliverablesAndAdr(
       addError(errors, "ADR_DUPLICATED", `duplicated ADR id: ${adr.id}`);
       continue;
     }
+
     adrById.set(adr.id, adr);
 
     if (!ADR_STATUSES.has(adr.status)) {
-      addError(
-        errors,
-        "ADR_STATUS_INVALID",
-        `ADR ${adr.id} has invalid status`,
-      );
+      addError(errors, "ADR_STATUS_INVALID", `ADR ${adr.id} has invalid status`);
     }
+
     if (!hasText(adr.background)) {
       addError(
         errors,
@@ -166,13 +177,11 @@ export function validateDeliverablesAndAdr(
         `ADR ${adr.id} background is required`,
       );
     }
+
     if (!hasText(adr.decision)) {
-      addError(
-        errors,
-        "ADR_DECISION_MISSING",
-        `ADR ${adr.id} decision is required`,
-      );
+      addError(errors, "ADR_DECISION_MISSING", `ADR ${adr.id} decision is required`);
     }
+
     if (adr.alternatives.length === 0) {
       addError(
         errors,
@@ -180,6 +189,7 @@ export function validateDeliverablesAndAdr(
         `ADR ${adr.id} alternatives are required`,
       );
     }
+
     if (!hasText(adr.consequences)) {
       addError(
         errors,
@@ -200,22 +210,35 @@ export function validateDeliverablesAndAdr(
       continue;
     }
 
-    if (DELIVERABLES_REQUIRING_ADR.has(requiredId)) {
-      if (!hasText(deliverable.adrId)) {
-        addError(
-          errors,
-          "ADR_LINK_MISSING",
-          `deliverable ${requiredId} must link to ADR`,
-        );
-        continue;
-      }
-      if (!adrById.has(deliverable.adrId)) {
-        addError(
-          errors,
-          "ADR_LINK_NOT_FOUND",
-          `deliverable ${requiredId} points to missing ADR ${deliverable.adrId}`,
-        );
-      }
+    if (!DELIVERABLES_REQUIRING_ADR.has(requiredId)) {
+      continue;
+    }
+
+    if (!hasText(deliverable.adrId)) {
+      addError(
+        errors,
+        "ADR_LINK_MISSING",
+        `deliverable ${requiredId} must link to ADR`,
+      );
+      continue;
+    }
+
+    const linkedAdr = adrById.get(deliverable.adrId);
+    if (!linkedAdr) {
+      addError(
+        errors,
+        "ADR_LINK_NOT_FOUND",
+        `deliverable ${requiredId} points to missing ADR ${deliverable.adrId}`,
+      );
+      continue;
+    }
+
+    if (!isAcceptedAdrStatus(linkedAdr.status)) {
+      addError(
+        errors,
+        "ADR_NOT_ACCEPTED",
+        `deliverable ${requiredId} must link to Accepted ADR before review`,
+      );
     }
   }
 
@@ -238,6 +261,7 @@ const ALLOWED_BRANCH_KINDS = new Set<BranchKind>([
   "cleanup",
   "experiment",
 ]);
+
 const SHORT_LIVED_BRANCH_LIMIT_DAYS = 5;
 
 export type Phase4ExecutionBranch = {
@@ -251,40 +275,30 @@ export type Phase4ExecutionBranch = {
 
 export type Phase4BranchStrategyInput = {
   governanceBranch: string;
-  governanceIssueId?: number;
   now: string;
   executionBranches: Phase4ExecutionBranch[];
 };
 
 function extractBranchKind(branchName: string): BranchKind | null {
-  const [kind] = branchName.split("/");
-  if (!kind) {
+  const [rawKind] = branchName.split("/");
+  if (!rawKind) {
     return null;
   }
-  if (!ALLOWED_BRANCH_KINDS.has(kind as BranchKind)) {
-    return null;
-  }
-  return kind as BranchKind;
-}
 
-function extractGovernanceIssueId(governanceBranch: string): number | null {
-  const match = /^task\/([0-9]+)-[a-z0-9-]+$/u.exec(governanceBranch);
-  if (!match) {
+  if (!ALLOWED_BRANCH_KINDS.has(rawKind as BranchKind)) {
     return null;
   }
-  const issueToken = match[1];
-  if (!issueToken) {
-    return null;
-  }
-  return Number.parseInt(issueToken, 10);
+
+  return rawKind as BranchKind;
 }
 
 function computeAgeDays(startAt: string, endAt: string): number | null {
-  const start = Date.parse(startAt);
-  const end = Date.parse(endAt);
-  if (Number.isNaN(start) || Number.isNaN(end)) {
+  const start = parseTimestamp(startAt);
+  const end = parseTimestamp(endAt);
+  if (start === null || end === null) {
     return null;
   }
+
   return (end - start) / (1000 * 60 * 60 * 24);
 }
 
@@ -300,19 +314,7 @@ export function validateBranchLifecyclePolicy(
       "governance branch must follow task/<N>-<slug>",
     );
   }
-  if (
-    typeof input.governanceIssueId === "number" &&
-    input.governanceIssueId > 0
-  ) {
-    const parsedIssueId = extractGovernanceIssueId(input.governanceBranch);
-    if (parsedIssueId !== input.governanceIssueId) {
-      addError(
-        errors,
-        "BRANCH_GOVERNANCE_ISSUE_MISMATCH",
-        `governance branch ${input.governanceBranch} does not match issue ${input.governanceIssueId.toString()}`,
-      );
-    }
-  }
+
   if (!isIsoTimestamp(input.now)) {
     addError(
       errors,
@@ -360,6 +362,7 @@ export function validateBranchLifecyclePolicy(
       );
       continue;
     }
+
     if (ageDays < 0) {
       addError(
         errors,
@@ -369,15 +372,18 @@ export function validateBranchLifecyclePolicy(
       continue;
     }
 
-    if (kind !== "experiment" && ageDays > SHORT_LIVED_BRANCH_LIMIT_DAYS) {
-      addError(
-        errors,
-        "BRANCH_LIFECYCLE_EXCEEDED",
-        `execution branch ${branch.name} exceeds ${SHORT_LIVED_BRANCH_LIMIT_DAYS.toString()} day policy`,
-      );
-    }
-
     if (kind === "experiment") {
+      if (
+        branch.targetBranch !== input.governanceBranch &&
+        branch.targetBranch !== "main"
+      ) {
+        addError(
+          errors,
+          "BRANCH_TARGET_INVALID",
+          `experiment branch ${branch.name} must target governance branch or main`,
+        );
+      }
+
       if (branch.targetBranch === "main") {
         if (branch.promoted !== true || !hasText(branch.riskReviewId)) {
           addError(
@@ -387,7 +393,25 @@ export function validateBranchLifecyclePolicy(
           );
         }
       }
+
       continue;
+    }
+
+    if (!hasText(branch.mergedAt)) {
+      addError(
+        errors,
+        "BRANCH_NOT_MERGED_BACK",
+        `execution branch ${branch.name} must merge back before delivery closeout`,
+      );
+      continue;
+    }
+
+    if (ageDays > SHORT_LIVED_BRANCH_LIMIT_DAYS) {
+      addError(
+        errors,
+        "BRANCH_LIFECYCLE_EXCEEDED",
+        `execution branch ${branch.name} exceeds ${SHORT_LIVED_BRANCH_LIMIT_DAYS.toString()} day policy`,
+      );
     }
 
     if (branch.targetBranch !== input.governanceBranch) {
@@ -416,83 +440,40 @@ const PHASE4_QUALITY_GATE_NAMES = [
 
 type Phase4QualityGateName = (typeof PHASE4_QUALITY_GATE_NAMES)[number];
 
-export type Phase4RequiredChecksContract = {
-  documentedChecks: string[];
-  workflowChecks: string[];
-};
+export type Phase4CiStageCheckName =
+  (typeof PHASE4_REQUIRED_CI_STAGE_CHECKS)[number];
 
 export type Phase4CiGateInput = {
   autoMergeEnabled: boolean;
-  requiredChecksContract: Phase4RequiredChecksContract;
   requiredChecks: Array<{
     name: string;
     state: RequiredCheckState;
   }>;
   qualityGates: Record<Phase4QualityGateName, QualityGateState>;
+  stageChecks: Array<{
+    name: Phase4CiStageCheckName;
+    state: RequiredCheckState;
+  }>;
 };
 
-function sameStringSet(left: string[], right: string[]): boolean {
+function sameStringSet(left: readonly string[], right: readonly string[]): boolean {
   if (left.length !== right.length) {
     return false;
   }
+
   const leftSet = new Set(left);
   const rightSet = new Set(right);
   if (leftSet.size !== rightSet.size) {
     return false;
   }
+
   for (const value of leftSet) {
     if (!rightSet.has(value)) {
       return false;
     }
   }
+
   return true;
-}
-
-export function extractDocumentedRequiredChecks(markdown: string): string[] {
-  const checks = new Set<string>();
-  for (const requiredCheck of PHASE4_REQUIRED_CHECKS) {
-    if (markdown.includes(`\`${requiredCheck}\``)) {
-      checks.add(requiredCheck);
-    }
-  }
-  return [...checks].sort((a, b) => a.localeCompare(b));
-}
-
-export function extractRequiredChecksFromWorkflowFiles(
-  workflowFiles: string[],
-): string[] {
-  const workflowFileSet = new Set(workflowFiles);
-  const checks: string[] = [];
-  for (const requiredCheck of PHASE4_REQUIRED_CHECKS) {
-    const workflowFile = REQUIRED_CHECK_WORKFLOW_FILES[requiredCheck];
-    if (workflowFileSet.has(workflowFile)) {
-      checks.push(requiredCheck);
-    }
-  }
-  return checks.sort((a, b) => a.localeCompare(b));
-}
-
-export function validateRequiredChecksContract(
-  input: Phase4RequiredChecksContract,
-): ValidationResult {
-  const errors: ValidationError[] = [];
-
-  if (!sameStringSet(input.documentedChecks, [...PHASE4_REQUIRED_CHECKS])) {
-    addError(
-      errors,
-      "CI_REQUIRED_CHECK_DOC_DRIFT",
-      "delivery-skill documented required checks drift from ci + openspec-log-guard + merge-serial",
-    );
-  }
-  if (!sameStringSet(input.workflowChecks, [...PHASE4_REQUIRED_CHECKS])) {
-    addError(
-      errors,
-      "CI_REQUIRED_CHECK_WORKFLOW_DRIFT",
-      "workflow required checks drift from ci + openspec-log-guard + merge-serial",
-    );
-  }
-
-  return buildResult(errors);
 }
 
 export function validateCiDeliveryGate(
@@ -508,13 +489,8 @@ export function validateCiDeliveryGate(
     );
   }
 
-  const contractResult = validateRequiredChecksContract(
-    input.requiredChecksContract,
-  );
-  errors.push(...contractResult.errors);
-
   const checkNames = input.requiredChecks.map((check) => check.name);
-  if (!sameStringSet(checkNames, [...PHASE4_REQUIRED_CHECKS])) {
+  if (!sameStringSet(checkNames, PHASE4_REQUIRED_CHECKS)) {
     addError(
       errors,
       "CI_REQUIRED_CHECK_CONTRACT_DRIFT",
@@ -523,9 +499,7 @@ export function validateCiDeliveryGate(
   }
 
   for (const requiredCheck of PHASE4_REQUIRED_CHECKS) {
-    const check = input.requiredChecks.find(
-      (item) => item.name === requiredCheck,
-    );
+    const check = input.requiredChecks.find((item) => item.name === requiredCheck);
     if (!check || check.state !== "success") {
       addError(
         errors,
@@ -536,8 +510,7 @@ export function validateCiDeliveryGate(
   }
 
   for (const gateName of PHASE4_QUALITY_GATE_NAMES) {
-    const gateState = input.qualityGates[gateName];
-    if (gateState !== "pass") {
+    if (input.qualityGates[gateName] !== "pass") {
       addError(
         errors,
         "CI_QUALITY_GATE_FAILED",
@@ -546,56 +519,72 @@ export function validateCiDeliveryGate(
     }
   }
 
+  const stageCheckNames = input.stageChecks.map((check) => check.name);
+  if (!sameStringSet(stageCheckNames, PHASE4_REQUIRED_CI_STAGE_CHECKS)) {
+    addError(
+      errors,
+      "CI_STAGE_CHECK_CONTRACT_DRIFT",
+      "stage checks contract must include lint/typecheck/unit-test/build/e2e-smoke",
+    );
+  }
+
+  for (const stageName of PHASE4_REQUIRED_CI_STAGE_CHECKS) {
+    const stageCheck = input.stageChecks.find((check) => check.name === stageName);
+    if (!stageCheck || stageCheck.state !== "success") {
+      addError(
+        errors,
+        "CI_STAGE_CHECK_NOT_GREEN",
+        `${stageName} stage check must be success`,
+      );
+    }
+  }
+
   return buildResult(errors);
 }
 
-interface LocaleTreeNode {
-  [key: string]: LocaleLeaf;
-}
+type LocaleTree = {
+  [key: string]: string | LocaleTree;
+};
 
-type LocaleLeaf = string | LocaleTreeNode;
-
-function walkLocaleKeys(
-  node: LocaleLeaf,
-  prefix: string,
-  out: Set<string>,
-): void {
+function flattenLocaleTree(node: string | LocaleTree, prefix: string, out: Set<string>): void {
   if (typeof node === "string") {
-    out.add(prefix);
+    if (prefix.length > 0) {
+      out.add(prefix);
+    }
     return;
   }
 
   for (const [key, value] of Object.entries(node)) {
     const nextPrefix = prefix.length === 0 ? key : `${prefix}.${key}`;
-    walkLocaleKeys(value, nextPrefix, out);
+    flattenLocaleTree(value, nextPrefix, out);
   }
 }
 
-export function collectLocaleKeysByLocale(
-  localeTrees: Record<string, LocaleLeaf>,
+export function buildLocaleKeyIndex(
+  localeTrees: Record<string, string | LocaleTree>,
 ): Record<string, string[]> {
-  const byLocale: Record<string, string[]> = {};
+  const index: Record<string, string[]> = {};
 
   for (const [locale, tree] of Object.entries(localeTrees)) {
     const keys = new Set<string>();
-    walkLocaleKeys(tree, "", keys);
-    byLocale[locale] = [...keys].sort((a, b) => a.localeCompare(b));
+    flattenLocaleTree(tree, "", keys);
+    index[locale] = [...keys].sort((left, right) => left.localeCompare(right));
   }
 
-  return byLocale;
+  return index;
 }
 
 export function flattenLocaleKeys(
-  localeTrees: Record<string, LocaleLeaf>,
+  localeTrees: Record<string, string | LocaleTree>,
 ): string[] {
-  const byLocale = collectLocaleKeysByLocale(localeTrees);
-  const merged = new Set<string>();
-  for (const keys of Object.values(byLocale)) {
+  const keyUnion = new Set<string>();
+  const index = buildLocaleKeyIndex(localeTrees);
+  for (const keys of Object.values(index)) {
     for (const key of keys) {
-      merged.add(key);
+      keyUnion.add(key);
     }
   }
-  return [...merged].sort((a, b) => a.localeCompare(b));
+  return [...keyUnion].sort((left, right) => left.localeCompare(right));
 }
 
 export type Phase4I18nSubmission = {
@@ -604,39 +593,37 @@ export type Phase4I18nSubmission = {
     i18nKey?: string;
     rawLiteral?: string;
   }>;
-  localeKeysByLocale: Record<string, string[]>;
+  localeKeyIndex: Record<string, string[]>;
+  requiredLocales: string[];
   formattingRequirements: Array<"date" | "number" | "relativeTime">;
   intlCalls: string[];
   hardcodedFormattingPatterns: string[];
 };
 
-const REQUIRED_INTL_CALLS: Record<"date" | "number" | "relativeTime", string> =
-  {
-    date: "Intl.DateTimeFormat",
-    number: "Intl.NumberFormat",
-    relativeTime: "Intl.RelativeTimeFormat",
-  };
+const REQUIRED_INTL_CALLS: Record<"date" | "number" | "relativeTime", string> = {
+  date: "Intl.DateTimeFormat",
+  number: "Intl.NumberFormat",
+  relativeTime: "Intl.RelativeTimeFormat",
+};
 
 export function validateI18nSubmissionGate(
   input: Phase4I18nSubmission,
 ): ValidationResult {
   const errors: ValidationError[] = [];
-  const baseLocaleKeySet = new Set(input.localeKeysByLocale["zh-CN"] ?? []);
-  const fallbackLocaleKeySet = new Set(input.localeKeysByLocale["en-US"] ?? []);
+  const localeLookup = new Map<string, Set<string>>();
 
-  if (baseLocaleKeySet.size === 0) {
-    addError(
-      errors,
-      "I18N_BASE_LOCALE_MISSING",
-      "zh-CN locale keys are required for phase 4 submission gate",
-    );
-  }
-  if (fallbackLocaleKeySet.size === 0) {
-    addError(
-      errors,
-      "I18N_FALLBACK_LOCALE_MISSING",
-      "en-US locale keys are required for phase 4 submission gate",
-    );
+  for (const locale of input.requiredLocales) {
+    const keys = input.localeKeyIndex[locale];
+    if (!keys) {
+      addError(
+        errors,
+        "I18N_REQUIRED_LOCALE_MISSING",
+        `required locale ${locale} is missing from locale index`,
+      );
+      continue;
+    }
+
+    localeLookup.set(locale, new Set(keys));
   }
 
   for (const change of input.uiChanges) {
@@ -657,19 +644,14 @@ export function validateI18nSubmissionGate(
       continue;
     }
 
-    if (!baseLocaleKeySet.has(change.i18nKey)) {
-      addError(
-        errors,
-        "I18N_KEY_NOT_IN_BASE_LOCALE",
-        `component ${change.componentPath} references missing zh-CN key ${change.i18nKey}`,
-      );
-    }
-    if (!fallbackLocaleKeySet.has(change.i18nKey)) {
-      addError(
-        errors,
-        "I18N_KEY_NOT_IN_FALLBACK_LOCALE",
-        `component ${change.componentPath} references missing en-US key ${change.i18nKey}`,
-      );
+    for (const [locale, keySet] of localeLookup) {
+      if (!keySet.has(change.i18nKey)) {
+        addError(
+          errors,
+          "I18N_KEY_LOCALE_GAP",
+          `component ${change.componentPath} key ${change.i18nKey} missing in locale ${locale}`,
+        );
+      }
     }
   }
 

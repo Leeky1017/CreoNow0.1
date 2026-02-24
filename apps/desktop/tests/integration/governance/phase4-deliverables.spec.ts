@@ -96,3 +96,27 @@ const completeLedger: Phase4DeliverablesLedgerInput = {
     JSON.stringify(result.errors, null, 2),
   );
 }
+
+// PM-P4-S1
+// 关联 ADR 处于未接受状态时，交付物不能进入审阅通过态
+{
+  const proposedAdrLedger: Phase4DeliverablesLedgerInput = {
+    ...completeLedger,
+    adrs: completeLedger.adrs.map((adr) =>
+      adr.id === "ADR-606-P4-001"
+        ? {
+            ...adr,
+            status: "Proposed",
+          }
+        : adr,
+    ),
+  };
+
+  const result = validateDeliverablesAndAdr(proposedAdrLedger);
+  assert.equal(result.ok, false);
+  assert.equal(
+    result.errors.some((error) => error.code === "ADR_NOT_ACCEPTED"),
+    true,
+    JSON.stringify(result.errors, null, 2),
+  );
+}
