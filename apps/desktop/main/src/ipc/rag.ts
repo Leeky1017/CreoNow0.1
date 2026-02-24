@@ -260,6 +260,7 @@ export function registerRagIpcHandlers(deps: {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
+      const db = deps.db;
       const payloadError = validateRagRetrievePayload(payload);
       if (payloadError) {
         return payloadError;
@@ -294,7 +295,7 @@ export function registerRagIpcHandlers(deps: {
         }
 
         const semanticPrepareError = prepareSemanticDocuments({
-          db: deps.db,
+          db,
           projectId: payload.projectId,
           model,
           semanticIndex,
@@ -334,7 +335,7 @@ export function registerRagIpcHandlers(deps: {
             return { ok: false, error: semantic.error };
           }
 
-          const fts = createFtsService({ db: deps.db, logger: deps.logger });
+          const fts = createFtsService({ db, logger: deps.logger });
           const ftsRes = fts.searchFulltext({
             projectId: payload.projectId,
             query: payload.queryText,
@@ -403,7 +404,7 @@ export function registerRagIpcHandlers(deps: {
             };
           }
 
-          const fts = createFtsService({ db: deps.db, logger: deps.logger });
+          const fts = createFtsService({ db, logger: deps.logger });
           const ftsRes = fts.searchFulltext({
             projectId: payload.projectId,
             query: payload.queryText,
