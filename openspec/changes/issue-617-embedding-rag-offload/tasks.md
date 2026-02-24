@@ -1,11 +1,30 @@
-更新时间：2026-02-22 19:37
+更新时间：2026-02-24 11:29
 
 ## 1. Specification
 
 - [ ] 1.1 审阅并确认需求边界（Embedding/RAG 的执行位置迁移、队列化、写入批量化、缓存有界）
 - [ ] 1.2 审阅并确认错误路径与边界路径（向量不可用降级、超时/取消、批处理失败回滚）
 - [ ] 1.3 审阅并确认验收阈值与不可变契约（autosave 不阻塞；降级可见；cache 有上限）
-- [ ] 1.4 若存在上游依赖，先完成依赖同步检查（Dependency Sync Check）并记录“无漂移/已更新”；无依赖则标注 N/A
+- [x] 1.4 若存在上游依赖，先完成依赖同步检查（Dependency Sync Check）并记录“无漂移/已更新”；结论：`PASS（NO_DRIFT）`
+
+### 依赖同步检查（Dependency Sync Check）
+
+- 检查时间：2026-02-24 11:29
+- 核对输入：
+  - `openspec/changes/archive/issue-617-utilityprocess-foundation/proposal.md`
+  - `openspec/changes/archive/issue-617-utilityprocess-foundation/tasks.md`
+  - `openspec/changes/archive/issue-617-utilityprocess-foundation/specs/ipc/spec.md`
+  - `openspec/changes/archive/issue-617-scoped-lifecycle-and-abort/proposal.md`
+  - `openspec/changes/archive/issue-617-scoped-lifecycle-and-abort/tasks.md`
+  - `openspec/changes/archive/issue-617-scoped-lifecycle-and-abort/specs/ipc/spec.md`
+  - `openspec/changes/archive/issue-617-scoped-lifecycle-and-abort/specs/skill-system/spec.md`
+  - `openspec/changes/archive/issue-617-scoped-lifecycle-and-abort/specs/context-engine/spec.md`
+  - `openspec/specs/ipc/spec.md`
+  - `openspec/specs/skill-system/spec.md`
+  - `openspec/specs/context-engine/spec.md`
+  - `apps/desktop/main/src/services/utilityprocess/**`
+- 核对结论：`PASS（NO_DRIFT）`
+- 后续动作：当前 change 文档无需修订，按 BE-EMR-S1~S4 继续进入 TDD Red 阶段。
 
 ## 2. TDD Mapping（先测前提）
 
@@ -41,5 +60,5 @@
 ## 6. Evidence
 
 - [ ] 6.1 记录 RUN_LOG（含 Red 失败证据、Green 通过证据与关键命令输出）
-- [ ] 6.2 记录 Dependency Sync Check 的输入、核对结论与后续动作（无漂移/已更新）
+- [x] 6.2 记录 Dependency Sync Check 的输入、核对结论与后续动作（无漂移/已更新）
 - [ ] 6.3 记录 Main Session Audit（Audit-Owner/Reviewed-HEAD-SHA=签字提交 HEAD^/三项 PASS/Blocking-Issues=0/Decision=ACCEPT），并确认签字提交仅变更当前任务 RUN_LOG
