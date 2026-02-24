@@ -1,6 +1,6 @@
 # ISSUE-644
 
-更新时间：2026-02-24 22:39
+更新时间：2026-02-24 22:56
 
 ## Links
 
@@ -152,10 +152,34 @@
   - 当前阻断仅剩 `Reviewed-HEAD-SHA` 与签字提交 `HEAD^` 对齐。
   - 本次 RUN_LOG-only 签字提交将 `Reviewed-HEAD-SHA` 更新为签字提交前 HEAD（`902597120d22b9683447c59a810d3701a3135d9d`）。
 
+### 2026-02-24 Main Session Audit refresh（doc-2）
+
+- Preflight fail（本轮复现）:
+  - Command:
+    - `python3 scripts/agent_pr_preflight.py`
+  - Exit code:
+    - `1`
+  - Key output:
+    - `[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch: audit=f852e20719066f94868213327f1fc2aba406fa72, head=902597120d22b9683447c59a810d3701a3135d9d`
+- Fix applied（签字提交前准备）:
+  - Command:
+    - `git rev-parse HEAD`
+    - `edit openspec/_ops/task_runs/ISSUE-644.md`
+  - Exit code:
+    - `0`
+  - Key output:
+    - `HEAD(before signing commit)=f852e20719066f94868213327f1fc2aba406fa72`
+    - `Reviewed-HEAD-SHA` 已刷新为签字提交前 `HEAD`
+- Preflight（修复后）:
+  - Command:
+    - `python3 scripts/agent_pr_preflight.py`
+  - Expected:
+    - 签字提交后以 `HEAD^=f852e20719066f94868213327f1fc2aba406fa72` 通过 `MAIN_AUDIT` 校验
+
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 902597120d22b9683447c59a810d3701a3135d9d
+- Reviewed-HEAD-SHA: f852e20719066f94868213327f1fc2aba406fa72
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
