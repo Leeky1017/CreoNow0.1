@@ -1,6 +1,6 @@
 # ISSUE-644
 
-更新时间：2026-02-24 22:18
+更新时间：2026-02-24 22:20
 
 ## Links
 
@@ -112,10 +112,27 @@
   - preflight 阻断：`[OPENSPEC_CHANGE] active change content updated but openspec/changes/EXECUTION_ORDER.md not updated in this PR`
   - 修复后已补齐 `openspec/changes/EXECUTION_ORDER.md` 同步更新。
 
+### 2026-02-24 Prettier gate repair
+
+- Command:
+  - `python3 scripts/agent_pr_preflight.py`（阻断：2 个测试文件 Prettier 格式不一致）
+  - `pnpm exec prettier --write apps/desktop/main/src/services/skills/__tests__/skill-registry.lazy-load.contract.test.ts apps/desktop/main/src/services/skills/__tests__/skill-scheduler.timeout-recovery.contract.test.ts`
+  - `node --import tsx .../skill-registry.lazy-load.contract.test.ts`
+  - `node --import tsx .../skill-file-io.dataprocess.contract.test.ts`
+  - `node --import tsx .../skill-scheduler.timeout-recovery.contract.test.ts`
+  - `node --import tsx .../skill-cancel.race.contract.test.ts`
+  - `pnpm exec tsc -p apps/desktop/tsconfig.json --noEmit`
+- Exit code:
+  - prettier: `0`
+  - 四个 contract tests: `0`
+  - tsc noEmit: `0`
+- Key output:
+  - preflight 报告的格式阻断已消除，功能验证回归通过。
+
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 4118cf538f6e4e502cececc8a90ce4e777622278
+- Reviewed-HEAD-SHA: dd4edfa121cbc35c0ec56d08d78a71d77ea0a299
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
