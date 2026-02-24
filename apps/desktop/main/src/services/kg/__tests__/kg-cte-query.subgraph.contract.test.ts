@@ -114,10 +114,10 @@ function insertRelation(args: {
     );
 }
 
-function capturePreparedSql<T>(args: {
-  db: Database.Database;
-  run: () => T;
-}): { result: T; preparedSql: string[] } {
+function capturePreparedSql<T>(args: { db: Database.Database; run: () => T }): {
+  result: T;
+  preparedSql: string[];
+} {
   const trackedDb = args.db as unknown as {
     prepare: (sql: string, ...bindArgs: unknown[]) => unknown;
   };
@@ -133,6 +133,41 @@ function capturePreparedSql<T>(args: {
     return {
       result: args.run(),
       preparedSql,
+    };
+  } finally {
+    trackedDb.prepare = originalPrepare as typeof trackedDb.prepare;
+  }
+}
+
+function withEntityInPlaceholderLimit<T>(args: {
+  db: Database.Database;
+  maxPlaceholders: number;
+  run: () => T;
+}): { result: T; placeholderCounts: number[] } {
+  const trackedDb = args.db as unknown as {
+    prepare: (sql: string, ...bindArgs: unknown[]) => unknown;
+  };
+  const originalPrepare = trackedDb.prepare.bind(args.db);
+  const placeholderCounts: number[] = [];
+
+  trackedDb.prepare = ((sql: string, ...bindArgs: unknown[]) => {
+    if (/FROM kg_entities WHERE id IN \(/i.test(sql)) {
+      const placeholderCount = (sql.match(/\?/g) ?? []).length;
+      placeholderCounts.push(placeholderCount);
+      if (placeholderCount > args.maxPlaceholders) {
+        throw new Error(
+          `simulated placeholder limit exceeded: ${placeholderCount} > ${args.maxPlaceholders}`,
+        );
+      }
+    }
+
+    return originalPrepare(sql, ...bindArgs);
+  }) as typeof trackedDb.prepare;
+
+  try {
+    return {
+      result: args.run(),
+      placeholderCounts,
     };
   } finally {
     trackedDb.prepare = originalPrepare as typeof trackedDb.prepare;
@@ -210,16 +245,75 @@ function capturePreparedSql<T>(args: {
     assert.equal(captured.result.data.queryCostMs >= 0, true);
 
     const entityIds = captured.result.data.entities.map((entity) => entity.id);
-    assert.deepEqual([...entityIds].sort(),
-      [centerEntityId, hop1EntityId, hop2EntityId].sort());
+    assert.deepEqual(
+      [...entityIds].sort(),
+      [centerEntityId, hop1EntityId, hop2EntityId].sort(),
+    );
 
-    const relationIds = captured.result.data.relations.map((relation) =>
-      relation.id,
+    const relationIds = captured.result.data.relations.map(
+      (relation) => relation.id,
     );
     assert.deepEqual(relationIds.sort(), ["r-s1-1", "r-s1-2"]);
 
     const joinedSql = captured.preparedSql.join("\n");
     assert.match(joinedSql, /WITH\s+RECURSIVE/i);
+  } finally {
+    harness.close();
+  }
+}
+
+// BE-KGQ-S1
+// querySubgraph should avoid oversized IN placeholder lists by batching id lookups.
+{
+  const harness = createTestHarness();
+  try {
+    const centerEntityId = createEntity({
+      service: harness.service,
+      projectId: harness.projectId,
+      name: "center-s1-batch",
+    });
+
+    for (let index = 0; index < 300; index += 1) {
+      const hopEntityId = createEntity({
+        service: harness.service,
+        projectId: harness.projectId,
+        name: `hop-batch-${index}`,
+      });
+      insertRelation({
+        db: harness.db,
+        id: `r-s1-batch-${index}`,
+        projectId: harness.projectId,
+        sourceEntityId: centerEntityId,
+        targetEntityId: hopEntityId,
+        createdAt: `2026-02-24T11:${String(index % 60).padStart(2, "0")}:00.000Z`,
+      });
+    }
+
+    const placeholderCap = 256;
+    const captured = withEntityInPlaceholderLimit({
+      db: harness.db,
+      maxPlaceholders: placeholderCap,
+      run: () =>
+        harness.service.querySubgraph({
+          projectId: harness.projectId,
+          centerEntityId,
+          k: 1,
+        }),
+    });
+
+    assert.equal(captured.result.ok, true);
+    if (!captured.result.ok) {
+      assert.fail("expected batched querySubgraph success");
+    }
+
+    assert.equal(captured.result.data.nodeCount, 301);
+    assert.equal(captured.result.data.edgeCount, 300);
+    assert.equal(captured.placeholderCounts.length >= 2, true);
+    assert.equal(
+      captured.placeholderCounts.every((count) => count <= placeholderCap),
+      true,
+      `expected all placeholder batches <= ${placeholderCap}, got [${captured.placeholderCounts.join(", ")}]`,
+    );
   } finally {
     harness.close();
   }

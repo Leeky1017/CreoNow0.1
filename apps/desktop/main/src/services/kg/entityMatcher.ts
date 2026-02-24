@@ -109,23 +109,27 @@ function buildAutomaton(entities: MatchableEntity[]): {
   ];
 
   const entityOrderById = new Map<string, number>();
+  const seenTermsByEntityId = new Map<string, Set<string>>();
   for (const entity of entities) {
     if (entity.aiContextLevel !== "when_detected") {
       continue;
     }
-    if (entityOrderById.has(entity.id)) {
-      continue;
+    if (!entityOrderById.has(entity.id)) {
+      entityOrderById.set(entity.id, entityOrderById.size);
     }
 
-    entityOrderById.set(entity.id, entityOrderById.size);
+    let seenTerms = seenTermsByEntityId.get(entity.id);
+    if (!seenTerms) {
+      seenTerms = new Set<string>();
+      seenTermsByEntityId.set(entity.id, seenTerms);
+    }
 
-    const uniqueCandidates = new Set<string>();
     const candidates = [entity.name, ...entity.aliases];
     for (const candidate of candidates) {
-      if (candidate.trim().length === 0 || uniqueCandidates.has(candidate)) {
+      if (candidate.trim().length === 0 || seenTerms.has(candidate)) {
         continue;
       }
-      uniqueCandidates.add(candidate);
+      seenTerms.add(candidate);
       addPattern(nodes, {
         entityId: entity.id,
         matchedTerm: candidate,

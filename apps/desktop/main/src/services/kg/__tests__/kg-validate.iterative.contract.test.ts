@@ -118,7 +118,7 @@ function seedLinearGraph(args: {
 
     assert.equal(result.ok, true);
     if (!result.ok) {
-      assert.fail(`expected success, got ${result.error.code}`);
+      assert.fail("expected success");
     }
 
     assert.deepEqual(result.data.cycles, []);
@@ -200,6 +200,50 @@ function seedLinearGraph(args: {
     assert.equal(details?.reason, "MAX_VISITED_EXCEEDED");
     assert.equal(details?.maxVisited, 10);
     assert.equal(details?.visited, 11);
+  } finally {
+    harness.close();
+  }
+}
+
+// BE-KGQ-S3
+// queryValidate should report cycle semantics for A->B->C->A.
+{
+  const harness = createTestHarness();
+  try {
+    const now = "2026-02-24T12:00:00.000Z";
+    const insertEntity = harness.db.prepare(
+      "INSERT INTO kg_entities (id, project_id, type, name, description, attributes_json, last_seen_state, ai_context_level, aliases, version, created_at, updated_at) VALUES (?, ?, 'event', ?, '', '{}', NULL, 'when_detected', '[]', 1, ?, ?)",
+    );
+    insertEntity.run("n-a", harness.projectId, "node-a", now, now);
+    insertEntity.run("n-b", harness.projectId, "node-b", now, now);
+    insertEntity.run("n-c", harness.projectId, "node-c", now, now);
+
+    const insertRelation = harness.db.prepare(
+      "INSERT INTO kg_relations (id, project_id, source_entity_id, target_entity_id, relation_type, description, created_at) VALUES (?, ?, ?, ?, 'next', '', ?)",
+    );
+    insertRelation.run("r-ab", harness.projectId, "n-a", "n-b", now);
+    insertRelation.run("r-bc", harness.projectId, "n-b", "n-c", now);
+    insertRelation.run("r-ca", harness.projectId, "n-c", "n-a", now);
+
+    const result = harness.service.queryValidate({
+      projectId: harness.projectId,
+      maxDepth: 8,
+      maxVisited: 8,
+    });
+
+    assert.equal(result.ok, true);
+    if (!result.ok) {
+      assert.fail("expected cycle detection success");
+    }
+
+    assert.equal(result.data.cycles.length >= 1, true);
+    const cycle = result.data.cycles[0];
+    assert.equal(cycle[0], cycle[cycle.length - 1]);
+    assert.deepEqual([...new Set(cycle.slice(0, -1))].sort(), [
+      "n-a",
+      "n-b",
+      "n-c",
+    ]);
   } finally {
     harness.close();
   }

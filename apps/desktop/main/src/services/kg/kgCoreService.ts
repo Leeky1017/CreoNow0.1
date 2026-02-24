@@ -37,6 +37,7 @@ const DEFAULT_PATH_EXPANSION_LIMIT = 10_000;
 const DEFAULT_SUBGRAPH_MAX_K = 3;
 const DEFAULT_VALIDATE_MAX_DEPTH = 10_000;
 const DEFAULT_VALIDATE_MAX_VISITED = DEFAULT_NODE_LIMIT;
+const ENTITY_ID_QUERY_BATCH_SIZE = 256;
 
 const MAX_ENTITY_NAME_CHARS = 256;
 const MAX_ENTITY_ALIAS_CHARS = 256;
@@ -570,15 +571,25 @@ function listEntitiesByIds(
     return [];
   }
 
-  const placeholders = entityIds.map(() => "?").join(",");
-  const sql = `SELECT id, project_id as projectId, type, name, description, attributes_json as attributesJson, last_seen_state as lastSeenState, ai_context_level as aiContextLevel, aliases as aliasesJson, version, created_at as createdAt, updated_at as updatedAt FROM kg_entities WHERE id IN (${placeholders})`;
-
-  const rows = db.prepare(sql).all(...entityIds) as EntityRow[];
-  return rows.map((row) => ({
-    id: row.id,
-    projectId: row.projectId,
-    row,
-  }));
+  const records: Array<{ id: string; projectId: string; row: EntityRow }> = [];
+  for (
+    let start = 0;
+    start < entityIds.length;
+    start += ENTITY_ID_QUERY_BATCH_SIZE
+  ) {
+    const batchIds = entityIds.slice(start, start + ENTITY_ID_QUERY_BATCH_SIZE);
+    const placeholders = batchIds.map(() => "?").join(",");
+    const sql = `SELECT id, project_id as projectId, type, name, description, attributes_json as attributesJson, last_seen_state as lastSeenState, ai_context_level as aiContextLevel, aliases as aliasesJson, version, created_at as createdAt, updated_at as updatedAt FROM kg_entities WHERE id IN (${placeholders})`;
+    const rows = db.prepare(sql).all(...batchIds) as EntityRow[];
+    records.push(
+      ...rows.map((row) => ({
+        id: row.id,
+        projectId: row.projectId,
+        row,
+      })),
+    );
+  }
+  return records;
 }
 
 function buildDirectedAdjacency(
@@ -1516,7 +1527,14 @@ export function createKnowledgeGraphCoreService(args: {
       }
     },
 
-    queryPath: ({ projectId, sourceEntityId, targetEntityId, timeoutMs }) => {
+    queryPath: ({
+      projectId,
+      sourceEntityId,
+      targetEntityId,
+      timeoutMs,
+      maxDepth,
+      maxExpansions,
+    }) => {
       const startedAt = Date.now();
       const invalidProjectId = validateProjectId(projectId);
       if (invalidProjectId) {
@@ -1538,6 +1556,25 @@ export function createKnowledgeGraphCoreService(args: {
           timeoutMs: effectiveTimeoutMs,
           suggestion: "reduce graph scope or use keyword filtering",
         });
+      }
+      if (
+        maxDepth !== undefined &&
+        (!Number.isInteger(maxDepth) || maxDepth <= 0)
+      ) {
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "maxDepth must be a positive integer",
+        );
+      }
+      const effectiveMaxExpansions = maxExpansions ?? limits.pathExpansionLimit;
+      if (
+        !Number.isInteger(effectiveMaxExpansions) ||
+        effectiveMaxExpansions <= 0
+      ) {
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "maxExpansions must be a positive integer",
+        );
       }
 
       const normalizedProjectId = projectId.trim();
@@ -1569,6 +1606,7 @@ export function createKnowledgeGraphCoreService(args: {
         let queueIndex = 0;
         const visited = new Set<string>([normalizedSource]);
         const previous = new Map<string, string>();
+        const depthByNode = new Map<string, number>([[normalizedSource, 0]]);
 
         let expansions = 0;
         let found = false;
@@ -1586,10 +1624,11 @@ export function createKnowledgeGraphCoreService(args: {
           queueIndex += 1;
 
           expansions += 1;
-          if (expansions > limits.pathExpansionLimit) {
+          if (expansions > effectiveMaxExpansions) {
             return ipcError("KG_QUERY_TIMEOUT", "query timeout", {
+              reason: "MAX_EXPANSIONS_EXCEEDED",
               expansions,
-              maxExpansions: limits.pathExpansionLimit,
+              maxExpansions: effectiveMaxExpansions,
               suggestion: "reduce graph scope or use keyword filtering",
             });
           }
@@ -1599,13 +1638,26 @@ export function createKnowledgeGraphCoreService(args: {
             break;
           }
 
+          const nodeDepth = depthByNode.get(nodeId) ?? 0;
           const neighbors = adjacency.get(nodeId) ?? [];
           for (const neighbor of neighbors) {
             if (visited.has(neighbor)) {
               continue;
             }
+            const nextDepth = nodeDepth + 1;
+            if (maxDepth !== undefined && nextDepth > maxDepth) {
+              return ipcError("KG_QUERY_TIMEOUT", "query timeout", {
+                reason: "MAX_DEPTH_EXCEEDED",
+                maxDepth,
+                depth: nextDepth,
+                nodeId: neighbor,
+                suggestion: "reduce graph scope or increase maxDepth",
+              });
+            }
+
             visited.add(neighbor);
             previous.set(neighbor, nodeId);
+            depthByNode.set(neighbor, nextDepth);
             if (neighbor === normalizedTarget) {
               found = true;
               break;

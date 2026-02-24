@@ -183,6 +183,8 @@ function insertRelation(args: {
       sourceEntityId,
       targetEntityId,
       timeoutMs: 500,
+      maxDepth: 4,
+      maxExpansions: 4,
     });
 
     assert.equal(queried.ok, true);
@@ -190,10 +192,148 @@ function insertRelation(args: {
       assert.fail("queryPath should succeed");
     }
 
-    assert.deepEqual(queried.data.pathEntityIds, [sourceEntityId, targetEntityId]);
+    assert.deepEqual(queried.data.pathEntityIds, [
+      sourceEntityId,
+      targetEntityId,
+    ]);
     assert.equal(queried.data.expansions <= 2, true);
     assert.equal(queried.data.degraded, false);
     assert.equal(queried.data.queryCostMs >= 0, true);
+  } finally {
+    harness.close();
+  }
+}
+
+// BE-KGQ-S2
+// queryPath should enforce caller-provided maxExpansions with stable overflow semantics.
+{
+  const harness = createTestHarness();
+  try {
+    const sourceEntityId = createEntity({
+      service: harness.service,
+      projectId: harness.projectId,
+      name: "source-s2-exp-limit",
+    });
+    const middleEntityId = createEntity({
+      service: harness.service,
+      projectId: harness.projectId,
+      name: "middle-s2-exp-limit",
+    });
+    const targetEntityId = createEntity({
+      service: harness.service,
+      projectId: harness.projectId,
+      name: "target-s2-exp-limit",
+    });
+
+    insertRelation({
+      db: harness.db,
+      id: "r-s2-exp-1",
+      projectId: harness.projectId,
+      sourceEntityId,
+      targetEntityId: middleEntityId,
+      createdAt: "2026-02-24T10:01:00.000Z",
+    });
+    insertRelation({
+      db: harness.db,
+      id: "r-s2-exp-2",
+      projectId: harness.projectId,
+      sourceEntityId: middleEntityId,
+      targetEntityId,
+      createdAt: "2026-02-24T10:01:01.000Z",
+    });
+
+    const queried = harness.service.queryPath({
+      projectId: harness.projectId,
+      sourceEntityId,
+      targetEntityId,
+      timeoutMs: 500,
+      maxExpansions: 1,
+    });
+
+    assert.equal(queried.ok, false);
+    if (queried.ok) {
+      assert.fail("expected maxExpansions violation");
+    }
+
+    assert.equal(queried.error.code, "KG_QUERY_TIMEOUT");
+    const details = queried.error.details as
+      | {
+          reason?: string;
+          maxExpansions?: number;
+          expansions?: number;
+        }
+      | undefined;
+    assert.equal(details?.reason, "MAX_EXPANSIONS_EXCEEDED");
+    assert.equal(details?.maxExpansions, 1);
+    assert.equal(details?.expansions, 2);
+  } finally {
+    harness.close();
+  }
+}
+
+// BE-KGQ-S2
+// queryPath should enforce caller-provided maxDepth with stable overflow semantics.
+{
+  const harness = createTestHarness();
+  try {
+    const sourceEntityId = createEntity({
+      service: harness.service,
+      projectId: harness.projectId,
+      name: "source-s2-depth-limit",
+    });
+    const middleEntityId = createEntity({
+      service: harness.service,
+      projectId: harness.projectId,
+      name: "middle-s2-depth-limit",
+    });
+    const targetEntityId = createEntity({
+      service: harness.service,
+      projectId: harness.projectId,
+      name: "target-s2-depth-limit",
+    });
+
+    insertRelation({
+      db: harness.db,
+      id: "r-s2-depth-1",
+      projectId: harness.projectId,
+      sourceEntityId,
+      targetEntityId: middleEntityId,
+      createdAt: "2026-02-24T10:02:00.000Z",
+    });
+    insertRelation({
+      db: harness.db,
+      id: "r-s2-depth-2",
+      projectId: harness.projectId,
+      sourceEntityId: middleEntityId,
+      targetEntityId,
+      createdAt: "2026-02-24T10:02:01.000Z",
+    });
+
+    const queried = harness.service.queryPath({
+      projectId: harness.projectId,
+      sourceEntityId,
+      targetEntityId,
+      timeoutMs: 500,
+      maxDepth: 1,
+      maxExpansions: 8,
+    });
+
+    assert.equal(queried.ok, false);
+    if (queried.ok) {
+      assert.fail("expected maxDepth violation");
+    }
+
+    assert.equal(queried.error.code, "KG_QUERY_TIMEOUT");
+    const details = queried.error.details as
+      | {
+          reason?: string;
+          maxDepth?: number;
+          depth?: number;
+        }
+      | undefined;
+    assert.equal(details?.reason, "MAX_DEPTH_EXCEEDED");
+    assert.equal(details?.maxDepth, 1);
+    assert.equal(details?.depth, 2);
   } finally {
     harness.close();
   }
