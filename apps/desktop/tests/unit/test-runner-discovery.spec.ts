@@ -167,7 +167,8 @@ assert.equal(
 
 const integrationSentinel =
   "apps/desktop/tests/integration/runtime-governance-consistency.test.ts";
-const perfSentinel = "apps/desktop/tests/perf/project-lifecycle.benchmark.test.ts";
+const perfSentinel =
+  "apps/desktop/tests/perf/project-lifecycle.benchmark.test.ts";
 const visualSentinel =
   "apps/desktop/tests/e2e/visual/phase4-baseline-capture.spec.ts";
 const scriptSentinel = "scripts/tests/phase4-ci-gates.spec.ts";

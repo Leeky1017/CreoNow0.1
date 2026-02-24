@@ -52,7 +52,10 @@ import {
   const gate = evaluateVisualAuditClosure(auditItems);
 
   assert.equal(gate.ok, false);
-  assert.equal(gate.blockers.some((blocker) => blocker.itemId === "WB-AUDIT-003"), true);
+  assert.equal(
+    gate.blockers.some((blocker) => blocker.itemId === "WB-AUDIT-003"),
+    true,
+  );
 }
 
 // WB-P4-S2: non-empty id required
@@ -179,7 +182,8 @@ import {
   assert.equal(gate.ok, false);
   assert.equal(
     gate.blockers.some(
-      (blocker) => blocker.reason === "retest status is not PASS or approved WAIVED",
+      (blocker) =>
+        blocker.reason === "retest status is not PASS or approved WAIVED",
     ),
     true,
   );

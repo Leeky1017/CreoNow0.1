@@ -29,7 +29,9 @@ function buildCompleteCaptureEntries(): Phase4BaselineCaptureEntry[] {
 
 // WB-P4-S3: 必选界面截图基线齐备 [ADDED]
 {
-  const gate = evaluateBaselineCaptureCompleteness(buildCompleteCaptureEntries());
+  const gate = evaluateBaselineCaptureCompleteness(
+    buildCompleteCaptureEntries(),
+  );
 
   assert.equal(gate.ok, true);
   assert.deepEqual(gate.missing, []);

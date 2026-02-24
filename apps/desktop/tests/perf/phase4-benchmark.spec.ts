@@ -35,7 +35,9 @@ import { evaluatePhase4Benchmark } from "../../main/src/services/workbench/phase
     true,
   );
   assert.equal(
-    evaluation.failures.some((failure) => failure.metric === "mainContentWidthPx"),
+    evaluation.failures.some(
+      (failure) => failure.metric === "mainContentWidthPx",
+    ),
     true,
   );
 }

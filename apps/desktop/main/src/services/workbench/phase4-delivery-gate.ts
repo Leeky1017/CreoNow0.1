@@ -136,7 +136,11 @@ export type Phase4BaselineMissingEntry = {
   reason: "missing-entry" | "missing-baseline" | "missing-after";
 };
 
-function buildBaselineKey(screen: string, state: string, theme: Phase4Theme): string {
+function buildBaselineKey(
+  screen: string,
+  state: string,
+  theme: Phase4Theme,
+): string {
   return `${screen}::${state}::${theme}`;
 }
 
@@ -218,14 +222,15 @@ export type Phase4BenchmarkInput = {
 };
 
 export type Phase4BenchmarkFailure = {
-  metric: "commandPaletteInvokeMs" | "workspaceInteractionMs" | "mainContentWidthPx";
+  metric:
+    | "commandPaletteInvokeMs"
+    | "workspaceInteractionMs"
+    | "mainContentWidthPx";
   actual: number;
   expected: string;
 };
 
-export function evaluatePhase4Benchmark(
-  input: Phase4BenchmarkInput,
-): {
+export function evaluatePhase4Benchmark(input: Phase4BenchmarkInput): {
   status: "PASS" | "FAIL";
   readyForCloseout: boolean;
   needsNextPolishRound: boolean;
