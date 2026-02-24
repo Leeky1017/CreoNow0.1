@@ -8,6 +8,11 @@ import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import { createProjectService } from "../projects/projectService";
 import {
+  createSkillFileIo,
+  type DataProcessTaskRunner,
+  type SkillFileIo,
+} from "./skillFileIo";
+import {
   loadSkillFile,
   loadSkills,
   type LoadedSkill,
@@ -73,11 +78,11 @@ export type SkillService = {
   list: (args: { includeDisabled?: boolean }) => ServiceResult<{
     items: SkillListItem[];
   }>;
-  read: (args: { id: string }) => ServiceResult<SkillReadResult>;
+  read: (args: { id: string }) => Promise<ServiceResult<SkillReadResult>>;
   write: (args: {
     id: string;
     content: string;
-  }) => ServiceResult<SkillWriteResult>;
+  }) => Promise<ServiceResult<SkillWriteResult>>;
   toggle: (args: {
     id: string;
     enabled: boolean;
@@ -117,6 +122,8 @@ export type SkillService = {
 
 const GLOBAL_CUSTOM_SKILL_LIMIT = 1_000;
 const PROJECT_CUSTOM_SKILL_LIMIT = 500;
+const SKILL_REGISTRY_PROJECT_CACHE_LIMIT = 8;
+const NO_PROJECT_CACHE_KEY = "__no_project__";
 
 type SkillDbRow = {
   skillId: string;
@@ -141,6 +148,10 @@ type CustomSkillOwnershipRow = {
   id: string;
   scope: CustomSkillScope;
   projectId: string | null;
+};
+
+type SkillRegistryCacheEntry = {
+  skills: LoadedSkill[];
 };
 
 function nowTs(): number {
@@ -685,40 +696,38 @@ function upsertSkillRows(args: {
   }
 }
 
-/**
- * Read a skill file from disk without leaking content to logs.
- */
-function readSkillContent(filePath: string): ServiceResult<string> {
-  try {
-    const content = fs.readFileSync(filePath, "utf8");
-    return { ok: true, data: content };
-  } catch (error) {
-    return ipcError(
-      "IO_ERROR",
-      "Failed to read skill file",
-      error instanceof Error ? { message: error.message } : { error },
-    );
+function normalizeUnknownError(error: unknown): Error {
+  if (error instanceof Error) {
+    return error;
   }
+  return new Error(String(error));
 }
 
-/**
- * Write a skill file to disk, creating parent directories.
- */
-function writeSkillContent(args: {
-  filePath: string;
-  content: string;
-}): ServiceResult<true> {
-  try {
-    fs.mkdirSync(path.dirname(args.filePath), { recursive: true });
-    fs.writeFileSync(args.filePath, args.content, "utf8");
-    return { ok: true, data: true };
-  } catch (error) {
-    return ipcError(
-      "IO_ERROR",
-      "Failed to write skill file",
-      error instanceof Error ? { message: error.message } : { error },
-    );
-  }
+function createDirectDataProcessRunner(): DataProcessTaskRunner {
+  return {
+    run: async <T>(args: {
+      execute?: (signal: AbortSignal) => Promise<T>;
+      run?: (signal: AbortSignal) => Promise<T>;
+    }) => {
+      const execute = args.execute ?? args.run;
+      if (!execute) {
+        return {
+          status: "error" as const,
+          error: new Error("Data process execute callback is required"),
+        };
+      }
+
+      try {
+        const value = await execute(new AbortController().signal);
+        return { status: "completed" as const, value };
+      } catch (error) {
+        return {
+          status: "error" as const,
+          error: normalizeUnknownError(error),
+        };
+      }
+    },
+  };
 }
 
 /**
@@ -823,8 +832,52 @@ export function createSkillService(deps: {
   userDataDir: string;
   builtinSkillsDir: string;
   logger: Logger;
+  dataProcess?: DataProcessTaskRunner;
+  skillFileIo?: SkillFileIo;
+  skillFileIoTimeoutMs?: number;
 }): SkillService {
   const globalSkillsDir = path.join(deps.userDataDir, "skills");
+  const skillFileIo =
+    deps.skillFileIo ??
+    createSkillFileIo({
+      dataProcess: deps.dataProcess ?? createDirectDataProcessRunner(),
+      timeoutMs: deps.skillFileIoTimeoutMs,
+    });
+  const skillRegistryCache = new Map<string, SkillRegistryCacheEntry>();
+  let activeProjectCacheKey: string | null = null;
+
+  const invalidateSkillRegistryCache = (): void => {
+    skillRegistryCache.clear();
+  };
+
+  const readSkillRegistryCache = (
+    projectCacheKey: string,
+  ): SkillRegistryCacheEntry | null => {
+    const cached = skillRegistryCache.get(projectCacheKey);
+    if (!cached) {
+      return null;
+    }
+    skillRegistryCache.delete(projectCacheKey);
+    skillRegistryCache.set(projectCacheKey, cached);
+    return cached;
+  };
+
+  const writeSkillRegistryCache = (
+    projectCacheKey: string,
+    entry: SkillRegistryCacheEntry,
+  ): void => {
+    if (skillRegistryCache.has(projectCacheKey)) {
+      skillRegistryCache.delete(projectCacheKey);
+    }
+    skillRegistryCache.set(projectCacheKey, entry);
+    while (skillRegistryCache.size > SKILL_REGISTRY_PROJECT_CACHE_LIMIT) {
+      const oldest = skillRegistryCache.keys().next();
+      if (oldest.done) {
+        return;
+      }
+      skillRegistryCache.delete(oldest.value);
+    }
+  };
 
   const resolveLoaded = (): ServiceResult<{
     skills: LoadedSkill[];
@@ -850,16 +903,40 @@ export function createSkillService(deps: {
         ? null
         : path.join(currentProject.data.rootPath, ".creonow", "skills");
 
-    const loaded = loadSkills({
-      logger: deps.logger,
-      roots: {
-        builtinSkillsDir: deps.builtinSkillsDir,
-        globalSkillsDir,
-        projectSkillsDir,
-      },
-    });
-    if (!loaded.ok) {
-      return loaded;
+    const roots = {
+      builtinSkillsDir: deps.builtinSkillsDir,
+      globalSkillsDir,
+      projectSkillsDir,
+    };
+    const projectCacheKey =
+      currentProject.data === null
+        ? NO_PROJECT_CACHE_KEY
+        : `${currentProject.data.projectId}:${currentProject.data.rootPath}`;
+
+    if (
+      activeProjectCacheKey !== null &&
+      activeProjectCacheKey !== projectCacheKey
+    ) {
+      invalidateSkillRegistryCache();
+    }
+    activeProjectCacheKey = projectCacheKey;
+
+    const cached = readSkillRegistryCache(projectCacheKey);
+    let resolvedSkills: LoadedSkill[];
+    if (cached) {
+      resolvedSkills = cached.skills;
+    } else {
+      const loaded = loadSkills({
+        logger: deps.logger,
+        roots,
+      });
+      if (!loaded.ok) {
+        return loaded;
+      }
+      resolvedSkills = loaded.data.skills;
+      writeSkillRegistryCache(projectCacheKey, {
+        skills: resolvedSkills,
+      });
     }
 
     const enabledMapRes = readEnabledMap(deps.db);
@@ -869,7 +946,7 @@ export function createSkillService(deps: {
 
     const upserted = upsertSkillRows({
       db: deps.db,
-      skills: loaded.data.skills,
+      skills: resolvedSkills,
       enabledMap: enabledMapRes.data,
     });
     if (!upserted.ok) {
@@ -879,13 +956,9 @@ export function createSkillService(deps: {
     return {
       ok: true,
       data: {
-        skills: loaded.data.skills,
+        skills: resolvedSkills,
         enabledMap: enabledMapRes.data,
-        roots: {
-          builtinSkillsDir: deps.builtinSkillsDir,
-          globalSkillsDir,
-          projectSkillsDir,
-        },
+        roots,
         currentProjectId: currentProject.data?.projectId ?? null,
       },
     };
@@ -940,7 +1013,7 @@ export function createSkillService(deps: {
       return { ok: true, data: { items } };
     },
 
-    read: ({ id }) => {
+    read: async ({ id }) => {
       if (id.trim().length === 0) {
         return ipcError("INVALID_ARGUMENT", "id is required", {
           fieldName: "id",
@@ -957,14 +1030,14 @@ export function createSkillService(deps: {
         return ipcError("NOT_FOUND", "Skill not found", { id });
       }
 
-      const content = readSkillContent(skill.filePath);
+      const content = await skillFileIo.read({ filePath: skill.filePath });
       if (!content.ok) {
         return content;
       }
       return { ok: true, data: { id, content: content.data } };
     },
 
-    write: ({ id, content }) => {
+    write: async ({ id, content }) => {
       if (id.trim().length === 0) {
         return ipcError("INVALID_ARGUMENT", "id is required", {
           fieldName: "id",
@@ -1025,7 +1098,7 @@ export function createSkillService(deps: {
         return ref;
       }
 
-      const written = writeSkillContent({
+      const written = await skillFileIo.write({
         filePath: ref.data.filePath,
         content,
       });
@@ -1046,6 +1119,8 @@ export function createSkillService(deps: {
       if (!upserted.ok) {
         return upserted;
       }
+
+      invalidateSkillRegistryCache();
 
       return { ok: true, data: { id, scope: targetScope, written: true } };
     },
@@ -1330,6 +1405,8 @@ export function createSkillService(deps: {
       if (!upserted.ok) {
         return upserted;
       }
+
+      invalidateSkillRegistryCache();
 
       deps.logger.info("skill_scope_updated", {
         id,
