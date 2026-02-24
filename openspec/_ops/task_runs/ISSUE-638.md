@@ -1,6 +1,6 @@
 # ISSUE-638
 
-更新时间：2026-02-24 11:34
+更新时间：2026-02-24 11:49
 
 ## Links
 
@@ -25,6 +25,39 @@
 - [ ] 主会话后续实现/提测/PR/auto-merge 收口
 
 ## Runs
+
+### 2026-02-24 BE-EMR-S3/S4 Red（contract tests）
+
+- Command:
+  - `node --import tsx/esm apps/desktop/main/src/services/rag/__tests__/rag-offload.compute.contract.test.ts`
+  - `node --import tsx/esm apps/desktop/main/src/services/embedding/__tests__/semantic-chunk-index.lru-ttl.contract.test.ts`
+- Exit code:
+  - `rag-offload.compute.contract`: `1`
+  - `semantic-chunk-index.lru-ttl.contract`: `1`
+- Key output:
+  - `Error [ERR_MODULE_NOT_FOUND]: Cannot find module .../rag/ragComputeOffload`
+  - `Error [ERR_MODULE_NOT_FOUND]: Cannot find module .../embedding/semanticChunkIndexCache`
+
+### 2026-02-24 BE-EMR-S3/S4 Green（contract + related）
+
+- Command:
+  - `node --import tsx/esm apps/desktop/main/src/services/rag/__tests__/rag-offload.compute.contract.test.ts`
+  - `node --import tsx/esm apps/desktop/main/src/services/embedding/__tests__/semantic-chunk-index.lru-ttl.contract.test.ts`
+  - `node --import tsx/esm apps/desktop/main/src/services/embedding/__tests__/embedding-queue.debounce.contract.test.ts`
+  - `node --import tsx/esm apps/desktop/main/src/services/embedding/__tests__/embedding-offload.compute.contract.test.ts`
+  - `node --import tsx/esm apps/desktop/main/src/services/embedding/__tests__/onnx-runtime.init.test.ts`
+  - `node --import tsx/esm apps/desktop/main/src/services/rag/__tests__/hybrid-rag.merge.test.ts`
+  - `node --import tsx/esm apps/desktop/main/src/services/rag/__tests__/hybrid-rag.explain.test.ts`
+  - `node --import tsx/esm apps/desktop/main/src/services/rag/__tests__/hybrid-rag.truncate.test.ts`
+- Exit code:
+  - all `0`
+- Key output:
+  - `PASS apps/desktop/main/src/services/embedding/__tests__/embedding-queue.debounce.contract.test.ts`
+  - `PASS apps/desktop/main/src/services/embedding/__tests__/embedding-offload.compute.contract.test.ts`
+  - `PASS apps/desktop/main/src/services/embedding/__tests__/onnx-runtime.init.test.ts`
+  - `PASS apps/desktop/main/src/services/rag/__tests__/hybrid-rag.merge.test.ts`
+  - `PASS apps/desktop/main/src/services/rag/__tests__/hybrid-rag.explain.test.ts`
+  - `PASS apps/desktop/main/src/services/rag/__tests__/hybrid-rag.truncate.test.ts`
 
 ### 2026-02-24 Rulebook validate
 
