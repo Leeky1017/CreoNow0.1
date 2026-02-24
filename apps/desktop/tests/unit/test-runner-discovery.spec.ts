@@ -80,10 +80,21 @@ type UnitExecutionPlan = {
   }>;
 };
 
+type IntegrationExecutionPlan = {
+  files: string[];
+  commands: Array<{
+    command: string;
+    args: string[];
+    cwd: string;
+  }>;
+};
+
 const runnerModule = (await import(pathToFileURL(runnerScriptPath).href)) as {
   buildUnitExecutionPlan: () => Promise<UnitExecutionPlan>;
+  buildIntegrationExecutionPlan: () => Promise<IntegrationExecutionPlan>;
 };
 const unitPlan = await runnerModule.buildUnitExecutionPlan();
+const integrationPlan = await runnerModule.buildIntegrationExecutionPlan();
 
 const unitTsxSentinel = "apps/desktop/tests/unit/test-runner-discovery.spec.ts";
 const mainTsxSentinel =
@@ -152,4 +163,64 @@ assert.equal(
   (vitestExecution?.args ?? []).includes(lintVitestExecutionSentinel),
   true,
   "lint vitest suites should be part of execution plan",
+);
+
+const integrationSentinel =
+  "apps/desktop/tests/integration/runtime-governance-consistency.test.ts";
+const perfSentinel =
+  "apps/desktop/tests/perf/project-lifecycle.benchmark.test.ts";
+const visualSentinel =
+  "apps/desktop/tests/e2e/visual/phase4-baseline-capture.spec.ts";
+const scriptSentinel = "scripts/tests/phase4-ci-gates.spec.ts";
+
+assert.match(
+  runnerScript,
+  /apps\/desktop\/tests\/e2e\/visual/,
+  "phase4 visual discovery root is required",
+);
+assert.match(
+  runnerScript,
+  /scripts\/tests/,
+  "scripts/tests discovery root is required",
+);
+
+assert.equal(
+  integrationPlan.files.some((file) => file.endsWith(integrationSentinel)),
+  true,
+  "integration discovery should include integration suites",
+);
+assert.equal(
+  integrationPlan.files.some((file) => file.endsWith(perfSentinel)),
+  true,
+  "integration discovery should include perf suites",
+);
+assert.equal(
+  integrationPlan.files.some((file) => file.endsWith(visualSentinel)),
+  true,
+  "integration discovery should include phase4 visual suites",
+);
+assert.equal(
+  integrationPlan.files.some((file) => file.endsWith(scriptSentinel)),
+  true,
+  "integration discovery should include scripts/tests suites",
+);
+
+const integrationExecutionTargets = integrationPlan.commands
+  .filter(
+    (command) =>
+      command.command === "pnpm" &&
+      command.args[0] === "exec" &&
+      command.args[1] === "tsx",
+  )
+  .map((command) => command.args[2] ?? "");
+
+assert.equal(
+  integrationExecutionTargets.some((file) => file.endsWith(visualSentinel)),
+  true,
+  "integration execution plan should run phase4 visual suites",
+);
+assert.equal(
+  integrationExecutionTargets.some((file) => file.endsWith(scriptSentinel)),
+  true,
+  "integration execution plan should run scripts/tests suites",
 );

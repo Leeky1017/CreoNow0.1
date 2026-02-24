@@ -138,6 +138,8 @@ export async function discoverIntegrationFiles(): Promise<string[]> {
   const roots = [
     path.join(REPO_ROOT, "apps/desktop/tests/integration"),
     path.join(REPO_ROOT, "apps/desktop/tests/perf"),
+    path.join(REPO_ROOT, "apps/desktop/tests/e2e/visual"),
+    path.join(REPO_ROOT, "scripts/tests"),
   ];
 
   const allFiles: string[] = [];
