@@ -88,3 +88,22 @@ function createEntity(args: {
   ]);
   assert.deepEqual(matchEntities("", entities), []);
 }
+
+// Scenario KG-S2-EM-S4
+// does not drop later entries that share the same entityId.
+{
+  const text = "影子从门口掠过。";
+  const entities: MatchableEntity[] = [
+    createEntity({ id: "e-dup", name: "林默", aliases: ["小默"] }),
+    createEntity({ id: "e-dup", name: "影子", aliases: ["影卫"] }),
+  ];
+
+  const results = matchEntities(text, entities);
+  assert.deepEqual(results, [
+    {
+      entityId: "e-dup",
+      matchedTerm: "影子",
+      position: text.indexOf("影子"),
+    },
+  ]);
+}
