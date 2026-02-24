@@ -1,4 +1,4 @@
-更新时间：2026-02-24 11:31
+更新时间：2026-02-24 11:44
 
 ## 1. Specification
 
@@ -33,22 +33,22 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [x] 3.1 编写 Happy Path 的失败测试并确认先失败
+- [x] 3.2 编写 Edge Case 的失败测试并确认先失败
+- [x] 3.3 编写 Error Path 的失败测试并确认先失败
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [x] 4.1 仅实现让 Red 转绿的最小代码
+- [x] 4.2 逐条使失败测试通过，不引入无关功能
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [x] 5.1 去重与重构，保持测试全绿
+- [x] 5.2 不改变已通过的外部行为契约
 
 ## 6. Evidence
 
-- [ ] 6.1 记录 RUN_LOG（含 Red 失败证据、Green 通过证据与关键命令输出）
-- [ ] 6.2 记录 Dependency Sync Check 的输入、核对结论与后续动作（无漂移/已更新）
+- [x] 6.1 记录 RUN_LOG（含 Red 失败证据、Green 通过证据与关键命令输出）
+- [x] 6.2 记录 Dependency Sync Check 的输入、核对结论与后续动作（无漂移/已更新）
 - [ ] 6.3 记录 Main Session Audit（Audit-Owner/Reviewed-HEAD-SHA=签字提交 HEAD^/三项 PASS/Blocking-Issues=0/Decision=ACCEPT），并确认签字提交仅变更当前任务 RUN_LOG

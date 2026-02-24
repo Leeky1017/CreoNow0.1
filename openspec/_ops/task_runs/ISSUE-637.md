@@ -1,6 +1,6 @@
 # ISSUE-637
 
-更新时间：2026-02-24 11:31
+更新时间：2026-02-24 11:44
 
 ## Links
 
@@ -13,7 +13,7 @@
 
 - Change: `openspec/changes/issue-617-kg-query-engine-refactor/**`
 - Rulebook task: `rulebook/tasks/issue-637-kg-query-engine-refactor/**`
-- Runtime paths (planned): `apps/desktop/main/src/services/kg/**`
+- Runtime paths: `apps/desktop/main/src/services/kg/**`
 - Required checks: `ci`, `openspec-log-guard`, `merge-serial`
 
 ## Goal
@@ -26,7 +26,7 @@
 - [x] 创建隔离 worktree 与 `task/637-kg-query-engine-refactor`
 - [x] 创建 Rulebook task（`issue-637-kg-query-engine-refactor`）
 - [x] 记录依赖同步检查（NO_DRIFT）
-- [ ] 并行实现 S1/S2、S3、S4（Red -> Green -> Refactor）
+- [x] 并行实现 S1/S2、S3、S4（Red -> Green -> Refactor）
 - [ ] 双审计（spec + quality）与修复闭环
 - [ ] 创建 PR 并开启 auto-merge
 - [ ] required checks 全绿后自动合并
@@ -83,6 +83,34 @@
 - Key output:
   - `OK: validated timestamps for 4 governed markdown file(s)`
   - `Task issue-637-kg-query-engine-refactor is valid`
+
+### 2026-02-24 Scenario implementation import (team payload integration)
+
+- Command:
+  - `git -C /home/leeky/work/codex-team-worktree-tm-2b568a12 diff -- apps/desktop/main/src/services/kg/kgCoreService.ts apps/desktop/main/src/services/kg/__tests__/kg-cte-query.subgraph.contract.test.ts apps/desktop/main/src/services/kg/__tests__/kg-cte-query.path.contract.test.ts > /tmp/patch-s12.diff`
+  - `git -C /home/leeky/work/codex-team-worktree-tm-25558b48 diff -- apps/desktop/main/src/services/kg/kgCoreService.ts apps/desktop/main/src/services/kg/types.ts apps/desktop/main/src/services/kg/__tests__/kg-validate.iterative.contract.test.ts > /tmp/patch-s3.diff`
+  - `git -C /home/leeky/work/codex-team-worktree-tm-a264dbc3 diff -- apps/desktop/main/src/services/kg/entityMatcher.ts apps/desktop/main/src/services/kg/__tests__/entity-matcher.aho-corasick.contract.test.ts > /tmp/patch-s4.diff`
+  - `git apply --3way --index /tmp/patch-s12.diff`
+  - `git apply --3way --index /tmp/patch-s3.diff`
+  - `git apply --3way --index /tmp/patch-s4.diff`
+- Key output:
+  - all three patches applied cleanly (`kgCoreService.ts`/`types.ts`/`entityMatcher.ts`)
+
+### 2026-02-24 Targeted verification (KG + retrieved fetcher)
+
+- Command:
+  - `for t in apps/desktop/main/src/services/kg/__tests__/*.test.ts apps/desktop/main/src/services/context/__tests__/retrievedFetcher.test.ts; do pnpm exec tsx "$t"; done`
+- Key output:
+  - KG test files: `0` failures
+  - `retrievedFetcher.test.ts`: `0` failures
+
+### 2026-02-24 Implementation commit
+
+- Command:
+  - `git commit -m "feat: implement kg query contracts and matcher refactor (#637)" -m "Co-authored-by: Codex <noreply@openai.com>"`
+- Key output:
+  - commit: `8b7d6909b31a8695fcb809ef8f0733f632ce8f35`
+  - changed files: `7`
 
 ## Main Session Audit
 

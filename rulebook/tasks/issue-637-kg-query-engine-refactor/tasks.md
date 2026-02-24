@@ -1,6 +1,6 @@
 # issue-637-kg-query-engine-refactor
 
-更新时间：2026-02-24 11:31
+更新时间：2026-02-24 11:44
 
 ## 1. Governance Baseline
 
@@ -12,10 +12,10 @@
 
 ## 2. Implementation (TDD)
 
-- [ ] 2.1 BE-KGQ-S1/S2：subgraph/path 合同测试 Red -> Green
-- [ ] 2.2 BE-KGQ-S3：validate 迭代化合同测试 Red -> Green
-- [ ] 2.3 BE-KGQ-S4：entity matcher 多模式匹配合同测试 Red -> Green
-- [ ] 2.4 Refactor：保持绿灯并清理重复逻辑
+- [x] 2.1 BE-KGQ-S1/S2：subgraph/path 合同测试 Red -> Green
+- [x] 2.2 BE-KGQ-S3：validate 迭代化合同测试 Red -> Green
+- [x] 2.3 BE-KGQ-S4：entity matcher 多模式匹配合同测试 Red -> Green
+- [x] 2.4 Refactor：保持绿灯并清理重复逻辑
 
 ## 3. Audit + Delivery
 
