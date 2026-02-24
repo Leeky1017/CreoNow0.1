@@ -1,6 +1,6 @@
 # ISSUE-637
 
-更新时间：2026-02-24 12:54
+更新时间：2026-02-24 12:58
 
 ## Links
 
@@ -162,10 +162,20 @@
   - branch sync commit: `bf3c474d040a1bbc2db3ed4a8acc0dce1aef1232`
   - post-sync targeted verification re-run: pass
 
+### 2026-02-24 Preflight blocker remediation (execution-order + re-sign)
+
+- Command:
+  - `python3 scripts/agent_pr_preflight.py`
+  - `git add openspec/changes/EXECUTION_ORDER.md && git commit -m "docs: sync execution order for issue-637 delivery (#637)"`
+  - `python3 scripts/agent_pr_preflight.py`（复跑）
+- Key output:
+  - first preflight failed: `[OPENSPEC_CHANGE] active change content updated but openspec/changes/EXECUTION_ORDER.md not updated in this PR`
+  - after syncing `EXECUTION_ORDER.md` preflight failed with `[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch`，按门禁要求执行 RUN_LOG-only 重新签字
+
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: bf3c474d040a1bbc2db3ed4a8acc0dce1aef1232
+- Reviewed-HEAD-SHA: 1827dd41d6a02ab0a507d331d408cd4ad903f8f5
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
