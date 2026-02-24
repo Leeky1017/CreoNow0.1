@@ -349,6 +349,32 @@
 - Follow-up:
   - 将 `Main Session Audit.Reviewed-HEAD-SHA` 更新为 `9b8e94398ab9d2df0006398c30217f177aec8892`，并创建 RUN_LOG-only 签字提交后重跑 preflight。
 
+### 2026-02-24 Gate recovery（rebase + guard drift）
+
+- Command:
+  - `pnpm lint:ratchet`
+  - `node --import tsx apps/desktop/main/src/ipc/__tests__/embedding-generate-runtime.contract.test.ts`
+  - `node --import tsx apps/desktop/main/src/ipc/__tests__/rag-retrieve-runtime.contract.test.ts`
+  - `git fetch origin`
+  - `git rebase origin/main`
+  - `gh run view 22355459980 --job 64693728987 --log`
+  - `./scripts/agent_pr_preflight.sh`
+- Exit code:
+  - `lint:ratchet`: `0`
+  - `tsx contracts`: `0`
+  - `rebase`: `1`（中途冲突）→ `0`（冲突解决后 `GIT_EDITOR=true git rebase --continue`）
+  - `openspec-log-guard log fetch`: `0`
+  - `preflight`: `1`（外部网络握手超时）
+- Key output:
+  - `[LINT_RATCHET] PASS baseline=67 current=67 delta=0`
+  - `CONFLICT (content): Merge conflict in openspec/changes/EXECUTION_ORDER.md`
+  - `RuntimeError: [MAIN_AUDIT] Reviewed-HEAD-SHA mismatch: audit=9b8e94398ab9d2df0006398c30217f177aec8892, head=3bb52859b91ea36816e5ad1cce0e86ca4d7e5cc7`
+  - `PRE-FLIGHT FAILED: [ISSUE] failed to query issue #638; cannot validate issue freshness/open state`
+  - `Post "https://api.github.com/graphql": net/http: TLS handshake timeout`
+- Follow-up:
+  - 已在 `EXECUTION_ORDER.md` 解决 rebase 冲突并保留最新真实进度。
+  - 将 `Main Session Audit.Reviewed-HEAD-SHA` 更新为当前签字前 HEAD（`d5416f677d180c60ec3ce04419be1d569e845692`），并以 RUN_LOG-only 提交重新签字。
+
 ## Dependency Sync Check
 
 - 检查时间：2026-02-24 14:05
@@ -381,7 +407,7 @@
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 9b8e94398ab9d2df0006398c30217f177aec8892
+- Reviewed-HEAD-SHA: d5416f677d180c60ec3ce04419be1d569e845692
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
