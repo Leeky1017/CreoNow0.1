@@ -7,7 +7,7 @@
 - Issue: #644
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/644
 - Branch: `task/644-skill-runtime-hardening`
-- PR: N/A（governance scaffold 阶段，尚未创建）
+- PR: https://github.com/Leeky1017/CreoNow/pull/645
 
 ## Scope
 
