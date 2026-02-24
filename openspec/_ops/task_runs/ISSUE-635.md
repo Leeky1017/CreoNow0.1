@@ -1,6 +1,6 @@
 # ISSUE-635
 
-更新时间：2026-02-24 11:43
+更新时间：2026-02-24 11:46
 
 ## Links
 
@@ -56,7 +56,7 @@
 
 - Draft-Status: SIGNED-FINALIZED
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: f1c13935a34e85d9955460b41baf0bdda8b4e4a1
+- Reviewed-HEAD-SHA: 6c61b8befae990bd09e1cd52e82bd98d50e06ef2
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
@@ -258,3 +258,13 @@
 - Key output:
   - `PRE-FLIGHT FAILED: [OPENSPEC_CHANGE] active change content updated but openspec/changes/EXECUTION_ORDER.md not updated in this PR`
   - `docs: sync execution order for issue-635 delivery (#635)`
+
+### 2026-02-24 Signing-order reset after extra HEAD push (pre-sign HEAD 6c61b8be)
+
+- Command:
+  - `git push origin task/635-issue-606-phase-4-polish-and-delivery`
+  - `git rev-parse HEAD`
+- Exit code: `0`
+- Key output:
+  - `c3d47ef0..6c61b8be task/635-issue-606-phase-4-polish-and-delivery -> task/635-issue-606-phase-4-polish-and-delivery`
+  - `6c61b8befae990bd09e1cd52e82bd98d50e06ef2`
