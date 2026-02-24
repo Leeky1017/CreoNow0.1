@@ -51,6 +51,7 @@ const DEFAULT_RAG_CONFIG: RagConfig = {
   minScore: 0.7,
   maxTokens: 1500,
 };
+const DEFAULT_RAG_RETRIEVE_TIMEOUT_MS = 5_000;
 
 function listProjectDocuments(args: {
   db: Database.Database;
@@ -537,6 +538,7 @@ export function registerRagIpcHandlers(deps: {
       }
 
       const runResult = await deps.computeRunner.run({
+        timeoutMs: DEFAULT_RAG_RETRIEVE_TIMEOUT_MS,
         signal,
         execute: async (runtimeSignal) =>
           await retrieveWithCurrentConfig(runtimeSignal),

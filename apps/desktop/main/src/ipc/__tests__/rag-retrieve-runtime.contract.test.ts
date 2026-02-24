@@ -167,11 +167,13 @@ async function main(): Promise<void> {
   let runCalls = 0;
   let inComputeRunner = false;
   let observedSignal: AbortSignal | undefined;
+  let observedTimeoutMs: number | undefined;
 
   const computeRunner: RagComputeRunner = {
     run: async (args) => {
       runCalls += 1;
       observedSignal = args.signal;
+      observedTimeoutMs = args.timeoutMs;
       inComputeRunner = true;
       try {
         return {
@@ -224,6 +226,11 @@ async function main(): Promise<void> {
     observedSignal,
     callerAbort.signal,
     "rag retrieve should forward caller AbortSignal to compute runner",
+  );
+  assert.equal(
+    observedTimeoutMs,
+    5_000,
+    "rag retrieve should set compute runner timeout to avoid long-running stalls",
   );
   assert.equal(response.ok, true);
   if (!response.ok) {
@@ -296,6 +303,85 @@ async function main(): Promise<void> {
     throw new Error("expected aborted-signal scenario to return an error");
   }
   assert.equal(abortedResponse.error.code, "CANCELED");
+
+  const timeoutHarness = createIpcHarness();
+  const timeoutRunner: RagComputeRunner = {
+    run: async () => ({
+      status: "timeout",
+      error: new Error("compute timeout"),
+    }),
+  };
+  registerRagIpcHandlers({
+    ipcMain: timeoutHarness.ipcMain,
+    db: createDbStub(),
+    logger: createLogger(),
+    embedding: createEmbeddingStub(),
+    ragRerank: { enabled: false },
+    semanticIndex: createSemanticIndexStub({
+      onSearch: () => {},
+    }),
+    computeRunner: timeoutRunner,
+  } as unknown as Parameters<typeof registerRagIpcHandlers>[0]);
+
+  const timeoutRetrieveHandler = timeoutHarness.handlers.get(
+    "rag:context:retrieve",
+  );
+  assert.ok(timeoutRetrieveHandler, "timeout-path handler should be registered");
+  const timeoutResponse = (await timeoutRetrieveHandler?.(
+    {},
+    {
+      projectId: "project-1",
+      queryText: "warehouse",
+      topK: 2,
+      maxTokens: 4,
+    },
+  )) as RagContextResponse;
+  assert.equal(timeoutResponse.ok, false);
+  if (timeoutResponse.ok) {
+    throw new Error("expected timeout-path scenario to return an error");
+  }
+  assert.equal(timeoutResponse.error.code, "SEARCH_TIMEOUT");
+
+  const abortedRunnerHarness = createIpcHarness();
+  const abortedRunner: RagComputeRunner = {
+    run: async () => ({
+      status: "aborted",
+      error: new Error("compute aborted"),
+    }),
+  };
+  registerRagIpcHandlers({
+    ipcMain: abortedRunnerHarness.ipcMain,
+    db: createDbStub(),
+    logger: createLogger(),
+    embedding: createEmbeddingStub(),
+    ragRerank: { enabled: false },
+    semanticIndex: createSemanticIndexStub({
+      onSearch: () => {},
+    }),
+    computeRunner: abortedRunner,
+  } as unknown as Parameters<typeof registerRagIpcHandlers>[0]);
+
+  const abortedRunnerRetrieveHandler = abortedRunnerHarness.handlers.get(
+    "rag:context:retrieve",
+  );
+  assert.ok(
+    abortedRunnerRetrieveHandler,
+    "aborted-path handler should be registered",
+  );
+  const abortedRunnerResponse = (await abortedRunnerRetrieveHandler?.(
+    {},
+    {
+      projectId: "project-1",
+      queryText: "warehouse",
+      topK: 2,
+      maxTokens: 4,
+    },
+  )) as RagContextResponse;
+  assert.equal(abortedRunnerResponse.ok, false);
+  if (abortedRunnerResponse.ok) {
+    throw new Error("expected aborted-path scenario to return an error");
+  }
+  assert.equal(abortedRunnerResponse.error.code, "CANCELED");
 }
 
 void main().catch((error) => {
