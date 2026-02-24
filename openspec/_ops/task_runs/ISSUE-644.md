@@ -1,6 +1,6 @@
 # ISSUE-644
 
-更新时间：2026-02-24 21:57
+更新时间：2026-02-24 22:16
 
 ## Links
 
@@ -25,7 +25,7 @@
 - [x] Rulebook validate 并落盘输出
 - [x] 创建 ISSUE-644 RUN_LOG
 - [x] 更新 change proposal 的 Dependency Sync Check 结论
-- [ ] 进入 TDD（Scenario 映射 -> Red -> Green -> Refactor）
+- [x] 进入 TDD（Scenario 映射 -> Red -> Green -> Refactor）
 
 ## Runs
 
@@ -63,12 +63,51 @@
   - `Warnings: No spec files found (specs/*/spec.md)`
   - `OK: validated timestamps for 3 governed markdown file(s)`
 
+### 2026-02-24 Skill runtime contract tests（BE-SRH-S1..S4）
+
+- Command:
+  - `node --import tsx apps/desktop/main/src/services/skills/__tests__/skill-registry.lazy-load.contract.test.ts`
+  - `node --import tsx apps/desktop/main/src/services/skills/__tests__/skill-file-io.dataprocess.contract.test.ts`
+  - `node --import tsx apps/desktop/main/src/services/skills/__tests__/skill-scheduler.timeout-recovery.contract.test.ts`
+  - `node --import tsx apps/desktop/main/src/services/skills/__tests__/skill-cancel.race.contract.test.ts`
+- Exit code:
+  - all `0`
+- Key output:
+  - BE-SRH-S1 通过：同项目重复读取命中缓存，project switch 触发缓存失效后重新扫描。
+  - BE-SRH-S2 通过：skill file 读写由 `skillFileIo` 异步委托 DataProcess 运行器，失败路径返回 `IO_ERROR`。
+  - BE-SRH-S3 通过：completion 丢失场景下槽位可回收，后续任务可继续执行。
+  - BE-SRH-S4 通过：取消与完成竞态下最终状态收敛为 `CANCELED`。
+
+### 2026-02-24 Skill module regression sweep
+
+- Command:
+  - `for f in apps/desktop/main/src/services/skills/__tests__/*.ts; do node --import tsx "$f"; done`
+  - `pnpm exec tsc -p apps/desktop/tsconfig.json --noEmit`
+  - `pnpm exec eslint apps/desktop/main/src/index.ts apps/desktop/main/src/ipc/skills.ts apps/desktop/main/src/services/skills/skillService.ts apps/desktop/main/src/services/skills/skillFileIo.ts apps/desktop/main/src/services/skills/__tests__/skill-registry.lazy-load.contract.test.ts apps/desktop/main/src/services/skills/__tests__/skill-file-io.dataprocess.contract.test.ts apps/desktop/main/src/services/skills/__tests__/skill-scheduler.timeout-recovery.contract.test.ts apps/desktop/main/src/services/skills/__tests__/skill-cancel.race.contract.test.ts`
+- Exit code:
+  - all `0`
+- Key output:
+  - skill suite 全量脚本测试通过（含既有 `skillScheduler.test.ts`/`skillRouter.test.ts`）。
+  - TypeScript noEmit 通过。
+  - ESLint 仅报告历史复杂度/函数长度 warning，无 error。
+
+### 2026-02-24 Delivery pipeline
+
+- Command:
+  - `git push -u origin task/644-skill-runtime-hardening`
+  - `gh pr create --base main --head task/644-skill-runtime-hardening --title "Deliver skill runtime hardening contracts and governance scaffold (#644)" --body-file /tmp/pr-644-body.md`
+  - `python3 scripts/agent_pr_preflight.py`（首次失败：Main Session Audit 字段为 PENDING）
+  - `git commit (RUN_LOG-only) + push`（回填 Main Session Audit）
+- Key output:
+  - PR: `https://github.com/Leeky1017/CreoNow/pull/645`
+  - preflight 阶段性阻断定位准确，仅剩 Main Session Audit 签字门槛待完成。
+
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: PENDING（final sign-off commit only）
-- Spec-Compliance: PENDING
-- Code-Quality: PENDING
-- Fresh-Verification: PENDING
-- Blocking-Issues: PENDING
-- Decision: PENDING
+- Reviewed-HEAD-SHA: 5fc2d1cf7dc1ca16747f71724c43dcb0332f7103
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
