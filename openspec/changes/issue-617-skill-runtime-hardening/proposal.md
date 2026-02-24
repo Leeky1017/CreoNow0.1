@@ -1,6 +1,6 @@
 # 提案：issue-617-skill-runtime-hardening
 
-更新时间：2026-02-22 19:37
+更新时间：2026-02-24 21:55
 
 ## 背景
 
@@ -46,7 +46,9 @@ Skill 系统存在 P0/P1 阻塞点：每次操作同步扫描目录并逐个 rea
   - Skill 系统的全局并发上限与队列语义不变（稳定可预测）。
   - 取消优先级明确：取消与完成竞态时必须以取消为准。
   - FS I/O 从同步改为异步，不引入数据一致性问题（写入原子性由 baseline change 兜底）。
-- 结论：`PENDING`
+- 结论：`NO_DRIFT`（2026-02-24）
+  - `issue-617-utilityprocess-foundation` 与 `issue-617-scoped-lifecycle-and-abort` 已归档，前置契约稳定。
+  - 当前 change 的异步 FS（DataProcess）与 Abort/slot 回收约束与上游输出一致，无需补丁更新即可进入 Red。
 
 ## 来源映射
 
