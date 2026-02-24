@@ -1,13 +1,13 @@
 # ISSUE-641
 
-更新时间：2026-02-24 13:08
+更新时间：2026-02-24 21:21
 
 ## Links
 
 - Issue: #641
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/641
 - Branch: `task/641-issue-606-phase-4-polish-and-delivery`
-- PR: (BLOCKED: network restricted, pending real PR URL backfill)
+- PR: https://github.com/Leeky1017/CreoNow/pull/643
 
 ## Scope
 
@@ -41,19 +41,19 @@
 - [x] 初始化 ISSUE-641 RUN_LOG
 - [x] 同步 `EXECUTION_ORDER.md` 进度快照（如存在漂移）
 - [x] 完成 Rulebook validate + 文档时间戳校验
-- [ ] 网络恢复后补齐 Issue OPEN 证据
-- [ ] PR 创建后回填真实 PR URL 并完成主会话签字
+- [x] 网络恢复后补齐 Issue OPEN 证据
+- [x] PR 创建后回填真实 PR URL 并完成主会话签字
 
 ## Main Session Audit
 
-- Draft-Status: PENDING-BLOCKED
+- Draft-Status: SIGNED
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: d26412d64bbca34f234527bd95595d0f755d76e5
+- Reviewed-HEAD-SHA: ef77d780c276f2dd73d9895365ca891c5852d753
 - Spec-Compliance: PASS
 - Code-Quality: PASS
-- Fresh-Verification: FAIL
-- Blocking-Issues: 1
-- Decision: REJECT
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
 
 ## Runs
 
@@ -84,3 +84,44 @@
   - `✅ Task issue-641-issue-606-phase-4-polish-and-delivery is valid`
   - warning: `No spec files found (specs/*/spec.md)`
   - `OK: validated timestamps for 3 governed markdown file(s)`
+
+### 2026-02-24 Issue freshness recheck (#641)
+
+- Command:
+  - `gh issue view 641 --json number,state,title,url,createdAt`
+- Exit code: `0`
+- Key output:
+  - `"state":"OPEN"`
+  - `"url":"https://github.com/Leeky1017/CreoNow/issues/641"`
+
+### 2026-02-24 Cross audit pass A（code/test）
+
+- Auditor: `tm-72a3e241` + main-session
+- Evidence source:
+  - `~/.codex/team/logs/team-60fe74d1/tm-72a3e241.err.log`
+  - `apps/desktop/main/src/services/workbench/phase4-delivery-gate.ts`
+  - `apps/desktop/tests/e2e/visual/phase4-baseline-capture.spec.ts`
+- Findings and disposition:
+  - HIGH（已修复）：`phase4-delivery-gate.ts` 需要对 benchmark/ratio 输入做 `Number.isFinite` 与边界校验，防止 `NaN/Infinity` 产生假绿；已在 `65c6ec30` 落地并由 `isValidRatio`/`isFiniteNonNegative` 覆盖。
+  - MEDIUM（已修复）：baseline 捕获重复键会被 `Map#set` 静默覆盖；已新增 `duplicate-entry` 阻断并补测。
+  - MEDIUM（已修复）：baseline 测试缺少失败路径；已补 `missing-entry`/`missing-baseline`/`missing-after`/`duplicate-entry`/路径层级校验断言。
+
+### 2026-02-24 Cross audit pass B（governance）
+
+- Auditor: `tm-c54184ab` + main-session
+- Evidence source:
+  - `~/.codex/team/logs/team-60fe74d1/tm-c54184ab.err.log`
+  - `scripts/agent_pr_preflight.py`
+  - `openspec/_ops/task_runs/ISSUE-641.md`
+- Findings and disposition:
+  - BLOCKER（已修复）：RUN_LOG `PR` 字段为占位符，preflight 阻断；已回填 `https://github.com/Leeky1017/CreoNow/pull/643`。
+  - BLOCKER（已修复）：Main Session Audit 初始为 `REJECT`/`Blocking-Issues=1`；已完成交叉审计闭环并更新为签字通过状态。
+  - RISK（接受）：本次 diff 包含 `ISSUE-635` 历史 RUN_LOG 追加证据；保持透明披露并在 PR 描述中说明用途为 phase4 场景证据链重建。
+
+### 2026-02-24 PR create (#643)
+
+- Command:
+  - `gh pr create --base main --head task/641-issue-606-phase-4-polish-and-delivery --title "Redo issue-606 phase-4 polish-and-delivery with governance closure (#641)" --body-file /tmp/pr641_body.md`
+- Exit code: `0`
+- Key output:
+  - `https://github.com/Leeky1017/CreoNow/pull/643`
