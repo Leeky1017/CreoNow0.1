@@ -1,4 +1,4 @@
-更新时间：2026-02-24 11:29
+更新时间：2026-02-24 12:55
 
 ## 1. Specification
 
@@ -38,7 +38,7 @@
 | ----------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | BE-EMR-S1   | `apps/desktop/main/src/services/embedding/__tests__/embedding-queue.debounce.contract.test.ts`     | `enqueue should debounce and dedupe by documentId`                  |
 | BE-EMR-S2   | `apps/desktop/main/src/services/embedding/__tests__/embedding-offload.compute.contract.test.ts`    | `encode should run via compute runner (no main-thread session.run)` |
-| BE-EMR-S3   | `apps/desktop/main/src/services/rag/__tests__/rag-offload.compute.contract.test.ts`                | `retrieve should run via compute runner and return stable TopK`     |
+| BE-EMR-S3   | `apps/desktop/main/src/services/rag/__tests__/rag-offload.compute.contract.test.ts` + `apps/desktop/main/src/ipc/__tests__/rag-retrieve-runtime.contract.test.ts` | `retrieve should run via compute runner and return stable TopK` + `rag:context:retrieve should execute inside compute runner` |
 | BE-EMR-S4   | `apps/desktop/main/src/services/embedding/__tests__/semantic-chunk-index.lru-ttl.contract.test.ts` | `cache should evict by maxSize and expire by ttl`                   |
 
 ## 3. Red（先写失败测试）
@@ -46,11 +46,13 @@
 - [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
 - [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
 - [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [x] 3.4 BE-EMR-S3（production IPC runtime）新增失败测试并确认 Red（`rag-retrieve-runtime.contract.test.ts` 断言 `semantic search` 未在 compute runner 内执行）
 
 ## 4. Green（最小实现通过）
 
 - [ ] 4.1 仅实现让 Red 转绿的最小代码
 - [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [x] 4.3 BE-EMR-S3 将 `rag:context:retrieve` 路径接入 compute runner，并在 `index.ts` 传入 `utilityProcessFoundation.compute`
 
 ## 5. Refactor（保持绿灯）
 
@@ -62,3 +64,4 @@
 - [ ] 6.1 记录 RUN_LOG（含 Red 失败证据、Green 通过证据与关键命令输出）
 - [x] 6.2 记录 Dependency Sync Check 的输入、核对结论与后续动作（无漂移/已更新）
 - [ ] 6.3 记录 Main Session Audit（Audit-Owner/Reviewed-HEAD-SHA=签字提交 HEAD^/三项 PASS/Blocking-Issues=0/Decision=ACCEPT），并确认签字提交仅变更当前任务 RUN_LOG
+- [x] 6.4 BE-EMR-S3 Red/Green 命令证据已追加至 `openspec/_ops/task_runs/ISSUE-638.md`（仅覆盖本轮 production IPC offload 事实）

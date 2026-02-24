@@ -422,6 +422,7 @@ function registerIpcHandlers(deps: {
     embedding: embeddingService,
     ragRerank,
     semanticIndex,
+    computeRunner: utilityProcessFoundation.compute,
     defaultModel: deps.env.CREONOW_EMBEDDING_MODEL ?? "default",
   });
 

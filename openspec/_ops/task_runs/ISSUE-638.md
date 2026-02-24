@@ -1,6 +1,6 @@
 # ISSUE-638
 
-更新时间：2026-02-24 12:30
+更新时间：2026-02-24 12:55
 
 ## Links
 
@@ -165,6 +165,30 @@
   - `fatal: unable to access 'https://github.com/Leeky1017/CreoNow.git/': Could not resolve host: github.com`
 - Blocker conclusion:
   - 当前可完成本地验证；远程交付链路（push / PR / auto-merge / checks polling / main sync）受网络解析失败阻断。
+
+### 2026-02-24 BE-EMR-S3 Red（production rag IPC compute runtime）
+
+- Command:
+  - `node --import tsx apps/desktop/main/src/ipc/__tests__/rag-retrieve-runtime.contract.test.ts`
+- Exit code: `1`
+- Key output:
+  - `AssertionError [ERR_ASSERTION]: rag retrieve semantic search must run inside compute runner`
+  - `false !== true`
+
+### 2026-02-24 BE-EMR-S3 Green（production rag IPC compute runtime）
+
+- Command:
+  - `node --import tsx apps/desktop/main/src/ipc/__tests__/rag-retrieve-runtime.contract.test.ts`
+  - `node --import tsx apps/desktop/main/src/services/rag/__tests__/rag-offload.compute.contract.test.ts`
+- Exit code:
+  - `rag-retrieve-runtime.contract`: `0`
+  - `rag-offload.compute.contract`: `0`
+- Key output:
+  - `[OK] node --import tsx apps/desktop/main/src/ipc/__tests__/rag-retrieve-runtime.contract.test.ts`
+  - `[OK] node --import tsx apps/desktop/main/src/services/rag/__tests__/rag-offload.compute.contract.test.ts`
+- Notes:
+  - `registerRagIpcHandlers` 在提供 `computeRunner` 时通过 `computeRunner.run(...)` 执行 `rag:context:retrieve` 检索路径。
+  - `apps/desktop/main/src/index.ts` 已为 `registerRagIpcHandlers` 注入 `utilityProcessFoundation.compute`。
 
 ## Dependency Sync Check
 
