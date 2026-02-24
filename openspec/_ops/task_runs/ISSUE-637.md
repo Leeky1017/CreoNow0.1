@@ -1,6 +1,6 @@
 # ISSUE-637
 
-更新时间：2026-02-24 13:48
+更新时间：2026-02-24 13:58
 
 ## Links
 
@@ -206,10 +206,20 @@
 - Key output:
   - expected failure before re-sign: `[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch`（新 code commit 后需刷新 RUN_LOG 审计签字）
 
+### 2026-02-24 BEHIND recovery sync (post-green)
+
+- Command:
+  - `gh pr view 640 --json state,mergeStateStatus,mergedAt,statusCheckRollup`
+  - `git fetch origin && git merge --no-edit origin/main`
+- Key output:
+  - required checks (`ci`/`openspec-log-guard`/`merge-serial`) 已全绿，但 PR 仍为 `BEHIND`
+  - sync merge commit: `d440c9ce3a2c4f9656a0d904fdb0ce039f2660a1`
+  - 引入 `origin/main` 最新提交：`d0fb0b2a`、`ff5da04c`
+
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: d25f6c987fc2d76a830eddb1930886c27d638636
+- Reviewed-HEAD-SHA: d440c9ce3a2c4f9656a0d904fdb0ce039f2660a1
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
