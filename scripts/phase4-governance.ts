@@ -81,7 +81,7 @@ function isIsoTimestamp(value: string): boolean {
   return Number.isNaN(Date.parse(value)) === false;
 }
 
-function hasText(value: string | undefined): boolean {
+function hasText(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
@@ -447,7 +447,11 @@ export function validateCiDeliveryGate(
   return buildResult(errors);
 }
 
-type LocaleLeaf = string | Record<string, LocaleLeaf>;
+interface LocaleTreeNode {
+  [key: string]: LocaleLeaf;
+}
+
+type LocaleLeaf = string | LocaleTreeNode;
 
 export function flattenLocaleKeys(
   localeTrees: Record<string, LocaleLeaf>,
