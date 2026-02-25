@@ -18,6 +18,7 @@ export type ChatMessage = {
 
 export type ChatMessageManager = {
   add: (msg: ChatMessage) => void;
+  removeById: (id: string) => void;
   clear: () => void;
   getMessages: () => ChatMessage[];
 };
@@ -35,6 +36,10 @@ export function createChatMessageManager(): ChatMessageManager {
   return {
     add(msg: ChatMessage): void {
       messages.push(cloneChatMessage(msg));
+    },
+
+    removeById(id: string): void {
+      messages = messages.filter((msg) => msg.id !== id);
     },
 
     clear(): void {

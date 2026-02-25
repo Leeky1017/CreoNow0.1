@@ -163,7 +163,7 @@ async function withStreamingServer(args: {
             event.type === "chunk" &&
             executionId.length > 0 &&
             !cancelIssued &&
-            event.seq >= 2
+            event.seq >= 1
           ) {
             cancelIssued = true;
             const cancelResult = ai.cancel({

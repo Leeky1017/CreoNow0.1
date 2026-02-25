@@ -43,6 +43,7 @@ import {
   providerDisplayName,
 } from "./aiPayloadParsers";
 import type { TraceStore } from "./traceStore";
+import { createAiWriteTransaction } from "./aiWriteTransaction";
 
 export { assembleSystemPrompt, GLOBAL_IDENTITY_PROMPT };
 export { mapUpstreamStatusToIpcErrorCode };
@@ -110,6 +111,7 @@ type RunEntry = {
   controller: AbortController;
   timeoutTimer: NodeJS.Timeout | null;
   completionTimer: NodeJS.Timeout | null;
+  chunkFlushTimer: NodeJS.Timeout | null;
   stream: boolean;
   startedAt: number;
   terminal: AiStreamTerminal | null;
@@ -118,11 +120,16 @@ type RunEntry = {
   resolveSchedulerTerminal: (terminal: SkillSchedulerTerminal) => void;
   seq: number;
   outputText: string;
+  pendingChunkBuffer: string;
+  pendingChunkCount: number;
   emitEvent: (event: AiStreamEvent) => void;
 };
 
 const DEFAULT_LLM_RATE_LIMIT_PER_MINUTE = 60;
 const PROVIDER_HALF_OPEN_AFTER_MS = 15 * 60 * 1000;
+const STREAM_CHUNK_BATCH_WINDOW_MS = 20;
+const STREAM_CHUNK_MAX_BATCH_COUNT = 4;
+const STREAM_COMPLETION_SETTLE_MS = 20;
 
 type RuntimeMessages = {
   systemText: string;
@@ -450,12 +457,42 @@ export function createAiService(deps: {
   }
 
   /**
-   * Emit a single stream chunk in-order for the given execution.
+   * Clear pending chunk flush timer if armed.
    */
-  function emitChunk(entry: RunEntry, chunk: string): void {
-    if (entry.terminal !== null || chunk.length === 0) {
+  function clearChunkFlushTimer(entry: RunEntry): void {
+    if (entry.chunkFlushTimer) {
+      clearTimeout(entry.chunkFlushTimer);
+      entry.chunkFlushTimer = null;
+    }
+  }
+
+  /**
+   * Drop buffered chunk payload without emitting.
+   */
+  function clearChunkBuffer(entry: RunEntry): void {
+    clearChunkFlushTimer(entry);
+    entry.pendingChunkBuffer = "";
+    entry.pendingChunkCount = 0;
+  }
+
+  /**
+   * Flush buffered chunks as a single stream event.
+   *
+   * Why: high-frequency upstream deltas must be coalesced by batch size/window.
+   */
+  function flushChunkBuffer(entry: RunEntry): void {
+    if (entry.pendingChunkBuffer.length === 0) {
+      clearChunkBuffer(entry);
       return;
     }
+
+    if (entry.terminal !== null) {
+      clearChunkBuffer(entry);
+      return;
+    }
+
+    const chunk = entry.pendingChunkBuffer;
+    clearChunkBuffer(entry);
 
     const nextOutputLength = entry.outputText.length + chunk.length;
     if (nextOutputLength > maxSkillOutputChars) {
@@ -483,6 +520,46 @@ export function createAiService(deps: {
       chunk,
       ts: Date.now(),
     });
+  }
+
+  /**
+   * Buffer stream chunk and flush by threshold/window.
+   */
+  function emitChunk(entry: RunEntry, chunk: string): void {
+    if (entry.terminal !== null || chunk.length === 0) {
+      return;
+    }
+
+    const bufferedLength = entry.pendingChunkBuffer.length;
+    const nextOutputLength =
+      entry.outputText.length + bufferedLength + chunk.length;
+    if (nextOutputLength > maxSkillOutputChars) {
+      entry.controller.abort();
+      const oversizedError = buildSkillOutputTooLargeError(nextOutputLength);
+      setTerminal({
+        entry,
+        terminal: "error",
+        error: oversizedError,
+        logEvent: "ai_run_failed",
+        errorCode: oversizedError.code,
+      });
+      return;
+    }
+
+    entry.pendingChunkBuffer = `${entry.pendingChunkBuffer}${chunk}`;
+    entry.pendingChunkCount += 1;
+
+    if (entry.pendingChunkCount >= STREAM_CHUNK_MAX_BATCH_COUNT) {
+      flushChunkBuffer(entry);
+      return;
+    }
+
+    if (entry.chunkFlushTimer === null) {
+      entry.chunkFlushTimer = setTimeout(() => {
+        entry.chunkFlushTimer = null;
+        flushChunkBuffer(entry);
+      }, STREAM_CHUNK_BATCH_WINDOW_MS);
+    }
   }
 
   /**
@@ -546,6 +623,12 @@ export function createAiService(deps: {
       return;
     }
 
+    if (args.terminal !== "completed") {
+      clearChunkBuffer(entry);
+    } else {
+      clearChunkFlushTimer(entry);
+    }
+
     entry.terminal = args.terminal;
     emitDone({
       entry,
@@ -586,6 +669,7 @@ export function createAiService(deps: {
     if (entry.completionTimer) {
       clearTimeout(entry.completionTimer);
     }
+    clearChunkBuffer(entry);
     runs.delete(runId);
   }
 
@@ -617,6 +701,7 @@ export function createAiService(deps: {
   function resetForFullPromptReplay(entry: RunEntry): void {
     entry.seq = 0;
     entry.outputText = "";
+    clearChunkBuffer(entry);
   }
 
   /**
@@ -1144,6 +1229,7 @@ export function createAiService(deps: {
       controller,
       timeoutTimer: null,
       completionTimer: null,
+      chunkFlushTimer: null,
       stream: args.stream,
       startedAt: args.ts,
       terminal: null,
@@ -1152,6 +1238,8 @@ export function createAiService(deps: {
       resolveSchedulerTerminal: resolveCompletion,
       seq: 0,
       outputText: "",
+      pendingChunkBuffer: "",
+      pendingChunkCount: 0,
       emitEvent: args.emitEvent,
     };
     runs.set(runId, entry);
@@ -1185,28 +1273,46 @@ export function createAiService(deps: {
 
     const persistSuccessfulTurn = (assistantOutput: string): void => {
       const baseTs = now();
-      chatMessageManager.add({
-        id: randomUUID(),
-        role: "user",
-        content: args.input,
-        timestamp: baseTs,
-        skillId: args.skillId,
-        metadata: {
-          tokenCount: promptTokens,
-          model: args.model,
+      const tx = createAiWriteTransaction();
+      const userMessageId = randomUUID();
+      const assistantMessageId = randomUUID();
+      tx.applyWrite({
+        apply: () => {
+          chatMessageManager.add({
+            id: userMessageId,
+            role: "user",
+            content: args.input,
+            timestamp: baseTs,
+            skillId: args.skillId,
+            metadata: {
+              tokenCount: promptTokens,
+              model: args.model,
+            },
+          });
+        },
+        rollback: () => {
+          chatMessageManager.removeById(userMessageId);
         },
       });
-      chatMessageManager.add({
-        id: randomUUID(),
-        role: "assistant",
-        content: assistantOutput,
-        timestamp: baseTs + 1,
-        skillId: args.skillId,
-        metadata: {
-          tokenCount: estimateTokenCount(assistantOutput),
-          model: args.model,
+      tx.applyWrite({
+        apply: () => {
+          chatMessageManager.add({
+            id: assistantMessageId,
+            role: "assistant",
+            content: assistantOutput,
+            timestamp: baseTs + 1,
+            skillId: args.skillId,
+            metadata: {
+              tokenCount: estimateTokenCount(assistantOutput),
+              model: args.model,
+            },
+          });
+        },
+        rollback: () => {
+          chatMessageManager.removeById(assistantMessageId);
         },
       });
+      tx.commit();
     };
 
     const persistTraceAndGetDegradation = (
@@ -1512,29 +1618,40 @@ export function createAiService(deps: {
                 return;
               }
 
-              // Completion is deferred one tick so a near-simultaneous cancel can win.
+              clearChunkFlushTimer(entry);
+              // Completion is deferred briefly so a near-simultaneous cancel can win.
               entry.completionTimer = setTimeout(() => {
                 entry.completionTimer = null;
                 if (entry.terminal !== null) {
                   return;
                 }
+                entry.completionTimer = setTimeout(() => {
+                  entry.completionTimer = null;
+                  if (entry.terminal !== null) {
+                    return;
+                  }
+                  flushChunkBuffer(entry);
+                  if (entry.terminal !== null) {
+                    return;
+                  }
 
-                const currentTotal =
-                  sessionTokenTotalsByKey.get(sessionKey) ?? 0;
-                const completionTokens = estimateTokenCount(entry.outputText);
-                sessionTokenTotalsByKey.set(
-                  sessionKey,
-                  currentTotal + promptTokens + completionTokens,
-                );
-                persistSuccessfulTurn(entry.outputText);
-                persistTraceAndGetDegradation(entry.outputText);
+                  const currentTotal =
+                    sessionTokenTotalsByKey.get(sessionKey) ?? 0;
+                  const completionTokens = estimateTokenCount(entry.outputText);
+                  sessionTokenTotalsByKey.set(
+                    sessionKey,
+                    currentTotal + promptTokens + completionTokens,
+                  );
+                  persistSuccessfulTurn(entry.outputText);
+                  persistTraceAndGetDegradation(entry.outputText);
 
-                setTerminal({
-                  entry,
-                  terminal: "completed",
-                  logEvent: "ai_run_completed",
-                });
-              }, 0);
+                  setTerminal({
+                    entry,
+                    terminal: "completed",
+                    logEvent: "ai_run_completed",
+                  });
+                }, 0);
+              }, STREAM_COMPLETION_SETTLE_MS);
             } catch (error) {
               if (entry.terminal !== null) {
                 return;

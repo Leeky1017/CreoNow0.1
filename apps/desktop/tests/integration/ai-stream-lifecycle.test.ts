@@ -187,7 +187,8 @@ async function withOpenAiStreamingServer(args: {
           event.type === "chunk" && event.executionId === executionId,
       );
 
-      assert.ok(chunks.length >= 2);
+      assert.ok(chunks.length > 0);
+      assert.equal(chunks.map((chunk) => chunk.chunk).join(""), "Hello World");
       assert.deepEqual(
         chunks.map((chunk) => chunk.seq),
         Array.from({ length: chunks.length }, (_, index) => index + 1),

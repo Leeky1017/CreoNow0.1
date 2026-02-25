@@ -49,6 +49,35 @@ import { createChatMessageManager } from "../chatMessageManager";
   assert.equal(mgr.getMessages().length, 0);
 }
 
+// --- removeById removes exact message ---
+
+{
+  const mgr = createChatMessageManager();
+
+  mgr.add({ id: "m1", role: "user", content: "Hello", timestamp: 1000 });
+  mgr.add({ id: "m2", role: "assistant", content: "Hi", timestamp: 2000 });
+  mgr.add({ id: "m3", role: "assistant", content: "Again", timestamp: 3000 });
+
+  mgr.removeById("m2");
+
+  const msgs = mgr.getMessages();
+  assert.equal(msgs.length, 2);
+  assert.equal(msgs[0]?.id, "m1");
+  assert.equal(msgs[1]?.id, "m3");
+}
+
+// --- removeById is no-op for unknown id ---
+
+{
+  const mgr = createChatMessageManager();
+
+  mgr.add({ id: "m1", role: "user", content: "Hello", timestamp: 1000 });
+  mgr.removeById("missing");
+
+  assert.equal(mgr.getMessages().length, 1);
+  assert.equal(mgr.getMessages()[0]?.id, "m1");
+}
+
 // --- getMessages returns a copy (not mutable reference) ---
 
 {
