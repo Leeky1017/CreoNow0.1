@@ -40,10 +40,31 @@ function sortedUnique(ids: string[]): string[] {
 }
 
 const repoRoot = path.resolve(import.meta.dirname, "../..");
-const tasksPath = path.join(
-  repoRoot,
-  "openspec/changes/issue-606-phase-4-polish-and-delivery/tasks.md",
-);
+
+function resolvePhase4TasksPath(root: string): string {
+  const candidates = [
+    path.join(
+      root,
+      "openspec/changes/issue-606-phase-4-polish-and-delivery/tasks.md",
+    ),
+    path.join(
+      root,
+      "openspec/changes/archive/issue-606-phase-4-polish-and-delivery/tasks.md",
+    ),
+  ];
+
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  throw new Error(
+    `phase4 tasks.md not found in active/archive paths: ${candidates.join(", ")}`,
+  );
+}
+
+const tasksPath = resolvePhase4TasksPath(repoRoot);
 const runLogPath = path.join(repoRoot, "openspec/_ops/task_runs/ISSUE-635.md");
 
 const tasksText = readFileSync(tasksPath, "utf8");

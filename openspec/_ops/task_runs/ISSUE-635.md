@@ -1,6 +1,6 @@
 # ISSUE-635
 
-更新时间：2026-02-24 16:40
+更新时间：2026-02-25 09:41
 
 ## Links
 
@@ -11,9 +11,9 @@
 
 ## Scope
 
-- Rulebook task: `rulebook/tasks/issue-635-issue-606-phase-4-polish-and-delivery/**`
+- Rulebook task: `rulebook/tasks/archive/2026-02-25-issue-635-issue-606-phase-4-polish-and-delivery/**`
 - RUN_LOG: `openspec/_ops/task_runs/ISSUE-635.md`
-- Active change: `openspec/changes/issue-606-phase-4-polish-and-delivery/**`
+- Archived change: `openspec/changes/archive/issue-606-phase-4-polish-and-delivery/**`
 - Required checks: `ci`, `openspec-log-guard`, `merge-serial`
 
 ## Specification
@@ -24,7 +24,7 @@
 
 ## TDD Mapping References
 
-- Scenario->测试映射主表：`openspec/changes/issue-606-phase-4-polish-and-delivery/tasks.md`
+- Scenario->测试映射主表：`openspec/changes/archive/issue-606-phase-4-polish-and-delivery/tasks.md`
 - Workbench Scenario refs：`WB-P4-S1` ~ `WB-P4-S6`
 - Project Management Scenario refs：`PM-P4-S1` ~ `PM-P4-S8`
 - Mapping rule：每个 Scenario ID 至少映射一个测试；未记录 Red 证据前不得进入 Green。
@@ -32,7 +32,7 @@
 ## Dependency Sync Check
 
 - Inputs reviewed:
-  - `openspec/changes/issue-606-phase-4-polish-and-delivery/{proposal.md,tasks.md,specs/workbench/spec.md,specs/project-management/spec.md}`
+  - `openspec/changes/archive/issue-606-phase-4-polish-and-delivery/{proposal.md,tasks.md,specs/workbench/spec.md,specs/project-management/spec.md}`
   - `openspec/specs/workbench/spec.md`
   - `openspec/specs/project-management/spec.md`
   - `docs/delivery-skill.md`
@@ -42,7 +42,7 @@
 - Result: `NO_DRIFT`
 - Notes:
   - 上游 Phase 1/2/3 已归档收口，未发现影响 Phase 4 契约边界的语义漂移。
-  - 本次无需更新 `issue-606-phase-4-polish-and-delivery` 的 `proposal.md` / `tasks.md`。
+  - 本次无需更新 `openspec/changes/archive/issue-606-phase-4-polish-and-delivery` 的 `proposal.md` / `tasks.md`。
 
 ## Plan
 
@@ -64,6 +64,24 @@
 - Decision: ACCEPT
 
 ## Runs
+
+### 2026-02-25 Governance closeout（archive + main truth）
+
+- Command:
+  - `gh pr view 639 --json number,state,mergedAt,url`
+  - `gh issue view 635 --json number,state,closedAt,url`
+  - `find openspec/changes/archive -maxdepth 1 -type d -name '*issue-606-phase-4-polish-and-delivery*' -print`
+  - `find rulebook/tasks/archive -maxdepth 1 -type d -name '*issue-635-issue-606-phase-4-polish-and-delivery*' -print`
+  - `test -d openspec/changes/issue-606-phase-4-polish-and-delivery && echo ACTIVE_CHANGE_EXISTS || echo ACTIVE_CHANGE_REMOVED`
+  - `test -d rulebook/tasks/issue-635-issue-606-phase-4-polish-and-delivery && echo ACTIVE_TASK_EXISTS || echo ACTIVE_TASK_REMOVED`
+- Key output:
+  - PR truth: `#639` `MERGED` at `2026-02-24T03:52:00Z`
+  - Issue truth: `#635` `CLOSED` at `2026-02-24T03:52:01Z`
+  - archive paths present:
+    - `openspec/changes/archive/issue-606-phase-4-polish-and-delivery`
+    - `rulebook/tasks/archive/2026-02-25-issue-635-issue-606-phase-4-polish-and-delivery`
+  - `ACTIVE_CHANGE_REMOVED`
+  - `ACTIVE_TASK_REMOVED`
 
 ### 2026-02-24 Issue admission check (#635)
 

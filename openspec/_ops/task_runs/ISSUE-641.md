@@ -1,6 +1,6 @@
 # ISSUE-641
 
-更新时间：2026-02-24 21:25
+更新时间：2026-02-25 09:41
 
 ## Links
 
@@ -11,9 +11,9 @@
 
 ## Scope
 
-- Rulebook task: `rulebook/tasks/issue-641-issue-606-phase-4-polish-and-delivery/**`
+- Rulebook task: `rulebook/tasks/archive/2026-02-25-issue-641-issue-606-phase-4-polish-and-delivery/**`
 - RUN_LOG: `openspec/_ops/task_runs/ISSUE-641.md`
-- Active change reference: `openspec/changes/issue-606-phase-4-polish-and-delivery/**`
+- Archived change reference: `openspec/changes/archive/issue-606-phase-4-polish-and-delivery/**`
 - Governance snapshot: `openspec/changes/EXECUTION_ORDER.md`
 - Required checks: `ci`, `openspec-log-guard`, `merge-serial`
 
@@ -26,9 +26,9 @@
 ## Dependency Sync Check
 
 - Inputs reviewed:
-  - `openspec/changes/issue-606-phase-4-polish-and-delivery/{proposal.md,tasks.md}`
+  - `openspec/changes/archive/issue-606-phase-4-polish-and-delivery/{proposal.md,tasks.md}`
   - `openspec/changes/EXECUTION_ORDER.md`
-  - `rulebook/tasks/issue-635-issue-606-phase-4-polish-and-delivery/{proposal.md,tasks.md}`
+  - `rulebook/tasks/archive/2026-02-25-issue-635-issue-606-phase-4-polish-and-delivery/{proposal.md,tasks.md}`
   - `openspec/_ops/task_runs/ISSUE-635.md`
 - Result: `NO_DRIFT`（治理引导层）
 - Notes:
@@ -56,6 +56,24 @@
 - Decision: ACCEPT
 
 ## Runs
+
+### 2026-02-25 Governance closeout（archive + main truth）
+
+- Command:
+  - `gh pr view 643 --json number,state,mergedAt,url`
+  - `gh issue view 641 --json number,state,closedAt,url`
+  - `find openspec/changes/archive -maxdepth 1 -type d -name '*issue-606-phase-4-polish-and-delivery*' -print`
+  - `find rulebook/tasks/archive -maxdepth 1 -type d -name '*issue-641-issue-606-phase-4-polish-and-delivery*' -print`
+  - `test -d openspec/changes/issue-606-phase-4-polish-and-delivery && echo ACTIVE_CHANGE_EXISTS || echo ACTIVE_CHANGE_REMOVED`
+  - `test -d rulebook/tasks/issue-641-issue-606-phase-4-polish-and-delivery && echo ACTIVE_TASK_EXISTS || echo ACTIVE_TASK_REMOVED`
+- Key output:
+  - PR truth: `#643` `MERGED` at `2026-02-24T14:01:12Z`
+  - Issue truth: `#641` `CLOSED` at `2026-02-24T14:01:13Z`
+  - archive paths present:
+    - `openspec/changes/archive/issue-606-phase-4-polish-and-delivery`
+    - `rulebook/tasks/archive/2026-02-25-issue-641-issue-606-phase-4-polish-and-delivery`
+  - `ACTIVE_CHANGE_REMOVED`
+  - `ACTIVE_TASK_REMOVED`
 
 ### 2026-02-24 Issue freshness check (#641)
 
