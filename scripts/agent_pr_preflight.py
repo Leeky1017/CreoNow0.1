@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import re
@@ -460,7 +461,39 @@ def validate_execution_order_doc(repo: str, changed_files: set[str]) -> None:
         )
 
 
-def main() -> int:
+def collect_changed_files(repo: str) -> set[str]:
+    changed_files: set[str] = set()
+    for cmd in [
+        ["git", "diff", "--name-only", "--diff-filter=ACMR", "origin/main...HEAD"],
+        ["git", "diff", "--name-only", "--diff-filter=ACMR"],
+        ["git", "ls-files", "--others", "--exclude-standard"],
+    ]:
+        res = run(cmd, cwd=repo)
+        if res.code != 0:
+            print(res.out, file=sys.stderr)
+            raise RuntimeError(f"failed to list changed files: {' '.join(cmd)}")
+        for line in res.out.splitlines():
+            if line.strip():
+                changed_files.add(line.strip())
+    return changed_files
+
+
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="CreoNow governed preflight checks"
+    )
+    parser.add_argument(
+        "--mode",
+        choices=("fast", "full"),
+        default="full",
+        help="fast: governance/signoff checks only; full: include lint/type/tests (default).",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str]) -> int:
+    args = parse_args(argv)
+    issue_number = "unknown"
     try:
         repo = git_root()
         branch = current_branch(repo)
@@ -470,7 +503,6 @@ def main() -> int:
 
         issue_number = m.group("n")
         slug = m.group("slug")
-        head_sha = current_head_sha(repo)
         head_parent_sha = current_head_parent_sha(repo)
         run_log = os.path.join(repo, "openspec", "_ops", "task_runs", f"ISSUE-{issue_number}.md")
         require_file(run_log)
@@ -478,6 +510,7 @@ def main() -> int:
         validate_main_session_audit(run_log, head_parent_sha)
         validate_main_session_audit_signature_commit(repo, run_log)
 
+        print(f"== Preflight mode: {args.mode} ==")
         print("== Repo checks ==")
         must_run(["git", "status", "--porcelain=v1"], cwd=repo)
 
@@ -499,19 +532,7 @@ def main() -> int:
         # Formatting policy:
         # - We only enforce Prettier on files changed in this branch, to avoid
         #   blocking delivery on legacy/unrelated formatting drift.
-        changed_files: set[str] = set()
-        for cmd in [
-            ["git", "diff", "--name-only", "--diff-filter=ACMR", "origin/main...HEAD"],
-            ["git", "diff", "--name-only", "--diff-filter=ACMR"],
-            ["git", "ls-files", "--others", "--exclude-standard"],
-        ]:
-            res = run(cmd, cwd=repo)
-            if res.code != 0:
-                print(res.out, file=sys.stderr)
-                raise RuntimeError(f"failed to list changed files: {' '.join(cmd)}")
-            for line in res.out.splitlines():
-                if line.strip():
-                    changed_files.add(line.strip())
+        changed_files = collect_changed_files(repo)
 
         must_run(["python3", "scripts/check_doc_timestamps.py"], cwd=repo)
 
@@ -519,6 +540,10 @@ def main() -> int:
         validate_no_completed_active_changes(repo)
         validate_tdd_first_change_tasks(repo, changed_files)
         validate_execution_order_doc(repo, changed_files)
+
+        if args.mode == "fast":
+            print("\nOK: fast preflight checks passed")
+            return 0
 
         prettier_exts = (
             ".cjs",
@@ -547,9 +572,15 @@ def main() -> int:
 
         return 0
     except Exception as e:
-        print(f"PRE-FLIGHT FAILED: {e}", file=sys.stderr)
+        message = str(e)
+        print(f"PRE-FLIGHT FAILED: {message}", file=sys.stderr)
+        if "[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch" in message and issue_number.isdigit():
+            print(
+                f"HINT: run `scripts/main_audit_resign.sh --issue {issue_number}` then `scripts/agent_pr_preflight.sh --mode fast`.",
+                file=sys.stderr,
+            )
         return 1
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))

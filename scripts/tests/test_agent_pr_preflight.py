@@ -199,5 +199,15 @@ class MainSessionAuditSignatureCommitTests(unittest.TestCase):
                 agent_pr_preflight.validate_main_session_audit_signature_commit(self.repo, self.run_log)
 
 
+class PreflightArgsTests(unittest.TestCase):
+    def test_parse_args_defaults_to_full_mode(self) -> None:
+        args = agent_pr_preflight.parse_args([])
+        self.assertEqual("full", args.mode)
+
+    def test_parse_args_accepts_fast_mode(self) -> None:
+        args = agent_pr_preflight.parse_args(["--mode", "fast"])
+        self.assertEqual("fast", args.mode)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -39,6 +39,105 @@ MERGE_INTERVAL_SECONDS="10"
 MERGE_TIMEOUT_SECONDS="1800"
 MERGE_COMMENT="true"
 RUNLOG_BACKFILLED="false"
+GH_RETRY_BASE_SECONDS="2"
+GH_RETRY_MAX_SECONDS="30"
+GH_RETRY_MAX_ATTEMPTS="5"
+GH_LAST_TRANSIENT="false"
+
+is_transient_gh_error() {
+  local output="$1"
+  grep -qiE "TLS handshake timeout|i/o timeout|connection reset by peer|context deadline exceeded|unexpected EOF|temporary failure" <<<"$output"
+}
+
+run_gh_with_retry() {
+  local output=""
+  local rc=0
+  local attempt=0
+  local sleep_seconds="$GH_RETRY_BASE_SECONDS"
+  GH_LAST_TRANSIENT="false"
+
+  while true; do
+    set +e
+    output="$("$@" 2>&1)"
+    rc=$?
+    set -e
+    if [[ $rc -eq 0 ]]; then
+      if [[ -n "$output" ]]; then
+        printf '%s' "$output"
+      fi
+      return 0
+    fi
+
+    if ! is_transient_gh_error "$output"; then
+      echo "$output" >&2
+      return "$rc"
+    fi
+
+    GH_LAST_TRANSIENT="true"
+    attempt=$((attempt + 1))
+    echo "WARN: transient GitHub error (attempt ${attempt}/${GH_RETRY_MAX_ATTEMPTS}): $output" >&2
+    if (( attempt >= GH_RETRY_MAX_ATTEMPTS )); then
+      echo "WARN: retries exhausted for: $*" >&2
+      return "$rc"
+    fi
+
+    sleep "$sleep_seconds"
+    sleep_seconds=$((sleep_seconds * 2))
+    if (( sleep_seconds > GH_RETRY_MAX_SECONDS )); then
+      sleep_seconds="$GH_RETRY_MAX_SECONDS"
+    fi
+  done
+}
+
+emit_transient_ci_snapshot() {
+  local pr_number="$1"
+  local head_sha=""
+  set +e
+  head_sha="$(run_gh_with_retry gh pr view "$pr_number" --json headRefOid --jq '.headRefOid' 2>/dev/null)"
+  local head_rc=$?
+  set -e
+  if [[ $head_rc -ne 0 || -z "$head_sha" ]]; then
+    echo "INFO: transient fallback: unable to resolve PR head SHA for #${pr_number}" >&2
+    return 0
+  fi
+
+  set +e
+  local runs_output=""
+  runs_output="$(run_gh_with_retry gh run list --limit 30 --json name,status,conclusion,headSha --jq '.[] | select(.headSha == "'"$head_sha"'") | [.name, .status, (.conclusion // "null")] | @tsv' 2>/dev/null)"
+  local runs_rc=$?
+  set -e
+  if [[ $runs_rc -ne 0 ]]; then
+    echo "INFO: transient fallback: gh run list unavailable for #${pr_number}" >&2
+    return 0
+  fi
+  if [[ -z "$runs_output" ]]; then
+    echo "INFO: transient fallback: no run snapshot available for #${pr_number} head=${head_sha}" >&2
+    return 0
+  fi
+
+  echo "INFO: transient fallback snapshot for PR #${pr_number} head=${head_sha}" >&2
+  while IFS=$'\t' read -r run_name run_status run_conclusion; do
+    [[ -z "$run_name" ]] && continue
+    echo "INFO: run=${run_name} status=${run_status} conclusion=${run_conclusion} transient=true" >&2
+  done <<<"$runs_output"
+}
+
+watch_checks_with_resilience() {
+  local pr_number="$1"
+  set +e
+  run_gh_with_retry gh pr checks "$pr_number" --watch > /dev/null
+  local rc=$?
+  set -e
+  if [[ $rc -eq 0 ]]; then
+    return 0
+  fi
+  if [[ "$GH_LAST_TRANSIENT" == "true" ]]; then
+    echo "INFO: gh pr checks interrupted by transient network errors (transient=true)." >&2
+    emit_transient_ci_snapshot "$pr_number"
+    return 0
+  fi
+  return "$rc"
+}
 
 comment_pr() {
   local pr_number="$1"
@@ -46,7 +145,7 @@ comment_pr() {
   if [[ "$MERGE_COMMENT" != "true" ]]; then
     return 0
   fi
-  gh pr comment "$pr_number" --body "$body" || true
+  run_gh_with_retry gh pr comment "$pr_number" --body "$body" >/dev/null || true
 }
 
 rebase_onto_origin_main() {
@@ -62,7 +161,7 @@ rebase_onto_origin_main() {
 backfill_runlog_pr_link() {
   local pr_number="$1"
   local pr_url=""
-  pr_url="$(gh pr view "$pr_number" --json url --jq '.url')"
+  pr_url="$(run_gh_with_retry gh pr view "$pr_number" --json url --jq '.url')"
 
   python3 - "$RUN_LOG" "$pr_url" <<'PY'
 import pathlib
@@ -169,7 +268,7 @@ if [[ "$SKIP_PREFLIGHT" != "true" ]]; then
 fi
 
 if [[ -z "$PR_NUMBER" ]]; then
-  PR_NUMBER="$(gh pr list --head "$BRANCH" --json number --jq '.[0].number' 2>/dev/null || true)"
+  PR_NUMBER="$(run_gh_with_retry gh pr list --head "$BRANCH" --json number --jq '.[0].number' 2>/dev/null || true)"
 fi
 
 if [[ -z "$PR_NUMBER" ]]; then
@@ -200,7 +299,7 @@ EOF
     DRAFT_FLAG="--draft"
   fi
 
-  PR_URL="$(gh pr create --base main --head "$BRANCH" $DRAFT_FLAG --title "$TITLE" --body "$BODY")"
+  PR_URL="$(run_gh_with_retry gh pr create --base main --head "$BRANCH" $DRAFT_FLAG --title "$TITLE" --body "$BODY")"
   PR_NUMBER="${PR_URL##*/}"
 fi
 
@@ -245,21 +344,32 @@ if [[ $PREFLIGHT_RC -ne 0 && "$FORCE" != "true" ]]; then
   done
 fi
 
-IS_DRAFT="$(gh pr view "$PR_NUMBER" --json isDraft --jq '.isDraft')"
+IS_DRAFT="$(run_gh_with_retry gh pr view "$PR_NUMBER" --json isDraft --jq '.isDraft')"
 if [[ "$IS_DRAFT" == "true" ]]; then
-  gh pr ready "$PR_NUMBER"
+  run_gh_with_retry gh pr ready "$PR_NUMBER" >/dev/null
 fi
 
-gh pr merge "$PR_NUMBER" --auto --squash
-gh pr checks "$PR_NUMBER" --watch
+run_gh_with_retry gh pr merge "$PR_NUMBER" --auto --squash >/dev/null
+watch_checks_with_resilience "$PR_NUMBER"
 
 START_MERGE_TS="$(date +%s)"
 LAST_STATUS_LINE=""
 while true; do
-	  IFS=$'\x1f' read -r MERGED_AT MERGE_STATE REVIEW_DECISION PR_URL < <(
-	    gh pr view "$PR_NUMBER" --json mergedAt,mergeStateStatus,reviewDecision,url \
-	      --jq '[.mergedAt // "", .mergeStateStatus // "", .reviewDecision // "", .url] | join("\u001f")'
-	  )
+  set +e
+  PR_STATUS="$(run_gh_with_retry gh pr view "$PR_NUMBER" --json mergedAt,mergeStateStatus,reviewDecision,url --jq '[.mergedAt // "", .mergeStateStatus // "", .reviewDecision // "", .url] | join("\u001f")')"
+  PR_STATUS_RC=$?
+  set -e
+  if [[ $PR_STATUS_RC -ne 0 ]]; then
+    if [[ "$GH_LAST_TRANSIENT" == "true" ]]; then
+      echo "INFO: transient GitHub query failure while polling merge state (transient=true)." >&2
+      emit_transient_ci_snapshot "$PR_NUMBER"
+      sleep "$MERGE_INTERVAL_SECONDS"
+      continue
+    fi
+    echo "ERROR: failed to query PR #${PR_NUMBER} merge state." >&2
+    exit "$PR_STATUS_RC"
+  fi
+  IFS=$'\x1f' read -r MERGED_AT MERGE_STATE REVIEW_DECISION PR_URL <<<"$PR_STATUS"
 
   if [[ -n "$MERGED_AT" && "$MERGED_AT" != "null" ]]; then
     break
@@ -274,7 +384,7 @@ while true; do
   if [[ "$REVIEW_DECISION" == "REVIEW_REQUIRED" ]]; then
     echo "WARN: PR #${PR_NUMBER} is blocked by review requirement; attempting admin merge to keep delivery autonomous." >&2
     set +e
-    gh pr merge "$PR_NUMBER" --admin --squash -d
+    run_gh_with_retry gh pr merge "$PR_NUMBER" --admin --squash -d >/dev/null
     MERGE_RC=$?
     set -e
     if [[ $MERGE_RC -ne 0 ]]; then
@@ -292,9 +402,10 @@ while true; do
   fi
 
   if [[ "$MERGE_STATE" == "BEHIND" ]]; then
-    echo "WARN: PR #${PR_NUMBER} is behind base; rebasing onto origin/main and re-running checks." >&2
+    echo "WARN: PR #${PR_NUMBER} is behind base; rebasing, re-signing main audit, and re-running checks." >&2
     rebase_onto_origin_main
-    gh pr checks "$PR_NUMBER" --watch
+    scripts/main_audit_resign.sh --issue "$ISSUE_NUMBER" --preflight-mode fast
+    watch_checks_with_resilience "$PR_NUMBER"
     continue
   fi
 
