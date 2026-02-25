@@ -20,7 +20,7 @@
 
 - [x] 3.1 更新 README / Rulebook / RUN_LOG 证据
 - [ ] 3.2 执行 preflight（至少 fast）与文档时间戳校验
-- [ ] 3.3 创建 PR（`Closes #649`）并开启 auto-merge
+- [x] 3.3 创建 PR（`Closes #649`）并开启 auto-merge
 - [ ] 3.4 required checks 全绿：`ci`、`openspec-log-guard`、`merge-serial`
 - [ ] 3.5 主会话审计签字提交（RUN_LOG only；`Reviewed-HEAD-SHA == HEAD^`）
 - [ ] 3.6 合并回 `main` 并清理 worktree
