@@ -110,6 +110,9 @@ type RunEntry = {
   controller: AbortController;
   timeoutTimer: NodeJS.Timeout | null;
   completionTimer: NodeJS.Timeout | null;
+  chunkFlushTimer: NodeJS.Timeout | null;
+  pendingChunkText: string;
+  pendingChunkCount: number;
   stream: boolean;
   startedAt: number;
   terminal: AiStreamTerminal | null;
@@ -123,6 +126,9 @@ type RunEntry = {
 
 const DEFAULT_LLM_RATE_LIMIT_PER_MINUTE = 60;
 const PROVIDER_HALF_OPEN_AFTER_MS = 15 * 60 * 1000;
+const STREAM_CHUNK_BATCH_WINDOW_MS = 20;
+const STREAM_CHUNK_MAX_BATCH_SIZE = 4;
+const STREAM_COMPLETION_SETTLE_DELAY_MS = 20;
 
 type RuntimeMessages = {
   systemText: string;
@@ -485,6 +491,53 @@ export function createAiService(deps: {
     });
   }
 
+  function clearChunkBatchState(entry: RunEntry): void {
+    if (entry.chunkFlushTimer !== null) {
+      clearTimeout(entry.chunkFlushTimer);
+      entry.chunkFlushTimer = null;
+    }
+    entry.pendingChunkText = "";
+    entry.pendingChunkCount = 0;
+  }
+
+  function flushPendingChunks(entry: RunEntry): void {
+    if (entry.pendingChunkCount === 0) {
+      return;
+    }
+
+    const batchedChunk = entry.pendingChunkText;
+    clearChunkBatchState(entry);
+    emitChunk(entry, batchedChunk);
+  }
+
+  /**
+   * Queue streamed deltas into bounded-size time-window batches.
+   *
+   * Why: avoid per-token push storms while preserving ordered text output.
+   */
+  function queueChunk(entry: RunEntry, chunk: string): void {
+    if (entry.terminal !== null || chunk.length === 0) {
+      return;
+    }
+
+    entry.pendingChunkText += chunk;
+    entry.pendingChunkCount += 1;
+
+    if (entry.pendingChunkCount >= STREAM_CHUNK_MAX_BATCH_SIZE) {
+      flushPendingChunks(entry);
+      return;
+    }
+
+    if (entry.chunkFlushTimer !== null) {
+      return;
+    }
+
+    entry.chunkFlushTimer = setTimeout(() => {
+      entry.chunkFlushTimer = null;
+      flushPendingChunks(entry);
+    }, STREAM_CHUNK_BATCH_WINDOW_MS);
+  }
+
   /**
    * Emit the done terminal event once.
    */
@@ -547,6 +600,7 @@ export function createAiService(deps: {
     }
 
     entry.terminal = args.terminal;
+    clearChunkBatchState(entry);
     emitDone({
       entry,
       terminal: args.terminal,
@@ -586,6 +640,9 @@ export function createAiService(deps: {
     if (entry.completionTimer) {
       clearTimeout(entry.completionTimer);
     }
+    if (entry.chunkFlushTimer) {
+      clearTimeout(entry.chunkFlushTimer);
+    }
     runs.delete(runId);
   }
 
@@ -617,6 +674,7 @@ export function createAiService(deps: {
   function resetForFullPromptReplay(entry: RunEntry): void {
     entry.seq = 0;
     entry.outputText = "";
+    clearChunkBatchState(entry);
   }
 
   /**
@@ -825,7 +883,7 @@ export function createAiService(deps: {
           continue;
         }
 
-        emitChunk(args.entry, delta);
+        queueChunk(args.entry, delta);
       }
     } catch (error) {
       if (args.entry.controller.signal.aborted) {
@@ -931,7 +989,7 @@ export function createAiService(deps: {
           continue;
         }
 
-        emitChunk(args.entry, delta);
+        queueChunk(args.entry, delta);
       }
     } catch (error) {
       if (args.entry.controller.signal.aborted) {
@@ -1144,6 +1202,9 @@ export function createAiService(deps: {
       controller,
       timeoutTimer: null,
       completionTimer: null,
+      chunkFlushTimer: null,
+      pendingChunkText: "",
+      pendingChunkCount: 0,
       stream: args.stream,
       startedAt: args.ts,
       terminal: null,
@@ -1508,6 +1569,11 @@ export function createAiService(deps: {
                 return;
               }
 
+              flushPendingChunks(entry);
+              if (entry.terminal !== null) {
+                return;
+              }
+
               if (entry.completionTimer !== null) {
                 return;
               }
@@ -1534,7 +1600,7 @@ export function createAiService(deps: {
                   terminal: "completed",
                   logEvent: "ai_run_completed",
                 });
-              }, 0);
+              }, STREAM_COMPLETION_SETTLE_DELAY_MS);
             } catch (error) {
               if (entry.terminal !== null) {
                 return;
