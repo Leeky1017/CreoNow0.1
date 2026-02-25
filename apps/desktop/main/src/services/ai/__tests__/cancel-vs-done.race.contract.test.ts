@@ -66,10 +66,10 @@ function createManualTimerRuntime(): ManualTimerRuntime {
   let nextId = 1;
   const timers: TimerEntry[] = [];
 
-  const setTimeoutMock: typeof globalThis.setTimeout = ((
-    handler,
-    timeout,
-    ...args
+  const setTimeoutMock = ((
+    handler: TimerHandler,
+    timeout?: number,
+    ...args: unknown[]
   ) => {
     const id = nextId;
     nextId += 1;
@@ -77,7 +77,7 @@ function createManualTimerRuntime(): ManualTimerRuntime {
     const callback =
       typeof handler === "function"
         ? () => {
-            handler(...args);
+            (handler as (...handlerArgs: unknown[]) => void)(...args);
           }
         : () => {};
     timers.push({
@@ -87,7 +87,7 @@ function createManualTimerRuntime(): ManualTimerRuntime {
       callback,
     });
     return id as unknown as NodeJS.Timeout;
-  }) as typeof globalThis.setTimeout;
+  }) as unknown as typeof globalThis.setTimeout;
 
   const clearTimeoutMock: typeof globalThis.clearTimeout = ((handle) => {
     if (handle == null) {
@@ -196,7 +196,7 @@ try {
   }
 
   let cancelInvokedAt = 0;
-  let cancelResult: ReturnType<typeof service.cancel> | null = null;
+  let cancelResult: unknown = null;
   await new Promise<void>((resolve) => {
     setTimeout(() => {
       cancelInvokedAt = Date.now();
@@ -209,11 +209,15 @@ try {
   });
 
   const done = await waitForDone(events, 2_000);
-  assert.ok(cancelResult !== null);
-  if (cancelResult === null) {
+  const resolvedCancelResult = cancelResult;
+  if (
+    resolvedCancelResult === null ||
+    typeof resolvedCancelResult !== "object" ||
+    !("ok" in resolvedCancelResult)
+  ) {
     throw new Error("BE-AIW-S4: cancel result missing");
   }
-  assert.equal(cancelResult.ok, true);
+  assert.equal((resolvedCancelResult as { ok: boolean }).ok, true);
   assert.equal(
     done.terminal,
     "cancelled",
@@ -286,7 +290,7 @@ try {
   );
 
   let cancelTs = 0;
-  let tieCancelResult: ReturnType<typeof tieService.cancel> | null = null;
+  let tieCancelResult: unknown = null;
   setTimeout(() => {
     cancelTs = Date.now();
     tieCancelResult = tieService.cancel({
@@ -299,11 +303,15 @@ try {
   assert.equal(advanced, true, "BE-AIW-S4: expected pending timers to execute");
   await new Promise<void>((resolve) => setImmediate(resolve));
 
-  assert.ok(tieCancelResult !== null);
-  if (tieCancelResult === null) {
+  const resolvedTieCancelResult = tieCancelResult;
+  if (
+    resolvedTieCancelResult === null ||
+    typeof resolvedTieCancelResult !== "object" ||
+    !("ok" in resolvedTieCancelResult)
+  ) {
     throw new Error("BE-AIW-S4: tie race cancel result missing");
   }
-  assert.equal(tieCancelResult.ok, true);
+  assert.equal((resolvedTieCancelResult as { ok: boolean }).ok, true);
 
   const tieDone = tieEvents.find(
     (event): event is AiStreamDoneEvent => event.type === "done",
