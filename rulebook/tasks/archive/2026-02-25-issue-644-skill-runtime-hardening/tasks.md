@@ -1,4 +1,4 @@
-更新时间：2026-02-24 21:57
+更新时间：2026-02-25 09:13
 
 ## 1. Governance Baseline
 
@@ -9,6 +9,6 @@
 
 ## 2. TDD Admission Ready
 
-- [ ] 2.1 对齐 BE-SRH-S1..S4 的 Scenario → 测试映射
-- [ ] 2.2 记录 Red 失败证据后进入 Green
-- [ ] 2.3 完成实现、审计、PR auto-merge 与主线收口
+- [x] 2.1 对齐 BE-SRH-S1..S4 的 Scenario → 测试映射
+- [x] 2.2 记录 Red 失败证据后进入 Green
+- [x] 2.3 完成实现、审计、PR auto-merge 与主线收口

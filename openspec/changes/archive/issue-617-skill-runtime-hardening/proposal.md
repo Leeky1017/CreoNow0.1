@@ -1,6 +1,6 @@
 # 提案：issue-617-skill-runtime-hardening
 
-更新时间：2026-02-24 21:55
+更新时间：2026-02-25 09:13
 
 ## 背景
 
@@ -39,9 +39,9 @@ Skill 系统存在 P0/P1 阻塞点：每次操作同步扫描目录并逐个 rea
   - `openspec/specs/skill-system/spec.md`
   - `openspec/specs/ipc/spec.md`
   - `openspec/specs/project-management/spec.md`
-  - `/tmp/notion_cn_backend_vault/CN-Backend/CN 后端开发/Skill 系统优化.md`
-  - `/tmp/notion_cn_backend_vault/CN-Backend/CN 后端开发/Agent 问题发现汇总（CN 后端审计）.md`
-  - `/tmp/notion_cn_backend_vault/CN-Backend/CN 后端开发/IPC 通信层审计（IPC Layer Audit）.md`
+  - `openspec/changes/archive/issue-617-skill-runtime-hardening/specs/skill-system/spec.md`
+  - `openspec/changes/archive/issue-617-skill-runtime-hardening/tasks.md`
+  - `openspec/_ops/task_runs/ISSUE-644.md`
 - 核对项：
   - Skill 系统的全局并发上限与队列语义不变（稳定可预测）。
   - 取消优先级明确：取消与完成竞态时必须以取消为准。
@@ -52,11 +52,11 @@ Skill 系统存在 P0/P1 阻塞点：每次操作同步扫描目录并逐个 rea
 
 ## 来源映射
 
-| 来源                                   | 提炼结论                                                | 落地位置                                                      |
-| -------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
-| `Skill 系统优化.md`                    | 懒加载 + cache、FS I/O 异步化、调度器兜底与 Abort 联动  | `specs/skill-system/spec.md`、`specs/ipc/spec.md`、`tasks.md` |
-| `Agent 问题发现汇总（CN 后端审计）.md` | 同步全目录扫描、同步 FS、槽位泄漏是明确问题             | `tasks.md`、后续测试与实现                                    |
-| `IPC 通信层审计（IPC Layer Audit）.md` | IPC 边界工程标准高，改造需保持 envelope/校验/ACL 不回退 | `tasks.md`                                                    |
+| 来源                                                                                    | 提炼结论                                                               | 落地位置                                                      |
+| --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `openspec/changes/archive/issue-617-skill-runtime-hardening/specs/skill-system/spec.md` | 懒加载 + cache、FS I/O 异步化、调度器兜底与 Abort 联动                 | `specs/skill-system/spec.md`、`specs/ipc/spec.md`、`tasks.md` |
+| `openspec/_ops/task_runs/ISSUE-644.md`                                                  | 同步全目录扫描、同步 FS、槽位泄漏等风险已通过 Red/Green 与回归验证收敛 | `tasks.md`、后续回归校验                                      |
+| `openspec/specs/ipc/spec.md`                                                            | IPC 边界工程标准保持 envelope/校验/ACL 不回退                          | `tasks.md`                                                    |
 
 ## 审阅状态
 

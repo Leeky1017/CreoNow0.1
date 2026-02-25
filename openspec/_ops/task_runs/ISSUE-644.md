@@ -1,6 +1,6 @@
 # ISSUE-644
 
-更新时间：2026-02-24 23:10
+更新时间：2026-02-25 09:13
 
 ## Links
 
@@ -11,13 +11,13 @@
 
 ## Scope
 
-- Change: `openspec/changes/issue-617-skill-runtime-hardening/**`
-- Rulebook task: `rulebook/tasks/issue-644-skill-runtime-hardening/**`
+- Change: `openspec/changes/archive/issue-617-skill-runtime-hardening/**`
+- Rulebook task: `rulebook/tasks/archive/2026-02-25-issue-644-skill-runtime-hardening/**`
 - Required checks: `ci`, `openspec-log-guard`, `merge-serial`
 
 ## Goal
 
-- 在进入实现前，完成 issue #644 的治理准入：Rulebook task、RUN_LOG、依赖同步检查结论全部落盘并可验证。
+- 完成 issue #644 从治理准入到实现交付再到归档收口的全流程闭环，并确保证据链可审计。
 
 ## Plan
 
@@ -196,6 +196,22 @@
   - Key output:
     - `HEAD(before signing commit)=747eae702c147134830e9642f0c9173e8fd6e52e`
     - `Reviewed-HEAD-SHA` 已刷新为签字提交前 `HEAD`（用于满足 `Reviewed-HEAD-SHA == HEAD^`）。
+
+### 2026-02-25 Governance closeout（archive + main truth）
+
+- Command:
+  - `git log --oneline --decorate --max-count=80 --grep='(#644)\\|(#645)'`
+  - `git rev-parse HEAD`
+  - `find openspec/changes/archive -maxdepth 1 -type d -name '*skill-runtime-hardening*' -print`
+  - `find rulebook/tasks/archive -maxdepth 1 -type d -name '*644-skill-runtime-hardening*' -print`
+  - `test -d openspec/changes/issue-617-skill-runtime-hardening && echo ACTIVE_CHANGE_EXISTS || echo ACTIVE_CHANGE_REMOVED`
+  - `test -d rulebook/tasks/issue-644-skill-runtime-hardening && echo ACTIVE_TASK_EXISTS || echo ACTIVE_TASK_REMOVED`
+- Key output:
+  - `f24d11c5 Deliver skill runtime hardening contracts and governance scaffold (#644) (#645)`
+  - archive paths present: `openspec/changes/archive/issue-617-skill-runtime-hardening`、`rulebook/tasks/archive/2026-02-25-issue-644-skill-runtime-hardening`
+  - `ACTIVE_CHANGE_REMOVED`
+  - `ACTIVE_TASK_REMOVED`
+  - control-plane truth: closeout branch merged via PR #645 commit chain in `main`
 
 ## Main Session Audit
 
