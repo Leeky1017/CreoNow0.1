@@ -1,13 +1,13 @@
 # ISSUE-651
 
-更新时间：2026-02-25 17:08
+更新时间：2026-02-25 17:12
 
 ## Links
 
 - Issue: #651
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/651
 - Branch: `task/651-ai-stream-write-guardrails`
-- PR: `TO_BE_FILLED_AFTER_PR_CREATED`
+- PR: https://github.com/Leeky1017/CreoNow/pull/652
 
 ## Scope
 
@@ -34,18 +34,22 @@
 - [x] 完成 BE-AIW-S1/S2/S3/S4 的 Red→Green→Refactor 落地
 - [x] 更新并归档 `issue-617-ai-stream-write-guardrails` change
 - [x] 归档 Rulebook task 到 `rulebook/tasks/archive/2026-02-25-issue-651-ai-stream-write-guardrails`
-- [ ] 完成 preflight、PR、auto-merge、main 收口
+- [ ] 完成 preflight、auto-merge、main 收口
+
+## Blockers
+
+- 无
 
 ## Main Session Audit
 
 - Draft-Status: PENDING
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 0000000000000000000000000000000000000000
+- Reviewed-HEAD-SHA: 2f6207d107c75f7acc6cc5c307a1e3c2264bc2a9
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
-- Blocking-Issues: 1
-- Decision: REJECT
+- Blocking-Issues: 0
+- Decision: ACCEPT
 
 ## Runs
 
@@ -104,3 +108,13 @@
 - Key output:
   - active change path removed from `openspec/changes/`
   - archived change + archived rulebook task paths created
+
+### 2026-02-25 Push branch + create PR
+
+- Command:
+  - `git push -u origin HEAD`
+  - `gh pr create --base main --head task/651-ai-stream-write-guardrails --title "fix: implement ai stream write guardrails and archive change (#651)" --body "Closes #651 ..."`
+- Exit code: `0`
+- Key output:
+  - remote branch created: `origin/task/651-ai-stream-write-guardrails`
+  - PR created: `https://github.com/Leeky1017/CreoNow/pull/652`
