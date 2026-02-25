@@ -27,19 +27,26 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **异步 SSOT 基线**：调用 `ensureCreonowDirStructureAsync(projectPath)`，断言创建完整 `.creonow` 子目录结构（AUD-C6-S1）
+- [ ] 3.2 **sync/async 一致性（结构）**：分别调用 sync 和 async 版本，断言产出的目录结构完全相同（AUD-C6-S2）
+- [ ] 3.3 **异步状态查询**：调用 `getCreonowDirStatusAsync`，断言返回正确的目录存在/缺失状态（AUD-C6-S3）
+- [ ] 3.4 **sync/async 一致性（状态）**：同一路径分别调用 sync 和 async 状态查询，断言返回值严格相等（AUD-C6-S4）
+- [ ] 3.5 **错误语义一致**：在不可写路径上分别调用 sync 和 async，断言两者抛出/reject 的错误具有相同的 code 和 message 模式（AUD-C6-S5）
+- [ ] 3.6 **幂等性**：对已存在的目录重复调用 `ensureCreonowDirStructureAsync`，断言不报错且目录内容不变（AUD-C6-S6）
+- [ ] 3.7 **单一业务逻辑验证**：AST 或源码扫描 contextFs.ts，断言 `mkdir` / `stat` 调用序列仅出现一次（在异步实现中），sync 版本不含独立的 mkdir/stat 序列（AUD-C6-S7）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 提取 async 版本中的目录结构定义（路径列表、创建顺序）为纯数据常量或共享配置函数
+- [ ] 4.2 重写 sync 版本为薄包装：调用共享配置函数获取目录列表，再用 `fs.mkdirSync` 逐个创建（业务逻辑不重复）
+- [ ] 4.3 同理重写 `getCreonowDirStatus` sync 版本，调用共享纯逻辑后用 `fs.statSync` 适配
+- [ ] 4.4 删除 sync 版本中原有的重复 mkdir/stat 调用序列
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 将目录结构定义（`.creonow` 下的子目录清单）抽取为 `CREONOW_DIR_STRUCTURE` 常量，sync/async 共用
+- [ ] 5.2 评估 sync wrapper 是否保持当前的 sync fs API + 共享配置模式（推荐），避免使用 `execSync` + async 函数的反模式
+- [ ] 5.3 确保重构后无多余的 fs import（如同时 import `fs` 和 `fs/promises` 时各自仅用其必要 API）
 
 ## 6. Evidence
 

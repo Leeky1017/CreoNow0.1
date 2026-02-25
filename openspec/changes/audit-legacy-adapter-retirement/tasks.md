@@ -26,19 +26,27 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **原生字段直用**：构造 IPC 返回的 entity 数据（使用 `id` / `type`），在 kgStore consumer 中消费，断言无 `toLegacyEntity` 调用参与（AUD-C11-S1）
+- [ ] 3.2 **关系字段直用**：构造 IPC 返回的 relation 数据（使用 `sourceEntityId` / `targetEntityId`），断言无 `toLegacyRelation` 调用（AUD-C11-S2）
+- [ ] 3.3 **normalizeEntityType 无 legacy 映射**：断言 UI entity type 列表不含 `"other"` 选项，且 `normalizeEntityType` 中无 `"other"→"faction"` 映射（AUD-C11-S3）
+- [ ] 3.4 **历史数据迁移**：构造含 `"other"` type 的历史记录，断言通过数据迁移（而非运行时映射）转换为正确类型（AUD-C11-S4）
+- [ ] 3.5 **bootstrapForProject 调用方迁移**：所有原 `bootstrapForProject` 调用方改用新接口，断言行为一致（AUD-C11-S5）
+- [ ] 3.6 **bootstrapForProject 消除**：`rg bootstrapForProject` 扫描生产代码，断言零匹配；`tsc --noEmit` 通过（AUD-C11-S6）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 修改 kgStore 中 6 个调用 `toLegacyEntity()` 的方法，直接使用 IPC 返回的原生字段名
+- [ ] 4.2 修改 kgStore 中调用 `toLegacyRelation()` 的方法，直接使用原生字段名
+- [ ] 4.3 从 UI 的 entity type 枚举/列表中移除 `"other"` 选项，删除 `normalizeEntityType` 中的遗留映射
+- [ ] 4.4 为含 `"other"` type 的历史数据编写一次性迁移逻辑（在 DB 层或初始化时执行）
+- [ ] 4.5 找到 `bootstrapForProject()` 的所有调用方，迁移到新接口（如直接调用底层方法或新的初始化 API）
+- [ ] 4.6 删除 `toLegacyEntity()` / `toLegacyRelation()` / `normalizeEntityType` 遗留映射 / `bootstrapForProject()` 四处死代码
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 确认 renderer 组件中所有 entity/relation 数据消费点已使用统一字段名（`id` 而非 `entityId` 等混用）
+- [ ] 5.2 检查 `kgStore.ts` 的类型定义是否已同步更新（移除 legacy 字段类型声明）
+- [ ] 5.3 验证删除 `toLegacy*` 后的 kgStore 文件行数下降，确认无多余空行或注释残留
 
 ## 6. Evidence
 

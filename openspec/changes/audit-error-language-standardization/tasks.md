@@ -27,19 +27,26 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **后端错误纯英文**：触发后端 IPC error 响应，断言 `message` 字段不含中文字符（正则 `/[\u4e00-\u9fff]/` 匹配为 0）（AUD-C13-S1）
+- [ ] 3.2 **前端翻译覆盖率**：枚举所有后端 error code，断言前端翻译映射表对每个 code 均有对应中文条目（AUD-C13-S2）
+- [ ] 3.3 **静态守卫**：扫描后端 IPC error 创建点的 message 参数，断言不含中文字符（AUD-C13-S3）
+- [ ] 3.4 **runtime-validation 纯英文**：触发 runtime-validation 所有 6 个错误路径，断言每个错误的 code 和 message 均为英文（AUD-C13-S4）
+- [ ] 3.5 **runtime-validation 前端映射**：前端接收 runtime-validation error code，断言翻译映射产出的中文含义与原硬编码中文语义一致（AUD-C13-S5）
+- [ ] 3.6 **providerResolver 纯英文**：触发 providerResolver 所有 2 个错误路径，断言错误为英文 code + message（AUD-C13-S6）
+- [ ] 3.7 **providerResolver 前端映射**：前端接收 providerResolver error code，断言翻译后语义与原中文一致（AUD-C13-S7）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 在 `runtime-validation.ts` 中将 6 处中文错误消息替换为英文 error code（如 `VALIDATION_FIELD_REQUIRED`）+ 英文 message
+- [ ] 4.2 在 `providerResolver.ts` 中将 2 处中文错误消息替换为英文 error code + message
+- [ ] 4.3 创建 `renderer/src/lib/errorTranslation.ts`，建立 `Record<string, string>` 映射表，将后端 error code 映射为用户可见中文提示
+- [ ] 4.4 在前端错误展示组件中调用翻译映射，未映射 code 兜底显示英文 message
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 将后端 error code 常量抽取为 `packages/shared/errorCodes.ts`，前后端共享引用（避免硬编码字符串漂移）
+- [ ] 5.2 评估翻译映射是否应按模块分文件还是统一一个文件（当前规模推荐统一）
+- [ ] 5.3 为后端新增 error code 的 PR 添加 lint 守卫：error message 含中文字符则 CI 报错
 
 ## 6. Evidence
 

@@ -28,19 +28,29 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **IPC bridge 类型对齐**：TypeScript 编译断言 preload `ipc.ts` 的返回类型与 renderer 期望类型直接兼容（无 `as unknown as`）（AUD-C8-S1）
+- [ ] 3.2 **renderer 组件零强转**：ProxySection 和 AiSettingsSection 中的 5 处 `as unknown as` 消除后，tsc 编译通过（AUD-C8-S2）
+- [ ] 3.3 **deriveOutline 类型对齐**：`deriveOutline.ts` 在 :107/:162/:235 的 3 处 `as unknown as` 消除后 tsc 通过（AUD-C8-S3）
+- [ ] 3.4 **ipcAcl 类型对齐**：`ipcAcl.ts:33` 的 `as unknown as` 消除后 tsc 通过（AUD-C8-S4）
+- [ ] 3.5 **白名单文档与守卫**：扫描生产代码 `as unknown as`，断言匹配数为 0 或仅在白名单中（白名单 ≤ 3 条且每条附理由文档）（AUD-C8-S5）
+- [ ] 3.6 **IpcInvoke 共享导入**：扫描 8 个 store 文件，断言均从 `renderer/src/lib/ipcTypes.ts` import `IpcInvoke`，无本地定义（AUD-C8-S6）
+- [ ] 3.7 **tsc 全量通过**：`tsc --noEmit` 零错误且无新增 `@ts-ignore` / `@ts-expect-error`（AUD-C8-S7）
+- [ ] 3.8 **静态扫描守卫**：`rg 'as unknown as'` 结果仅含白名单条目（AUD-C8-S8）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 修正 `preload/src/ipc.ts` 的 contextBridge 暴露函数返回类型，使其与 renderer 侧 `window.api` 的期望类型结构性匹配
+- [ ] 4.2 在 C7 归一化 ProxySettings 后，更新 ProxySection / AiSettingsSection 的 props 类型定义，消除 5 处强转
+- [ ] 4.3 修正 `deriveOutline.ts` 的输入/输出类型签名使其与调用方一致，消除 3 处强转
+- [ ] 4.4 修正 `ipcAcl.ts` 的 ACL 类型定义使其与 IPC 层一致，消除 1 处强转
+- [ ] 4.5 抽取 `IpcInvoke` 类型到 `renderer/src/lib/ipcTypes.ts`，8 个 store 统一 import
+- [ ] 4.6 对确实无法消除的强转（如第三方库类型不完整），建立白名单并附内联注释说明理由
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 评估白名单中的每一条是否可通过上游类型定义（如 `@types/` 包更新或 module augmentation）彻底消除
+- [ ] 5.2 统一 IPC 响应类型定义的存放位置（`packages/shared/types/` vs `renderer/src/lib/`），与 C4 建立的共享模式对齐
+- [ ] 5.3 清理 8 个 store 文件中 IpcInvoke 本地定义删除后的空行和无用 import
 
 ## 6. Evidence
 

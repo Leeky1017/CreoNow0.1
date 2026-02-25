@@ -26,19 +26,26 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **phase4-delivery-gate 处置**：扫描生产代码 import 图，断言 `phase4-delivery-gate.ts` 要么被生产代码 import 要么文件已不存在（AUD-C12-S1）
+- [ ] 3.2 **死代码守卫延续**：`ping-dead-code-cleanup.test.ts` 运行通过，断言守卫测试在 phase4 处置后仍有效（AUD-C12-S2）
+- [ ] 3.3 **模板路径确定性**：mock 构建配置输出路径，调用 templateService 路径解析，断言直接命中目标路径而非遍历 5 个候选（AUD-C12-S3）
+- [ ] 3.4 **模板缺失明确报错**：构建配置路径下模板文件不存在，断言抛出的错误包含确切的期望路径（AUD-C12-S4）
+- [ ] 3.5 **preload 路径确定性**：mock 构建配置，断言 preload 路径直接从配置解析，无候选列表遍历（AUD-C12-S5）
+- [ ] 3.6 **preload 缺失明确报错**：preload 文件不存在，断言错误包含确切期望路径而非"在 N 个位置均未找到"（AUD-C12-S6）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 决策 `phase4-delivery-gate.ts`：若无生产用途则连同其测试文件一并删除；若有用途则补齐生产代码的 import
+- [ ] 4.2 更新 `ping-dead-code-cleanup.test.ts` 守卫测试以反映 phase4 处置后的文件清单
+- [ ] 4.3 在 `templateService.ts` 中从 `electron.vite.config.ts` 或构建输出 manifest 读取模板路径，替换 5 候选暴力搜索
+- [ ] 4.4 在 `index.ts` 中从构建配置读取 preload 路径，替换 3 候选暴力搜索
+- [ ] 4.5 为路径不存在场景添加包含具体路径的 Error message（如 `Template not found at ${expectedPath}`）
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 评估是否可抽取 `resolveFromBuildConfig(configKey)` 工具函数，templateService 和 index.ts 共用
+- [ ] 5.2 确保构建配置路径的读取方式在 dev 和 production 环境下均可用（electron.vite dev 模式 vs 打包后的路径）
+- [ ] 5.3 清理删除 phase4 后可能残留的空目录或无用测试 helper
 
 ## 6. Evidence
 

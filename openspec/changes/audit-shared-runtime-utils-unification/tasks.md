@@ -28,19 +28,28 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **nowTs 零重复**：`rg` 扫描生产代码（排除 shared 模块），断言 `function nowTs` 或 `const nowTs =` 定义数为 0（AUD-C5-S1）
+- [ ] 3.2 **nowTs 行为一致**：调用共享 `nowTs()`，断言返回值在 `Date.now()` ± 10ms 范围内（AUD-C5-S2）
+- [ ] 3.3 **estimateTokenCount 零重复**：扫描排除 `@shared/tokenBudget.ts` 后，断言无本地 `estimateTokenCount` / `estimateUtf8TokenCount` 定义（AUD-C5-S3）
+- [ ] 3.4 **estimateTokenCount 一致性**：对相同输入，共享版本与原各副本返回值相同（AUD-C5-S4）
+- [ ] 3.5 **hash 零重复**：扫描排除 shared 后，断言无 `hashJson` / `sha256Hex` / `hashText` 本地定义（AUD-C5-S5）
+- [ ] 3.6 **max_tokens 常量引用**：读取 aiService.ts 源码，断言不含字面量 `256` 出现在 `max_tokens` 上下文中，而是引用 `DEFAULT_REQUEST_MAX_TOKENS_ESTIMATE`（AUD-C5-S6）
+- [ ] 3.7 **timeoutMs 常量引用**：读取 skillValidator.ts 源码，断言不含字面量 `120000`，而是引用 `MAX_SKILL_TIMEOUT_MS`（AUD-C5-S7）
+- [ ] 3.8 **防回归守卫**：在非 shared 文件新增 `function nowTs`，断言守卫测试失败（AUD-C5-S8）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 在共享模块中定义 `nowTs()` 函数，11 个消费文件逐一替换为 `import { nowTs } from 'shared/...'`，删除本地定义
+- [ ] 4.2 将 3 个独立 `estimateTokenCount` 副本删除，改为 `import { estimateUtf8TokenCount } from '@shared/tokenBudget'`
+- [ ] 4.3 在共享模块中定义 `hashJson` / `sha256Hex`，5 个消费文件统一 import，删除本地实现
+- [ ] 4.4 `aiService.ts` 中将 `max_tokens: 256` 替换为 `max_tokens: DEFAULT_REQUEST_MAX_TOKENS_ESTIMATE`（从 runtimeConfig import）
+- [ ] 4.5 `skillValidator.ts` 中将 `120000` 替换为 `MAX_SKILL_TIMEOUT_MS`（从 runtimeConfig import）
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 合并 `hashJson` / `sha256Hex` / `hashText` 为单一 `hash(input: string): string` 函数 + 类型重载，消除命名碎片
+- [ ] 5.2 确认共享模块是否放在 `services/shared/` 还是 `packages/shared/`，与 C4 建立的模式保持一致
+- [ ] 5.3 检查 `nowTs` 的共享定义是否已为 fake timer 注入预留接口（如接受可选 `clock` 参数）
 
 ## 6. Evidence
 

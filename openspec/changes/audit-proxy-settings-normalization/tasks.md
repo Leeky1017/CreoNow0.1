@@ -26,19 +26,26 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **自动归一化**：构造含 legacy flat fields（`baseUrl` / `apiKey`）的配置对象，调用 `getRaw()`，断言返回的结构中 legacy 字段已迁移到 canonical nested 位置（AUD-C7-S1）
+- [ ] 3.2 **仅写规范格式**：调用 `update()` 写入配置，断言存储内容仅包含 canonical 字段、无 `baseUrl` / `apiKey` / `encryptedLegacyKey` 等遗留字段（AUD-C7-S2）
+- [ ] 3.3 **直接解析**：调用 `providerResolver.resolve(provider)`，断言直接从 canonical nested 结构获取 credentials，无三级 fallback 逻辑执行（AUD-C7-S3）
+- [ ] 3.4 **最旧配置无损迁移**：构造 v1（最早）格式配置，经 normalize 后断言所有 provider 均可正确 resolve（AUD-C7-S4）
+- [ ] 3.5 **缺失字段安全默认**：构造部分字段缺失的配置，断言 normalize 填充安全默认值且不抛异常（AUD-C7-S5）
+- [ ] 3.6 **getRaw 零 legacy fallback**：源码扫描 `getRaw` 方法体，断言不包含 `baseUrl` / `apiKey` / `encryptedLegacyKey` 字符串（AUD-C7-S6）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 实现 `normalizeProxySettings(raw)` 纯函数：检测 legacy flat 字段，迁移到 canonical nested 结构，填充缺失字段默认值
+- [ ] 4.2 在 `getRaw()` 入口处调用 `normalizeProxySettings()`，移除原有的遗留字段 fallback 逻辑
+- [ ] 4.3 修改 `update()` 方法，确保写入时仅保存 canonical 格式（通过 normalizeProxySettings 过滤后再写入）
+- [ ] 4.4 重写 `providerResolver` 中每个 provider 的 credentials 获取逻辑为直接读取 canonical 路径，移除三级 fallback
+- [ ] 4.5 删除 `resolveSettingsBackupProvider()` 中重复的 fallback 构造代码
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 将 `normalizeProxySettings` 的字段映射规则提取为声明式配置表（`{ legacyField → canonicalPath }`），而非 if-else 链
+- [ ] 5.2 检查 `resolveSettingsBackupProvider()` 是否可完全委托给 `providerResolver.resolve()`，消除重复函数
+- [ ] 5.3 确保 normalize 后的对象通过 `ProxySettings` 类型的 strict type check（无多余字段）
 
 ## 6. Evidence
 

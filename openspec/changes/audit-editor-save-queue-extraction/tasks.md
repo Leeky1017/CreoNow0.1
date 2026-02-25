@@ -28,19 +28,28 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **串行执行**：入队 3 个写任务（各含 50ms 模拟延迟），断言执行顺序严格为入队顺序（AUD-C10-S1）
+- [ ] 3.2 **优先级插入**：入队普通任务后立即入队高优先级任务，断言高优先级任务在当前任务完成后、普通任务前执行（AUD-C10-S2）
+- [ ] 3.3 **单任务失败不阻塞**：入队 3 个任务、第 2 个抛异常，断言第 1、3 个正常完成且第 2 个的错误可检索（AUD-C10-S3）
+- [ ] 3.4 **异常不死锁**：任务抛非预期异常后，断言后续入队的任务仍能正常执行、队列未死锁（AUD-C10-S4）
+- [ ] 3.5 **独立实例化**：直接 `new SaveQueue()` 不依赖 editorStore 或 IPC mock，断言可正常入队和处理（AUD-C10-S5）
+- [ ] 3.6 **editorStore 集成**：调用 editorStore 的 save 方法，断言内部委托给提取后的 SaveQueue 模块（AUD-C10-S6）
+- [ ] 3.7 **eslint 通过**：运行 eslint 检查 editorStore.tsx，断言无 `eslint-disable` 注释且通过（AUD-C10-S7）
+- [ ] 3.8 **空队列无副作用**：实例化 SaveQueue 但不入队任何任务，断言无定时器、无轮询、无内存分配增长（AUD-C10-S8）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 创建 `renderer/src/lib/saveQueue.ts`，实现 `SaveQueue` 类：含 `enqueue(task, priority?)` 方法、内部用数组维护队列、串行 `processNext()` 循环
+- [ ] 4.2 实现优先级插入：高优先级任务插入队列头部（当前执行中任务之后）
+- [ ] 4.3 实现错误隔离：`processNext()` 中 try-catch 单个任务，失败后记录错误并继续处理下一个
+- [ ] 4.4 在 `editorStore.tsx` 中替换内联 save queue 逻辑为 `new SaveQueue()` 实例调用
+- [ ] 4.5 删除 `editorStore.tsx:128` 的 `eslint-disable-next-line max-lines-per-function`
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 检查提取后 `createEditorStore` 的行数是否已降至 eslint `max-lines-per-function` 阈值以下（无需豁免）
+- [ ] 5.2 评估 `SaveQueue` 是否需要 `dispose()` 方法（清空队列 + 中断处理循环），为未来 HMR 或组件卸载场景预留
+- [ ] 5.3 确保 SaveQueue 的错误记录使用与 editorStore 一致的日志方式（console.error vs logger），不引入新的依赖
 
 ## 6. Evidence
 

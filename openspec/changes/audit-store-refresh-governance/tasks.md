@@ -28,19 +28,27 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **刷新失败可捕获**：mock `refresh()` 抛异常，在 mutation 调用后断言异常可被 caller 捕获（不被 `void` 丢弃）（AUD-C9-S1）
+- [ ] 3.2 **kgStore 返回 Promise**：调用 kgStore mutation（如 `addEntity`），断言返回值为 Promise 且 resolve 后 refresh 已完成（AUD-C9-S2）
+- [ ] 3.3 **memoryStore 返回 Promise**：同理验证 memoryStore mutation（AUD-C9-S3）
+- [ ] 3.4 **projectStore 返回 Promise**：同理验证 projectStore mutation（AUD-C9-S4）
+- [ ] 3.5 **可观测执行器错误记录**：触发 observable executor 中的 failure，断言结构化失败信息被记录（非仅 console.error 字符串）（AUD-C9-S5）
+- [ ] 3.6 **catch 回调异常安全**：observable executor 的 catch 回调自身抛异常，断言不产生 unhandledRejection（AUD-C9-S6）
+- [ ] 3.7 **非关键路径不阻塞**：非关键 fire-and-forget 操作失败，断言主流程正常完成且失败被日志记录（AUD-C9-S7）
+- [ ] 3.8 **静态扫描零 void refresh**：扫描关键 mutation 路径源码，断言不含 `void get().refresh()` 或 `void this.refresh()` 模式（AUD-C9-S8）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 将 kgStore / memoryStore / projectStore 中关键 mutation 的 `void get().refresh()` 改为 `await get().refresh()`，使 mutation 方法返回 `Promise<void>`
+- [ ] 4.2 实现 `ObservableExecutor`：接受 `() => Promise<void>` 和可选 `onError` 回调，内部 catch 异常后写入结构化日志，且 onError 自身异常被安全捕获
+- [ ] 4.3 将非关键路径的 fire-and-forget 调用改为 `ObservableExecutor.run(fn, { onError: logger.warn })`
+- [ ] 4.4 改造 `fireAndForget.ts` 为 `ObservableExecutor` 的简便包装，保留现有调用方兼容
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 将 `ObservableExecutor` 抽取为 `renderer/src/lib/observableExecutor.ts` 独立模块，附完整 JSDoc
+- [ ] 5.2 评估是否可删除 `fireAndForget.ts`（如所有调用方已迁移到 ObservableExecutor），或保留为薄包装
+- [ ] 5.3 确认关键 vs 非关键路径的划分标准已文档化（如注释或常量命名），避免后续混淆
 
 ## 6. Evidence
 

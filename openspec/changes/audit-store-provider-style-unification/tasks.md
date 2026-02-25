@@ -24,19 +24,23 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **全 JSX + 零 createElement**：扫描 `renderer/src/stores/` 目录，断言所有文件为 `.tsx` 扩展名且不含 `React.createElement` 调用（AUD-C14-S1）
+- [ ] 3.2 **import 路径无断裂**：`tsc --noEmit`，断言重命名 `.ts → .tsx` 后无 unresolved module 错误（AUD-C14-S2）
+- [ ] 3.3 **渲染输出一致**：对每个 store 的 Provider 组件，分别用 JSX 和原 `React.createElement` 渲染，断言 DOM 输出严格相等（AUD-C14-S3）
+- [ ] 3.4 **lint 防回归**：在 store 文件中写入 `React.createElement(Provider, ...)`，断言 eslint 报错阻止提交（AUD-C14-S4）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 将 5 个 `.ts` store 文件重命名为 `.tsx`（`kgStore.ts` → `kgStore.tsx`、`memoryStore.ts` → `memoryStore.tsx`、`fileStore.ts` → `fileStore.tsx`、`aiStore.ts` → `aiStore.tsx`、`searchStore.ts` → `searchStore.tsx`）
+- [ ] 4.2 将每个文件中的 `React.createElement(XxxProvider, { value: ... }, children)` 替换为 `<XxxProvider value={...}>{children}</XxxProvider>` JSX 语法
+- [ ] 4.3 更新所有引用这 5 个文件的 import 路径（如需显式扩展名引用的场景）
+- [ ] 4.4 在 `.eslintrc.cjs` 中添加针对 `renderer/src/stores/**` 的规则：禁止 `React.createElement` 模式
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 检查 `.tsx` 重命名后 Storybook / 测试 / 构建配置是否需要同步更新 glob pattern
+- [ ] 5.2 确认 lint 规则范围是仅限 stores 目录还是全 renderer（推荐全 renderer 统一 JSX）
+- [ ] 5.3 清理可能因重命名产生的 git 追踪问题（确保 git 识别为 rename 而非 delete+add）
 
 ## 6. Evidence
 

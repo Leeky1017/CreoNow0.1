@@ -29,19 +29,30 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **fetcher 降级日志**：触发 rulesFetcher KG 服务不可用降级，断言 `logger.warn` 被调用且参数包含 `{ event: 'degradation', fetcher: 'rulesFetcher', reason: ... }` 结构（AUD-C3-S1）
+- [ ] 3.2 **连续降级告警升级**：连续触发 N 次降级，断言第 N 次触发 `logger.error`（或更高级别告警），而前 N-1 次仅为 `logger.warn`（AUD-C3-S2）
+- [ ] 3.3 **降级恢复重置**：降级 N-1 次后成功一次，断言计数器重置，后续第 1 次降级仅为 warn（AUD-C3-S3）
+- [ ] 3.4 **embedding 双失败**：primary 和 fallback embedding 均失败，断言两个错误都被记录且包含各自的 error context（AUD-C3-S4）
+- [ ] 3.5 **AiPanel localStorage 异常**：mock `localStorage.getItem` 抛异常，断言 `console.error` 被调用且包含操作类型和 key 名（AUD-C3-S5）
+- [ ] 3.6 **AiPanel judge 异常**：mock judge 评估抛异常，断言 `console.error` 包含 judge 上下文（AUD-C3-S6）
+- [ ] 3.7 **SSE 解析异常**：传入畸形 JSON SSE 数据，断言 `logger.warn` 包含截断的原始数据片段（AUD-C3-S7）
+- [ ] 3.8 **memory 降级日志**：触发 memoryService 语义→确定性降级，断言 `logger.warn` 含结构化降级事件（AUD-C3-S8）
+- [ ] 3.9 **memory 连续降级升级**：连续 N 次 memory 降级，断言告警升级触发（AUD-C3-S9）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 实现 `DegradationCounter` 类：`increment(key)` 返回当前计数，`reset(key)` 归零，`shouldEscalate(key)` 判断是否达到阈值 N
+- [ ] 4.2 在各 context fetcher 降级分支插入 `logger.warn({ event: 'degradation', fetcher, reason, count })` 调用
+- [ ] 4.3 在 fetcher 降级路径接入 `DegradationCounter`，达到阈值时调用 `logger.error({ event: 'degradation_escalation', ... })`
+- [ ] 4.4 在 embeddingService fallback catch 块添加 `logger.warn({ event: 'embedding_fallback_failure', primaryError, fallbackError })`
+- [ ] 4.5 在 AiPanel.tsx 的 localStorage catch 和 judge catch 中添加 `console.error` 调用
+- [ ] 4.6 在 aiService SSE JSON.parse catch 中添加 `logger.warn({ event: 'sse_parse_failure', raw: data.slice(0, 200) })`
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 将 `DegradationCounter` 抽取为 `services/shared/degradationCounter.ts`，供 context-engine 和 memory-system 共用
+- [ ] 5.2 统一降级日志结构体字段命名（`event` / `module` / `reason` / `count`），建立结构化日志契约
+- [ ] 5.3 检查告警阈值 N 是否应提取为可配置常量（如 `DEGRADATION_ESCALATION_THRESHOLD`）
 
 ## 6. Evidence
 

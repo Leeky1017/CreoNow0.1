@@ -26,19 +26,24 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **watcher close 清理监听器**：创建 watcher，注册 error 监听器，close watcher，断言 error 事件的 listener 数量为 0（AUD-C15-S1）
+- [ ] 3.2 **关闭后 error 无副作用**：close watcher 后手动 emit `error` 事件，断言原监听器回调未被调用（AUD-C15-S2）
+- [ ] 3.3 **N 次 create-close 无累积**：循环 N 次 create watcher → close watcher，断言 error listener 数量始终为 0 且无 MaxListenersExceededWarning（AUD-C15-S3）
+- [ ] 3.4 **首次注册**：调用 `installGlobalExceptionHandlers()`，断言 `process.listenerCount('uncaughtException')` 和 `process.listenerCount('unhandledRejection')` 各增加 1（AUD-C15-S4）
+- [ ] 3.5 **重复调用不累积**：连续调用 3 次 `installGlobalExceptionHandlers()`，断言 listener 数量与首次调用后相同（AUD-C15-S5）
+- [ ] 3.6 **异常捕获功能正常**：安装 dedup guard 后触发 uncaughtException，断言处理函数仍被正确调用（AUD-C15-S6）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 在 `watchService.ts` 的 watcher close 逻辑中添加 `watcher.off('error', errorHandler)`（需将 error handler 提取为具名函数引用）
+- [ ] 4.2 在 `globalExceptionHandlers.ts` 顶部添加 `let installed = false` 标志，`installGlobalExceptionHandlers()` 入口检查：已安装则直接 return
+- [ ] 4.3 确保 dedup guard 不影响异常处理函数的正常执行（即 `installed = true` 后 handler 仍生效）
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 将 watcher error handler 从匿名箭头函数改为模块级具名函数，确保 `.on()` 和 `.off()` 引用同一函数对象
+- [ ] 5.2 评估 `installed` 标志是否应改为 `WeakRef` 或 `AbortController` 模式（当前场景单 flag 已足够，不过度设计）
+- [ ] 5.3 检查是否有其他 EventEmitter 的 `.on()` 调用存在类似的无 `.off()` 配对问题（本次仅修复审计发现的 2 处）
 
 ## 6. Evidence
 

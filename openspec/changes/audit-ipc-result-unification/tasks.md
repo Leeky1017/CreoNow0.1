@@ -25,19 +25,24 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **共享导出完整性**：import `services/shared/ipcResult.ts`，断言导出包含 `ipcError(code, message, details?, options?)` 签名，`options` 含可选 `traceId` 和 `retryable` 字段（AUD-C4-S1）
+- [ ] 3.2 **零本地重复**：用 `rg` 或 AST 扫描生产代码（排除 shared/ipcResult.ts），断言匹配 `function ipcError` 或 `type ServiceResult` 定义数为 0（AUD-C4-S2）
+- [ ] 3.3 **迁移兼容性**：运行 `tsc --noEmit`，断言零错误；运行既有测试套件，断言全通过（AUD-C4-S3）
+- [ ] 3.4 **签名变体行为一致**：构造原各变体调用（带 traceId、带 retryable、仅 code+message），断言统一后返回结构与原行为一致（AUD-C4-S4）
+- [ ] 3.5 **防回归守卫**：在任意非 shared 文件中新增 `function ipcError`，断言守卫测试失败（AUD-C4-S5）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 扩展 `services/shared/ipcResult.ts` 的 `ipcError` 签名，增加可选 `options: { traceId?, retryable? }` 参数，保持向后兼容
+- [ ] 4.2 逐文件将 33 个本地 `ipcError` / `ServiceResult` 定义替换为 `import { ipcError, ServiceResult, Ok, Err } from 'services/shared/ipcResult'`
+- [ ] 4.3 对各签名变体调用点适配新签名：将 `ipcError(code, msg, details, traceId)` 改为 `ipcError(code, msg, details, { traceId })`
+- [ ] 4.4 删除 33 个文件中的本地定义代码块
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 检查迁移后是否存在 `import` 路径不一致（相对路径 vs 别名），统一为项目约定的模块解析方式
+- [ ] 5.2 确认 `services/shared/ipcResult.ts` 的导出是否应纳入 `packages/shared/` 包（与 cross-module 共享层保持一致）
+- [ ] 5.3 清理迁移过程中可能残留的空行或无用 import
 
 ## 6. Evidence
 

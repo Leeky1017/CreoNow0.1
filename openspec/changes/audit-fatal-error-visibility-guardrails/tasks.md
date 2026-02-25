@@ -24,19 +24,21 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [ ] 3.1 **stderr fallback**：mock `logger.fatal` 抛异常，断言 `process.stderr.write` 被调用且包含错误上下文信息（AUD-C2-S1）
+- [ ] 3.2 **fallback 自身安全**：mock `process.stderr.write` 也抛异常，断言进程不崩溃、不抛未捕获异常（AUD-C2-S2）
+- [ ] 3.3 **用户可见错误**：mock IPC `createProject` 返回错误，渲染 `CreateProjectDialog`，断言 DOM 中出现包含错误描述的可见元素（AUD-C2-S3）
+- [ ] 3.4 **诊断上下文**：mock IPC 返回特定 error code，断言 `console.error` 调用包含该 code 与操作类型（AUD-C2-S4）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [ ] 4.1 在 `index.ts:466` 的 catch 块中添加 `try { process.stderr.write(\`[FATAL] ${error}\n\`) } catch { /* 最后兜底，不能再抛 */ }`
+- [ ] 4.2 在 `CreateProjectDialog.tsx:456` 的 catch 块中调用 `setError(err.message || '项目创建失败')`，并在 JSX 中条件渲染错误提示区域
+- [ ] 4.3 在 `CreateProjectDialog` catch 块补充 `console.error('[CreateProjectDialog] createProject failed:', err)` 提供诊断信息
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [ ] 5.1 评估 `index.ts` 的 fatal catch 块是否可抽取为 `safeFatalLog(error)` 工具函数，供其他主进程顶层 catch 复用
+- [ ] 5.2 确保 `CreateProjectDialog` 的错误状态在下次提交时自动清除（`setError(null)` 在 submit 开头）
 
 ## 6. Evidence
 
