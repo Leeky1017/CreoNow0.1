@@ -1,10 +1,10 @@
-更新时间：2026-02-24 14:01
+更新时间：2026-02-25 09:13
 
 ## 1. Specification
 
-- [ ] 1.1 审阅并确认需求边界（Embedding/RAG 的执行位置迁移、队列化、写入批量化、缓存有界）
-- [ ] 1.2 审阅并确认错误路径与边界路径（向量不可用降级、超时/取消、批处理失败回滚）
-- [ ] 1.3 审阅并确认验收阈值与不可变契约（autosave 不阻塞；降级可见；cache 有上限）
+- [x] 1.1 审阅并确认需求边界（Embedding/RAG 的执行位置迁移、队列化、写入批量化、缓存有界）
+- [x] 1.2 审阅并确认错误路径与边界路径（向量不可用降级、超时/取消、批处理失败回滚）
+- [x] 1.3 审阅并确认验收阈值与不可变契约（autosave 不阻塞；降级可见；cache 有上限）
 - [x] 1.4 若存在上游依赖，先完成依赖同步检查（Dependency Sync Check）并记录“无漂移/已更新”；结论：`PASS（NO_DRIFT，DOCS_UPDATED_FOR_BASELINE_ALIGNMENT）`
 
 ### 依赖同步检查（Dependency Sync Check）
@@ -23,8 +23,8 @@
   - `openspec/specs/skill-system/spec.md`
   - `openspec/specs/context-engine/spec.md`
   - `apps/desktop/main/src/services/utilityprocess/**`
-  - `openspec/changes/issue-617-embedding-rag-offload/proposal.md`
-  - `openspec/changes/issue-617-embedding-rag-offload/specs/search-and-retrieval/spec.md`
+  - `openspec/changes/archive/issue-617-embedding-rag-offload/proposal.md`
+  - `openspec/changes/archive/issue-617-embedding-rag-offload/specs/search-and-retrieval/spec.md`
 - 核对结论：`PASS（NO_DRIFT，DOCS_UPDATED_FOR_BASELINE_ALIGNMENT）`
 - 无漂移/已更新依据：
   - 上游 `issue-617-utilityprocess-foundation` 的可验证基线是 UtilityProcess supervisor/runner 契约（`utilityProcessFoundation.compute` + BackgroundTaskRunner 语义）。
@@ -33,9 +33,9 @@
 
 ## 2. TDD Mapping（先测前提）
 
-- [ ] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
-- [ ] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
-- [ ] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+- [x] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
+- [x] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
+- [x] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
 
 ### Scenario -> 测试映射
 
@@ -48,25 +48,25 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 编写 Happy Path 的失败测试并确认先失败
-- [ ] 3.2 编写 Edge Case 的失败测试并确认先失败
-- [ ] 3.3 编写 Error Path 的失败测试并确认先失败
+- [x] 3.1 编写 Happy Path 的失败测试并确认先失败
+- [x] 3.2 编写 Edge Case 的失败测试并确认先失败
+- [x] 3.3 编写 Error Path 的失败测试并确认先失败
 - [x] 3.4 BE-EMR-S3（production IPC runtime）新增失败测试并确认 Red（`rag-retrieve-runtime.contract.test.ts` 断言 `semantic search` 未在 compute runner 内执行）
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 仅实现让 Red 转绿的最小代码
-- [ ] 4.2 逐条使失败测试通过，不引入无关功能
+- [x] 4.1 仅实现让 Red 转绿的最小代码
+- [x] 4.2 逐条使失败测试通过，不引入无关功能
 - [x] 4.3 BE-EMR-S3 将 `rag:context:retrieve` 路径接入 compute runner，并在 `index.ts` 传入 `utilityProcessFoundation.compute`
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 去重与重构，保持测试全绿
-- [ ] 5.2 不改变已通过的外部行为契约
+- [x] 5.1 去重与重构，保持测试全绿
+- [x] 5.2 不改变已通过的外部行为契约
 
 ## 6. Evidence
 
-- [ ] 6.1 记录 RUN_LOG（含 Red 失败证据、Green 通过证据与关键命令输出）
+- [x] 6.1 记录 RUN_LOG（含 Red 失败证据、Green 通过证据与关键命令输出）
 - [x] 6.2 记录 Dependency Sync Check 的输入、核对结论与后续动作（无漂移/已更新）
-- [ ] 6.3 记录 Main Session Audit（Audit-Owner/Reviewed-HEAD-SHA=签字提交 HEAD^/三项 PASS/Blocking-Issues=0/Decision=ACCEPT），并确认签字提交仅变更当前任务 RUN_LOG
+- [x] 6.3 记录 Main Session Audit（Audit-Owner/Reviewed-HEAD-SHA=签字提交 HEAD^/三项 PASS/Blocking-Issues=0/Decision=ACCEPT），并确认签字提交仅变更当前任务 RUN_LOG
 - [x] 6.4 BE-EMR-S3 Red/Green 命令证据已追加至 `openspec/_ops/task_runs/ISSUE-638.md`（仅覆盖本轮 production IPC offload 事实）

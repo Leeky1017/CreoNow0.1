@@ -1,6 +1,6 @@
 # 提案：issue-617-embedding-rag-offload
 
-更新时间：2026-02-24 14:01
+更新时间：2026-02-25 09:13
 
 ## 背景
 
@@ -47,9 +47,9 @@ Embedding/RAG 路径当前在主线程同步执行（ONNX 推理、FTS 查询、
   - `openspec/specs/ipc/spec.md`
   - `openspec/changes/archive/issue-617-utilityprocess-foundation/specs/ipc/spec.md`
   - `openspec/changes/archive/issue-617-scoped-lifecycle-and-abort/specs/ipc/spec.md`
-  - `/tmp/notion_cn_backend_vault/CN-Backend/CN 后端开发/Embedding & RAG 优化.md`
-  - `/tmp/notion_cn_backend_vault/CN-Backend/CN 后端开发/数据层设计（SQLite & DAO）.md`
-  - `/tmp/notion_cn_backend_vault/CN-Backend/CN 后端开发/Agent 问题发现汇总（CN 后端审计）.md`
+  - `openspec/changes/archive/issue-617-embedding-rag-offload/specs/search-and-retrieval/spec.md`
+  - `openspec/changes/archive/issue-617-embedding-rag-offload/tasks.md`
+  - `openspec/_ops/task_runs/ISSUE-638.md`
 - 核对项：
   - 主 spec 的“索引更新不阻塞编辑器操作”要求在 autosave 路径得到硬保障（队列化/异步化）。
   - 语义搜索不可用时必须按 spec 自动降级到 FTS，并有用户可见提示（行为不回退）。
@@ -59,11 +59,11 @@ Embedding/RAG 路径当前在主线程同步执行（ONNX 推理、FTS 查询、
 
 ## 来源映射
 
-| 来源                                   | 提炼结论                                                                                             | 落地位置                                         |
-| -------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| `Embedding & RAG 优化.md`              | 推理走 compute runner 契约、写入走 data role 契约、主进程零同步推理；EmbeddingQueue 与 bounded cache | `specs/search-and-retrieval/spec.md`、`tasks.md` |
-| `数据层设计（SQLite & DAO）.md`        | SQLite WAL + vec0（可选）是当前持久化基线，写入收口需可测试                                          | `tasks.md`、后续实现                             |
-| `Agent 问题发现汇总（CN 后端审计）.md` | autosave 同步 ONNX、RAG rerank 同步路径、语义块索引无界增长是明确问题                                | `tasks.md`、后续测试与实现                       |
+| 来源                                                                                          | 提炼结论                                                                                             | 落地位置                 |
+| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------ |
+| `openspec/changes/archive/issue-617-embedding-rag-offload/specs/search-and-retrieval/spec.md` | 推理走 compute runner 契约、写入走 data role 契约、主进程零同步推理；EmbeddingQueue 与 bounded cache | `tasks.md`               |
+| `openspec/_ops/task_runs/ISSUE-638.md`                                                        | Red/Green 与集成验证覆盖 autosave 同步推理、RAG 检索 offload 与缓存上限约束                          | `tasks.md`、后续回归校验 |
+| `openspec/specs/search-and-retrieval/spec.md`                                                 | SQLite 持久化基线与检索降级语义保持一致                                                              | `tasks.md`               |
 
 ## 审阅状态
 

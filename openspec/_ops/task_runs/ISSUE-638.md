@@ -1,6 +1,6 @@
 # ISSUE-638
 
-更新时间：2026-02-24 22:31
+更新时间：2026-02-25 09:13
 
 ## Links
 
@@ -11,8 +11,8 @@
 
 ## Scope
 
-- Rulebook task: `rulebook/tasks/issue-638-embedding-rag-offload/**`
-- Target change: `openspec/changes/issue-617-embedding-rag-offload/**`
+- Rulebook task: `rulebook/tasks/archive/2026-02-25-issue-638-embedding-rag-offload/**`
+- Target change: `openspec/changes/archive/issue-617-embedding-rag-offload/**`
 - RUN_LOG: `openspec/_ops/task_runs/ISSUE-638.md`
 - Required checks: `ci`, `openspec-log-guard`, `merge-serial`
 
@@ -24,7 +24,7 @@
 - [x] 执行并记录受管 markdown 时间戳门禁
 - [x] 修正 delta 文档的基线术语，明确 UtilityProcess compute runner 契约并去除“已实现物理 OS 进程隔离”暗示
 - [x] 产出治理预检清单（BE-EMR-S1~S4 + Rulebook/RUN_LOG/Preflight 门禁）
-- [ ] 主会话后续实现/提测/PR/auto-merge 收口
+- [x] 主会话后续实现/提测/PR/auto-merge 收口
 
 ## Runs
 
@@ -393,16 +393,32 @@
   - `openspec/specs/ipc/spec.md`
   - `openspec/specs/skill-system/spec.md`
   - `openspec/specs/context-engine/spec.md`
-  - `openspec/changes/issue-617-embedding-rag-offload/proposal.md`
-  - `openspec/changes/issue-617-embedding-rag-offload/specs/search-and-retrieval/spec.md`
-  - `openspec/changes/issue-617-embedding-rag-offload/tasks.md`
+  - `openspec/changes/archive/issue-617-embedding-rag-offload/proposal.md`
+  - `openspec/changes/archive/issue-617-embedding-rag-offload/specs/search-and-retrieval/spec.md`
+  - `openspec/changes/archive/issue-617-embedding-rag-offload/tasks.md`
 - 核对项：
   - timeout -> abort（BE-SLA-S2）语义已在主 spec 保持一致。
   - 会话并发槽位回收（BE-SLA-S3）语义已在主 spec 保持一致。
   - project-scoped cache/watcher 清理（BE-SLA-S4）语义已在主 spec 保持一致。
   - `issue-617-utilityprocess-foundation` 可验证基线为 UtilityProcess supervisor/runner 契约（含 BackgroundTaskRunner 五态机），未发现必须宣称“已实现物理 OS 进程级隔离”的依赖证据。
 - 结论：`PASS（NO_DRIFT，DOCS_UPDATED_FOR_BASELINE_ALIGNMENT）`
-- 后续动作：已将结论同步写入 `openspec/changes/issue-617-embedding-rag-offload/tasks.md` 第 1.4 节，并更新 proposal/spec 的 baseline 表述后继续按 BE-EMR-S1~S4 推进。
+- 后续动作：已将结论同步写入 `openspec/changes/archive/issue-617-embedding-rag-offload/tasks.md` 第 1.4 节，并更新 proposal/spec 的 baseline 表述后继续按 BE-EMR-S1~S4 推进。
+
+### 2026-02-25 Governance closeout（archive + main truth）
+
+- Command:
+  - `git log --oneline --decorate --max-count=80 --grep='(#638)\\|(#642)'`
+  - `git rev-parse HEAD`
+  - `find openspec/changes/archive -maxdepth 1 -type d -name '*embedding-rag-offload*' -print`
+  - `find rulebook/tasks/archive -maxdepth 1 -type d -name '*638-embedding-rag-offload*' -print`
+  - `test -d openspec/changes/issue-617-embedding-rag-offload && echo ACTIVE_CHANGE_EXISTS || echo ACTIVE_CHANGE_REMOVED`
+  - `test -d rulebook/tasks/issue-638-embedding-rag-offload && echo ACTIVE_TASK_EXISTS || echo ACTIVE_TASK_REMOVED`
+- Key output:
+  - `6933470b Deliver issue-617-embedding-rag-offload change (#638) (#642)`
+  - archive paths present: `openspec/changes/archive/issue-617-embedding-rag-offload`、`rulebook/tasks/archive/2026-02-25-issue-638-embedding-rag-offload`
+  - `ACTIVE_CHANGE_REMOVED`
+  - `ACTIVE_TASK_REMOVED`
+  - control-plane truth: closeout branch merged via PR #642 commit chain in `main`
 
 ## Main Session Audit
 
