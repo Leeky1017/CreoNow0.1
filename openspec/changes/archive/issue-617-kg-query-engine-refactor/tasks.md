@@ -1,4 +1,4 @@
-更新时间：2026-02-24 11:44
+更新时间：2026-02-25 08:49
 
 ## 1. Specification
 
@@ -19,7 +19,7 @@
 - 核对输入：
   - `openspec/changes/archive/issue-617-utilityprocess-foundation/**`
   - `openspec/changes/archive/issue-617-scoped-lifecycle-and-abort/**`
-  - `openspec/changes/issue-617-kg-query-engine-refactor/{proposal.md,specs/knowledge-graph/spec.md,tasks.md}`
+  - `openspec/changes/archive/issue-617-kg-query-engine-refactor/{proposal.md,specs/knowledge-graph/spec.md,tasks.md}`
   - `openspec/changes/EXECUTION_ORDER.md`
 
 ### Scenario -> 测试映射
@@ -51,4 +51,4 @@
 
 - [x] 6.1 记录 RUN_LOG（含 Red 失败证据、Green 通过证据与关键命令输出）
 - [x] 6.2 记录 Dependency Sync Check 的输入、核对结论与后续动作（无漂移/已更新）
-- [ ] 6.3 记录 Main Session Audit（Audit-Owner/Reviewed-HEAD-SHA=签字提交 HEAD^/三项 PASS/Blocking-Issues=0/Decision=ACCEPT），并确认签字提交仅变更当前任务 RUN_LOG
+- [x] 6.3 记录 Main Session Audit（Audit-Owner/Reviewed-HEAD-SHA=签字提交 HEAD^/三项 PASS/Blocking-Issues=0/Decision=ACCEPT），并确认签字提交仅变更当前任务 RUN_LOG

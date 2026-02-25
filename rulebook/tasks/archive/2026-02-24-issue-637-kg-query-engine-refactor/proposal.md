@@ -1,10 +1,10 @@
 # Proposal: issue-637-kg-query-engine-refactor
 
-更新时间：2026-02-24 11:31
+更新时间：2026-02-25 08:49
 
 ## Why
 
-`openspec/changes/issue-617-kg-query-engine-refactor` 仍处于活跃状态，且 #617 已关闭，不满足当前任务准入门禁。需要以 OPEN issue #637 重新承接该 change，先完成治理基线，再按 TDD 交付 BE-KGQ-S1..S4 并合并到 `main`。
+`openspec/changes/archive/issue-617-kg-query-engine-refactor` 已归档，且 #617 已关闭，不满足当前任务准入门禁。需要以 OPEN issue #637 承接该 change 的治理收口，完成证据闭环并确认交付状态。
 
 ## What Changes
 
@@ -15,8 +15,8 @@
 ## Impact
 
 - Affected specs:
-  - `openspec/changes/issue-617-kg-query-engine-refactor/specs/knowledge-graph/spec.md`
-  - `openspec/changes/issue-617-kg-query-engine-refactor/tasks.md`
+  - `openspec/changes/archive/issue-617-kg-query-engine-refactor/specs/knowledge-graph/spec.md`
+  - `openspec/changes/archive/issue-617-kg-query-engine-refactor/tasks.md`
 - Affected code:
   - `apps/desktop/main/src/services/kg/**`
   - `apps/desktop/main/src/services/kg/__tests__/**`

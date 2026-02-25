@@ -1,6 +1,6 @@
 # issue-637-kg-query-engine-refactor
 
-更新时间：2026-02-24 11:44
+更新时间：2026-02-24 21:50
 
 ## 1. Governance Baseline
 
@@ -19,9 +19,9 @@
 
 ## 3. Audit + Delivery
 
-- [ ] 3.1 审计 mate #1：Spec 合规审计
-- [ ] 3.2 审计 mate #2：代码质量/回归风险审计
-- [ ] 3.3 修复审计发现并复验
-- [ ] 3.4 创建 PR（`Closes #637`）并开启 auto-merge
-- [ ] 3.5 required checks 全绿，自动合并到 `main`
-- [ ] 3.6 控制面 `main` 同步 + worktree 清理
+- [x] 3.1 审计 mate #1：Spec 合规审计
+- [x] 3.2 审计 mate #2：代码质量/回归风险审计
+- [x] 3.3 修复审计发现并复验
+- [x] 3.4 创建 PR（`Closes #637`）并开启 auto-merge
+- [x] 3.5 required checks 全绿，自动合并到 `main`
+- [x] 3.6 控制面 `main` 同步 + worktree 清理

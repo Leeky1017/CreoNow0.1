@@ -1,6 +1,6 @@
 # 提案：issue-617-kg-query-engine-refactor
 
-更新时间：2026-02-24 11:31
+更新时间：2026-02-25 08:49
 
 ## 背景
 
@@ -40,8 +40,9 @@ KG 查询层存在多个 P0/P1 问题：全量拉图后在 JS 层遍历导致主
   - `openspec/specs/knowledge-graph/spec.md`
   - `openspec/specs/context-engine/spec.md`
   - `openspec/specs/ipc/spec.md`
-  - `/tmp/notion_cn_backend_vault/CN-Backend/CN 后端开发/KG 查询层重构.md`
-  - `/tmp/notion_cn_backend_vault/CN-Backend/CN 后端开发/Agent 问题发现汇总（CN 后端审计）.md`
+  - `openspec/changes/archive/issue-617-kg-query-engine-refactor/specs/knowledge-graph/spec.md`
+  - `openspec/changes/archive/issue-617-kg-query-engine-refactor/tasks.md`
+  - `openspec/_ops/task_runs/ISSUE-637.md`
 - 核对项：
   - 子图/路径/校验查询的上限与降级策略符合主 spec 的查询契约与性能阈值。
   - 超时/取消必须可中止底层计算，不得继续占用 ComputeProcess。
@@ -50,10 +51,10 @@ KG 查询层存在多个 P0/P1 问题：全量拉图后在 JS 层遍历导致主
 
 ## 来源映射
 
-| 来源                                   | 提炼结论                                                                | 落地位置                                    |
-| -------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------- |
-| `KG 查询层重构.md`                     | CTE 图遍历 + 迭代化 validate + Aho-Corasick 匹配 + Deque BFS 的混合策略 | `specs/knowledge-graph/spec.md`、`tasks.md` |
-| `Agent 问题发现汇总（CN 后端审计）.md` | P0/P1 问题清单明确指向：全量拉图、递归栈溢出、shift 退化、N×M 匹配      | `tasks.md`、后续测试与实现                  |
+| 来源                                                                                 | 提炼结论                                                                              | 落地位置                                                                                   |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `openspec/changes/archive/issue-617-kg-query-engine-refactor/specs/knowledge-graph/spec.md` | CTE 图遍历、迭代化 validate、多模式匹配与队列优化的契约点已在 delta spec 明确化            | `openspec/changes/archive/issue-617-kg-query-engine-refactor/tasks.md`                     |
+| `openspec/_ops/task_runs/ISSUE-637.md`                                              | Red/Green 与性能风险证据覆盖全量拉图、递归深度、`Array.shift()` 退化与 N×M 匹配热点 | `openspec/changes/archive/issue-617-kg-query-engine-refactor/tasks.md`、后续回归校验清单 |
 
 ## 审阅状态
 

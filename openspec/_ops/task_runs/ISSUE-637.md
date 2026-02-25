@@ -1,6 +1,6 @@
 # ISSUE-637
 
-更新时间：2026-02-24 13:59
+更新时间：2026-02-25 08:49
 
 ## Links
 
@@ -11,8 +11,8 @@
 
 ## Scope
 
-- Change: `openspec/changes/issue-617-kg-query-engine-refactor/**`
-- Rulebook task: `rulebook/tasks/issue-637-kg-query-engine-refactor/**`
+- Change: `openspec/changes/archive/issue-617-kg-query-engine-refactor/**`
+- Rulebook task: `rulebook/tasks/archive/2026-02-24-issue-637-kg-query-engine-refactor/**`
 - Runtime paths: `apps/desktop/main/src/services/kg/**`
 - Required checks: `ci`, `openspec-log-guard`, `merge-serial`
 
@@ -29,8 +29,8 @@
 - [x] 并行实现 S1/S2、S3、S4（Red -> Green -> Refactor）
 - [x] 双审计（spec + quality）与修复闭环
 - [x] 创建 PR 并开启 auto-merge
-- [ ] required checks 全绿后自动合并
-- [ ] 同步控制面 `main` + 清理 worktree
+- [x] required checks 全绿后自动合并
+- [x] 同步控制面 `main` + 清理 worktree
 
 ## Runs
 
@@ -109,7 +109,7 @@
 - Command:
   - `git commit -m "feat: implement kg query contracts and matcher refactor (#637)" -m "Co-authored-by: Codex <noreply@openai.com>"`
 - Key output:
-  - commit: `8b7d6909b31a8695fcb809ef8f0733f632ce8f35`
+  - commit: `8b7d69095dc6279db2a6d4ba5e43ac1fbaf803ed`
   - changed files: `7`
 
 ### 2026-02-24 Cross-audit results (Team Mode)
@@ -215,6 +215,58 @@
   - required checks (`ci`/`openspec-log-guard`/`merge-serial`) 已全绿，但 PR 仍为 `BEHIND`
   - sync merge commit: `d440c9ce0ff2dcf2cccd0e44d20ba95c9b1a2f7a`
   - 引入 `origin/main` 最新提交：`d0fb0b2a`、`ff5da04c`
+
+### 2026-02-24 Rulebook + RUN_LOG closeout on control-plane main
+
+- Command:
+  - `git rev-parse --abbrev-ref HEAD`
+  - `git show --no-patch --pretty=format:'%H %s' d26412d6`
+  - `git show --no-patch --pretty=format:'%H %s' 369554aa`
+  - `git show --no-patch --pretty=format:'%P' 369554aad4c05fbd1414399ac2117c1347b1ec59`
+  - `find rulebook/tasks -maxdepth 3 -type d -name '*637*' -print`
+  - `find openspec/changes -maxdepth 3 -type d -name '*617-kg-query-engine-refactor*' -print`
+  - `rulebook task validate issue-637-kg-query-engine-refactor || true`
+  - `python3 scripts/check_doc_timestamps.py --files rulebook/tasks/archive/2026-02-24-issue-637-kg-query-engine-refactor/proposal.md rulebook/tasks/archive/2026-02-24-issue-637-kg-query-engine-refactor/tasks.md openspec/_ops/task_runs/ISSUE-637.md`
+  - `cat rulebook/tasks/archive/2026-02-24-issue-637-kg-query-engine-refactor/.metadata.json`
+- Key output:
+  - branch: `main`
+  - merge truth: `d26412d64bbca34f234527bd95595d0f755d76e5 Merge pull request #640 from Leeky1017/task/637-kg-query-engine-refactor`
+  - final signoff commit: `369554aad4c05fbd1414399ac2117c1347b1ec59 chore: final run-log signoff after behind resync (#637)`
+  - signoff parent (`HEAD^`) = `3a1721772fca154325b249c69682bf27de094514`（与 Main Session Audit `Reviewed-HEAD-SHA` 一致）
+  - archive paths detected: `rulebook/tasks/archive/2026-02-24-issue-637-kg-query-engine-refactor`、`openspec/changes/archive/issue-617-kg-query-engine-refactor`
+  - `rulebook task validate issue-637-kg-query-engine-refactor`: failed with `Task ... not found`（任务已归档，active 路径不再存在）
+  - timestamp gate: `OK: no governed markdown files to validate`（预期结果：脚本按规则排除 `openspec/_ops/task_runs/**` 与 `rulebook/tasks/archive/**`）
+  - Rulebook metadata: `"status": "completed"`
+
+### 2026-02-25 Governance closeout truth refresh (post-merge)
+
+- Command:
+  - `gh pr view 640 --json state,mergedAt,mergeCommit,statusCheckRollup,url`
+  - `gh issue view 637 --json state,closedAt,url`
+  - `git merge-base --is-ancestor d26412d64bbca34f234527bd95595d0f755d76e5 main && echo MAIN_CONTAINS_PR640_MERGE`
+  - `git worktree list | grep -F 'issue-637-kg-query-engine-refactor' || true`
+  - `[ -d .worktrees ] && find .worktrees -maxdepth 2 -type d -name '*637*' | sort || true`
+  - `test -d rulebook/tasks/issue-637-kg-query-engine-refactor && echo ACTIVE_EXISTS || echo ACTIVE_REMOVED`
+  - `ls -la rulebook/tasks/archive/2026-02-24-issue-637-kg-query-engine-refactor`
+  - `cat rulebook/tasks/archive/2026-02-24-issue-637-kg-query-engine-refactor/.metadata.json`
+- Key output:
+  - PR `#640`: `MERGED` at `2026-02-24T06:07:46Z`, merge commit `d26412d64bbca34f234527bd95595d0f755d76e5`
+  - required checks: `merge-serial=SUCCESS (2026-02-24T06:03:04Z)`, `openspec-log-guard=SUCCESS (2026-02-24T06:03:06Z)`, `ci=SUCCESS (2026-02-24T06:07:44Z)`
+  - issue `#637`: `CLOSED` at `2026-02-24T06:07:47Z`
+  - `MAIN_CONTAINS_PR640_MERGE`
+  - issue-637 worktree grep/find returned empty（无残留）
+  - active Rulebook path check: `ACTIVE_REMOVED`
+  - archive path contains `.metadata.json` / `proposal.md` / `tasks.md`; metadata `"status": "completed"`
+
+### 2026-02-25 Timestamp header check for closeout docs
+
+- Command:
+  - `grep -n '^更新时间：' openspec/_ops/task_runs/ISSUE-637.md rulebook/tasks/archive/2026-02-24-issue-637-kg-query-engine-refactor/proposal.md`
+  - `grep -nE '^更新时间：[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}$' openspec/_ops/task_runs/ISSUE-637.md rulebook/tasks/archive/2026-02-24-issue-637-kg-query-engine-refactor/proposal.md`
+- Key output:
+  - `openspec/_ops/task_runs/ISSUE-637.md:3:更新时间：2026-02-25 08:49`
+  - `rulebook/tasks/archive/2026-02-24-issue-637-kg-query-engine-refactor/proposal.md:3:更新时间：2026-02-25 08:49`
+  - 两个 closeout 文档均命中 `更新时间：YYYY-MM-DD HH:mm` 头部格式。
 
 ## Main Session Audit
 
