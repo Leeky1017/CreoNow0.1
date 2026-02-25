@@ -1,6 +1,6 @@
 # ISSUE-651
 
-更新时间：2026-02-25 15:37
+更新时间：2026-02-25 15:40
 
 ## Links
 
@@ -11,7 +11,7 @@
 
 ## Scope
 
-- Rulebook task: `rulebook/tasks/issue-651-ai-stream-write-guardrails/**`
+- Rulebook task: `rulebook/tasks/issue-651-issue-617-ai-stream-write-guardrails/**`
 - RUN_LOG: `openspec/_ops/task_runs/ISSUE-651.md`
 - Dependency baseline (read-only):
   - `openspec/specs/ai-service/spec.md`
@@ -32,73 +32,68 @@
   - `openspec/changes/EXECUTION_ORDER.md`
 - Result: `NO_DRIFT`
 - Notes:
-  - `issue-617-ai-stream-write-guardrails` 的契约目标（batching / backpressure / abort+rollback）与主 spec 方向一致；
-  - 当前仅进行 ISSUE-651 治理脚手架收口，不引入新行为或依赖漂移。
+  - `issue-617-ai-stream-write-guardrails` 契约目标（batching / backpressure / abort+rollback）与主 spec 方向一致。
+  - ISSUE-651 当前仅推进治理闭环，不引入新行为或依赖漂移。
 
 ## Plan
 
 - [ ] 实时校验 Issue #651 OPEN（当前网络阻塞）
-- [x] Rulebook task 创建并通过 validate
-- [x] RUN_LOG 落盘并记录依赖同步检查
-- [x] 文档时间戳校验通过（本次改动文件）
+- [x] 核验当前工作目录与分支
+- [x] Rulebook task 路径更正并通过 validate
+- [x] RUN_LOG 更新为当前命令证据与 blocker
+- [x] 文档时间戳校验通过
 - [ ] 网络恢复后执行 preflight + PR + auto-merge 收口
 
 ## Blockers
 
-- `gh issue view 651 --json number,state,url,title` 失败：`error connecting to api.github.com`
-- 受限于当前网络，无法实时确认 Issue OPEN / 创建 PR / 执行在线门禁链路。
-- `scripts/agent_pr_preflight.sh --mode fast` 当前阻断于 RUN_LOG `PR` 字段必须为真实 PR URL（需先恢复网络并创建 PR）。
+- `timeout 20 gh issue view 651 --json number,state,url,title` 失败：`error connecting to api.github.com`。
+- `scripts/agent_pr_preflight.sh --mode fast` 失败：`[RUN_LOG] PR field must be a real URL`（需先恢复网络并创建 PR）。
 
 ## Main Session Audit
 
 - Draft-Status: PENDING
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: d2fd92c4bbf6f92895198d955b08995a1cdd1698
+- Reviewed-HEAD-SHA: 0a50d6ffb6f01ac0987fb5a7f674b8f277df3c17
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
-- Blocking-Issues: 1
+- Blocking-Issues: 2
 - Decision: REJECT
 
 ## Runs
 
-### 2026-02-25 Governance bootstrap verification
+### 2026-02-25 Governance worker verify cwd/branch
 
 - Command:
-  - `rulebook task validate issue-651-ai-stream-write-guardrails`
+  - `pwd`
+  - `git rev-parse --abbrev-ref HEAD`
+  - `git status -sb`
 - Exit code: `0`
 - Key output:
-  - `✅ Task issue-651-ai-stream-write-guardrails is valid`
-  - `⚠️  Warnings: No spec files found (specs/*/spec.md)`
+  - `/home/leeky/work/CreoNow/.worktrees/issue-651-ai-stream-write-guardrails`
+  - `task/651-ai-stream-write-guardrails`
+  - `## task/651-ai-stream-write-guardrails...origin/main [ahead 1]`
 
-### 2026-02-25 Issue freshness check (blocked)
+### 2026-02-25 Rulebook validate + timestamp gate
+
+- Command:
+  - `rulebook task validate issue-651-issue-617-ai-stream-write-guardrails`
+  - `python3 scripts/check_doc_timestamps.py --files rulebook/tasks/issue-651-issue-617-ai-stream-write-guardrails/proposal.md rulebook/tasks/issue-651-issue-617-ai-stream-write-guardrails/tasks.md openspec/_ops/task_runs/ISSUE-651.md`
+- Exit code: `0`
+- Key output:
+  - `✅ Task issue-651-issue-617-ai-stream-write-guardrails is valid`
+  - `⚠️  Warnings: No spec files found (specs/*/spec.md)`
+  - `OK: validated timestamps for 2 governed markdown file(s)`
+
+### 2026-02-25 Issue freshness + preflight blockers
 
 - Command:
   - `timeout 20 gh issue view 651 --json number,state,url,title`
-- Exit code: `1`
+  - `scripts/agent_pr_preflight.sh --mode fast`
+- Exit code:
+  - `gh issue view`: `1`
+  - `agent_pr_preflight`: `1`
 - Key output:
   - `error connecting to api.github.com`
   - `check your internet connection or https://githubstatus.com`
-
-### 2026-02-25 Dependency sync evidence readback
-
-- Command:
-  - `sed -n '1,260p' openspec/specs/ai-service/spec.md`
-  - `sed -n '1,260p' openspec/changes/issue-617-ai-stream-write-guardrails/proposal.md`
-  - `sed -n '1,320p' openspec/changes/issue-617-ai-stream-write-guardrails/specs/ai-service/spec.md`
-  - `sed -n '1,340p' openspec/changes/issue-617-ai-stream-write-guardrails/tasks.md`
-  - `sed -n '1,260p' openspec/changes/EXECUTION_ORDER.md`
-- Key output:
-  - 可见活跃 backend lane 顺序中包含 `issue-617-ai-stream-write-guardrails`，且其依赖关系在 `EXECUTION_ORDER.md` 已声明；
-  - 变更契约与主 spec 无冲突，记录为 `NO_DRIFT`。
-
-### 2026-02-25 Local governance validations
-
-- Command:
-  - `rulebook task validate issue-651-ai-stream-write-guardrails`
-  - `python3 scripts/check_doc_timestamps.py --files rulebook/tasks/issue-651-ai-stream-write-guardrails/tasks.md openspec/_ops/task_runs/ISSUE-651.md`
-  - `scripts/agent_pr_preflight.sh --mode fast`
-- Key output:
-  - `✅ Task issue-651-ai-stream-write-guardrails is valid`
-  - `OK: validated timestamps for 1 governed markdown file(s)`
-  - `PRE-FLIGHT FAILED: [RUN_LOG] PR field must be a real URL ...`
+  - `PRE-FLIGHT FAILED: [RUN_LOG] PR field must be a real URL in .../ISSUE-651.md`
