@@ -253,3 +253,46 @@ Current signoff below is for utilityprocess delivery PR `#624`.
 - Fresh-Verification: PASS
 - Blocking-Issues: 0
 - Decision: ACCEPT
+
+## Backend Test Gates Delivery (issue-617-backend-test-gates)
+
+- Branch: `task/backend-test-gates`
+- PR: https://github.com/Leeky1017/CreoNow/pull/654
+
+### 2026-02-25 pre-flight: verify test and service files
+- Command: `ls apps/desktop/main/src/__tests__/contract/ apps/desktop/main/src/__tests__/performance/ apps/desktop/main/src/__tests__/stress/`
+- Key output:
+  ```
+  contract/: background-task-runner.contract.test.ts  ipc-timeout-abort.contract.test.ts  project-lifecycle.contract.test.ts
+  performance/: kg-query.benchmark.test.ts
+  stress/: ai-stream-write.stress.test.ts
+  ```
+- Evidence: all 5 test files present; service files backgroundTaskRunner.ts, projectLifecycle.ts, aiWriteTransaction.ts confirmed
+
+### 2026-02-25 test run: all 5 scenarios GREEN
+- Command: `pnpm exec tsx apps/desktop/main/src/__tests__/contract/background-task-runner.contract.test.ts`
+- Key output: `[BE-TG-S1] all scenarios passed`
+
+- Command: `pnpm exec tsx apps/desktop/main/src/__tests__/contract/project-lifecycle.contract.test.ts`
+- Key output: `[BE-TG-S2] all scenarios passed`
+
+- Command: `pnpm exec tsx apps/desktop/main/src/__tests__/contract/ipc-timeout-abort.contract.test.ts`
+- Key output: `[BE-TG-S3] all scenarios passed`
+
+- Command: `pnpm exec tsx apps/desktop/main/src/__tests__/performance/kg-query.benchmark.test.ts`
+- Key output:
+  ```
+  [BE-TG-S4] js_traversal=0.75ms cte_lookup=0.02ms rounds=50
+  [BE-TG-S4] cte_small=0.05ms cte_large=0.01ms (O(1) baseline)
+  [BE-TG-S4] all scenarios passed
+  ```
+
+- Command: `pnpm exec tsx apps/desktop/main/src/__tests__/stress/ai-stream-write.stress.test.ts`
+- Key output:
+  ```
+  [BE-TG-S5] 1000-block write: applied=1000 maxTickMs=0.41
+  [BE-TG-S5] rollback at block 500: rolledBack=500
+  [BE-TG-S5] abort at block 300: rolledBack=300
+  [BE-TG-S5] all scenarios passed
+  ```
+- Evidence: all 5 scenarios GREEN; LLM mocked; no real network requests
