@@ -6,8 +6,8 @@
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/617
 - Branch: `task/617-utilityprocess-foundation`
 - Branch (decomposition closeout): `task/617-cn-backend-notion-changes`
-- Branch (current delivery): `task/617-utilityprocess-foundation`
-- PR: https://github.com/Leeky1017/CreoNow/pull/624
+- Branch (current delivery): `task/617-backend-test-gates`
+- PR: https://github.com/Leeky1017/CreoNow/pull/655
 
 ## Scope
 
@@ -242,12 +242,66 @@
 - Blocking-Issues: `<0 if ACCEPT>`
 - Decision: `<ACCEPT|REJECT>`
 
-Current signoff below is for utilityprocess delivery PR `#624`.
+## Plan (2026-02-25 Backend Test Gates)
+
+- [x] 实现 BE-TG-S1~S5 五个 Scenario 的 Contract/Performance/Stress 测试
+- [x] 修复 typecheck 错误（Logger mock 补齐 logPath/info）
+- [x] 更新 tasks.md 全部 checkbox 为 checked
+- [x] 归档 change 到 `openspec/changes/archive/issue-617-backend-test-gates`
+- [x] 更新 EXECUTION_ORDER 反映 Backend lane 全部归档
+- [x] 签署 Main Session Audit 并创建 PR
+
+### 2026-02-25 Backend test gates TDD GREEN
+
+- Command:
+  - `node --import tsx apps/desktop/main/src/__tests__/contract/background-task-runner.contract.test.ts`
+  - `node --import tsx apps/desktop/main/src/__tests__/contract/project-lifecycle.contract.test.ts`
+  - `node --import tsx apps/desktop/main/src/__tests__/contract/ipc-timeout-abort.contract.test.ts`
+  - `node --import tsx apps/desktop/main/src/__tests__/performance/kg-query.benchmark.test.ts`
+  - `node --import tsx apps/desktop/main/src/__tests__/stress/ai-stream-write.stress.test.ts`
+- Key output:
+  - `[BE-TG-S1] all scenarios passed`
+  - `[BE-TG-S2] all scenarios passed`
+  - `[BE-TG-S3] all scenarios passed`
+  - `[BE-TG-S4] js_traversal=1.02ms cte_lookup=0.05ms rounds=50` / `cte_small=0.15ms cte_large=0.02ms (O(1) baseline)`
+  - `[BE-TG-S5] 1000-block write: applied=1000 maxTickMs=0.54` / `rollback at block 500: rolledBack=501` / `abort at block 300: rolledBack=300`
+  - All 5 scenarios GREEN; LLM mocked; no real network requests
+
+### 2026-02-25 Typecheck verification
+
+- Command: `pnpm typecheck`
+- Key output: exit code `0`, no errors
+
+## Dependency Sync Check (issue-617-backend-test-gates)
+
+- Inputs reviewed:
+  - `openspec/specs/ipc/spec.md`
+  - `openspec/specs/knowledge-graph/spec.md`
+  - `openspec/specs/search-and-retrieval/spec.md`
+  - `openspec/specs/skill-system/spec.md`
+  - `openspec/specs/ai-service/spec.md`
+- Result: `NO_DRIFT`
+- Notes: No upstream dependency; test-only change does not modify runtime code
+
+## Scenario Evidence (issue-617-backend-test-gates)
+
+- BE-TG-S1 (BackgroundTaskRunner five-state machine): `PASS`
+  - test: `apps/desktop/main/src/__tests__/contract/background-task-runner.contract.test.ts`
+- BE-TG-S2 (ProjectLifecycle switch unbind/bind/cleanup): `PASS`
+  - test: `apps/desktop/main/src/__tests__/contract/project-lifecycle.contract.test.ts`
+- BE-TG-S3 (IPC timeout abort, no ghost execution): `PASS`
+  - test: `apps/desktop/main/src/__tests__/contract/ipc-timeout-abort.contract.test.ts`
+- BE-TG-S4 (KG CTE vs JS traversal benchmark): `PASS`
+  - test: `apps/desktop/main/src/__tests__/performance/kg-query.benchmark.test.ts`
+- BE-TG-S5 (AI stream write 1000-block stress, rollback-safe): `PASS`
+  - test: `apps/desktop/main/src/__tests__/stress/ai-stream-write.stress.test.ts`
+
+Current signoff below is for backend-test-gates delivery.
 
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: a2dd646a31c2eb3b70d5a524e8c6ff31a72c1729
+- Reviewed-HEAD-SHA: cc35cc1129233ba565956ffb7fa66d064cb9416f
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
