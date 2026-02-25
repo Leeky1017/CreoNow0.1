@@ -1,6 +1,6 @@
 # ISSUE-651
 
-更新时间：2026-02-25 17:12
+更新时间：2026-02-25 17:31
 
 ## Links
 
@@ -44,7 +44,7 @@
 
 - Draft-Status: PENDING
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 2f6207d107c75f7acc6cc5c307a1e3c2264bc2a9
+- Reviewed-HEAD-SHA: 4fa0123ba34963215cc0c19b4ced5bb8ebd4c202
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
@@ -118,3 +118,27 @@
 - Key output:
   - remote branch created: `origin/task/651-ai-stream-write-guardrails`
   - PR created: `https://github.com/Leeky1017/CreoNow/pull/652`
+
+### 2026-02-25 CI failure diagnosis (PR #652)
+
+- Command:
+  - `gh pr checks 652 --watch`
+  - `gh run view 22390365950 --job 64810538437 --log`
+  - `gh run view 22390365950 --job 64811150341 --log`
+- Exit code:
+  - `gh pr checks --watch`: `1`
+  - `gh run view`: `0`
+- Key output:
+  - CI gate failed because `integration-test` job failed in `apps/desktop/tests/integration/ai-stream-lifecycle.test.ts:190`
+  - failing assertion expected `chunks.length >= 2`, but chunk batching now允许单次合并 chunk
+
+### 2026-02-25 Integration test fix + local verification
+
+- Command:
+  - `node --import tsx apps/desktop/tests/integration/ai-stream-lifecycle.test.ts`
+  - `git commit -m "test: align stream lifecycle integration with batching (#651)"`
+  - `git push`
+- Exit code: `0`
+- Key output:
+  - integration test passed after assertion update (`>=1` + full output join check)
+  - push succeeded: `task/651-ai-stream-write-guardrails -> task/651-ai-stream-write-guardrails`
