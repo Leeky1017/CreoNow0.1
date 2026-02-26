@@ -1,4 +1,4 @@
-更新时间：2026-02-25 23:50
+更新时间：2026-02-26 15:18
 
 ## 1. Specification
 
@@ -17,8 +17,8 @@
 
 | Scenario ID | 测试文件                                                                                    | 计划用例名 / 断言块                                                                      |
 | ----------- | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| AUD-C1-S1   | `apps/desktop/main/src/__tests__/stress/episodic-memory-mutex.stress.test.ts`               | `concurrent recordEpisode should not lose updates`                                       |
-| AUD-C1-S2   | `apps/desktop/main/src/__tests__/stress/episodic-memory-mutex.stress.test.ts`               | `recordEpisode and scheduleBatchDistillation should be mutually exclusive`                |
+| AUD-C1-S1   | `apps/desktop/main/src/__tests__/stress/episodic-memory-mutex.stress.test.ts`               | `concurrent recordEpisode should not lose persisted updates and should keep snapshot consistent` |
+| AUD-C1-S2   | `apps/desktop/main/src/__tests__/stress/episodic-memory-mutex.stress.test.ts`               | `recordEpisode and distillSemanticMemory (manual) should be mutually exclusive with consistent snapshot` |
 | AUD-C1-S3   | `apps/desktop/main/src/__tests__/stress/episodic-memory-mutex.stress.test.ts`               | `different projects should not block each other`                                         |
 | AUD-C1-S4   | `apps/desktop/main/src/__tests__/stress/project-lifecycle-switch-lock.stress.test.ts`       | `concurrent switchProject should serialize without interleaving`                          |
 | AUD-C1-S5   | `apps/desktop/main/src/__tests__/stress/project-lifecycle-switch-lock.stress.test.ts`       | `duplicate switchProject to same target should be idempotent`                             |
@@ -28,8 +28,8 @@
 
 ## 3. Red（先写失败测试）
 
-- [x] 3.1 **并发丢失更新**：构造 N 个并发 `recordEpisode(projectId)` 调用（共享同一 projectId），断言最终持久化 episode 条目数等于 N，且 `pendingEpisodeCountByProject` 与新增已接收 episode 数一致（AUD-C1-S1）
-- [x] 3.2 **互斥验证**：并发触发 `recordEpisode` 与 `scheduleBatchDistillation`，断言 `distillingProjects` 在同一 project 上不存在交叠时间窗（AUD-C1-S2）
+- [x] 3.1 **并发丢失更新**：构造 N 个并发 `recordEpisode(projectId)` 调用（共享同一 projectId），断言最终持久化 episode 条目数等于 N，并在手动触发 `distillSemanticMemory({ trigger: "manual" })` 时验证快照与已持久化集合一致（AUD-C1-S1）
+- [x] 3.2 **互斥验证**：并发触发 `recordEpisode` 与 `distillSemanticMemory({ trigger: "manual" })`，断言同一 project 上不存在互斥区交叠，且蒸馏快照不出现部分状态或遗漏已入队 episode（AUD-C1-S2）
 - [x] 3.3 **跨 project 隔离**：并发操作不同 projectId，断言无互相阻塞、各自独立完成（AUD-C1-S3）
 - [x] 3.4 **switchProject 串行化**：并发触发 2 次 `switchProject(A→B, A→C)`，断言 unbind→persist→bind 序列无交错（AUD-C1-S4）
 - [x] 3.5 **switchProject 幂等**：同目标并发 `switchProject(A→B, A→B)`，断言仅执行一次完整序列（AUD-C1-S5）
@@ -39,7 +39,7 @@
 
 ## 4. Green（最小实现通过）
 
-- [x] 4.1 实现 per-project `Mutex` 类（基于 Promise chain），为 `episodicMemoryService` 的 `recordEpisode` / `scheduleBatchDistillation` 在入口处 `await mutex.acquire(projectId)` → 业务逻辑 → `mutex.release(projectId)`
+- [x] 4.1 实现 per-project `Mutex` 类（基于 Promise chain），为 `episodicMemoryService` 的 `recordEpisode` / `distillSemanticMemory`（manual 路径）在入口处 `await mutex.acquire(projectId)` → 业务逻辑 → `mutex.release(projectId)`；批量调度路径复用同一 project 互斥锁
 - [x] 4.2 为 `projectLifecycle.switchProject()` 实现 per-project 串行锁：相同 project 的切换请求排队执行，不同 project 不阻塞
 - [x] 4.3 为 `projectScopedCache.getOrComputeString()` 实现 Promise-based singleflight：cache miss 时将 Promise 存入 inflight Map，后续同 key 请求直接 await 该 Promise；完成后从 inflight Map 移除
 - [x] 4.4 确保 singleflight 在 compute 抛异常时从 inflight Map 移除 key 且不写入缓存
