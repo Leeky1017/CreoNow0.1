@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-02-26 00:30
+更新时间：2026-02-26 15:53
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -19,7 +19,7 @@
 
 | Lane | Change | 依赖 | 状态 |
 |------|--------|------|------|
-| A | `audit-race-serialization-core`（C1） | 无 | PENDING |
+| A | `audit-race-serialization-core`（C1） | 无 | IN_PROGRESS |
 | B | `audit-fatal-error-visibility-guardrails`（C2） | 无 | PENDING |
 | C | `audit-degradation-telemetry-escalation`（C3） | 无 | PENDING |
 
@@ -74,7 +74,7 @@ C15（独立）
 
 ## 进度快照
 
-- 审计整改 Wave 1：C1/C2/C3 已创建 change 目录，状态 PENDING，待创建 Issue 后启动。
+- 审计整改 Wave 1：C1 已进入 IN_PROGRESS；C2/C3 已创建 change 目录，状态 PENDING。
 - 审计整改 Wave 2：C4/C5/C6/C7/C8/C10 已创建 change 目录，状态 PENDING。
 - 审计整改 Wave 3：C9/C11/C12/C13/C14/C15 已创建 change 目录，状态 PENDING。
 - 历史归档：ISSUE-606（Workbench lane 4 phases）、ISSUE-617（Backend lane 7 changes）已全部归档。
