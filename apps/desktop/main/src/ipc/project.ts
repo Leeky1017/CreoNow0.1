@@ -370,26 +370,29 @@ export function registerProjectIpcHandlers(deps: {
 
       const traceId = payload.traceId;
       const lifecycle = deps.projectLifecycle;
-      if (lifecycle) {
-        await lifecycle.unbindAll({
-          projectId: payload.fromProjectId,
-          traceId,
-        });
-      }
-
-      const res = svc.switchProject({
-        projectId: payload.projectId,
-        fromProjectId: payload.fromProjectId,
-        operatorId: payload.operatorId,
-        traceId,
-      });
-
-      if (lifecycle) {
-        await lifecycle.bindAll({
-          projectId: res.ok ? payload.projectId : payload.fromProjectId,
-          traceId,
-        });
-      }
+      const res = lifecycle
+        ? await lifecycle.switchProject({
+            fromProjectId: payload.fromProjectId,
+            toProjectId: payload.projectId,
+            traceId,
+            persist: async () => {
+              return svc.switchProject({
+                projectId: payload.projectId,
+                fromProjectId: payload.fromProjectId,
+                operatorId: payload.operatorId,
+                traceId,
+              });
+            },
+            resolveBindProjectId: ({ fromProjectId, toProjectId, result }) => {
+              return result.ok ? toProjectId : fromProjectId;
+            },
+          })
+        : svc.switchProject({
+            projectId: payload.projectId,
+            fromProjectId: payload.fromProjectId,
+            operatorId: payload.operatorId,
+            traceId,
+          });
       if (res.ok) {
         deps.projectSessionBinding?.bind({
           webContentsId: event.sender.id,

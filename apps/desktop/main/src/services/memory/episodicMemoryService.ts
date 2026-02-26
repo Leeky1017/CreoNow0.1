@@ -4,6 +4,7 @@ import type Database from "better-sqlite3";
 
 import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
+import { createKeyedMutex } from "../shared/concurrency";
 import {
   IMPLICIT_SIGNAL_WEIGHTS,
   assembleMemoryLayers,
@@ -211,7 +212,7 @@ type Err = { ok: false; error: IpcError };
 export type ServiceResult<T> = Ok<T> | Err;
 
 export type EpisodeRepository = {
-  insertEpisode: (episode: EpisodeRecord) => void;
+  insertEpisode: (episode: EpisodeRecord) => void | Promise<void>;
   updateEpisodeSignal: (args: {
     episodeId: string;
     signal: ImplicitSignal;
@@ -263,13 +264,13 @@ export type EpisodeRepository = {
 };
 
 export type EpisodicMemoryService = {
-  recordEpisode: (args: EpisodeRecordInput) => ServiceResult<{
+  recordEpisode: (args: EpisodeRecordInput) => Promise<ServiceResult<{
     accepted: true;
     episodeId: string;
     retryCount: number;
     implicitSignal: ImplicitSignal;
     implicitWeight: number;
-  }>;
+  }>>;
   queryEpisodes: (args: EpisodeQueryInput) => ServiceResult<{
     items: EpisodeRecord[];
     memoryDegraded: boolean;
@@ -343,7 +344,7 @@ export type EpisodicMemoryService = {
   distillSemanticMemory: (args: {
     projectId: string;
     trigger?: DistillTrigger;
-  }) => ServiceResult<{ accepted: true; runId: string }>;
+  }) => Promise<ServiceResult<{ accepted: true; runId: string }>>;
   listConflictQueue: (args: {
     projectId: string;
   }) => ServiceResult<{ items: SemanticConflictQueueItem[] }>;
@@ -1063,7 +1064,8 @@ export function createEpisodicMemoryService(args: {
   const pendingEpisodeCountByProject = new Map<string, number>();
   const retryPendingByProject = new Map<string, boolean>();
   const distillingProjects = new Set<string>();
-  const walQueueByProject = new Map<string, EpisodeRecordInput[]>();
+  const scheduledBatchDistillProjects = new Set<string>();
+  const projectMutex = createKeyedMutex();
   const semanticRulesByProject = new Map<string, SemanticMemoryRule[]>();
   const conflictQueueByProject = new Map<string, SemanticConflictQueueItem[]>();
   const distillIoDegradedProjects = new Set<string>();
@@ -1634,41 +1636,39 @@ export function createEpisodicMemoryService(args: {
   }
 
   function scheduleBatchDistillation(projectId: string): void {
-    if (distillingProjects.has(projectId)) {
+    if (
+      distillingProjects.has(projectId) ||
+      scheduledBatchDistillProjects.has(projectId)
+    ) {
       return;
     }
+    scheduledBatchDistillProjects.add(projectId);
     const runId = randomUUID();
-    distillingProjects.add(projectId);
     distillScheduler(() => {
-      try {
-        const result = executeDistillation({
-          projectId,
-          trigger: "batch",
-          runId,
-          background: true,
-        });
-        if (!result.ok) {
-          args.logger.error("memory_distill_background_failed", {
-            project_id: projectId,
-            code: result.error.code,
-            message: result.error.message,
-          });
+      void projectMutex.runExclusive(projectId, async () => {
+        scheduledBatchDistillProjects.delete(projectId);
+        if (distillingProjects.has(projectId)) {
+          return;
         }
-      } finally {
-        distillingProjects.delete(projectId);
-        const wal = walQueueByProject.get(projectId) ?? [];
-        walQueueByProject.set(projectId, []);
-        for (const queuedInput of wal) {
-          const result = service.recordEpisode(queuedInput);
+        distillingProjects.add(projectId);
+        try {
+          const result = executeDistillation({
+            projectId,
+            trigger: "batch",
+            runId,
+            background: true,
+          });
           if (!result.ok) {
-            args.logger.error("memory_wal_flush_failed", {
-              project_id: queuedInput.projectId,
+            args.logger.error("memory_distill_background_failed", {
+              project_id: projectId,
               code: result.error.code,
               message: result.error.message,
             });
           }
+        } finally {
+          distillingProjects.delete(projectId);
         }
-      }
+      });
     });
   }
 
@@ -1681,131 +1681,119 @@ export function createEpisodicMemoryService(args: {
   }
 
   const service: EpisodicMemoryService = {
-    recordEpisode: (input) => {
+    recordEpisode: async (input) => {
       const invalid = validateRecordInput(input);
       if (invalid) {
         return invalid;
       }
 
-      const implicit = resolveImplicitFeedback({
-        selectedIndex: input.selectedIndex,
-        candidateCount: input.candidates.length,
-        editDistance: input.editDistance,
-        acceptedWithoutEdit: input.acceptedWithoutEdit,
-        undoAfterAccept: input.undoAfterAccept,
-        repeatedSceneSkillCount: input.repeatedSceneSkillCount,
-      });
-
-      const ts = now();
-      knownProjectIds.add(input.projectId);
-
-      if (input.undoAfterAccept && input.targetEpisodeId) {
-        const updated = args.repository.updateEpisodeSignal({
-          episodeId: input.targetEpisodeId,
-          signal: implicit.signal,
-          weight: implicit.weight,
-          updatedAt: ts,
+      return await projectMutex.runExclusive(input.projectId, async () => {
+        const implicit = resolveImplicitFeedback({
+          selectedIndex: input.selectedIndex,
+          candidateCount: input.candidates.length,
+          editDistance: input.editDistance,
+          acceptedWithoutEdit: input.acceptedWithoutEdit,
+          undoAfterAccept: input.undoAfterAccept,
+          repeatedSceneSkillCount: input.repeatedSceneSkillCount,
         });
-        if (!updated) {
-          return ipcError("NOT_FOUND", "Episode not found", {
+
+        const ts = now();
+        knownProjectIds.add(input.projectId);
+
+        if (input.undoAfterAccept && input.targetEpisodeId) {
+          const updated = args.repository.updateEpisodeSignal({
             episodeId: input.targetEpisodeId,
+            signal: implicit.signal,
+            weight: implicit.weight,
+            updatedAt: ts,
           });
-        }
-        return {
-          ok: true,
-          data: {
-            accepted: true,
-            episodeId: input.targetEpisodeId,
-            retryCount: 0,
-            implicitSignal: implicit.signal,
-            implicitWeight: implicit.weight,
-          },
-        };
-      }
-
-      if (distillingProjects.has(input.projectId)) {
-        const queued = walQueueByProject.get(input.projectId) ?? [];
-        queued.push({ ...input });
-        walQueueByProject.set(input.projectId, queued);
-        return {
-          ok: true,
-          data: {
-            accepted: true,
-            episodeId: randomUUID(),
-            retryCount: 0,
-            implicitSignal: implicit.signal,
-            implicitWeight: implicit.weight,
-          },
-        };
-      }
-
-      const capacity = ensureCapacity(input.projectId);
-      if (!capacity.ok) {
-        return capacity;
-      }
-
-      const episode: EpisodeRecord = {
-        id: randomUUID(),
-        projectId: input.projectId,
-        scope: "project",
-        version: 1,
-        chapterId: input.chapterId,
-        sceneType: input.sceneType,
-        skillUsed: input.skillUsed,
-        inputContext: input.inputContext,
-        candidates: [...input.candidates],
-        selectedIndex: input.selectedIndex,
-        finalText: input.finalText,
-        explicit: input.explicit,
-        editDistance: input.editDistance,
-        implicitSignal: implicit.signal,
-        implicitWeight: implicit.weight,
-        importance: Math.max(0, Math.min(1, input.importance ?? 0.5)),
-        recallCount: 0,
-        compressed: false,
-        userConfirmed: input.userConfirmed ?? false,
-        createdAt: ts,
-        updatedAt: ts,
-      };
-
-      let lastError: unknown = null;
-      for (let attempt = 1; attempt <= MAX_WRITE_ATTEMPTS; attempt += 1) {
-        try {
-          args.repository.insertEpisode(episode);
-          const pending =
-            (pendingEpisodeCountByProject.get(input.projectId) ?? 0) + 1;
-          pendingEpisodeCountByProject.set(input.projectId, pending);
-          maybeTriggerBatchDistillation(input.projectId);
+          if (!updated) {
+            return ipcError("NOT_FOUND", "Episode not found", {
+              episodeId: input.targetEpisodeId,
+            });
+          }
           return {
             ok: true,
             data: {
               accepted: true,
-              episodeId: episode.id,
-              retryCount: attempt - 1,
+              episodeId: input.targetEpisodeId,
+              retryCount: 0,
               implicitSignal: implicit.signal,
               implicitWeight: implicit.weight,
             },
           };
-        } catch (error) {
-          lastError = error;
-          args.logger.error("memory_episode_write_retry", {
-            attempt,
-            message: error instanceof Error ? error.message : String(error),
-            project_id: input.projectId,
-          });
         }
-      }
 
-      retryQueue.push(input);
-      return ipcError(
-        "MEMORY_EPISODE_WRITE_FAILED",
-        "Failed to record episode after retries",
-        {
-          attempts: MAX_WRITE_ATTEMPTS,
-          message:
-            lastError instanceof Error ? lastError.message : String(lastError),
-        },
-      );
+        const capacity = ensureCapacity(input.projectId);
+        if (!capacity.ok) {
+          return capacity;
+        }
+
+        const episode: EpisodeRecord = {
+          id: randomUUID(),
+          projectId: input.projectId,
+          scope: "project",
+          version: 1,
+          chapterId: input.chapterId,
+          sceneType: input.sceneType,
+          skillUsed: input.skillUsed,
+          inputContext: input.inputContext,
+          candidates: [...input.candidates],
+          selectedIndex: input.selectedIndex,
+          finalText: input.finalText,
+          explicit: input.explicit,
+          editDistance: input.editDistance,
+          implicitSignal: implicit.signal,
+          implicitWeight: implicit.weight,
+          importance: Math.max(0, Math.min(1, input.importance ?? 0.5)),
+          recallCount: 0,
+          compressed: false,
+          userConfirmed: input.userConfirmed ?? false,
+          createdAt: ts,
+          updatedAt: ts,
+        };
+
+        let lastError: unknown = null;
+        for (let attempt = 1; attempt <= MAX_WRITE_ATTEMPTS; attempt += 1) {
+          try {
+            await args.repository.insertEpisode(episode);
+            const pending =
+              (pendingEpisodeCountByProject.get(input.projectId) ?? 0) + 1;
+            pendingEpisodeCountByProject.set(input.projectId, pending);
+            maybeTriggerBatchDistillation(input.projectId);
+            return {
+              ok: true,
+              data: {
+                accepted: true,
+                episodeId: episode.id,
+                retryCount: attempt - 1,
+                implicitSignal: implicit.signal,
+                implicitWeight: implicit.weight,
+              },
+            };
+          } catch (error) {
+            lastError = error;
+            args.logger.error("memory_episode_write_retry", {
+              attempt,
+              message: error instanceof Error ? error.message : String(error),
+              project_id: input.projectId,
+            });
+          }
+        }
+
+        retryQueue.push(input);
+        return ipcError(
+          "MEMORY_EPISODE_WRITE_FAILED",
+          "Failed to record episode after retries",
+          {
+            attempts: MAX_WRITE_ATTEMPTS,
+            message:
+              lastError instanceof Error
+                ? lastError.message
+                : String(lastError),
+          },
+        );
+      });
     },
 
     queryEpisodes: (input) => {
@@ -2236,7 +2224,7 @@ export function createEpisodicMemoryService(args: {
         knownProjectIds.delete(projectId);
         pendingEpisodeCountByProject.delete(projectId);
         retryPendingByProject.delete(projectId);
-        walQueueByProject.delete(projectId);
+        scheduledBatchDistillProjects.delete(projectId);
         distillIoDegradedProjects.delete(projectId);
         return {
           ok: true,
@@ -2268,7 +2256,7 @@ export function createEpisodicMemoryService(args: {
         knownProjectIds.clear();
         pendingEpisodeCountByProject.clear();
         retryPendingByProject.clear();
-        walQueueByProject.clear();
+        scheduledBatchDistillProjects.clear();
         semanticRulesByProject.clear();
         conflictQueueByProject.clear();
         distillIoDegradedProjects.clear();
@@ -2287,7 +2275,7 @@ export function createEpisodicMemoryService(args: {
       }
     },
 
-    distillSemanticMemory: ({ projectId, trigger }) => {
+    distillSemanticMemory: async ({ projectId, trigger }) => {
       if (projectId.trim().length === 0) {
         return ipcError("INVALID_ARGUMENT", "projectId is required");
       }
@@ -2296,30 +2284,25 @@ export function createEpisodicMemoryService(args: {
           projectId,
         });
       }
-      const runId = randomUUID();
-      distillingProjects.add(projectId);
-      try {
-        return executeDistillation({
-          projectId,
-          trigger: trigger ?? "manual",
-          runId,
-          background: false,
-        });
-      } finally {
-        distillingProjects.delete(projectId);
-        const wal = walQueueByProject.get(projectId) ?? [];
-        walQueueByProject.set(projectId, []);
-        for (const queuedInput of wal) {
-          const result = service.recordEpisode(queuedInput);
-          if (!result.ok) {
-            args.logger.error("memory_wal_flush_failed", {
-              project_id: queuedInput.projectId,
-              code: result.error.code,
-              message: result.error.message,
-            });
-          }
+      return await projectMutex.runExclusive(projectId, async () => {
+        if (distillingProjects.has(projectId)) {
+          return ipcError("CONFLICT", "Distillation already in progress", {
+            projectId,
+          });
         }
-      }
+        const runId = randomUUID();
+        distillingProjects.add(projectId);
+        try {
+          return executeDistillation({
+            projectId,
+            trigger: trigger ?? "manual",
+            runId,
+            background: false,
+          });
+        } finally {
+          distillingProjects.delete(projectId);
+        }
+      });
     },
 
     listConflictQueue: ({ projectId }) => {

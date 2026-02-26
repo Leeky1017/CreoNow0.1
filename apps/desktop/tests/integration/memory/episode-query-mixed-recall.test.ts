@@ -22,7 +22,7 @@ import {
   for (let i = 0; i < 6; i += 1) {
     const sceneType = i < 4 ? "dialogue" : "action";
     const finalText = i === 0 ? "角色低声对白，语气克制" : `历史片段 ${i}`;
-    const saved = service.recordEpisode({
+    const saved = await service.recordEpisode({
       projectId: "proj-1",
       chapterId: `chapter-${i}`,
       sceneType,

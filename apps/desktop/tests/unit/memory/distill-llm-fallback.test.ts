@@ -43,14 +43,14 @@ import {
   assert.equal(baselineAdd.ok, true);
 
   // Act
-  const failed = service.distillSemanticMemory({
+  const failed = await service.distillSemanticMemory({
     projectId: "proj-1",
     trigger: "manual",
   });
   const listedAfterFail = service.listSemanticMemory({ projectId: "proj-1" });
 
   llmAvailable = true;
-  const retried = service.distillSemanticMemory({
+  const retried = await service.distillSemanticMemory({
     projectId: "proj-1",
     trigger: "manual",
   });

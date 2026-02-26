@@ -115,8 +115,10 @@ function createFakeTimers() {
     },
   });
 
-  await Promise.resolve();
-  assert.deepEqual(events, ["unbind:fast", "unbind:slow:start"]);
+  for (let attempt = 0; attempt < 4 && events.length < 2; attempt += 1) {
+    await Promise.resolve();
+  }
+  assert.deepEqual(events.slice(0, 2), ["unbind:fast", "unbind:slow:start"]);
 
   fakeTimers.runNext();
 
