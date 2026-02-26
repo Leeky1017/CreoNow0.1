@@ -7,7 +7,7 @@
 - Issue: #660
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/660
 - Branch: `task/660-audit-race-serialization-core`
-- PR: https://github.com/Leeky1017/CreoNow/pull/660
+- PR: https://github.com/Leeky1017/CreoNow/pull/661
 
 ## Plan
 
@@ -57,13 +57,44 @@
   - `d41cb704 docs: update wave1 C1 status in execution order (#660)`
   - `M openspec/changes/EXECUTION_ORDER.md`
 
+### 2026-02-26 RUN_LOG + Rulebook scaffold 提交核验
+
+- Command:
+  - `git show --name-status --oneline 0b66477 --`
+- Key output:
+  - `0b66477a docs: add issue-660 runlog and rulebook scaffold (#660)`
+  - `A openspec/_ops/task_runs/ISSUE-660.md`
+  - `M openspec/changes/audit-race-serialization-core/tasks.md`
+  - `A rulebook/tasks/issue-660-audit-race-serialization-core/.metadata.json`
+  - `A rulebook/tasks/issue-660-audit-race-serialization-core/proposal.md`
+  - `A rulebook/tasks/issue-660-audit-race-serialization-core/tasks.md`
+
+### 2026-02-26 cache unbind in-flight 回填修复 + 测试提交核验
+
+- Command:
+  - `git show --name-status --oneline 814ba89 --`
+- Key output:
+  - `814ba89f fix: guard projectScopedCache stale inflight writeback (#660)`
+  - `M apps/desktop/main/src/services/context/__tests__/project-scoped-cache.cleanup.contract.test.ts`
+  - `M apps/desktop/main/src/services/context/projectScopedCache.ts`
+  - `M openspec/changes/audit-race-serialization-core/tasks.md`
+
+### 2026-02-26 代码审计复审结论（无阻断）
+
+- Conclusion:
+  - 代码审计复审通过，未发现阻断项（blocking issues = 0）
+
+### 2026-02-26 治理审计当前结论
+
+- Conclusion:
+  - 治理审计结论为可通过态；当前处于待主会话签字提交阶段（Reviewed-HEAD-SHA 将由签字脚本覆盖）
+
 ## Main Session Audit
 
-- Draft-Status: PENDING
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: d41cb704e4aa0708ac53d71ff28ca89ba6980a3c
-- Spec-Compliance: PENDING
-- Code-Quality: PENDING
+- Reviewed-HEAD-SHA: 814ba89fc713fffe1f874821cdab461ba5667d61
+- Spec-Compliance: PASS
+- Code-Quality: PASS
 - Fresh-Verification: PASS
-- Blocking-Issues: 1
-- Decision: PENDING
+- Blocking-Issues: 0
+- Decision: ACCEPT
