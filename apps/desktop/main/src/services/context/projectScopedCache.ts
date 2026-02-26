@@ -17,6 +17,7 @@ export function createContextProjectScopedCache(deps: {
   watchService: CreonowWatchService;
 }): ContextProjectScopedCache {
   const cacheByProject = new Map<string, Map<string, string>>();
+  const generationByProject = new Map<string, number>();
   const singleflight = createKeyedSingleflight();
 
   return {
@@ -31,6 +32,7 @@ export function createContextProjectScopedCache(deps: {
         return await compute();
       }
 
+      const generation = generationByProject.get(normalizedProjectId) ?? 0;
       const existingProjectCache = cacheByProject.get(normalizedProjectId);
       if (existingProjectCache) {
         const cached = existingProjectCache.get(normalizedKey);
@@ -40,18 +42,23 @@ export function createContextProjectScopedCache(deps: {
       }
 
       return await singleflight.run(
-        `${normalizedProjectId}:${normalizedKey}`,
+        `${normalizedProjectId}:${generation}:${normalizedKey}`,
         async () => {
-          const projectCacheForCheck = cacheByProject.get(normalizedProjectId);
-          const cached = projectCacheForCheck?.get(normalizedKey);
+          const projectCache = cacheByProject.get(normalizedProjectId);
+          const cached = projectCache?.get(normalizedKey);
           if (cached !== undefined) {
             return cached;
           }
 
           const value = await compute();
-          const projectCache = projectCacheForCheck ?? new Map<string, string>();
-          projectCache.set(normalizedKey, value);
-          cacheByProject.set(normalizedProjectId, projectCache);
+          const latestGeneration = generationByProject.get(normalizedProjectId) ?? 0;
+          if (latestGeneration !== generation) {
+            return value;
+          }
+
+          const latestProjectCache = cacheByProject.get(normalizedProjectId) ?? new Map<string, string>();
+          latestProjectCache.set(normalizedKey, value);
+          cacheByProject.set(normalizedProjectId, latestProjectCache);
           return value;
         },
       );
@@ -69,6 +76,10 @@ export function createContextProjectScopedCache(deps: {
       }
 
       cacheByProject.delete(normalizedProjectId);
+      generationByProject.set(
+        normalizedProjectId,
+        (generationByProject.get(normalizedProjectId) ?? 0) + 1,
+      );
 
       const stopped = deps.watchService.stop({ projectId: normalizedProjectId });
       if (!stopped.ok) {

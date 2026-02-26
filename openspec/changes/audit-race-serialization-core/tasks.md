@@ -35,14 +35,14 @@
 - [x] 3.5 **switchProject 幂等**：同目标并发 `switchProject(A→B, A→B)`，断言仅执行一次完整序列（AUD-C1-S5）
 - [x] 3.6 **singleflight 去重**：同 key 并发 3 次 `getOrComputeString`，断言 compute 回调仅调用 1 次，3 个调用者拿到同一结果（AUD-C1-S6）
 - [x] 3.7 **singleflight 不同 key 隔离**：并发请求不同 key，断言各自独立触发 compute、互不阻塞（AUD-C1-S7）
-- [x] 3.8 **singleflight 异常透传**：compute 抛异常时，断言所有等待者均收到同一异常且缓存不被污染（AUD-C1-S8）
+- [x] 3.8 **singleflight 异常透传 + unbind 回归**：compute 抛异常时，断言所有等待者均收到同一异常且缓存不被污染（AUD-C1-S8）；并补充 `project-scoped-cache.cleanup.contract.test.ts` 回归：`unbind` 后旧 in-flight 结果不得回填缓存，后续读取必须重新 compute
 
 ## 4. Green（最小实现通过）
 
 - [x] 4.1 实现 per-project `Mutex` 类（基于 Promise chain），为 `episodicMemoryService` 的 `recordEpisode` / `distillSemanticMemory`（manual 路径）在入口处 `await mutex.acquire(projectId)` → 业务逻辑 → `mutex.release(projectId)`；批量调度路径复用同一 project 互斥锁
 - [x] 4.2 为 `projectLifecycle.switchProject()` 实现 per-project 串行锁：相同 project 的切换请求排队执行，不同 project 不阻塞
 - [x] 4.3 为 `projectScopedCache.getOrComputeString()` 实现 Promise-based singleflight：cache miss 时将 Promise 存入 inflight Map，后续同 key 请求直接 await 该 Promise；完成后从 inflight Map 移除
-- [x] 4.4 确保 singleflight 在 compute 抛异常时从 inflight Map 移除 key 且不写入缓存
+- [x] 4.4 确保 singleflight 在 compute 抛异常时从 inflight Map 移除 key 且不写入缓存；`projectScopedCache` 在 `unbind` 时递增 project generation，阻断旧 in-flight 结果回填
 
 ## 5. Refactor（保持绿灯）
 
