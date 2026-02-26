@@ -30,7 +30,7 @@ import {
   });
 
   for (let i = 0; i < 50; i += 1) {
-    const recorded = service.recordEpisode({
+    const recorded = await service.recordEpisode({
       projectId: "proj-1",
       chapterId: `chapter-${i}`,
       sceneType: "dialogue",
@@ -45,7 +45,7 @@ import {
   }
 
   // Act
-  const distill = service.distillSemanticMemory({
+  const distill = await service.distillSemanticMemory({
     projectId: "proj-1",
     trigger: "manual",
   });

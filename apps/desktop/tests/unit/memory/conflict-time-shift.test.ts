@@ -41,7 +41,7 @@ import {
   now += 40 * 24 * 60 * 60 * 1000;
 
   for (let i = 0; i < 50; i += 1) {
-    const recorded = service.recordEpisode({
+    const recorded = await service.recordEpisode({
       projectId: "proj-1",
       chapterId: `chapter-${i}`,
       sceneType: "narration",
@@ -56,6 +56,8 @@ import {
   }
 
   // Act
+  await Promise.resolve();
+  await Promise.resolve();
   const listed = service.listSemanticMemory({ projectId: "proj-1" });
 
   // Assert

@@ -1,4 +1,5 @@
 import type { Logger } from "../../logging/logger";
+import { createKeyedMutex } from "../shared/concurrency";
 
 export type ProjectLifecycleTimers = {
   setTimeout: (callback: () => void, ms: number) => ReturnType<typeof setTimeout>;
@@ -54,6 +55,18 @@ export function createProjectLifecycle(deps: {
   };
 
   const participants = new Map<string, ProjectLifecycleParticipant>();
+  const switchMutex = createKeyedMutex();
+  const scopeByProjectId = new Map<string, string>();
+  const activeProjectByScope = new Map<string, string>();
+  const inflightSwitchByScopeAndTarget = new Map<string, Promise<unknown>>();
+
+  function resolveScopeKey(projectId: string): string {
+    const normalizedProjectId = projectId.trim();
+    if (normalizedProjectId.length === 0) {
+      return "";
+    }
+    return scopeByProjectId.get(normalizedProjectId) ?? normalizedProjectId;
+  }
 
   async function runStep(args: {
     step: "unbind" | "bind";
@@ -216,27 +229,65 @@ export function createProjectLifecycle(deps: {
     },
 
     switchProject: async ({ fromProjectId, toProjectId, traceId, persist }) => {
-      for (const participant of participants.values()) {
-        await runStep({
-          step: "unbind",
-          participant,
-          projectId: fromProjectId,
-          traceId,
-        });
+      const normalizedFrom = fromProjectId.trim();
+      const normalizedTo = toProjectId.trim();
+      const scopeKey = resolveScopeKey(normalizedFrom);
+      if (scopeKey.length > 0) {
+        scopeByProjectId.set(normalizedFrom, scopeKey);
       }
 
-      const result = await persist();
-
-      for (const participant of participants.values()) {
-        await runStep({
-          step: "bind",
-          participant,
-          projectId: toProjectId,
-          traceId,
-        });
+      const dedupeKey = `${scopeKey}->${normalizedTo}`;
+      const existingInflight = inflightSwitchByScopeAndTarget.get(dedupeKey);
+      if (existingInflight) {
+        return (await existingInflight) as Awaited<ReturnType<typeof persist>>;
       }
 
-      return result;
+      const runPromise = switchMutex.runExclusive(scopeKey, async () => {
+        const currentFrom =
+          activeProjectByScope.get(scopeKey) ?? normalizedFrom;
+        if (scopeKey.length > 0) {
+          scopeByProjectId.set(currentFrom, scopeKey);
+        }
+
+        if (currentFrom !== normalizedTo) {
+          for (const participant of participants.values()) {
+            await runStep({
+              step: "unbind",
+              participant,
+              projectId: currentFrom,
+              traceId,
+            });
+          }
+        }
+
+        const result = await persist();
+
+        if (currentFrom !== normalizedTo) {
+          for (const participant of participants.values()) {
+            await runStep({
+              step: "bind",
+              participant,
+              projectId: normalizedTo,
+              traceId,
+            });
+          }
+          if (scopeKey.length > 0) {
+            activeProjectByScope.set(scopeKey, normalizedTo);
+            scopeByProjectId.set(normalizedTo, scopeKey);
+          }
+        }
+
+        return result;
+      });
+
+      inflightSwitchByScopeAndTarget.set(dedupeKey, runPromise);
+      try {
+        return await runPromise;
+      } finally {
+        if (inflightSwitchByScopeAndTarget.get(dedupeKey) === runPromise) {
+          inflightSwitchByScopeAndTarget.delete(dedupeKey);
+        }
+      }
     },
   };
 }

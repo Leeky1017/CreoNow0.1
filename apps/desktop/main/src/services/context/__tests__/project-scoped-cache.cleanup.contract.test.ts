@@ -55,14 +55,14 @@ function createLogger(
   assert.equal(watchService.isWatching({ projectId: "proj-a" }), true);
   assert.equal(createdWatchers.length, 1);
 
-  const first = cache.getOrComputeString({
+  const first = await cache.getOrComputeString({
     projectId: "proj-a",
     cacheKey: "rules",
     compute: () => "cached-v1",
   });
   assert.equal(first, "cached-v1");
 
-  const cached = cache.getOrComputeString({
+  const cached = await cache.getOrComputeString({
     projectId: "proj-a",
     cacheKey: "rules",
     compute: () => "cached-v2",
@@ -74,7 +74,7 @@ function createLogger(
   assert.equal(watchService.isWatching({ projectId: "proj-a" }), false);
   assert.equal(createdWatchers[0]?.closed, true);
 
-  const after = cache.getOrComputeString({
+  const after = await cache.getOrComputeString({
     projectId: "proj-a",
     cacheKey: "rules",
     compute: () => "cached-v2",

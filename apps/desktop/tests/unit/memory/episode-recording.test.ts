@@ -21,7 +21,7 @@ import {
   });
 
   // Act
-  const res = service.recordEpisode({
+  const res = await service.recordEpisode({
     projectId: "proj-1",
     chapterId: "chapter-7",
     sceneType: "action",

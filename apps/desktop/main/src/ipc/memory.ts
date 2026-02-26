@@ -369,7 +369,7 @@ export function registerMemoryIpcHandlers(deps: {
       }
 
       rememberSender(e);
-      const res = episodicService.recordEpisode(payload);
+      const res = await episodicService.recordEpisode(payload);
       return res.ok
         ? { ok: true, data: res.data }
         : { ok: false, error: res.error };
@@ -577,7 +577,7 @@ export function registerMemoryIpcHandlers(deps: {
         };
       }
       rememberSender(e);
-      const res = episodicService.distillSemanticMemory(payload);
+      const res = await episodicService.distillSemanticMemory(payload);
       return res.ok
         ? { ok: true, data: res.data }
         : { ok: false, error: res.error };
