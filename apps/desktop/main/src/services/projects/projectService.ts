@@ -4,9 +4,10 @@ import path from "node:path";
 
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import { redactUserDataPath } from "../../db/paths";
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 import {
   ensureCreonowDirStructure,
   getCreonowRootPath,
@@ -82,10 +83,6 @@ type DuplicateDocumentRow = {
 type SettingsRow = {
   valueJson: string;
 };
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
 
 export type ProjectService = {
   create: (args: {
@@ -187,51 +184,6 @@ const NARRATIVE_PERSON_SET = new Set<NarrativePerson>([
 
 function nowTs(): number {
   return Date.now();
-}
-
-/**
- * Build a stable IPC error object.
- *
- * Why: services must return deterministic error codes/messages for IPC tests.
- */
-function ipcError(
-  code: IpcErrorCode,
-  message: string,
-  detailsOrOptions?:
-    | unknown
-    | {
-        details?: unknown;
-        traceId?: string;
-      },
-): Err {
-  if (
-    detailsOrOptions &&
-    typeof detailsOrOptions === "object" &&
-    ("details" in detailsOrOptions || "traceId" in detailsOrOptions)
-  ) {
-    const options = detailsOrOptions as {
-      details?: unknown;
-      traceId?: string;
-    };
-    return {
-      ok: false,
-      error: {
-        code,
-        message,
-        ...(options.traceId ? { traceId: options.traceId } : {}),
-        ...(options.details === undefined ? {} : { details: options.details }),
-      },
-    };
-  }
-
-  return {
-    ok: false,
-    error: {
-      code,
-      message,
-      ...(detailsOrOptions === undefined ? {} : { details: detailsOrOptions }),
-    },
-  };
 }
 
 /**
@@ -953,19 +905,28 @@ export function createProjectService(args: {
 
     switchProject: ({ projectId, fromProjectId, operatorId, traceId }) => {
       if (projectId.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "projectId is required", {
-          traceId,
-        });
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "projectId is required",
+          undefined,
+          { traceId },
+        );
       }
       if (fromProjectId.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "fromProjectId is required", {
-          traceId,
-        });
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "fromProjectId is required",
+          undefined,
+          { traceId },
+        );
       }
       if (operatorId.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "operatorId is required", {
-          traceId,
-        });
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "operatorId is required",
+          undefined,
+          { traceId },
+        );
       }
 
       const nextProject = getProjectById(args.db, projectId);
@@ -1041,9 +1002,12 @@ export function createProjectService(args: {
 
     lifecycleGet: ({ projectId, traceId }) => {
       if (projectId.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "projectId is required", {
-          traceId,
-        });
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "projectId is required",
+          undefined,
+          { traceId },
+        );
       }
 
       const project = getProjectById(args.db, projectId);
@@ -1062,9 +1026,12 @@ export function createProjectService(args: {
 
     lifecycleArchive: ({ projectId, traceId }) => {
       if (projectId.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "projectId is required", {
-          traceId,
-        });
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "projectId is required",
+          undefined,
+          { traceId },
+        );
       }
 
       const project = getProjectById(args.db, projectId);
@@ -1111,12 +1078,10 @@ export function createProjectService(args: {
           "PROJECT_LIFECYCLE_WRITE_FAILED",
           "生命周期状态写入失败",
           {
-            traceId,
-            details: {
-              transition: "active->archived",
-              projectId,
-            },
+            transition: "active->archived",
+            projectId,
           },
+          { traceId },
         );
       }
 
@@ -1132,9 +1097,12 @@ export function createProjectService(args: {
 
     lifecycleRestore: ({ projectId, traceId }) => {
       if (projectId.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "projectId is required", {
-          traceId,
-        });
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "projectId is required",
+          undefined,
+          { traceId },
+        );
       }
 
       const project = getProjectById(args.db, projectId);
@@ -1180,12 +1148,10 @@ export function createProjectService(args: {
           "PROJECT_LIFECYCLE_WRITE_FAILED",
           "生命周期状态写入失败",
           {
-            traceId,
-            details: {
-              transition: "archived->active",
-              projectId,
-            },
+            transition: "archived->active",
+            projectId,
           },
+          { traceId },
         );
       }
 
@@ -1200,18 +1166,18 @@ export function createProjectService(args: {
 
     lifecyclePurge: ({ projectId, traceId }) => {
       if (projectId.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "projectId is required", {
-          traceId,
-        });
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "projectId is required",
+          undefined,
+          { traceId },
+        );
       }
 
       const project = getProjectById(args.db, projectId);
       if (!project.ok) {
         if (project.error.code === "NOT_FOUND") {
-          return ipcError("NOT_FOUND", "项目已删除", {
-            traceId,
-            details: { projectId },
-          });
+          return ipcError("NOT_FOUND", "项目已删除", { projectId }, { traceId });
         }
         return project;
       }
@@ -1240,10 +1206,8 @@ export function createProjectService(args: {
           return ipcError(
             "PROJECT_PURGE_PERMISSION_DENIED",
             "删除失败，路径无写权限",
-            {
-              traceId,
-              details: { projectId, rootPath: project.data.rootPath },
-            },
+            { projectId, rootPath: project.data.rootPath },
+            { traceId },
           );
         }
 
@@ -1253,9 +1217,8 @@ export function createProjectService(args: {
           trace_id: traceId,
           project_id: projectId,
         });
-        return ipcError("IO_ERROR", "Failed to remove project files", {
+        return ipcError("IO_ERROR", "Failed to remove project files", { projectId }, {
           traceId,
-          details: { projectId },
         });
       }
 
@@ -1264,10 +1227,7 @@ export function createProjectService(args: {
           .prepare("DELETE FROM projects WHERE project_id = ?")
           .run(projectId);
         if (result.changes === 0) {
-          return ipcError("NOT_FOUND", "项目已删除", {
-            traceId,
-            details: { projectId },
-          });
+          return ipcError("NOT_FOUND", "项目已删除", { projectId }, { traceId });
         }
       } catch (error) {
         args.logger.error("project_lifecycle_purge_db_failed", {
@@ -1276,9 +1236,8 @@ export function createProjectService(args: {
           trace_id: traceId,
           project_id: projectId,
         });
-        return ipcError("DB_ERROR", "Failed to purge project", {
+        return ipcError("DB_ERROR", "Failed to purge project", { projectId }, {
           traceId,
-          details: { projectId },
         });
       }
 

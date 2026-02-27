@@ -4,7 +4,7 @@ import path from "node:path";
 
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
+import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import { createProjectService } from "../projects/projectService";
 import {
@@ -19,10 +19,8 @@ import {
   type SkillFileRef,
 } from "./skillLoader";
 import type { SkillScope } from "./skillValidator";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult, type Err } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type SkillListItem = {
   id: string;
@@ -262,15 +260,6 @@ function toCustomSkillRecord(row: CustomSkillDbRow): CustomSkillRecord {
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };
-}
-
-/**
- * Build a stable IPC error object.
- *
- * Why: skills must surface deterministic, UI-displayable failures without throwing.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
 }
 
 /**

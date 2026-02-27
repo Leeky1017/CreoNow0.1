@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { parseDocument } from "yaml";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
+import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import {
   validateSkillFrontmatter,
@@ -13,10 +13,8 @@ import {
   type SkillScope,
 } from "./skillValidator";
 import { selectSkillsByScope } from "./scopeResolver";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type SkillFileRef = {
   scope: SkillScope;
@@ -54,15 +52,6 @@ export type DiscoverSkillFilesResult = {
 };
 
 type JsonObject = Record<string, unknown>;
-
-/**
- * Build a stable IPC error wrapper.
- *
- * Why: skill loading must be diagnosable and must not throw across IPC boundaries.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 /**
  * Narrow an unknown value to a JSON object.

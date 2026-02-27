@@ -4,12 +4,9 @@ import path from "node:path";
 import type Database from "better-sqlite3";
 import { getLoadablePath } from "sqlite-vec";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type UserMemoryVecSource = {
   memoryId: string;
@@ -43,15 +40,6 @@ const DEFAULT_DIMENSION = 64;
 const DEFAULT_TOPK = 8;
 
 const LOADED_DBS = new WeakSet<Database.Database>();
-
-/**
- * Build a stable IPC error object.
- *
- * Why: semantic recall must degrade deterministically when sqlite-vec is unavailable.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 function nowTs(): number {
   return Date.now();

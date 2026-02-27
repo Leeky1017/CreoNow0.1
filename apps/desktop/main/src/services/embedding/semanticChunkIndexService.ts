@@ -1,16 +1,13 @@
 import { createHash } from "node:crypto";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import type { EmbeddingService } from "./embeddingService";
 import {
   createSemanticChunkIndexCache,
   type SemanticChunkIndexCache,
 } from "./semanticChunkIndexCache";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type SemanticChunk = {
   chunkId: string;
@@ -72,10 +69,6 @@ export type SemanticChunkIndexService = {
   }) => ServiceResult<{ chunks: ScoredSemanticChunk[] }>;
   listProjectChunks: (args: { projectId: string }) => SemanticChunk[];
 };
-
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 function normalizeNewline(text: string): string {
   return text.replaceAll("\r\n", "\n");

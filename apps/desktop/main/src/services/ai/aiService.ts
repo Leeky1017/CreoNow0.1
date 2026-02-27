@@ -45,14 +45,12 @@ import {
 import type { TraceStore } from "./traceStore";
 import { createAiWriteTransaction } from "./aiWriteTransaction";
 import { logWarn } from "../shared/degradationCounter";
+import { ipcError, type ServiceResult, type Err } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export { assembleSystemPrompt, GLOBAL_IDENTITY_PROMPT };
 export { mapUpstreamStatusToIpcErrorCode };
 export type { AiProvider } from "./aiPayloadParsers";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
 
 export type TracePersistenceDegradation = {
   code: "TRACE_PERSISTENCE_DEGRADED";
@@ -147,15 +145,6 @@ function asObject(x: unknown): JsonObject | null {
     return null;
   }
   return x as JsonObject;
-}
-
-/**
- * Return a stable IPC error wrapper.
- *
- * Why: errors must be deterministic for E2E assertions and must not leak secrets.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
 }
 
 /**

@@ -1,8 +1,5 @@
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult, type Err } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type SkillSchedulerTerminal =
   | "completed"
@@ -75,10 +72,6 @@ export type SkillScheduler = {
     start: () => SkillTaskStartResult<T>;
   }) => Promise<ServiceResult<T>>;
 };
-
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 function normalizeDependencies(dependsOn: string[] | undefined): string[] {
   if (!dependsOn) {

@@ -2,9 +2,10 @@ import { randomUUID } from "node:crypto";
 
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import type { MemoryScope, MemorySettings, MemoryType } from "./memoryService";
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type SkillFeedbackAction = "accept" | "reject" | "partial";
 
@@ -18,10 +19,6 @@ export type PreferenceLearningOutcome = {
   threshold?: number;
 };
 
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
-
 const MIN_EVIDENCE_REF_LEN = 3;
 const MAX_EVIDENCE_REF_LEN = 240;
 const MAX_PRIVACY_TOKEN_LEN = 64;
@@ -29,16 +26,6 @@ const PRIVACY_TOKEN_RE = /^[a-z0-9][a-z0-9._:-]{0,63}$/i;
 
 function nowTs(): number {
   return Date.now();
-}
-
-/**
- * Build a stable IPC error object.
- *
- * Why: learning is triggered by IPC feedback and must produce deterministic
- * error codes/messages for E2E assertions.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
 }
 
 type EvidenceNorm =

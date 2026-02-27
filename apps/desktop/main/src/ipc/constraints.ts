@@ -8,6 +8,7 @@ import type { IpcMain } from "electron";
 import type { IpcError, IpcResponse } from "@shared/types/ipc-generated";
 import type { Logger } from "../logging/logger";
 import { ensureCreonowDirStructure } from "../services/context/contextFs";
+import { ipcError, type ServiceResult, type Err } from "../services/shared/ipcResult";
 
 type ConstraintSource = "user" | "kg";
 
@@ -46,10 +47,6 @@ type ConstraintPatchInput = {
   priority?: number;
   degradable?: boolean;
 };
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-type ServiceResult<T> = Ok<T> | Err;
 
 /**
  * Return a new default constraints document.
@@ -215,13 +212,6 @@ function isConstraintsStore(x: unknown): x is ConstraintsStore {
     return false;
   }
   return x.items.every((item) => isConstraintItem(item));
-}
-
-/**
- * Build a stable IPC error object.
- */
-function ipcError(code: IpcError["code"], message: string): Err {
-  return { ok: false, error: { code, message } };
 }
 
 /**

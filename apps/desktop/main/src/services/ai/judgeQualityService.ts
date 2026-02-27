@@ -1,10 +1,7 @@
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import type { JudgeSeverity } from "@shared/types/judge";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 type JudgeIssue = {
   severity: JudgeSeverity;
@@ -33,15 +30,6 @@ type AdvancedCheckRunner = (args: {
   text: string;
   contextSummary: string;
 }) => Promise<JudgeIssue[]>;
-
-/**
- * Build a deterministic IPC error envelope.
- *
- * Why: Judge pipeline failures must be判定型 and never become silent failures.
- */
-function ipcError(code: IpcErrorCode, message: string): Err {
-  return { ok: false, error: { code, message } };
-}
 
 /**
  * Detect first-person perspective mismatches from a lightweight rules engine.

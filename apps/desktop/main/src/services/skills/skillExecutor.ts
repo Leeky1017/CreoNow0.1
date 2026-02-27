@@ -1,10 +1,8 @@
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
+import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import type { AiStreamEvent } from "@shared/types/ai";
 import type { ContextAssembleResult } from "../context/layerAssemblyService";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 type SkillPrompt = {
   system: string;
@@ -83,13 +81,6 @@ type SkillExecutorDeps = {
     warn: (event: string, data?: Record<string, unknown>) => void;
   };
 };
-
-/**
- * Build a stable IPC error payload.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 /**
  * Normalize skill id into builtin leaf id.

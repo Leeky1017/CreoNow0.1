@@ -1,12 +1,10 @@
 import { randomUUID } from "node:crypto";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
+import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import type { FtsService } from "./ftsService";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type SearchStrategy = "fts" | "semantic" | "hybrid";
 
@@ -107,15 +105,6 @@ type WorkingCandidate = {
   bm25Raw: number;
   semanticRaw: number;
 };
-
-/**
- * Build a stable IPC error object.
- *
- * Why: ranking service must expose deterministic error envelopes for IPC.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 function isTimeoutCode(code: IpcErrorCode): boolean {
   return code === "TIMEOUT" || code === "SEARCH_TIMEOUT";

@@ -2,21 +2,8 @@ import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import path from "node:path";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
-
-/**
- * Build a stable IPC error object.
- *
- * Why: `.creonow` operations must return deterministic error codes/messages for
- * E2E and must not leak raw stacks across IPC.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type CreonowDirStatus = {
   exists: boolean;

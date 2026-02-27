@@ -1,20 +1,8 @@
 import fs from "node:fs";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
-
-/**
- * Build a stable IPC error object.
- *
- * Why: filesystem watcher failures must not leak raw stacks across IPC.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type CreonowWatchService = {
   isWatching: (args: { projectId: string }) => boolean;

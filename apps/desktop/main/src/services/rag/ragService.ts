@@ -1,6 +1,5 @@
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import {
   estimateUtf8TokenCount as estimateTokens,
   trimUtf8ToTokenBudget,
@@ -10,10 +9,8 @@ import type { EmbeddingService } from "../embedding/embeddingService";
 import { createFtsService } from "../search/ftsService";
 import type { LruCache } from "./lruCache";
 import { planFtsQueries } from "./queryPlanner";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type RagRetrieveItem = {
   sourceRef: string;
@@ -63,15 +60,6 @@ const MAX_CANDIDATES = 50;
 const DEFAULT_BUDGET_TOKENS = 800;
 const MIN_BUDGET_TOKENS = 50;
 const MAX_BUDGET_TOKENS = 8000;
-
-/**
- * Build a stable IPC error object.
- *
- * Why: services must return deterministic error codes/messages for IPC tests.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 /**
  * Normalize and validate a limit.

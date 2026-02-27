@@ -1,11 +1,7 @@
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 
 import type { Logger } from "../../logging/logger";
 import type { FakeAiServer } from "./fakeAiServer";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
 
 type AiProvider = "anthropic" | "openai" | "proxy";
 type ProviderMode = "openai-compatible" | "openai-byok" | "anthropic-byok";
@@ -50,10 +46,6 @@ type ProviderHealthState = {
 };
 
 const PROVIDER_FAILURE_THRESHOLD = 3;
-
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 function isE2E(env: NodeJS.ProcessEnv): boolean {
   return env.CREONOW_E2E === "1";

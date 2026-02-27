@@ -6,14 +6,11 @@ import type Database from "better-sqlite3";
 import PDFDocument from "pdfkit";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import { atomicWrite } from "../documents/atomicWrite";
 import { createDocumentService } from "../documents/documentService";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type ExportResult = {
   relativePath: string;
@@ -41,15 +38,6 @@ export type ExportService = {
     documentId?: string;
   }) => Promise<ServiceResult<ExportResult>>;
 };
-
-/**
- * Build a stable IPC error object.
- *
- * Why: export errors must be deterministic and must not leak absolute paths.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 function isSafePathSegment(segment: string): boolean {
   if (segment.length === 0) {
