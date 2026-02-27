@@ -27,13 +27,19 @@ function createHarness(args?: {
   platform?: NodeJS.Platform;
   hasWindow?: boolean;
   initiallyMaximized?: boolean;
+  throwOnIsMaximized?: boolean;
 }): Harness {
   const handlers = new Map<string, Handler>();
   const calls: string[] = [];
   const maximizeState = { value: args?.initiallyMaximized ?? false };
 
   const win: FakeWindow = {
-    isMaximized: () => maximizeState.value,
+    isMaximized: () => {
+      if (args?.throwOnIsMaximized) {
+        throw new Error("window_state_unavailable");
+      }
+      return maximizeState.value;
+    },
     isMinimized: () => false,
     isFullScreen: () => false,
     minimize: () => {
@@ -185,6 +191,34 @@ async function main(): Promise<void> {
       assert.equal(response.error?.code, "NOT_FOUND");
     },
   );
+  await runScenario(
+    "W5 should map unexpected window runtime errors to INTERNAL response",
+    async () => {
+      const harness = createHarness({
+        platform: "win32",
+        throwOnIsMaximized: true,
+      });
+
+      const getStateResponse = await harness.invoke<{
+        ok: boolean;
+        error?: { code: string; message: string };
+      }>("app:window:getstate");
+
+      assert.equal(getStateResponse.ok, false);
+      assert.equal(getStateResponse.error?.code, "INTERNAL");
+      assert.equal(getStateResponse.error?.message, "window_state_unavailable");
+
+      const toggleResponse = await harness.invoke<{
+        ok: boolean;
+        error?: { code: string; message: string };
+      }>("app:window:togglemaximized");
+
+      assert.equal(toggleResponse.ok, false);
+      assert.equal(toggleResponse.error?.code, "INTERNAL");
+      assert.equal(toggleResponse.error?.message, "window_state_unavailable");
+    },
+  );
+
 }
 
 void main().catch((error) => {

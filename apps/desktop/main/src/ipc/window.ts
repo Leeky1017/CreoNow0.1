@@ -27,6 +27,10 @@ function toError(code: IpcError["code"], message: string): IpcResponse<never> {
   };
 }
 
+function toErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
 function isWindowControlsEnabled(platform: NodeJS.Platform): boolean {
   return platform === "win32";
 }
@@ -80,53 +84,69 @@ export function registerWindowIpcHandlers(args: {
   args.ipcMain.handle(
     "app:window:getstate",
     async (event): Promise<IpcResponse<WindowState>> => {
-      const win = controlsEnabled ? resolveWindow(event) : null;
-      return {
-        ok: true,
-        data: buildState(win),
-      };
+      try {
+        const win = controlsEnabled ? resolveWindow(event) : null;
+        return {
+          ok: true,
+          data: buildState(win),
+        };
+      } catch (error) {
+        return toError("INTERNAL", toErrorMessage(error));
+      }
     },
   );
 
   args.ipcMain.handle(
     "app:window:minimize",
     async (event): Promise<IpcResponse<Record<string, never>>> => {
-      const resolved = resolveSupportedWindow(event);
-      if (!resolved.ok) {
-        return resolved;
+      try {
+        const resolved = resolveSupportedWindow(event);
+        if (!resolved.ok) {
+          return resolved;
+        }
+        resolved.data.minimize();
+        return { ok: true, data: {} };
+      } catch (error) {
+        return toError("INTERNAL", toErrorMessage(error));
       }
-      resolved.data.minimize();
-      return { ok: true, data: {} };
     },
   );
 
   args.ipcMain.handle(
     "app:window:togglemaximized",
     async (event): Promise<IpcResponse<Record<string, never>>> => {
-      const resolved = resolveSupportedWindow(event);
-      if (!resolved.ok) {
-        return resolved;
-      }
+      try {
+        const resolved = resolveSupportedWindow(event);
+        if (!resolved.ok) {
+          return resolved;
+        }
 
-      if (resolved.data.isMaximized()) {
-        resolved.data.unmaximize();
-      } else {
-        resolved.data.maximize();
-      }
+        if (resolved.data.isMaximized()) {
+          resolved.data.unmaximize();
+        } else {
+          resolved.data.maximize();
+        }
 
-      return { ok: true, data: {} };
+        return { ok: true, data: {} };
+      } catch (error) {
+        return toError("INTERNAL", toErrorMessage(error));
+      }
     },
   );
 
   args.ipcMain.handle(
     "app:window:close",
     async (event): Promise<IpcResponse<Record<string, never>>> => {
-      const resolved = resolveSupportedWindow(event);
-      if (!resolved.ok) {
-        return resolved;
+      try {
+        const resolved = resolveSupportedWindow(event);
+        if (!resolved.ok) {
+          return resolved;
+        }
+        resolved.data.close();
+        return { ok: true, data: {} };
+      } catch (error) {
+        return toError("INTERNAL", toErrorMessage(error));
       }
-      resolved.data.close();
-      return { ok: true, data: {} };
     },
   );
 }
