@@ -342,6 +342,67 @@ function matchesPreview(
 }
 
 /**
+ * Resolve document ids for execute scope.
+ * Returns error result or list of document ids.
+ */
+function resolveExecuteDocumentIds(
+  args: { scope: string; documentId?: string; confirmed?: boolean; previewId?: string; replaceWith: string },
+  scope: "currentDocument" | "wholeProject",
+  projectId: string,
+  queryData: string,
+  options: ReturnType<typeof normalizeOptions>,
+  previewStore: PreviewTokenStore,
+): ServiceResult<string[]> {
+  if (scope === "currentDocument") {
+    const documentIdRes = normalizeDocumentId(args.documentId);
+    if (!documentIdRes.ok) return documentIdRes;
+    return { ok: true, data: [documentIdRes.data] };
+  }
+  if (!args.confirmed) {
+    return ipcError("VALIDATION_ERROR", "Whole-project replace requires explicit confirmation");
+  }
+  const previewId = args.previewId?.trim() ?? "";
+  if (previewId.length === 0) {
+    return ipcError("VALIDATION_ERROR", "Whole-project replace requires previewId");
+  }
+  const preview = previewStore.get(previewId);
+  if (!preview) {
+    return ipcError("VALIDATION_ERROR", "Preview context not found");
+  }
+  if (!matchesPreview(preview, { projectId, documentId: undefined, scope, query: queryData, replaceWith: args.replaceWith, options })) {
+    return ipcError("VALIDATION_ERROR", "Preview context does not match");
+  }
+  previewStore.delete(previewId);
+  return { ok: true, data: [...preview.documentIds] };
+}
+
+/**
+ * Map a caught error message to a SearchReplaceSkippedItem reason code.
+ */
+function mapReplaceErrorReason(message: string): SearchReplaceSkippedItem["reason"] {
+  if (message.startsWith("SNAPSHOT_FAILED")) return "SNAPSHOT_FAILED";
+  if (message === "WRITE_CONFLICT") return "SEARCH_CONCURRENT_WRITE_CONFLICT";
+  if (message === "NOT_FOUND") return "NOT_FOUND";
+  return "DB_ERROR";
+}
+
+function loadPreviewRows(
+  db: Database.Database,
+  scope: "currentDocument" | "wholeProject",
+  projectId: string,
+  documentId: string | undefined,
+): ServiceResult<DocumentRow[]> {
+  if (scope === "currentDocument") {
+    const documentIdRes = normalizeDocumentId(documentId);
+    if (!documentIdRes.ok) return documentIdRes;
+    const row = loadDocumentById({ db, projectId, documentId: documentIdRes.data });
+    if (!row) return ipcError("NOT_FOUND", "Document not found");
+    return { ok: true, data: [row] };
+  }
+  return { ok: true, data: loadProjectDocuments({ db, projectId }) };
+}
+
+/**
  * Create search replace service.
  *
  * Why: keep preview/execute state and DB operations inside main-process service.
@@ -378,32 +439,7 @@ export function createSearchReplaceService(deps: {
       const scope = scopeRes.data;
 
       try {
-        const rows =
-          scope === "currentDocument"
-            ? (() => {
-                const documentIdRes = normalizeDocumentId(args.documentId);
-                if (!documentIdRes.ok) {
-                  return documentIdRes;
-                }
-                const row = loadDocumentById({
-                  db: deps.db,
-                  projectId,
-                  documentId: documentIdRes.data,
-                });
-                if (!row) {
-                  return ipcError("NOT_FOUND", "Document not found");
-                }
-                return { ok: true, data: [row] } as ServiceResult<
-                  DocumentRow[]
-                >;
-              })()
-            : ({
-                ok: true,
-                data: loadProjectDocuments({
-                  db: deps.db,
-                  projectId,
-                }),
-              } as ServiceResult<DocumentRow[]>);
+        const rows = loadPreviewRows(deps.db, scope, projectId, args.documentId);
 
         if (!rows.ok) {
           return rows;
@@ -494,46 +530,11 @@ export function createSearchReplaceService(deps: {
       let replacedCount = 0;
       let affectedDocumentCount = 0;
 
-      let documentIds: string[] = [];
-      if (scope === "currentDocument") {
-        const documentIdRes = normalizeDocumentId(args.documentId);
-        if (!documentIdRes.ok) {
-          return documentIdRes;
-        }
-        documentIds = [documentIdRes.data];
-      } else {
-        if (!args.confirmed) {
-          return ipcError(
-            "VALIDATION_ERROR",
-            "Whole-project replace requires explicit confirmation",
-          );
-        }
-        const previewId = args.previewId?.trim() ?? "";
-        if (previewId.length === 0) {
-          return ipcError(
-            "VALIDATION_ERROR",
-            "Whole-project replace requires previewId",
-          );
-        }
-        const preview = previewStore.get(previewId);
-        if (!preview) {
-          return ipcError("VALIDATION_ERROR", "Preview context not found");
-        }
-        if (
-          !matchesPreview(preview, {
-            projectId,
-            documentId: undefined,
-            scope,
-            query: queryRes.data,
-            replaceWith: args.replaceWith,
-            options,
-          })
-        ) {
-          return ipcError("VALIDATION_ERROR", "Preview context does not match");
-        }
-        documentIds = [...preview.documentIds];
-        previewStore.delete(previewId);
-      }
+      const documentIdsRes = resolveExecuteDocumentIds(
+        args, scope, projectId, queryRes.data, options, previewStore,
+      );
+      if (!documentIdsRes.ok) return documentIdsRes;
+      const documentIds = documentIdsRes.data;
 
       try {
         for (const documentId of documentIds) {
@@ -653,18 +654,7 @@ export function createSearchReplaceService(deps: {
             const message =
               error instanceof Error ? error.message : String(error);
             if (scope === "wholeProject") {
-              const reason = message.startsWith("SNAPSHOT_FAILED")
-                ? "SNAPSHOT_FAILED"
-                : message === "WRITE_CONFLICT"
-                  ? "SEARCH_CONCURRENT_WRITE_CONFLICT"
-                  : message === "NOT_FOUND"
-                    ? "NOT_FOUND"
-                    : "DB_ERROR";
-              skipped.push({
-                documentId: row.documentId,
-                reason,
-                message,
-              });
+              skipped.push({ documentId: row.documentId, reason: mapReplaceErrorReason(message), message });
               continue;
             }
             deps.logger.error("search_replace_execute_failed", {
