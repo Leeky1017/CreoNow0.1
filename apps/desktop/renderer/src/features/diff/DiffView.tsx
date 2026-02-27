@@ -150,6 +150,82 @@ export function getChangePositions(lines: DiffLine[]): number[] {
   return positions;
 }
 
+function getUnderlineClass(style: LineUnderlineStyle | undefined): string {
+  if (style === "dashed") {
+    return "underline decoration-dashed underline-offset-[3px]";
+  }
+  if (style === "solid") {
+    return "underline decoration-solid underline-offset-[3px]";
+  }
+  return "";
+}
+
+function getDiffLineRowClass(flags: {
+  isAdded: boolean;
+  isRemoved: boolean;
+  isContext: boolean;
+  isCurrentChange: boolean;
+}): string {
+  const classes = ["flex group transition-colors"];
+  if (flags.isRemoved) {
+    classes.push("bg-[rgba(239,68,68,0.1)]");
+  }
+  if (flags.isAdded) {
+    classes.push("bg-[rgba(34,197,94,0.1)]");
+  }
+  if (flags.isContext) {
+    classes.push("hover:bg-[var(--color-bg-hover)]");
+  }
+  if (flags.isCurrentChange) {
+    classes.push("ring-1 ring-inset ring-[var(--color-accent)]");
+  }
+  return classes.join(" ");
+}
+
+function getDiffLineGutterClass(flags: {
+  isAdded: boolean;
+  isRemoved: boolean;
+  isContext: boolean;
+}): string {
+  const classes = [
+    "w-20 shrink-0 flex select-none text-[11px] border-r border-[var(--color-separator)]",
+  ];
+  if (flags.isRemoved) {
+    classes.push("bg-[rgba(239,68,68,0.05)]");
+  }
+  if (flags.isAdded) {
+    classes.push("bg-[rgba(34,197,94,0.05)]");
+  }
+  if (flags.isContext) {
+    classes.push("bg-[var(--color-bg-base)]");
+  }
+  return classes.join(" ");
+}
+
+function getDiffLineContentClass(flags: {
+  isAdded: boolean;
+  isRemoved: boolean;
+  isContext: boolean;
+  underlineClass: string;
+}): string {
+  const classes = ["flex-1 px-4 py-1 whitespace-pre-wrap break-words"];
+  if (flags.isRemoved) {
+    classes.push(
+      "text-[rgba(239,68,68,0.7)] line-through decoration-[rgba(239,68,68,0.4)]",
+    );
+  }
+  if (flags.isAdded) {
+    classes.push("text-[rgba(34,197,94,0.9)]");
+  }
+  if ((flags.isRemoved || flags.isAdded) && flags.underlineClass) {
+    classes.push(flags.underlineClass);
+  }
+  if (flags.isContext) {
+    classes.push("text-[var(--color-fg-muted)]");
+  }
+  return classes.join(" ");
+}
+
 /**
  * UnifiedDiffView renders a unified diff with dual-column line numbers.
  *
@@ -227,14 +303,7 @@ export function UnifiedDiffView(props: {
         const isRemoved = line.type === "removed";
         const isAdded = line.type === "added";
         const isContext = line.type === "context";
-        const underlineClass =
-          props.lineUnderlineStyle === "dashed"
-            ? "underline decoration-dashed underline-offset-[3px]"
-            : props.lineUnderlineStyle === "solid"
-              ? "underline decoration-solid underline-offset-[3px]"
-              : "";
-
-        // Determine if this line is part of the currently highlighted change
+        const underlineClass = getUnderlineClass(props.lineUnderlineStyle);
         const isCurrentChange =
           props.currentChangeIndex !== undefined &&
           line.hunkIndex !== null &&
@@ -244,24 +313,14 @@ export function UnifiedDiffView(props: {
           <div
             key={index}
             data-line-index={index}
-            className={`
-              flex group transition-colors
-              ${isRemoved ? "bg-[rgba(239,68,68,0.1)]" : ""}
-              ${isAdded ? "bg-[rgba(34,197,94,0.1)]" : ""}
-              ${isContext ? "hover:bg-[var(--color-bg-hover)]" : ""}
-              ${isCurrentChange ? "ring-1 ring-inset ring-[var(--color-accent)]" : ""}
-            `}
+            className={getDiffLineRowClass({
+              isAdded,
+              isRemoved,
+              isContext,
+              isCurrentChange,
+            })}
           >
-            {/* Gutter: +/- indicator + old line number + new line number */}
-            <div
-              className={`
-                w-20 shrink-0 flex select-none text-[11px] border-r border-[var(--color-separator)]
-                ${isRemoved ? "bg-[rgba(239,68,68,0.05)]" : ""}
-                ${isAdded ? "bg-[rgba(34,197,94,0.05)]" : ""}
-                ${isContext ? "bg-[var(--color-bg-base)]" : ""}
-              `}
-            >
-              {/* +/- indicator */}
+            <div className={getDiffLineGutterClass({ isAdded, isRemoved, isContext })}>
               <div className="w-4 flex items-center justify-center">
                 {isRemoved && (
                   <span className="text-[var(--color-error)] opacity-50">
@@ -274,35 +333,25 @@ export function UnifiedDiffView(props: {
                   </span>
                 )}
               </div>
-              {/* Old line number */}
               <div
-                className={`
-                  w-8 text-right pr-2 py-1
-                  ${isRemoved ? "text-[var(--color-error)] opacity-50" : "text-[var(--color-fg-subtle)]"}
-                `}
+                className={`w-8 text-right pr-2 py-1 ${isRemoved ? "text-[var(--color-error)] opacity-50" : "text-[var(--color-fg-subtle)]"}`}
               >
                 {line.oldLineNumber ?? ""}
               </div>
-              {/* New line number */}
               <div
-                className={`
-                  w-8 text-right pr-2 py-1
-                  ${isAdded ? "text-[var(--color-success)] opacity-50" : "text-[var(--color-fg-subtle)]"}
-                `}
+                className={`w-8 text-right pr-2 py-1 ${isAdded ? "text-[var(--color-success)] opacity-50" : "text-[var(--color-fg-subtle)]"}`}
               >
                 {line.newLineNumber ?? ""}
               </div>
             </div>
 
-            {/* Content */}
             <div
-              className={`
-                flex-1 px-4 py-1 whitespace-pre-wrap break-words
-                ${isRemoved ? "text-[rgba(239,68,68,0.7)] line-through decoration-[rgba(239,68,68,0.4)]" : ""}
-                ${isAdded ? "text-[rgba(34,197,94,0.9)]" : ""}
-                ${(isRemoved || isAdded) && underlineClass ? underlineClass : ""}
-                ${isContext ? "text-[var(--color-fg-muted)]" : ""}
-              `}
+              className={getDiffLineContentClass({
+                isAdded,
+                isRemoved,
+                isContext,
+                underlineClass,
+              })}
             >
               {line.content || "\u00A0"}
             </div>
