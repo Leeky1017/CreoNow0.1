@@ -64,6 +64,232 @@ function isRecord(x: unknown): x is Record<string, unknown> {
   return typeof x === "object" && x !== null;
 }
 
+function invalidArgument(message: string): Err {
+  return ipcError("INVALID_ARGUMENT", message);
+}
+
+function readPayloadObject(payload: unknown): ServiceResult<Record<string, unknown>> {
+  if (!isRecord(payload)) {
+    return invalidArgument("payload must be an object");
+  }
+  return { ok: true, data: payload };
+}
+
+function readStringField(args: {
+  payload: Record<string, unknown>;
+  field: string;
+}): ServiceResult<string> {
+  const value = args.payload[args.field];
+  if (typeof value !== "string") {
+    return invalidArgument(`${args.field} must be a string`);
+  }
+  return { ok: true, data: value };
+}
+
+function readObjectField(args: {
+  payload: Record<string, unknown>;
+  field: string;
+}): ServiceResult<Record<string, unknown>> {
+  const value = args.payload[args.field];
+  if (!isRecord(value)) {
+    return invalidArgument(`${args.field} must be an object`);
+  }
+  return { ok: true, data: value };
+}
+
+function parsePolicyListPayload(
+  payload: unknown,
+): ServiceResult<{ projectId: string }> {
+  const payloadObj = readPayloadObject(payload);
+  if (!payloadObj.ok) {
+    return payloadObj;
+  }
+
+  const projectId = readStringField({
+    payload: payloadObj.data,
+    field: "projectId",
+  });
+  if (!projectId.ok) {
+    return projectId;
+  }
+
+  return { ok: true, data: { projectId: projectId.data } };
+}
+
+function parsePolicyCreatePayload(payload: unknown): ServiceResult<{
+  projectId: string;
+  constraint: ConstraintCreateInput;
+}> {
+  const payloadObj = readPayloadObject(payload);
+  if (!payloadObj.ok) {
+    return payloadObj;
+  }
+
+  const projectId = readStringField({
+    payload: payloadObj.data,
+    field: "projectId",
+  });
+  if (!projectId.ok) {
+    return projectId;
+  }
+
+  const constraintObj = readObjectField({
+    payload: payloadObj.data,
+    field: "constraint",
+  });
+  if (!constraintObj.ok) {
+    return constraintObj;
+  }
+
+  if (typeof constraintObj.data.text !== "string") {
+    return invalidArgument("constraint.text must be a string");
+  }
+  if (
+    constraintObj.data.source !== undefined &&
+    typeof constraintObj.data.source !== "string"
+  ) {
+    return invalidArgument("constraint.source must be a string");
+  }
+  if (
+    constraintObj.data.priority !== undefined &&
+    typeof constraintObj.data.priority !== "number"
+  ) {
+    return invalidArgument("constraint.priority must be a number");
+  }
+  if (
+    constraintObj.data.degradable !== undefined &&
+    typeof constraintObj.data.degradable !== "boolean"
+  ) {
+    return invalidArgument("constraint.degradable must be a boolean");
+  }
+
+  return {
+    ok: true,
+    data: {
+      projectId: projectId.data,
+      constraint: constraintObj.data as ConstraintCreateInput,
+    },
+  };
+}
+
+function parsePolicyUpdatePayload(payload: unknown): ServiceResult<{
+  projectId: string;
+  constraintId: string;
+  patch: ConstraintPatchInput;
+}> {
+  const payloadObj = readPayloadObject(payload);
+  if (!payloadObj.ok) {
+    return payloadObj;
+  }
+
+  const projectId = readStringField({
+    payload: payloadObj.data,
+    field: "projectId",
+  });
+  if (!projectId.ok) {
+    return projectId;
+  }
+  const constraintId = readStringField({
+    payload: payloadObj.data,
+    field: "constraintId",
+  });
+  if (!constraintId.ok) {
+    return constraintId;
+  }
+
+  const patchObj = readObjectField({
+    payload: payloadObj.data,
+    field: "patch",
+  });
+  if (!patchObj.ok) {
+    return patchObj;
+  }
+  if (patchObj.data.text !== undefined && typeof patchObj.data.text !== "string") {
+    return invalidArgument("patch.text must be a string");
+  }
+  if (
+    patchObj.data.priority !== undefined &&
+    typeof patchObj.data.priority !== "number"
+  ) {
+    return invalidArgument("patch.priority must be a number");
+  }
+  if (
+    patchObj.data.degradable !== undefined &&
+    typeof patchObj.data.degradable !== "boolean"
+  ) {
+    return invalidArgument("patch.degradable must be a boolean");
+  }
+
+  return {
+    ok: true,
+    data: {
+      projectId: projectId.data,
+      constraintId: constraintId.data,
+      patch: patchObj.data as ConstraintPatchInput,
+    },
+  };
+}
+
+function parsePolicyDeletePayload(payload: unknown): ServiceResult<{
+  projectId: string;
+  constraintId: string;
+}> {
+  const payloadObj = readPayloadObject(payload);
+  if (!payloadObj.ok) {
+    return payloadObj;
+  }
+
+  const projectId = readStringField({
+    payload: payloadObj.data,
+    field: "projectId",
+  });
+  if (!projectId.ok) {
+    return projectId;
+  }
+  const constraintId = readStringField({
+    payload: payloadObj.data,
+    field: "constraintId",
+  });
+  if (!constraintId.ok) {
+    return constraintId;
+  }
+
+  return {
+    ok: true,
+    data: { projectId: projectId.data, constraintId: constraintId.data },
+  };
+}
+
+function parsePolicySetPayload(payload: unknown): ServiceResult<{
+  projectId: string;
+  constraints: LegacyConstraintsConfig;
+}> {
+  const payloadObj = readPayloadObject(payload);
+  if (!payloadObj.ok) {
+    return payloadObj;
+  }
+
+  const projectId = readStringField({
+    payload: payloadObj.data,
+    field: "projectId",
+  });
+  if (!projectId.ok) {
+    return projectId;
+  }
+
+  if (!isRecord(payloadObj.data.constraints)) {
+    return invalidArgument("constraints must be an object");
+  }
+
+  return {
+    ok: true,
+    data: {
+      projectId: projectId.data,
+      constraints: payloadObj.data.constraints as LegacyConstraintsConfig,
+    },
+  };
+}
+
 /**
  * Validate allowed constraint source values.
  */
@@ -482,8 +708,13 @@ export function registerConstraintsIpcHandlers(deps: {
     "constraints:policy:list",
     async (
       _e,
-      payload: { projectId: string },
+      payload: unknown,
     ): Promise<IpcResponse<{ constraints: ConstraintItem[] }>> => {
+      const parsedPayload = parsePolicyListPayload(payload);
+      if (!parsedPayload.ok) {
+        return parsedPayload;
+      }
+      const { projectId } = parsedPayload.data;
       if (!deps.db) {
         return {
           ok: false,
@@ -491,7 +722,7 @@ export function registerConstraintsIpcHandlers(deps: {
         };
       }
 
-      const projectIdValidation = validateProjectId(payload.projectId);
+      const projectIdValidation = validateProjectId(projectId);
       if (projectIdValidation) {
         return projectIdValidation;
       }
@@ -499,7 +730,7 @@ export function registerConstraintsIpcHandlers(deps: {
       try {
         const rootRes = getProjectRootPath({
           db: deps.db,
-          projectId: payload.projectId,
+          projectId,
         });
         if (!rootRes.ok) {
           return rootRes;
@@ -509,7 +740,7 @@ export function registerConstraintsIpcHandlers(deps: {
         const res = await readConstraintsFile(constraintsPath);
         if (!res.ok) {
           deps.logger.error("constraints_list_failed", {
-            projectId: payload.projectId,
+            projectId,
             code: res.error.code,
           });
           return { ok: false, error: res.error };
@@ -538,8 +769,13 @@ export function registerConstraintsIpcHandlers(deps: {
     "constraints:policy:create",
     async (
       _e,
-      payload: { projectId: string; constraint: ConstraintCreateInput },
+      payload: unknown,
     ): Promise<IpcResponse<{ constraint: ConstraintItem }>> => {
+      const parsedPayload = parsePolicyCreatePayload(payload);
+      if (!parsedPayload.ok) {
+        return parsedPayload;
+      }
+      const { projectId, constraint } = parsedPayload.data;
       if (!deps.db) {
         return {
           ok: false,
@@ -547,12 +783,12 @@ export function registerConstraintsIpcHandlers(deps: {
         };
       }
 
-      const projectIdValidation = validateProjectId(payload.projectId);
+      const projectIdValidation = validateProjectId(projectId);
       if (projectIdValidation) {
         return projectIdValidation;
       }
 
-      const createValidation = validateCreatePayload(payload.constraint);
+      const createValidation = validateCreatePayload(constraint);
       if (!createValidation.ok) {
         return createValidation;
       }
@@ -560,7 +796,7 @@ export function registerConstraintsIpcHandlers(deps: {
       try {
         const rootRes = getProjectRootPath({
           db: deps.db,
-          projectId: payload.projectId,
+          projectId,
         });
         if (!rootRes.ok) {
           return rootRes;
@@ -610,7 +846,7 @@ export function registerConstraintsIpcHandlers(deps: {
         }
 
         deps.logger.info("constraints_created", {
-          projectId: payload.projectId,
+          projectId,
           constraintId: created.id,
           source: created.source,
           priority: created.priority,
@@ -634,12 +870,13 @@ export function registerConstraintsIpcHandlers(deps: {
     "constraints:policy:update",
     async (
       _e,
-      payload: {
-        projectId: string;
-        constraintId: string;
-        patch: ConstraintPatchInput;
-      },
+      payload: unknown,
     ): Promise<IpcResponse<{ constraint: ConstraintItem }>> => {
+      const parsedPayload = parsePolicyUpdatePayload(payload);
+      if (!parsedPayload.ok) {
+        return parsedPayload;
+      }
+      const { projectId, constraintId, patch } = parsedPayload.data;
       if (!deps.db) {
         return {
           ok: false,
@@ -647,19 +884,19 @@ export function registerConstraintsIpcHandlers(deps: {
         };
       }
 
-      const projectIdValidation = validateProjectId(payload.projectId);
+      const projectIdValidation = validateProjectId(projectId);
       if (projectIdValidation) {
         return projectIdValidation;
       }
 
-      if (payload.constraintId.trim().length === 0) {
+      if (constraintId.trim().length === 0) {
         return ipcError(
           "CONSTRAINT_VALIDATION_ERROR",
           "constraintId is required",
         );
       }
 
-      const patchValidation = validatePatchPayload(payload.patch);
+      const patchValidation = validatePatchPayload(patch);
       if (!patchValidation.ok) {
         return patchValidation;
       }
@@ -667,7 +904,7 @@ export function registerConstraintsIpcHandlers(deps: {
       try {
         const rootRes = getProjectRootPath({
           db: deps.db,
-          projectId: payload.projectId,
+          projectId,
         });
         if (!rootRes.ok) {
           return rootRes;
@@ -685,7 +922,7 @@ export function registerConstraintsIpcHandlers(deps: {
         }
 
         const index = readRes.data.items.findIndex(
-          (item) => item.id === payload.constraintId,
+          (item) => item.id === constraintId,
         );
         if (index < 0) {
           return ipcError("CONSTRAINT_NOT_FOUND", "Constraint not found");
@@ -739,7 +976,7 @@ export function registerConstraintsIpcHandlers(deps: {
         }
 
         deps.logger.info("constraints_updated", {
-          projectId: payload.projectId,
+          projectId,
           constraintId: updated.id,
         });
 
@@ -761,8 +998,13 @@ export function registerConstraintsIpcHandlers(deps: {
     "constraints:policy:delete",
     async (
       _e,
-      payload: { projectId: string; constraintId: string },
+      payload: unknown,
     ): Promise<IpcResponse<{ deletedConstraintId: string }>> => {
+      const parsedPayload = parsePolicyDeletePayload(payload);
+      if (!parsedPayload.ok) {
+        return parsedPayload;
+      }
+      const { projectId, constraintId } = parsedPayload.data;
       if (!deps.db) {
         return {
           ok: false,
@@ -770,12 +1012,12 @@ export function registerConstraintsIpcHandlers(deps: {
         };
       }
 
-      const projectIdValidation = validateProjectId(payload.projectId);
+      const projectIdValidation = validateProjectId(projectId);
       if (projectIdValidation) {
         return projectIdValidation;
       }
 
-      if (payload.constraintId.trim().length === 0) {
+      if (constraintId.trim().length === 0) {
         return ipcError(
           "CONSTRAINT_VALIDATION_ERROR",
           "constraintId is required",
@@ -785,7 +1027,7 @@ export function registerConstraintsIpcHandlers(deps: {
       try {
         const rootRes = getProjectRootPath({
           db: deps.db,
-          projectId: payload.projectId,
+          projectId,
         });
         if (!rootRes.ok) {
           return rootRes;
@@ -803,7 +1045,7 @@ export function registerConstraintsIpcHandlers(deps: {
         }
 
         const current = readRes.data.items.find(
-          (item) => item.id === payload.constraintId,
+          (item) => item.id === constraintId,
         );
         if (!current) {
           return ipcError("CONSTRAINT_NOT_FOUND", "Constraint not found");
@@ -821,7 +1063,7 @@ export function registerConstraintsIpcHandlers(deps: {
           constraints: {
             version: 2,
             items: readRes.data.items.filter(
-              (item) => item.id !== payload.constraintId,
+              (item) => item.id !== constraintId,
             ),
           },
         });
@@ -830,13 +1072,13 @@ export function registerConstraintsIpcHandlers(deps: {
         }
 
         deps.logger.info("constraints_deleted", {
-          projectId: payload.projectId,
-          constraintId: payload.constraintId,
+          projectId,
+          constraintId,
         });
 
         return {
           ok: true,
-          data: { deletedConstraintId: payload.constraintId },
+          data: { deletedConstraintId: constraintId },
         };
       } catch (error) {
         deps.logger.error("constraints_delete_unhandled", {
@@ -856,8 +1098,13 @@ export function registerConstraintsIpcHandlers(deps: {
     "constraints:policy:get",
     async (
       _e,
-      payload: { projectId: string },
+      payload: unknown,
     ): Promise<IpcResponse<{ constraints: LegacyConstraintsConfig }>> => {
+      const parsedPayload = parsePolicyListPayload(payload);
+      if (!parsedPayload.ok) {
+        return parsedPayload;
+      }
+      const { projectId } = parsedPayload.data;
       if (!deps.db) {
         return {
           ok: false,
@@ -865,7 +1112,7 @@ export function registerConstraintsIpcHandlers(deps: {
         };
       }
 
-      if (payload.projectId.trim().length === 0) {
+      if (projectId.trim().length === 0) {
         return {
           ok: false,
           error: {
@@ -878,7 +1125,7 @@ export function registerConstraintsIpcHandlers(deps: {
       try {
         const rootRes = getProjectRootPath({
           db: deps.db,
-          projectId: payload.projectId,
+          projectId,
         });
         if (!rootRes.ok) {
           return rootRes;
@@ -888,7 +1135,7 @@ export function registerConstraintsIpcHandlers(deps: {
         const readRes = await readConstraintsFile(constraintsPath);
         if (!readRes.ok) {
           deps.logger.error("constraints_read_failed", {
-            projectId: payload.projectId,
+            projectId,
             code: readRes.error.code,
           });
           return { ok: false, error: toLegacyError(readRes.error) };
@@ -915,21 +1162,26 @@ export function registerConstraintsIpcHandlers(deps: {
     "constraints:policy:set",
     async (
       _e,
-      payload: { projectId: string; constraints: LegacyConstraintsConfig },
+      payload: unknown,
     ): Promise<IpcResponse<{ constraints: LegacyConstraintsConfig }>> => {
+      const parsedPayload = parsePolicySetPayload(payload);
+      if (!parsedPayload.ok) {
+        return parsedPayload;
+      }
+      const { projectId, constraints } = parsedPayload.data;
       if (!deps.db) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (projectId.trim().length === 0) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
         };
       }
-      if (!isLegacyConstraintsConfig(payload.constraints)) {
+      if (!isLegacyConstraintsConfig(constraints)) {
         return {
           ok: false,
           error: {
@@ -942,7 +1194,7 @@ export function registerConstraintsIpcHandlers(deps: {
       try {
         const rootRes = getProjectRootPath({
           db: deps.db,
-          projectId: payload.projectId,
+          projectId,
         });
         if (!rootRes.ok) {
           return rootRes;
@@ -951,32 +1203,32 @@ export function registerConstraintsIpcHandlers(deps: {
         const ensured = ensureCreonowDirStructure(rootRes.data);
         if (!ensured.ok) {
           deps.logger.error("constraints_ensure_creonow_failed", {
-            projectId: payload.projectId,
+            projectId,
             code: ensured.error.code,
           });
           return { ok: false, error: ensured.error };
         }
 
         const constraintsPath = getConstraintsPath(rootRes.data);
-        const store = fromLegacyConstraintsConfig(payload.constraints);
+        const store = fromLegacyConstraintsConfig(constraints);
         const writeRes = await writeConstraintsFile({
           constraintsPath,
           constraints: store,
         });
         if (!writeRes.ok) {
           deps.logger.error("constraints_write_failed", {
-            projectId: payload.projectId,
+            projectId,
             code: writeRes.error.code,
           });
           return { ok: false, error: toLegacyError(writeRes.error) };
         }
 
         deps.logger.info("constraints_updated", {
-          projectId: payload.projectId,
-          items_count: payload.constraints.items.length,
+          projectId,
+          items_count: constraints.items.length,
         });
 
-        return { ok: true, data: { constraints: payload.constraints } };
+        return { ok: true, data: { constraints } };
       } catch (error) {
         deps.logger.error("constraints_set_failed", {
           code: "IO_ERROR",
