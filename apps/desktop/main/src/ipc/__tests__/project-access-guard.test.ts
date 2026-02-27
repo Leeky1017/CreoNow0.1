@@ -108,3 +108,29 @@ function createEvent(webContentsId: number): { sender: { id: number } } {
   assert.equal(knowledgeDenied.ok, false);
   assert.equal(knowledgeDenied.error?.code, "FORBIDDEN");
 }
+
+// Scenario: project-scoped payloads are fail-closed when renderer session is not bound
+{
+  const binding = createProjectSessionBindingRegistry();
+  const logger = createLogger();
+
+  const memoryHarness = createIpcHarness();
+  registerMemoryIpcHandlers({
+    ipcMain: memoryHarness.ipcMain,
+    db: null,
+    logger,
+    projectSessionBinding: binding,
+  });
+
+  const memoryList = memoryHarness.handlers.get("memory:entry:list");
+  assert.ok(memoryList, "expected memory:entry:list handler");
+
+  const unboundDenied = (await memoryList!(createEvent(88), {
+    projectId: "project-rogue",
+  })) as {
+    ok: boolean;
+    error?: { code?: string };
+  };
+  assert.equal(unboundDenied.ok, false);
+  assert.equal(unboundDenied.error?.code, "FORBIDDEN");
+}
