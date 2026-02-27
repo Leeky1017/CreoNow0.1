@@ -372,6 +372,33 @@ function toPublic(raw: AiProxySettingsRaw): AiProxySettings {
   };
 }
 
+type ProxyPatch = Parameters<AiProxySettingsService["update"]>[0]["patch"];
+
+function mergeProxyPatch(patch: ProxyPatch, existing: AiProxySettingsRaw): AiProxySettingsRaw {
+  return normalizeProxySettings({
+    enabled: patch.enabled ?? existing.enabled,
+    providerMode: normalizeProviderMode(patch.providerMode ?? existing.providerMode),
+    openAiCompatible: {
+      baseUrl:
+        typeof patch.openAiCompatibleBaseUrl === "string" ? patch.openAiCompatibleBaseUrl
+        : typeof patch.baseUrl === "string" ? patch.baseUrl
+        : existing.openAiCompatible.baseUrl,
+      apiKey:
+        typeof patch.openAiCompatibleApiKey === "string" ? patch.openAiCompatibleApiKey
+        : typeof patch.apiKey === "string" ? patch.apiKey
+        : existing.openAiCompatible.apiKey,
+    },
+    openAiByok: {
+      baseUrl: typeof patch.openAiByokBaseUrl === "string" ? patch.openAiByokBaseUrl : existing.openAiByok.baseUrl,
+      apiKey: typeof patch.openAiByokApiKey === "string" ? patch.openAiByokApiKey : existing.openAiByok.apiKey,
+    },
+    anthropicByok: {
+      baseUrl: typeof patch.anthropicByokBaseUrl === "string" ? patch.anthropicByokBaseUrl : existing.anthropicByok.baseUrl,
+      apiKey: typeof patch.anthropicByokApiKey === "string" ? patch.anthropicByokApiKey : existing.anthropicByok.apiKey,
+    },
+  });
+}
+
 /**
  * Create an AI proxy settings service backed by the main SQLite DB.
  */
@@ -428,46 +455,7 @@ export function createAiProxySettingsService(deps: {
       return existing;
     }
 
-    const next: AiProxySettingsRaw = normalizeProxySettings({
-      enabled: args.patch.enabled ?? existing.data.enabled,
-      providerMode: normalizeProviderMode(
-        args.patch.providerMode ?? existing.data.providerMode,
-      ),
-      openAiCompatible: {
-        baseUrl:
-          typeof args.patch.openAiCompatibleBaseUrl === "string"
-            ? args.patch.openAiCompatibleBaseUrl
-            : typeof args.patch.baseUrl === "string"
-              ? args.patch.baseUrl
-              : existing.data.openAiCompatible.baseUrl,
-        apiKey:
-          typeof args.patch.openAiCompatibleApiKey === "string"
-            ? args.patch.openAiCompatibleApiKey
-            : typeof args.patch.apiKey === "string"
-              ? args.patch.apiKey
-              : existing.data.openAiCompatible.apiKey,
-      },
-      openAiByok: {
-        baseUrl:
-          typeof args.patch.openAiByokBaseUrl === "string"
-            ? args.patch.openAiByokBaseUrl
-            : existing.data.openAiByok.baseUrl,
-        apiKey:
-          typeof args.patch.openAiByokApiKey === "string"
-            ? args.patch.openAiByokApiKey
-            : existing.data.openAiByok.apiKey,
-      },
-      anthropicByok: {
-        baseUrl:
-          typeof args.patch.anthropicByokBaseUrl === "string"
-            ? args.patch.anthropicByokBaseUrl
-            : existing.data.anthropicByok.baseUrl,
-        apiKey:
-          typeof args.patch.anthropicByokApiKey === "string"
-            ? args.patch.anthropicByokApiKey
-            : existing.data.anthropicByok.apiKey,
-      },
-    });
+    const next: AiProxySettingsRaw = mergeProxyPatch(args.patch, existing.data);
 
     if (next.providerMode !== "openai-compatible") {
       next.enabled = false;
