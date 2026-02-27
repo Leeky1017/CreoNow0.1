@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-02-27 10:35
+更新时间：2026-02-27 11:55
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -19,8 +19,8 @@
 
 | Lane | Change | 依赖 | 状态 |
 |------|--------|------|------|
-| A | `audit-fatal-error-visibility-guardrails`（C2） | 无 | PENDING |
-| B | `audit-degradation-telemetry-escalation`（C3） | 无 | PENDING |
+| A | `audit-fatal-error-visibility-guardrails`（C2） | 无 | DONE |
+| B | `audit-degradation-telemetry-escalation`（C3） | 无 | DONE |
 
 ### Wave 2（P1 + C10，结构收敛）
 
@@ -68,13 +68,13 @@ C15（独立）
 
 ## 波次并行建议
 
-- Wave 1（P0 止血）：C1 已归档；当前剩余 C2/C3 两条独立 lane，可并行推进。
+- Wave 1（P0 止血）：C1/C2/C3 全部完成归档，Wave 1 收口。Wave 2 可启动。
 - Wave 2（P1 结构收敛 + C10）：C4 是关键路径起点；C10 独立并行。
 - Wave 3（P2/P3 质量抬升）：C9/C11 串行（Lane A），C12 依赖 C10（Lane B），C13/C14 串行（Lane C），C15 独立（Lane D）。
 
 ## 进度快照
 
-- 审计整改 Wave 1：C1 已归档完成；C2/C3 已创建 change 目录，状态 PENDING。
+- 审计整改 Wave 1：C1/C2/C3 全部完成，Wave 1 收口。PR #661（C1）、#665（C2）、#666（C3）已合并，Issue #660/#663/#662 已关闭。
 - 审计整改 Wave 2：C4/C5/C6/C7/C8/C10 已创建 change 目录，状态 PENDING。
 - 审计整改 Wave 3：C9/C11/C12/C13/C14/C15 已创建 change 目录，状态 PENDING。
 - 历史归档：ISSUE-606（Workbench lane 4 phases）、ISSUE-617（Backend lane 7 changes）已全部归档。
