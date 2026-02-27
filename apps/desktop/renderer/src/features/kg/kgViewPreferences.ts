@@ -34,7 +34,13 @@ export function loadKgViewPreferences(projectId: string): KgViewPreferences {
     return DEFAULT_PREFERENCES;
   }
 
-  const raw = window.localStorage.getItem(storageKey(projectId));
+  let raw: string | null = null;
+  try {
+    raw = window.localStorage.getItem(storageKey(projectId));
+  } catch {
+    return DEFAULT_PREFERENCES;
+  }
+
   if (!raw) {
     return DEFAULT_PREFERENCES;
   }
@@ -79,7 +85,11 @@ export function saveKgViewPreferences(
   };
 
   if (canUseStorage()) {
-    window.localStorage.setItem(storageKey(projectId), JSON.stringify(next));
+    try {
+      window.localStorage.setItem(storageKey(projectId), JSON.stringify(next));
+    } catch {
+      return current;
+    }
   }
 
   return next;
