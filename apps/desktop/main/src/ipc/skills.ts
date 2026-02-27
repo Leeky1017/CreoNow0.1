@@ -10,6 +10,20 @@ import {
 } from "../services/skills/skillService";
 import { createDbNotReadyError } from "./dbError";
 
+function createInvalidArgument(message: string) {
+  return {
+    ok: false as const,
+    error: {
+      code: "INVALID_ARGUMENT" as const,
+      message,
+    },
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
 /**
  * Register `skill:*` IPC handlers.
  *
@@ -35,6 +49,15 @@ export function registerSkillIpcHandlers(deps: {
           ok: false,
           error: createDbNotReadyError(),
         };
+      }
+      if (!isRecord(payload)) {
+        return createInvalidArgument("payload must be an object");
+      }
+      if (
+        "includeDisabled" in payload &&
+        typeof payload.includeDisabled !== "boolean"
+      ) {
+        return createInvalidArgument("includeDisabled must be a boolean");
       }
 
       const svc = createSkillService({
@@ -62,6 +85,12 @@ export function registerSkillIpcHandlers(deps: {
           ok: false,
           error: createDbNotReadyError(),
         };
+      }
+      if (!isRecord(payload)) {
+        return createInvalidArgument("payload must be an object");
+      }
+      if (typeof payload.id !== "string") {
+        return createInvalidArgument("id must be a string");
       }
 
       const svc = createSkillService({
@@ -96,6 +125,15 @@ export function registerSkillIpcHandlers(deps: {
           error: createDbNotReadyError(),
         };
       }
+      if (!isRecord(payload)) {
+        return createInvalidArgument("payload must be an object");
+      }
+      if (typeof payload.id !== "string") {
+        return createInvalidArgument("id must be a string");
+      }
+      if (typeof payload.content !== "string") {
+        return createInvalidArgument("content must be a string");
+      }
 
       const svc = createSkillService({
         db: deps.db,
@@ -122,6 +160,22 @@ export function registerSkillIpcHandlers(deps: {
           ok: false,
           error: createDbNotReadyError(),
         };
+      }
+      if (!isRecord(payload)) {
+        return createInvalidArgument("payload must be an object");
+      }
+      if (typeof payload.enabled !== "boolean") {
+        return createInvalidArgument("enabled must be a boolean");
+      }
+      if ("id" in payload && payload.id !== undefined && typeof payload.id !== "string") {
+        return createInvalidArgument("id must be a string");
+      }
+      if (
+        "skillId" in payload &&
+        payload.skillId !== undefined &&
+        typeof payload.skillId !== "string"
+      ) {
+        return createInvalidArgument("skillId must be a string");
       }
 
       const svc = createSkillService({
@@ -168,6 +222,9 @@ export function registerSkillIpcHandlers(deps: {
           ok: false,
           error: createDbNotReadyError(),
         };
+      }
+      if (!isRecord(payload)) {
+        return createInvalidArgument("payload must be an object");
       }
 
       const svc = createSkillService({
@@ -218,6 +275,9 @@ export function registerSkillIpcHandlers(deps: {
           ok: false,
           error: createDbNotReadyError(),
         };
+      }
+      if (!isRecord(payload)) {
+        return createInvalidArgument("payload must be an object");
       }
 
       const svc = createSkillService({
@@ -284,6 +344,12 @@ export function registerSkillIpcHandlers(deps: {
           ok: false,
           error: createDbNotReadyError(),
         };
+      }
+      if (!isRecord(payload)) {
+        return createInvalidArgument("payload must be an object");
+      }
+      if (typeof payload.id !== "string") {
+        return createInvalidArgument("id must be a string");
       }
 
       const svc = createSkillService({
