@@ -1,4 +1,5 @@
 const UTF8_BYTES_PER_TOKEN = 4;
+const UTF8_FATAL_DECODER = new TextDecoder("utf-8", { fatal: true });
 
 /**
  * Convert token budget into a byte limit using the shared UTF-8 estimator.
@@ -38,5 +39,13 @@ export function trimUtf8ToTokenBudget(
     return text;
   }
 
-  return new TextDecoder().decode(encoded.slice(0, maxBytes));
+  for (let end = maxBytes; end > 0; end -= 1) {
+    try {
+      return UTF8_FATAL_DECODER.decode(encoded.slice(0, end));
+    } catch {
+      continue;
+    }
+  }
+
+  return "";
 }
