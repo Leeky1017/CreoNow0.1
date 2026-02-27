@@ -46,6 +46,8 @@ type RagRetrievePayload = {
   model?: string;
 };
 
+type RuntimeRecord = Record<string, unknown>;
+
 const DEFAULT_RAG_CONFIG: RagConfig = {
   topK: 5,
   minScore: 0.7,
@@ -91,20 +93,82 @@ function normalizeMaxTokens(value: number, fallback: number): number {
   return Math.floor(value);
 }
 
-function validateRagRetrievePayload(
-  payload: RagRetrievePayload,
+function isRuntimeRecord(value: unknown): value is RuntimeRecord {
+  return typeof value === "object" && value !== null;
+}
+
+function toInvalidPayloadError(message: string): IpcResponse<never> {
+  return {
+    ok: false,
+    error: { code: "INVALID_ARGUMENT", message },
+  };
+}
+
+function validateRagConfigUpdatePayload(
+  payload: unknown,
 ): IpcResponse<never> | null {
+  if (!isRuntimeRecord(payload)) {
+    return toInvalidPayloadError("payload must be an object");
+  }
+
+  if (payload.topK !== undefined && typeof payload.topK !== "number") {
+    return toInvalidPayloadError("topK must be a number");
+  }
+  if (
+    payload.minScore !== undefined &&
+    typeof payload.minScore !== "number"
+  ) {
+    return toInvalidPayloadError("minScore must be a number");
+  }
+  if (
+    payload.maxTokens !== undefined &&
+    typeof payload.maxTokens !== "number"
+  ) {
+    return toInvalidPayloadError("maxTokens must be a number");
+  }
+  if (payload.model !== undefined && typeof payload.model !== "string") {
+    return toInvalidPayloadError("model must be a string");
+  }
+
+  return null;
+}
+
+function validateRagRetrievePayload(
+  payload: unknown,
+): IpcResponse<never> | null {
+  if (!isRuntimeRecord(payload)) {
+    return toInvalidPayloadError("payload must be an object");
+  }
+  if (typeof payload.projectId !== "string") {
+    return toInvalidPayloadError("projectId must be a string");
+  }
+  if (typeof payload.queryText !== "string") {
+    return toInvalidPayloadError("queryText must be a string");
+  }
+  if (payload.topK !== undefined && typeof payload.topK !== "number") {
+    return toInvalidPayloadError("topK must be a number");
+  }
+  if (
+    payload.minScore !== undefined &&
+    typeof payload.minScore !== "number"
+  ) {
+    return toInvalidPayloadError("minScore must be a number");
+  }
+  if (
+    payload.maxTokens !== undefined &&
+    typeof payload.maxTokens !== "number"
+  ) {
+    return toInvalidPayloadError("maxTokens must be a number");
+  }
+  if (payload.model !== undefined && typeof payload.model !== "string") {
+    return toInvalidPayloadError("model must be a string");
+  }
+
   if (payload.projectId.trim().length === 0) {
-    return {
-      ok: false,
-      error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
-    };
+    return toInvalidPayloadError("projectId is required");
   }
   if (payload.queryText.trim().length === 0) {
-    return {
-      ok: false,
-      error: { code: "INVALID_ARGUMENT", message: "queryText is required" },
-    };
+    return toInvalidPayloadError("queryText is required");
   }
   return null;
 }
@@ -219,17 +283,23 @@ export function registerRagIpcHandlers(deps: {
     "rag:config:update",
     async (
       _e,
-      payload: Partial<RagConfig>,
+      payload: unknown,
     ): Promise<IpcResponse<RagConfig>> => {
-      ragConfig.topK = normalizeTopK(payload.topK ?? ragConfig.topK);
+      const payloadError = validateRagConfigUpdatePayload(payload);
+      if (payloadError) {
+        return payloadError;
+      }
+      const validPayload = payload as Partial<RagConfig>;
+
+      ragConfig.topK = normalizeTopK(validPayload.topK ?? ragConfig.topK);
       ragConfig.minScore = normalizeMinScore(
-        payload.minScore ?? ragConfig.minScore,
+        validPayload.minScore ?? ragConfig.minScore,
       );
       ragConfig.maxTokens = normalizeMaxTokens(
-        payload.maxTokens ?? ragConfig.maxTokens,
+        validPayload.maxTokens ?? ragConfig.maxTokens,
         ragConfig.maxTokens,
       );
-      ragConfig.model = payload.model?.trim() || ragConfig.model;
+      ragConfig.model = validPayload.model?.trim() || ragConfig.model;
 
       return {
         ok: true,
@@ -242,7 +312,7 @@ export function registerRagIpcHandlers(deps: {
     "rag:context:retrieve",
     async (
       _e,
-      payload: RagRetrievePayload,
+      payload: unknown,
       signal?: AbortSignal,
     ): Promise<
       IpcResponse<{
@@ -267,16 +337,17 @@ export function registerRagIpcHandlers(deps: {
       if (payloadError) {
         return payloadError;
       }
+      const validPayload = payload as RagRetrievePayload;
 
-      const topK = normalizeTopK(payload.topK ?? ragConfig.topK);
+      const topK = normalizeTopK(validPayload.topK ?? ragConfig.topK);
       const minScore = normalizeMinScore(
-        payload.minScore ?? ragConfig.minScore,
+        validPayload.minScore ?? ragConfig.minScore,
       );
       const maxTokens = normalizeMaxTokens(
-        payload.maxTokens ?? ragConfig.maxTokens,
+        validPayload.maxTokens ?? ragConfig.maxTokens,
         ragConfig.maxTokens,
       );
-      const model = payload.model ?? ragConfig.model;
+      const model = validPayload.model ?? ragConfig.model;
 
       const retrieveWithCurrentConfig = async (
         runtimeSignal?: AbortSignal,
@@ -298,7 +369,7 @@ export function registerRagIpcHandlers(deps: {
 
         const semanticPrepareError = prepareSemanticDocuments({
           db,
-          projectId: payload.projectId,
+          projectId: validPayload.projectId,
           model,
           semanticIndex,
         });
@@ -310,8 +381,8 @@ export function registerRagIpcHandlers(deps: {
         }
 
         const semantic = semanticIndex.search({
-          projectId: payload.projectId,
-          queryText: payload.queryText,
+          projectId: validPayload.projectId,
+          queryText: validPayload.queryText,
           topK,
           minScore,
           model,
@@ -339,8 +410,8 @@ export function registerRagIpcHandlers(deps: {
 
           const fts = createFtsService({ db, logger: deps.logger });
           const ftsRes = fts.searchFulltext({
-            projectId: payload.projectId,
-            query: payload.queryText,
+            projectId: validPayload.projectId,
+            query: validPayload.queryText,
             limit: topK,
           });
           if (!ftsRes.ok) {
@@ -348,12 +419,12 @@ export function registerRagIpcHandlers(deps: {
           }
 
           const crossProjectItem = ftsRes.data.items.find(
-            (item) => item.projectId !== payload.projectId,
+            (item) => item.projectId !== validPayload.projectId,
           );
           if (crossProjectItem) {
             deps.logger.error("rag_project_forbidden_audit", {
               operation: "rag:context:retrieve",
-              requestedProjectId: payload.projectId,
+              requestedProjectId: validPayload.projectId,
               rowProjectId: crossProjectItem.projectId,
               documentId: crossProjectItem.documentId,
             });
@@ -363,7 +434,7 @@ export function registerRagIpcHandlers(deps: {
                 code: "SEARCH_PROJECT_FORBIDDEN",
                 message: "Cross-project rag retrieval is forbidden",
                 details: {
-                  requestedProjectId: payload.projectId,
+                  requestedProjectId: validPayload.projectId,
                   rowProjectId: crossProjectItem.projectId,
                 },
               },
@@ -384,12 +455,12 @@ export function registerRagIpcHandlers(deps: {
           }));
         } else {
           const crossProjectChunk = semantic.data.chunks.find(
-            (chunk) => chunk.projectId !== payload.projectId,
+            (chunk) => chunk.projectId !== validPayload.projectId,
           );
           if (crossProjectChunk) {
             deps.logger.error("rag_project_forbidden_audit", {
               operation: "rag:context:retrieve",
-              requestedProjectId: payload.projectId,
+              requestedProjectId: validPayload.projectId,
               rowProjectId: crossProjectChunk.projectId,
               documentId: crossProjectChunk.documentId,
             });
@@ -399,7 +470,7 @@ export function registerRagIpcHandlers(deps: {
                 code: "SEARCH_PROJECT_FORBIDDEN",
                 message: "Cross-project rag retrieval is forbidden",
                 details: {
-                  requestedProjectId: payload.projectId,
+                  requestedProjectId: validPayload.projectId,
                   rowProjectId: crossProjectChunk.projectId,
                 },
               },
@@ -408,8 +479,8 @@ export function registerRagIpcHandlers(deps: {
 
           const fts = createFtsService({ db, logger: deps.logger });
           const ftsRes = fts.searchFulltext({
-            projectId: payload.projectId,
-            query: payload.queryText,
+            projectId: validPayload.projectId,
+            query: validPayload.queryText,
             limit: topK,
           });
           if (!ftsRes.ok) {
@@ -417,12 +488,12 @@ export function registerRagIpcHandlers(deps: {
           }
 
           const crossProjectItem = ftsRes.data.items.find(
-            (item) => item.projectId !== payload.projectId,
+            (item) => item.projectId !== validPayload.projectId,
           );
           if (crossProjectItem) {
             deps.logger.error("rag_project_forbidden_audit", {
               operation: "rag:context:retrieve",
-              requestedProjectId: payload.projectId,
+              requestedProjectId: validPayload.projectId,
               rowProjectId: crossProjectItem.projectId,
               documentId: crossProjectItem.documentId,
             });
@@ -432,7 +503,7 @@ export function registerRagIpcHandlers(deps: {
                 code: "SEARCH_PROJECT_FORBIDDEN",
                 message: "Cross-project rag retrieval is forbidden",
                 details: {
-                  requestedProjectId: payload.projectId,
+                  requestedProjectId: validPayload.projectId,
                   rowProjectId: crossProjectItem.projectId,
                 },
               },
@@ -465,8 +536,8 @@ export function registerRagIpcHandlers(deps: {
           });
 
           deps.logger.info("rag_retrieve_complete", {
-            projectId: payload.projectId,
-            queryLength: payload.queryText.trim().length,
+            projectId: validPayload.projectId,
+            queryLength: validPayload.queryText.trim().length,
             topK,
             minScore,
             maxTokens,
@@ -513,8 +584,8 @@ export function registerRagIpcHandlers(deps: {
         }
 
         deps.logger.info("rag_retrieve_complete", {
-          projectId: payload.projectId,
-          queryLength: payload.queryText.trim().length,
+          projectId: validPayload.projectId,
+          queryLength: validPayload.queryText.trim().length,
           topK,
           minScore,
           maxTokens,
