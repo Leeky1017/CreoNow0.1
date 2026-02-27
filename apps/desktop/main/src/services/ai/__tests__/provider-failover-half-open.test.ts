@@ -72,15 +72,19 @@ try {
     rateLimitPerMinute: 1_000,
     getProxySettings: () => ({
       enabled: false,
-      baseUrl: null,
-      apiKey: null,
       providerMode: "openai-byok",
-      openAiCompatibleBaseUrl: null,
-      openAiCompatibleApiKey: null,
-      openAiByokBaseUrl: primaryBaseUrl,
-      openAiByokApiKey: "sk-primary",
-      anthropicByokBaseUrl: backupBaseUrl,
-      anthropicByokApiKey: "sk-backup",
+      openAiCompatible: {
+        baseUrl: null,
+        apiKey: null,
+      },
+      openAiByok: {
+        baseUrl: primaryBaseUrl,
+        apiKey: "sk-primary",
+      },
+      anthropicByok: {
+        baseUrl: backupBaseUrl,
+        apiKey: "sk-backup",
+      },
     }),
   });
 

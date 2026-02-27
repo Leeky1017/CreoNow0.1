@@ -13,18 +13,10 @@ type ProviderCredentials = {
 
 export type ProxySettings = {
   enabled: boolean;
-  baseUrl: string | null;
-  apiKey: string | null;
   providerMode?: ProviderMode;
   openAiCompatible?: ProviderCredentials;
   openAiByok?: ProviderCredentials;
   anthropicByok?: ProviderCredentials;
-  openAiCompatibleBaseUrl?: string | null;
-  openAiCompatibleApiKey?: string | null;
-  openAiByokBaseUrl?: string | null;
-  openAiByokApiKey?: string | null;
-  anthropicByokBaseUrl?: string | null;
-  anthropicByokApiKey?: string | null;
 };
 
 export type ProviderConfig = {
@@ -77,43 +69,19 @@ function resolveSettingsProviderCredentials(args: {
   provider: AiProvider;
   credentials: ProviderCredentials;
 } {
-  const openAiCompatible: ProviderCredentials = {
-    baseUrl:
-      args.settings.openAiCompatible?.baseUrl ??
-      args.settings.openAiCompatibleBaseUrl ??
-      args.settings.baseUrl ??
-      null,
-    apiKey:
-      args.settings.openAiCompatible?.apiKey ??
-      args.settings.openAiCompatibleApiKey ??
-      args.settings.apiKey ??
-      null,
+  const openAiCompatible: ProviderCredentials = args.settings.openAiCompatible ?? {
+    baseUrl: null,
+    apiKey: null,
   };
 
-  const openAiByok: ProviderCredentials = {
-    baseUrl:
-      args.settings.openAiByok?.baseUrl ??
-      args.settings.openAiByokBaseUrl ??
-      args.settings.baseUrl ??
-      null,
-    apiKey:
-      args.settings.openAiByok?.apiKey ??
-      args.settings.openAiByokApiKey ??
-      args.settings.apiKey ??
-      null,
+  const openAiByok: ProviderCredentials = args.settings.openAiByok ?? {
+    baseUrl: null,
+    apiKey: null,
   };
 
-  const anthropicByok: ProviderCredentials = {
-    baseUrl:
-      args.settings.anthropicByok?.baseUrl ??
-      args.settings.anthropicByokBaseUrl ??
-      args.settings.baseUrl ??
-      null,
-    apiKey:
-      args.settings.anthropicByok?.apiKey ??
-      args.settings.anthropicByokApiKey ??
-      args.settings.apiKey ??
-      null,
+  const anthropicByok: ProviderCredentials = args.settings.anthropicByok ?? {
+    baseUrl: null,
+    apiKey: null,
   };
 
   if (args.mode === "anthropic-byok") {
@@ -174,41 +142,17 @@ function resolveSettingsBackupProvider(args: {
   timeoutMs: number;
   env: NodeJS.ProcessEnv;
 }): ProviderConfig | null {
-  const openAiCompatible: ProviderCredentials = {
-    baseUrl:
-      args.settings.openAiCompatible?.baseUrl ??
-      args.settings.openAiCompatibleBaseUrl ??
-      args.settings.baseUrl ??
-      null,
-    apiKey:
-      args.settings.openAiCompatible?.apiKey ??
-      args.settings.openAiCompatibleApiKey ??
-      args.settings.apiKey ??
-      null,
+  const openAiCompatible: ProviderCredentials = args.settings.openAiCompatible ?? {
+    baseUrl: null,
+    apiKey: null,
   };
-  const openAiByok: ProviderCredentials = {
-    baseUrl:
-      args.settings.openAiByok?.baseUrl ??
-      args.settings.openAiByokBaseUrl ??
-      args.settings.baseUrl ??
-      null,
-    apiKey:
-      args.settings.openAiByok?.apiKey ??
-      args.settings.openAiByokApiKey ??
-      args.settings.apiKey ??
-      null,
+  const openAiByok: ProviderCredentials = args.settings.openAiByok ?? {
+    baseUrl: null,
+    apiKey: null,
   };
-  const anthropicByok: ProviderCredentials = {
-    baseUrl:
-      args.settings.anthropicByok?.baseUrl ??
-      args.settings.anthropicByokBaseUrl ??
-      args.settings.baseUrl ??
-      null,
-    apiKey:
-      args.settings.anthropicByok?.apiKey ??
-      args.settings.anthropicByokApiKey ??
-      args.settings.apiKey ??
-      null,
+  const anthropicByok: ProviderCredentials = args.settings.anthropicByok ?? {
+    baseUrl: null,
+    apiKey: null,
   };
 
   const candidates: ProviderConfig[] = [];

@@ -50,11 +50,11 @@ try {
     sleep: async () => {},
     getProxySettings: () => ({
       enabled: false,
-      baseUrl: null,
-      apiKey: null,
       providerMode: "openai-byok",
-      openAiByokBaseUrl: "https://api.openai.com",
-      openAiByokApiKey: "sk-byok",
+      openAiByok: {
+        baseUrl: "https://api.openai.com",
+        apiKey: "sk-byok",
+      },
     }),
   });
 

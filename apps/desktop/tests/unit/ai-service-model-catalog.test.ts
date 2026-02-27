@@ -190,8 +190,11 @@ async function withCustomServer(args: {
       env: {},
       getProxySettings: () => ({
         enabled: true,
-        baseUrl,
-        apiKey: "proxy-key",
+        providerMode: "openai-compatible",
+        openAiCompatible: {
+          baseUrl,
+          apiKey: "proxy-key",
+        },
       }),
     });
 

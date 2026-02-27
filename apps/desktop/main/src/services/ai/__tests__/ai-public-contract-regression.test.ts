@@ -50,11 +50,11 @@ try {
     rateLimitPerMinute: 1_000,
     getProxySettings: () => ({
       enabled: false,
-      baseUrl: null,
-      apiKey: null,
       providerMode: "openai-byok",
-      openAiByokBaseUrl: "https://api.openai.com",
-      openAiByokApiKey: "sk-contract",
+      openAiByok: {
+        baseUrl: "https://api.openai.com",
+        apiKey: "sk-contract",
+      },
     }),
   });
 

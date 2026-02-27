@@ -19,17 +19,17 @@ export type AiProxySettings = {
   anthropicByokApiKeyConfigured: boolean;
 };
 
-export type AiProxySettingsRaw = {
-  enabled: boolean;
+type ProviderProxyCredentials = {
   baseUrl: string | null;
   apiKey: string | null;
+};
+
+export type AiProxySettingsRaw = {
+  enabled: boolean;
   providerMode: "openai-compatible" | "openai-byok" | "anthropic-byok";
-  openAiCompatibleBaseUrl: string | null;
-  openAiCompatibleApiKey: string | null;
-  openAiByokBaseUrl: string | null;
-  openAiByokApiKey: string | null;
-  anthropicByokBaseUrl: string | null;
-  anthropicByokApiKey: string | null;
+  openAiCompatible: ProviderProxyCredentials;
+  openAiByok: ProviderProxyCredentials;
+  anthropicByok: ProviderProxyCredentials;
 };
 
 export type AiProxySettingsService = {
@@ -225,6 +225,59 @@ function normalizeProviderMode(
   return "openai-compatible";
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function normalizeProviderCredentials(args: {
+  nested: unknown;
+  flatBaseUrl?: unknown;
+  flatApiKey?: unknown;
+  fallbackBaseUrl?: unknown;
+  fallbackApiKey?: unknown;
+}): ProviderProxyCredentials {
+  const nested = isRecord(args.nested) ? args.nested : null;
+  return {
+    baseUrl: normalizeBaseUrl(
+      nested?.baseUrl ?? args.flatBaseUrl ?? args.fallbackBaseUrl,
+    ),
+    apiKey: normalizeApiKey(
+      nested?.apiKey ?? args.flatApiKey ?? args.fallbackApiKey,
+    ),
+  };
+}
+
+export function normalizeProxySettings(raw: unknown): AiProxySettingsRaw {
+  const data = isRecord(raw) ? raw : {};
+
+  const legacyBaseUrl = normalizeBaseUrl(data.baseUrl);
+  const legacyApiKey = normalizeApiKey(data.apiKey);
+
+  return {
+    enabled: data.enabled === true,
+    providerMode: normalizeProviderMode(data.providerMode),
+    openAiCompatible: normalizeProviderCredentials({
+      nested: data.openAiCompatible,
+      flatBaseUrl: data.openAiCompatibleBaseUrl,
+      flatApiKey: data.openAiCompatibleApiKey,
+      fallbackBaseUrl: legacyBaseUrl,
+      fallbackApiKey: legacyApiKey,
+    }),
+    openAiByok: normalizeProviderCredentials({
+      nested: data.openAiByok,
+      flatBaseUrl: data.openAiByokBaseUrl,
+      flatApiKey: data.openAiByokApiKey,
+      fallbackBaseUrl: legacyBaseUrl,
+      fallbackApiKey: legacyApiKey,
+    }),
+    anthropicByok: normalizeProviderCredentials({
+      nested: data.anthropicByok,
+      flatBaseUrl: data.anthropicByokBaseUrl,
+      flatApiKey: data.anthropicByokApiKey,
+    }),
+  };
+}
+
 function joinApiPath(args: { baseUrl: string; endpointPath: string }): string {
   const base = new URL(args.baseUrl);
   const endpoint = args.endpointPath.startsWith("/")
@@ -262,37 +315,30 @@ function readRawSettings(args: {
   const anthropicByokBaseUrl = readSetting(args.db, KEY_ANTH_BYOK_BASE_URL);
   const anthropicByokApiKey = readSetting(args.db, KEY_ANTH_BYOK_API_KEY);
 
-  const normalizedLegacyBaseUrl = normalizeBaseUrl(baseUrl);
-  const normalizedLegacyApiKey = decryptApiKey({
-    value: apiKey,
-    secretStorage: args.secretStorage,
-    logger: args.logger,
-    field: KEY_API_KEY,
-  });
-
-  return {
+  return normalizeProxySettings({
     enabled: enabled === true,
-    baseUrl: normalizedLegacyBaseUrl,
-    apiKey: normalizedLegacyApiKey,
-    providerMode: normalizeProviderMode(providerMode),
-    openAiCompatibleBaseUrl:
-      normalizeBaseUrl(openAiCompatibleBaseUrl) ?? normalizedLegacyBaseUrl,
-    openAiCompatibleApiKey:
-      decryptApiKey({
-        value: openAiCompatibleApiKey,
-        secretStorage: args.secretStorage,
-        logger: args.logger,
-        field: KEY_OA_COMPAT_API_KEY,
-      }) ?? normalizedLegacyApiKey,
-    openAiByokBaseUrl:
-      normalizeBaseUrl(openAiByokBaseUrl) ?? normalizedLegacyBaseUrl,
-    openAiByokApiKey:
-      decryptApiKey({
-        value: openAiByokApiKey,
-        secretStorage: args.secretStorage,
-        logger: args.logger,
-        field: KEY_OA_BYOK_API_KEY,
-      }) ?? normalizedLegacyApiKey,
+    providerMode,
+    baseUrl: normalizeBaseUrl(baseUrl),
+    apiKey: decryptApiKey({
+      value: apiKey,
+      secretStorage: args.secretStorage,
+      logger: args.logger,
+      field: KEY_API_KEY,
+    }),
+    openAiCompatibleBaseUrl: normalizeBaseUrl(openAiCompatibleBaseUrl),
+    openAiCompatibleApiKey: decryptApiKey({
+      value: openAiCompatibleApiKey,
+      secretStorage: args.secretStorage,
+      logger: args.logger,
+      field: KEY_OA_COMPAT_API_KEY,
+    }),
+    openAiByokBaseUrl: normalizeBaseUrl(openAiByokBaseUrl),
+    openAiByokApiKey: decryptApiKey({
+      value: openAiByokApiKey,
+      secretStorage: args.secretStorage,
+      logger: args.logger,
+      field: KEY_OA_BYOK_API_KEY,
+    }),
     anthropicByokBaseUrl: normalizeBaseUrl(anthropicByokBaseUrl),
     anthropicByokApiKey: decryptApiKey({
       value: anthropicByokApiKey,
@@ -300,27 +346,29 @@ function readRawSettings(args: {
       logger: args.logger,
       field: KEY_ANTH_BYOK_API_KEY,
     }),
-  };
+  });
 }
 
 function toPublic(raw: AiProxySettingsRaw): AiProxySettings {
   return {
     enabled: raw.enabled,
-    baseUrl: raw.baseUrl ?? "",
-    apiKeyConfigured: typeof raw.apiKey === "string" && raw.apiKey.length > 0,
+    baseUrl: raw.openAiCompatible.baseUrl ?? "",
+    apiKeyConfigured:
+      typeof raw.openAiCompatible.apiKey === "string" &&
+      raw.openAiCompatible.apiKey.length > 0,
     providerMode: raw.providerMode,
-    openAiCompatibleBaseUrl: raw.openAiCompatibleBaseUrl ?? "",
+    openAiCompatibleBaseUrl: raw.openAiCompatible.baseUrl ?? "",
     openAiCompatibleApiKeyConfigured:
-      typeof raw.openAiCompatibleApiKey === "string" &&
-      raw.openAiCompatibleApiKey.length > 0,
-    openAiByokBaseUrl: raw.openAiByokBaseUrl ?? "",
+      typeof raw.openAiCompatible.apiKey === "string" &&
+      raw.openAiCompatible.apiKey.length > 0,
+    openAiByokBaseUrl: raw.openAiByok.baseUrl ?? "",
     openAiByokApiKeyConfigured:
-      typeof raw.openAiByokApiKey === "string" &&
-      raw.openAiByokApiKey.length > 0,
-    anthropicByokBaseUrl: raw.anthropicByokBaseUrl ?? "",
+      typeof raw.openAiByok.apiKey === "string" &&
+      raw.openAiByok.apiKey.length > 0,
+    anthropicByokBaseUrl: raw.anthropicByok.baseUrl ?? "",
     anthropicByokApiKeyConfigured:
-      typeof raw.anthropicByokApiKey === "string" &&
-      raw.anthropicByokApiKey.length > 0,
+      typeof raw.anthropicByok.apiKey === "string" &&
+      raw.anthropicByok.apiKey.length > 0,
   };
 }
 
@@ -380,50 +428,52 @@ export function createAiProxySettingsService(deps: {
       return existing;
     }
 
-    const next: AiProxySettingsRaw = {
+    const next: AiProxySettingsRaw = normalizeProxySettings({
       enabled: args.patch.enabled ?? existing.data.enabled,
-      baseUrl:
-        typeof args.patch.baseUrl === "string"
-          ? normalizeBaseUrl(args.patch.baseUrl)
-          : existing.data.baseUrl,
-      apiKey:
-        typeof args.patch.apiKey === "string"
-          ? normalizeApiKey(args.patch.apiKey)
-          : existing.data.apiKey,
       providerMode: normalizeProviderMode(
         args.patch.providerMode ?? existing.data.providerMode,
       ),
-      openAiCompatibleBaseUrl:
-        typeof args.patch.openAiCompatibleBaseUrl === "string"
-          ? normalizeBaseUrl(args.patch.openAiCompatibleBaseUrl)
-          : existing.data.openAiCompatibleBaseUrl,
-      openAiCompatibleApiKey:
-        typeof args.patch.openAiCompatibleApiKey === "string"
-          ? normalizeApiKey(args.patch.openAiCompatibleApiKey)
-          : existing.data.openAiCompatibleApiKey,
-      openAiByokBaseUrl:
-        typeof args.patch.openAiByokBaseUrl === "string"
-          ? normalizeBaseUrl(args.patch.openAiByokBaseUrl)
-          : existing.data.openAiByokBaseUrl,
-      openAiByokApiKey:
-        typeof args.patch.openAiByokApiKey === "string"
-          ? normalizeApiKey(args.patch.openAiByokApiKey)
-          : existing.data.openAiByokApiKey,
-      anthropicByokBaseUrl:
-        typeof args.patch.anthropicByokBaseUrl === "string"
-          ? normalizeBaseUrl(args.patch.anthropicByokBaseUrl)
-          : existing.data.anthropicByokBaseUrl,
-      anthropicByokApiKey:
-        typeof args.patch.anthropicByokApiKey === "string"
-          ? normalizeApiKey(args.patch.anthropicByokApiKey)
-          : existing.data.anthropicByokApiKey,
-    };
+      openAiCompatible: {
+        baseUrl:
+          typeof args.patch.openAiCompatibleBaseUrl === "string"
+            ? args.patch.openAiCompatibleBaseUrl
+            : typeof args.patch.baseUrl === "string"
+              ? args.patch.baseUrl
+              : existing.data.openAiCompatible.baseUrl,
+        apiKey:
+          typeof args.patch.openAiCompatibleApiKey === "string"
+            ? args.patch.openAiCompatibleApiKey
+            : typeof args.patch.apiKey === "string"
+              ? args.patch.apiKey
+              : existing.data.openAiCompatible.apiKey,
+      },
+      openAiByok: {
+        baseUrl:
+          typeof args.patch.openAiByokBaseUrl === "string"
+            ? args.patch.openAiByokBaseUrl
+            : existing.data.openAiByok.baseUrl,
+        apiKey:
+          typeof args.patch.openAiByokApiKey === "string"
+            ? args.patch.openAiByokApiKey
+            : existing.data.openAiByok.apiKey,
+      },
+      anthropicByok: {
+        baseUrl:
+          typeof args.patch.anthropicByokBaseUrl === "string"
+            ? args.patch.anthropicByokBaseUrl
+            : existing.data.anthropicByok.baseUrl,
+        apiKey:
+          typeof args.patch.anthropicByokApiKey === "string"
+            ? args.patch.anthropicByokApiKey
+            : existing.data.anthropicByok.apiKey,
+      },
+    });
 
     if (next.providerMode !== "openai-compatible") {
       next.enabled = false;
     }
 
-    if (next.enabled && !next.baseUrl) {
+    if (next.enabled && !next.openAiCompatible.baseUrl) {
       return ipcError(
         "INVALID_ARGUMENT",
         "proxy baseUrl is required when proxy enabled",
@@ -432,16 +482,8 @@ export function createAiProxySettingsService(deps: {
 
     const ts = nowTs();
 
-    const encryptedLegacyKey = encryptApiKey({
-      value: next.apiKey,
-      secretStorage: deps.secretStorage,
-    });
-    if (!encryptedLegacyKey.ok) {
-      return encryptedLegacyKey;
-    }
-
     const encryptedOpenAiCompatibleKey = encryptApiKey({
-      value: next.openAiCompatibleApiKey,
+      value: next.openAiCompatible.apiKey,
       secretStorage: deps.secretStorage,
     });
     if (!encryptedOpenAiCompatibleKey.ok) {
@@ -449,7 +491,7 @@ export function createAiProxySettingsService(deps: {
     }
 
     const encryptedOpenAiByokKey = encryptApiKey({
-      value: next.openAiByokApiKey,
+      value: next.openAiByok.apiKey,
       secretStorage: deps.secretStorage,
     });
     if (!encryptedOpenAiByokKey.ok) {
@@ -457,7 +499,7 @@ export function createAiProxySettingsService(deps: {
     }
 
     const encryptedAnthropicByokKey = encryptApiKey({
-      value: next.anthropicByokApiKey,
+      value: next.anthropicByok.apiKey,
       secretStorage: deps.secretStorage,
     });
     if (!encryptedAnthropicByokKey.ok) {
@@ -472,24 +514,24 @@ export function createAiProxySettingsService(deps: {
         ) {
           writeSetting(deps.db, KEY_ENABLED, next.enabled, ts);
         }
-        if (typeof args.patch.baseUrl === "string") {
-          writeSetting(deps.db, KEY_BASE_URL, next.baseUrl ?? "", ts);
-        }
-        if (typeof args.patch.apiKey === "string") {
-          writeSetting(deps.db, KEY_API_KEY, encryptedLegacyKey.data ?? "", ts);
-        }
         if (typeof args.patch.providerMode === "string") {
           writeSetting(deps.db, KEY_PROVIDER_MODE, next.providerMode, ts);
         }
-        if (typeof args.patch.openAiCompatibleBaseUrl === "string") {
+        if (
+          typeof args.patch.baseUrl === "string" ||
+          typeof args.patch.openAiCompatibleBaseUrl === "string"
+        ) {
           writeSetting(
             deps.db,
             KEY_OA_COMPAT_BASE_URL,
-            next.openAiCompatibleBaseUrl ?? "",
+            next.openAiCompatible.baseUrl ?? "",
             ts,
           );
         }
-        if (typeof args.patch.openAiCompatibleApiKey === "string") {
+        if (
+          typeof args.patch.apiKey === "string" ||
+          typeof args.patch.openAiCompatibleApiKey === "string"
+        ) {
           writeSetting(
             deps.db,
             KEY_OA_COMPAT_API_KEY,
@@ -501,7 +543,7 @@ export function createAiProxySettingsService(deps: {
           writeSetting(
             deps.db,
             KEY_OA_BYOK_BASE_URL,
-            next.openAiByokBaseUrl ?? "",
+            next.openAiByok.baseUrl ?? "",
             ts,
           );
         }
@@ -517,7 +559,7 @@ export function createAiProxySettingsService(deps: {
           writeSetting(
             deps.db,
             KEY_ANTH_BYOK_BASE_URL,
-            next.anthropicByokBaseUrl ?? "",
+            next.anthropicByok.baseUrl ?? "",
             ts,
           );
         }
@@ -534,8 +576,8 @@ export function createAiProxySettingsService(deps: {
       deps.logger.info("ai_proxy_settings_updated", {
         enabled: next.enabled,
         providerMode: next.providerMode,
-        baseUrlConfigured: typeof next.baseUrl === "string",
-        apiKeyConfigured: typeof next.apiKey === "string",
+        baseUrlConfigured: typeof next.openAiCompatible.baseUrl === "string",
+        apiKeyConfigured: typeof next.openAiCompatible.apiKey === "string",
       });
 
       return { ok: true, data: toPublic(next) };
@@ -575,16 +617,16 @@ export function createAiProxySettingsService(deps: {
     const mode = raw.data.providerMode;
     const targetBaseUrl =
       mode === "anthropic-byok"
-        ? raw.data.anthropicByokBaseUrl
+        ? raw.data.anthropicByok.baseUrl
         : mode === "openai-byok"
-          ? raw.data.openAiByokBaseUrl
-          : raw.data.openAiCompatibleBaseUrl;
+          ? raw.data.openAiByok.baseUrl
+          : raw.data.openAiCompatible.baseUrl;
     const targetApiKey =
       mode === "anthropic-byok"
-        ? raw.data.anthropicByokApiKey
+        ? raw.data.anthropicByok.apiKey
         : mode === "openai-byok"
-          ? raw.data.openAiByokApiKey
-          : raw.data.openAiCompatibleApiKey;
+          ? raw.data.openAiByok.apiKey
+          : raw.data.openAiCompatible.apiKey;
 
     if (!targetBaseUrl) {
       return {

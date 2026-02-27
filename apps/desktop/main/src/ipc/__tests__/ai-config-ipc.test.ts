@@ -321,7 +321,7 @@ async function main(): Promise<void> {
     if (!raw.ok) {
       return;
     }
-    assert.equal(raw.data.openAiByokApiKey, null);
+    assert.equal(raw.data.openAiByok.apiKey, null);
   });
 
   await runScenario(

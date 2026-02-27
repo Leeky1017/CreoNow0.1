@@ -29,11 +29,11 @@ function createLogger(): Logger {
       rateLimitPerMinute: 1_000,
       getProxySettings: () => ({
         enabled: false,
-        baseUrl: null,
-        apiKey: null,
         providerMode: "openai-byok",
-        openAiByokBaseUrl: "https://api.openai.com",
-        openAiByokApiKey: null,
+        openAiByok: {
+          baseUrl: "https://api.openai.com",
+          apiKey: null,
+        },
       }),
     });
 
