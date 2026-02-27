@@ -30,6 +30,23 @@ describe("recentItems", () => {
     expect(ids[ids.length - 1]).toBe("command-3");
   });
 
+
+  it("should normalize command id whitespace to prevent duplicated history records", () => {
+    recordRecentCommandId("command-a");
+    recordRecentCommandId("  command-a  ");
+
+    expect(readRecentCommandIds()).toEqual(["command-a"]);
+  });
+
+  it("should ignore blank ids and sanitize polluted storage payload", () => {
+    window.localStorage.setItem(
+      "creonow.commandPalette.recent",
+      JSON.stringify(["   ", " command-a ", "command-a", "", 1, null]),
+    );
+
+    expect(readRecentCommandIds()).toEqual(["command-a"]);
+  });
+
   it("should return empty list when storage payload is invalid", () => {
     window.localStorage.setItem("creonow.commandPalette.recent", "{bad-json");
 

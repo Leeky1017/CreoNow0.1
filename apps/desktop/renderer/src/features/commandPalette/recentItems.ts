@@ -2,6 +2,15 @@ const STORAGE_KEY = "creonow.commandPalette.recent";
 
 export const MAX_RECENT_COMMANDS = 20;
 
+function normalizeCommandId(value: unknown): string | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const normalized = value.trim();
+  return normalized.length > 0 ? normalized : null;
+}
+
 function resolveStorage(provided?: Storage): Storage | null {
   if (provided) {
     return provided;
@@ -36,9 +45,9 @@ export function readRecentCommandIds(args?: {
     if (!Array.isArray(parsed)) {
       return [];
     }
-    const ids = parsed.filter(
-      (item): item is string => typeof item === "string",
-    );
+    const ids = parsed
+      .map((item) => normalizeCommandId(item))
+      .filter((item): item is string => item !== null);
     const uniqueIds = Array.from(new Set(ids));
     const limit = Math.max(0, args?.limit ?? MAX_RECENT_COMMANDS);
     return uniqueIds.slice(0, limit);
@@ -58,15 +67,18 @@ export function recordRecentCommandId(
   args?: { storage?: Storage; limit?: number },
 ): void {
   const storage = resolveStorage(args?.storage);
-  if (!storage || !commandId.trim()) {
+  const normalizedCommandId = normalizeCommandId(commandId);
+  if (!storage || !normalizedCommandId) {
     return;
   }
 
   try {
     const limit = Math.max(1, args?.limit ?? MAX_RECENT_COMMANDS);
     const existing = readRecentCommandIds({ storage, limit });
-    const withoutCurrent = existing.filter((item) => item !== commandId);
-    const next = [commandId, ...withoutCurrent].slice(0, limit);
+    const withoutCurrent = existing.filter(
+      (item) => item !== normalizedCommandId,
+    );
+    const next = [normalizedCommandId, ...withoutCurrent].slice(0, limit);
     storage.setItem(STORAGE_KEY, JSON.stringify(next));
   } catch (error) {
     console.error("COMMAND_PALETTE_RECENT_WRITE_FAILED", error);
