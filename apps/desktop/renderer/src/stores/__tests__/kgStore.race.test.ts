@@ -91,7 +91,7 @@ describe("kgStore race scenarios", () => {
     );
     await secondBootstrap;
 
-    expect(store.getState().entities.map((entity) => entity.entityId)).toEqual([
+    expect(store.getState().entities.map((entity) => entity.id)).toEqual([
       "entity-b",
     ]);
 
@@ -104,7 +104,7 @@ describe("kgStore race scenarios", () => {
 
     const state = store.getState();
     expect(state.projectId).toBe("project-b");
-    expect(state.entities.map((entity) => entity.entityId)).toEqual([
+    expect(state.entities.map((entity) => entity.id)).toEqual([
       "entity-b",
     ]);
     expect(state.bootstrapStatus).toBe("ready");

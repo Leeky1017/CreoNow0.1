@@ -9,7 +9,7 @@ import {
 import * as kgViewPreferences from "../kgViewPreferences";
 
 type ServiceResult =
-  | { ok: true; data?: { entityId?: string } }
+  | { ok: true; data?: { id?: string } }
   | { ok: false; error: { code: string; message: string } };
 
 type MockKgState = {
@@ -42,10 +42,8 @@ function makeEntity(args: {
 }): KgEntity {
   return {
     id: args.id,
-    entityId: args.id,
     projectId: "project-1",
     type: args.type,
-    entityType: args.type,
     name: args.name,
     description: "",
     attributes: {},
@@ -61,12 +59,9 @@ function makeEntity(args: {
 function makeRelation(): KgRelation {
   return {
     id: "rel-1",
-    relationId: "rel-1",
     projectId: "project-1",
     sourceEntityId: "char-1",
-    fromEntityId: "char-1",
     targetEntityId: "loc-1",
-    toEntityId: "loc-1",
     relationType: "盟友",
     description: "",
     createdAt: "2026-02-14T00:00:00.000Z",
@@ -101,7 +96,7 @@ describe("kg async validation", () => {
     const shouldClear = shouldClearRelationEditingAfterDelete({
       editing: {
         mode: "relation",
-        relationId: "rel-1",
+        id: "rel-1",
         relationType: "盟友",
       },
       targetRelationId: "rel-1",
@@ -145,14 +140,14 @@ describe("kg async validation", () => {
 
   it("KG-S0-AV-S3 batch entityUpdate partial failure reports errors", async () => {
     mockKgState.entityUpdate = vi.fn(
-      async ({ entityId }: { entityId: string }) => {
-        if (entityId === "ev-2") {
+      async ({ id }: { id: string }) => {
+        if (id === "ev-2") {
           return {
             ok: false,
             error: { code: "INTERNAL_ERROR", message: "first failed" },
           };
         }
-        if (entityId === "ev-3") {
+        if (id === "ev-3") {
           throw new Error("second failed");
         }
         return { ok: true };

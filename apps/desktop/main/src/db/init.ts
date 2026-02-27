@@ -37,6 +37,7 @@ import kgAliasesSql from "./migrations/0019_kg_aliases.sql?raw";
 import kgLastSeenStateSql from "./migrations/0020_kg_last_seen_state.sql?raw";
 import tracePersistenceSql from "./migrations/0021_s3_trace_persistence.sql?raw";
 import synopsisInjectionSql from "./migrations/0022_s3_synopsis_injection.sql?raw";
+import kgTypeOtherToFactionSql from "./migrations/0023_kg_type_other_to_faction.sql?raw";
 
 export type DbInitOk = {
   ok: true;
@@ -134,6 +135,11 @@ const MIGRATIONS_BASE: readonly Migration[] = [
     version: 22,
     name: "0022_s3_synopsis_injection",
     sql: synopsisInjectionSql,
+  },
+  {
+    version: 23,
+    name: "0023_kg_type_other_to_faction",
+    sql: kgTypeOtherToFactionSql,
   },
 ];
 

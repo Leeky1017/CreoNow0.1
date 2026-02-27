@@ -84,20 +84,20 @@ export function CharacterCardListContainer({
   const handleCreateCharacter = React.useCallback(async () => {
     const created = await entityCreate({
       name: "新角色",
-      entityType: "character",
+      type: "character",
       description: "",
     });
     if (!created.ok) {
       return;
     }
-    setSelectedId(created.data.entityId);
+    setSelectedId(created.data.id);
     setDialogOpen(true);
   }, [entityCreate]);
 
   const handleSaveCharacter = React.useCallback(
     async (character: Character) => {
       await entityUpdate({
-        entityId: character.id,
+        id: character.id,
         patch: {
           name: character.name,
           description: character.description ?? "",
@@ -123,7 +123,7 @@ export function CharacterCardListContainer({
       if (!confirmed) {
         return;
       }
-      await entityDelete({ entityId: characterId });
+      await entityDelete({ id: characterId });
       if (selectedId === characterId) {
         setSelectedId(null);
         setDialogOpen(false);

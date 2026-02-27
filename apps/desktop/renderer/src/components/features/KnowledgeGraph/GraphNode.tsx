@@ -9,7 +9,7 @@ const nodeColorVars: Record<NodeType, string> = {
   location: "var(--color-node-location)",
   event: "var(--color-node-event)",
   item: "var(--color-node-item)",
-  other: "var(--color-node-other)",
+  faction: "var(--color-node-other)",
 };
 
 /**
@@ -62,7 +62,7 @@ function NodeIcon({ type, color }: { type: NodeType; color: string }): JSX.Eleme
         </svg>
       );
     default:
-      // character and other types show avatar or initials
+      // character and faction types show avatar or initials
       return <></>;
   }
 }
@@ -95,7 +95,7 @@ const typeStyles: Record<NodeType, string> = {
   location: "rounded-lg",
   event: "rounded-lg rotate-45",
   item: "rounded-xl",
-  other: "rounded-full",
+  faction: "rounded-full",
 };
 
 /**
@@ -192,7 +192,7 @@ export function GraphNode({
     >
       {/* Node content */}
       <div className={`flex items-center justify-center ${isEventType ? "-rotate-45" : ""}`}>
-        {type === "character" || type === "other" ? (
+        {type === "character" || type === "faction" ? (
           avatar ? (
             <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
               <img

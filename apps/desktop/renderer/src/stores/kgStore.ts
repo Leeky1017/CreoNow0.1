@@ -19,16 +19,10 @@ type AiContextLevel = EntityResponse["aiContextLevel"];
 export type { IpcInvoke };
 
 export type KgEntity = EntityResponse & {
-  entityId: string;
-  entityType: string;
   metadataJson: string;
 };
 
-export type KgRelation = RelationResponse & {
-  relationId: string;
-  fromEntityId: string;
-  toEntityId: string;
-};
+export type KgRelation = RelationResponse;
 
 export type KgState = {
   projectId: string | null;
@@ -43,43 +37,42 @@ export type KgActions = {
   refresh: () => Promise<void>;
   entityCreate: (args: {
     name: string;
-    entityType?: string;
+    type?: string;
     description?: string;
     lastSeenState?: string;
     aiContextLevel?: AiContextLevel;
     aliases?: string[];
   }) => Promise<IpcResponse<KgEntity>>;
   entityUpdate: (args: {
-    entityId: string;
+    id: string;
     patch: Partial<
       Pick<
         KgEntity,
         | "name"
-        | "entityType"
         | "description"
         | "metadataJson"
         | "lastSeenState"
         | "aiContextLevel"
         | "aliases"
       >
-    >;
+    > & { type?: string };
   }) => Promise<IpcResponse<KgEntity>>;
   entityDelete: (args: {
-    entityId: string;
+    id: string;
   }) => Promise<IpcResponse<{ deleted: true; deletedRelationCount: number }>>;
   relationCreate: (args: {
-    fromEntityId: string;
-    toEntityId: string;
+    sourceEntityId: string;
+    targetEntityId: string;
     relationType: string;
   }) => Promise<IpcResponse<KgRelation>>;
   relationUpdate: (args: {
-    relationId: string;
+    id: string;
     patch: Partial<
-      Pick<KgRelation, "fromEntityId" | "toEntityId" | "relationType">
+      Pick<KgRelation, "sourceEntityId" | "targetEntityId" | "relationType">
     >;
   }) => Promise<IpcResponse<KgRelation>>;
   relationDelete: (args: {
-    relationId: string;
+    id: string;
   }) => Promise<IpcResponse<{ deleted: true }>>;
   clearError: () => void;
 };
@@ -101,7 +94,7 @@ function normalizeEntityType(
     return undefined;
   }
 
-  const normalized = value.trim();
+  const normalized = value.trim().toLowerCase();
 
   switch (normalized) {
     case "character":
@@ -110,8 +103,6 @@ function normalizeEntityType(
     case "item":
     case "faction":
       return normalized;
-    case "other":
-      return "faction";
     default:
       return undefined;
   }
@@ -129,24 +120,6 @@ function toMetadataJson(attributes: Record<string, string>): string {
     return packed;
   }
   return JSON.stringify(attributes);
-}
-
-function toLegacyEntity(entity: EntityResponse): KgEntity {
-  return {
-    ...entity,
-    entityId: entity.id,
-    entityType: entity.type,
-    metadataJson: toMetadataJson(entity.attributes),
-  };
-}
-
-function toLegacyRelation(relation: RelationResponse): KgRelation {
-  return {
-    ...relation,
-    relationId: relation.id,
-    fromEntityId: relation.sourceEntityId,
-    toEntityId: relation.targetEntityId,
-  };
 }
 
 /**
@@ -190,8 +163,11 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
 
     return {
       ok: true,
-      entities: entitiesRes.data.items.map(toLegacyEntity),
-      relations: relationsRes.data.items.map(toLegacyRelation),
+      entities: entitiesRes.data.items.map((entity) => ({
+        ...entity,
+        metadataJson: toMetadataJson(entity.attributes),
+      })),
+      relations: relationsRes.data.items,
     };
   }
 
@@ -281,7 +257,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
 
     entityCreate: async ({
       name,
-      entityType,
+      type,
       description,
       lastSeenState,
       aiContextLevel,
@@ -294,7 +270,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
         return { ok: false, error };
       }
 
-      const normalizedType = normalizeEntityType(entityType) ?? "character";
+      const normalizedType = normalizeEntityType(type) ?? "character";
 
       const res = await deps.invoke("knowledge:entity:create", {
         projectId: state.projectId,
@@ -311,10 +287,16 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
       }
 
       await get().refresh();
-      return { ok: true, data: toLegacyEntity(res.data) };
+      return {
+        ok: true,
+        data: {
+          ...res.data,
+          metadataJson: toMetadataJson(res.data.attributes),
+        },
+      };
     },
 
-    entityUpdate: async ({ entityId, patch }) => {
+    entityUpdate: async ({ id, patch }) => {
       const state = get();
       if (!state.projectId) {
         const error = missingProjectError();
@@ -322,9 +304,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
         return { ok: false, error };
       }
 
-      const existing = state.entities.find(
-        (entity) => entity.entityId === entityId,
-      );
+      const existing = state.entities.find((entity) => entity.id === id);
       if (!existing) {
         const error: IpcError = {
           code: "NOT_FOUND",
@@ -335,8 +315,8 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
       }
 
       const nextType =
-        typeof patch.entityType === "string"
-          ? normalizeEntityType(patch.entityType)
+        typeof patch.type === "string"
+          ? normalizeEntityType(patch.type)
           : undefined;
 
       const nextAttributes =
@@ -346,7 +326,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
 
       const res = await deps.invoke("knowledge:entity:update", {
         projectId: state.projectId,
-        id: entityId,
+        id,
         expectedVersion: existing.version,
         patch: {
           name: patch.name,
@@ -365,10 +345,16 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
       }
 
       await get().refresh();
-      return { ok: true, data: toLegacyEntity(res.data) };
+      return {
+        ok: true,
+        data: {
+          ...res.data,
+          metadataJson: toMetadataJson(res.data.attributes),
+        },
+      };
     },
 
-    entityDelete: async ({ entityId }) => {
+    entityDelete: async ({ id }) => {
       const state = get();
       if (!state.projectId) {
         const error = missingProjectError();
@@ -378,7 +364,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
 
       const res = await deps.invoke("knowledge:entity:delete", {
         projectId: state.projectId,
-        id: entityId,
+        id,
       });
       if (!res.ok) {
         set({ lastError: res.error });
@@ -389,7 +375,11 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
       return res;
     },
 
-    relationCreate: async ({ fromEntityId, toEntityId, relationType }) => {
+    relationCreate: async ({
+      sourceEntityId,
+      targetEntityId,
+      relationType,
+    }) => {
       const state = get();
       if (!state.projectId) {
         const error = missingProjectError();
@@ -399,8 +389,8 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
 
       const res = await deps.invoke("knowledge:relation:create", {
         projectId: state.projectId,
-        sourceEntityId: fromEntityId,
-        targetEntityId: toEntityId,
+        sourceEntityId,
+        targetEntityId,
         relationType,
       });
       if (!res.ok) {
@@ -409,10 +399,10 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
       }
 
       await get().refresh();
-      return { ok: true, data: toLegacyRelation(res.data) };
+      return { ok: true, data: res.data };
     },
 
-    relationUpdate: async ({ relationId, patch }) => {
+    relationUpdate: async ({ id, patch }) => {
       const state = get();
       if (!state.projectId) {
         const error = missingProjectError();
@@ -422,10 +412,10 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
 
       const res = await deps.invoke("knowledge:relation:update", {
         projectId: state.projectId,
-        id: relationId,
+        id,
         patch: {
-          sourceEntityId: patch.fromEntityId,
-          targetEntityId: patch.toEntityId,
+          sourceEntityId: patch.sourceEntityId,
+          targetEntityId: patch.targetEntityId,
           relationType: patch.relationType,
         },
       });
@@ -435,10 +425,10 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
       }
 
       await get().refresh();
-      return { ok: true, data: toLegacyRelation(res.data) };
+      return { ok: true, data: res.data };
     },
 
-    relationDelete: async ({ relationId }) => {
+    relationDelete: async ({ id }) => {
       const state = get();
       if (!state.projectId) {
         const error = missingProjectError();
@@ -448,7 +438,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
 
       const res = await deps.invoke("knowledge:relation:delete", {
         projectId: state.projectId,
-        id: relationId,
+        id,
       });
       if (!res.ok) {
         set({ lastError: res.error });

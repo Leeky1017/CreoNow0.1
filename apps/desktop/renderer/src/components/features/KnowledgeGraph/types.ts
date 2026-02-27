@@ -7,11 +7,11 @@
  * - --color-node-location: #22c55e (绿色)
  * - --color-node-event: #f97316 (橙色)
  * - --color-node-item: #06b6d4 (青色)
- * - --color-node-other: #8b5cf6 (紫色)
+ * - --color-node-other: #8b5cf6 (阵营)
  */
 
 /** Node types in the knowledge graph */
-export type NodeType = "character" | "location" | "event" | "item" | "other";
+export type NodeType = "character" | "location" | "event" | "item" | "faction";
 
 /** Graph node representing an entity */
 export interface GraphNode {

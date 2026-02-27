@@ -11,7 +11,7 @@ const typeToVariant: Record<NodeType, "info" | "success" | "warning" | "default"
   location: "success",
   event: "warning",
   item: "default",
-  other: "default",
+  faction: "default",
 };
 
 /**
@@ -22,7 +22,7 @@ const typeColorVars: Record<NodeType, string> = {
   location: "var(--color-node-location)",
   event: "var(--color-node-event)",
   item: "var(--color-node-item)",
-  other: "var(--color-node-other)",
+  faction: "var(--color-node-other)",
 };
 
 const typeLabels: Record<NodeType, string> = {
@@ -30,7 +30,7 @@ const typeLabels: Record<NodeType, string> = {
   location: "Location",
   event: "Event",
   item: "Item",
-  other: "Other",
+  faction: "Faction",
 };
 
 /**

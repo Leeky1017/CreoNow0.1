@@ -6,7 +6,7 @@ import type { KgEntity, KgRelation } from "../../stores/kgStore";
 import { KnowledgeGraphPanel } from "./KnowledgeGraphPanel";
 
 type ServiceResult =
-  | { ok: true; data?: { entityId?: string } }
+  | { ok: true; data?: { id?: string } }
   | { ok: false; error: { code: string; message: string } };
 
 type MockKgState = {
@@ -34,10 +34,8 @@ vi.mock("../../stores/kgStore", () => ({
 function makeEntity(): KgEntity {
   return {
     id: "entity-1",
-    entityId: "entity-1",
     projectId: "project-1",
     type: "character",
-    entityType: "character",
     name: "林远",
     description: "冷静",
     attributes: {},
@@ -82,7 +80,7 @@ describe("KnowledgeGraphPanel.context-level", () => {
 
     await waitFor(() => {
       expect(mockKgState.entityUpdate).toHaveBeenCalledWith({
-        entityId: "entity-1",
+        id: "entity-1",
         patch: expect.objectContaining({
           aiContextLevel: "always",
         }),

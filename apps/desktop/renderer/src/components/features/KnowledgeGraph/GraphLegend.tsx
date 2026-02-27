@@ -33,6 +33,12 @@ const legendItems: Array<{
     colorVar: "var(--color-node-item)",
     shape: "rounded",
   },
+  {
+    type: "faction",
+    label: "Faction",
+    colorVar: "var(--color-node-other)",
+    shape: "rounded",
+  },
 ];
 
 /**

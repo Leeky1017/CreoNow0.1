@@ -34,10 +34,8 @@ describe("metadata parse fail-fast", () => {
       entities: [
         {
           id: "ev-1",
-          entityId: "ev-1",
           projectId: "project-1",
           type: "event",
-          entityType: "event",
           name: "雨夜冲突",
           description: "desc",
           attributes: {},

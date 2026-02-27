@@ -26,15 +26,15 @@ type EditingState =
   | { mode: "idle" }
   | {
       mode: "entity";
-      entityId: string;
+      id: string;
       name: string;
-      entityType: string;
+      type: string;
       description: string;
       lastSeenState: string;
       aiContextLevel: AiContextLevel;
       aliasesInput: string;
     }
-  | { mode: "relation"; relationId: string; relationType: string };
+  | { mode: "relation"; id: string; relationType: string };
 
 type AiContextLevel = "always" | "when_detected" | "manual_only" | "never";
 
@@ -56,8 +56,8 @@ type AsyncMutationResult =
   | null
   | undefined;
 
-function entityLabel(args: { name: string; entityType?: string }): string {
-  return args.entityType ? `${args.name} (${args.entityType})` : args.name;
+function entityLabel(args: { name: string; type?: string }): string {
+  return args.type ? `${args.name} (${args.type})` : args.name;
 }
 
 function parseAliasesInput(value: string): string[] {
@@ -75,7 +75,7 @@ function formatAliasesInput(aliases: string[]): string {
  * Map NodeType to KG entity type string.
  */
 function nodeTypeToEntityType(nodeType: NodeType): string {
-  return nodeType === "other" ? "" : nodeType;
+  return nodeType;
 }
 
 function parseMetadataJson(
@@ -123,7 +123,7 @@ export function shouldClearRelationEditingAfterDelete(args: {
   return (
     args.result?.ok === true &&
     args.editing.mode === "relation" &&
-    args.editing.relationId === args.targetRelationId
+    args.editing.id === args.targetRelationId
   );
 }
 
@@ -223,11 +223,11 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
       setRelToId("");
       return;
     }
-    if (!entities.some((e) => e.entityId === relFromId)) {
-      setRelFromId(entities[0]!.entityId);
+    if (!entities.some((e) => e.id === relFromId)) {
+      setRelFromId(entities[0]!.id);
     }
-    if (!entities.some((e) => e.entityId === relToId)) {
-      const fallback = entities[1]?.entityId ?? entities[0]!.entityId;
+    if (!entities.some((e) => e.id === relToId)) {
+      const fallback = entities[1]?.id ?? entities[0]!.id;
       setRelToId(fallback);
     }
   }, [entities, relFromId, relToId]);
@@ -235,7 +235,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
   async function onCreateEntity(): Promise<void> {
     const res = await entityCreate({
       name: createName,
-      entityType: createType,
+      type: createType,
       description: createDescription,
       aliases: parseAliasesInput(createAliasesInput),
     });
@@ -259,8 +259,8 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
     if (!confirmed) {
       return;
     }
-    await entityDelete({ entityId });
-    if (editing.mode === "entity" && editing.entityId === entityId) {
+    await entityDelete({ id: entityId });
+    if (editing.mode === "entity" && editing.id === entityId) {
       setEditing({ mode: "idle" });
     }
   }
@@ -281,7 +281,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
       return;
     }
     try {
-      const res = await relationDelete({ relationId });
+      const res = await relationDelete({ id: relationId });
       if (!res.ok) {
         console.warn(
           "[KnowledgeGraphPanel] relationDelete failed:",
@@ -312,10 +312,10 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
   async function onSaveEdit(): Promise<void> {
     if (editing.mode === "entity") {
       const res = await entityUpdate({
-        entityId: editing.entityId,
+        id: editing.id,
         patch: {
           name: editing.name,
-          entityType: editing.entityType,
+          type: editing.type,
           description: editing.description,
           lastSeenState: editing.lastSeenState,
           aiContextLevel: editing.aiContextLevel,
@@ -331,7 +331,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
 
     if (editing.mode === "relation") {
       const res = await relationUpdate({
-        relationId: editing.relationId,
+        id: editing.id,
         patch: { relationType: editing.relationType },
       });
       if (!res.ok) {
@@ -347,8 +347,8 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
       return;
     }
     const res = await relationCreate({
-      fromEntityId: relFromId,
-      toEntityId: relToId,
+      sourceEntityId: relFromId,
+      targetEntityId: relToId,
       relationType: relType,
     });
     if (!res.ok) {
@@ -358,7 +358,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
   }
 
   function getEntityName(entityId: string): string {
-    const e = entities.find((x) => x.entityId === entityId);
+    const e = entities.find((x) => x.id === entityId);
     return e ? e.name : entityId;
   }
 
@@ -375,7 +375,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
 
   const timelineEvents = React.useMemo<TimelineEventItem[]>(() => {
     return entities
-      .filter((entity) => entity.entityType === "event")
+      .filter((entity) => entity.type === "event")
       .map((entity, index) => {
         const metadata = parseMetadataJson(entity.metadataJson);
         const timeline = metadata
@@ -384,7 +384,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
         const chapterValue = timeline.chapter;
         const orderValue = timeline.order;
         return {
-          id: entity.entityId,
+          id: entity.id,
           title: entity.name,
           chapter:
             typeof chapterValue === "string" && chapterValue.length > 0
@@ -404,7 +404,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
     nodeId: string,
     position: { x: number; y: number },
   ): Promise<void> {
-    const entity = entities.find((e) => e.entityId === nodeId);
+    const entity = entities.find((e) => e.id === nodeId);
     if (!entity) {
       return;
     }
@@ -419,7 +419,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
 
     try {
       const res = await entityUpdate({
-        entityId: nodeId,
+        id: nodeId,
         patch: { metadataJson: updatedMetadata },
       });
       if (!res.ok) {
@@ -452,11 +452,11 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
   }
 
   async function onTimelineOrderChange(orderedIds: string[]): Promise<void> {
-    const byId = new Map(entities.map((entity) => [entity.entityId, entity]));
+    const byId = new Map(entities.map((entity) => [entity.id, entity]));
     const writeResults = await Promise.allSettled(
       orderedIds.map(async (entityId, index) => {
         const entity = byId.get(entityId);
-        if (!entity || entity.entityType !== "event") {
+        if (!entity || entity.type !== "event") {
           return { attempted: false as const, failed: false as const };
         }
         const metadataJson = updateTimelineOrderInMetadata(
@@ -468,7 +468,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
         }
         try {
           const res = await entityUpdate({
-            entityId,
+            id: entityId,
             patch: { metadataJson },
           });
           if (!res.ok) {
@@ -528,7 +528,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
 
     const res = await entityCreate({
       name: "New Entity",
-      entityType: nodeTypeToEntityType(nodeType),
+      type: nodeTypeToEntityType(nodeType),
       description: "",
     });
 
@@ -536,10 +536,10 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
       // Update with position metadata
       const metadata = createEntityMetadataWithPosition(nodeType, position);
       await entityUpdate({
-        entityId: res.data.entityId,
+        id: res.data.id,
         patch: { metadataJson: metadata },
       });
-      setSelectedNodeId(res.data.entityId);
+      setSelectedNodeId(res.data.id);
     }
   }
 
@@ -551,7 +551,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
       // Create new entity
       const res = await entityCreate({
         name: node.label,
-        entityType: node.type === "other" ? "" : node.type,
+        type: node.type,
         description: node.metadata?.description ?? "",
       });
 
@@ -561,14 +561,14 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
           node.position,
         );
         await entityUpdate({
-          entityId: res.data.entityId,
+          id: res.data.id,
           patch: { metadataJson: metadata },
         });
-        setSelectedNodeId(res.data.entityId);
+        setSelectedNodeId(res.data.id);
       }
     } else {
       // Update existing entity
-      const entity = entities.find((e) => e.entityId === node.id);
+      const entity = entities.find((e) => e.id === node.id);
       if (!entity) return;
 
       const updatedMetadata = updatePositionInMetadata(
@@ -580,10 +580,10 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
       }
 
       await entityUpdate({
-        entityId: node.id,
+        id: node.id,
         patch: {
           name: node.label,
-          entityType: node.type === "other" ? "" : node.type,
+          type: node.type,
           description: node.metadata?.description ?? "",
           metadataJson: updatedMetadata,
         },
@@ -681,16 +681,16 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
             }
             onOpenEvent={(eventId) => {
               const eventEntity = entities.find(
-                (entity) => entity.entityId === eventId,
+                (entity) => entity.id === eventId,
               );
               if (!eventEntity) {
                 return;
               }
               setEditing({
                 mode: "entity",
-                entityId: eventEntity.entityId,
+                id: eventEntity.id,
                 name: eventEntity.name,
-                entityType: eventEntity.entityType,
+                type: eventEntity.type,
                 description: eventEntity.description ?? "",
                 lastSeenState: eventEntity.lastSeenState ?? "",
                 aiContextLevel: eventEntity.aiContextLevel,
@@ -792,11 +792,11 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
             <div className="mt-3 flex flex-col gap-2">
               {entities.map((e) => {
                 const isEditing =
-                  editing.mode === "entity" && editing.entityId === e.entityId;
+                  editing.mode === "entity" && editing.id === e.id;
                 return (
                   <Card
-                    key={e.entityId}
-                    data-testid={`kg-entity-row-${e.entityId}`}
+                    key={e.id}
+                    data-testid={`kg-entity-row-${e.id}`}
                     noPadding
                     className="p-2.5 flex flex-col gap-2"
                   >
@@ -813,11 +813,11 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                           fullWidth
                         />
                         <Input
-                          value={editing.entityType}
+                          value={editing.type}
                           onChange={(evt) =>
                             setEditing({
                               ...editing,
-                              entityType: evt.target.value,
+                              type: evt.target.value,
                             })
                           }
                           fullWidth
@@ -872,7 +872,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                         <Text size="small">
                           {entityLabel({
                             name: e.name,
-                            entityType: e.entityType,
+                            type: e.type,
                           })}
                         </Text>
                         {e.description ? (
@@ -909,9 +909,9 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                             onClick={() =>
                               setEditing({
                                 mode: "entity",
-                                entityId: e.entityId,
+                                id: e.id,
                                 name: e.name,
-                                entityType: e.entityType ?? "",
+                                type: e.type ?? "",
                                 description: e.description ?? "",
                                 lastSeenState: e.lastSeenState ?? "",
                                 aiContextLevel: e.aiContextLevel,
@@ -922,10 +922,10 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                             Edit
                           </Button>
                           <Button
-                            data-testid={`kg-entity-delete-${e.entityId}`}
+                            data-testid={`kg-entity-delete-${e.id}`}
                             variant="ghost"
                             size="sm"
-                            onClick={() => void onDeleteEntity(e.entityId)}
+                            onClick={() => void onDeleteEntity(e.id)}
                           >
                             Delete
                           </Button>
@@ -949,10 +949,10 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                 onValueChange={(value) => setRelFromId(value)}
                 disabled={!isReady || entities.length === 0}
                 options={entities.map((e) => ({
-                  value: e.entityId,
+                  value: e.id,
                   label: entityLabel({
                     name: e.name,
-                    entityType: e.entityType,
+                    type: e.type,
                   }),
                 }))}
                 placeholder="Select entity..."
@@ -964,10 +964,10 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                 onValueChange={(value) => setRelToId(value)}
                 disabled={!isReady || entities.length === 0}
                 options={entities.map((e) => ({
-                  value: e.entityId,
+                  value: e.id,
                   label: entityLabel({
                     name: e.name,
-                    entityType: e.entityType,
+                    type: e.type,
                   }),
                 }))}
                 placeholder="Select entity..."
@@ -1004,11 +1004,11 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                 {relations.map((r) => {
                   const isEditing =
                     editing.mode === "relation" &&
-                    editing.relationId === r.relationId;
+                    editing.id === r.id;
                   return (
                     <Card
-                      key={r.relationId}
-                      data-testid={`kg-relation-row-${r.relationId}`}
+                      key={r.id}
+                      data-testid={`kg-relation-row-${r.id}`}
                       noPadding
                       className="p-2.5 flex flex-col gap-2"
                     >
@@ -1025,8 +1025,8 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                         />
                       ) : (
                         <Text size="small">
-                          {getEntityName(r.fromEntityId)} -({r.relationType})→{" "}
-                          {getEntityName(r.toEntityId)}
+                          {getEntityName(r.sourceEntityId)} -({r.relationType})→{" "}
+                          {getEntityName(r.targetEntityId)}
                         </Text>
                       )}
 
@@ -1054,21 +1054,21 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                               variant="ghost"
                               size="sm"
                               onClick={() =>
-                                setEditing({
-                                  mode: "relation",
-                                  relationId: r.relationId,
-                                  relationType: r.relationType,
-                                })
+                              setEditing({
+                                mode: "relation",
+                                id: r.id,
+                                relationType: r.relationType,
+                              })
                               }
                             >
                               Edit
                             </Button>
                             <Button
-                              data-testid={`kg-relation-delete-${r.relationId}`}
+                              data-testid={`kg-relation-delete-${r.id}`}
                               variant="ghost"
                               size="sm"
                               onClick={() =>
-                                void onDeleteRelation(r.relationId)
+                                void onDeleteRelation(r.id)
                               }
                             >
                               Delete

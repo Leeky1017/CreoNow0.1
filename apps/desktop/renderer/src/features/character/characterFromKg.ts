@@ -186,12 +186,12 @@ export function kgEntityToCharacter(
 
   for (const rel of relations) {
     // Outgoing relations: this character -> other
-    if (rel.fromEntityId === entity.entityId) {
-      const targetEntity = entityMap.get(rel.toEntityId);
-      if (targetEntity && targetEntity.entityType === "character") {
+    if (rel.sourceEntityId === entity.id) {
+      const targetEntity = entityMap.get(rel.targetEntityId);
+      if (targetEntity && targetEntity.type === "character") {
         const targetMeta = parseCharacterMetadata(targetEntity.metadataJson);
         relationships.push({
-          characterId: targetEntity.entityId,
+          characterId: targetEntity.id,
           characterName: targetEntity.name,
           characterRole: targetMeta.role,
           characterAvatar: targetMeta.avatarUrl,
@@ -200,17 +200,17 @@ export function kgEntityToCharacter(
       }
     }
     // Incoming relations: other -> this character (show as bidirectional)
-    if (rel.toEntityId === entity.entityId) {
-      const sourceEntity = entityMap.get(rel.fromEntityId);
-      if (sourceEntity && sourceEntity.entityType === "character") {
+    if (rel.targetEntityId === entity.id) {
+      const sourceEntity = entityMap.get(rel.sourceEntityId);
+      if (sourceEntity && sourceEntity.type === "character") {
         const sourceMeta = parseCharacterMetadata(sourceEntity.metadataJson);
         // Check if we already have this relationship (avoid duplicates)
         const existing = relationships.find(
-          (r) => r.characterId === sourceEntity.entityId,
+          (r) => r.characterId === sourceEntity.id,
         );
         if (!existing) {
           relationships.push({
-            characterId: sourceEntity.entityId,
+            characterId: sourceEntity.id,
             characterName: sourceEntity.name,
             characterRole: sourceMeta.role,
             characterAvatar: sourceMeta.avatarUrl,
@@ -222,7 +222,7 @@ export function kgEntityToCharacter(
   }
 
   return {
-    id: entity.entityId,
+    id: entity.id,
     name: entity.name,
     age: metadata.age,
     birthDate: metadata.birthDate,
@@ -312,7 +312,7 @@ export function characterToMetadataJson(character: Partial<Character>): string {
  * @returns Entities with entityType="character"
  */
 export function filterCharacterEntities(entities: KgEntity[]): KgEntity[] {
-  return entities.filter((e) => e.entityType === "character");
+  return entities.filter((e) => e.type === "character");
 }
 
 /**
@@ -327,7 +327,7 @@ export function kgToCharacters(
   relations: KgRelation[],
 ): Character[] {
   const characterEntities = filterCharacterEntities(entities);
-  const entityMap = new Map(entities.map((e) => [e.entityId, e]));
+  const entityMap = new Map(entities.map((e) => [e.id, e]));
 
   return characterEntities.map((entity) =>
     kgEntityToCharacter(entity, relations, entityMap),

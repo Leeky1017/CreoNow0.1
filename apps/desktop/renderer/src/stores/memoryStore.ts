@@ -228,8 +228,6 @@ export type MemoryActions = {
     projectId: string | null,
     documentId: string | null,
   ) => Promise<void>;
-  /** @deprecated Use bootstrapForContext instead */
-  bootstrapForProject: (projectId: string | null) => Promise<void>;
   refresh: () => Promise<void>;
   create: (args: {
     type: MemoryItem["type"];
@@ -335,11 +333,6 @@ export function createMemoryStore(deps: { invoke: IpcInvoke }) {
         settings: settingsRes.data,
         items: listRes.data.items,
       });
-    },
-
-    bootstrapForProject: async (projectId) => {
-      // Backward compatible wrapper
-      await get().bootstrapForContext(projectId, null);
     },
 
     refresh: async () => {

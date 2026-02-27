@@ -68,7 +68,7 @@ describe("store refresh governance", () => {
 
     const result = await store.getState().entityCreate({
       name: "entity-1",
-      entityType: "character",
+      type: "character",
     });
 
     expect(result.ok).toBe(true);

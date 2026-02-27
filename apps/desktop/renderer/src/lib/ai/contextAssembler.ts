@@ -45,16 +45,16 @@ export type AssembledContext = {
 };
 
 export type KnowledgeGraphEntity = {
-  entityId: string;
+  id: string;
   name: string;
-  entityType?: string;
+  type?: string;
   description?: string;
 };
 
 export type KnowledgeGraphRelation = {
-  relationId: string;
-  fromEntityId: string;
-  toEntityId: string;
+  id: string;
+  sourceEntityId: string;
+  targetEntityId: string;
   relationType: string;
 };
 
@@ -75,7 +75,7 @@ export function formatKnowledgeGraphContext(args: {
 
   const entityById = new Map<string, KnowledgeGraphEntity>();
   for (const e of args.entities) {
-    entityById.set(e.entityId, e);
+    entityById.set(e.id, e);
   }
 
   const entities = args.entities.slice(0, maxEntities);
@@ -89,7 +89,7 @@ export function formatKnowledgeGraphContext(args: {
     lines.push("  - (none)");
   } else {
     for (const e of entities) {
-      const type = typeof e.entityType === "string" ? e.entityType.trim() : "";
+      const type = typeof e.type === "string" ? e.type.trim() : "";
       const typeSuffix = type.length > 0 ? ` (${type})` : "";
 
       const rawDesc =
@@ -100,7 +100,7 @@ export function formatKnowledgeGraphContext(args: {
       const descSuffix = desc.length > 0 ? `: ${desc}` : "";
 
       lines.push(
-        `  - [entity:${e.entityId}] ${e.name}${typeSuffix}${descSuffix}`,
+        `  - [entity:${e.id}] ${e.name}${typeSuffix}${descSuffix}`,
       );
     }
   }
@@ -110,10 +110,10 @@ export function formatKnowledgeGraphContext(args: {
     lines.push("  - (none)");
   } else {
     for (const r of relations) {
-      const fromName = entityById.get(r.fromEntityId)?.name ?? r.fromEntityId;
-      const toName = entityById.get(r.toEntityId)?.name ?? r.toEntityId;
+      const fromName = entityById.get(r.sourceEntityId)?.name ?? r.sourceEntityId;
+      const toName = entityById.get(r.targetEntityId)?.name ?? r.targetEntityId;
       lines.push(
-        `  - [rel:${r.relationId}] ${fromName} -(${r.relationType})-> ${toName}`,
+        `  - [rel:${r.id}] ${fromName} -(${r.relationType})-> ${toName}`,
       );
     }
   }

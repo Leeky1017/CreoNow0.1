@@ -64,7 +64,7 @@ describe("KnowledgeGraphPanel.aliases", () => {
 
     expect(mockKgState.entityCreate).toHaveBeenCalledWith({
       name: "林默",
-      entityType: "",
+      type: "",
       description: "",
       aliases: ["小默", "默哥", "小默"],
     });

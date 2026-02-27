@@ -26,6 +26,11 @@ const filterButtons: Array<{
     colorClass: "bg-[var(--color-node-event)]",
   },
   { filter: "item", label: "Items", colorClass: "bg-[var(--color-node-item)]" },
+  {
+    filter: "faction",
+    label: "Factions",
+    colorClass: "bg-[var(--color-node-other)]",
+  },
 ];
 
 /**

@@ -34,10 +34,8 @@ describe("KnowledgeGraphPanel.render", () => {
       entities: [
         {
           id: "e-character",
-          entityId: "e-character",
           projectId: "project-1",
           type: "character",
-          entityType: "character",
           name: "林远",
           description: "冷静",
           attributes: {},
@@ -50,10 +48,8 @@ describe("KnowledgeGraphPanel.render", () => {
         },
         {
           id: "e-location",
-          entityId: "e-location",
           projectId: "project-1",
           type: "location",
-          entityType: "location",
           name: "旧港",
           description: "",
           attributes: {},
@@ -68,12 +64,9 @@ describe("KnowledgeGraphPanel.render", () => {
       relations: [
         {
           id: "r-1",
-          relationId: "r-1",
           projectId: "project-1",
           sourceEntityId: "e-character",
-          fromEntityId: "e-character",
           targetEntityId: "e-location",
-          toEntityId: "e-location",
           relationType: "盟友",
           description: "",
           createdAt: "2026-02-08T12:00:00.000Z",

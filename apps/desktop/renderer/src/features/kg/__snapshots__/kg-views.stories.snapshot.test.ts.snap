@@ -271,6 +271,14 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           />
           Items
         </button>
+        <button
+          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+        >
+          <span
+            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-other)]"
+          />
+          Factions
+        </button>
       </div>
       <div
         class="flex items-center gap-3 w-[240px] justify-end"
@@ -518,6 +526,14 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           />
           Items
         </button>
+        <button
+          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+        >
+          <span
+            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-other)]"
+          />
+          Factions
+        </button>
       </div>
       <div
         class="flex items-center gap-3 w-[240px] justify-end"
@@ -745,6 +761,19 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
               Item
             </span>
           </div>
+          <div
+            class="flex items-center gap-2"
+          >
+            <div
+              class="w-2 h-2 border rounded-full"
+              style="border-color: var(--color-node-other); background-color: color-mix(in srgb, var(--color-node-other) 10%, transparent);"
+            />
+            <span
+              class="text-[11px] text-[var(--color-fg-muted)]"
+            >
+              Faction
+            </span>
+          </div>
         </div>
       </div>
       <div
@@ -840,6 +869,14 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
             class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-item)]"
           />
           Items
+        </button>
+        <button
+          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+        >
+          <span
+            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-other)]"
+          />
+          Factions
         </button>
       </div>
       <div
@@ -1217,6 +1254,19 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
               class="text-[11px] text-[var(--color-fg-muted)]"
             >
               Item
+            </span>
+          </div>
+          <div
+            class="flex items-center gap-2"
+          >
+            <div
+              class="w-2 h-2 border rounded-full"
+              style="border-color: var(--color-node-other); background-color: color-mix(in srgb, var(--color-node-other) 10%, transparent);"
+            />
+            <span
+              class="text-[11px] text-[var(--color-fg-muted)]"
+            >
+              Faction
             </span>
           </div>
         </div>

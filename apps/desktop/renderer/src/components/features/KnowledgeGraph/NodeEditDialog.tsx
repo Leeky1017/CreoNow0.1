@@ -26,7 +26,11 @@ const nodeTypeOptions: Array<{
   },
   { value: "event", label: "事件 (Event)", colorVar: "var(--color-node-event)" },
   { value: "item", label: "物品 (Item)", colorVar: "var(--color-node-item)" },
-  { value: "other", label: "其他 (Other)", colorVar: "var(--color-node-other)" },
+  {
+    value: "faction",
+    label: "阵营 (Faction)",
+    colorVar: "var(--color-node-other)",
+  },
 ];
 
 /**
@@ -177,7 +181,7 @@ export function NodeEditDialog({
         </div>
 
         {/* Role (for characters) */}
-        {(type === "character" || type === "other") && (
+        {(type === "character" || type === "faction") && (
           <div>
             <label className={labelStyles}>角色定位</label>
             <Input

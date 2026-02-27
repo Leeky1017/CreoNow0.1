@@ -71,13 +71,13 @@ export function CharacterPanelContainer(
   const handleCreate = React.useCallback(async () => {
     const res = await entityCreate({
       name: "New Character",
-      entityType: "character",
+      type: "character",
       description: "",
     });
 
     if (res.ok) {
       // Select the newly created character
-      setSelectedId(res.data.entityId);
+      setSelectedId(res.data.id);
     }
   }, [entityCreate]);
 
@@ -87,7 +87,7 @@ export function CharacterPanelContainer(
   const handleUpdate = React.useCallback(
     async (character: Character) => {
       await entityUpdate({
-        entityId: character.id,
+        id: character.id,
         patch: {
           name: character.name,
           description: character.description ?? "",
@@ -117,7 +117,7 @@ export function CharacterPanelContainer(
         return;
       }
 
-      await entityDelete({ entityId: characterId });
+      await entityDelete({ id: characterId });
 
       // Clear selection if deleted character was selected
       if (selectedId === characterId) {

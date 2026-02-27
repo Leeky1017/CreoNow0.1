@@ -66,11 +66,11 @@ function defaultPosition(index: number): { x: number; y: number } {
  * Map KG entity type to graph node type.
  *
  * Why: KG entity types are free-form strings; we map them to known
- * node types with fallback to "other".
+ * node types with fallback to "faction".
  */
 function mapEntityType(entityType: string | undefined | null): NodeType {
   if (!entityType) {
-    return "other";
+    return "faction";
   }
 
   const normalized = entityType.toLowerCase().trim();
@@ -89,9 +89,10 @@ function mapEntityType(entityType: string | undefined | null): NodeType {
     item: "item",
     object: "item",
     artifact: "item",
+    faction: "faction",
   };
 
-  return typeMap[normalized] ?? "other";
+  return typeMap[normalized] ?? "faction";
 }
 
 /**
@@ -153,9 +154,9 @@ export function kgEntityToNode(entity: KgEntity, index: number): GraphNode {
   const uiMeta = parseEntityUiMetadata(entity.metadataJson);
 
   return {
-    id: entity.entityId,
+    id: entity.id,
     label: entity.name,
-    type: mapEntityType(entity.entityType),
+    type: mapEntityType(entity.type),
     avatar: uiMeta.avatarUrl,
     position: uiMeta.position ?? defaultPosition(index),
     metadata: {
@@ -174,15 +175,15 @@ export function kgEntityToNode(entity: KgEntity, index: number): GraphNode {
  */
 export function kgRelationToEdge(relation: KgRelation): GraphEdge | null {
   // Validate required fields
-  if (!relation.fromEntityId || !relation.toEntityId) {
+  if (!relation.sourceEntityId || !relation.targetEntityId) {
     console.warn("[kgToGraph] Relation missing source/target:", relation);
     return null;
   }
 
   return {
-    id: relation.relationId,
-    source: relation.fromEntityId,
-    target: relation.toEntityId,
+    id: relation.id,
+    source: relation.sourceEntityId,
+    target: relation.targetEntityId,
     label: relation.relationType || "related",
   };
 }
