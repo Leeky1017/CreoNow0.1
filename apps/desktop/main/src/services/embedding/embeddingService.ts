@@ -1,4 +1,3 @@
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import { embedTextToUnitVector } from "./hashEmbedding";
 import type {
@@ -6,10 +5,8 @@ import type {
   OnnxEmbeddingRuntimeError,
 } from "./onnxRuntime";
 import { logWarn } from "../shared/degradationCounter";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult, type Err } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type EmbeddingEncodeResult = { vectors: number[][]; dimension: number };
 export type EmbeddingProvider = "hash" | "onnx";
@@ -53,15 +50,6 @@ const HASH_MODEL_ALIASES = new Set([
 const HASH_MODEL_DIMENSION = 256;
 const ONNX_MODEL_ALIASES = new Set(["onnx", "onnx-v1", "local:onnx"]);
 const PRIMARY_TIMEOUT_REASONS: PrimaryFailureReason[] = ["PRIMARY_TIMEOUT"];
-
-/**
- * Build a stable IPC error object.
- *
- * Why: services must return deterministic error codes/messages for IPC tests.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 function normalizeModelId(model?: string): string {
   const m = typeof model === "string" ? model.trim() : "";

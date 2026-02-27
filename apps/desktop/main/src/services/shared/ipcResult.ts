@@ -11,12 +11,29 @@ export type Ok<T> = { ok: true; data: T };
 export type Err = { ok: false; error: IpcError };
 export type ServiceResult<T> = Ok<T> | Err;
 
+export type IpcErrorOptions = {
+  traceId?: string;
+  retryable?: boolean;
+};
+
 export function ipcError(
   code: IpcErrorCode,
   message: string,
   details?: unknown,
+  options?: IpcErrorOptions,
 ): Err {
-  return { ok: false, error: { code, message, details } };
+  return {
+    ok: false,
+    error: {
+      code,
+      message,
+      details,
+      ...(options?.traceId ? { traceId: options.traceId } : {}),
+      ...(options?.retryable === undefined
+        ? {}
+        : { retryable: options.retryable }),
+    },
+  };
 }
 
 export function ipcOk<T>(data: T): Ok<T> {

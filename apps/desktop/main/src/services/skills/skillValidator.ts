@@ -1,8 +1,5 @@
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type SkillScope = "builtin" | "global" | "project";
 export type SkillKind = "single" | "chat";
@@ -58,15 +55,6 @@ const CONTEXT_RULE_KEYS = [
 ] as const;
 
 const CONTEXT_RULE_KEY_SET: ReadonlySet<string> = new Set(CONTEXT_RULE_KEYS);
-
-/**
- * Build a stable IPC error wrapper.
- *
- * Why: validator failures must be deterministic for E2E and displayable in UI.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 /**
  * Narrow an unknown value to a JSON object.

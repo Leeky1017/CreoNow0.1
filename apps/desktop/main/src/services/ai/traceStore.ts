@@ -2,12 +2,9 @@ import { randomUUID } from "node:crypto";
 
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type PersistGenerationTraceInput = {
   traceId: string;
@@ -39,10 +36,6 @@ export type TraceStore = {
   ) => ServiceResult<{ feedbackId: string }>;
   getTraceIdByRunId: (runId: string) => string | null;
 };
-
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 function normalizeErrorMessage(error: unknown): string {
   if (error instanceof Error) {

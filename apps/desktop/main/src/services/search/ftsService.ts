@@ -1,11 +1,8 @@
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type FtsHighlightRange = {
   start: number;
@@ -65,15 +62,6 @@ const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
 const MAX_QUERY_LENGTH = 1024;
 const DEFAULT_OFFSET = 0;
-
-/**
- * Build a stable IPC error object.
- *
- * Why: services must return deterministic error codes/messages for IPC tests.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 /**
  * Normalize and validate a user query.

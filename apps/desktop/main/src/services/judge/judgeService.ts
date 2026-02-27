@@ -1,9 +1,7 @@
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
+import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type JudgeModelStatus = "not_ready" | "downloading" | "ready" | "error";
 
@@ -19,15 +17,6 @@ export type JudgeService = {
     timeoutMs?: number;
   }) => Promise<ServiceResult<JudgeModelState>>;
 };
-
-/**
- * Create a stable IPC error object.
- *
- * Why: judge failures must return deterministic error codes/messages for E2E.
- */
-function ipcError(code: IpcErrorCode, message: string): Err {
-  return { ok: false, error: { code, message } };
-}
 
 /**
  * Sleep for a given duration.

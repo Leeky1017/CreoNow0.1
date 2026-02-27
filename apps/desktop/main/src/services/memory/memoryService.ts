@@ -2,13 +2,14 @@ import { randomUUID } from "node:crypto";
 
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import { createUserMemoryVecService } from "./userMemoryVec";
 import {
   DegradationCounter,
   logWarn,
 } from "../shared/degradationCounter";
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type MemoryType = "preference" | "fact" | "note";
 export type MemoryScope = "global" | "project" | "document";
@@ -55,10 +56,6 @@ export type MemoryInjectionPreview = {
   mode: MemoryInjectionMode;
   diagnostics?: { degradedFrom: "semantic"; reason: string };
 };
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
 
 export type MemoryService = {
   create: (args: {
@@ -119,15 +116,6 @@ const TYPE_RANK: Readonly<Record<MemoryType, number>> = {
 
 function nowTs(): number {
   return Date.now();
-}
-
-/**
- * Build a stable IPC error object.
- *
- * Why: services must return deterministic error codes/messages for IPC tests.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
 }
 
 function isMemoryType(x: string): x is MemoryType {

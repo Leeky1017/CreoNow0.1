@@ -3,7 +3,6 @@ import { randomUUID } from "node:crypto";
 import type Database from "better-sqlite3";
 import { z } from "zod";
 
-import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import { resolveRuntimeGovernanceFromEnv } from "../../config/runtimeGovernance";
 import {
@@ -18,6 +17,7 @@ import {
   KNOWLEDGE_ENTITY_TYPES,
   type ServiceResult,
 } from "./types";
+import { ipcError } from "../shared/ipcResult";
 
 const BUILTIN_RELATION_TYPES = [
   "ally",
@@ -104,14 +104,6 @@ type RelationRow = {
   description: string;
   createdAt: string;
 };
-/**
- * Build a stable IPC error object.
- *
- * Why: services must return deterministic error codes/messages for IPC tests.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 /**
  * Parse a positive integer from env with fallback.

@@ -1,11 +1,8 @@
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type StatsSummary = {
   wordsWritten: number;
@@ -44,15 +41,6 @@ const DEFAULT_SUMMARY: StatsSummary = {
   skillsUsed: 0,
   documentsCreated: 0,
 };
-
-/**
- * Build a stable IPC error object.
- *
- * Why: stats failures must not leak raw SQLite stacks across IPC.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 function asNonNegativeInt(x: unknown): number {
   const n = typeof x === "number" ? x : 0;

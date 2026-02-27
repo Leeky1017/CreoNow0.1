@@ -1,9 +1,10 @@
 import type { IpcMain } from "electron";
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcResponse } from "@shared/types/ipc-generated";
+import type { IpcResponse } from "@shared/types/ipc-generated";
 import type { Logger } from "../logging/logger";
 import { createStatsService } from "../services/stats/statsService";
+import { ipcError } from "../services/shared/ipcResult";
 
 type StatsSummary = {
   wordsWritten: number;
@@ -22,10 +23,6 @@ type StatsRange = {
 };
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-
-function ipcError(code: IpcError["code"], message: string): IpcResponse<never> {
-  return { ok: false, error: { code, message } };
-}
 
 function isValidDateKey(x: string): boolean {
   if (!DATE_RE.test(x)) {

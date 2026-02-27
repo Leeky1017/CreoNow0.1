@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type GenerationTraceMemoryType = "working" | "episodic" | "semantic";
 
@@ -30,10 +31,6 @@ export type GenerationTraceFeedback = {
   createdAt: number;
 };
 
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
-
 export type MemoryTraceService = {
   getTrace: (args: {
     projectId: string;
@@ -53,10 +50,6 @@ export type MemoryTraceService = {
 
 function nowTs(): number {
   return Date.now();
-}
-
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
 }
 
 function cloneTrace(trace: GenerationTrace): GenerationTrace {

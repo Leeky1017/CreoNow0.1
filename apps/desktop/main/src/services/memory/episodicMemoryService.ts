@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
+import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import { createKeyedMutex } from "../shared/concurrency";
 import {
@@ -12,6 +12,8 @@ import {
   classifyDecayLevel,
   resolveImplicitFeedback,
 } from "./episodicMemoryHelpers";
+import { ipcError, type ServiceResult, type Err } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export {
   IMPLICIT_SIGNAL_WEIGHTS,
@@ -207,10 +209,6 @@ export type EpisodeQueryInput = {
   limit?: number;
 };
 
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
-
 export type EpisodeRepository = {
   insertEpisode: (episode: EpisodeRecord) => void | Promise<void>;
   updateEpisodeSignal: (args: {
@@ -357,15 +355,6 @@ export type InMemoryEpisodeRepository = EpisodeRepository & {
     semanticRules: SemanticMemoryRulePlaceholder[];
   };
 };
-
-/**
- * Build deterministic IPC error objects for Memory System responses.
- *
- * Why: memory IPC handlers must return explicit, parseable failures.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
-}
 
 /**
  * Compute lexical overlap score for mixed recall ranking.

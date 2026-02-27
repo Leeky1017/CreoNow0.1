@@ -2,13 +2,9 @@ import { createHash, randomUUID } from "node:crypto";
 
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import { deriveContent } from "../documents/derive";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
 
 type SearchReplaceScope = "currentDocument" | "wholeProject";
 
@@ -102,28 +98,6 @@ type ReplaceJsonResult = {
 };
 
 type PreviewTokenStore = Map<string, StoredPreview>;
-
-/**
- * Build a stable IPC error object.
- *
- * Why: Search replacement must return deterministic envelope errors.
- */
-function ipcError(
-  code: IpcErrorCode,
-  message: string,
-  details?: unknown,
-  retryable?: boolean,
-): Err {
-  return {
-    ok: false,
-    error: {
-      code,
-      message,
-      details,
-      ...(typeof retryable === "boolean" ? { retryable } : {}),
-    },
-  };
-}
 
 function hashJson(contentJson: string): string {
   return createHash("sha256").update(contentJson, "utf8").digest("hex");
@@ -710,7 +684,7 @@ export function createSearchReplaceService(deps: {
                 "SEARCH_CONCURRENT_WRITE_CONFLICT",
                 "Concurrent write conflict during replace",
                 { documentId: row.documentId },
-                true,
+                { retryable: true },
               );
             }
             return message === "NOT_FOUND"

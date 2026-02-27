@@ -1,11 +1,9 @@
 import type Database from "better-sqlite3";
 
-import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
+import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
-
-type Ok<T> = { ok: true; data: T };
-type Err = { ok: false; error: IpcError };
-export type ServiceResult<T> = Ok<T> | Err;
+import { ipcError, type ServiceResult } from "../shared/ipcResult";
+export type { ServiceResult };
 
 export type AiProxySettings = {
   enabled: boolean;
@@ -84,15 +82,6 @@ const ENCRYPTED_SECRET_PREFIX = "__safe_storage_v1__:";
 
 function nowTs(): number {
   return Date.now();
-}
-
-/**
- * Build a stable IPC error object.
- *
- * Why: proxy errors must be deterministic and must not leak secrets.
- */
-function ipcError(code: IpcErrorCode, message: string, details?: unknown): Err {
-  return { ok: false, error: { code, message, details } };
 }
 
 type SettingsRow = { valueJson: string };
