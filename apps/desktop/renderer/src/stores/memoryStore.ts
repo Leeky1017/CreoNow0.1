@@ -408,7 +408,7 @@ export function createMemoryStore(deps: { invoke: IpcInvoke }) {
         return res;
       }
 
-      void get().refresh();
+      await get().refresh();
       return res;
     },
 
@@ -419,7 +419,7 @@ export function createMemoryStore(deps: { invoke: IpcInvoke }) {
         return res;
       }
 
-      void get().refresh();
+      await get().refresh();
       return res;
     },
 

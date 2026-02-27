@@ -1,6 +1,7 @@
 import React from "react";
 import { create } from "zustand";
 
+import { runFireAndForget } from "../lib/fireAndForget";
 import type {
   IpcChannel,
   IpcError,
@@ -197,7 +198,9 @@ export function createProjectStore(deps: {
       }
 
       set({ current: setRes.data, lastError: null });
-      void get().bootstrap();
+      runFireAndForget(() => get().bootstrap(), {
+        label: "projectStore.bootstrap",
+      });
       return setRes;
     },
 
@@ -272,7 +275,9 @@ export function createProjectStore(deps: {
         current: prev.current?.projectId === projectId ? null : prev.current,
         lastError: null,
       }));
-      void get().bootstrap();
+      runFireAndForget(() => get().bootstrap(), {
+        label: "projectStore.bootstrap",
+      });
       return { ok: true, data: { deleted: true } };
     },
 
@@ -287,7 +292,9 @@ export function createProjectStore(deps: {
       }
 
       set({ lastError: null });
-      void get().bootstrap();
+      runFireAndForget(() => get().bootstrap(), {
+        label: "projectStore.bootstrap",
+      });
       return res;
     },
 
@@ -299,7 +306,9 @@ export function createProjectStore(deps: {
       }
 
       set({ lastError: null });
-      void get().bootstrap();
+      runFireAndForget(() => get().bootstrap(), {
+        label: "projectStore.bootstrap",
+      });
       return res;
     },
 
@@ -326,7 +335,9 @@ export function createProjectStore(deps: {
             : prev.current,
         lastError: null,
       }));
-      void get().bootstrap();
+      runFireAndForget(() => get().bootstrap(), {
+        label: "projectStore.bootstrap",
+      });
       return res;
     },
   }));

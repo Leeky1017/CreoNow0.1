@@ -314,7 +314,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
         return res;
       }
 
-      void get().refresh();
+      await get().refresh();
       return { ok: true, data: toLegacyEntity(res.data) };
     },
 
@@ -368,7 +368,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
         return res;
       }
 
-      void get().refresh();
+      await get().refresh();
       return { ok: true, data: toLegacyEntity(res.data) };
     },
 
@@ -389,7 +389,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
         return res;
       }
 
-      void get().refresh();
+      await get().refresh();
       return res;
     },
 
@@ -412,7 +412,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
         return res;
       }
 
-      void get().refresh();
+      await get().refresh();
       return { ok: true, data: toLegacyRelation(res.data) };
     },
 
@@ -438,7 +438,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
         return res;
       }
 
-      void get().refresh();
+      await get().refresh();
       return { ok: true, data: toLegacyRelation(res.data) };
     },
 
@@ -459,7 +459,7 @@ export function createKgStore(deps: { invoke: IpcInvoke }) {
         return res;
       }
 
-      void get().refresh();
+      await get().refresh();
       return res;
     },
   }));
