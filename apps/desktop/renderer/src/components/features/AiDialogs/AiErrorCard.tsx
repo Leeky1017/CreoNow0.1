@@ -222,6 +222,54 @@ function getBorderColorByType(type: AiErrorType): string {
   }
 }
 
+function getBackgroundColorByType(type: AiErrorType): string {
+  switch (type) {
+    case "rate_limit":
+    case "usage_limit":
+      return "bg-[var(--color-bg-raised)]";
+    case "service_error":
+    case "connection_failed":
+    case "timeout":
+    default:
+      return "bg-[var(--color-error-subtle)]";
+  }
+}
+
+function isRetryableErrorType(type: AiErrorType): boolean {
+  switch (type) {
+    case "connection_failed":
+    case "timeout":
+    case "rate_limit":
+      return true;
+    default:
+      return false;
+  }
+}
+
+function getRetryButtonContent(
+  retryState: RetryState,
+  errorType: AiErrorType,
+): JSX.Element {
+  if (retryState === "loading") {
+    return (
+      <>
+        <Spinner />
+        <span>Retrying...</span>
+      </>
+    );
+  }
+
+  if (retryState === "success") {
+    return <span className="text-[var(--color-success)]">Success!</span>;
+  }
+
+  if (retryState === "error") {
+    return <span className="text-[var(--color-error)]">Failed</span>;
+  }
+
+  return <span>{errorType === "timeout" ? "Try Again" : "Retry"}</span>;
+}
+
 /**
 
  * Card styles
@@ -468,6 +516,91 @@ const dismissButtonStyles = [
   "focus-visible:outline-[var(--color-ring-focus)]",
 ].join(" ");
 
+type RenderActionButtonsArgs = {
+  errorType: AiErrorType;
+  onUpgradePlan?: () => void;
+  onViewUsage?: () => void;
+  onRetry?: () => void | Promise<void>;
+  onCheckStatus?: () => void;
+  handleRetry: () => void;
+  retryState: RetryState;
+  isRetryDisabled: boolean;
+  retryButtonContent: JSX.Element;
+};
+
+function renderActionButtons({
+  errorType,
+  onUpgradePlan,
+  onViewUsage,
+  onRetry,
+  onCheckStatus,
+  handleRetry,
+  retryState,
+  isRetryDisabled,
+  retryButtonContent,
+}: RenderActionButtonsArgs): JSX.Element | null {
+  if (errorType === "usage_limit") {
+    return (
+      <>
+        {onUpgradePlan && (
+          <button
+            type="button"
+            className={upgradeButtonStyles}
+            onClick={onUpgradePlan}
+          >
+            Upgrade Plan
+          </button>
+        )}
+
+        {onViewUsage && (
+          <button type="button" className={linkButtonStyles} onClick={onViewUsage}>
+            View Usage
+          </button>
+        )}
+      </>
+    );
+  }
+
+  if (errorType === "service_error") {
+    return (
+      <>
+        {onRetry && (
+          <button
+            type="button"
+            className={retryButtonStyles}
+            onClick={handleRetry}
+            disabled={retryState === "loading"}
+          >
+            {retryButtonContent}
+          </button>
+        )}
+
+        {onCheckStatus && (
+          <button type="button" className={linkButtonStyles} onClick={onCheckStatus}>
+            Check Status
+            <ExternalLinkIcon />
+          </button>
+        )}
+      </>
+    );
+  }
+
+  if (isRetryableErrorType(errorType) && onRetry) {
+    return (
+      <button
+        type="button"
+        className={retryButtonStyles}
+        onClick={handleRetry}
+        disabled={isRetryDisabled}
+      >
+        {retryButtonContent}
+      </button>
+    );
+  }
+
+  return null;
+}
+
 /**
 
  * AiErrorCard - Error state card for AI operations
@@ -550,12 +683,7 @@ export function AiErrorCard({
 
   const borderColor = getBorderColorByType(error.type);
 
-  const bgColor =
-    error.type === "service_error"
-      ? "bg-[var(--color-error-subtle)]"
-      : error.type === "rate_limit" || error.type === "usage_limit"
-        ? "bg-[var(--color-bg-raised)]"
-        : "bg-[var(--color-error-subtle)]";
+  const bgColor = getBackgroundColorByType(error.type);
 
   // Countdown timer for rate limit errors
 
@@ -633,29 +761,7 @@ export function AiErrorCard({
   const opacityClass =
     cardState === "dismissing" ? "opacity-0 scale-95" : "opacity-100 scale-100";
 
-  // Get retry button text and state
-
-  const getRetryButtonContent = () => {
-    if (retryState === "loading") {
-      return (
-        <>
-          <Spinner />
-
-          <span>Retrying...</span>
-        </>
-      );
-    }
-
-    if (retryState === "success") {
-      return <span className="text-[var(--color-success)]">Success!</span>;
-    }
-
-    if (retryState === "error") {
-      return <span className="text-[var(--color-error)]">Failed</span>;
-    }
-
-    return <span>{error.type === "timeout" ? "Try Again" : "Retry"}</span>;
-  };
+  const retryButtonContent = getRetryButtonContent(retryState, error.type);
 
   return (
     <div
@@ -715,75 +821,17 @@ export function AiErrorCard({
           {/* Actions */}
 
           <div className={buttonContainerStyles}>
-            {/* Usage limit: Upgrade Plan + View Usage */}
-
-            {error.type === "usage_limit" && (
-              <>
-                {onUpgradePlan && (
-                  <button
-                    type="button"
-                    className={upgradeButtonStyles}
-                    onClick={onUpgradePlan}
-                  >
-                    Upgrade Plan
-                  </button>
-                )}
-
-                {onViewUsage && (
-                  <button
-                    type="button"
-                    className={linkButtonStyles}
-                    onClick={onViewUsage}
-                  >
-                    View Usage
-                  </button>
-                )}
-              </>
-            )}
-
-            {/* Service error: Retry + Check Status */}
-
-            {error.type === "service_error" && (
-              <>
-                {onRetry && (
-                  <button
-                    type="button"
-                    className={retryButtonStyles}
-                    onClick={handleRetry}
-                    disabled={retryState === "loading"}
-                  >
-                    {getRetryButtonContent()}
-                  </button>
-                )}
-
-                {onCheckStatus && (
-                  <button
-                    type="button"
-                    className={linkButtonStyles}
-                    onClick={onCheckStatus}
-                  >
-                    Check Status
-                    <ExternalLinkIcon />
-                  </button>
-                )}
-              </>
-            )}
-
-            {/* Connection/Timeout/Rate Limit: Retry button */}
-
-            {(error.type === "connection_failed" ||
-              error.type === "timeout" ||
-              error.type === "rate_limit") &&
-              onRetry && (
-                <button
-                  type="button"
-                  className={retryButtonStyles}
-                  onClick={handleRetry}
-                  disabled={isRetryDisabled}
-                >
-                  {getRetryButtonContent()}
-                </button>
-              )}
+            {renderActionButtons({
+              errorType: error.type,
+              onUpgradePlan,
+              onViewUsage,
+              onRetry,
+              onCheckStatus,
+              handleRetry,
+              retryState,
+              isRetryDisabled,
+              retryButtonContent,
+            })}
           </div>
         </div>
       </div>
