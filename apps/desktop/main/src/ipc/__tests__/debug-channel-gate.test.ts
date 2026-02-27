@@ -84,7 +84,26 @@ async function main(): Promise<void> {
   );
 
   await runScenario(
-    "IPC-S2-DBG-S2 non-production 环境保留调试能力",
+    "IPC-S2-DBG-S2 缺失 NODE_ENV 默认 fail-closed",
+    async () => {
+      const harness = createHarness({
+        env: {},
+        tableNames: ["zeta", "alpha"],
+      });
+
+      registerDbDebugIpcHandlers({
+        ipcMain: harness.ipcMain,
+        db: harness.db,
+        logger: harness.logger,
+        env: harness.env,
+      });
+
+      assert.equal(harness.handlers.has("db:debug:tablenames"), false);
+    },
+  );
+
+  await runScenario(
+    "IPC-S2-DBG-S3 non-production 环境保留调试能力",
     async () => {
       const harness = createHarness({
         env: { NODE_ENV: "development" },
@@ -111,6 +130,25 @@ async function main(): Promise<void> {
 
       assert.equal(response.ok, true);
       assert.deepEqual(response.data?.tableNames, ["alpha", "zeta"]);
+    },
+  );
+
+  await runScenario(
+    "IPC-S2-DBG-S4 显式开关允许测试外开启调试通道",
+    async () => {
+      const harness = createHarness({
+        env: { CREONOW_ENABLE_DB_DEBUG: "1", NODE_ENV: "production" },
+        tableNames: ["zeta", "alpha"],
+      });
+
+      registerDbDebugIpcHandlers({
+        ipcMain: harness.ipcMain,
+        db: harness.db,
+        logger: harness.logger,
+        env: harness.env,
+      });
+
+      assert.equal(harness.handlers.has("db:debug:tablenames"), true);
     },
   );
 }
