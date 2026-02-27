@@ -78,6 +78,8 @@ const FileStoreContext = React.createContext<UseFileStore | null>(null);
  * testable state machine, and `currentDocumentId` must persist per project.
  */
 export function createFileStore(deps: { invoke: IpcInvoke }) {
+  let latestBootstrapRequestId = 0;
+
   async function loadDocuments(
     projectId: string,
   ): Promise<IpcInvokeResult<"file:document:list">> {
@@ -149,6 +151,10 @@ export function createFileStore(deps: { invoke: IpcInvoke }) {
         return;
       }
 
+      const requestId = ++latestBootstrapRequestId;
+      const shouldCommit = () =>
+        requestId === latestBootstrapRequestId && get().projectId === projectId;
+
       set({
         projectId,
         bootstrapStatus: "loading",
@@ -158,12 +164,18 @@ export function createFileStore(deps: { invoke: IpcInvoke }) {
       });
 
       const listRes = await loadDocuments(projectId);
+      if (!shouldCommit()) {
+        return;
+      }
       if (!listRes.ok) {
         set({ bootstrapStatus: "error", lastError: listRes.error });
         return;
       }
 
       const currentRes = await loadCurrent(projectId);
+      if (!shouldCommit()) {
+        return;
+      }
       if (currentRes.ok) {
         set({
           bootstrapStatus: "ready",
@@ -185,6 +197,9 @@ export function createFileStore(deps: { invoke: IpcInvoke }) {
       const firstExisting = listRes.data.items[0]?.documentId ?? null;
       if (firstExisting) {
         const setRes = await persistCurrent(projectId, firstExisting);
+        if (!shouldCommit()) {
+          return;
+        }
         if (!setRes.ok) {
           set({
             bootstrapStatus: "error",
@@ -203,18 +218,27 @@ export function createFileStore(deps: { invoke: IpcInvoke }) {
       }
 
       const created = await createDocument(projectId);
+      if (!shouldCommit()) {
+        return;
+      }
       if (!created.ok) {
         set({ bootstrapStatus: "error", lastError: created.error });
         return;
       }
 
       const setRes = await persistCurrent(projectId, created.data.documentId);
+      if (!shouldCommit()) {
+        return;
+      }
       if (!setRes.ok) {
         set({ bootstrapStatus: "error", lastError: setRes.error });
         return;
       }
 
       const listRes2 = await loadDocuments(projectId);
+      if (!shouldCommit()) {
+        return;
+      }
       if (!listRes2.ok) {
         set({ bootstrapStatus: "error", lastError: listRes2.error });
         return;
