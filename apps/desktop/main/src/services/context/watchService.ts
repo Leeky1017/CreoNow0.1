@@ -24,7 +24,10 @@ export function createCreonowWatchService(deps: {
   watchFactory?: typeof fs.watch;
   onWatcherInvalidated?: (args: { projectId: string; reason: "error" }) => void;
 }): CreonowWatchService {
-  const watchers = new Map<string, fs.FSWatcher>();
+  const watchers = new Map<
+    string,
+    { watcher: fs.FSWatcher; onError: (error: unknown) => void }
+  >();
   const watchFactory = deps.watchFactory ?? fs.watch;
   const supportsRecursiveWatch =
     process.platform === "win32" || process.platform === "darwin";
@@ -69,22 +72,24 @@ export function createCreonowWatchService(deps: {
             // Intentionally ignored in P0: renderer will pull fresh context on demand.
           },
         );
-        watcher.on("error", (error) => {
+        const onError = (error: unknown): void => {
           deps.logger.error("context_watch_error", {
             projectId,
             code: "IO_ERROR",
             message: error instanceof Error ? error.message : String(error),
           });
+          watcher.removeListener("error", onError);
           safeClose(watcher);
-          if (watchers.get(projectId) === watcher) {
+          if (watchers.get(projectId)?.watcher === watcher) {
             watchers.delete(projectId);
           }
           deps.onWatcherInvalidated?.({
             projectId,
             reason: "error",
           });
-        });
-        watchers.set(projectId, watcher);
+        };
+        watcher.on("error", onError);
+        watchers.set(projectId, { watcher, onError });
         return { ok: true, data: { watching: true } };
       } catch (error) {
         deps.logger.error("context_watch_start_failed", {
@@ -101,12 +106,13 @@ export function createCreonowWatchService(deps: {
         return ipcError("INVALID_ARGUMENT", "projectId is required");
       }
 
-      const watcher = watchers.get(projectId);
-      if (!watcher) {
+      const entry = watchers.get(projectId);
+      if (!entry) {
         return { ok: true, data: { watching: false } };
       }
 
-      safeClose(watcher);
+      entry.watcher.removeListener("error", entry.onError);
+      safeClose(entry.watcher);
       watchers.delete(projectId);
       return { ok: true, data: { watching: false } };
     },

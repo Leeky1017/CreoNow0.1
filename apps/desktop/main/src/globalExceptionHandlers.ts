@@ -22,6 +22,7 @@ export type GlobalExceptionHandlerDeps = {
 };
 
 const DEFAULT_SHUTDOWN_TIMEOUT_MS = 10_000;
+const installedProcessLikes = new WeakSet<FatalProcessLike>();
 
 function describeReason(reason: unknown): {
   error_type: string;
@@ -43,6 +44,12 @@ function describeReason(reason: unknown): {
 export function registerGlobalExceptionHandlers(
   deps: GlobalExceptionHandlerDeps,
 ): void {
+  if (installedProcessLikes.has(deps.processLike)) {
+    return;
+  }
+
+  installedProcessLikes.add(deps.processLike);
+
   const timeoutMs = deps.shutdownTimeoutMs ?? DEFAULT_SHUTDOWN_TIMEOUT_MS;
   const setTimeoutFn = deps.setTimeoutFn ?? setTimeout;
   const clearTimeoutFn = deps.clearTimeoutFn ?? clearTimeout;
@@ -99,11 +106,16 @@ export function registerGlobalExceptionHandlers(
     }
   };
 
-  deps.processLike.on("uncaughtException", (error) => {
-    handleFatal("uncaughtException", error);
-  });
+  try {
+    deps.processLike.on("uncaughtException", (error) => {
+      handleFatal("uncaughtException", error);
+    });
 
-  deps.processLike.on("unhandledRejection", (reason) => {
-    handleFatal("unhandledRejection", reason);
-  });
+    deps.processLike.on("unhandledRejection", (reason) => {
+      handleFatal("unhandledRejection", reason);
+    });
+  } catch (error) {
+    installedProcessLikes.delete(deps.processLike);
+    throw error;
+  }
 }
