@@ -12,6 +12,111 @@ import { emitAiModelCatalogUpdated } from "../ai/modelCatalogEvents";
 type ProxySettings = IpcResponseData<"ai:config:get">;
 type ModelCatalog = IpcResponseData<"ai:models:list">;
 
+type ModelsSectionProps = {
+  modelCatalog: ModelCatalog | null;
+  modelsStatus: "idle" | "loading";
+  modelsErrorText: string | null;
+};
+
+function ModelsSection({
+  modelCatalog,
+  modelsStatus,
+  modelsErrorText,
+}: ModelsSectionProps): JSX.Element {
+  return (
+    <div className="flex flex-col gap-1.5 border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-2.5">
+      <div className="flex items-center gap-2">
+        <Text size="small" color="muted">
+          Available Models
+        </Text>
+        <Text size="tiny" color="muted" className="ml-auto">
+          {modelCatalog ? `source: ${modelCatalog.source}` : "source: unknown"}
+        </Text>
+      </div>
+
+      {modelsErrorText ? (
+        <Text data-testid="proxy-models-error" size="small" color="muted">
+          {modelsErrorText}
+        </Text>
+      ) : null}
+
+      <div data-testid="proxy-models-list" className="max-h-28 overflow-auto">
+        {modelCatalog && modelCatalog.items.length > 0 ? (
+          modelCatalog.items.map((item) => (
+            <Text key={item.id} size="small" color="muted">
+              {item.name} ({item.id})
+            </Text>
+          ))
+        ) : (
+          <Text size="small" color="muted">
+            {modelsStatus === "loading" ? "Loading models..." : "No models discovered"}
+          </Text>
+        )}
+      </div>
+    </div>
+  );
+}
+
+type ProxyActionsProps = {
+  status: "idle" | "loading";
+  modelsStatus: "idle" | "loading";
+  onSave: () => Promise<void>;
+  onTest: () => Promise<void>;
+  onModelsRefresh: () => Promise<void>;
+  onRefresh: () => Promise<void>;
+};
+
+function ProxyActions({
+  status,
+  modelsStatus,
+  onSave,
+  onTest,
+  onModelsRefresh,
+  onRefresh,
+}: ProxyActionsProps): JSX.Element {
+  return (
+    <div className="flex gap-2">
+      <Button
+        data-testid="proxy-save"
+        variant="secondary"
+        size="sm"
+        onClick={() => void onSave()}
+        disabled={status === "loading"}
+      >
+        Save
+      </Button>
+      <Button
+        data-testid="proxy-test"
+        variant="secondary"
+        size="sm"
+        onClick={() => void onTest()}
+        disabled={status === "loading"}
+      >
+        Test
+      </Button>
+      <Button
+        data-testid="proxy-models-refresh"
+        variant="secondary"
+        size="sm"
+        onClick={() => void onModelsRefresh()}
+        disabled={modelsStatus === "loading"}
+      >
+        Refresh Models
+      </Button>
+      <Button
+        data-testid="proxy-refresh"
+        variant="secondary"
+        size="sm"
+        onClick={() => void onRefresh()}
+        disabled={status === "loading"}
+        className="ml-auto"
+      >
+        Refresh
+      </Button>
+    </div>
+  );
+}
+
 /**
  * ProxySection controls optional OpenAI-compatible proxy settings.
  *
@@ -300,80 +405,20 @@ export function ProxySection(): JSX.Element {
         </Text>
       ) : null}
 
-      <div className="flex flex-col gap-1.5 border border-[var(--color-border-default)] rounded-[var(--radius-md)] p-2.5">
-        <div className="flex items-center gap-2">
-          <Text size="small" color="muted">
-            Available Models
-          </Text>
-          <Text size="tiny" color="muted" className="ml-auto">
-            {modelCatalog
-              ? `source: ${modelCatalog.source}`
-              : "source: unknown"}
-          </Text>
-        </div>
+      <ModelsSection
+        modelCatalog={modelCatalog}
+        modelsStatus={modelsStatus}
+        modelsErrorText={modelsErrorText}
+      />
 
-        {modelsErrorText ? (
-          <Text data-testid="proxy-models-error" size="small" color="muted">
-            {modelsErrorText}
-          </Text>
-        ) : null}
-
-        <div data-testid="proxy-models-list" className="max-h-28 overflow-auto">
-          {modelCatalog && modelCatalog.items.length > 0 ? (
-            modelCatalog.items.map((item) => (
-              <Text key={item.id} size="small" color="muted">
-                {item.name} ({item.id})
-              </Text>
-            ))
-          ) : (
-            <Text size="small" color="muted">
-              {modelsStatus === "loading"
-                ? "Loading models..."
-                : "No models discovered"}
-            </Text>
-          )}
-        </div>
-      </div>
-
-      <div className="flex gap-2">
-        <Button
-          data-testid="proxy-save"
-          variant="secondary"
-          size="sm"
-          onClick={() => void onSave()}
-          disabled={status === "loading"}
-        >
-          Save
-        </Button>
-        <Button
-          data-testid="proxy-test"
-          variant="secondary"
-          size="sm"
-          onClick={() => void onTest()}
-          disabled={status === "loading"}
-        >
-          Test
-        </Button>
-        <Button
-          data-testid="proxy-models-refresh"
-          variant="secondary"
-          size="sm"
-          onClick={() => void refreshModels()}
-          disabled={modelsStatus === "loading"}
-        >
-          Refresh Models
-        </Button>
-        <Button
-          data-testid="proxy-refresh"
-          variant="secondary"
-          size="sm"
-          onClick={() => void refresh()}
-          disabled={status === "loading"}
-          className="ml-auto"
-        >
-          Refresh
-        </Button>
-      </div>
+      <ProxyActions
+        status={status}
+        modelsStatus={modelsStatus}
+        onSave={onSave}
+        onTest={onTest}
+        onModelsRefresh={refreshModels}
+        onRefresh={refresh}
+      />
     </Card>
   );
 }
