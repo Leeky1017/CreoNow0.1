@@ -67,15 +67,21 @@ export function GraphCanvas({
     [data.nodes],
   );
 
-  // Filter visible nodes
-  const visibleNodes = data.nodes.filter((node) => isNodeVisible(node, filter));
-  const visibleNodeIds = new Set(visibleNodes.map((n) => n.id));
+  const { visibleNodes, visibleEdges } = useMemo(() => {
+    const nextVisibleNodes = data.nodes.filter((node) =>
+      isNodeVisible(node, filter),
+    );
+    const visibleNodeIds = new Set(nextVisibleNodes.map((node) => node.id));
+    const nextVisibleEdges = data.edges.filter(
+      (edge) =>
+        visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target),
+    );
 
-  // Filter edges to only show those connecting visible nodes
-  const visibleEdges = data.edges.filter(
-    (edge) =>
-      visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target),
-  );
+    return {
+      visibleNodes: nextVisibleNodes,
+      visibleEdges: nextVisibleEdges,
+    };
+  }, [data.edges, data.nodes, filter]);
 
   /**
    * Handle node drag start
