@@ -153,10 +153,10 @@ export function SearchStoreProvider(props: {
   store: UseSearchStore;
   children: React.ReactNode;
 }): React.ReactElement {
-  return React.createElement(
-    SearchStoreContext.Provider,
-    { value: props.store },
-    props.children,
+  return (
+    <SearchStoreContext.Provider value={props.store}>
+      {props.children}
+    </SearchStoreContext.Provider>
   );
 }
 

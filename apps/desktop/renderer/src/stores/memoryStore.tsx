@@ -453,10 +453,10 @@ export function MemoryStoreProvider(props: {
   store: UseMemoryStore;
   children: React.ReactNode;
 }): JSX.Element {
-  return React.createElement(
-    MemoryStoreContext.Provider,
-    { value: props.store },
-    props.children,
+  return (
+    <MemoryStoreContext.Provider value={props.store}>
+      {props.children}
+    </MemoryStoreContext.Provider>
   );
 }
 

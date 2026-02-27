@@ -11,11 +11,11 @@ type Hit = {
 const REPO_ROOT = path.resolve(import.meta.dirname, "../../../..");
 
 const STORE_FILES = [
-  "apps/desktop/renderer/src/stores/aiStore.ts",
-  "apps/desktop/renderer/src/stores/fileStore.ts",
-  "apps/desktop/renderer/src/stores/searchStore.ts",
-  "apps/desktop/renderer/src/stores/kgStore.ts",
-  "apps/desktop/renderer/src/stores/memoryStore.ts",
+  "apps/desktop/renderer/src/stores/aiStore.tsx",
+  "apps/desktop/renderer/src/stores/fileStore.tsx",
+  "apps/desktop/renderer/src/stores/searchStore.tsx",
+  "apps/desktop/renderer/src/stores/kgStore.tsx",
+  "apps/desktop/renderer/src/stores/memoryStore.tsx",
   "apps/desktop/renderer/src/stores/editorStore.tsx",
   "apps/desktop/renderer/src/stores/versionStore.tsx",
   "apps/desktop/renderer/src/stores/projectStore.tsx",

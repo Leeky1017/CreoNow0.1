@@ -341,10 +341,10 @@ export function FileStoreProvider(props: {
   store: UseFileStore;
   children: React.ReactNode;
 }): JSX.Element {
-  return React.createElement(
-    FileStoreContext.Provider,
-    { value: props.store },
-    props.children,
+  return (
+    <FileStoreContext.Provider value={props.store}>
+      {props.children}
+    </FileStoreContext.Provider>
   );
 }
 

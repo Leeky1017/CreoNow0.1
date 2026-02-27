@@ -647,10 +647,10 @@ export function AiStoreProvider(props: {
   store: UseAiStore;
   children: React.ReactNode;
 }): React.ReactElement {
-  return React.createElement(
-    AiStoreContext.Provider,
-    { value: props.store },
-    props.children,
+  return (
+    <AiStoreContext.Provider value={props.store}>
+      {props.children}
+    </AiStoreContext.Provider>
   );
 }
 

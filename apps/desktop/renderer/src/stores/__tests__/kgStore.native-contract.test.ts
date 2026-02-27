@@ -121,7 +121,7 @@ describe("kgStore native contract", () => {
 
   it("AUD-C11-S1/S2: source code must not keep toLegacy adapters", () => {
     const source = readFileSync(
-      resolve(process.cwd(), "renderer/src/stores/kgStore.ts"),
+      resolve(process.cwd(), "renderer/src/stores/kgStore.tsx"),
       "utf8",
     );
 

@@ -458,10 +458,10 @@ export function KgStoreProvider(props: {
   store: UseKgStore;
   children: React.ReactNode;
 }): JSX.Element {
-  return React.createElement(
-    KgStoreContext.Provider,
-    { value: props.store },
-    props.children,
+  return (
+    <KgStoreContext.Provider value={props.store}>
+      {props.children}
+    </KgStoreContext.Provider>
   );
 }
 

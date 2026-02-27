@@ -77,11 +77,11 @@ describe("store refresh governance", () => {
 
   it("static scan clears void refresh patterns in critical stores (AUD-C9-S8)", () => {
     const kgStoreSource = readFileSync(
-      resolve(process.cwd(), "renderer/src/stores/kgStore.ts"),
+      resolve(process.cwd(), "renderer/src/stores/kgStore.tsx"),
       "utf8",
     );
     const memoryStoreSource = readFileSync(
-      resolve(process.cwd(), "renderer/src/stores/memoryStore.ts"),
+      resolve(process.cwd(), "renderer/src/stores/memoryStore.tsx"),
       "utf8",
     );
     const projectStoreSource = readFileSync(
