@@ -1,19 +1,84 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # ── Fast feedback (parallel) ─────────────────────────────────
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      code_changed: ${{ steps.diff.outputs.code_changed }}
+      desktop_changed: ${{ steps.diff.outputs.desktop_changed }}
+      docs_only: ${{ steps.diff.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: diff
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE="${{ github.event.before }}"
+            if [[ "$BASE" == "0000000000000000000000000000000000000000" ]]; then
+              BASE="$(git rev-list --max-parents=0 HEAD)"
+            fi
+          fi
+          HEAD="${{ github.sha }}"
+          FILES="$(git diff --name-only "$BASE" "$HEAD")"
+
+          if printf '%s\n' "$FILES" | grep -Eq '^(apps/|packages/|scripts/|package.json|pnpm-lock.yaml|.github/actions/|.github/workflows/)'; then
+            echo "code_changed=true" >> "$GITHUB_OUTPUT"
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "code_changed=false" >> "$GITHUB_OUTPUT"
+            echo "docs_only=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          if printf '%s\n' "$FILES" | grep -Eq '^(apps/desktop/|packages/|package.json|pnpm-lock.yaml)'; then
+            echo "desktop_changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "desktop_changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  doc-timestamp-gate:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Doc timestamp gate
+        run: |
+          python3 scripts/check_doc_timestamps.py \
+            --base "${{ github.event.pull_request.base.sha }}" \
+            --head "${{ github.event.pull_request.head.sha }}"
 
   lint-and-typecheck:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-node-pnpm
       - name: Lint
         run: pnpm lint
@@ -22,54 +87,67 @@ jobs:
       - name: Type check
         run: pnpm typecheck
 
-  doc-timestamp-gate:
+  unit-test-core:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    timeout-minutes: 2
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Doc timestamp gate
-        run: |
-          python3 scripts/check_doc_timestamps.py \
-            --base "${{ github.event.pull_request.base.sha }}" \
-            --head "${{ github.event.pull_request.head.sha }}"
-
-  unit-test:
-    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-node-pnpm
       - name: Unit tests
         run: pnpm test:unit
+
+  unit-test-renderer:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node-pnpm
       - name: Desktop vitest (renderer/store)
         run: pnpm -C apps/desktop test:run
 
   integration-test:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-node-pnpm
       - name: Integration tests
         run: pnpm test:integration
 
   test-discovery-consistency:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-node-pnpm
       - name: Test discovery consistency
         run: pnpm test:discovery:consistency
 
   coverage-gate:
     runs-on: ubuntu-latest
+    needs: changes
+    if: github.event_name == 'pull_request' && needs.changes.outputs.docs_only != 'true'
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-node-pnpm
       - name: Coverage gate
         run: pnpm test:coverage:desktop
@@ -81,47 +159,65 @@ jobs:
 
   ipc-acceptance:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-node-pnpm
       - name: IPC acceptance SLO gate
         run: pnpm test:ipc:acceptance
 
   contract-check:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-node-pnpm
       - name: IPC contract check
         run: pnpm contract:check
 
   cross-module-check:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-node-pnpm
       - name: Cross-module contract alignment check
         run: pnpm cross-module:check
 
   storybook-build:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.desktop_changed == 'true'
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: ./.github/actions/setup-node-pnpm
       - name: Storybook build check
         run: pnpm -C apps/desktop storybook:build
 
-  # ── Windows jobs ─────────────────────────────────────────────
-
   windows-e2e:
     runs-on: windows-latest
+    needs: changes
+    if: github.event_name == 'pull_request' && needs.changes.outputs.desktop_changed == 'true'
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-python@v5
         with:
@@ -135,6 +231,13 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~\AppData\Local\ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -156,10 +259,13 @@ jobs:
 
   windows-build:
     runs-on: windows-latest
-    if: github.event_name == 'push'
+    needs: changes
+    if: github.event_name == 'push' && needs.changes.outputs.desktop_changed == 'true'
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-python@v5
         with:
@@ -173,6 +279,15 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Cache Electron builder
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~\AppData\Local\electron\Cache
+            ~\AppData\Local\electron-builder\Cache
+          key: electron-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -184,16 +299,17 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: creonow-windows-build
-          path: |
-            apps/desktop/dist-electron/
+          path: apps/desktop/dist-electron/
 
   ci:
     runs-on: ubuntu-latest
     if: ${{ always() && github.event_name == 'pull_request' }}
     needs:
+      - changes
       - doc-timestamp-gate
       - lint-and-typecheck
-      - unit-test
+      - unit-test-core
+      - unit-test-renderer
       - integration-test
       - test-discovery-consistency
       - coverage-gate
@@ -217,14 +333,14 @@ jobs:
           non_success = {
             name: meta.get("result", "unknown")
             for name, meta in needs.items()
-            if meta.get("result") != "success"
+            if meta.get("result") not in {"success", "skipped"}
           }
 
           if non_success:
-            print("❌ ci gate blocked: prerequisite jobs not in success state:")
+            print("❌ ci gate blocked: prerequisite jobs not in success/skipped state:")
             for name, result in sorted(non_success.items()):
               print(f"  - {name}: {result}")
             sys.exit(1)
 
-          print("✅ All required CI jobs passed.")
+          print("✅ All required CI jobs passed (or were intentionally skipped).")
           PY
