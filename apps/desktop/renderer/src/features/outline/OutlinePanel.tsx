@@ -673,6 +673,146 @@ function NoResultsState({ query }: { query: string }) {
  *
  * Design ref: 13-sidebar-outline.html
  */
+interface OutlineDragHandlers {
+  handleDragStart: (e: React.DragEvent, itemId: string) => void;
+  handleDragEnd: () => void;
+  handleDragOver: (e: React.DragEvent, itemId: string, itemLevel: OutlineLevel) => void;
+  handleDragLeave: () => void;
+  handleDrop: (e: React.DragEvent, targetId: string) => void;
+}
+
+function useOutlineDrag(
+  draggingId: string | null,
+  dropPosition: DropPosition | null,
+  onReorder: OutlinePanelProps["onReorder"],
+  setDraggingId: React.Dispatch<React.SetStateAction<string | null>>,
+  setDragOverId: React.Dispatch<React.SetStateAction<string | null>>,
+  setDropPosition: React.Dispatch<React.SetStateAction<DropPosition | null>>,
+): OutlineDragHandlers {
+  const handleDragStart = (e: React.DragEvent, itemId: string) => {
+    e.dataTransfer.setData("text/plain", itemId);
+    e.dataTransfer.effectAllowed = "move";
+    setDraggingId(itemId);
+  };
+  const handleDragEnd = () => {
+    setDraggingId(null);
+    setDragOverId(null);
+    setDropPosition(null);
+  };
+  const handleDragOver = (e: React.DragEvent, itemId: string, itemLevel: OutlineLevel) => {
+    e.preventDefault();
+    if (draggingId === itemId) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const y = e.clientY - rect.top;
+    const height = rect.height;
+    const threshold = height / 4;
+    let position: DropPosition;
+    if (y < threshold) {
+      position = "before";
+    } else if (y > height - threshold) {
+      position = "after";
+    } else {
+      position = itemLevel !== "h3" ? "into" : "after";
+    }
+    setDragOverId(itemId);
+    setDropPosition(position);
+  };
+  const handleDragLeave = () => {
+    setDragOverId(null);
+    setDropPosition(null);
+  };
+  const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    const draggedId = e.dataTransfer.getData("text/plain");
+    if (draggedId && draggedId !== targetId && dropPosition) {
+      onReorder?.(draggedId, targetId, dropPosition);
+    }
+    setDraggingId(null);
+    setDragOverId(null);
+    setDropPosition(null);
+  };
+  return { handleDragStart, handleDragEnd, handleDragOver, handleDragLeave, handleDrop };
+}
+
+interface OutlineKeyboardParams {
+  focusedIndex: number;
+  visibleItems: OutlineItem[];
+  activeId: string | null | undefined;
+  flatItems: OutlineItem[];
+  collapsed: Set<string>;
+  selectedIds: Set<string>;
+  setFocusedIndex: React.Dispatch<React.SetStateAction<number>>;
+  onNavigate: OutlinePanelProps["onNavigate"];
+  toggleSelect: (id: string, e: React.MouseEvent | React.KeyboardEvent) => void;
+  toggleCollapse: (id: string) => void;
+  startEditing: (item: OutlineItem) => void;
+  handleDelete: (id: string) => void;
+  clearSelection: () => void;
+  setSelectedIds: React.Dispatch<React.SetStateAction<Set<string>>>;
+}
+
+function handleOutlineArrowNav(
+  e: React.KeyboardEvent,
+  key: string,
+  currentIdx: number,
+  p: OutlineKeyboardParams,
+): void {
+  if (key === "ArrowDown" || key === "ArrowUp") {
+    const delta = key === "ArrowDown" ? 1 : -1;
+    const nextIdx = currentIdx + delta;
+    if (nextIdx >= 0 && nextIdx < p.visibleItems.length) {
+      p.setFocusedIndex(nextIdx);
+      const item = p.visibleItems[nextIdx];
+      if (!e.shiftKey) { p.onNavigate?.(item.id); } else { p.toggleSelect(item.id, e); }
+    }
+    return;
+  }
+  const item = currentIdx >= 0 ? p.visibleItems[currentIdx] : null;
+  if (!item) return;
+  if (key === "ArrowRight" && p.collapsed.has(item.id)) {
+    p.toggleCollapse(item.id);
+  } else if (key === "ArrowLeft" && !p.collapsed.has(item.id) && hasChildren(item, p.flatItems)) {
+    p.toggleCollapse(item.id);
+  }
+}
+
+function useOutlineKeyboard(p: OutlineKeyboardParams): (e: React.KeyboardEvent) => void {
+  return (e: React.KeyboardEvent) => {
+    const currentIdx =
+      p.focusedIndex >= 0
+        ? p.focusedIndex
+        : p.visibleItems.findIndex((i) => i.id === p.activeId);
+    switch (e.key) {
+      case "ArrowDown": case "ArrowUp": case "ArrowRight": case "ArrowLeft":
+        e.preventDefault();
+        handleOutlineArrowNav(e, e.key, currentIdx, p);
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (currentIdx >= 0) { p.onNavigate?.(p.visibleItems[currentIdx].id); }
+        break;
+      case "F2":
+        e.preventDefault();
+        if (currentIdx >= 0) { p.startEditing(p.visibleItems[currentIdx]); }
+        break;
+      case "Delete": case "Backspace":
+        e.preventDefault();
+        if (currentIdx >= 0) { p.handleDelete(p.visibleItems[currentIdx].id); }
+        break;
+      case "Escape":
+        e.preventDefault();
+        if (p.selectedIds.size > 0) { p.clearSelection(); }
+        break;
+      case "a":
+        if (e.ctrlKey || e.metaKey) {
+          e.preventDefault();
+          p.setSelectedIds(new Set(p.visibleItems.map((i) => i.id)));
+        }
+        break;
+    }
+  };
+}
+
 export function OutlinePanel({
   items,
   activeId,
@@ -831,60 +971,9 @@ export function OutlinePanel({
   };
 
   // Drag handlers
-  const handleDragStart = (e: React.DragEvent, itemId: string) => {
-    e.dataTransfer.setData("text/plain", itemId);
-    e.dataTransfer.effectAllowed = "move";
-    setDraggingId(itemId);
-  };
-
-  const handleDragEnd = () => {
-    setDraggingId(null);
-    setDragOverId(null);
-    setDropPosition(null);
-  };
-
-  const handleDragOver = (
-    e: React.DragEvent,
-    itemId: string,
-    itemLevel: OutlineLevel,
-  ) => {
-    e.preventDefault();
-    if (draggingId === itemId) return;
-
-    const rect = e.currentTarget.getBoundingClientRect();
-    const y = e.clientY - rect.top;
-    const height = rect.height;
-    const threshold = height / 4;
-
-    let position: DropPosition;
-    if (y < threshold) {
-      position = "before";
-    } else if (y > height - threshold) {
-      position = "after";
-    } else {
-      // Only allow "into" for items that can have children (h1/h2)
-      position = itemLevel !== "h3" ? "into" : "after";
-    }
-
-    setDragOverId(itemId);
-    setDropPosition(position);
-  };
-
-  const handleDragLeave = () => {
-    setDragOverId(null);
-    setDropPosition(null);
-  };
-
-  const handleDrop = (e: React.DragEvent, targetId: string) => {
-    e.preventDefault();
-    const draggedId = e.dataTransfer.getData("text/plain");
-    if (draggedId && draggedId !== targetId && dropPosition) {
-      onReorder?.(draggedId, targetId, dropPosition);
-    }
-    setDraggingId(null);
-    setDragOverId(null);
-    setDropPosition(null);
-  };
+  // Drag handlers
+  const { handleDragStart, handleDragEnd, handleDragOver, handleDragLeave, handleDrop } =
+    useOutlineDrag(draggingId, dropPosition, onReorder, setDraggingId, setDragOverId, setDropPosition);
 
   // Delete handler (supports multi-select)
   const handleDelete = (itemId: string) => {
@@ -897,98 +986,11 @@ export function OutlinePanel({
   };
 
   // Keyboard navigation
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    const currentIdx =
-      focusedIndex >= 0
-        ? focusedIndex
-        : visibleItems.findIndex((i) => i.id === activeId);
-
-    switch (e.key) {
-      case "ArrowDown":
-        e.preventDefault();
-        if (currentIdx < visibleItems.length - 1) {
-          const nextIdx = currentIdx + 1;
-          setFocusedIndex(nextIdx);
-          const item = visibleItems[nextIdx];
-          if (!e.shiftKey) {
-            onNavigate?.(item.id);
-          } else {
-            toggleSelect(item.id, e);
-          }
-        }
-        break;
-
-      case "ArrowUp":
-        e.preventDefault();
-        if (currentIdx > 0) {
-          const prevIdx = currentIdx - 1;
-          setFocusedIndex(prevIdx);
-          const item = visibleItems[prevIdx];
-          if (!e.shiftKey) {
-            onNavigate?.(item.id);
-          } else {
-            toggleSelect(item.id, e);
-          }
-        }
-        break;
-
-      case "ArrowRight":
-        e.preventDefault();
-        if (currentIdx >= 0) {
-          const item = visibleItems[currentIdx];
-          if (collapsed.has(item.id)) {
-            toggleCollapse(item.id);
-          }
-        }
-        break;
-
-      case "ArrowLeft":
-        e.preventDefault();
-        if (currentIdx >= 0) {
-          const item = visibleItems[currentIdx];
-          if (!collapsed.has(item.id) && hasChildren(item, flatItems)) {
-            toggleCollapse(item.id);
-          }
-        }
-        break;
-
-      case "Enter":
-        e.preventDefault();
-        if (currentIdx >= 0) {
-          onNavigate?.(visibleItems[currentIdx].id);
-        }
-        break;
-
-      case "F2":
-        e.preventDefault();
-        if (currentIdx >= 0) {
-          startEditing(visibleItems[currentIdx]);
-        }
-        break;
-
-      case "Delete":
-      case "Backspace":
-        e.preventDefault();
-        if (currentIdx >= 0) {
-          handleDelete(visibleItems[currentIdx].id);
-        }
-        break;
-
-      case "Escape":
-        e.preventDefault();
-        if (selectedIds.size > 0) {
-          clearSelection();
-        }
-        break;
-
-      case "a":
-        if (e.ctrlKey || e.metaKey) {
-          e.preventDefault();
-          setSelectedIds(new Set(visibleItems.map((i) => i.id)));
-        }
-        break;
-    }
-  };
+  const handleKeyDown = useOutlineKeyboard({
+    focusedIndex, visibleItems, activeId, flatItems, collapsed, selectedIds,
+    setFocusedIndex, onNavigate, toggleSelect, toggleCollapse,
+    startEditing, handleDelete, clearSelection, setSelectedIds,
+  });
 
   return (
     <aside
