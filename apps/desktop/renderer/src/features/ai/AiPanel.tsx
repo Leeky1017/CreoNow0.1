@@ -247,13 +247,18 @@ export function CodeBlock(props: {
   const [copied, setCopied] = React.useState(false);
 
   function handleCopy(): void {
-    void navigator.clipboard.writeText(props.code);
-
-    setCopied(true);
-
-    setTimeout(() => setCopied(false), 2000);
-
-    props.onCopy?.();
+    runFireAndForget(async () => {
+      try {
+        await navigator.clipboard.writeText(props.code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+        props.onCopy?.();
+      } catch (error) {
+        console.error("CodeBlock copy failed", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    });
   }
 
   return (
