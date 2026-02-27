@@ -14,6 +14,44 @@ type ContextBudgetRegistrarDeps = {
   contextAssemblyService: ContextLayerAssemblyService;
 };
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isBudgetLayerPayload(value: unknown): boolean {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    typeof value.ratio === "number" && typeof value.minimumTokens === "number"
+  );
+}
+
+function isContextBudgetUpdatePayload(
+  payload: unknown,
+): payload is ContextBudgetUpdateRequest {
+  if (!isRecord(payload)) {
+    return false;
+  }
+
+  if (
+    typeof payload.version !== "number" ||
+    typeof payload.tokenizerId !== "string" ||
+    typeof payload.tokenizerVersion !== "string" ||
+    !isRecord(payload.layers)
+  ) {
+    return false;
+  }
+
+  return (
+    isBudgetLayerPayload(payload.layers.rules) &&
+    isBudgetLayerPayload(payload.layers.settings) &&
+    isBudgetLayerPayload(payload.layers.retrieved) &&
+    isBudgetLayerPayload(payload.layers.immediate)
+  );
+}
+
 export function registerContextBudgetHandlers(
   deps: ContextBudgetRegistrarDeps,
 ): void {
@@ -40,10 +78,17 @@ export function registerContextBudgetHandlers(
 
   deps.ipcMain.handle(
     "context:budget:update",
-    async (
-      _e,
-      payload: ContextBudgetUpdateRequest,
-    ): Promise<IpcResponse<ContextBudgetProfile>> => {
+    async (_e, payload: unknown): Promise<IpcResponse<ContextBudgetProfile>> => {
+      if (!isContextBudgetUpdatePayload(payload)) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "Invalid context budget update payload",
+          },
+        };
+      }
+
       const updated = deps.contextAssemblyService.updateBudgetProfile(payload);
       if (!updated.ok) {
         deps.logger.error("context_budget_update_failed", {
