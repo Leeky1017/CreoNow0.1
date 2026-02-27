@@ -38,5 +38,14 @@ export function trimUtf8ToTokenBudget(
     return text;
   }
 
-  return new TextDecoder().decode(encoded.slice(0, maxBytes));
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  for (let end = maxBytes; end > 0; end -= 1) {
+    try {
+      return decoder.decode(encoded.slice(0, end));
+    } catch {
+      continue;
+    }
+  }
+
+  return "";
 }
