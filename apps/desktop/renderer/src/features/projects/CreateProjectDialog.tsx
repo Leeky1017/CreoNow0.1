@@ -354,6 +354,10 @@ export function CreateProjectDialog({
   // CreateTemplateDialog state
   const [createTemplateOpen, setCreateTemplateOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<{
+    code: string;
+    message: string;
+  } | null>(null);
   const [mode, setMode] = useState<"manual" | "ai-assist">("manual");
   const [aiPrompt, setAiPrompt] = useState("");
   const [aiGenerating, setAiGenerating] = useState(false);
@@ -401,6 +405,7 @@ export function CreateProjectDialog({
       setAiGenerating(false);
       setAiErrorMessage(null);
       setAiDraft(null);
+      setSubmitError(null);
     }
   }, [open, clearError]);
 
@@ -412,6 +417,7 @@ export function CreateProjectDialog({
       description?: string;
     }) => {
       setSubmitting(true);
+      setSubmitError(null);
       try {
         const selectedPreset = presets.find(
           (preset) => preset.id === data.templateId,
@@ -447,13 +453,42 @@ export function CreateProjectDialog({
         });
 
         if (!res.ok) {
+          setSubmitError({
+            code: res.error.code,
+            message: res.error.message,
+          });
+          console.error("[CreateProjectDialog] createProject failed:", {
+            operation: "createAndSetCurrent",
+            code: res.error.code,
+            message: res.error.message,
+            error: res.error,
+          });
           setSubmitting(false);
           return;
         }
 
+        setSubmitError(null);
         setSubmitting(false);
         onOpenChange(false);
-      } catch {
+      } catch (error) {
+        const code =
+          typeof error === "object" &&
+          error !== null &&
+          "code" in error &&
+          typeof error.code === "string"
+            ? error.code
+            : "INTERNAL_ERROR";
+        const message =
+          error instanceof Error && error.message.length > 0
+            ? error.message
+            : "项目创建失败，请重试";
+        setSubmitError({ code, message });
+        console.error("[CreateProjectDialog] createProject failed:", {
+          operation: "createAndSetCurrent",
+          code,
+          message,
+          error,
+        });
         setSubmitting(false);
       }
     },
@@ -553,7 +588,7 @@ export function CreateProjectDialog({
                 presetOptions={presetOptions}
                 customOptions={customOptions}
                 hasCustomTemplates={hasCustomTemplates}
-                lastError={lastError}
+                lastError={submitError ?? lastError}
                 onSubmit={handleSubmit}
                 onOpenCreateTemplate={() => setCreateTemplateOpen(true)}
               />

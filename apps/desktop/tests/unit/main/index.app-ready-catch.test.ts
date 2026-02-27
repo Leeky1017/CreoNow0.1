@@ -168,6 +168,75 @@ describe("main index app ready catch", () => {
     expect(harness.appQuit).toHaveBeenCalledTimes(1);
   });
 
+  it("writes stderr fallback when fatal logger write fails", async () => {
+    let rejectReady: (reason: unknown) => void = () => {};
+    const whenReadyPromise = new Promise<void>((_resolve, reject) => {
+      rejectReady = reject;
+    });
+
+    const fatal = new Error("app ready failed");
+    const loggerSinkFailure = new Error("logger sink unavailable");
+    const harness = await bootIndexWithWhenReady(whenReadyPromise);
+    harness.loggerError.mockImplementationOnce(() => {
+      throw loggerSinkFailure;
+    });
+
+    const stderrWriteSpy = vi
+      .spyOn(process.stderr, "write")
+      .mockImplementation(() => true);
+    try {
+      rejectReady(fatal);
+      await flushMicrotasks();
+
+      expect(stderrWriteSpy).toHaveBeenCalled();
+      const mergedStderrOutput = stderrWriteSpy.mock.calls
+        .map(([chunk]) => String(chunk))
+        .join("\n");
+      expect(mergedStderrOutput).toContain("app ready failed");
+      expect(mergedStderrOutput).toContain("logger sink unavailable");
+      expect(harness.appQuit).toHaveBeenCalledTimes(1);
+    } finally {
+      stderrWriteSpy.mockRestore();
+    }
+  });
+
+  it("swallows stderr fallback failure without uncaught exceptions", async () => {
+    let rejectReady: (reason: unknown) => void = () => {};
+    const whenReadyPromise = new Promise<void>((_resolve, reject) => {
+      rejectReady = reject;
+    });
+
+    const fatal = new Error("app ready failed");
+    const loggerSinkFailure = new Error("logger sink unavailable");
+    const harness = await bootIndexWithWhenReady(whenReadyPromise);
+    harness.loggerError.mockImplementationOnce(() => {
+      throw loggerSinkFailure;
+    });
+
+    const uncaught: unknown[] = [];
+    const onUncaught = (error: unknown): void => {
+      uncaught.push(error);
+    };
+    process.on("uncaughtException", onUncaught);
+
+    const stderrWriteSpy = vi
+      .spyOn(process.stderr, "write")
+      .mockImplementation(() => {
+        throw new Error("stderr unavailable");
+      });
+
+    try {
+      rejectReady(fatal);
+      await flushMicrotasks();
+
+      expect(harness.appQuit).toHaveBeenCalledTimes(1);
+      expect(uncaught).toHaveLength(0);
+    } finally {
+      process.off("uncaughtException", onUncaught);
+      stderrWriteSpy.mockRestore();
+    }
+  });
+
   it("does not quit on successful app ready path", async () => {
     const harness = await bootIndexWithWhenReady(Promise.resolve());
     await flushMicrotasks();

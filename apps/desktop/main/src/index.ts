@@ -467,8 +467,22 @@ function logAppInitFatal(error: unknown): void {
   try {
     const logger = createMainLogger(app.getPath("userData"));
     logger.error("app_init_fatal", payload);
-  } catch {
-    // Swallow to ensure startup rejection is fully handled.
+  } catch (loggerError) {
+    try {
+      const originalContext =
+        error instanceof Error
+          ? `${error.message}${error.stack ? `\n${error.stack}` : ""}`
+          : String(error);
+      const loggerContext =
+        loggerError instanceof Error
+          ? `${loggerError.message}${loggerError.stack ? `\n${loggerError.stack}` : ""}`
+          : String(loggerError);
+      process.stderr.write(
+        `[FATAL] app_init_fatal logger write failed\noriginal: ${originalContext}\nlogger_error: ${loggerContext}\n`,
+      );
+    } catch {
+      // Swallow to ensure startup rejection is fully handled.
+    }
   }
 }
 

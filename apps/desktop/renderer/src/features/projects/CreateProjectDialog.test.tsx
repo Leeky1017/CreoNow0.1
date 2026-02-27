@@ -409,6 +409,102 @@ describe("CreateProjectDialog", () => {
       expect(screen.getByText(/IO_ERROR/)).toBeInTheDocument();
       expect(screen.getByText(/Failed to create project/)).toBeInTheDocument();
     });
+
+    it("项目创建返回错误时应显示可见错误并记录诊断上下文", async () => {
+      const { useProjectStore } = await import("../../stores/projectStore");
+      const createAndSetCurrent: ProjectStore["createAndSetCurrent"] = vi
+        .fn()
+        .mockResolvedValue({
+          ok: false,
+          error: {
+            code: "NAME_CONFLICT",
+            message: "Project already exists",
+          },
+        });
+      vi.mocked(useProjectStore).mockImplementation((selector) => {
+        const state = createMockProjectState({
+          createAndSetCurrent,
+          lastError: null,
+        });
+        return selector(state);
+      });
+
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => undefined);
+      const user = userEvent.setup();
+
+      try {
+        render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+        await user.type(
+          screen.getByTestId("create-project-name"),
+          "Duplicate Project",
+        );
+        await user.click(screen.getByTestId("create-project-submit"));
+
+        await waitFor(() => {
+          expect(screen.getByText(/NAME_CONFLICT/)).toBeInTheDocument();
+          expect(screen.getByText(/Project already exists/)).toBeInTheDocument();
+        });
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          "[CreateProjectDialog] createProject failed:",
+          expect.objectContaining({
+            operation: "createAndSetCurrent",
+            code: "NAME_CONFLICT",
+          }),
+        );
+      } finally {
+        consoleErrorSpy.mockRestore();
+      }
+    });
+
+    it("项目创建抛异常时应展示错误并输出诊断日志", async () => {
+      const { useProjectStore } = await import("../../stores/projectStore");
+      const createAndSetCurrent: ProjectStore["createAndSetCurrent"] = vi
+        .fn()
+        .mockRejectedValue(
+          Object.assign(new Error("Disk full"), { code: "IO_ERROR" }),
+        );
+      vi.mocked(useProjectStore).mockImplementation((selector) => {
+        const state = createMockProjectState({
+          createAndSetCurrent,
+          lastError: null,
+        });
+        return selector(state);
+      });
+
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => undefined);
+      const user = userEvent.setup();
+
+      try {
+        render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+        await user.type(
+          screen.getByTestId("create-project-name"),
+          "Disk Full Project",
+        );
+        await user.click(screen.getByTestId("create-project-submit"));
+
+        await waitFor(() => {
+          expect(screen.getByText(/IO_ERROR/)).toBeInTheDocument();
+          expect(screen.getByText(/Disk full/)).toBeInTheDocument();
+        });
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          "[CreateProjectDialog] createProject failed:",
+          expect.objectContaining({
+            operation: "createAndSetCurrent",
+            code: "IO_ERROR",
+          }),
+        );
+      } finally {
+        consoleErrorSpy.mockRestore();
+      }
+    });
   });
 
   // ===========================================================================
