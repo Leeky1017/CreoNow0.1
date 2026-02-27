@@ -9,7 +9,26 @@ function resolveStorage(provided?: Storage): Storage | null {
   if (typeof window === "undefined") {
     return null;
   }
-  return window.localStorage;
+
+  try {
+    return window.localStorage;
+  } catch (error) {
+    console.error("COMMAND_PALETTE_RECENT_STORAGE_UNAVAILABLE", error);
+    return null;
+  }
+}
+
+function normalizeLimit(
+  limit: unknown,
+  fallback: number,
+  min: number,
+): number {
+  if (typeof limit !== "number" || !Number.isFinite(limit)) {
+    return fallback;
+  }
+
+  const roundedLimit = Math.floor(limit);
+  return Math.max(min, roundedLimit);
 }
 
 /**
@@ -40,7 +59,7 @@ export function readRecentCommandIds(args?: {
       (item): item is string => typeof item === "string",
     );
     const uniqueIds = Array.from(new Set(ids));
-    const limit = Math.max(0, args?.limit ?? MAX_RECENT_COMMANDS);
+    const limit = normalizeLimit(args?.limit, MAX_RECENT_COMMANDS, 0);
     return uniqueIds.slice(0, limit);
   } catch (error) {
     console.error("COMMAND_PALETTE_RECENT_READ_FAILED", error);
@@ -63,7 +82,7 @@ export function recordRecentCommandId(
   }
 
   try {
-    const limit = Math.max(1, args?.limit ?? MAX_RECENT_COMMANDS);
+    const limit = normalizeLimit(args?.limit, MAX_RECENT_COMMANDS, 1);
     const existing = readRecentCommandIds({ storage, limit });
     const withoutCurrent = existing.filter((item) => item !== commandId);
     const next = [commandId, ...withoutCurrent].slice(0, limit);
