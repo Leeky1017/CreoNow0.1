@@ -6,7 +6,11 @@ const UTF8_BYTES_PER_TOKEN = 4;
  * Why: token budget math must stay identical across renderer/main/test paths.
  */
 export function tokenBudgetToUtf8ByteLimit(tokenBudget: number): number {
-  return Math.max(0, Math.floor(tokenBudget * UTF8_BYTES_PER_TOKEN));
+  const byteLimit = Math.floor(tokenBudget * UTF8_BYTES_PER_TOKEN);
+  if (Number.isNaN(byteLimit)) {
+    return 0;
+  }
+  return Math.max(0, byteLimit);
 }
 
 /**
