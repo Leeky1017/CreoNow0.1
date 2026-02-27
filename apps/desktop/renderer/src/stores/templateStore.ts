@@ -140,7 +140,53 @@ function generateTemplateId(): string {
 /**
  * Storage key for persisting custom templates
  */
-const STORAGE_KEY = "creonow.templates.customs";
+export const STORAGE_KEY = "creonow.templates.customs";
+
+function isTemplateStructure(value: unknown): value is TemplateStructure {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+
+  const candidate = value as Partial<TemplateStructure>;
+  const { folders, files } = candidate;
+
+  if (!Array.isArray(folders) || !folders.every((folder) => typeof folder === "string")) {
+    return false;
+  }
+
+  if (!Array.isArray(files)) {
+    return false;
+  }
+
+  return files.every((file) => {
+    if (typeof file !== "object" || file === null) {
+      return false;
+    }
+    const candidateFile = file as { path?: unknown; content?: unknown };
+    return (
+      typeof candidateFile.path === "string" &&
+      (candidateFile.content === undefined || typeof candidateFile.content === "string")
+    );
+  });
+}
+
+function isCustomTemplate(value: unknown): value is ProjectTemplate {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+
+  const candidate = value as Partial<ProjectTemplate>;
+
+  return (
+    typeof candidate.id === "string" &&
+    typeof candidate.name === "string" &&
+    candidate.type === "custom" &&
+    isTemplateStructure(candidate.structure) &&
+    (candidate.icon === undefined || typeof candidate.icon === "string") &&
+    (candidate.description === undefined || typeof candidate.description === "string") &&
+    (candidate.createdAt === undefined || typeof candidate.createdAt === "number")
+  );
+}
 
 /**
  * Load custom templates from localStorage
@@ -149,9 +195,25 @@ function loadCustomTemplatesFromStorage(): ProjectTemplate[] {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return [];
-    return JSON.parse(stored) as ProjectTemplate[];
-  } catch {
-    console.error("Failed to load custom templates from storage");
+
+    const parsed = JSON.parse(stored) as unknown;
+    if (!Array.isArray(parsed)) {
+      localStorage.removeItem(STORAGE_KEY);
+      return [];
+    }
+
+    const customs = parsed.filter(isCustomTemplate);
+    if (customs.length !== parsed.length) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(customs));
+    }
+
+    return customs;
+  } catch (error) {
+    console.error("Failed to load custom templates from storage", {
+      storageKey: STORAGE_KEY,
+      error,
+    });
+    localStorage.removeItem(STORAGE_KEY);
     return [];
   }
 }
@@ -162,8 +224,11 @@ function loadCustomTemplatesFromStorage(): ProjectTemplate[] {
 function saveCustomTemplatesToStorage(templates: ProjectTemplate[]): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(templates));
-  } catch {
-    console.error("Failed to save custom templates to storage");
+  } catch (error) {
+    console.error("Failed to save custom templates to storage", {
+      storageKey: STORAGE_KEY,
+      error,
+    });
   }
 }
 
