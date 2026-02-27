@@ -50,7 +50,16 @@ export function guardAndNormalizeProjectAccess(args: {
     webContentsId,
   });
   if (!boundProjectId) {
-    return { ok: true };
+    return {
+      ok: false,
+      response: {
+        ok: false,
+        error: {
+          code: "FORBIDDEN",
+          message: "projectId is not active for this renderer session",
+        },
+      },
+    };
   }
 
   const requestedProjectId =
