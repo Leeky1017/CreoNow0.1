@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   MAX_RECENT_COMMANDS,
@@ -34,5 +34,31 @@ describe("recentItems", () => {
     window.localStorage.setItem("creonow.commandPalette.recent", "{bad-json");
 
     expect(readRecentCommandIds()).toEqual([]);
+  });
+
+  it("should fail closed when localStorage is unavailable", () => {
+    const originalDescriptor = Object.getOwnPropertyDescriptor(window, "localStorage");
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    Object.defineProperty(window, "localStorage", {
+      configurable: true,
+      get() {
+        throw new DOMException("blocked", "SecurityError");
+      },
+    });
+
+    try {
+      expect(readRecentCommandIds()).toEqual([]);
+      expect(() => recordRecentCommandId("command-a")).not.toThrow();
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "COMMAND_PALETTE_STORAGE_UNAVAILABLE",
+        expect.any(DOMException),
+      );
+    } finally {
+      consoleErrorSpy.mockRestore();
+      if (originalDescriptor) {
+        Object.defineProperty(window, "localStorage", originalDescriptor);
+      }
+    }
   });
 });

@@ -9,7 +9,12 @@ function resolveStorage(provided?: Storage): Storage | null {
   if (typeof window === "undefined") {
     return null;
   }
-  return window.localStorage;
+  try {
+    return window.localStorage;
+  } catch (error) {
+    console.error("COMMAND_PALETTE_STORAGE_UNAVAILABLE", error);
+    return null;
+  }
 }
 
 /**
