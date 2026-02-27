@@ -183,6 +183,25 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
           }
         }
       },
+      onUnexpectedError: (error, request) => {
+        const stillCurrent =
+          get().projectId === request.projectId &&
+          get().documentId === request.documentId;
+        if (!stillCurrent) {
+          return;
+        }
+
+        set({
+          autosaveStatus: "error",
+          autosaveError: {
+            code: "INTERNAL_ERROR",
+            message:
+              error instanceof Error
+                ? error.message
+                : "editorSaveQueue received unexpected save error",
+          },
+        });
+      },
     });
 
     return {

@@ -51,7 +51,48 @@ describe("editorStore save queue delegation", () => {
     await store.getState().save(request);
 
     expect(createEditorSaveQueueMock).toHaveBeenCalledTimes(1);
+    expect(createEditorSaveQueueMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        executeSave: expect.any(Function),
+        onUnexpectedError: expect.any(Function),
+      }),
+    );
     expect(enqueueMock).toHaveBeenCalledTimes(1);
     expect(enqueueMock).toHaveBeenCalledWith(request);
   });
+  it("should map queue unexpected errors to autosave error state for current document", () => {
+    const invoke: IpcInvoke = async (channel) => {
+      throw new Error(`Unexpected invoke in mocked queue test: ${channel}`);
+    };
+
+    const store = createEditorStore({ invoke });
+    store.setState({ projectId: "project-1", documentId: "doc-1" });
+
+    const queueFactoryCall = createEditorSaveQueueMock.mock.calls.at(0);
+    expect(queueFactoryCall).toBeDefined();
+
+    const queueDeps = (queueFactoryCall as unknown[] | undefined)?.[0] as
+      | {
+          onUnexpectedError?: (
+            error: unknown,
+            request: { projectId: string; documentId: string },
+          ) => void;
+        }
+      | undefined;
+
+    queueDeps?.onUnexpectedError?.(
+      new Error("queue failed"),
+      {
+        projectId: "project-1",
+        documentId: "doc-1",
+      },
+    );
+
+    expect(store.getState().autosaveStatus).toBe("error");
+    expect(store.getState().autosaveError).toMatchObject({
+      code: "INTERNAL_ERROR",
+      message: "queue failed",
+    });
+  });
+
 });
