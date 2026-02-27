@@ -27,6 +27,7 @@ import { createSkillService } from "../services/skills/skillService";
 import { createSkillExecutor } from "../services/skills/skillExecutor";
 import { createContextLayerAssemblyService } from "../services/context/layerAssemblyService";
 import { createKnowledgeGraphService } from "../services/kg/kgService";
+import { DegradationCounter } from "../services/shared/degradationCounter";
 import { createDbNotReadyError } from "./dbError";
 import type { ProjectSessionBindingRegistry } from "./projectSessionBinding";
 
@@ -446,17 +447,21 @@ export function registerAiIpcHandlers(deps: {
   const chatHistoryByProject = new Map<string, ChatHistoryMessage[]>();
   const sessionTokenTotalsByContext = new Map<string, number>();
   const modelPricingByModel = parseModelPricingMap(deps.env);
+  const degradationCounter = new DegradationCounter();
   const memoryServiceForContext =
     deps.db !== null
       ? createMemoryService({
           db: deps.db,
           logger: deps.logger,
+          degradationCounter,
         })
       : undefined;
   const contextAssemblyService = createContextLayerAssemblyService(
     undefined,
     deps.db
       ? {
+          logger: deps.logger,
+          degradationCounter,
           kgService: createKnowledgeGraphService({
             db: deps.db,
             logger: deps.logger,

@@ -5,6 +5,7 @@ import type {
   OnnxEmbeddingRuntime,
   OnnxEmbeddingRuntimeError,
 } from "./onnxRuntime";
+import { logWarn } from "../shared/degradationCounter";
 
 type Ok<T> = { ok: true; data: T };
 type Err = { ok: false; error: IpcError };
@@ -105,6 +106,18 @@ function classifyPrimaryFailureReason(
   }
 
   return "PRIMARY_UNAVAILABLE";
+}
+
+function serializeRuntimeError(error: OnnxEmbeddingRuntimeError): Record<string, unknown> {
+  return {
+    code: error.code,
+    message: error.message,
+    provider: error.details.provider,
+    modelPath: error.details.modelPath,
+    ...(typeof error.details.error === "string"
+      ? { error: error.details.error }
+      : {}),
+  };
 }
 
 function mapOnnxRuntimeError(args: {
@@ -308,7 +321,6 @@ export function createEmbeddingService(deps: {
         const shouldFallback =
           Boolean(fallbackPolicy?.enabled) &&
           Boolean(fallbackPolicy?.provider) &&
-          fallbackPolicy?.provider !== providerPolicy.primaryProvider &&
           (fallbackPolicy?.onReasons ?? PRIMARY_TIMEOUT_REASONS).includes(
             reason,
           );
@@ -328,6 +340,34 @@ export function createEmbeddingService(deps: {
           if (fallback.ok) {
             return fallback;
           }
+
+          logWarn(
+            deps.logger as Logger & {
+              warn?: (event: string, data?: Record<string, unknown>) => void;
+            },
+            "embedding_fallback_failure",
+            {
+              module: "embedding-service",
+              reason,
+              primaryProvider: providerPolicy.primaryProvider,
+              fallbackProvider: fallbackPolicy.provider,
+              primaryError: serializeRuntimeError(primary.error),
+              fallbackError: serializeRuntimeError(fallback.error),
+            },
+          );
+
+          return ipcError(
+            "EMBEDDING_PROVIDER_UNAVAILABLE",
+            "Embedding provider unavailable",
+            {
+              primaryProvider: providerPolicy.primaryProvider,
+              fallbackProvider: fallbackPolicy.provider,
+              fallbackEnabled: true,
+              reason,
+              runtimeCode: primary.error.code,
+              fallbackRuntimeCode: fallback.error.code,
+            },
+          );
         }
 
         return ipcError(

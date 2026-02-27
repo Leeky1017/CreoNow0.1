@@ -5,6 +5,10 @@ import type Database from "better-sqlite3";
 import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { Logger } from "../../logging/logger";
 import { createUserMemoryVecService } from "./userMemoryVec";
+import {
+  DegradationCounter,
+  logWarn,
+} from "../shared/degradationCounter";
 
 export type MemoryType = "preference" | "fact" | "note";
 export type MemoryScope = "global" | "project" | "document";
@@ -364,7 +368,44 @@ function selectMemoryById(
 export function createMemoryService(args: {
   db: Database.Database;
   logger: Logger;
+  degradationCounter?: DegradationCounter;
+  degradationEscalationThreshold?: number;
 }): MemoryService {
+  const degradationCounter =
+    args.degradationCounter ??
+    new DegradationCounter({
+      threshold: args.degradationEscalationThreshold,
+    });
+
+  const reportSemanticDegradation = (args2: {
+    projectId: string | null;
+    reason: string;
+  }): void => {
+    const tracked = degradationCounter.record("memoryService.semanticFallback");
+    const payload: Record<string, unknown> = {
+      module: "memory-system",
+      service: "memoryService",
+      reason: args2.reason,
+      count: tracked.count,
+      firstDegradedAt: tracked.firstDegradedAt,
+      ...(args2.projectId ? { projectId: args2.projectId } : {}),
+    };
+    logWarn(
+      args.logger as Logger & {
+        warn?: (event: string, data?: Record<string, unknown>) => void;
+      },
+      "memory_service_degradation",
+      payload,
+    );
+    if (tracked.escalated) {
+      args.logger.error("memory_service_degradation_escalation", payload);
+    }
+  };
+
+  const resetSemanticDegradation = (): void => {
+    degradationCounter.reset("memoryService.semanticFallback");
+  };
+
   function getSettings(): ServiceResult<MemorySettings> {
     try {
       return {
@@ -797,6 +838,7 @@ export function createMemoryService(args: {
       }
 
       if (!settings.data.injectionEnabled) {
+        resetSemanticDegradation();
         args.logger.info("memory_injection_preview", {
           mode: "deterministic",
           count: 0,
@@ -847,6 +889,7 @@ export function createMemoryService(args: {
         const wantsSemantic = trimmedQueryText.length > 0;
 
         if (!wantsSemantic) {
+          resetSemanticDegradation();
           const items: MemoryInjectionItem[] = sorted.map((item) => ({
             id: item.memoryId,
             type: item.type,
@@ -878,6 +921,10 @@ export function createMemoryService(args: {
         });
 
         if (!vecRes.ok) {
+          reportSemanticDegradation({
+            projectId: scopedProjectId,
+            reason: `${vecRes.error.code}:${vecRes.error.message}`,
+          });
           args.logger.info("memory_semantic_recall", {
             mode: "deterministic",
             reason: `${vecRes.error.code}:${vecRes.error.message}`,
@@ -909,6 +956,7 @@ export function createMemoryService(args: {
           };
         }
 
+        resetSemanticDegradation();
         const scores = new Map<string, number>();
         for (const m of vecRes.data.matches) {
           scores.set(m.memoryId, m.score);

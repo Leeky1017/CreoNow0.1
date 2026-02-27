@@ -8,6 +8,8 @@ import { createRulesFetcher } from "./fetchers/rulesFetcher";
 import { createSettingsFetcher } from "./fetchers/settingsFetcher";
 import { createSynopsisFetcher } from "./fetchers/synopsisFetcher";
 import type { SynopsisStore } from "./synopsisStore";
+import type { Logger } from "../../logging/logger";
+import { DegradationCounter } from "../shared/degradationCounter";
 import {
   estimateUtf8TokenCount as estimateTokenCount,
   trimUtf8ToTokenBudget as trimTextToTokenBudget,
@@ -58,6 +60,11 @@ export type ContextLayerAssemblyDeps = {
   memoryService?: Pick<MemoryService, "previewInjection">;
   synopsisStore?: Pick<SynopsisStore, "listRecentByProject">;
   matchEntities?: (text: string, entities: MatchableEntity[]) => MatchResult[];
+  logger?: Pick<Logger, "info" | "error"> & {
+    warn?: (event: string, data?: Record<string, unknown>) => void;
+  };
+  degradationCounter?: DegradationCounter;
+  degradationEscalationThreshold?: number;
 };
 
 const LAYER_ORDER: ContextLayerId[] = [
@@ -987,9 +994,21 @@ async function buildContextSnapshot(args: {
 function defaultFetchers(
   deps?: Pick<
     ContextLayerAssemblyDeps,
-    "kgService" | "memoryService" | "synopsisStore" | "matchEntities"
+    | "kgService"
+    | "memoryService"
+    | "synopsisStore"
+    | "matchEntities"
+    | "logger"
+    | "degradationCounter"
+    | "degradationEscalationThreshold"
   >,
 ): ContextLayerFetcherMap {
+  const degradationCounter =
+    deps?.degradationCounter ??
+    new DegradationCounter({
+      threshold: deps?.degradationEscalationThreshold,
+    });
+
   const fallbackRulesFetcher: ContextLayerFetcher = async (request) => ({
     chunks: [
       {
@@ -1011,6 +1030,9 @@ function defaultFetchers(
     ? createRetrievedFetcher({
         kgService: deps.kgService,
         matchEntities: deps.matchEntities ?? defaultMatchEntities,
+        logger: deps.logger,
+        degradationCounter,
+        degradationEscalationThreshold: deps.degradationEscalationThreshold,
       })
     : async () => ({
         chunks: [],
@@ -1018,11 +1040,19 @@ function defaultFetchers(
 
   return {
     rules: deps?.kgService
-      ? createRulesFetcher({ kgService: deps.kgService })
+      ? createRulesFetcher({
+          kgService: deps.kgService,
+          logger: deps.logger,
+          degradationCounter,
+          degradationEscalationThreshold: deps.degradationEscalationThreshold,
+        })
       : fallbackRulesFetcher,
     settings: deps?.memoryService
       ? createSettingsFetcher({
           memoryService: deps.memoryService,
+          logger: deps.logger,
+          degradationCounter,
+          degradationEscalationThreshold: deps.degradationEscalationThreshold,
         })
       : async () => ({
           chunks: [],
@@ -1062,6 +1092,9 @@ export function createContextLayerAssemblyService(
       memoryService: deps?.memoryService,
       synopsisStore: deps?.synopsisStore,
       matchEntities: deps?.matchEntities,
+      logger: deps?.logger,
+      degradationCounter: deps?.degradationCounter,
+      degradationEscalationThreshold: deps?.degradationEscalationThreshold,
     }),
     ...(fetchers ?? {}),
   };

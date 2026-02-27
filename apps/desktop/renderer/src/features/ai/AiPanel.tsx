@@ -494,7 +494,12 @@ export function AiPanel(): JSX.Element {
         .filter((item): item is string => typeof item === "string")
         .slice(0, 8);
       setRecentModelIds(items);
-    } catch {
+    } catch (error) {
+      console.error("AiPanel localStorage read failed", {
+        operation: "read",
+        key: RECENT_MODELS_STORAGE_KEY,
+        error: error instanceof Error ? error.message : String(error),
+      });
       return;
     }
   }, []);
@@ -508,10 +513,18 @@ export function AiPanel(): JSX.Element {
         selectedModel,
         ...prev.filter((id) => id !== selectedModel),
       ].slice(0, 8);
-      window.localStorage.setItem(
-        RECENT_MODELS_STORAGE_KEY,
-        JSON.stringify(next),
-      );
+      try {
+        window.localStorage.setItem(
+          RECENT_MODELS_STORAGE_KEY,
+          JSON.stringify(next),
+        );
+      } catch (error) {
+        console.error("AiPanel localStorage write failed", {
+          operation: "write",
+          key: RECENT_MODELS_STORAGE_KEY,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
       return next;
     });
   }, [selectedModel]);
@@ -529,7 +542,12 @@ export function AiPanel(): JSX.Element {
       if (parsed >= 1 && parsed <= 5) {
         setCandidateCount(parsed);
       }
-    } catch {
+    } catch (error) {
+      console.error("AiPanel localStorage read failed", {
+        operation: "read",
+        key: CANDIDATE_COUNT_STORAGE_KEY,
+        error: error instanceof Error ? error.message : String(error),
+      });
       return;
     }
   }, []);
@@ -540,7 +558,12 @@ export function AiPanel(): JSX.Element {
         CANDIDATE_COUNT_STORAGE_KEY,
         String(candidateCount),
       );
-    } catch {
+    } catch (error) {
+      console.error("AiPanel localStorage write failed", {
+        operation: "write",
+        key: CANDIDATE_COUNT_STORAGE_KEY,
+        error: error instanceof Error ? error.message : String(error),
+      });
       return;
     }
   }, [candidateCount]);
@@ -695,8 +718,18 @@ export function AiPanel(): JSX.Element {
         if (res.ok) {
           return;
         }
-      } catch {
-        // ignored: evaluatedRunIdRef recovery below enables deterministic retry.
+        console.error("AiPanel judge evaluation failed", {
+          projectId,
+          traceId: lastRunId,
+          code: res.error.code,
+          message: res.error.message,
+        });
+      } catch (error) {
+        console.error("AiPanel judge evaluation failed", {
+          projectId,
+          traceId: lastRunId,
+          error: error instanceof Error ? error.message : String(error),
+        });
       }
       if (evaluatedRunIdRef.current === lastRunId) {
         evaluatedRunIdRef.current = null;

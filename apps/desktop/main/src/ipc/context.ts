@@ -12,6 +12,7 @@ import {
   createContextLayerAssemblyService,
   type ContextLayerAssemblyService,
 } from "../services/context/layerAssemblyService";
+import { DegradationCounter } from "../services/shared/degradationCounter";
 import type { CreonowWatchService } from "../services/context/watchService";
 import type { ProjectSessionBindingRegistry } from "./projectSessionBinding";
 
@@ -24,6 +25,7 @@ export function registerContextIpcHandlers(deps: {
   projectSessionBinding?: ProjectSessionBindingRegistry;
   contextAssemblyService?: ContextLayerAssemblyService;
 }): void {
+  const degradationCounter = new DegradationCounter();
   const kgService =
     deps.db !== null
       ? createKnowledgeGraphService({
@@ -36,6 +38,7 @@ export function registerContextIpcHandlers(deps: {
       ? createMemoryService({
           db: deps.db,
           logger: deps.logger,
+          degradationCounter,
         })
       : undefined;
   const synopsisStore =
@@ -54,6 +57,8 @@ export function registerContextIpcHandlers(deps: {
       ...(kgService ? { kgService } : {}),
       ...(memoryService ? { memoryService } : {}),
       ...(synopsisStore ? { synopsisStore } : {}),
+      logger: deps.logger,
+      degradationCounter,
     });
 
   const registrationDeps = {

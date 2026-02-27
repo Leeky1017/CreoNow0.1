@@ -44,6 +44,7 @@ import {
 } from "./aiPayloadParsers";
 import type { TraceStore } from "./traceStore";
 import { createAiWriteTransaction } from "./aiWriteTransaction";
+import { logWarn } from "../shared/degradationCounter";
 
 export { assembleSystemPrompt, GLOBAL_IDENTITY_PROMPT };
 export { mapUpstreamStatusToIpcErrorCode };
@@ -130,6 +131,7 @@ const PROVIDER_HALF_OPEN_AFTER_MS = 15 * 60 * 1000;
 const STREAM_CHUNK_BATCH_WINDOW_MS = 20;
 const STREAM_CHUNK_MAX_BATCH_COUNT = 4;
 const STREAM_COMPLETION_SETTLE_MS = 20;
+const SSE_PARSE_RAW_MAX_LEN = 200;
 
 type RuntimeMessages = {
   systemText: string;
@@ -902,7 +904,19 @@ export function createAiService(deps: {
         let parsed: unknown;
         try {
           parsed = JSON.parse(msg.data);
-        } catch {
+        } catch (error) {
+          logWarn(
+            deps.logger as Logger & {
+              warn?: (event: string, data?: Record<string, unknown>) => void;
+            },
+            "ai_sse_parse_failure",
+            {
+              module: "ai-service",
+              provider: "openai",
+              raw: msg.data.slice(0, SSE_PARSE_RAW_MAX_LEN),
+              error: error instanceof Error ? error.message : String(error),
+            },
+          );
           continue;
         }
         const delta = extractOpenAiDelta(parsed);
@@ -1008,7 +1022,19 @@ export function createAiService(deps: {
         let parsed: unknown;
         try {
           parsed = JSON.parse(msg.data);
-        } catch {
+        } catch (error) {
+          logWarn(
+            deps.logger as Logger & {
+              warn?: (event: string, data?: Record<string, unknown>) => void;
+            },
+            "ai_sse_parse_failure",
+            {
+              module: "ai-service",
+              provider: "anthropic",
+              raw: msg.data.slice(0, SSE_PARSE_RAW_MAX_LEN),
+              error: error instanceof Error ? error.message : String(error),
+            },
+          );
           continue;
         }
         const delta = extractAnthropicDelta(parsed);
