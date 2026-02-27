@@ -103,6 +103,32 @@ function getContentStyles(hasContainer: boolean): string {
   ].join(" ");
 }
 
+const ZODIAC_RANGES: ReadonlyArray<{
+  sign: ZodiacSign;
+  start: number;
+  end: number;
+}> = [
+  { sign: "aries", start: 321, end: 419 },
+  { sign: "taurus", start: 420, end: 520 },
+  { sign: "gemini", start: 521, end: 620 },
+  { sign: "cancer", start: 621, end: 722 },
+  { sign: "leo", start: 723, end: 822 },
+  { sign: "virgo", start: 823, end: 922 },
+  { sign: "libra", start: 923, end: 1022 },
+  { sign: "scorpio", start: 1023, end: 1121 },
+  { sign: "sagittarius", start: 1122, end: 1221 },
+  { sign: "capricorn", start: 1222, end: 119 },
+  { sign: "aquarius", start: 120, end: 218 },
+  { sign: "pisces", start: 219, end: 320 },
+];
+
+function isMonthDayInRange(monthDay: number, start: number, end: number): boolean {
+  if (start <= end) {
+    return monthDay >= start && monthDay <= end;
+  }
+  return monthDay >= start || monthDay <= end;
+}
+
 /**
  * Compute zodiac sign from ISO birth date (YYYY-MM-DD).
  *
@@ -116,22 +142,11 @@ function getZodiacFromBirthDate(birthDate: string): ZodiacSign | undefined {
   const day = Number.parseInt(parts[2] ?? "", 10);
   if (!Number.isFinite(month) || !Number.isFinite(day)) return undefined;
 
-  const md = month * 100 + day;
-
-  if (md >= 321 && md <= 419) return "aries";
-  if (md >= 420 && md <= 520) return "taurus";
-  if (md >= 521 && md <= 620) return "gemini";
-  if (md >= 621 && md <= 722) return "cancer";
-  if (md >= 723 && md <= 822) return "leo";
-  if (md >= 823 && md <= 922) return "virgo";
-  if (md >= 923 && md <= 1022) return "libra";
-  if (md >= 1023 && md <= 1121) return "scorpio";
-  if (md >= 1122 && md <= 1221) return "sagittarius";
-  if (md >= 1222 || md <= 119) return "capricorn";
-  if (md >= 120 && md <= 218) return "aquarius";
-  if (md >= 219 && md <= 320) return "pisces";
-
-  return undefined;
+  const monthDay = month * 100 + day;
+  const zodiac = ZODIAC_RANGES.find(({ start, end }) =>
+    isMonthDayInRange(monthDay, start, end),
+  );
+  return zodiac?.sign;
 }
 
 const labelStyles = [
