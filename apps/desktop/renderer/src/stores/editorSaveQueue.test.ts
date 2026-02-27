@@ -132,4 +132,28 @@ describe("editorSaveQueue", () => {
 
     expect(order).toEqual(["fail", "after-1", "after-2"]);
   });
+
+  it("should report unexpected save errors while keeping the queue alive", async () => {
+    const onUnexpectedError = vi.fn();
+
+    const queue = createEditorSaveQueue({
+      executeSave: async (request) => {
+        if (request.contentJson === "broken") {
+          throw new Error("unexpected");
+        }
+      },
+      onUnexpectedError,
+    });
+
+    const broken = queue.enqueue(makeRequest({ contentJson: "broken" }));
+    const next = queue.enqueue(makeRequest({ contentJson: "next" }));
+
+    await Promise.all([broken, next]);
+
+    expect(onUnexpectedError).toHaveBeenCalledTimes(1);
+    expect(onUnexpectedError).toHaveBeenCalledWith({
+      request: expect.objectContaining({ contentJson: "broken" }),
+      error: expect.any(Error),
+    });
+  });
 });

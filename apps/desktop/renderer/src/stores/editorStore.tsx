@@ -126,6 +126,25 @@ function createInitialEntityCompletionSession(): EntityCompletionSession {
 export function createEditorStore(deps: { invoke: IpcInvoke }) {
   return create<EditorStore>((set, get) => {
     const saveQueue = createEditorSaveQueue({
+      onUnexpectedError: ({ request, error }) => {
+        const stillCurrent =
+          get().projectId === request.projectId &&
+          get().documentId === request.documentId;
+        if (!stillCurrent) {
+          return;
+        }
+
+        set({
+          autosaveStatus: "error",
+          autosaveError: {
+            code: "INTERNAL_ERROR",
+            message:
+              error instanceof Error
+                ? error.message
+                : "editor save queue failed unexpectedly",
+          },
+        });
+      },
       executeSave: async (request: EditorSaveRequest) => {
         const isCurrent =
           get().projectId === request.projectId &&
