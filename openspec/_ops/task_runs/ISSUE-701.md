@@ -1,13 +1,13 @@
 # ISSUE-701
 
-更新时间：2026-02-27 21:40
+更新时间：2026-02-27 21:45
 
 ## Links
 
 - Issue: #701
 - Issue URL: https://github.com/Leeky1017/CreoNow/issues/701
 - Branch: `task/701-audit-store-provider-style-unification`
-- PR: NOT-CREATED（本次仅完成本地实现与验证，待创建后回填真实链接）
+- PR: https://github.com/Leeky1017/CreoNow/pull/704
 
 ## Plan
 
@@ -70,10 +70,16 @@
   - `[test-discovery] mode=unit tsx=243 vitest=8`
   - `vitest bucket: 8 files, 26 tests passed`
 
+### 2026-02-27 GitHub 提交流程
+
+- Command: `gh pr create --base main --head task/701-audit-store-provider-style-unification --title "Audit store provider style unification (#701)" ...`
+- Exit code: `0`
+- Key output: `https://github.com/Leeky1017/CreoNow/pull/704`
+
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 86a69c59f5438661f23567260845af9e87f81175
+- Reviewed-HEAD-SHA: 756f3a84cf96c7e017ef7a7537b54685f44b4c4f
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
