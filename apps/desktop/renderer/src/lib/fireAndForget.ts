@@ -64,7 +64,12 @@ export function runFireAndForget(
     }
   };
 
-  void task().catch((error) => {
+  try {
+    const result = task();
+    void result.catch((error) => {
+      safeHandleError(error);
+    });
+  } catch (error) {
     safeHandleError(error);
-  });
+  }
 }
