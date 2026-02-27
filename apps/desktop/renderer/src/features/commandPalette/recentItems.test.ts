@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   MAX_RECENT_COMMANDS,
@@ -9,6 +9,10 @@ import {
 describe("recentItems", () => {
   beforeEach(() => {
     window.localStorage.clear();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it("should store recent command ids with newest-first order and dedupe", () => {
@@ -35,4 +39,53 @@ describe("recentItems", () => {
 
     expect(readRecentCommandIds()).toEqual([]);
   });
+  it("should ignore non-finite read limits and keep default capacity", () => {
+    for (let index = 1; index <= 3; index += 1) {
+      recordRecentCommandId(`command-${index}`);
+    }
+
+    expect(readRecentCommandIds({ limit: Number.NaN })).toEqual([
+      "command-3",
+      "command-2",
+      "command-1",
+    ]);
+  });
+
+  it("should ignore non-finite write limits without wiping history", () => {
+    recordRecentCommandId("command-a");
+    recordRecentCommandId("command-b", { limit: Number.NaN });
+
+    expect(readRecentCommandIds()).toEqual(["command-b", "command-a"]);
+  });
+
+  it("should return empty list when localStorage is unavailable", () => {
+    const localStorageDescriptor = Object.getOwnPropertyDescriptor(
+      window,
+      "localStorage",
+    );
+
+    if (!localStorageDescriptor?.configurable) {
+      return;
+    }
+
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+
+    Object.defineProperty(window, "localStorage", {
+      configurable: true,
+      get: () => {
+        throw new Error("blocked");
+      },
+    });
+
+    expect(readRecentCommandIds()).toEqual([]);
+    expect(consoleError).toHaveBeenCalledWith(
+      "COMMAND_PALETTE_RECENT_STORAGE_UNAVAILABLE",
+      expect.any(Error),
+    );
+
+    Object.defineProperty(window, "localStorage", localStorageDescriptor);
+  });
+
 });
