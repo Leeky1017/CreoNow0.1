@@ -117,6 +117,31 @@ function createInitialEntityCompletionSession(): EntityCompletionSession {
   };
 }
 
+function createSaveQueueUnexpectedErrorHandler(deps: {
+  get: () => EditorStore;
+  set: (patch: Partial<EditorStore>) => void;
+}) {
+  return ({ request, error }: { request: EditorSaveRequest; error: unknown }) => {
+    const stillCurrent =
+      deps.get().projectId === request.projectId &&
+      deps.get().documentId === request.documentId;
+    if (!stillCurrent) {
+      return;
+    }
+
+    deps.set({
+      autosaveStatus: "error",
+      autosaveError: {
+        code: "INTERNAL_ERROR",
+        message:
+          error instanceof Error
+            ? error.message
+            : "editor save queue failed unexpectedly",
+      },
+    });
+  };
+}
+
 /**
  * Create a zustand store for editor/document state.
  *
@@ -128,6 +153,10 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
 
   return create<EditorStore>((set, get) => {
     const saveQueue = createEditorSaveQueue({
+      onUnexpectedError: createSaveQueueUnexpectedErrorHandler({
+        get,
+        set: (patch) => set(patch),
+      }),
       executeSave: async (request: EditorSaveRequest) => {
         const isCurrent =
           get().projectId === request.projectId &&

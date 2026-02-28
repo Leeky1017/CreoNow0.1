@@ -61,6 +61,103 @@ function hasCorruptedOffsets(chunk: {
   return chunk.startOffset < 0 || chunk.endOffset < chunk.startOffset;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function invalidArgument(message: string): IpcResponse<never> {
+  return {
+    ok: false,
+    error: {
+      code: "INVALID_ARGUMENT",
+      message,
+    },
+  };
+}
+
+function parseTextGeneratePayload(payload: unknown): {
+  texts: string[];
+  model?: string;
+} | null {
+  if (!isRecord(payload) || !Array.isArray(payload.texts)) {
+    return null;
+  }
+  if (!payload.texts.every((text) => typeof text === "string")) {
+    return null;
+  }
+  if (payload.model !== undefined && typeof payload.model !== "string") {
+    return null;
+  }
+
+  return {
+    texts: payload.texts,
+    ...(typeof payload.model === "string" ? { model: payload.model } : {}),
+  };
+}
+
+function parseSemanticSearchPayload(payload: unknown): {
+  projectId: string;
+  queryText: string;
+  topK?: number;
+  minScore?: number;
+  model?: string;
+} | null {
+  if (!isRecord(payload)) {
+    return null;
+  }
+  if (typeof payload.projectId !== "string") {
+    return null;
+  }
+  if (typeof payload.queryText !== "string") {
+    return null;
+  }
+  if (payload.topK !== undefined && typeof payload.topK !== "number") {
+    return null;
+  }
+  if (payload.minScore !== undefined && typeof payload.minScore !== "number") {
+    return null;
+  }
+  if (payload.model !== undefined && typeof payload.model !== "string") {
+    return null;
+  }
+
+  return {
+    projectId: payload.projectId,
+    queryText: payload.queryText,
+    ...(typeof payload.topK === "number" ? { topK: payload.topK } : {}),
+    ...(typeof payload.minScore === "number"
+      ? { minScore: payload.minScore }
+      : {}),
+    ...(typeof payload.model === "string" ? { model: payload.model } : {}),
+  };
+}
+
+
+function parseReindexPayload(payload: unknown): {
+  projectId: string;
+  batchSize?: number;
+  model?: string;
+} | null {
+  if (!isRecord(payload)) {
+    return null;
+  }
+  if (typeof payload.projectId !== "string") {
+    return null;
+  }
+  if (payload.batchSize !== undefined && typeof payload.batchSize !== "number") {
+    return null;
+  }
+  if (payload.model !== undefined && typeof payload.model !== "string") {
+    return null;
+  }
+
+  return {
+    projectId: payload.projectId,
+    ...(typeof payload.batchSize === "number" ? { batchSize: payload.batchSize } : {}),
+    ...(typeof payload.model === "string" ? { model: payload.model } : {}),
+  };
+}
+
 /**
  * Register `embedding:*` IPC handlers.
  *
@@ -99,7 +196,7 @@ export function registerEmbeddingIpcHandlers(deps: {
     "embedding:text:generate",
     async (
       _e,
-      payload: { texts: string[]; model?: string },
+      payload: unknown,
       signal?: AbortSignal,
     ): Promise<IpcResponse<{ vectors: number[][]; dimension: number }>> => {
       if (!deps.db) {
@@ -109,17 +206,22 @@ export function registerEmbeddingIpcHandlers(deps: {
         };
       }
 
+      const parsedPayload = parseTextGeneratePayload(payload);
+      if (!parsedPayload) {
+        return invalidArgument("payload must include texts:string[] and optional model:string");
+      }
+
       if (embeddingTextOffload) {
         return await embeddingTextOffload.encode({
-          texts: payload.texts,
-          model: payload.model,
+          texts: parsedPayload.texts,
+          model: parsedPayload.model,
           signal,
         });
       }
 
       const encoded = deps.embedding.encode({
-        texts: payload.texts,
-        model: payload.model,
+        texts: parsedPayload.texts,
+        model: parsedPayload.model,
       });
       return encoded.ok
         ? { ok: true, data: encoded.data }
@@ -131,13 +233,7 @@ export function registerEmbeddingIpcHandlers(deps: {
     "embedding:semantic:search",
     async (
       _e,
-      payload: {
-        projectId: string;
-        queryText: string;
-        topK?: number;
-        minScore?: number;
-        model?: string;
-      },
+      payload: unknown,
     ): Promise<
       IpcResponse<{
         mode: "semantic" | "fts-fallback";
@@ -167,33 +263,34 @@ export function registerEmbeddingIpcHandlers(deps: {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
-        return {
-          ok: false,
-          error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
-        };
+
+      const parsedPayload = parseSemanticSearchPayload(payload);
+      if (!parsedPayload) {
+        return invalidArgument(
+          "payload must include projectId:string, queryText:string, and optional topK/minScore/model",
+        );
       }
-      if (payload.queryText.trim().length === 0) {
-        return {
-          ok: false,
-          error: { code: "INVALID_ARGUMENT", message: "queryText is required" },
-        };
+      if (parsedPayload.projectId.trim().length === 0) {
+        return invalidArgument("projectId is required");
+      }
+      if (parsedPayload.queryText.trim().length === 0) {
+        return invalidArgument("queryText is required");
       }
 
-      const topK = normalizeTopK(payload.topK);
-      const minScore = normalizeMinScore(payload.minScore);
+      const topK = normalizeTopK(parsedPayload.topK);
+      const minScore = normalizeMinScore(parsedPayload.minScore);
 
       const docs = listProjectDocuments({
         db: deps.db,
-        projectId: payload.projectId,
+        projectId: parsedPayload.projectId,
       });
       for (const doc of docs) {
         const upserted = semanticIndex.upsertDocument({
-          projectId: payload.projectId,
+          projectId: parsedPayload.projectId,
           documentId: doc.documentId,
           contentText: doc.contentText,
           updatedAt: doc.updatedAt,
-          model: payload.model,
+          model: parsedPayload.model,
         });
         if (
           !upserted.ok &&
@@ -205,11 +302,11 @@ export function registerEmbeddingIpcHandlers(deps: {
       }
 
       const semantic = semanticIndex.search({
-        projectId: payload.projectId,
-        queryText: payload.queryText,
+        projectId: parsedPayload.projectId,
+        queryText: parsedPayload.queryText,
         topK,
         minScore,
-        model: payload.model,
+        model: parsedPayload.model,
       });
 
       if (!semantic.ok) {
@@ -222,8 +319,8 @@ export function registerEmbeddingIpcHandlers(deps: {
 
         const fts = createFtsService({ db: deps.db, logger: deps.logger });
         const ftsRes = fts.searchFulltext({
-          projectId: payload.projectId,
-          query: payload.queryText,
+          projectId: parsedPayload.projectId,
+          query: parsedPayload.queryText,
           limit: topK,
         });
         if (!ftsRes.ok) {
@@ -231,12 +328,12 @@ export function registerEmbeddingIpcHandlers(deps: {
         }
 
         const crossProjectItem = ftsRes.data.items.find(
-          (item) => item.projectId !== payload.projectId,
+          (item) => item.projectId !== parsedPayload.projectId,
         );
         if (crossProjectItem) {
           deps.logger.error("embedding_project_forbidden_audit", {
             operation: "embedding:semantic:search",
-            requestedProjectId: payload.projectId,
+            requestedProjectId: parsedPayload.projectId,
             rowProjectId: crossProjectItem.projectId,
             documentId: crossProjectItem.documentId,
           });
@@ -246,7 +343,7 @@ export function registerEmbeddingIpcHandlers(deps: {
               code: "SEARCH_PROJECT_FORBIDDEN",
               message: "Cross-project semantic retrieval is forbidden",
               details: {
-                requestedProjectId: payload.projectId,
+                requestedProjectId: parsedPayload.projectId,
                 rowProjectId: crossProjectItem.projectId,
               },
             },
@@ -254,9 +351,9 @@ export function registerEmbeddingIpcHandlers(deps: {
         }
 
         deps.logger.info("embedding_search_fallback_fts", {
-          projectId: payload.projectId,
+          projectId: parsedPayload.projectId,
           reason: semantic.error.code,
-          queryLength: payload.queryText.trim().length,
+          queryLength: parsedPayload.queryText.trim().length,
           resultCount: ftsRes.data.items.length,
         });
 
@@ -283,12 +380,12 @@ export function registerEmbeddingIpcHandlers(deps: {
       }
 
       const crossProjectChunk = semantic.data.chunks.find(
-        (chunk) => chunk.projectId !== payload.projectId,
+        (chunk) => chunk.projectId !== parsedPayload.projectId,
       );
       if (crossProjectChunk) {
         deps.logger.error("embedding_project_forbidden_audit", {
           operation: "embedding:semantic:search",
-          requestedProjectId: payload.projectId,
+          requestedProjectId: parsedPayload.projectId,
           rowProjectId: crossProjectChunk.projectId,
           documentId: crossProjectChunk.documentId,
         });
@@ -298,7 +395,7 @@ export function registerEmbeddingIpcHandlers(deps: {
             code: "SEARCH_PROJECT_FORBIDDEN",
             message: "Cross-project semantic retrieval is forbidden",
             details: {
-              requestedProjectId: payload.projectId,
+              requestedProjectId: parsedPayload.projectId,
               rowProjectId: crossProjectChunk.projectId,
             },
           },
@@ -316,14 +413,14 @@ export function registerEmbeddingIpcHandlers(deps: {
 
       if (isolatedChunkIds.length > 0) {
         deps.logger.error("embedding_data_corrupted_isolated", {
-          projectId: payload.projectId,
+          projectId: parsedPayload.projectId,
           isolatedChunkIds,
         });
       }
 
       deps.logger.info("embedding_search_semantic", {
-        projectId: payload.projectId,
-        queryLength: payload.queryText.trim().length,
+        projectId: parsedPayload.projectId,
+        queryLength: parsedPayload.queryText.trim().length,
         resultCount: validChunks.length,
       });
 
@@ -356,7 +453,7 @@ export function registerEmbeddingIpcHandlers(deps: {
     "embedding:index:reindex",
     async (
       _e,
-      payload: { projectId: string; batchSize?: number; model?: string },
+      payload: unknown,
     ): Promise<
       IpcResponse<{
         indexedDocuments: number;
@@ -370,28 +467,29 @@ export function registerEmbeddingIpcHandlers(deps: {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
-        return {
-          ok: false,
-          error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
-        };
+      const parsedPayload = parseReindexPayload(payload);
+      if (!parsedPayload) {
+        return invalidArgument("payload must include projectId:string and optional batchSize/model");
+      }
+      if (parsedPayload.projectId.trim().length === 0) {
+        return invalidArgument("projectId is required");
       }
 
       const docs = listProjectDocuments({
         db: deps.db,
-        projectId: payload.projectId,
+        projectId: parsedPayload.projectId,
       });
       const reindexed = semanticIndex.reindexProject({
-        projectId: payload.projectId,
+        projectId: parsedPayload.projectId,
         documents: docs,
-        model: payload.model,
+        model: parsedPayload.model,
       });
       if (!reindexed.ok) {
         return { ok: false, error: reindexed.error };
       }
 
       deps.logger.info("embedding_reindex", {
-        projectId: payload.projectId,
+        projectId: parsedPayload.projectId,
         indexedDocuments: reindexed.data.indexedDocuments,
         indexedChunks: reindexed.data.indexedChunks,
       });

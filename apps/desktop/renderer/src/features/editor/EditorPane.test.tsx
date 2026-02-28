@@ -31,6 +31,7 @@ import {
   EDITOR_DOCUMENT_CHARACTER_LIMIT,
   LARGE_PASTE_THRESHOLD_CHARS,
   chunkLargePasteText,
+  parseEditorContentJsonSafely,
   sanitizePastedHtml,
   shouldConfirmOverflowPaste,
   shouldWarnDocumentCapacity,
@@ -240,6 +241,13 @@ describe("EditorPane", () => {
     expect(shouldWarnDocumentCapacity(EDITOR_DOCUMENT_CHARACTER_LIMIT)).toBe(
       true,
     );
+  });
+
+  it("should fallback to empty doc when persisted content is invalid JSON", () => {
+    expect(parseEditorContentJsonSafely("{invalid")).toEqual({
+      type: "doc",
+      content: [{ type: "paragraph" }],
+    });
   });
 
   it("S2-BA-1 should show Bubble Menu with inline actions when selection is non-empty", async () => {

@@ -44,6 +44,10 @@ const CAPACITY_WARNING_TEXT =
 const WRITE_CONTEXT_WINDOW = 240;
 const ENTITY_COMPLETION_LOOKBACK_CHARS = 96;
 const ENTITY_COMPLETION_TRIGGER = "@";
+const EMPTY_EDITOR_DOC: ReturnType<Editor["getJSON"]> = {
+  type: "doc",
+  content: [{ type: "paragraph" }],
+};
 
 type EntityListItem = IpcResponseData<"knowledge:entity:list">["items"][number];
 
@@ -197,6 +201,19 @@ function buildWriteInput(editor: Editor): string {
     return `Continue writing from cursor context:\n${fallback.slice(-WRITE_CONTEXT_WINDOW)}`;
   }
   return "Continue writing from cursor context:";
+}
+
+/**
+ * Parse persisted editor JSON with fail-safe fallback.
+ */
+export function parseEditorContentJsonSafely(
+  contentJson: string,
+): ReturnType<Editor["getJSON"]> {
+  try {
+    return JSON.parse(contentJson) as ReturnType<Editor["getJSON"]>;
+  } catch {
+    return EMPTY_EDITOR_DOC;
+  }
 }
 
 /**
@@ -498,7 +515,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
     try {
       setContentReady(false);
       suppressAutosaveRef.current = true;
-      editor.commands.setContent(JSON.parse(activeContentJson));
+      editor.commands.setContent(parseEditorContentJsonSafely(activeContentJson));
     } finally {
       window.setTimeout(() => {
         suppressAutosaveRef.current = false;
