@@ -1,4 +1,4 @@
-import { _electron as electron, expect, test } from "@playwright/test";
+import { _electron as electron, expect, test, type Page } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
@@ -44,6 +44,64 @@ async function fileExists(p: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+type ExportOutcome =
+  | { kind: "success" }
+  | { kind: "error"; code: string; message: string }
+  | {
+      kind: "timeout";
+      successVisible: boolean;
+      errorVisible: boolean;
+      fileWritten: boolean;
+    };
+
+async function waitForExportOutcome(args: {
+  page: Page;
+  expectedAbsPath: string;
+  timeoutMs?: number;
+}): Promise<ExportOutcome> {
+  const timeoutMs = args.timeoutMs ?? 30_000;
+  const deadline = Date.now() + timeoutMs;
+
+  while (Date.now() <= deadline) {
+    const [successVisible, errorVisible, fileWritten] = await Promise.all([
+      args.page.getByTestId("export-success").isVisible(),
+      args.page.getByTestId("export-error").isVisible(),
+      fileExists(args.expectedAbsPath),
+    ]);
+
+    if (errorVisible) {
+      const [codeText, messageText] = await Promise.all([
+        args.page.getByTestId("export-error-code").textContent(),
+        args.page.getByTestId("export-error-message").textContent(),
+      ]);
+      return {
+        kind: "error",
+        code: codeText?.trim() || "<missing code>",
+        message: messageText?.trim() || "<missing message>",
+      };
+    }
+
+    if (successVisible && fileWritten) {
+      return { kind: "success" };
+    }
+
+    await args.page.waitForTimeout(250);
+  }
+
+  const [successVisible, errorVisible, fileWritten] = await Promise.all([
+    args.page.getByTestId("export-success").isVisible(),
+    args.page.getByTestId("export-error").isVisible(),
+    fileExists(args.expectedAbsPath),
+  ]);
+
+  return {
+    kind: "timeout",
+    successVisible,
+    errorVisible,
+    fileWritten,
+  };
 }
 
 test("export: markdown writes deterministic file under userData exports", async () => {
@@ -111,51 +169,6 @@ test("export: markdown writes deterministic file under userData exports", async 
     "checked",
   );
 
-  // Click Export button to start export
-  await page.getByTestId("export-submit").click();
-
-  // Wait for success (or a surfaced error) and print diagnostics on failure.
-  try {
-    await expect(page.getByTestId("export-success")).toBeVisible({
-      timeout: 10_000,
-    });
-  } catch (error) {
-    const errorVisible = await page.getByTestId("export-error").isVisible();
-    if (errorVisible) {
-      const code = await page.getByTestId("export-error-code").textContent();
-      const message = await page
-        .getByTestId("export-error-message")
-        .textContent();
-      const mainLogTail = await readMainLogTail({ userDataDir });
-      throw new Error(
-        [
-          "Export failed:",
-          `${code ?? "<missing code>"}: ${message ?? "<missing message>"}`,
-          "--- main.log tail ---",
-          mainLogTail,
-          "--- original error ---",
-          error instanceof Error ? error.message : String(error),
-        ].join("\n"),
-      );
-    }
-
-    const mainLogTail = await readMainLogTail({ userDataDir });
-    throw new Error(
-      [
-        "Export did not reach success view within timeout.",
-        "--- main.log tail ---",
-        mainLogTail,
-        "--- original error ---",
-        error instanceof Error ? error.message : String(error),
-      ].join("\n"),
-    );
-  }
-
-  // Verify result fields are displayed
-  await expect(page.getByTestId("export-success-relative-path")).toBeVisible();
-  await expect(page.getByTestId("export-success-bytes-written")).toBeVisible();
-
-  // Verify file was actually written
   const expectedRelPath = path.join(
     "exports",
     current.projectId,
@@ -163,7 +176,43 @@ test("export: markdown writes deterministic file under userData exports", async 
   );
   const expectedAbsPath = path.join(userDataDir, expectedRelPath);
 
-  await expect.poll(async () => await fileExists(expectedAbsPath)).toBe(true);
+  // Click Export button to start export
+  await page.getByTestId("export-submit").click();
+
+  // Require dual evidence: success UI + exported file written.
+  const outcome = await waitForExportOutcome({
+    page,
+    expectedAbsPath,
+    timeoutMs: 30_000,
+  });
+
+  if (outcome.kind === "error") {
+    const mainLogTail = await readMainLogTail({ userDataDir });
+    throw new Error(
+      [
+        "Export failed:",
+        `${outcome.code}: ${outcome.message}`,
+        "--- main.log tail ---",
+        mainLogTail,
+      ].join("\n"),
+    );
+  }
+
+  if (outcome.kind === "timeout") {
+    const mainLogTail = await readMainLogTail({ userDataDir });
+    throw new Error(
+      [
+        "Export did not reach stable success state within timeout.",
+        `state: successVisible=${outcome.successVisible}, errorVisible=${outcome.errorVisible}, fileWritten=${outcome.fileWritten}`,
+        "--- main.log tail ---",
+        mainLogTail,
+      ].join("\n"),
+    );
+  }
+
+  // Verify result fields are displayed
+  await expect(page.getByTestId("export-success-relative-path")).toBeVisible();
+  await expect(page.getByTestId("export-success-bytes-written")).toBeVisible();
 
   const exported = await fs.readFile(expectedAbsPath, "utf8");
   expect(exported).toContain("Export me");
