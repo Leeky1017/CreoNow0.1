@@ -1,5 +1,9 @@
 # Proposal: issue-775-frontend-overhaul-change-breakdown
 
+更新时间：2026-02-28 19:20
+
+更新时间：2026-02-28 19:20
+
 ## Why
 
 `docs/frontend-overhaul-plan.md` 已给出一份可追溯的前端整改审计方案（含问题清单、根因、优先级、阻塞决策与 B1–B45 深度审计）。但若不将其拆解为可执行的 OpenSpec changes 并落盘执行顺序，后续实现会出现三类治理风险：

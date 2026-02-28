@@ -1,5 +1,9 @@
 ## 1. Implementation（Spec-only）
 
+更新时间：2026-02-28 19:20
+
+更新时间：2026-02-28 19:20
+
 - [ ] 1.1 交付 `docs/frontend-overhaul-plan.md` 到控制面 `main`（作为拆分 SSOT）
 - [ ] 1.2 从文档提取条目全集并建立 coverage map（S1–S7 / F1–F4 / A1–A17 / R1–R3 / D1–D3 / B1–B45）
 - [ ] 1.3 为每个可执行条目创建 OpenSpec change：
