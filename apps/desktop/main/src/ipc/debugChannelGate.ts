@@ -8,7 +8,10 @@ import type { Logger } from "../logging/logger";
  * Enforce production hardening for debug-only DB inspection channel.
  */
 function shouldRegisterDbDebugChannel(env: NodeJS.ProcessEnv): boolean {
-  return env.NODE_ENV !== "production";
+  if (env.CREONOW_ENABLE_DB_DEBUG === "1" || env.CREONOW_E2E === "1") {
+    return true;
+  }
+  return env.NODE_ENV === "development" || env.NODE_ENV === "test";
 }
 
 /**

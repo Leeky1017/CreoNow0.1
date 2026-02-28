@@ -87,10 +87,14 @@ export function createPreferenceStore(storage: Storage): PreferenceStore {
 
   function migrate(): void {
     const versionKey = `${APP_ID}.version` as const;
-    const storedVersion = parseVersion(storage.getItem(versionKey));
-    if (storedVersion !== CURRENT_VERSION) {
-      clearCreonowKeys();
-      storage.setItem(versionKey, CURRENT_VERSION);
+    try {
+      const storedVersion = parseVersion(storage.getItem(versionKey));
+      if (storedVersion !== CURRENT_VERSION) {
+        clearCreonowKeys();
+        storage.setItem(versionKey, CURRENT_VERSION);
+      }
+    } catch (error) {
+      console.error("PreferenceStore.migrate failed", { error });
     }
   }
 
