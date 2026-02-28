@@ -137,7 +137,25 @@ export function registerJudgeIpcHandlers(deps: {
         return { ok: false, error: parsed.error };
       }
 
-      const evaluated = await deps.judgeQualityService.evaluate(parsed.data);
+      let evaluated: Awaited<
+        ReturnType<typeof deps.judgeQualityService.evaluate>
+      >;
+      try {
+        evaluated = await deps.judgeQualityService.evaluate(parsed.data);
+      } catch (error) {
+        deps.logger.error("judge_quality_evaluate_failed", {
+          traceId: parsed.data.traceId,
+          message: error instanceof Error ? error.message : String(error),
+        });
+        return {
+          ok: false,
+          error: {
+            code: "INTERNAL_ERROR",
+            message: "Failed to evaluate judge quality",
+          },
+        };
+      }
+
       if (!evaluated.ok) {
         return { ok: false, error: evaluated.error };
       }
@@ -159,6 +177,13 @@ export function registerJudgeIpcHandlers(deps: {
           traceId: event.traceId,
           message: error instanceof Error ? error.message : String(error),
         });
+        return {
+          ok: false,
+          error: {
+            code: "INTERNAL_ERROR",
+            message: "Failed to push judge result",
+          },
+        };
       }
 
       return {
