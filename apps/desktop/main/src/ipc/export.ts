@@ -1,9 +1,73 @@
 import type { IpcMain } from "electron";
 import type Database from "better-sqlite3";
 
-import type { IpcResponse } from "@shared/types/ipc-generated";
+import type { IpcError, IpcResponse } from "@shared/types/ipc-generated";
 import type { Logger } from "../logging/logger";
 import { createExportService } from "../services/export/exportService";
+
+type ExportPayloadError = IpcError;
+
+type DocumentExportPayload = {
+  projectId: string;
+  documentId?: string;
+};
+
+function invalidPayload(message: string): ExportPayloadError {
+  return { code: "INVALID_ARGUMENT", message };
+}
+
+function parseDocumentExportPayload(payload: unknown):
+  | { ok: true; data: DocumentExportPayload }
+  | { ok: false; error: ExportPayloadError } {
+  if (!payload || typeof payload !== "object") {
+    return { ok: false, error: invalidPayload("payload must be an object") };
+  }
+
+  const projectId = (payload as { projectId?: unknown }).projectId;
+  if (typeof projectId !== "string") {
+    return { ok: false, error: invalidPayload("projectId must be a string") };
+  }
+
+  const documentId = (payload as { documentId?: unknown }).documentId;
+  if (documentId !== undefined && typeof documentId !== "string") {
+    return { ok: false, error: invalidPayload("documentId must be a string") };
+  }
+
+  return { ok: true, data: { projectId, documentId } };
+}
+
+function parseProjectBundlePayload(payload: unknown):
+  | { ok: true; data: { projectId: string } }
+  | { ok: false; error: ExportPayloadError } {
+  if (!payload || typeof payload !== "object") {
+    return { ok: false, error: invalidPayload("payload must be an object") };
+  }
+
+  const projectId = (payload as { projectId?: unknown }).projectId;
+  if (typeof projectId !== "string") {
+    return { ok: false, error: invalidPayload("projectId must be a string") };
+  }
+
+  return { ok: true, data: { projectId } };
+}
+
+function toUnexpectedExportError(error: unknown): ExportPayloadError {
+  return {
+    code: "INTERNAL_ERROR",
+    message:
+      error instanceof Error ? error.message : "Unexpected export IPC error",
+  };
+}
+
+function resolveExportResponse(
+  result:
+    | { ok: true; data: { relativePath: string; bytesWritten: number } }
+    | { ok: false; error: ExportPayloadError },
+): IpcResponse<{ relativePath: string; bytesWritten: number }> {
+  return result.ok
+    ? { ok: true, data: result.data }
+    : { ok: false, error: result.error };
+}
 
 /**
  * Register `export:*` IPC handlers.
@@ -17,11 +81,36 @@ export function registerExportIpcHandlers(deps: {
   logger: Logger;
   userDataDir: string;
 }): void {
+  const invokeDocumentExport = async (
+    channel: string,
+    payload: unknown,
+    run: (args: DocumentExportPayload) => Promise<
+      | { ok: true; data: { relativePath: string; bytesWritten: number } }
+      | { ok: false; error: ExportPayloadError }
+    >,
+  ): Promise<IpcResponse<{ relativePath: string; bytesWritten: number }>> => {
+    const parsed = parseDocumentExportPayload(payload);
+    if (!parsed.ok) {
+      return { ok: false, error: parsed.error };
+    }
+
+    try {
+      const result = await run(parsed.data);
+      return resolveExportResponse(result);
+    } catch (error) {
+      deps.logger.error("ipc_export_unexpected_error", {
+        channel,
+        message: error instanceof Error ? error.message : String(error),
+      });
+      return { ok: false, error: toUnexpectedExportError(error) };
+    }
+  };
+
   deps.ipcMain.handle(
     "export:document:markdown",
     async (
       _e,
-      payload: { projectId: string; documentId?: string },
+      payload: unknown,
     ): Promise<IpcResponse<{ relativePath: string; bytesWritten: number }>> => {
       if (!deps.db) {
         return {
@@ -35,10 +124,11 @@ export function registerExportIpcHandlers(deps: {
         logger: deps.logger,
         userDataDir: deps.userDataDir,
       });
-      const res = await svc.exportMarkdown(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
+      return invokeDocumentExport(
+        "export:document:markdown",
+        payload,
+        async (args) => svc.exportMarkdown(args),
+      );
     },
   );
 
@@ -46,7 +136,7 @@ export function registerExportIpcHandlers(deps: {
     "export:document:pdf",
     async (
       _e,
-      payload: { projectId: string; documentId?: string },
+      payload: unknown,
     ): Promise<IpcResponse<{ relativePath: string; bytesWritten: number }>> => {
       if (!deps.db) {
         return {
@@ -59,10 +149,11 @@ export function registerExportIpcHandlers(deps: {
         logger: deps.logger,
         userDataDir: deps.userDataDir,
       });
-      const res = await svc.exportPdf(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
+      return invokeDocumentExport(
+        "export:document:pdf",
+        payload,
+        async (args) => svc.exportPdf(args),
+      );
     },
   );
 
@@ -70,7 +161,7 @@ export function registerExportIpcHandlers(deps: {
     "export:document:docx",
     async (
       _e,
-      payload: { projectId: string; documentId?: string },
+      payload: unknown,
     ): Promise<IpcResponse<{ relativePath: string; bytesWritten: number }>> => {
       if (!deps.db) {
         return {
@@ -83,10 +174,11 @@ export function registerExportIpcHandlers(deps: {
         logger: deps.logger,
         userDataDir: deps.userDataDir,
       });
-      const res = await svc.exportDocx(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
+      return invokeDocumentExport(
+        "export:document:docx",
+        payload,
+        async (args) => svc.exportDocx(args),
+      );
     },
   );
 
@@ -94,7 +186,7 @@ export function registerExportIpcHandlers(deps: {
     "export:document:txt",
     async (
       _e,
-      payload: { projectId: string; documentId?: string },
+      payload: unknown,
     ): Promise<IpcResponse<{ relativePath: string; bytesWritten: number }>> => {
       if (!deps.db) {
         return {
@@ -108,10 +200,11 @@ export function registerExportIpcHandlers(deps: {
         logger: deps.logger,
         userDataDir: deps.userDataDir,
       });
-      const res = await svc.exportTxt(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
+      return invokeDocumentExport(
+        "export:document:txt",
+        payload,
+        async (args) => svc.exportTxt(args),
+      );
     },
   );
 
@@ -119,7 +212,7 @@ export function registerExportIpcHandlers(deps: {
     "export:project:bundle",
     async (
       _e,
-      payload: { projectId: string },
+      payload: unknown,
     ): Promise<IpcResponse<{ relativePath: string; bytesWritten: number }>> => {
       if (!deps.db) {
         return {
@@ -128,15 +221,27 @@ export function registerExportIpcHandlers(deps: {
         };
       }
 
+      const parsed = parseProjectBundlePayload(payload);
+      if (!parsed.ok) {
+        return { ok: false, error: parsed.error };
+      }
+
       const svc = createExportService({
         db: deps.db,
         logger: deps.logger,
         userDataDir: deps.userDataDir,
       });
-      const res = await svc.exportProjectBundle(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
+
+      try {
+        const result = await svc.exportProjectBundle(parsed.data);
+        return resolveExportResponse(result);
+      } catch (error) {
+        deps.logger.error("ipc_export_unexpected_error", {
+          channel: "export:project:bundle",
+          message: error instanceof Error ? error.message : String(error),
+        });
+        return { ok: false, error: toUnexpectedExportError(error) };
+      }
     },
   );
 }
