@@ -16,7 +16,9 @@ function txStateError(args: {
   );
 }
 
-export function createAiWriteTransaction(): AiWriteTransaction {
+export function createAiWriteTransaction(args?: {
+  onRollbackError?: (error: unknown, rollbackIndex: number) => void;
+}): AiWriteTransaction {
   const rollbacks: Array<() => void> = [];
   let state: AiWriteTransactionState = "open";
 
@@ -24,8 +26,13 @@ export function createAiWriteTransaction(): AiWriteTransaction {
     for (let index = rollbacks.length - 1; index >= 0; index -= 1) {
       try {
         rollbacks[index]?.();
-      } catch {
+      } catch (error) {
         // Rollback is best-effort; subsequent rollback handlers still run.
+        try {
+          args?.onRollbackError?.(error, index);
+        } catch {
+          // Ignore telemetry callback failures to preserve rollback flow.
+        }
       }
     }
     rollbacks.length = 0;
