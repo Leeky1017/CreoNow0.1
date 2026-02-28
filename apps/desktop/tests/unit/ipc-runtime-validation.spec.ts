@@ -33,7 +33,10 @@ async function invokeWrapped(
   payload: unknown,
 ): Promise<IpcResponse<unknown>> {
   return (await wrapped(
-    {} as Parameters<typeof wrapped>[0],
+    {
+      senderFrame: { url: "file:///index.html" },
+      sender: { id: 1 },
+    } as Parameters<typeof wrapped>[0],
     payload,
   )) as IpcResponse<unknown>;
 }

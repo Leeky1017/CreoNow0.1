@@ -29,7 +29,13 @@ function createMockIpcMain() {
       if (!listener) {
         throw new Error(`Missing handler: ${channel}`);
       }
-      return await listener({} as IpcMainInvokeEvent, payload);
+      return await listener(
+        {
+          senderFrame: { url: "file:///index.html" },
+          sender: { id: 1 },
+        } as IpcMainInvokeEvent,
+        payload,
+      );
     },
   };
 }
