@@ -9,9 +9,9 @@
   - RightPanel：spec 文字要求仅 AI/Info，但枚举包含 `quality`
 - [ ] 1.3 审阅并确认不可变契约：同一面板不得存在同义双 ID；spec 内不得自相矛盾。
 - [ ] 1.4 依赖同步检查（Dependency Sync Check）：
-  - [ ] D1（IconBar `media` 面板处置）Owner 决策已确认 — **STOP if pending**
-  - [ ] D2（`graph` vs `knowledgeGraph` 命名）Owner 决策已确认 — **STOP if pending**
-  - [ ] D3（RightPanel `Quality` tab 保留/移除）Owner 决策已确认 — **STOP if pending**
+  - [x] D1（IconBar `media` 面板处置）Owner 决策已确认 — 保留但标注 `[FUTURE]`
+  - [x] D2（`graph` vs `knowledgeGraph` 命名）Owner 决策已确认 — 统一到 `knowledgeGraph`（仅改 spec，代码零改动）
+  - [x] D3（RightPanel `Quality` tab 保留/移除）Owner 决策已确认 — 保留，更新 Spec 为三 tab
 
 ### 1.5 预期实现触点
 
