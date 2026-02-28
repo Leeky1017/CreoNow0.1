@@ -569,8 +569,9 @@ export function SearchPanel(props: {
     }
   }, [open]);
 
-  // Handle keyboard shortcuts
+  // Handle keyboard shortcuts — only when panel is open
   React.useEffect(() => {
+    if (!open) return;
     function handleKeyDown(e: KeyboardEvent): void {
       if (e.key === "Escape" && onClose) {
         onClose();
@@ -586,7 +587,7 @@ export function SearchPanel(props: {
     }
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose, totalResults]);
+  }, [onClose, totalResults, open]);
 
   function handleInputKeyDown(e: React.KeyboardEvent): void {
     if (e.key === "Enter") {
