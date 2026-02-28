@@ -79,6 +79,64 @@ async function main(): Promise<void> {
     );
     assert.equal(tx.state(), "aborted");
   }
+
+  {
+    const writes: string[] = [];
+    const rollbackErrors: Array<{ message: string; index: number }> = [];
+    const tx = createAiWriteTransaction({
+      onRollbackError: (error, index) => {
+        rollbackErrors.push({
+          message: error instanceof Error ? error.message : String(error),
+          index,
+        });
+      },
+    });
+
+    tx.applyWrite({
+      apply: () => {
+        writes.push("first");
+      },
+      rollback: () => {
+        removeOne(writes, "first");
+      },
+    });
+    tx.applyWrite({
+      apply: () => {
+        writes.push("second");
+      },
+      rollback: () => {
+        removeOne(writes, "second");
+        throw new Error("rollback second failed");
+      },
+    });
+    assert.throws(
+      () =>
+        tx.applyWrite({
+          apply: () => {
+            throw new Error("trigger abort");
+          },
+          rollback: () => {
+            throw new Error("rollback third failed");
+          },
+        }),
+      /trigger abort/,
+    );
+
+    assert.deepEqual(
+      rollbackErrors,
+      [
+        { message: "rollback third failed", index: 2 },
+        { message: "rollback second failed", index: 1 },
+      ],
+      "rollback failures should be reported with stable index",
+    );
+    assert.deepEqual(
+      writes,
+      [],
+      "rollback should continue after one rollback handler throws",
+    );
+    assert.equal(tx.state(), "aborted");
+  }
 }
 
 void main().catch((error) => {

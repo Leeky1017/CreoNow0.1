@@ -1297,7 +1297,16 @@ export function createAiService(deps: {
 
     const persistSuccessfulTurn = (assistantOutput: string): void => {
       const baseTs = now();
-      const tx = createAiWriteTransaction();
+      const tx = createAiWriteTransaction({
+        onRollbackError: (error, rollbackIndex) => {
+          deps.logger.error("ai_write_transaction_rollback_failed", {
+            runId,
+            traceId,
+            rollbackIndex,
+            message: error instanceof Error ? error.message : String(error),
+          });
+        },
+      });
       const userMessageId = randomUUID();
       const assistantMessageId = randomUUID();
       tx.applyWrite({
