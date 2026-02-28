@@ -124,6 +124,8 @@ function createInitialEntityCompletionSession(): EntityCompletionSession {
  * and StatusBar, and must be driven through typed IPC.
  */
 export function createEditorStore(deps: { invoke: IpcInvoke }) {
+  let latestBootstrapRequestId = 0;
+
   return create<EditorStore>((set, get) => {
     const saveQueue = createEditorSaveQueue({
       executeSave: async (request: EditorSaveRequest) => {
@@ -228,17 +230,19 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
         }),
 
       bootstrapForProject: async (projectId) => {
-        set({ bootstrapStatus: "loading" });
-
+        const requestId = ++latestBootstrapRequestId;
+        const shouldCommit = () => requestId === latestBootstrapRequestId;
+        set({ bootstrapStatus: "loading", projectId });
         let documentId: string | null = null;
-
         const currentRes = await deps.invoke("file:document:getcurrent", {
           projectId,
         });
+        if (!shouldCommit()) return;
         if (currentRes.ok) {
           documentId = currentRes.data.documentId;
         } else if (currentRes.error.code === "NOT_FOUND") {
           const listRes = await deps.invoke("file:document:list", { projectId });
+          if (!shouldCommit()) return;
           if (!listRes.ok) {
             set({ bootstrapStatus: "error" });
             return;
@@ -249,6 +253,7 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
             const created = await deps.invoke("file:document:create", {
               projectId,
             });
+            if (!shouldCommit()) return;
             if (!created.ok) {
               set({ bootstrapStatus: "error" });
               return;
@@ -260,6 +265,7 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
             projectId,
             documentId,
           });
+          if (!shouldCommit()) return;
           if (!setRes.ok) {
             set({ bootstrapStatus: "error" });
             return;
@@ -283,6 +289,7 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
           projectId,
           documentId,
         });
+        if (!shouldCommit()) return;
         if (!readRes.ok) {
           set({ bootstrapStatus: "error" });
           return;

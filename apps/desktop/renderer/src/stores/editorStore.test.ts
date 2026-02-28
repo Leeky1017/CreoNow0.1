@@ -31,10 +31,11 @@ function err<C extends IpcChannel>(
 
 function createReadPayload(
   documentId: string,
+  projectId = "project-1",
 ): IpcResponseData<"file:document:read"> {
   return {
     documentId,
-    projectId: "project-1",
+    projectId,
     title: "Doc",
     type: "chapter",
     status: "draft",
@@ -248,4 +249,79 @@ describe("editorStore bootstrap and autosave scenarios", () => {
     expect(store.getState().autosaveStatus).toBe("saved");
     expect(store.getState().autosaveError).toBeNull();
   });
+  it("should ignore stale bootstrap responses after rapid project switch", async () => {
+    type Deferred<T> = {
+      promise: Promise<T>;
+      resolve: (value: T) => void;
+    };
+
+    function deferred<T>(): Deferred<T> {
+      let resolve!: (value: T) => void;
+      const promise = new Promise<T>((res) => {
+        resolve = res;
+      });
+      return { promise, resolve };
+    }
+
+    const pendingCurrentByProject = new Map<
+      string,
+      Deferred<IpcInvokeResult<"file:document:getcurrent">>
+    >([
+      ["project-a", deferred<IpcInvokeResult<"file:document:getcurrent">>()],
+      ["project-b", deferred<IpcInvokeResult<"file:document:getcurrent">>()],
+    ]);
+
+    const invoke: IpcInvoke = async (channel, payload) => {
+      if (channel === "file:document:getcurrent") {
+        const request = payload as { projectId: string };
+        const pending = pendingCurrentByProject.get(request.projectId);
+        if (!pending) {
+          throw new Error("Unexpected projectId: " + request.projectId);
+        }
+        return await pending.promise;
+      }
+
+      if (channel === "file:document:read") {
+        const request = payload as { projectId: string; documentId: string };
+        return ok(
+          channel,
+          createReadPayload(request.documentId, request.projectId),
+        );
+      }
+
+      throw new Error("Unexpected channel: " + channel);
+    };
+
+    const store = createEditorStore({ invoke });
+
+    const firstBootstrap = store.getState().bootstrapForProject("project-a");
+    await vi.waitFor(() => {
+      expect(store.getState().projectId).toBe("project-a");
+      expect(store.getState().bootstrapStatus).toBe("loading");
+    });
+
+    const secondBootstrap = store.getState().bootstrapForProject("project-b");
+    await vi.waitFor(() => {
+      expect(store.getState().projectId).toBe("project-b");
+      expect(store.getState().bootstrapStatus).toBe("loading");
+    });
+
+    pendingCurrentByProject
+      .get("project-b")!
+      .resolve(ok("file:document:getcurrent", { documentId: "doc-b" }));
+    await secondBootstrap;
+
+    expect(store.getState().documentId).toBe("doc-b");
+
+    pendingCurrentByProject
+      .get("project-a")!
+      .resolve(ok("file:document:getcurrent", { documentId: "doc-a" }));
+    await firstBootstrap;
+
+    const state = store.getState();
+    expect(state.projectId).toBe("project-b");
+    expect(state.documentId).toBe("doc-b");
+    expect(state.bootstrapStatus).toBe("ready");
+  });
+
 });
