@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { FileTreePanel } from "./FileTreePanel";
 
@@ -52,6 +52,23 @@ vi.mock("../../stores/editorStore", () => ({
   ),
 }));
 
+async function renderFileTreePanel(projectId = "proj-1"): Promise<void> {
+  await act(async () => {
+    render(<FileTreePanel projectId={projectId} />);
+  });
+
+  await waitFor(() => {
+    expect(screen.getByTestId("sidebar-files")).toBeInTheDocument();
+  });
+}
+
+async function flushFileTreeAsyncUpdates(): Promise<void> {
+  await act(async () => {
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+}
+
 describe("FileTreePanel type/status baseline", () => {
   beforeEach(() => {
     fileItems = [];
@@ -71,10 +88,11 @@ describe("FileTreePanel type/status baseline", () => {
     openCurrentDocumentForProject.mockReset().mockResolvedValue({ ok: true });
   });
 
-  it("should create chapter document from default create button", () => {
-    render(<FileTreePanel projectId="proj-1" />);
+  it("should create chapter document from default create button", async () => {
+    await renderFileTreePanel("proj-1");
 
     fireEvent.click(screen.getByTestId("file-create"));
+    await flushFileTreeAsyncUpdates();
 
     expect(createAndSetCurrent).toHaveBeenCalledWith({
       projectId: "proj-1",
@@ -82,7 +100,7 @@ describe("FileTreePanel type/status baseline", () => {
     });
   });
 
-  it("should render note type icon in file row", () => {
+  it("should render note type icon in file row", async () => {
     fileItems = [
       {
         documentId: "doc-note",
@@ -93,12 +111,12 @@ describe("FileTreePanel type/status baseline", () => {
       },
     ];
 
-    render(<FileTreePanel projectId="proj-1" />);
+    await renderFileTreePanel("proj-1");
 
     expect(screen.getByTestId("file-type-icon-doc-note")).toBeInTheDocument();
   });
 
-  it("should render final status indicator in file row", () => {
+  it("should render final status indicator in file row", async () => {
     fileItems = [
       {
         documentId: "doc-final",
@@ -109,7 +127,7 @@ describe("FileTreePanel type/status baseline", () => {
       },
     ];
 
-    render(<FileTreePanel projectId="proj-1" />);
+    await renderFileTreePanel("proj-1");
 
     expect(
       screen.getByTestId("file-status-final-doc-final"),

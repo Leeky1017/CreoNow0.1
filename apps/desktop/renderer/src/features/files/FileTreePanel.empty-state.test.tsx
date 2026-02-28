@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { FileTreePanel } from "./FileTreePanel";
 
@@ -39,6 +39,23 @@ vi.mock("../../stores/editorStore", () => ({
   ),
 }));
 
+async function renderFileTreePanel(projectId: string): Promise<void> {
+  await act(async () => {
+    render(<FileTreePanel projectId={projectId} />);
+  });
+
+  await waitFor(() => {
+    expect(screen.getByTestId("sidebar-files")).toBeInTheDocument();
+  });
+}
+
+async function flushFileTreeAsyncUpdates(): Promise<void> {
+  await act(async () => {
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+}
+
 describe("FileTreePanel empty state", () => {
   beforeEach(() => {
     createAndSetCurrent.mockReset().mockResolvedValue({
@@ -57,8 +74,8 @@ describe("FileTreePanel empty state", () => {
     openCurrentDocumentForProject.mockReset().mockResolvedValue({ ok: true });
   });
 
-  it("should render empty state message and new file entry action when no documents exist", () => {
-    render(<FileTreePanel projectId="proj-empty" />);
+  it("should render empty state message and new file entry action when no documents exist", async () => {
+    await renderFileTreePanel("proj-empty");
 
     expect(
       screen.getByText("暂无文件，开始创建你的第一个文件"),
@@ -66,6 +83,7 @@ describe("FileTreePanel empty state", () => {
 
     const createButton = screen.getByRole("button", { name: "新建文件" });
     fireEvent.click(createButton);
+    await flushFileTreeAsyncUpdates();
 
     expect(createAndSetCurrent).toHaveBeenCalledWith({
       projectId: "proj-empty",

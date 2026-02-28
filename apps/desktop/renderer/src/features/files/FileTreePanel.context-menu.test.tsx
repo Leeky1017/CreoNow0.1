@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { FileTreePanel } from "./FileTreePanel";
 
@@ -56,6 +56,23 @@ vi.mock("../../stores/editorStore", () => ({
   ),
 }));
 
+async function renderFileTreePanel(projectId = "proj-1"): Promise<void> {
+  await act(async () => {
+    render(<FileTreePanel projectId={projectId} />);
+  });
+
+  await waitFor(() => {
+    expect(screen.getByTestId("sidebar-files")).toBeInTheDocument();
+  });
+}
+
+async function flushFileTreeAsyncUpdates(): Promise<void> {
+  await act(async () => {
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+}
+
 describe("FileTreePanel context menu actions", () => {
   beforeEach(() => {
     fileItems = [
@@ -97,9 +114,11 @@ describe("FileTreePanel context menu actions", () => {
   });
 
   it("should show rename/delete/copy/move/status actions and invoke corresponding operations", async () => {
-    render(<FileTreePanel projectId="proj-1" />);
+    await renderFileTreePanel("proj-1");
 
-    fireEvent.contextMenu(screen.getByTestId("file-row-doc-1"));
+    await act(async () => {
+      fireEvent.contextMenu(screen.getByTestId("file-row-doc-1"));
+    });
 
     const renameItem = await screen.findByRole("menuitem", { name: "Rename" });
     const deleteItem = await screen.findByRole("menuitem", { name: "Delete" });
@@ -122,16 +141,20 @@ describe("FileTreePanel context menu actions", () => {
     expect(statusItem).toBeInTheDocument();
 
     fireEvent.click(copyItem);
+    await flushFileTreeAsyncUpdates();
+
     expect(createAndSetCurrent).toHaveBeenCalledWith({
       projectId: "proj-1",
       type: "chapter",
       title: "未命名章节 Copy",
     });
 
-    fireEvent.contextMenu(screen.getByTestId("file-row-doc-1"));
-    fireEvent.click(
-      await screen.findByRole("menuitem", { name: "Move to Folder" }),
-    );
+    await act(async () => {
+      fireEvent.contextMenu(screen.getByTestId("file-row-doc-1"));
+    });
+
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Move to Folder" }));
+    await flushFileTreeAsyncUpdates();
 
     expect(moveToFolder).toHaveBeenCalledWith({
       projectId: "proj-1",

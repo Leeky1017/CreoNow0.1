@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 type SelectionSnapshot = {
@@ -165,6 +165,18 @@ vi.mock("../../lib/ipcClient", () => ({
   }),
 }));
 
+async function renderAiPanel(): Promise<void> {
+  const { AiPanel } = await import("./AiPanel");
+
+  await act(async () => {
+    render(<AiPanel />);
+  });
+
+  await waitFor(() => {
+    expect(screen.getByTestId("ai-panel")).toBeInTheDocument();
+  });
+}
+
 describe("AiPanel selection reference card", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -179,11 +191,10 @@ describe("AiPanel selection reference card", () => {
   });
 
   it("should render selection reference card with preview when selection exists", async () => {
-    const { AiPanel } = await import("./AiPanel");
     mocks.aiState.selectionRef = mocks.selectionA.selectionRef;
     mocks.aiState.selectionText = mocks.selectionA.selectionText;
 
-    render(<AiPanel />);
+    await renderAiPanel();
 
     expect(
       screen.getByTestId("ai-selection-reference-card"),
@@ -198,11 +209,10 @@ describe("AiPanel selection reference card", () => {
 
   it("should clear selection snapshot when user closes reference card", async () => {
     const user = userEvent.setup();
-    const { AiPanel } = await import("./AiPanel");
     mocks.aiState.selectionRef = mocks.selectionA.selectionRef;
     mocks.aiState.selectionText = mocks.selectionA.selectionText;
 
-    render(<AiPanel />);
+    await renderAiPanel();
 
     await user.click(screen.getByTestId("ai-selection-reference-close"));
 
@@ -210,12 +220,11 @@ describe("AiPanel selection reference card", () => {
   });
 
   it("should send with selection context and clear reference after Enter", async () => {
-    const { AiPanel } = await import("./AiPanel");
     mocks.aiState.input = "润色这段话";
     mocks.aiState.selectionRef = mocks.selectionA.selectionRef;
     mocks.aiState.selectionText = mocks.selectionA.selectionText;
 
-    render(<AiPanel />);
+    await renderAiPanel();
 
     fireEvent.keyDown(screen.getByTestId("ai-input"), {
       key: "Enter",
@@ -238,11 +247,10 @@ describe("AiPanel selection reference card", () => {
   });
 
   it("should replace existing reference when a new selection is made", async () => {
-    const { AiPanel } = await import("./AiPanel");
     mocks.aiState.selectionRef = mocks.selectionA.selectionRef;
     mocks.aiState.selectionText = mocks.selectionA.selectionText;
 
-    render(<AiPanel />);
+    await renderAiPanel();
 
     captureSelectionRefMock.mockReturnValueOnce({
       ok: true,
@@ -259,11 +267,10 @@ describe("AiPanel selection reference card", () => {
   });
 
   it("should not render reference card when no selection exists", async () => {
-    const { AiPanel } = await import("./AiPanel");
     mocks.aiState.selectionRef = null;
     mocks.aiState.selectionText = "";
 
-    render(<AiPanel />);
+    await renderAiPanel();
 
     expect(
       screen.queryByTestId("ai-selection-reference-card"),

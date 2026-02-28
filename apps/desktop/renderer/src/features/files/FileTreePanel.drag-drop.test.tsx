@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { FileTreePanel } from "./FileTreePanel";
 
@@ -57,6 +57,23 @@ vi.mock("../../stores/editorStore", () => ({
       }),
   ),
 }));
+
+async function renderFileTreePanel(projectId = "proj-1"): Promise<void> {
+  await act(async () => {
+    render(<FileTreePanel projectId={projectId} />);
+  });
+
+  await waitFor(() => {
+    expect(screen.getByTestId("sidebar-files")).toBeInTheDocument();
+  });
+}
+
+async function flushFileTreeAsyncUpdates(): Promise<void> {
+  await act(async () => {
+    await Promise.resolve();
+    await Promise.resolve();
+  });
+}
 
 describe("FileTreePanel drag and folder hierarchy", () => {
   beforeEach(() => {
@@ -125,15 +142,18 @@ describe("FileTreePanel drag and folder hierarchy", () => {
     openCurrentDocumentForProject.mockReset().mockResolvedValue({ ok: true });
   });
 
-  it("should reorder sibling documents and persist via file:document:reorder", () => {
-    render(<FileTreePanel projectId="proj-1" />);
+  it("should reorder sibling documents and persist via file:document:reorder", async () => {
+    await renderFileTreePanel("proj-1");
 
     const source = screen.getByTestId("file-row-doc-3");
     const target = screen.getByTestId("file-row-doc-1");
 
     fireEvent.dragStart(source);
+    await flushFileTreeAsyncUpdates();
     fireEvent.dragOver(target);
+    await flushFileTreeAsyncUpdates();
     fireEvent.drop(target);
+    await flushFileTreeAsyncUpdates();
 
     expect(reorder).toHaveBeenCalledWith({
       projectId: "proj-1",
@@ -141,15 +161,18 @@ describe("FileTreePanel drag and folder hierarchy", () => {
     });
   });
 
-  it("should move document into target folder and persist parentId", () => {
-    render(<FileTreePanel projectId="proj-1" />);
+  it("should move document into target folder and persist parentId", async () => {
+    await renderFileTreePanel("proj-1");
 
     const source = screen.getByTestId("file-row-doc-side");
     const targetFolder = screen.getByTestId("file-row-folder-1");
 
     fireEvent.dragStart(source);
+    await flushFileTreeAsyncUpdates();
     fireEvent.dragOver(targetFolder);
+    await flushFileTreeAsyncUpdates();
     fireEvent.drop(targetFolder);
+    await flushFileTreeAsyncUpdates();
 
     expect(moveToFolder).toHaveBeenCalledWith({
       projectId: "proj-1",
