@@ -169,6 +169,10 @@ function estimateWritingSeconds(wordsAdded: number): number {
   return words === 0 ? 0 : Math.max(1, Math.ceil(words / WORDS_PER_SECOND));
 }
 
+function hasNonEmptyText(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
 /**
  * Register `file:document:*` IPC handlers.
  *
@@ -203,7 +207,7 @@ export function registerFileIpcHandlers(deps: {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!hasNonEmptyText(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -261,7 +265,7 @@ export function registerFileIpcHandlers(deps: {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!hasNonEmptyText(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -305,8 +309,8 @@ export function registerFileIpcHandlers(deps: {
         };
       }
       if (
-        payload.projectId.trim().length === 0 ||
-        payload.documentId.trim().length === 0
+        !hasNonEmptyText(payload.projectId) ||
+        !hasNonEmptyText(payload.documentId)
       ) {
         return {
           ok: false,
@@ -349,8 +353,8 @@ export function registerFileIpcHandlers(deps: {
         };
       }
       if (
-        payload.projectId.trim().length === 0 ||
-        payload.documentId.trim().length === 0
+        !hasNonEmptyText(payload.projectId) ||
+        !hasNonEmptyText(payload.documentId)
       ) {
         return {
           ok: false,
@@ -396,8 +400,8 @@ export function registerFileIpcHandlers(deps: {
         };
       }
       if (
-        payload.projectId.trim().length === 0 ||
-        payload.documentId.trim().length === 0
+        !hasNonEmptyText(payload.projectId) ||
+        !hasNonEmptyText(payload.documentId)
       ) {
         return {
           ok: false,
@@ -542,7 +546,7 @@ export function registerFileIpcHandlers(deps: {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!hasNonEmptyText(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -570,8 +574,8 @@ export function registerFileIpcHandlers(deps: {
         };
       }
       if (
-        payload.projectId.trim().length === 0 ||
-        payload.documentId.trim().length === 0
+        !hasNonEmptyText(payload.projectId) ||
+        !hasNonEmptyText(payload.documentId)
       ) {
         return {
           ok: false,
@@ -605,7 +609,7 @@ export function registerFileIpcHandlers(deps: {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!hasNonEmptyText(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -640,8 +644,8 @@ export function registerFileIpcHandlers(deps: {
         };
       }
       if (
-        payload.projectId.trim().length === 0 ||
-        payload.documentId.trim().length === 0
+        !hasNonEmptyText(payload.projectId) ||
+        !hasNonEmptyText(payload.documentId)
       ) {
         return {
           ok: false,
@@ -692,8 +696,8 @@ export function registerFileIpcHandlers(deps: {
         };
       }
       if (
-        payload.projectId.trim().length === 0 ||
-        payload.documentId.trim().length === 0
+        !hasNonEmptyText(payload.projectId) ||
+        !hasNonEmptyText(payload.documentId)
       ) {
         return {
           ok: false,
