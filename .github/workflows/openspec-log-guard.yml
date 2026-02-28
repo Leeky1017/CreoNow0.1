@@ -10,6 +10,11 @@ concurrency:
   group: openspec-log-guard-pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   openspec-log-guard:
     runs-on: ubuntu-latest
@@ -95,9 +100,9 @@ jobs:
               FIX_LINE="Skip-Reason: automated quality iteration by 天野 (non-task branch)"
               echo "skip_reason_missing=true" >> "$GITHUB_OUTPUT"
 
-              echo "::error title=Missing Skip-Reason::Non-task branch '$BRANCH' must include a 'Skip-Reason:' line in PR body."
               echo "❌ Missing Skip-Reason in PR body"
               echo "Fix suggestion (copy one line): $FIX_LINE"
+              echo "After updating the PR body, re-run OpenSpec Log Guard from Checks tab."
               echo "Minimal example:"
               echo "$FIX_LINE"
               echo "## 主题"
@@ -111,6 +116,8 @@ jobs:
                 echo "Copy one line:"
                 echo "\`$FIX_LINE\`"
                 echo
+                echo "更新 PR 描述后，请在 Checks 页面点击 \`Re-run jobs\`（或 push 任意新 commit）重新触发 OpenSpec Log Guard。"
+                echo
                 echo "Minimal example:"
                 echo '```markdown'
                 echo "$FIX_LINE"
@@ -118,13 +125,11 @@ jobs:
                 echo "- 简要说明本次改动解决的问题"
                 echo '```'
               } >> "$GITHUB_STEP_SUMMARY"
-
-              exit 1
             fi
           fi
 
       - name: Comment Skip-Reason guidance on PR
-        if: ${{ failure() && steps.validate_run_log_or_skip_reason.outputs.skip_reason_missing == 'true' }}
+        if: ${{ steps.validate_run_log_or_skip_reason.outputs.skip_reason_missing == 'true' }}
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -137,6 +142,8 @@ jobs:
               '',
               '可直接复制这一行到 PR 描述顶部：',
               `\`${fixLine}\``,
+              '',
+              '更新 PR 描述后，请在 Checks 页面点击 `Re-run jobs`（或 push 任意新 commit）重新触发 OpenSpec Log Guard。',
               '',
               '最小示例：',
               '```markdown',
@@ -175,3 +182,12 @@ jobs:
                 body,
               });
             }
+
+      - name: Fail when Skip-Reason is missing
+        if: ${{ steps.validate_run_log_or_skip_reason.outputs.skip_reason_missing == 'true' }}
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          echo "::error title=Missing Skip-Reason::Non-task branch '$BRANCH' must include a 'Skip-Reason:' line in PR body."
+          echo "❌ Missing Skip-Reason in PR body"
+          echo "请按机器人评论指引补齐 Skip-Reason 后重跑 OpenSpec Log Guard。"
+          exit 1
