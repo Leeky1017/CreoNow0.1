@@ -94,6 +94,8 @@ describe("runFireAndForget", () => {
 
   it("keeps backward-compat function options signature", async () => {
     const handler = vi.fn();
+    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
     runFireAndForget(
       async () => {
@@ -107,5 +109,17 @@ describe("runFireAndForget", () => {
     expect(handler).toHaveBeenCalledTimes(1);
     const [error] = handler.mock.calls[0];
     expect(error).toBeInstanceOf(Error);
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+    expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+    const [message, details] = consoleWarnSpy.mock.calls[0];
+    expect(message).toContain("[fire-and-forget][non-critical] task failed");
+    expect(details).toMatchObject({
+      errorType: "Error",
+      message: "boom",
+      critical: false,
+    });
+
+    consoleErrorSpy.mockRestore();
+    consoleWarnSpy.mockRestore();
   });
 });

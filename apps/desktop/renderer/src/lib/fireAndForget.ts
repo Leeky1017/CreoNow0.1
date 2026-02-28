@@ -15,7 +15,7 @@ export function runFireAndForget(
 ): void {
   const normalized: FireAndForgetOptions =
     typeof options === "function"
-      ? { onError: options }
+      ? { onError: options, critical: false }
       : options ?? {};
 
   const { label, onError, critical = true } = normalized;
