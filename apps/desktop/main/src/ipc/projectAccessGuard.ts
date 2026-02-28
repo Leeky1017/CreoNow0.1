@@ -22,6 +22,19 @@ function senderWebContentsId(event: unknown): number | null {
   return sender.id;
 }
 
+function forbiddenProjectAccess(): { ok: false; response: IpcResponse<never> } {
+  return {
+    ok: false,
+    response: {
+      ok: false,
+      error: {
+        code: "FORBIDDEN",
+        message: "projectId is not active for this renderer session",
+      },
+    },
+  };
+}
+
 /**
  * Enforce renderer-session project binding for project-scoped IPC payloads.
  *
@@ -43,14 +56,14 @@ export function guardAndNormalizeProjectAccess(args: {
 
   const webContentsId = senderWebContentsId(args.event);
   if (!webContentsId) {
-    return { ok: true };
+    return forbiddenProjectAccess();
   }
 
   const boundProjectId = args.projectSessionBinding.resolveProjectId({
     webContentsId,
   });
   if (!boundProjectId) {
-    return { ok: true };
+    return forbiddenProjectAccess();
   }
 
   const requestedProjectId =
@@ -61,16 +74,7 @@ export function guardAndNormalizeProjectAccess(args: {
   }
 
   if (requestedProjectId !== boundProjectId) {
-    return {
-      ok: false,
-      response: {
-        ok: false,
-        error: {
-          code: "FORBIDDEN",
-          message: "projectId is not active for this renderer session",
-        },
-      },
-    };
+    return forbiddenProjectAccess();
   }
 
   payload.projectId = requestedProjectId;
