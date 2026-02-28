@@ -110,6 +110,41 @@ async function main(): Promise<void> {
       );
     },
   );
+
+  await runScenario(
+    "SIA-S4 should block privileged channel when sender origin is about:blank",
+    async () => {
+      let called = false;
+
+      const wrapped = wrapIpcRequestResponse({
+        channel: "db:debug:tablenames",
+        requestSchema: s.object({}),
+        responseSchema: s.object({ tableNames: s.array(s.string()) }),
+        logger: createLogger(),
+        timeoutMs: 5_000,
+        handler: async () => {
+          called = true;
+          return { ok: true, data: { tableNames: ["projects"] } };
+        },
+      });
+
+      const response = (await wrapped(
+        createEvent("about:blank", 1),
+        {},
+      )) as IpcResponse<unknown>;
+
+      assert.equal(called, false);
+      assert.equal(response.ok, false);
+      if (response.ok) {
+        assert.fail("expected FORBIDDEN response");
+      }
+      assert.equal(response.error.code, "FORBIDDEN");
+      assert.equal(
+        (response.error.details as { reason?: string } | undefined)?.reason,
+        "origin_not_allowed",
+      );
+    },
+  );
 }
 
 void main().catch((error) => {
