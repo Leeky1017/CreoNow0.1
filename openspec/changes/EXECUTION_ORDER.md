@@ -1,25 +1,19 @@
 # Active Changes Execution Order
 
-更新时间：2026-02-28 21:00
+更新时间：2026-02-28 21:35
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
 ## 执行策略
 
-- 当前活跃 change 数量为 **38**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七）。
-- 执行模式：**5 批次渐进推进**（第零批 Hotfix → 第一批核心体验 → 第二批功能补全 → 第三批设计系统 → 第四批独立 Issue）。
+- 当前活跃 change 数量为 **37**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-hotfix-searchpanel-backdrop-close` 已归档）。
+- 执行模式：**4 批次渐进推进**（第一批核心体验 → 第二批功能补全 → 第三批设计系统 → 第四批独立 Issue）。
 - 规则：
   - 任一 change 开始 Red 前，必须完成该 change 的依赖同步检查（Dependency Sync Check）。
   - 同批次内无依赖关系的 change 可并行（≤3 lane）。
   - 有 Owner 决策阻塞（D1/D2/D3）的 change 必须等决策落盘后才能进入 Red。
 
 ## 执行顺序
-
-### 第零批：Hotfix（立即执行）
-
-| Lane | Change | 依赖 | 状态 |
-|------|--------|------|------|
-| A | `fe-hotfix-searchpanel-backdrop-close` | — | 待执行 |
 
 ### 第一批：核心体验修复
 
@@ -29,7 +23,7 @@
 | B | `fe-rightpanel-ai-tabbar-layout` | — | 待执行 |
 | A | `fe-rightpanel-ai-guidance-and-style` | `fe-rightpanel-ai-tabbar-layout` | 待执行 |
 | C | `fe-spec-drift-iconbar-rightpanel-alignment` | D1/D2/D3 已决策 | 待执行 |
-| B | `fe-leftpanel-dialog-migration` | `fe-hotfix-searchpanel-backdrop-close`, D1/D2 已决策 | 待执行 |
+| B | `fe-leftpanel-dialog-migration` | D1/D2 已决策（前置 hotfix 已归档） | 待执行 |
 | D | `fe-ai-panel-toggle-button` | — | 待执行 |
 | A | `fe-dashboard-welcome-merge-and-ghost-actions` | `fe-cleanup-proxysection-and-mocks`, `fe-ui-open-folder-entrypoints` | 待执行 |
 
@@ -48,7 +42,7 @@
 
 | Lane | Change | 依赖 | 状态 |
 |------|--------|------|------|
-| A | `fe-searchpanel-tokenized-rewrite` | `fe-hotfix-searchpanel-backdrop-close` | 待执行 |
+| A | `fe-searchpanel-tokenized-rewrite` | 前置 hotfix 已归档 | 待执行 |
 | B | `fe-lucide-icon-unification` | — | 待执行 |
 | C | `fe-feature-focus-visible-coverage` | — | 待执行 |
 | D | `fe-visual-noise-reduction` | `fe-rightpanel-ai-tabbar-layout`, `fe-rightpanel-ai-guidance-and-style`, `fe-leftpanel-dialog-migration` | 待执行 |
@@ -103,10 +97,6 @@
 ## 依赖拓扑
 
 ```
-第零批
-  fe-hotfix-searchpanel-backdrop-close ──→ fe-leftpanel-dialog-migration (第一批)
-                                       ──→ fe-searchpanel-tokenized-rewrite (第三批)
-
 第一批
   fe-cleanup-proxysection-and-mocks ──→ fe-dashboard-welcome-merge-and-ghost-actions
   fe-rightpanel-ai-tabbar-layout ──→ fe-rightpanel-ai-guidance-and-style
@@ -126,6 +116,9 @@
                                           ──→ fe-composites-p2-empties-and-confirms
 ```
 
+已归档前置：
+- `fe-hotfix-searchpanel-backdrop-close`：已归档到 `openspec/changes/archive/fe-hotfix-searchpanel-backdrop-close`（commit `c56a1eea`，PR #790）。
+
 ## Owner 决策阻塞项
 
 | # | 决策项 | 阻塞 change | 状态 | 结论 |
@@ -139,6 +132,7 @@
 - 审计整改 Wave 1–3（C1–C15）：全部完成并归档。PR #661–#704。
 - Workbench lane（ISSUE-606 phase 1–4）：已归档。
 - Backend lane（ISSUE-617 × 7 changes）：已归档。
+- `fe-hotfix-searchpanel-backdrop-close`：已完成并归档。PR #790。
 
 ## 维护规则
 
