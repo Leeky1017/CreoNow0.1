@@ -39,3 +39,27 @@ import { createProjectSessionBindingRegistry } from "../projectSessionBinding";
     "clear should remove current binding",
   );
 }
+
+
+// S2: projectId 异常类型不应抛错，并应清空已有绑定
+{
+  const registry = createProjectSessionBindingRegistry();
+
+  registry.bind({
+    webContentsId: 202,
+    projectId: "project-safe",
+  });
+
+  assert.doesNotThrow(() => {
+    registry.bind({
+      webContentsId: 202,
+      projectId: 123 as unknown as string,
+    });
+  });
+
+  assert.equal(
+    registry.resolveProjectId({ webContentsId: 202 }),
+    null,
+    "non-string projectId should clear binding instead of throwing",
+  );
+}

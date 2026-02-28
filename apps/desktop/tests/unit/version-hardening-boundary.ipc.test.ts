@@ -458,6 +458,53 @@ async function testConcurrentRollbackConflict(): Promise<void> {
   db.close();
 }
 
+
+async function testSnapshotCreateRejectsNonStringIdsWithoutThrowing(): Promise<void> {
+  const db = createVersionDb();
+  const now = Date.now();
+  seedProjectAndDocument(db, {
+    projectId: "proj-invalid-payload",
+    documentId: "doc-invalid-payload",
+    text: "seed",
+    createdAt: now - 10_000,
+  });
+
+  const { ipcMain, handlers } = createIpcHarness();
+  registerVersionIpcHandlers({ ipcMain, db, logger: createNoopLogger() });
+
+  const createHandler = handlers.get("version:snapshot:create");
+  assert.ok(
+    createHandler,
+    "version:snapshot:create handler should be registered",
+  );
+  if (!createHandler) {
+    throw new Error("missing version:snapshot:create handler");
+  }
+
+  const res = (await createHandler(
+    {},
+    {
+      projectId: 1,
+      documentId: "doc-invalid-payload",
+      contentJson: toContentJson("payload"),
+      actor: "user",
+      reason: "manual-save",
+    },
+  )) as IpcResult<unknown>;
+
+  assert.equal(
+    res.ok,
+    false,
+    "snapshot create should map invalid payload to INVALID_ARGUMENT",
+  );
+  if (!res.ok) {
+    assert.equal(res.error.code, "INVALID_ARGUMENT");
+    assert.equal(res.error.message, "projectId/documentId is required");
+  }
+
+  db.close();
+}
+
 async function testSnapshotCreateIoRetry(): Promise<void> {
   const db = createVersionDb();
   const now = Date.now();
@@ -554,6 +601,10 @@ const checks: Array<{ name: string; run: () => Promise<void> }> = [
   {
     name: "snapshot create io retry",
     run: testSnapshotCreateIoRetry,
+  },
+  {
+    name: "snapshot create rejects non-string ids without throwing",
+    run: testSnapshotCreateRejectsNonStringIdsWithoutThrowing,
   },
 ];
 

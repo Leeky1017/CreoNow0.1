@@ -16,6 +16,8 @@ type FakeWindow = {
   close: () => void;
 };
 
+type ThrowTargets = Partial<Record<keyof FakeWindow, string>>;
+
 type Harness = {
   handlers: Map<string, Handler>;
   calls: string[];
@@ -27,27 +29,48 @@ function createHarness(args?: {
   platform?: NodeJS.Platform;
   hasWindow?: boolean;
   initiallyMaximized?: boolean;
+  throwOn?: ThrowTargets;
 }): Harness {
   const handlers = new Map<string, Handler>();
   const calls: string[] = [];
   const maximizeState = { value: args?.initiallyMaximized ?? false };
 
+  const maybeThrow = (method: keyof FakeWindow): void => {
+    const message = args?.throwOn?.[method];
+    if (message) {
+      throw new Error(message);
+    }
+  };
+
   const win: FakeWindow = {
-    isMaximized: () => maximizeState.value,
-    isMinimized: () => false,
-    isFullScreen: () => false,
+    isMaximized: () => {
+      maybeThrow("isMaximized");
+      return maximizeState.value;
+    },
+    isMinimized: () => {
+      maybeThrow("isMinimized");
+      return false;
+    },
+    isFullScreen: () => {
+      maybeThrow("isFullScreen");
+      return false;
+    },
     minimize: () => {
+      maybeThrow("minimize");
       calls.push("minimize");
     },
     maximize: () => {
+      maybeThrow("maximize");
       calls.push("maximize");
       maximizeState.value = true;
     },
     unmaximize: () => {
+      maybeThrow("unmaximize");
       calls.push("unmaximize");
       maximizeState.value = false;
     },
     close: () => {
+      maybeThrow("close");
       calls.push("close");
     },
   };
@@ -183,6 +206,45 @@ async function main(): Promise<void> {
 
       assert.equal(response.ok, false);
       assert.equal(response.error?.code, "NOT_FOUND");
+    },
+  );
+
+  await runScenario(
+    "W5 should map getstate runtime exceptions to INTERNAL",
+    async () => {
+      const harness = createHarness({
+        platform: "win32",
+        throwOn: { isMaximized: "boom-state" },
+      });
+
+      const response = await harness.invoke<{
+        ok: boolean;
+        error?: { code: string; message: string };
+      }>("app:window:getstate");
+
+      assert.equal(response.ok, false);
+      assert.equal(response.error?.code, "INTERNAL");
+      assert.match(response.error?.message ?? "", /get window state/);
+    },
+  );
+
+  await runScenario(
+    "W6 should map action runtime exceptions to INTERNAL",
+    async () => {
+      const harness = createHarness({
+        platform: "win32",
+        throwOn: { minimize: "boom-minimize" },
+      });
+
+      const response = await harness.invoke<{
+        ok: boolean;
+        error?: { code: string; message: string };
+      }>("app:window:minimize");
+
+      assert.equal(response.ok, false);
+      assert.equal(response.error?.code, "INTERNAL");
+      assert.match(response.error?.message ?? "", /Failed to minimize window/);
+      assert.deepEqual(harness.calls, []);
     },
   );
 }
