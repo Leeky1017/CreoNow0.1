@@ -41,14 +41,14 @@ describe("SearchPanel", () => {
   // ===========================================================================
   describe("渲染", () => {
     it("应该渲染 SearchPanel 组件", () => {
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       const panel = screen.getByTestId("search-panel");
       expect(panel).toBeInTheDocument();
     });
 
     it("应该显示搜索输入框带有 placeholder", () => {
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       const input = screen.getByTestId("search-input");
       expect(input).toBeInTheDocument();
@@ -59,14 +59,14 @@ describe("SearchPanel", () => {
     });
 
     it("应该显示分类过滤按钮", () => {
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       // 组件使用分类过滤器（All, Documents, Memories, Knowledge, Assets）
       expect(screen.getByText("All")).toBeInTheDocument();
     });
 
     it("应该有模态背景遮罩", () => {
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       // 检查模态框结构
       const panel = screen.getByTestId("search-panel");
@@ -80,7 +80,7 @@ describe("SearchPanel", () => {
   // ===========================================================================
   describe("交互", () => {
     it("输入框应可输入", () => {
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       const input = screen.getByTestId("search-input");
       expect(input).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe("SearchPanel", () => {
     });
 
     it("点击分类按钮应切换分类", () => {
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       const allButton = screen.getByText("All");
       expect(allButton).toBeInTheDocument();
@@ -103,7 +103,7 @@ describe("SearchPanel", () => {
   // ===========================================================================
   describe("搜索结果展示", () => {
     it("输入搜索词后应显示相关结果", () => {
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       const input = screen.getByTestId("search-input");
       fireEvent.change(input, { target: { value: "design" } });
@@ -136,7 +136,7 @@ describe("SearchPanel", () => {
         return selector(state);
       });
 
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       // 组件可能显示 Spinner 或其他加载指示器
       // 基于当前实现，loading 状态由 store 管理
@@ -148,7 +148,7 @@ describe("SearchPanel", () => {
   // ===========================================================================
   describe("样式", () => {
     it("应该是 div 元素（模态框样式）", () => {
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       const panel = screen.getByTestId("search-panel");
       // 组件使用 div 作为模态框容器，不是 section
@@ -156,7 +156,7 @@ describe("SearchPanel", () => {
     });
 
     it("应该有固定定位和全屏覆盖", () => {
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       const panel = screen.getByTestId("search-panel");
       expect(panel).toHaveClass("fixed");
@@ -165,7 +165,7 @@ describe("SearchPanel", () => {
     });
 
     it("应该居中显示搜索面板", () => {
-      render(<SearchPanel projectId="test-project" />);
+      render(<SearchPanel projectId="test-project" open={true} />);
 
       const panel = screen.getByTestId("search-panel");
       expect(panel).toHaveClass("items-start");
@@ -179,7 +179,7 @@ describe("SearchPanel", () => {
   describe("关闭功能", () => {
     it("点击背景遮罩应触发关闭", () => {
       const onClose = vi.fn();
-      render(<SearchPanel projectId="test-project" onClose={onClose} />);
+      render(<SearchPanel projectId="test-project" open={true} onClose={onClose} />);
 
       // 点击背景遮罩
       const backdrop = document.querySelector(".backdrop-blur-sm");

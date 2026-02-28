@@ -70,7 +70,7 @@ describe("Search Panel navigation (S3-SEARCH-PANEL-S2)", () => {
 
   it("navigates editor to selected search hit", async () => {
     const onClose = vi.fn();
-    render(<SearchPanel projectId="proj_1" onClose={onClose} />);
+    render(<SearchPanel projectId="proj_1" open={true} onClose={onClose} />);
 
     fireEvent.click(screen.getByTestId("search-result-item-doc_target"));
 

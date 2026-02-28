@@ -79,7 +79,7 @@ describe("Search Panel query rendering (S3-SEARCH-PANEL-S1)", () => {
       total: 2,
     });
 
-    render(<SearchPanel projectId="proj_1" />);
+    render(<SearchPanel projectId="proj_1" open={true} />);
 
     fireEvent.change(screen.getByTestId("search-input"), {
       target: { value: "design systems" },

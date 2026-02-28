@@ -51,7 +51,7 @@ type Story = StoryObj<typeof meta>;
  */
 function SearchPanelWithQuery(props: {
   projectId: string;
-  open?: boolean;
+  open: boolean;
   onClose?: () => void;
   mockResults?: SearchResultItem[];
   initialQuery?: string;

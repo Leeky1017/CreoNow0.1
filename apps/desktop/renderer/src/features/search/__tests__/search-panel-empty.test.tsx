@@ -31,7 +31,7 @@ vi.mock("../../../stores/fileStore", () => ({
 
 describe("search panel empty state (SR1-R1-S3)", () => {
   it("should render empty hint when no fts match exists", () => {
-    render(<SearchPanel projectId="proj_1" />);
+    render(<SearchPanel projectId="proj_1" open={true} />);
 
     expect(screen.getByText("未找到匹配结果")).toBeInTheDocument();
     expect(

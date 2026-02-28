@@ -45,7 +45,7 @@ describe("Search Panel status rendering (S3-SEARCH-PANEL-S3)", () => {
   });
 
   it("renders distinct empty and error states", async () => {
-    const { rerender } = render(<SearchPanel projectId="proj_1" />);
+    const { rerender } = render(<SearchPanel projectId="proj_1" open={true} />);
 
     expect(screen.getByText("未找到匹配结果")).toBeInTheDocument();
     expect(screen.queryByText("搜索失败，请重试")).not.toBeInTheDocument();
@@ -57,7 +57,7 @@ describe("Search Panel status rendering (S3-SEARCH-PANEL-S3)", () => {
         message: "fts query failed",
       },
     });
-    rerender(<SearchPanel projectId="proj_1" />);
+    rerender(<SearchPanel projectId="proj_1" open={true} />);
 
     expect(screen.queryByText("未找到匹配结果")).not.toBeInTheDocument();
     expect(screen.getByText("搜索失败，请重试")).toBeInTheDocument();

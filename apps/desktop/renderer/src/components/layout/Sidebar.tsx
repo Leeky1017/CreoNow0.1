@@ -59,6 +59,7 @@ export function Sidebar(props: {
   onSwitchProject?: (projectId: string) => Promise<void>;
   onCreateProject?: () => void;
   onOpenVersionHistoryDocument?: (documentId: string) => void;
+  onCloseSearch?: () => void;
 }): JSX.Element {
 
   if (props.collapsed) {
@@ -91,7 +92,11 @@ export function Sidebar(props: {
 
       case "search":
         return props.projectId ? (
-          <SearchPanel projectId={props.projectId} />
+          <SearchPanel
+            projectId={props.projectId}
+            open={true}
+            onClose={props.onCloseSearch}
+          />
         ) : (
           <div className="p-3 text-xs text-[var(--color-fg-muted)]">
             Open a project to search

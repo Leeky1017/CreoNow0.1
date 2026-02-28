@@ -497,7 +497,7 @@ function KeyHint(props: {
  */
 export function SearchPanel(props: {
   projectId: string;
-  open?: boolean;
+  open: boolean;
   onClose?: () => void;
   /** Mock results for storybook demonstration */
   mockResults?: SearchResultItem[];
@@ -507,7 +507,7 @@ export function SearchPanel(props: {
   mockStatus?: SearchStatus;
   /** Mock index state for storybook demonstration */
   mockIndexState?: "ready" | "rebuilding";
-}): JSX.Element {
+}): JSX.Element | null {
   const {
     projectId,
     open,
@@ -619,6 +619,8 @@ export function SearchPanel(props: {
     void runFulltext({ projectId, limit: 20 });
   }
 
+  if (!open) return null;
+
   return (
     <div
       data-testid="search-panel"
@@ -626,6 +628,7 @@ export function SearchPanel(props: {
     >
       {/* Backdrop with blur */}
       <div
+        data-testid="search-backdrop"
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
