@@ -87,7 +87,10 @@ jobs:
             if printf '%s\n' "$PR_BODY" | grep -Eiq '^[[:space:]]*Skip-Reason[[:space:]]*:'; then
               echo "✅ Non-task branch with required Skip-Reason"
             else
-              echo "❌ Non-task branch '$BRANCH' must include 'Skip-Reason:' in PR body"
+              echo "::error title=Missing Skip-Reason::Non-task branch '$BRANCH' must include a 'Skip-Reason:' line in PR body. Add for example: Skip-Reason: non-task branch delivery without openspec task run log"
+              echo "❌ Missing Skip-Reason in PR body"
+              echo "Please update PR description with a line like:"
+              echo "Skip-Reason: <why this branch is not task/* and has no RUN_LOG>"
               exit 1
             fi
           fi
