@@ -154,6 +154,18 @@ class MainSessionAuditValidationTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, r"^\[MAIN_AUDIT\]"):
             agent_pr_preflight.validate_main_session_audit(run_log, self.head_sha)
 
+    def test_validate_main_session_audit_should_fail_when_reviewed_sha_placeholder(self) -> None:
+        run_log = self._write_run_log(self._run_log_with_audit(reviewed_sha="PENDING_SHA"))
+
+        with self.assertRaisesRegex(RuntimeError, r"placeholder 'PENDING_SHA'"):
+            agent_pr_preflight.validate_main_session_audit(run_log, self.head_sha)
+
+    def test_validate_main_session_audit_should_fail_when_reviewed_sha_not_hex(self) -> None:
+        run_log = self._write_run_log(self._run_log_with_audit(reviewed_sha="123"))
+
+        with self.assertRaisesRegex(RuntimeError, r"must be a 40-hex commit sha"):
+            agent_pr_preflight.validate_main_session_audit(run_log, self.head_sha)
+
 
 class MainSessionAuditSignatureCommitTests(unittest.TestCase):
     def setUp(self) -> None:

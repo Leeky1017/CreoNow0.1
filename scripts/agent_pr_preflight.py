@@ -231,6 +231,31 @@ def _parse_main_audit_fields(section: str, path: str) -> dict[str, str]:
     return fields
 
 
+MAIN_AUDIT_REVIEWED_SHA_PLACEHOLDERS: tuple[str, ...] = (
+    "pending_sha",
+    "tbd",
+    "todo",
+    "to-be-filled",
+    "<to-be-filled by signing commit head^>",
+)
+
+
+def _is_main_audit_placeholder_sha(value: str) -> bool:
+    normalized = value.strip().lower()
+    if normalized in MAIN_AUDIT_REVIEWED_SHA_PLACEHOLDERS:
+        return True
+    return "pending" in normalized and "sha" in normalized
+
+
+def _main_audit_resign_hint(path: str) -> str:
+    issue_match = re.search(r"ISSUE-(\d+)\.md$", os.path.basename(path), re.IGNORECASE)
+    issue_hint = issue_match.group(1) if issue_match else "<N>"
+    return (
+        "Run `scripts/main_audit_resign.sh --issue "
+        f"{issue_hint} --preflight-mode fast` to backfill Reviewed-HEAD-SHA before pushing."
+    )
+
+
 def validate_main_session_audit(path: str, head_sha: str) -> None:
     with open(path, "r", encoding="utf-8") as fp:
         content = fp.read()
@@ -245,13 +270,19 @@ def validate_main_session_audit(path: str, head_sha: str) -> None:
         )
 
     reviewed_sha = fields["Reviewed-HEAD-SHA"]
+    if _is_main_audit_placeholder_sha(reviewed_sha):
+        raise RuntimeError(
+            f"[MAIN_AUDIT] Reviewed-HEAD-SHA is still placeholder '{reviewed_sha}'. "
+            + _main_audit_resign_hint(path)
+        )
     if not re.match(r"^[0-9a-fA-F]{40}$", reviewed_sha):
         raise RuntimeError(
             f"[MAIN_AUDIT] Reviewed-HEAD-SHA must be a 40-hex commit sha, got '{reviewed_sha}'"
         )
     if reviewed_sha.lower() != head_sha.lower():
         raise RuntimeError(
-            f"[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch: audit={reviewed_sha}, head={head_sha}"
+            f"[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch: audit={reviewed_sha}, head={head_sha}. "
+            + _main_audit_resign_hint(path)
         )
 
     for field in ("Spec-Compliance", "Code-Quality", "Fresh-Verification"):
@@ -574,9 +605,9 @@ def main(argv: list[str]) -> int:
     except Exception as e:
         message = str(e)
         print(f"PRE-FLIGHT FAILED: {message}", file=sys.stderr)
-        if "[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch" in message and issue_number.isdigit():
+        if "[MAIN_AUDIT] Reviewed-HEAD-SHA" in message and issue_number.isdigit():
             print(
-                f"HINT: run `scripts/main_audit_resign.sh --issue {issue_number}` then `scripts/agent_pr_preflight.sh --mode fast`.",
+                f"HINT: run `scripts/main_audit_resign.sh --issue {issue_number} --preflight-mode fast` then `scripts/agent_pr_preflight.sh --mode fast`.",
                 file=sys.stderr,
             )
         return 1

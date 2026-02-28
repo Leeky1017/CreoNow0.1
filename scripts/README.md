@@ -32,7 +32,11 @@
   - 多活跃 change（>=2）时 `openspec/changes/EXECUTION_ORDER.md` 的存在与同步更新
   - `task/<N>-<slug>` 对应 GitHub Issue `#N` 必须为 `OPEN`（阻断复用已关闭/历史 Issue）
   - `openspec/_ops/task_runs/ISSUE-<N>.md` 的 `PR` 字段不得为占位符（必须为真实链接）
+  - `## Main Session Audit` 的 `Reviewed-HEAD-SHA` 不得保留占位值（如 `PENDING_SHA` / `TBD`）；命中后会本地阻断并提示执行 `scripts/main_audit_resign.sh --issue <N> --preflight-mode fast`
 - `agent_pr_preflight.sh` 支持 `--mode fast|full`：
   - `fast`：治理与签字链路快检（Issue/Rulebook/RUN_LOG/Main Audit/doc 时间戳/OpenSpec 结构）
   - `full`：在 `fast` 基础上再执行 `prettier/typecheck/lint/contract/cross-module/test:unit`
+- Main Session Audit 回填标准操作：
+  - 回填时机：功能改动提交完成后、推送分支前执行一次重签；若后续又有代码提交，必须再次重签
+  - 回填命令：`scripts/main_audit_resign.sh --issue <N> --preflight-mode fast`（会刷新 `Reviewed-HEAD-SHA` 并立即做本地快检）
 - `agent_pr_automerge_and_sync.sh` 在 GitHub TLS 抖动时会标记 `transient` 并自动重试，必要时回退到 `gh run list` 快照通道。
