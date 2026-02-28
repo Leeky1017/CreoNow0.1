@@ -80,6 +80,10 @@ function isOriginAllowed(args: {
   return false;
 }
 
+function isAboutBlankOrigin(origin: string): boolean {
+  return origin === "about:blank";
+}
+
 function isPrivilegedChannel(
   channel: string,
   privilegedPrefixes: readonly string[],
@@ -112,6 +116,7 @@ export function createIpcAclEvaluator(
 
     if (
       senderOrigin !== null &&
+      (!isAboutBlankOrigin(senderOrigin) || isPrivileged) &&
       !isOriginAllowed({ senderOrigin, devServerOrigin })
     ) {
       return {

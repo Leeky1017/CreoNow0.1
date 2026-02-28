@@ -107,6 +107,15 @@ async function main(): Promise<void> {
 
     assert.equal(response.ok, true);
   });
+
+  await runScenario("SIA-S2 should allow about:blank for non-privileged channels", async () => {
+    const response = await invokeWrapped({
+      event: createEvent("about:blank"),
+      channel: "project:project:create",
+    });
+
+    assert.equal(response.ok, true);
+  });
 }
 
 process.env.VITE_DEV_SERVER_URL = "http://127.0.0.1:4173";
