@@ -108,3 +108,37 @@ function createEvent(webContentsId: number): { sender: { id: number } } {
   assert.equal(knowledgeDenied.ok, false);
   assert.equal(knowledgeDenied.error?.code, "FORBIDDEN");
 }
+
+// Scenario: unbound renderer session must fail closed for project-scoped IPC [ADDED]
+{
+  const binding = createProjectSessionBindingRegistry();
+
+  const logger = createLogger();
+  const contextHarness = createIpcHarness();
+
+  registerContextFsHandlers({
+    ipcMain: contextHarness.ipcMain,
+    db: null,
+    logger,
+    userDataDir: "<test-user-data>",
+    watchService: {
+      start: () => ({ ok: true, data: { watching: true } }),
+      stop: () => ({ ok: true, data: { watching: false } }),
+      isWatching: () => false,
+    },
+    projectSessionBinding: binding,
+  });
+
+  const contextRulesList = contextHarness.handlers.get("context:rules:list");
+  assert.ok(contextRulesList, "expected context:rules:list handler");
+
+  const deniedWhenUnbound = (await contextRulesList!(createEvent(999), {
+    projectId: "project-guess",
+  })) as {
+    ok: boolean;
+    error?: { code?: string };
+  };
+
+  assert.equal(deniedWhenUnbound.ok, false);
+  assert.equal(deniedWhenUnbound.error?.code, "FORBIDDEN");
+}
