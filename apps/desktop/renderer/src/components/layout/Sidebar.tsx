@@ -9,10 +9,6 @@ import { VersionHistoryContainer } from "../../features/version-history/VersionH
 import { ScrollArea } from "../primitives";
 import { LAYOUT_DEFAULTS, type LeftPanelType } from "../../stores/layoutStore";
 import type { ProjectListItem } from "../../stores/projectStore";
-import {
-  readPrefersReducedMotion,
-  resolveReducedMotionDuration,
-} from "../../lib/motion/reducedMotion";
 
 /**
  * Left panel header showing the current view name.
@@ -64,19 +60,12 @@ export function Sidebar(props: {
   onCreateProject?: () => void;
   onOpenVersionHistoryDocument?: (documentId: string) => void;
 }): JSX.Element {
-  const prefersReducedMotion = readPrefersReducedMotion();
-  const widthTransitionDuration = resolveReducedMotionDuration(
-    prefersReducedMotion,
-    "var(--duration-slow)",
-  );
-  const widthTransition = `width ${widthTransitionDuration} var(--ease-default)`;
 
   if (props.collapsed) {
     return (
       <aside
         data-testid="layout-sidebar"
         className="hidden w-0"
-        style={{ transition: widthTransition }}
       />
     );
   }
@@ -164,7 +153,6 @@ export function Sidebar(props: {
         width: props.width,
         minWidth: LAYOUT_DEFAULTS.sidebar.min,
         maxWidth: LAYOUT_DEFAULTS.sidebar.max,
-        transition: widthTransition,
       }}
     >
       <div

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Sidebar } from "./Sidebar";
 import { LayoutTestWrapper } from "./test-utils";
@@ -212,37 +212,11 @@ describe("Sidebar", () => {
   // 无障碍测试
   // ===========================================================================
   describe("无障碍", () => {
-    it("[WB-A11Y-01] reduced motion 启用时侧栏宽度过渡应降级为 0ms", () => {
-      const originalMatchMedia = window.matchMedia;
-      const matchMediaMock = vi.fn().mockImplementation((query: string) => ({
-        matches: query === "(prefers-reduced-motion: reduce)",
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      }));
-      Object.defineProperty(window, "matchMedia", {
-        configurable: true,
-        writable: true,
-        value: matchMediaMock,
-      });
-      try {
-        renderWithWrapper();
+    it("[WB-A11Y-01] 侧栏不应有 width transition（避免拖动卡顿）", () => {
+      renderWithWrapper();
 
-        const sidebar = screen.getByTestId("layout-sidebar");
-        expect(sidebar.style.transition).toContain(
-          "width 0ms var(--ease-default)",
-        );
-      } finally {
-        Object.defineProperty(window, "matchMedia", {
-          configurable: true,
-          writable: true,
-          value: originalMatchMedia,
-        });
-      }
+      const sidebar = screen.getByTestId("layout-sidebar");
+      expect(sidebar.style.transition).toBe("");
     });
 
     it("应该渲染为 aside 元素", () => {

@@ -261,12 +261,12 @@ describe("AppShell", () => {
       expect(appShell).toHaveClass("h-full");
     });
 
-    it("should expose sidebar width transition when sidebar can collapse or expand", async () => {
+    it("sidebar should not have width transition (drag jank fix)", async () => {
       await renderWithWrapper();
 
       const sidebar = screen.getByTestId("layout-sidebar");
 
-      expect(sidebar.style.transition).toContain("var(--duration-slow)");
+      expect(sidebar.style.transition).toBe("");
     });
   });
 

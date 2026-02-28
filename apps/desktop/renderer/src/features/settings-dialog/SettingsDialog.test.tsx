@@ -32,10 +32,6 @@ vi.mock("../settings/AppearanceSection", () => ({
   ),
 }));
 
-vi.mock("../settings/ProxySection", () => ({
-  ProxySection: () => <div data-testid="mock-proxy-section">Proxy</div>,
-}));
-
 vi.mock("../settings/AiSettingsSection", () => ({
   AiSettingsSection: () => (
     <div data-testid="mock-ai-settings-section">AI Settings</div>
@@ -59,7 +55,7 @@ describe("SettingsDialog", () => {
     expect(screen.getByTestId("settings-dialog")).toBeInTheDocument();
     expect(screen.getByTestId("settings-nav-general")).toBeInTheDocument();
     expect(screen.getByTestId("settings-nav-appearance")).toBeInTheDocument();
-    expect(screen.getByTestId("settings-nav-proxy")).toBeInTheDocument();
+    expect(screen.getByTestId("settings-nav-ai")).toBeInTheDocument();
     expect(screen.getByTestId("settings-nav-judge")).toBeInTheDocument();
     expect(screen.getByTestId("settings-nav-analytics")).toBeInTheDocument();
     expect(screen.getByTestId("settings-nav-account")).toBeInTheDocument();
@@ -82,7 +78,7 @@ describe("SettingsDialog", () => {
     await user.click(screen.getByTestId("settings-nav-appearance"));
     expect(screen.getByTestId("mock-appearance-section")).toBeInTheDocument();
 
-    await user.click(screen.getByTestId("settings-nav-proxy"));
+    await user.click(screen.getByTestId("settings-nav-ai"));
     expect(screen.getByTestId("mock-ai-settings-section")).toBeInTheDocument();
 
     await user.click(screen.getByTestId("settings-nav-judge"));

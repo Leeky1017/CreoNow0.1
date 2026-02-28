@@ -24,7 +24,7 @@ import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore
 export type SettingsTab =
   | "general"
   | "appearance"
-  | "proxy"
+  | "ai"
   | "judge"
   | "analytics"
   | "account";
@@ -47,7 +47,7 @@ export interface SettingsDialogProps {
 const navItems: Array<{ value: SettingsTab; label: string }> = [
   { value: "general", label: "General" },
   { value: "appearance", label: "Appearance" },
-  { value: "proxy", label: "Proxy" },
+  { value: "ai", label: "AI" },
   { value: "judge", label: "Judge" },
   { value: "analytics", label: "Analytics" },
   { value: "account", label: "Account" },
@@ -184,7 +184,7 @@ export function SettingsDialog({
         );
       case "appearance":
         return <AppearanceSection />;
-      case "proxy":
+      case "ai":
         return <AiSettingsSection />;
       case "judge":
         return <JudgeSection />;
@@ -282,7 +282,7 @@ export function SettingsDialog({
               Settings
             </DialogPrimitive.Title>
             <DialogPrimitive.Description className="sr-only">
-              Configure application settings including appearance, proxy, judge,
+              Configure application settings including appearance, AI, judge,
               and analytics.
             </DialogPrimitive.Description>
           </div>

@@ -8,6 +8,8 @@ out/
 build/
 *.tsbuildinfo
 apps/desktop/storybook-static/
+apps/desktop/dist/
+apps/desktop/dist-electron/
 
 # IDE
 .vscode/

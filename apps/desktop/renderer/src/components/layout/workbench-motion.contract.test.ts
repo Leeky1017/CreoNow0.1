@@ -28,8 +28,9 @@ describe("workbench motion contracts", () => {
     const rightPanelSource = read(RIGHT_PANEL_PATH);
     const iconBarSource = read(ICON_BAR_PATH);
 
-    expect(sidebarSource).toContain("var(--duration-slow)");
-    expect(sidebarSource).toContain("var(--ease-default)");
+    // Sidebar must NOT have width transition (causes drag jank)
+    expect(sidebarSource).not.toContain("var(--duration-slow)");
+    expect(sidebarSource).not.toContain("widthTransition");
     expect(rightPanelSource).toContain("duration-[var(--duration-fast)]");
     expect(rightPanelSource).toContain("ease-[var(--ease-default)]");
     expect(iconBarSource).toContain("duration-[var(--duration-fast)]");
@@ -38,11 +39,11 @@ describe("workbench motion contracts", () => {
     expect(iconBarSource).not.toContain("duration-200");
   });
 
-  it("[WB-A11Y-01] should keep reduced-motion contract scoped to workbench surfaces", () => {
+  it("[WB-A11Y-01] sidebar must not have width transition (drag jank fix)", () => {
     const sidebarSource = read(SIDEBAR_PATH);
-    expect(sidebarSource).toContain("../../lib/motion/reducedMotion");
-    expect(sidebarSource).toContain("readPrefersReducedMotion");
-    expect(sidebarSource).toContain("resolveReducedMotionDuration");
-    expect(sidebarSource).toContain("widthTransitionDuration");
+    expect(sidebarSource).not.toContain("readPrefersReducedMotion");
+    expect(sidebarSource).not.toContain("resolveReducedMotionDuration");
+    expect(sidebarSource).not.toContain("widthTransitionDuration");
+    expect(sidebarSource).not.toContain("widthTransition");
   });
 });

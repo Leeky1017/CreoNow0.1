@@ -46,7 +46,7 @@ const meta: Meta<typeof SettingsDialog> = {
     onOpenChange: { action: "openChange" },
     defaultTab: {
       control: "select",
-      options: ["general", "appearance", "proxy", "judge", "analytics", "account"],
+      options: ["general", "appearance", "ai", "judge", "analytics", "account"],
     },
   },
   decorators: [
@@ -76,8 +76,8 @@ export const Appearance: Story = {
   args: { open: true, defaultTab: "appearance" },
 };
 
-export const Proxy: Story = {
-  args: { open: true, defaultTab: "proxy" },
+export const AI: Story = {
+  args: { open: true, defaultTab: "ai" },
 };
 
 export const Judge: Story = {

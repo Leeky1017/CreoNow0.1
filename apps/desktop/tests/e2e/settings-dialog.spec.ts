@@ -49,7 +49,7 @@ test("settings-dialog: shortcut opens + theme persists + ai settings errors obse
   await expect(first.page.getByTestId("settings-dialog")).toBeVisible();
 
   // AI settings: invalid empty baseUrl should show INVALID_ARGUMENT (observable failure)
-  await first.page.getByTestId("settings-nav-proxy").click();
+  await first.page.getByTestId("settings-nav-ai").click();
   await expect(first.page.getByTestId("ai-save-btn")).toBeVisible();
   await first.page
     .getByTestId("ai-provider-mode")
