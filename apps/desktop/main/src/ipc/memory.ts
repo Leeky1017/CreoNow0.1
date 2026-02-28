@@ -157,6 +157,7 @@ export function registerMemoryIpcHandlers(deps: {
       try {
         sender.send("memory:distill:progress", event);
       } catch (error) {
+        distillSubscribers.delete(senderId);
         deps.logger.error("memory_distill_progress_send_failed", {
           senderId,
           message: error instanceof Error ? error.message : String(error),
