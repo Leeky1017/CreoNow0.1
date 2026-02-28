@@ -6,8 +6,8 @@
 - [ ] 1.2 审阅并确认错误路径与边界路径：Dialog 关闭（Esc/backdrop/关闭按钮）；多 Dialog 互斥（同时只开一个）；Spotlight 关闭同理。
 - [ ] 1.3 审阅并确认验收阈值与不可变契约：files/outline 保持停靠不变；其余不得再占用 Sidebar 宽度。
 - [ ] 1.4 依赖同步检查（Dependency Sync Check）：
-  - [ ] D1（IconBar `media` 面板处置）Owner 决策已确认 — **STOP if pending**
-  - [ ] D2（`graph` vs `knowledgeGraph` 命名）Owner 决策已确认 — **STOP if pending**
+  - [x] D1（IconBar `media` 面板处置）Owner 决策已确认 — 保留但标注 `[FUTURE]`
+  - [x] D2（`graph` vs `knowledgeGraph` 命名）Owner 决策已确认 — 统一到 `knowledgeGraph`（仅改 spec，代码零改动）
   - [ ] `fe-hotfix-searchpanel-backdrop-close` 已合并
 
 ### 1.5 预期实现触点

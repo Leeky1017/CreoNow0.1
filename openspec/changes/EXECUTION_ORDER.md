@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-02-28 18:30
+更新时间：2026-02-28 21:00
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -28,8 +28,8 @@
 | A | `fe-cleanup-proxysection-and-mocks` | — | 待执行 |
 | B | `fe-rightpanel-ai-tabbar-layout` | — | 待执行 |
 | A | `fe-rightpanel-ai-guidance-and-style` | `fe-rightpanel-ai-tabbar-layout` | 待执行 |
-| C | `fe-spec-drift-iconbar-rightpanel-alignment` | D1/D2/D3 决策 | 待执行（阻塞） |
-| B | `fe-leftpanel-dialog-migration` | `fe-hotfix-searchpanel-backdrop-close`, D1/D2 决策 | 待执行 |
+| C | `fe-spec-drift-iconbar-rightpanel-alignment` | D1/D2/D3 已决策 | 待执行 |
+| B | `fe-leftpanel-dialog-migration` | `fe-hotfix-searchpanel-backdrop-close`, D1/D2 已决策 | 待执行 |
 | D | `fe-ai-panel-toggle-button` | — | 待执行 |
 | A | `fe-dashboard-welcome-merge-and-ghost-actions` | `fe-cleanup-proxysection-and-mocks`, `fe-ui-open-folder-entrypoints` | 待执行 |
 
@@ -112,8 +112,8 @@
   fe-rightpanel-ai-tabbar-layout ──→ fe-rightpanel-ai-guidance-and-style
                                  ──→ fe-visual-noise-reduction (第三批)
   fe-spec-drift-iconbar-rightpanel-alignment ──→ fe-leftpanel-dialog-migration
-  [D1/D2/D3 Owner 决策] ──→ fe-spec-drift-iconbar-rightpanel-alignment
-                         ──→ fe-leftpanel-dialog-migration
+  [D1/D2/D3 Owner 决策] ──→ fe-spec-drift-iconbar-rightpanel-alignment  ✅ 已决策
+                         ──→ fe-leftpanel-dialog-migration               ✅ 已决策
 
 第二批
   fe-ipc-open-folder-contract ──→ fe-ui-open-folder-entrypoints ──→ fe-onboarding-flow-refresh
@@ -128,11 +128,11 @@
 
 ## Owner 决策阻塞项
 
-| # | 决策项 | 阻塞 change |
-|---|--------|------------|
-| D1 | IconBar `media` 面板处置（补全/删除） | `fe-spec-drift-iconbar-rightpanel-alignment`, `fe-leftpanel-dialog-migration` |
-| D2 | `graph` vs `knowledgeGraph` 命名统一 | `fe-spec-drift-iconbar-rightpanel-alignment`, `fe-leftpanel-dialog-migration` |
-| D3 | RightPanel `Quality` tab 保留/移除 | `fe-spec-drift-iconbar-rightpanel-alignment` |
+| # | 决策项 | 阻塞 change | 状态 | 结论 |
+|---|--------|------------|------|------|
+| D1 | IconBar `media` 面板处置（补全/删除） | `fe-spec-drift-iconbar-rightpanel-alignment`, `fe-leftpanel-dialog-migration` | 已决策 | 保留但标注 `[FUTURE]` |
+| D2 | `graph` vs `knowledgeGraph` 命名统一 | `fe-spec-drift-iconbar-rightpanel-alignment`, `fe-leftpanel-dialog-migration` | 已决策 | 统一到 `knowledgeGraph`（仅改 spec，代码零改动） |
+| D3 | RightPanel `Quality` tab 保留/移除 | `fe-spec-drift-iconbar-rightpanel-alignment` | 已决策 | 保留，更新 Spec 为三 tab（AI / Info / Quality） |
 
 ## 历史归档
 
