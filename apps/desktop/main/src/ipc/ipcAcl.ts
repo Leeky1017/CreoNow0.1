@@ -97,6 +97,19 @@ export function createIpcAclEvaluator(
 
   return ({ channel, event }): IpcAclDecision => {
     const senderOrigin = resolveSenderOrigin(event);
+    const isPrivileged = isPrivilegedChannel(channel, privilegedPrefixes);
+
+    if (senderOrigin === null && isPrivileged) {
+      return {
+        allowed: false,
+        reason: "origin_not_allowed",
+        details: {
+          channel,
+          senderOrigin,
+        },
+      };
+    }
+
     if (
       senderOrigin !== null &&
       !isOriginAllowed({ senderOrigin, devServerOrigin })
@@ -111,7 +124,7 @@ export function createIpcAclEvaluator(
       };
     }
 
-    if (isPrivilegedChannel(channel, privilegedPrefixes)) {
+    if (isPrivileged) {
       const webContentsId = resolveWebContentsId(event);
       if (!Number.isInteger(webContentsId) || (webContentsId ?? 0) <= 0) {
         return {

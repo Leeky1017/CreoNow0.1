@@ -106,4 +106,30 @@ describe("searchStore race scenarios", () => {
     ]);
     expect(state.lastError).toBeNull();
   });
+
+  it("WB-S2-SRF-S3 converts invoke throw into stable error state", async () => {
+    const invoke: IpcInvoke = async () => {
+      throw new Error("search backend unavailable");
+    };
+
+    const store = createSearchStore({ invoke });
+    store.getState().setQuery("alpha");
+
+    await expect(
+      store.getState().runFulltext({ projectId: "project-1" }),
+    ).resolves.toBeUndefined();
+
+    const state = store.getState();
+    expect(state.status).toBe("error");
+    expect(state.items).toEqual([]);
+    expect(state.total).toBe(0);
+    expect(state.hasMore).toBe(false);
+    expect(state.lastError).toMatchObject({
+      code: "INTERNAL",
+      message: "Search request failed",
+      details: {
+        message: "search backend unavailable",
+      },
+    });
+  });
 });

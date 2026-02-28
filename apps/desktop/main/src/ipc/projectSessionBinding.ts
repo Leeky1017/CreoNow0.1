@@ -18,6 +18,10 @@ export function createProjectSessionBindingRegistry(): ProjectSessionBindingRegi
       if (!Number.isInteger(webContentsId) || webContentsId <= 0) {
         return;
       }
+      if (typeof projectId !== "string") {
+        activeProjectByWebContents.delete(webContentsId);
+        return;
+      }
       const normalized = projectId.trim();
       if (normalized.length === 0) {
         activeProjectByWebContents.delete(webContentsId);

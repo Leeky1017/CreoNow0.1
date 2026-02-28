@@ -365,7 +365,9 @@ export function AppShell(): JSX.Element {
   // Bootstrap projects on mount
   React.useEffect(() => {
     if (bootstrapStatus === "idle") {
-      void bootstrapProjects();
+      runFireAndForget(() => bootstrapProjects(), {
+        label: "appShell.bootstrapProjects",
+      });
     }
   }, [bootstrapProjects, bootstrapStatus]);
 

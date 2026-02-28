@@ -357,17 +357,21 @@ function buildRankedItems(args: {
     });
     if (!semantic.ok) {
       if (isTimeoutCode(semantic.error.code)) {
-        const semanticNotice =
-          args.strategy === "hybrid"
-            ? "语义检索超时，已切换关键词检索"
-            : "语义检索超时，请稍后重试";
-        return ipcError("SEARCH_TIMEOUT", "Semantic search timed out", {
-          fallback: args.strategy === "hybrid" ? "fts" : "none",
-          notice: semanticNotice,
-          strategy: args.strategy,
-        });
-      }
-      if (args.strategy === "hybrid") {
+        if (args.strategy === "hybrid") {
+          args.logger.info("search_hybrid_semantic_degraded", {
+            projectId: args.projectId,
+            reason: semantic.error.code,
+          });
+          fallback = "fts";
+          notice = "语义检索超时，已切换关键词检索";
+        } else {
+          return ipcError("SEARCH_TIMEOUT", "Semantic search timed out", {
+            fallback: "none",
+            notice: "语义检索超时，请稍后重试",
+            strategy: args.strategy,
+          });
+        }
+      } else if (args.strategy === "hybrid") {
         args.logger.info("search_hybrid_semantic_degraded", {
           projectId: args.projectId,
           reason: semantic.error.code,

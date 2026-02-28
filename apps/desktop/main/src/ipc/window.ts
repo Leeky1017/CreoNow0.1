@@ -12,6 +12,8 @@ type WindowLike = {
   close: () => void;
 };
 
+type WindowAction = "minimize" | "togglemaximized" | "close";
+
 type WindowState = {
   controlsEnabled: boolean;
   isMaximized: boolean;
@@ -30,6 +32,12 @@ function toError(code: IpcError["code"], message: string): IpcResponse<never> {
 function isWindowControlsEnabled(platform: NodeJS.Platform): boolean {
   return platform === "win32";
 }
+
+function toInternalError(action: string, error: unknown): IpcResponse<never> {
+  const message = error instanceof Error ? error.message : String(error);
+  return toError("INTERNAL", `Failed to ${action} window: ${message}`);
+}
+
 
 export function registerWindowIpcHandlers(args: {
   ipcMain: IpcMain;
@@ -57,76 +65,89 @@ export function registerWindowIpcHandlers(args: {
     };
   }
 
-  function buildState(win: WindowLike | null): WindowState {
+  function buildState(win: WindowLike | null): IpcResponse<WindowState> {
     if (!controlsEnabled || !win) {
       return {
-        controlsEnabled,
-        isMaximized: false,
-        isMinimized: false,
-        isFullScreen: false,
-        platform: args.platform,
+        ok: true,
+        data: {
+          controlsEnabled,
+          isMaximized: false,
+          isMinimized: false,
+          isFullScreen: false,
+          platform: args.platform,
+        },
       };
     }
 
-    return {
-      controlsEnabled,
-      isMaximized: win.isMaximized(),
-      isMinimized: win.isMinimized(),
-      isFullScreen: win.isFullScreen(),
-      platform: args.platform,
-    };
+    try {
+      return {
+        ok: true,
+        data: {
+          controlsEnabled,
+          isMaximized: win.isMaximized(),
+          isMinimized: win.isMinimized(),
+          isFullScreen: win.isFullScreen(),
+          platform: args.platform,
+        },
+      };
+    } catch (error) {
+      return toInternalError("get window state", error);
+    }
+  }
+
+  function runWindowAction(
+    event: IpcMainInvokeEvent,
+    action: WindowAction,
+  ): IpcResponse<Record<string, never>> {
+    const resolved = resolveSupportedWindow(event);
+    if (!resolved.ok) {
+      return resolved;
+    }
+
+    try {
+      if (action === "minimize") {
+        resolved.data.minimize();
+      } else if (action === "togglemaximized") {
+        if (resolved.data.isMaximized()) {
+          resolved.data.unmaximize();
+        } else {
+          resolved.data.maximize();
+        }
+      } else {
+        resolved.data.close();
+      }
+      return { ok: true, data: {} };
+    } catch (error) {
+      return toInternalError(action, error);
+    }
   }
 
   args.ipcMain.handle(
     "app:window:getstate",
     async (event): Promise<IpcResponse<WindowState>> => {
       const win = controlsEnabled ? resolveWindow(event) : null;
-      return {
-        ok: true,
-        data: buildState(win),
-      };
+      return buildState(win);
     },
   );
 
   args.ipcMain.handle(
     "app:window:minimize",
     async (event): Promise<IpcResponse<Record<string, never>>> => {
-      const resolved = resolveSupportedWindow(event);
-      if (!resolved.ok) {
-        return resolved;
-      }
-      resolved.data.minimize();
-      return { ok: true, data: {} };
+      return runWindowAction(event, "minimize");
     },
   );
 
   args.ipcMain.handle(
     "app:window:togglemaximized",
     async (event): Promise<IpcResponse<Record<string, never>>> => {
-      const resolved = resolveSupportedWindow(event);
-      if (!resolved.ok) {
-        return resolved;
-      }
-
-      if (resolved.data.isMaximized()) {
-        resolved.data.unmaximize();
-      } else {
-        resolved.data.maximize();
-      }
-
-      return { ok: true, data: {} };
+      return runWindowAction(event, "togglemaximized");
     },
   );
 
   args.ipcMain.handle(
     "app:window:close",
     async (event): Promise<IpcResponse<Record<string, never>>> => {
-      const resolved = resolveSupportedWindow(event);
-      if (!resolved.ok) {
-        return resolved;
-      }
-      resolved.data.close();
-      return { ok: true, data: {} };
+      return runWindowAction(event, "close");
     },
   );
 }

@@ -99,48 +99,75 @@ export function createSearchStore(deps: { invoke: IpcInvoke }) {
       activeSearchController = controller;
 
       set({ status: "loading", lastError: null });
-      const res = await deps.invoke("search:fts:query", {
-        projectId,
-        query,
-        limit,
-        offset: 0,
-      });
 
-      const shouldCommit =
-        !controller.signal.aborted &&
-        requestId === latestSearchRequestId &&
-        activeSearchController === controller &&
-        get().query === query;
+      try {
+        const res = await deps.invoke("search:fts:query", {
+          projectId,
+          query,
+          limit,
+          offset: 0,
+        });
 
-      if (!shouldCommit) {
-        return;
-      }
+        const shouldCommit =
+          !controller.signal.aborted &&
+          requestId === latestSearchRequestId &&
+          activeSearchController === controller &&
+          get().query === query;
 
-      if (!res.ok) {
+        if (!shouldCommit) {
+          return;
+        }
+
+        if (!res.ok) {
+          set({
+            status: "error",
+            lastError: res.error,
+            items: [],
+            total: 0,
+            hasMore: false,
+          });
+          if (activeSearchController === controller) {
+            activeSearchController = null;
+          }
+          return;
+        }
+
+        set({
+          status: "ready",
+          items: res.data.results,
+          total: res.data.total,
+          hasMore: res.data.hasMore,
+          indexState: res.data.indexState,
+          lastError: null,
+        });
+      } catch (error) {
+        const shouldCommit =
+          !controller.signal.aborted &&
+          requestId === latestSearchRequestId &&
+          activeSearchController === controller &&
+          get().query === query;
+
+        if (!shouldCommit) {
+          return;
+        }
+
         set({
           status: "error",
-          lastError: res.error,
           items: [],
           total: 0,
           hasMore: false,
+          lastError: {
+            code: "INTERNAL",
+            message: "Search request failed",
+            details: {
+              message: error instanceof Error ? error.message : String(error),
+            },
+          },
         });
+      } finally {
         if (activeSearchController === controller) {
           activeSearchController = null;
         }
-        return;
-      }
-
-      set({
-        status: "ready",
-        items: res.data.results,
-        total: res.data.total,
-        hasMore: res.data.hasMore,
-        indexState: res.data.indexState,
-        lastError: null,
-      });
-
-      if (activeSearchController === controller) {
-        activeSearchController = null;
       }
     },
   }));

@@ -9,8 +9,19 @@ import {
   createLogger,
 } from "./hybrid-ranking-test-harness";
 
-// Scenario Mapping: SR5-R1-S2
-{
+type QueryStrategyResponse = IpcResponse<{
+  strategy: "fts" | "semantic" | "hybrid";
+  fallback: "fts" | "none";
+  notice?: string;
+  results: Array<{
+    documentId: string;
+    chunkId: string;
+    snippet: string;
+  }>;
+  total: number;
+}>;
+
+function createTimeoutHarness() {
   const logger = createLogger();
   const db = createFtsDbStub({
     projectId: "proj_1",
@@ -47,6 +58,12 @@ import {
     throw new Error("Missing handler search:query:strategy");
   }
 
+  return queryByStrategy;
+}
+
+// Scenario Mapping: SR5-R1-S2
+{
+  const queryByStrategy = createTimeoutHarness();
   const res = (await queryByStrategy(
     {},
     {
@@ -56,7 +73,31 @@ import {
       limit: 20,
       offset: 0,
     },
-  )) as IpcResponse<unknown>;
+  )) as QueryStrategyResponse;
+
+  assert.equal(res.ok, true);
+  if (res.ok) {
+    assert.equal(res.data.strategy, "hybrid");
+    assert.equal(res.data.fallback, "fts");
+    assert.ok((res.data.notice ?? "").includes("语义检索超时"));
+    assert.equal(res.data.total, 1);
+    assert.equal(res.data.results[0]?.documentId, "doc_1");
+  }
+}
+
+// Scenario Mapping: SR5-R1-S3
+{
+  const queryByStrategy = createTimeoutHarness();
+  const res = (await queryByStrategy(
+    {},
+    {
+      projectId: "proj_1",
+      query: "abandoned warehouse",
+      strategy: "semantic",
+      limit: 20,
+      offset: 0,
+    },
+  )) as QueryStrategyResponse;
 
   assert.equal(res.ok, false);
   if (!res.ok) {
@@ -66,8 +107,8 @@ import {
       notice?: string;
       strategy?: "fts" | "semantic" | "hybrid";
     };
-    assert.equal(details.fallback, "fts");
-    assert.equal(details.strategy, "hybrid");
+    assert.equal(details.fallback, "none");
+    assert.equal(details.strategy, "semantic");
     assert.ok((details.notice ?? "").includes("语义检索超时"));
   }
 }

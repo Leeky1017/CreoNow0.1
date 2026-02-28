@@ -31,9 +31,13 @@ type ContextFsRegistrarDeps = {
 
 function isReadWithinScope(args: {
   scope: "rules" | "settings";
-  p: string;
+  p: unknown;
 }): boolean {
-  return args.p.startsWith(`.creonow/${args.scope}/`);
+  return typeof args.p === "string" && args.p.startsWith(`.creonow/${args.scope}/`);
+}
+
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
 }
 
 export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
@@ -69,7 +73,7 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!isNonEmptyString(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -128,7 +132,7 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!isNonEmptyString(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -192,7 +196,7 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!isNonEmptyString(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -253,7 +257,7 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
       _e,
       payload: { projectId: string },
     ): Promise<IpcResponse<{ watching: false }>> => {
-      if (payload.projectId.trim().length === 0) {
+      if (!isNonEmptyString(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -301,7 +305,7 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!isNonEmptyString(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -363,7 +367,7 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!isNonEmptyString(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -433,7 +437,7 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!isNonEmptyString(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
@@ -532,7 +536,7 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (payload.projectId.trim().length === 0) {
+      if (!isNonEmptyString(payload.projectId)) {
         return {
           ok: false,
           error: { code: "INVALID_ARGUMENT", message: "projectId is required" },

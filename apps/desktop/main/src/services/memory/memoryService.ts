@@ -289,7 +289,11 @@ function getSettingKey(name: keyof MemorySettings): string {
   return `${SETTINGS_PREFIX}${name}`;
 }
 
-function readSetting(db: Database.Database, key: string): unknown | null {
+function readSetting(
+  db: Database.Database,
+  key: string,
+  logger?: Logger,
+): unknown | null {
   const row = db
     .prepare<
       [string, string],
@@ -301,7 +305,12 @@ function readSetting(db: Database.Database, key: string): unknown | null {
   }
   try {
     return JSON.parse(row.valueJson) as unknown;
-  } catch {
+  } catch (error) {
+    logger?.error("memory_settings_read_failed", {
+      code: "INVALID_JSON",
+      key,
+      message: error instanceof Error ? error.message : String(error),
+    });
     return null;
   }
 }
@@ -310,8 +319,9 @@ function readBoolSetting(
   db: Database.Database,
   key: string,
   fallback: boolean,
+  logger?: Logger,
 ): boolean {
-  const value = readSetting(db, key);
+  const value = readSetting(db, key, logger);
   return typeof value === "boolean" ? value : fallback;
 }
 
@@ -319,8 +329,9 @@ function readNumberSetting(
   db: Database.Database,
   key: string,
   fallback: number,
+  logger?: Logger,
 ): number {
-  const value = readSetting(db, key);
+  const value = readSetting(db, key, logger);
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
@@ -400,21 +411,25 @@ export function createMemoryService(args: {
             args.db,
             getSettingKey("injectionEnabled"),
             DEFAULT_SETTINGS.injectionEnabled,
+            args.logger,
           ),
           preferenceLearningEnabled: readBoolSetting(
             args.db,
             getSettingKey("preferenceLearningEnabled"),
             DEFAULT_SETTINGS.preferenceLearningEnabled,
+            args.logger,
           ),
           privacyModeEnabled: readBoolSetting(
             args.db,
             getSettingKey("privacyModeEnabled"),
             DEFAULT_SETTINGS.privacyModeEnabled,
+            args.logger,
           ),
           preferenceLearningThreshold: readNumberSetting(
             args.db,
             getSettingKey("preferenceLearningThreshold"),
             DEFAULT_SETTINGS.preferenceLearningThreshold,
+            args.logger,
           ),
         },
       };

@@ -145,31 +145,44 @@ export function createProjectStore(deps: {
 
       set({ bootstrapStatus: "loading", lastError: null });
 
-      const currentRes = await deps.invoke("project:project:getcurrent", {});
-      const current = currentRes.ok
-        ? currentRes.data
-        : currentRes.error.code === "NOT_FOUND"
-          ? null
-          : null;
-      if (!currentRes.ok && currentRes.error.code !== "NOT_FOUND") {
-        set({ bootstrapStatus: "error", lastError: currentRes.error });
-        return;
-      }
+      try {
+        const currentRes = await deps.invoke("project:project:getcurrent", {});
+        const current = currentRes.ok
+          ? currentRes.data
+          : currentRes.error.code === "NOT_FOUND"
+            ? null
+            : null;
+        if (!currentRes.ok && currentRes.error.code !== "NOT_FOUND") {
+          set({ bootstrapStatus: "error", lastError: currentRes.error });
+          return;
+        }
 
-      const listRes = await deps.invoke("project:project:list", {
-        includeArchived: true,
-      });
-      if (!listRes.ok) {
-        set({ bootstrapStatus: "error", lastError: listRes.error, current });
-        return;
-      }
+        const listRes = await deps.invoke("project:project:list", {
+          includeArchived: true,
+        });
+        if (!listRes.ok) {
+          set({ bootstrapStatus: "error", lastError: listRes.error, current });
+          return;
+        }
 
-      set({
-        bootstrapStatus: "ready",
-        current,
-        items: listRes.data.items,
-        lastError: null,
-      });
+        set({
+          bootstrapStatus: "ready",
+          current,
+          items: listRes.data.items,
+          lastError: null,
+        });
+      } catch (error: unknown) {
+        set({
+          bootstrapStatus: "error",
+          lastError: {
+            code: "INTERNAL",
+            message:
+              error instanceof Error
+                ? error.message
+                : "project bootstrap failed unexpectedly",
+          },
+        });
+      }
     },
 
     createAndSetCurrent: async ({ name, type, description, template }) => {
