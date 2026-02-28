@@ -5,7 +5,7 @@
 - Issue: #789
 - Branch: task/789-fix-searchpanel-keydown-when-closed
 - PR: <fill-after-created>
-- Reviewed-HEAD-SHA: b43ab38a37a174ca9b0359ea8e628ed28173941f
+- Reviewed-HEAD-SHA: ee5d6355c37a317d099947bc8c0b2bdd1a1d0791
 
 ## Plan
 
@@ -32,7 +32,7 @@
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: b43ab38a37a174ca9b0359ea8e628ed28173941f
+- Reviewed-HEAD-SHA: ee5d6355c37a317d099947bc8c0b2bdd1a1d0791
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
