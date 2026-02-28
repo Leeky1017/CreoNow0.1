@@ -1,8 +1,14 @@
 name: OpenSpec Log Guard
+run-name: >-
+  OpenSpec Log Guard / PR #${{ github.event.pull_request.number }} @ ${{ github.event.pull_request.head.sha }}
 
 on:
   pull_request:
     branches: [main]
+
+concurrency:
+  group: openspec-log-guard-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   openspec-log-guard:
