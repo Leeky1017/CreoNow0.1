@@ -205,15 +205,24 @@ async function* readSse(args: {
     buffer += decoder.decode(value, { stream: true });
 
     while (true) {
-      const sepIndex = buffer.indexOf("\n\n");
-      if (sepIndex < 0) {
+      const lfSeparator = buffer.indexOf("\n\n");
+      const crlfSeparator = buffer.indexOf("\r\n\r\n");
+      const hasLfSeparator = lfSeparator >= 0;
+      const hasCrlfSeparator = crlfSeparator >= 0;
+      if (!hasLfSeparator && !hasCrlfSeparator) {
         break;
       }
 
-      const rawEvent = buffer.slice(0, sepIndex);
-      buffer = buffer.slice(sepIndex + 2);
+      const useLfSeparator =
+        hasLfSeparator &&
+        (!hasCrlfSeparator || lfSeparator < crlfSeparator);
+      const sepIndex = useLfSeparator ? lfSeparator : crlfSeparator;
+      const sepLength = useLfSeparator ? 2 : 4;
 
-      const lines = rawEvent.split("\n");
+      const rawEvent = buffer.slice(0, sepIndex);
+      buffer = buffer.slice(sepIndex + sepLength);
+
+      const lines = rawEvent.split(/\r?\n/);
       let event: string | null = null;
       const dataLines: string[] = [];
 
