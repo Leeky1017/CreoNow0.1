@@ -58,6 +58,20 @@ function sleep(ms?: number): Promise<void> {
   });
 }
 
+function readNonEmptyStringField(
+  payload: unknown,
+  key: string,
+): string | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+  const value = (payload as Record<string, unknown>)[key];
+  if (typeof value !== "string" || value.trim().length === 0) {
+    return null;
+  }
+  return value;
+}
+
 async function withTimeout<T>(
   run: () => Promise<T>,
   timeoutMs: number,
@@ -257,16 +271,7 @@ export function registerVersionIpcHandlers(deps: {
 
   deps.ipcMain.handle(
     "version:snapshot:create",
-    async (
-      _e,
-      payload: {
-        projectId: string;
-        documentId: string;
-        contentJson: string;
-        actor: VersionSnapshotActor;
-        reason: VersionSnapshotReason;
-      },
-    ): Promise<
+    async (_e, payload: unknown): Promise<
       IpcResponse<{
         versionId: string;
         contentHash: string;
@@ -281,10 +286,10 @@ export function registerVersionIpcHandlers(deps: {
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      if (
-        payload.projectId.trim().length === 0 ||
-        payload.documentId.trim().length === 0
-      ) {
+
+      const projectId = readNonEmptyStringField(payload, "projectId");
+      const documentId = readNonEmptyStringField(payload, "documentId");
+      if (!projectId || !documentId) {
         return {
           ok: false,
           error: {
@@ -294,9 +299,23 @@ export function registerVersionIpcHandlers(deps: {
         };
       }
 
+      const contentJson =
+        payload && typeof payload === "object"
+          ? (payload as { contentJson?: unknown }).contentJson
+          : undefined;
+      if (typeof contentJson !== "string") {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "contentJson must be valid JSON",
+          },
+        };
+      }
+
       let parsed: unknown;
       try {
-        parsed = JSON.parse(payload.contentJson);
+        parsed = JSON.parse(contentJson);
       } catch {
         return {
           ok: false,
@@ -307,13 +326,22 @@ export function registerVersionIpcHandlers(deps: {
         };
       }
 
+      const actor =
+        payload && typeof payload === "object"
+          ? (payload as { actor?: VersionSnapshotActor }).actor
+          : undefined;
+      const reason =
+        payload && typeof payload === "object"
+          ? (payload as { reason?: VersionSnapshotReason }).reason
+          : undefined;
+
       return coordinator.withSerializedDocument(
-        payload.documentId,
+        documentId,
         async () => {
           await sleep(deps.simulateLatencyMs?.snapshot);
           return withIoRetry({
             operation: "version:snapshot:create",
-            documentId: payload.documentId,
+            documentId,
             run: async (): Promise<
               IpcResponse<{
                 versionId: string;
@@ -325,18 +353,18 @@ export function registerVersionIpcHandlers(deps: {
             > => {
               const svc = createService();
               const saved = svc.save({
-                projectId: payload.projectId,
-                documentId: payload.documentId,
+                projectId,
+                documentId,
                 contentJson: parsed,
-                actor: payload.actor,
-                reason: payload.reason,
+                actor: actor as VersionSnapshotActor,
+                reason: reason as VersionSnapshotReason,
               });
               if (!saved.ok) {
                 return { ok: false, error: saved.error };
               }
 
               const listed = svc.listVersions({
-                documentId: payload.documentId,
+                documentId,
               });
               if (!listed.ok) {
                 return { ok: false, error: listed.error };

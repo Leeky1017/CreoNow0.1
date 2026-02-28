@@ -156,6 +156,39 @@ type QueryByIdsPayload = {
   entityIds: string[];
 };
 
+function normalizeQueryByIdsPayload(payload: unknown):
+  | { ok: true; payload: QueryByIdsPayload }
+  | { ok: false; message: string } {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return { ok: false, message: "payload must be an object" };
+  }
+
+  const candidate = payload as {
+    projectId?: unknown;
+    entityIds?: unknown;
+  };
+
+  if (typeof candidate.projectId !== "string" || candidate.projectId.length === 0) {
+    return { ok: false, message: "projectId is required" };
+  }
+
+  if (!Array.isArray(candidate.entityIds)) {
+    return { ok: false, message: "entityIds must be an array" };
+  }
+
+  if (candidate.entityIds.some((id) => typeof id !== "string")) {
+    return { ok: false, message: "entityIds must contain only strings" };
+  }
+
+  return {
+    ok: true,
+    payload: {
+      projectId: candidate.projectId,
+      entityIds: candidate.entityIds,
+    },
+  };
+}
+
 type RulesInjectPayload = {
   projectId: string;
   documentId: string;
@@ -590,12 +623,20 @@ export function registerKnowledgeGraphIpcHandlers(deps: {
       _event,
       payload: QueryByIdsPayload,
     ): Promise<IpcResponse<KnowledgeQueryByIdsResult>> => {
+      const normalized = normalizeQueryByIdsPayload(payload);
+      if (!normalized.ok) {
+        return {
+          ok: false,
+          error: { code: "INVALID_ARGUMENT", message: normalized.message },
+        };
+      }
+
       const service = createService();
       if (!service) {
         return notReady<KnowledgeQueryByIdsResult>();
       }
 
-      const res = service.queryByIds(payload);
+      const res = service.queryByIds(normalized.payload);
       return res.ok
         ? { ok: true, data: res.data }
         : { ok: false, error: res.error };
