@@ -17,6 +17,7 @@ import {
 import { RightPanel } from "./RightPanel";
 import { Sidebar } from "./Sidebar";
 import { StatusBar } from "./StatusBar";
+import { RegionErrorBoundary } from "../patterns/RegionErrorBoundary";
 import { CharacterCardListContainer } from "../../features/character/CharacterCardListContainer";
 import { CommandPalette } from "../../features/commandPalette/CommandPalette";
 import type {
@@ -823,17 +824,19 @@ export function AppShell(): JSX.Element {
               />
             }
             left={
-              <Sidebar
-                width={layout.effectiveSidebarWidth}
-                collapsed={layout.sidebarCollapsed}
-                projectId={currentProjectId}
-                activePanel={activeLeftPanel}
-                currentProjectId={currentProjectId}
-                projects={projectItems}
-                onSwitchProject={handleSwitchProject}
-                onCreateProject={() => setCreateProjectDialogOpen(true)}
-                onOpenVersionHistoryDocument={openVersionHistoryForDocument}
-              />
+              <RegionErrorBoundary region="sidebar">
+                <Sidebar
+                  width={layout.effectiveSidebarWidth}
+                  collapsed={layout.sidebarCollapsed}
+                  projectId={currentProjectId}
+                  activePanel={activeLeftPanel}
+                  currentProjectId={currentProjectId}
+                  projects={projectItems}
+                  onSwitchProject={handleSwitchProject}
+                  onCreateProject={() => setCreateProjectDialogOpen(true)}
+                  onOpenVersionHistoryDocument={openVersionHistoryForDocument}
+                />
+              </RegionErrorBoundary>
             }
             leftResizer={layout.sidebarResizer}
             main={
@@ -847,7 +850,9 @@ export function AppShell(): JSX.Element {
                 }`}
                 style={{ minWidth: LAYOUT_DEFAULTS.mainMinWidth }}
               >
-                {renderMainContent()}
+                <RegionErrorBoundary region="editor">
+                  {renderMainContent()}
+                </RegionErrorBoundary>
                 <button
                   type="button"
                   aria-label="AI Panel (Ctrl+L)"
@@ -877,13 +882,15 @@ export function AppShell(): JSX.Element {
             }
             rightResizer={layout.panelResizer}
             right={
-              <RightPanel
-                width={layout.effectivePanelWidth}
-                collapsed={layout.panelCollapsed}
-                onOpenSettings={(tab) => openSettingsDialog(tab ?? "general")}
-                onOpenVersionHistory={openVersionHistoryPanel}
-                onCollapse={layout.panelVisibility.collapseRightPanel}
-              />
+              <RegionErrorBoundary region="panel">
+                <RightPanel
+                  width={layout.effectivePanelWidth}
+                  collapsed={layout.panelCollapsed}
+                  onOpenSettings={(tab) => openSettingsDialog(tab ?? "general")}
+                  onOpenVersionHistory={openVersionHistoryPanel}
+                  onCollapse={layout.panelVisibility.collapseRightPanel}
+                />
+              </RegionErrorBoundary>
             }
             bottomBar={<StatusBar />}
             overlays={

@@ -49,5 +49,10 @@ export type {
   ErrorSeverity,
 } from "./ErrorState";
 
+// Region error boundary
+export { RegionErrorBoundary } from "./RegionErrorBoundary";
+export { RegionFallback } from "./RegionFallback";
+export type { RegionFallbackProps } from "./RegionFallback";
+
 // Error boundary
 export { ErrorBoundary } from "./ErrorBoundary";
