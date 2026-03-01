@@ -384,6 +384,7 @@ function registerIpcHandlers(deps: {
     stateExtractor,
     semanticIndex,
     computeRunner: utilityProcessFoundation.compute,
+    projectSessionBinding,
   });
 
   registerExportIpcHandlers({

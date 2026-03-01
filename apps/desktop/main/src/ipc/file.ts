@@ -23,6 +23,8 @@ import {
   type StateExtractor,
 } from "../services/kg/stateExtractor";
 import { createStatsService } from "../services/stats/statsService";
+import { guardAndNormalizeProjectAccess } from "./projectAccessGuard";
+import type { ProjectSessionBindingRegistry } from "./projectSessionBinding";
 
 type Actor = "user" | "auto" | "ai";
 type SaveReason = "manual-save" | "autosave" | "ai-accept" | "status-change";
@@ -183,6 +185,7 @@ export function registerFileIpcHandlers(deps: {
   stateExtractor?: StateExtractor | null;
   semanticIndex?: SemanticChunkIndexService;
   computeRunner?: EmbeddingComputeRunner | null;
+  projectSessionBinding?: ProjectSessionBindingRegistry;
 }): void {
   const semanticAutosaveEmbeddingRuntime =
     createSemanticAutosaveEmbeddingRuntime({
@@ -191,7 +194,27 @@ export function registerFileIpcHandlers(deps: {
       computeRunner: deps.computeRunner,
     });
 
-  deps.ipcMain.handle(
+  function handleWithProjectAccess<TPayload, TResponse>(
+    channel: string,
+    listener: (
+      event: unknown,
+      payload: TPayload,
+    ) => Promise<IpcResponse<TResponse>>,
+  ): void {
+    deps.ipcMain.handle(channel, async (event, payload) => {
+      const guarded = guardAndNormalizeProjectAccess({
+        event,
+        payload,
+        projectSessionBinding: deps.projectSessionBinding,
+      });
+      if (!guarded.ok) {
+        return guarded.response as IpcResponse<TResponse>;
+      }
+      return listener(event, payload as TPayload);
+    });
+  }
+
+  handleWithProjectAccess(
     "file:document:create",
     async (
       _e,
@@ -237,7 +260,7 @@ export function registerFileIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  handleWithProjectAccess(
     "file:document:list",
     async (
       _e,
@@ -276,7 +299,7 @@ export function registerFileIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  handleWithProjectAccess(
     "file:document:read",
     async (
       _e,
@@ -328,7 +351,7 @@ export function registerFileIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  handleWithProjectAccess(
     "file:document:update",
     async (
       _e,
@@ -377,7 +400,7 @@ export function registerFileIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  handleWithProjectAccess(
     "file:document:save",
     async (
       _e,
@@ -530,7 +553,7 @@ export function registerFileIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  handleWithProjectAccess(
     "file:document:getcurrent",
     async (
       _e,
@@ -557,7 +580,7 @@ export function registerFileIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  handleWithProjectAccess(
     "file:document:setcurrent",
     async (
       _e,
@@ -593,7 +616,7 @@ export function registerFileIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  handleWithProjectAccess(
     "file:document:reorder",
     async (
       _e,
@@ -623,7 +646,7 @@ export function registerFileIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  handleWithProjectAccess(
     "file:document:updatestatus",
     async (
       _e,
@@ -679,7 +702,7 @@ export function registerFileIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  handleWithProjectAccess(
     "file:document:delete",
     async (
       _e,

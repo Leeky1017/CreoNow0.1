@@ -4,6 +4,7 @@ import type { IpcMain } from "electron";
 
 import type { Logger } from "../../logging/logger";
 import { registerContextFsHandlers } from "../contextFs";
+import { registerFileIpcHandlers } from "../file";
 import { registerKnowledgeGraphIpcHandlers } from "../knowledgeGraph";
 import { registerMemoryIpcHandlers } from "../memory";
 import { createProjectSessionBindingRegistry } from "../projectSessionBinding";
@@ -109,6 +110,49 @@ function createEvent(webContentsId: number): { sender: { id: number } } {
   assert.equal(knowledgeDenied.error?.code, "FORBIDDEN");
 }
 
+// Scenario: file:document:* handlers reject mismatched bound projectId [ADDED]
+{
+  const binding = createProjectSessionBindingRegistry();
+  binding.bind({ webContentsId: 88, projectId: "project-bound" });
+
+  const fileHarness = createIpcHarness();
+  registerFileIpcHandlers({
+    ipcMain: fileHarness.ipcMain,
+    db: null,
+    logger: createLogger(),
+    projectSessionBinding: binding,
+  });
+
+  const fileCreate = fileHarness.handlers.get("file:document:create");
+  assert.ok(fileCreate, "expected file:document:create handler");
+
+  const createDenied = (await fileCreate!(createEvent(88), {
+    projectId: "project-other",
+    title: "Title",
+  })) as {
+    ok: boolean;
+    error?: { code?: string };
+  };
+  assert.equal(createDenied.ok, false);
+  assert.equal(createDenied.error?.code, "FORBIDDEN");
+
+  const fileSave = fileHarness.handlers.get("file:document:save");
+  assert.ok(fileSave, "expected file:document:save handler");
+
+  const saveDenied = (await fileSave!(createEvent(88), {
+    projectId: "project-other",
+    documentId: "doc-1",
+    contentJson: "{\"type\":\"doc\",\"content\":[]}",
+    actor: "user",
+    reason: "manual-save",
+  })) as {
+    ok: boolean;
+    error?: { code?: string };
+  };
+  assert.equal(saveDenied.ok, false);
+  assert.equal(saveDenied.error?.code, "FORBIDDEN");
+}
+
 // Scenario: unbound renderer session must fail closed for project-scoped IPC [ADDED]
 {
   const binding = createProjectSessionBindingRegistry();
@@ -134,6 +178,33 @@ function createEvent(webContentsId: number): { sender: { id: number } } {
 
   const deniedWhenUnbound = (await contextRulesList!(createEvent(999), {
     projectId: "project-guess",
+  })) as {
+    ok: boolean;
+    error?: { code?: string };
+  };
+
+  assert.equal(deniedWhenUnbound.ok, false);
+  assert.equal(deniedWhenUnbound.error?.code, "FORBIDDEN");
+}
+
+// Scenario: file:document:* handlers fail closed when renderer session is unbound [ADDED]
+{
+  const binding = createProjectSessionBindingRegistry();
+  const fileHarness = createIpcHarness();
+
+  registerFileIpcHandlers({
+    ipcMain: fileHarness.ipcMain,
+    db: null,
+    logger: createLogger(),
+    projectSessionBinding: binding,
+  });
+
+  const fileSetCurrent = fileHarness.handlers.get("file:document:setcurrent");
+  assert.ok(fileSetCurrent, "expected file:document:setcurrent handler");
+
+  const deniedWhenUnbound = (await fileSetCurrent!(createEvent(999), {
+    projectId: "project-guess",
+    documentId: "doc-1",
   })) as {
     ok: boolean;
     error?: { code?: string };
