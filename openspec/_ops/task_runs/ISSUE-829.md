@@ -9,7 +9,7 @@
 | Issue  | #829                                           |
 | Branch | `task/827-ipc-open-folder-contract`            |
 | Change | `fe-dashboard-welcome-merge-and-ghost-actions` |
-| PR     | 待回填                                         |
+| PR     | #830                                         |
 
 ## Runs
 
