@@ -4,6 +4,15 @@ export type ProjectSessionBindingRegistry = {
   clear: (args: { webContentsId: number }) => void;
 };
 
+let activeProjectSessionBindingRegistry: ProjectSessionBindingRegistry | null =
+  null;
+
+export function getProjectSessionBindingRegistry():
+  | ProjectSessionBindingRegistry
+  | null {
+  return activeProjectSessionBindingRegistry;
+}
+
 /**
  * Build a renderer-session project binding registry.
  *
@@ -13,7 +22,7 @@ export type ProjectSessionBindingRegistry = {
 export function createProjectSessionBindingRegistry(): ProjectSessionBindingRegistry {
   const activeProjectByWebContents = new Map<number, string>();
 
-  return {
+  const registry: ProjectSessionBindingRegistry = {
     bind: ({ webContentsId, projectId }) => {
       if (!Number.isInteger(webContentsId) || webContentsId <= 0) {
         return;
@@ -44,4 +53,7 @@ export function createProjectSessionBindingRegistry(): ProjectSessionBindingRegi
       activeProjectByWebContents.delete(webContentsId);
     },
   };
+
+  activeProjectSessionBindingRegistry = registry;
+  return registry;
 }
