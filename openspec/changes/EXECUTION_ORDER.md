@@ -217,6 +217,12 @@
 已归档前置：
 - `fe-hotfix-searchpanel-backdrop-close`：已归档到 `openspec/changes/archive/fe-hotfix-searchpanel-backdrop-close`（commit `c56a1eea`，PR #790）。
 
+## 依赖说明
+
+- 当前子任务：`ISSUE-796 / fe-rightpanel-ai-tabbar-layout`。
+- 依赖关系：依赖列为 `—`，无上游 change 前置约束。
+- 同步结论：`Dependency Sync Check` 结果为无漂移（见 `openspec/_ops/task_runs/ISSUE-796.md` 2026-03-01 10:21 记录）。
+
 ## Owner 决策阻塞项
 
 | # | 决策项 | 阻塞 change | 状态 | 结论 |

@@ -31,8 +31,6 @@ import { applySelection, captureSelectionRef } from "./applySelection";
 import { SkillPicker } from "./SkillPicker";
 import { SkillManagerDialog } from "./SkillManagerDialog";
 
-import { ChatHistory } from "./ChatHistory";
-
 import { ModePicker, getModeName, type AiMode } from "./ModePicker";
 
 import {
@@ -303,8 +301,6 @@ export function CodeBlock(props: {
 
  * Layout:
 
- * - Header actions (history/new chat)
-
  * - User Request Card (shows current input)
 
  * - AI Response Area with streaming cursor
@@ -314,8 +310,11 @@ export function CodeBlock(props: {
  * - Input Area with embedded toolbar and send/stop button
 
  */
+type AiPanelProps = {
+  newChatSignal?: number;
+};
 
-export function AiPanel(): JSX.Element {
+export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   useAiStream();
 
   const openSettings = useOpenSettings();
@@ -400,7 +399,6 @@ export function AiPanel(): JSX.Element {
 
   const [modelOpen, setModelOpen] = React.useState(false);
 
-  const [historyOpen, setHistoryOpen] = React.useState(false);
   const [selectedMode, setSelectedMode] = React.useState<AiMode>("ask");
   const [selectedModel, setSelectedModel] = React.useState<AiModel>("gpt-5.2");
   const [candidateCount, setCandidateCount] = React.useState(1);
@@ -436,6 +434,8 @@ export function AiPanel(): JSX.Element {
   const activeRunId = selectedCandidate?.runId ?? lastRunId;
 
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const lastHandledNewChatSignalRef = React.useRef(props.newChatSignal ?? 0);
+  const handleNewChatRef = React.useRef<() => void>(() => {});
 
   const refreshModels = React.useCallback(async () => {
     setModelsStatus("loading");
@@ -1022,6 +1022,17 @@ export function AiPanel(): JSX.Element {
     textareaRef.current?.focus();
   }
 
+  handleNewChatRef.current = handleNewChat;
+
+  React.useEffect(() => {
+    const signal = props.newChatSignal ?? 0;
+    if (signal === lastHandledNewChatSignalRef.current) {
+      return;
+    }
+    lastHandledNewChatSignalRef.current = signal;
+    handleNewChatRef.current();
+  }, [props.newChatSignal]);
+
   const working = isRunning(status);
   const hasSelectionReference =
     !!selectionRef && selectionText.trim().length > 0;
@@ -1092,80 +1103,6 @@ export function AiPanel(): JSX.Element {
       data-testid="ai-panel"
       className="flex flex-col h-full min-h-0 bg-[var(--color-bg-surface)]"
     >
-      {/* Header actions */}
-
-      <header className="flex items-center h-8 px-2 border-b border-[var(--color-separator)] shrink-0">
-        <div className="ml-auto flex items-center gap-1 relative">
-          {/* History button */}
-
-          <button
-            data-testid="ai-history-toggle"
-            type="button"
-            title="History"
-            onClick={() => setHistoryOpen((v) => !v)}
-            className={`w-5 h-5 flex items-center justify-center rounded transition-colors ${
-              historyOpen
-                ? "text-[var(--color-fg-default)] bg-[var(--color-bg-selected)]"
-                : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
-            }`}
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="12" cy="12" r="10" />
-
-              <polyline points="12 6 12 12 16 14" />
-            </svg>
-          </button>
-
-          {/* New Chat button */}
-
-          <button
-            data-testid="ai-new-chat"
-            type="button"
-            title="New Chat"
-            onClick={handleNewChat}
-            className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] rounded transition-colors"
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <line x1="12" y1="5" x2="12" y2="19" />
-
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-          </button>
-
-          {/* History Dropdown */}
-
-          <ChatHistory
-            open={historyOpen}
-            onOpenChange={setHistoryOpen}
-            onSelectChat={(chatId) => {
-              // History feature: select a chat by ID
-
-              // Currently shows a placeholder UI; full implementation is P1 scope
-
-              setHistoryOpen(false);
-
-              // Optionally show a toast or notification that this feature is coming
-
-              void chatId; // Acknowledge the parameter for type checking
-            }}
-          />
-        </div>
-      </header>
-
       {/* Main content area */}
       <div className="flex-1 flex flex-col min-h-0">
         {/* Scrollable content */}
@@ -1492,16 +1429,6 @@ export function AiPanel(): JSX.Element {
                   {modelsStatus === "loading"
                     ? "Loading"
                     : getModelName(selectedModel, availableModels)}
-                </ToolButton>
-
-                {/* Candidate count button */}
-                <ToolButton
-                  testId="ai-candidate-count"
-                  onClick={() =>
-                    setCandidateCount((prev) => (prev >= 5 ? 1 : prev + 1))
-                  }
-                >
-                  {`${candidateCount}x`}
                 </ToolButton>
 
                 {/* Skill button */}

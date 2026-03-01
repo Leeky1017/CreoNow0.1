@@ -111,10 +111,16 @@ describe("AiPanel", () => {
       expect(screen.getByTestId("ai-send-stop")).toBeInTheDocument();
     });
 
-    it("应该显示 History 按钮", () => {
+    it("不应在 AiPanel 内显示 History/New Chat 按钮", () => {
       render(<AiPanel />);
 
-      expect(screen.getByTestId("ai-history-toggle")).toBeInTheDocument();
+      expect(screen.queryByTestId("ai-history-toggle")).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: /history|历史/i }),
+      ).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: /new chat|新建对话|新对话/i }),
+      ).not.toBeInTheDocument();
     });
 
     it("应该显示输入框", () => {
