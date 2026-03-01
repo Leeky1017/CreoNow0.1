@@ -41,6 +41,18 @@ async function runScenario(
   }
 }
 
+function assertOriginNotAllowed(response: IpcResponse<unknown>): void {
+  assert.equal(response.ok, false);
+  if (response.ok) {
+    assert.fail("expected FORBIDDEN response");
+  }
+  assert.equal(response.error.code, "FORBIDDEN");
+  assert.equal(
+    (response.error.details as { reason?: string } | undefined)?.reason,
+    "origin_not_allowed",
+  );
+}
+
 async function main(): Promise<void> {
   await runScenario(
     "SIA-S3 should block disallowed caller before handler execution",
@@ -146,19 +158,24 @@ async function main(): Promise<void> {
     },
   );
 
-  const restrictedAboutBlankChannels = [
-    "project:project:create",
-    "version:snapshot:create",
-    "export:document:markdown",
+  const aboutBlankChannelMatrix = [
+    { channel: "file:document:list", shouldAllow: true },
+    { channel: "context:assemble", shouldAllow: true },
+    { channel: "projective:project:create", shouldAllow: true },
+    { channel: "versioning:snapshot:create", shouldAllow: true },
+    { channel: "exporter:document:markdown", shouldAllow: true },
+    { channel: "project:project:create", shouldAllow: false },
+    { channel: "version:snapshot:create", shouldAllow: false },
+    { channel: "export:document:markdown", shouldAllow: false },
   ] as const;
-  for (const channel of restrictedAboutBlankChannels) {
+  for (const entry of aboutBlankChannelMatrix) {
     await runScenario(
-      `SIA-S4 should block restricted channel when sender origin is about:blank: ${channel}`,
+      `SIA-S4 about:blank matrix should ${entry.shouldAllow ? "allow" : "block"} ${entry.channel}`,
       async () => {
         let called = false;
 
         const wrapped = wrapIpcRequestResponse({
-          channel,
+          channel: entry.channel,
           requestSchema: s.object({}),
           responseSchema: s.object({ ok: s.literal(true) }),
           logger: createLogger(),
@@ -174,16 +191,14 @@ async function main(): Promise<void> {
           {},
         )) as IpcResponse<unknown>;
 
-        assert.equal(called, false);
-        assert.equal(response.ok, false);
-        if (response.ok) {
-          assert.fail("expected FORBIDDEN response");
+        if (entry.shouldAllow) {
+          assert.equal(called, true);
+          assert.equal(response.ok, true);
+          return;
         }
-        assert.equal(response.error.code, "FORBIDDEN");
-        assert.equal(
-          (response.error.details as { reason?: string } | undefined)?.reason,
-          "origin_not_allowed",
-        );
+
+        assert.equal(called, false);
+        assertOriginNotAllowed(response);
       },
     );
   }

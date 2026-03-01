@@ -57,6 +57,18 @@ async function invokeWrapped(args: {
   return (await wrapped(args.event, {})) as IpcResponse<unknown>;
 }
 
+function assertOriginNotAllowed(response: IpcResponse<unknown>): void {
+  assert.equal(response.ok, false);
+  if (response.ok) {
+    assert.fail("expected FORBIDDEN response");
+  }
+  assert.equal(response.error.code, "FORBIDDEN");
+  assert.equal(
+    (response.error.details as { reason?: string } | undefined)?.reason,
+    "origin_not_allowed",
+  );
+}
+
 async function main(): Promise<void> {
   await runScenario(
     "SIA-S1 should reject non-allowlisted origin with FORBIDDEN/origin_not_allowed",
@@ -108,41 +120,31 @@ async function main(): Promise<void> {
     assert.equal(response.ok, true);
   });
 
-  await runScenario(
-    "SIA-S2 should allow about:blank for non-restricted channels",
-    async () => {
-      const response = await invokeWrapped({
-        event: createEvent("about:blank"),
-        channel: "file:document:list",
-      });
-
-      assert.equal(response.ok, true);
-    },
-  );
-
-  const blockedAboutBlankChannels = [
-    "project:project:create",
-    "version:snapshot:create",
-    "export:document:markdown",
+  const aboutBlankChannelMatrix = [
+    { channel: "file:document:list", shouldAllow: true },
+    { channel: "context:assemble", shouldAllow: true },
+    { channel: "projective:project:create", shouldAllow: true },
+    { channel: "versioning:snapshot:create", shouldAllow: true },
+    { channel: "exporter:document:markdown", shouldAllow: true },
+    { channel: "project:project:create", shouldAllow: false },
+    { channel: "version:snapshot:create", shouldAllow: false },
+    { channel: "export:document:markdown", shouldAllow: false },
   ] as const;
-  for (const channel of blockedAboutBlankChannels) {
+  for (const entry of aboutBlankChannelMatrix) {
     await runScenario(
-      `SIA-S4 should block about:blank for restricted channel ${channel}`,
+      `SIA-S4 about:blank matrix should ${entry.shouldAllow ? "allow" : "block"} ${entry.channel}`,
       async () => {
         const response = await invokeWrapped({
           event: createEvent("about:blank"),
-          channel,
+          channel: entry.channel,
         });
 
-        assert.equal(response.ok, false);
-        if (response.ok) {
-          assert.fail("expected FORBIDDEN response");
+        if (entry.shouldAllow) {
+          assert.equal(response.ok, true);
+          return;
         }
-        assert.equal(response.error.code, "FORBIDDEN");
-        assert.equal(
-          (response.error.details as { reason?: string } | undefined)?.reason,
-          "origin_not_allowed",
-        );
+
+        assertOriginNotAllowed(response);
       },
     );
   }
