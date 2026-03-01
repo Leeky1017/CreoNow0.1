@@ -1,6 +1,6 @@
 # OpenSpec + Rulebook + GitHub 交付规则
 
-更新时间：2026-02-21 11:57
+更新时间：2026-03-01 14:10
 
 本文件是 CreoNow 的交付规则主源（Source of Truth）。
 本文件只定义约束条件和验收标准，不定义具体命令和脚本参数。
@@ -43,8 +43,9 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 14. **环境基线强制**：创建 `task/*` 分支和 worktree 前，必须先同步控制面到最新 `origin/main`。
 15. **RUN_LOG PR 真实链接强制**：`openspec/_ops/task_runs/ISSUE-<N>.md` 的 `PR` 字段不得为占位符（如 `待回填/TBD/TODO`）。
 16. **主会话审计强制**：RUN_LOG 必须包含 `## Main Session Audit`，且同时满足 `Audit-Owner=main-session`、`Reviewed-HEAD-SHA==签字提交的 HEAD^`、`Spec-Compliance/Code-Quality/Fresh-Verification` 全部 `PASS`、`Blocking-Issues=0`、`Decision=ACCEPT`；并且签字提交 `HEAD^..HEAD` 仅允许变更当前任务 RUN_LOG。任一不满足必须被 preflight 与 `openspec-log-guard` 阻断，子代理完成不得替代主会话签字。
-17. **完成变更归档强制**：当 `openspec/changes/<change>/tasks.md` 全部勾选完成时，必须归档到 `openspec/changes/archive/`，不得继续停留在活跃目录。
-18. **Rulebook 自归档无递归**：允许当前任务在同一 PR 中将自身 Rulebook task 从 `active` 归档到 `archive`；不得仅为“归档当前任务”再创建递归 closeout issue。
+17. **独立审计前置强制**：`task/<N>-<slug>` 分支进入合并前，必须存在 `openspec/_ops/reviews/ISSUE-<N>.md` 并通过独立审计校验：`Author-Agent != Reviewer-Agent`、`Decision=PASS`、`Reviewed-HEAD-SHA==签字提交的 HEAD^^（代码审计基线）`；由 `openspec-log-guard` 阻断未满足场景。
+18. **完成变更归档强制**：当 `openspec/changes/<change>/tasks.md` 全部勾选完成时，必须归档到 `openspec/changes/archive/`，不得继续停留在活跃目录。
+19. **Rulebook 自归档无递归**：允许当前任务在同一 PR 中将自身 Rulebook task 从 `active` 归档到 `archive`；不得仅为“归档当前任务”再创建递归 closeout issue。
 
 ---
 
@@ -56,7 +57,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 | 2. 规格制定   | OpenSpec spec 已编写或更新；Rulebook task 已创建并通过 validate；若有上游依赖则 Dependency Sync Check 已完成并落盘 |
 | 3. 环境隔离   | 控制面 `origin/main` 已同步，Worktree 已创建，工作目录已切换                                                       |
 | 4. 实现与测试 | 按 TDD 循环实现；所有测试通过；RUN_LOG 已记录                                                                      |
-| 5. 提交与合并 | PR 已创建；auto-merge 已开启；三个 checks 全绿；PR 已确认合并                                                      |
+| 5. 提交与合并 | PR 已创建；独立审计记录已通过；auto-merge 已开启；三个 checks 全绿；PR 已确认合并                                  |
 | 6. 收口与归档 | 控制面 `main` 已包含任务提交；worktree 已清理；Rulebook task 已归档（可同 PR 自归档，无需递归 closeout issue）     |
 
 ---
@@ -67,6 +68,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 | ------------------------------------ | ------------------------------------------------------------------------------------------- | -------------------------- |
 | `gh` 命令超时                        | 最多重试 3 次（间隔 10s），仍失败必须记录 RUN_LOG 并升级                                    |
 | PR 需要 review                       | 记录 blocker，通知 reviewer，等待处理，禁止 silent abandonment                              |
+| 独立审计缺失或未通过                 | 阻断交付；先补齐 `openspec/_ops/reviews/ISSUE-<N>.md` 并满足 Author/Reviewer 分离 + PASS + SHA 对齐，再继续        |
 | checks 失败                          | 修复后重新 push，重跑并记录失败原因和修复证据                                               |
 | Spec 不存在或不完整                  | 必须先补 spec 并确认，禁止猜测实现                                                          |
 | 上游依赖产出与当前 change 假设不一致 | 先做 Dependency Sync Check 并记录，再更新 proposal/spec/tasks（必要时更新 EXECUTION_ORDER） | 跳过更新直接进入 Red/Green |

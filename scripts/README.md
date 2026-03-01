@@ -11,6 +11,8 @@
 | `agent_pr_preflight.sh`            | 提交前 / PR 前的预检查                          | 阶段 5：提交前     |
 | `agent_pr_automerge_and_sync.sh`   | 创建 PR + auto-merge + 等待                     | 阶段 5：提交与合并 |
 | `main_audit_resign.sh`             | RUN_LOG 主会话审计重签（`Reviewed-HEAD-SHA`）   | BEHIND/sync 后修复 |
+| `independent_review_record.sh`     | 生成 `openspec/_ops/reviews/ISSUE-<N>.md` 初稿  | 独立审计执行前     |
+| `validate_independent_review_ci.py`| 校验独立审计记录（CI）                          | `openspec-log-guard` 内 |
 | `agent_worktree_cleanup.sh`        | 清理 worktree                                   | 阶段 6：收口       |
 | `team_delivery_status.py`          | 聚合 Team/GitHub/Governance 状态并给出可合并判定 | 盯盘/收口阶段      |
 | `ipc-acceptance-gate.ts`           | IPC acceptance SLO 门禁                         | 阶段 4：实现与测试 |
@@ -42,4 +44,9 @@
 - Main Session Audit 回填标准操作：
   - 回填时机：功能改动提交完成后、推送分支前执行一次重签；若后续又有代码提交，必须再次重签
   - 回填命令：`scripts/main_audit_resign.sh --issue <N> --preflight-mode fast`（会刷新 `Reviewed-HEAD-SHA` 并立即做本地快检）
+- 独立审计记录标准操作：
+  - 生成初稿：`scripts/independent_review_record.sh --issue <N> --author <agent> --reviewer <agent> --pr-url <url>`
+  - 审计签字：填写 Findings/Verification，并确保 `Decision=PASS`、`Reviewed-HEAD-SHA` 对齐代码审计基线（最终签字序列 `HEAD^^`）
+- `agent_worktree_setup.sh` 默认会在新 worktree 内执行 `pnpm install --frozen-lockfile`（可用 `--no-bootstrap` 关闭）。
+- `agent_pr_automerge_and_sync.sh` 在回填 RUN_LOG PR 链接后会自动执行 `main_audit_resign.sh`；并且遇到 `REVIEW_REQUIRED` 时会阻断合并，不再走 admin bypass。
 - `agent_pr_automerge_and_sync.sh` 在 GitHub TLS 抖动时会标记 `transient` 并自动重试，必要时回退到 `gh run list` 快照通道。

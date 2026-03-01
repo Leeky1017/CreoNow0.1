@@ -306,7 +306,7 @@ fi
 backfill_runlog_pr_link "$PR_NUMBER"
 if [[ "$RUNLOG_BACKFILLED" == "true" && "$SKIP_PREFLIGHT" != "true" ]]; then
   set +e
-  scripts/agent_pr_preflight.sh
+  scripts/main_audit_resign.sh --issue "$ISSUE_NUMBER" --preflight-mode fast
   PREFLIGHT_RC=$?
   set -e
 fi
@@ -382,17 +382,9 @@ while true; do
   fi
 
   if [[ "$REVIEW_DECISION" == "REVIEW_REQUIRED" ]]; then
-    echo "WARN: PR #${PR_NUMBER} is blocked by review requirement; attempting admin merge to keep delivery autonomous." >&2
-    set +e
-    run_gh_with_retry gh pr merge "$PR_NUMBER" --admin --squash -d >/dev/null
-    MERGE_RC=$?
-    set -e
-    if [[ $MERGE_RC -ne 0 ]]; then
-      echo "ERROR: admin merge failed for PR #${PR_NUMBER} (review required still blocking)." >&2
-      comment_pr "$PR_NUMBER" "Auto-merge is enabled and checks are green, but GitHub reports \`reviewDecision=REVIEW_REQUIRED\` and admin merge failed. Repo must allow admin bypass for autonomous delivery. PR: ${PR_URL}"
-      exit 1
-    fi
-    continue
+    echo "ERROR: PR #${PR_NUMBER} is blocked by review requirement; independent review must be completed before merge." >&2
+    comment_pr "$PR_NUMBER" "PR is blocked by \`reviewDecision=REVIEW_REQUIRED\`. Complete independent review before merge. PR: ${PR_URL}"
+    exit 1
   fi
 
   if [[ "$REVIEW_DECISION" == "CHANGES_REQUESTED" ]]; then

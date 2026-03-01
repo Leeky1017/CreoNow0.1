@@ -1,5 +1,7 @@
 # 异常处理
 
+更新时间：2026-03-01 14:10
+
 | 遇到的情况                           | 必须做                                                                                                   | 禁止做                     |
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------- | -------------------------- |
 | Spec 不存在或不完整                  | 通知 Owner，请求补充 spec                                                                                | 根据猜测直接写代码         |
@@ -7,6 +9,7 @@
 | 上游依赖产出与当前 change 假设不一致 | 先做 Dependency Sync Check 并记录 → 更新 proposal/spec/tasks（必要时更新 EXECUTION_ORDER）→ 经确认后继续 | 跳过更新直接进入 Red/Green |
 | `gh` 命令超时                        | 重试 3 次（间隔 10s），仍失败 → 记录 RUN_LOG → 升级                                                      | 静默忽略                   |
 | PR 需要 review                       | 记录 blocker → 通知 reviewer → 等待                                                                      | 静默放弃                   |
+| 独立审计缺失或失败                   | 补齐 `openspec/_ops/reviews/ISSUE-<N>.md`，并确保 `Author-Agent != Reviewer-Agent`、`Decision=PASS`、`Reviewed-HEAD-SHA == HEAD^^`（代码审计基线） | 跳过独立审计直接合并       |
 | CI 失败                              | 修复 → push → 再次 watch → 写入 RUN_LOG                                                                  | 先合并再修                 |
 | Rulebook task 缺失或不合规           | 阻断交付，先修复 Rulebook 再继续（active 必须 validate；archive 必须结构完整）                           | 跳过 Rulebook 直接实现     |
 | 非 `task/*` 分支提交 PR              | PR body 必须包含 `Skip-Reason:`                                                                          | 不说明原因直接跳过 RUN_LOG |

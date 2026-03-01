@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 3
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Validate completed active changes are archived (tasks.md all checked)
@@ -101,11 +101,12 @@ jobs:
             echo "✅ RUN_LOG format validated"
 
             python3 scripts/validate_main_session_audit_ci.py "$RUN_LOG"
+            python3 scripts/validate_independent_review_ci.py "$RUN_LOG"
           else
             if printf '%s\n' "$PR_BODY" | grep -Eiq '^[[:space:]]*Skip-Reason[[:space:]]*:'; then
               echo "✅ Non-task branch with required Skip-Reason"
             else
-              FIX_LINE="Skip-Reason: automated quality iteration by 天野 (non-task branch)"
+              FIX_LINE="Skip-Reason: governance closeout on non-task branch"
               echo "skip_reason_missing=true" >> "$GITHUB_OUTPUT"
 
               echo "❌ Missing Skip-Reason in PR body"
@@ -143,7 +144,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const marker = '<!-- openspec-skip-reason-guidance -->';
-            const fixLine = 'Skip-Reason: automated quality iteration by 天野 (non-task branch)';
+            const fixLine = 'Skip-Reason: governance closeout on non-task branch';
             const body = [
               marker,
               'OpenSpec Log Guard 检测到当前分支不是 `task/*`，但 PR 描述缺少 `Skip-Reason:`。',
