@@ -1,6 +1,6 @@
 # 提案：fe-rightpanel-ai-guidance-and-style
 
-更新时间：2026-03-01 16:45
+更新时间：2026-03-01 16:55
 
 ## Why（问题与目标）
 
@@ -47,6 +47,5 @@ Owner 反馈的 AI 报错已拿到截图证据，当前主要有两类：
 
 ## 审阅状态
 
-- Owner 审阅：`PENDING`
 - Owner 审阅：`APPROVED`
 - 批准来源：Issue `#806`（https://github.com/Leeky1017/CreoNow/issues/806）
