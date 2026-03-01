@@ -1,12 +1,12 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-01 16:12
+更新时间：2026-03-01 18:00
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
 ## 执行策略
 
-- 当前活跃 change 数量为 **35**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-rightpanel-ai-tabbar-layout`、`fe-spec-drift-iconbar-rightpanel-alignment`、`fe-hotfix-searchpanel-backdrop-close` 已归档）。
+- 当前活跃 change 数量为 **34**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-rightpanel-ai-tabbar-layout`、`fe-spec-drift-iconbar-rightpanel-alignment`、`fe-hotfix-searchpanel-backdrop-close`、`fe-leftpanel-dialog-migration` 已归档）。
 - 执行模式：**4 批次渐进推进**（第一批核心体验 → 第二批功能补全 → 第三批设计系统回归 → 第四批独立 Issue 收口）。
 - 规则：
   - 任一 change 开始 Red 前，必须完成该 change 的依赖同步检查（Dependency Sync Check）。
@@ -26,7 +26,7 @@
 | 1 | 1-2 | `fe-rightpanel-ai-guidance-and-style` | AiPanel 簇 | `fe-rightpanel-ai-tabbar-layout` | 执行中（PR #809，待独立审计） |
 | 1 | 1-3 | `fe-cleanup-proxysection-and-mocks` | AiPanel 簇 | — | 待执行 |
 | 2 | 2-1 | `fe-spec-drift-iconbar-rightpanel-alignment` | Layout 簇 | D1/D2/D3 已决策 | 已完成并归档（PR #799） |
-| 2 | 2-2 | `fe-leftpanel-dialog-migration` | Layout 簇 | `fe-spec-drift-iconbar-rightpanel-alignment`, D1/D2 已决策 | 执行中（ISSUE-807，PR #808） |
+| 2 | 2-2 | `fe-leftpanel-dialog-migration` | Layout 簇 | `fe-spec-drift-iconbar-rightpanel-alignment`, D1/D2 已决策 | 已完成并归档（PR #808） |
 | 2 | 2-3 | `fe-ai-panel-toggle-button` | Layout 簇 | — | 待执行 |
 | — | 收尾 | `fe-dashboard-welcome-merge-and-ghost-actions` | AppShell 簇 | `fe-cleanup-proxysection-and-mocks`, `fe-ui-open-folder-entrypoints`(第二批), 且与 leftpanel/toggle 共享 AppShell.tsx 需等其完成 | 待执行 |
 
@@ -218,12 +218,13 @@
 - `fe-rightpanel-ai-tabbar-layout`：已归档到 `openspec/changes/archive/fe-rightpanel-ai-tabbar-layout`（merge commit `ec6d70c9`，PR #801）。
 - `fe-spec-drift-iconbar-rightpanel-alignment`：已归档到 `openspec/changes/archive/fe-spec-drift-iconbar-rightpanel-alignment`（merge commit `b2a85696`，PR #799）。
 - `fe-hotfix-searchpanel-backdrop-close`：已归档到 `openspec/changes/archive/fe-hotfix-searchpanel-backdrop-close`（commit `c56a1eea`，PR #790）。
+- `fe-leftpanel-dialog-migration`：已归档到 `openspec/changes/archive/fe-leftpanel-dialog-migration`（merge commit `7d30ad03`，PR #808）。
 
 ## 依赖说明
 
-- 当前子任务：`ISSUE-807`（`fe-leftpanel-dialog-migration`，PR #808）。
-- 依赖关系：`fe-rightpanel-ai-guidance-and-style` 与 `fe-leftpanel-dialog-migration` 继续分别依赖已归档的 lane 起点 change。
-- 同步结论：归档后依赖关系保持成立，无新增漂移。
+- 当前子任务：`ISSUE-812`（`fe-leftpanel-dialog-migration` closeout，归档与 EO 同步）。
+- 依赖关系：`fe-rightpanel-ai-guidance-and-style` 继续依赖已归档的 lane 起点；`fe-leftpanel-dialog-migration` 已完成并归档。
+- 同步结论：第一批 lane 依赖关系保持成立，无新增漂移。
 
 ## Owner 决策阻塞项
 
