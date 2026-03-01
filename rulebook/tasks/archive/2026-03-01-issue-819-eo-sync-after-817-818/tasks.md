@@ -15,6 +15,6 @@
 ## 3. Evidence & Delivery
 
 - [x] 3.1 RUN_LOG 已落盘：`openspec/_ops/task_runs/ISSUE-819.md`
-- [ ] 3.2 独立审计记录已落盘：`openspec/_ops/reviews/ISSUE-819.md`
-- [ ] 3.3 preflight + required checks 全绿
-- [ ] 3.4 PR auto-merge 并确认合并到 `main`
+- [x] 3.2 独立审计记录已落盘：`openspec/_ops/reviews/ISSUE-819.md`
+- [x] 3.3 preflight + required checks 全绿
+- [x] 3.4 PR auto-merge 并确认合并到 `main`

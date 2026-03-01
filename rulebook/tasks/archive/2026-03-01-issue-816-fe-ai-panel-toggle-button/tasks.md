@@ -19,4 +19,4 @@
 - [x] 3.1 RUN_LOG 已落盘：`openspec/_ops/task_runs/ISSUE-816.md`
 - [x] 3.2 独立审计记录已落盘：`openspec/_ops/reviews/ISSUE-816.md`
 - [x] 3.3 fresh verification 通过（typecheck + 目标测试）
-- [ ] 3.4 三个 required checks 全绿并合并到 `main`
+- [x] 3.4 三个 required checks 全绿并合并到 `main`

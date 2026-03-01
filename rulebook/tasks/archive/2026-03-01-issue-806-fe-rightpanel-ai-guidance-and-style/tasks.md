@@ -20,4 +20,4 @@
 - [x] 3.1 更新 `openspec/changes/fe-rightpanel-ai-guidance-and-style/tasks.md`
 - [x] 3.2 新建并填写 `openspec/_ops/task_runs/ISSUE-806.md`
 - [x] 3.3 创建 PR 并回填 RUN_LOG 的真实 PR 链接（https://github.com/Leeky1017/CreoNow/pull/809）
-- [ ] 3.4 独立审计 PASS（`openspec/_ops/reviews/ISSUE-806.md`）后再进入合并链路
+- [x] 3.4 独立审计 PASS（`openspec/_ops/reviews/ISSUE-806.md`）后再进入合并链路

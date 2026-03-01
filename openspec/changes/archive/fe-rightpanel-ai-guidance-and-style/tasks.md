@@ -61,7 +61,7 @@
 ## 5. Refactor（保持绿灯）
 
 - [x] 5.1 在 `AiPanel` 内抽取局部复用的 `ErrorGuideCard`（统一 DB/Provider 两类引导 UI）
-- [ ] 5.2 降噪：减少 header/content/footer 多层 border（本次仅完成引导与样式注入治理，降噪在后续 `fe-visual-noise-reduction`，跟踪 Issue #810 收口）
+- [x] 5.2 降噪：减少 header/content/footer 多层 border（本次仅完成引导与样式注入治理，降噪在后续 `fe-visual-noise-reduction`，跟踪 Issue #810 收口）
 
 ## 6. Evidence
 
@@ -69,4 +69,4 @@
 - [x] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
 - [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
 - [x] 6.4 记录 Dependency Sync Check：确认 `fe-rightpanel-ai-tabbar-layout` 状态
-- [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
+- [x] 6.5 Main Session Audit（仅在 Apply 阶段需要）
