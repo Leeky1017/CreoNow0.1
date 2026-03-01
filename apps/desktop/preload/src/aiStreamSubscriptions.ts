@@ -8,6 +8,7 @@ import type {
 import { nowTs } from "@shared/timeUtils";
 
 export const MAX_AI_STREAM_SUBSCRIPTIONS = 500;
+const DEFAULT_MAX_ID_COLLISION_RETRIES = 3;
 
 export type IpcSecurityAuditEvent = {
   event: string;
@@ -20,6 +21,7 @@ export type IpcSecurityAuditEvent = {
 type CreateAiStreamSubscriptionRegistryArgs = {
   rendererId: string;
   maxSubscriptions?: number;
+  maxIdCollisionRetries?: number;
   now?: () => number;
   idFactory?: () => string;
   auditLog?: (event: IpcSecurityAuditEvent) => void;
@@ -64,6 +66,14 @@ function defaultAuditLog(event: IpcSecurityAuditEvent): void {
   console.warn("[ipc-security-audit]", JSON.stringify(event));
 }
 
+function normalizeMaxIdCollisionRetries(value: number | undefined): number {
+  if (!Number.isInteger(value) || value === undefined || value < 0) {
+    return DEFAULT_MAX_ID_COLLISION_RETRIES;
+  }
+
+  return value;
+}
+
 /**
  * Create per-renderer AI stream subscription registry with a hard upper bound.
  */
@@ -75,6 +85,9 @@ export function createAiStreamSubscriptionRegistry(
   count: () => number;
 } {
   const maxSubscriptions = args.maxSubscriptions ?? MAX_AI_STREAM_SUBSCRIPTIONS;
+  const maxIdCollisionRetries = normalizeMaxIdCollisionRetries(
+    args.maxIdCollisionRetries,
+  );
   const getNow = args.now ?? nowTs;
   const createId = args.idFactory ?? createSubscriptionId;
   const auditLog = args.auditLog ?? defaultAuditLog;
@@ -104,12 +117,52 @@ export function createAiStreamSubscriptionRegistry(
         });
       }
 
-      const subscriptionId = createId();
-      active.add(subscriptionId);
-      return {
-        ok: true,
-        data: { subscriptionId },
-      };
+      let attempt = 0;
+      let lastCollisionId: string | undefined;
+      while (attempt <= maxIdCollisionRetries) {
+        const subscriptionId = createId();
+        if (!active.has(subscriptionId)) {
+          active.add(subscriptionId);
+          return {
+            ok: true,
+            data: { subscriptionId },
+          };
+        }
+
+        lastCollisionId = subscriptionId;
+        auditLog({
+          event: "ipc_subscription_id_collision",
+          rendererId: args.rendererId,
+          channel: SKILL_STREAM_CHUNK_CHANNEL,
+          timestamp: getNow(),
+          details: {
+            subscriptionId,
+            attempt: attempt + 1,
+            maxRetries: maxIdCollisionRetries,
+          },
+        });
+        attempt += 1;
+      }
+
+      auditLog({
+        event: "ipc_subscription_id_collision_exhausted",
+        rendererId: args.rendererId,
+        channel: SKILL_STREAM_CHUNK_CHANNEL,
+        timestamp: getNow(),
+        details: {
+          subscriptionId: lastCollisionId,
+          attempts: maxIdCollisionRetries + 1,
+          maxRetries: maxIdCollisionRetries,
+        },
+      });
+      return toErr({
+        code: "CONFLICT",
+        message: "订阅ID冲突，请重试",
+        details: {
+          subscriptionId: lastCollisionId,
+          attempts: maxIdCollisionRetries + 1,
+        },
+      });
     },
     release: (subscriptionId: string) => {
       active.delete(subscriptionId);
