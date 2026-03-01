@@ -4,7 +4,7 @@
 
 - Issue: #806
 - Branch: task/806-fe-rightpanel-ai-guidance-and-style
-- PR: https://github.com/Leeky1017/CreoNow/pull/TBD
+- PR: https://github.com/Leeky1017/CreoNow/pull/809
 
 ## Plan
 
