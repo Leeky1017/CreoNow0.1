@@ -1,9 +1,11 @@
+import React from "react";
 import {
   LAYOUT_DEFAULTS,
   useLayoutStore,
   type RightPanelType,
 } from "../../stores/layoutStore";
 import { AiPanel } from "../../features/ai/AiPanel";
+import { ChatHistory } from "../../features/ai/ChatHistory";
 import { InfoPanel, QualityPanel } from "../../features/rightpanel";
 import { OpenSettingsContext } from "../../contexts/OpenSettingsContext";
 import { ScrollArea } from "../primitives";
@@ -70,6 +72,14 @@ export function RightPanel(props: {
 }): JSX.Element {
   const activeRightPanel = useLayoutStore((s) => s.activeRightPanel);
   const setActiveRightPanel = useLayoutStore((s) => s.setActiveRightPanel);
+  const [aiHistoryOpen, setAiHistoryOpen] = React.useState(false);
+  const [aiNewChatSignal, setAiNewChatSignal] = React.useState(0);
+
+  React.useEffect(() => {
+    if (activeRightPanel !== "ai") {
+      setAiHistoryOpen(false);
+    }
+  }, [activeRightPanel]);
 
   /**
    * Render the content for the active tab.
@@ -77,7 +87,7 @@ export function RightPanel(props: {
   const renderContent = () => {
     switch (activeRightPanel) {
       case "ai":
-        return <AiPanel />;
+        return <AiPanel newChatSignal={aiNewChatSignal} />;
       case "info":
         return <InfoPanel onOpenVersionHistory={props.onOpenVersionHistory} />;
       case "quality":
@@ -133,6 +143,60 @@ export function RightPanel(props: {
             );
           })}
           <div className="flex-1" />
+          {activeRightPanel === "ai" ? (
+            <div className="relative flex items-center gap-1">
+              <button
+                type="button"
+                data-testid="right-panel-ai-history-action"
+                onClick={() => setAiHistoryOpen((v) => !v)}
+                title="History"
+                className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${
+                  aiHistoryOpen
+                    ? "text-[var(--color-fg-default)] bg-[var(--color-bg-selected)]"
+                    : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                }`}
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                data-testid="right-panel-ai-new-chat-action"
+                onClick={() => setAiNewChatSignal((prev) => prev + 1)}
+                title="New Chat"
+                className="w-6 h-6 flex items-center justify-center rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </button>
+              <ChatHistory
+                open={aiHistoryOpen}
+                onOpenChange={setAiHistoryOpen}
+                onSelectChat={(chatId) => {
+                  setAiHistoryOpen(false);
+                  void chatId;
+                }}
+              />
+            </div>
+          ) : null}
           {props.onCollapse ? (
             <button
               type="button"

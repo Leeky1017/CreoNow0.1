@@ -2002,6 +2002,62 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
       <div
         class="flex-1"
       />
+      <div
+        class="relative flex items-center gap-1"
+      >
+        <button
+          class="w-6 h-6 flex items-center justify-center rounded transition-colors text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+          data-testid="right-panel-ai-history-action"
+          title="History"
+          type="button"
+        >
+          <svg
+            fill="none"
+            height="12"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="12"
+          >
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+            />
+            <polyline
+              points="12 6 12 12 16 14"
+            />
+          </svg>
+        </button>
+        <button
+          class="w-6 h-6 flex items-center justify-center rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+          data-testid="right-panel-ai-new-chat-action"
+          title="New Chat"
+          type="button"
+        >
+          <svg
+            fill="none"
+            height="12"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="12"
+          >
+            <line
+              x1="12"
+              x2="12"
+              y1="5"
+              y2="19"
+            />
+            <line
+              x1="5"
+              x2="19"
+              y1="12"
+              y2="12"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
     <div
       class="relative min-h-0 min-w-0 flex-1 min-h-0"
@@ -2017,66 +2073,6 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
           class="flex flex-col h-full min-h-0 bg-[var(--color-bg-surface)]"
           data-testid="ai-panel"
         >
-          <header
-            class="flex items-center h-8 px-2 border-b border-[var(--color-separator)] shrink-0"
-          >
-            <div
-              class="ml-auto flex items-center gap-1 relative"
-            >
-              <button
-                class="w-5 h-5 flex items-center justify-center rounded transition-colors text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
-                data-testid="ai-history-toggle"
-                title="History"
-                type="button"
-              >
-                <svg
-                  fill="none"
-                  height="12"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="12"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                  />
-                  <polyline
-                    points="12 6 12 12 16 14"
-                  />
-                </svg>
-              </button>
-              <button
-                class="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] rounded transition-colors"
-                data-testid="ai-new-chat"
-                title="New Chat"
-                type="button"
-              >
-                <svg
-                  fill="none"
-                  height="12"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="12"
-                >
-                  <line
-                    x1="12"
-                    x2="12"
-                    y1="5"
-                    y2="19"
-                  />
-                  <line
-                    x1="5"
-                    x2="19"
-                    y1="12"
-                    y2="12"
-                  />
-                </svg>
-              </button>
-            </div>
-          </header>
           <div
             class="flex-1 flex flex-col min-h-0"
           >
@@ -2130,17 +2126,6 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                       type="button"
                     >
                       Loading
-                    </button>
-                    <button
-                      class="
-        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
-        transition-colors cursor-pointer
-        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
-      "
-                      data-testid="ai-candidate-count"
-                      type="button"
-                    >
-                      1x
                     </button>
                     <button
                       class="
