@@ -4,7 +4,7 @@
 
 - Issue: #796
 - Branch: task/796-fe-rightpanel-ai-tabbar-layout
-- PR: <fill-after-created>
+- PR: https://github.com/Leeky1017/CreoNow/pull/801
 
 ## Plan
 
