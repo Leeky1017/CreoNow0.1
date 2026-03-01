@@ -36,3 +36,24 @@
 - Command: `pnpm -C apps/desktop test:run`
 - Key output: Test Files 198 passed (198), Tests 1576 passed (1576)
 - Evidence: Zero regressions
+
+### 2026-03-01 19:36 Main-session fresh verification
+- Command: `pnpm typecheck`
+- Key output: `tsc --noEmit` passed (exit 0)
+- Command: `pnpm -C apps/desktop test:run features/__tests__/proxy-section-dead.guard.test.ts`
+- Key output: 1 file passed, 2 tests passed
+- Command: `pnpm -C apps/desktop test:run features/search/SearchPanel.no-mock.guard.test.ts`
+- Key output: 1 file passed, 1 test passed
+- Command: `pnpm -C apps/desktop test:run features/ai/AiPanel.history.interaction.test.tsx`
+- Key output: 1 file passed, 2 tests passed
+- Evidence: Independent review blockers closed; fresh verification all green.
+
+## Main Session Audit
+
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: 2820fcb2bc9e485163dbe640c93e5292dd832e99
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
