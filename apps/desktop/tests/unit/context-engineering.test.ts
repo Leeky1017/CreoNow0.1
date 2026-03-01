@@ -64,3 +64,32 @@ assert(
     (e) => e.patternId === "openai_api_key_sk" && e.matchCount >= 1,
   ),
 );
+
+const githubTokenRedaction = redactText({
+  text: [
+    "ownerToken=gho_ABCDEF1234567890",
+    "classicToken=ghp_ABCDEF1234567890",
+    "fineGrained=github_pat_ABCDEF1234567890_ABCDEFGH",
+  ].join(" "),
+  sourceRef: ".creonow/settings/world.md",
+});
+assert(
+  !githubTokenRedaction.redactedText.includes("gho_ABCDEF1234567890"),
+  "gho_ token should be redacted",
+);
+assert(
+  !githubTokenRedaction.redactedText.includes("ghp_ABCDEF1234567890"),
+  "ghp_ token should be redacted",
+);
+assert(
+  !githubTokenRedaction.redactedText.includes(
+    "github_pat_ABCDEF1234567890_ABCDEFGH",
+  ),
+  "github_pat_ token should be redacted",
+);
+assert(
+  githubTokenRedaction.evidence.some(
+    (e) => e.patternId === "github_token" && e.matchCount === 3,
+  ),
+  "github token evidence should include all three token families",
+);
