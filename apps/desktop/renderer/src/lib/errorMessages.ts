@@ -11,7 +11,7 @@ const USER_FACING_MESSAGE_BY_CODE: Partial<
   VALIDATION_ERROR: () => "请求参数不符合契约",
   FORBIDDEN: () => "调用方未授权",
   INTERNAL_ERROR: () => "内部错误",
-  AI_NOT_CONFIGURED: () => "请先在设置中配置 AI 服务",
+  AI_NOT_CONFIGURED: () => "请先在设置中配置 AI API Key",
   IPC_TIMEOUT: (backendMessage) => {
     const detail = TIMEOUT_DETAIL_PATTERN.exec(backendMessage)?.[1];
     return detail ? `请求超时（${detail}）` : "请求超时";

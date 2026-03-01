@@ -1199,13 +1199,6 @@ export function createAiService(deps: {
       getProxySettings: deps.getProxySettings,
     });
     if (!cfgRes.ok) {
-      if (cfgRes.error.code === "AI_NOT_CONFIGURED") {
-        return ipcError(
-          "AI_PROVIDER_UNAVAILABLE",
-          "请先在设置中配置 AI 服务",
-          cfgRes.error.details,
-        );
-      }
       return cfgRes;
     }
     const primaryCfg = cfgRes.data.primary;

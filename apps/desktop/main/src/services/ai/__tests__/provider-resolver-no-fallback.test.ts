@@ -132,3 +132,30 @@ function createLogger(): Logger {
   assert.equal(resolved.data.backup?.baseUrl, "https://proxy.example");
   assert.equal(resolved.data.backup?.apiKey, "sk-proxy");
 }
+
+// proxy disabled + explicit baseUrl + missing API key should fail as AI_NOT_CONFIGURED
+{
+  const resolver = createProviderResolver({
+    logger: createLogger(),
+    now: () => 1_000,
+  });
+
+  const resolved = await resolver.resolveProviderConfig({
+    env: {
+      CREONOW_E2E: "1",
+      CREONOW_AI_PROVIDER: "anthropic",
+      CREONOW_AI_BASE_URL: "http://127.0.0.1:9",
+    },
+    runtimeAiTimeoutMs: 30_000,
+    getFakeServer: async () => {
+      throw new Error("should not be called");
+    },
+  });
+
+  assert.equal(resolved.ok, false);
+  if (resolved.ok) {
+    throw new Error("missing api key should fail when baseUrl is explicit");
+  }
+  assert.equal(resolved.error.code, "AI_NOT_CONFIGURED");
+  assert.match(resolved.error.message, /api key/i);
+}

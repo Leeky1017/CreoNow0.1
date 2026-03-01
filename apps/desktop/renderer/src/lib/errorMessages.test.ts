@@ -19,7 +19,7 @@ describe("errorMessages", () => {
         code: "AI_NOT_CONFIGURED",
         message: "AI service is not configured",
       }),
-    ).toBe("请先在设置中配置 AI 服务");
+    ).toBe("请先在设置中配置 AI API Key");
   });
 
   it("preserves timeout detail when mapping IPC_TIMEOUT", () => {

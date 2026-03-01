@@ -11,7 +11,7 @@ function createLogger(): Logger {
   };
 }
 
-// --- runSkill maps missing provider credentials to AI_PROVIDER_UNAVAILABLE ---
+// --- runSkill keeps missing provider credentials as AI_NOT_CONFIGURED ---
 {
   const originalFetch = globalThis.fetch;
 
@@ -54,7 +54,7 @@ function createLogger(): Logger {
       );
     }
 
-    assert.equal(result.error.code, "AI_PROVIDER_UNAVAILABLE");
+    assert.equal(result.error.code, "AI_NOT_CONFIGURED");
     assert.equal(fetchCalled, false, "must fail before provider network call");
   } finally {
     globalThis.fetch = originalFetch;

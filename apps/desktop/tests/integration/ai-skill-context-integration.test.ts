@@ -297,7 +297,7 @@ function createKnowledgeEntity(args: {
 }
 
 // AIS-ERR-S1
-// should map missing API key on run path to AI_PROVIDER_UNAVAILABLE
+// should return AI_NOT_CONFIGURED on run path when API key is missing
 {
   const service = createAiService({
     logger: createNoopLogger(),
@@ -323,7 +323,8 @@ function createKnowledgeEntity(args: {
   if (result.ok) {
     assert.fail("expected missing key to be rejected");
   }
-  assert.equal(result.error.code, "AI_PROVIDER_UNAVAILABLE");
+  assert.equal(result.error.code, "AI_NOT_CONFIGURED");
+  assert.match(result.error.message, /api key/i);
 }
 
 // AIS-HISTORY-S1 / AIS-HISTORY-S2

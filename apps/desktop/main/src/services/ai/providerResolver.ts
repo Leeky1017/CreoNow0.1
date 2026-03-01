@@ -383,10 +383,15 @@ export function createProviderResolver(deps: {
         ? args.env.CREONOW_AI_API_KEY
         : undefined;
 
-    if (!isE2E(args.env) && provider !== "proxy" && !apiKey) {
+    const hasExplicitBaseUrl =
+      typeof envBaseUrl === "string" && envBaseUrl.trim().length > 0;
+    const requiresApiKey =
+      provider !== "proxy" && (!isE2E(args.env) || hasExplicitBaseUrl);
+
+    if (requiresApiKey && !apiKey) {
       return ipcError(
         "AI_NOT_CONFIGURED",
-        "AI service is not configured. Configure it in Settings first.",
+        "AI service is not configured: API key is required. Configure API key in Settings first.",
       );
     }
 

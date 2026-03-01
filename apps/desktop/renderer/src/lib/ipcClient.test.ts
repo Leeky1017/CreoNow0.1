@@ -77,7 +77,7 @@ describe("ipcClient.invoke", () => {
       return;
     }
     expect(result.error.code).toBe("AI_NOT_CONFIGURED");
-    expect(result.error.message).toBe("请先在设置中配置 AI 服务");
+    expect(result.error.message).toBe("请先在设置中配置 AI API Key");
   });
 
   it("handles non-Error throwables", async () => {
