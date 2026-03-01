@@ -156,7 +156,7 @@ function resolveDbRemediationCommand(details?: unknown): string {
 }
 
 function isProviderConfigErrorCode(code: string): boolean {
-  return code === "AI_NOT_CONFIGURED" || code === "UPSTREAM_ERROR";
+  return code === "AI_NOT_CONFIGURED";
 }
 
 /**
@@ -1182,13 +1182,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
               ? "Rate limited"
               : "AI error",
 
-        description:
-          lastError.code === "DB_ERROR"
-            ? formatDbErrorDescription({
-                message: lastError.message,
-                details: lastError.details,
-              })
-            : lastError.message,
+        description: lastError.message,
 
         errorCode: lastError.code,
       }

@@ -182,6 +182,27 @@ describe("AiPanel error guidance", () => {
     expect(screen.getByText(/restart the app/i)).toBeInTheDocument();
   });
 
+  it("AI-FE-GUIDE-S1b renders rebuild guidance when skillsLastError is DB_ERROR", async () => {
+    mocks.aiState.skillsLastError = {
+      code: "DB_ERROR",
+      message: "SQLite binding mismatch",
+      details: {
+        remediation: {
+          command: "pnpm -C apps/desktop rebuild:native --workspace-root",
+          restartRequired: true,
+        },
+      },
+    };
+
+    const { AiPanel } = await import("./AiPanel");
+    render(<AiPanel />);
+
+    expect(await screen.findByTestId("ai-error-guide-db")).toBeInTheDocument();
+    expect(
+      screen.getByText("pnpm -C apps/desktop rebuild:native --workspace-root"),
+    ).toBeInTheDocument();
+  });
+
   it("AI-FE-GUIDE-S2 renders settings guidance for AI_NOT_CONFIGURED", async () => {
     mocks.setModelsMode("ai_not_configured");
 
@@ -209,6 +230,23 @@ describe("AiPanel error guidance", () => {
       "UNKNOWN_ERROR",
     );
     expect(screen.queryByTestId("ai-error-guide-db")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("ai-error-guide-provider"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("AI-FE-GUIDE-S2c keeps UPSTREAM_ERROR on generic error card", async () => {
+    mocks.aiState.lastError = {
+      code: "UPSTREAM_ERROR",
+      message: "Gateway timeout",
+    };
+
+    const { AiPanel } = await import("./AiPanel");
+    render(<AiPanel />);
+
+    expect(await screen.findByTestId("ai-error-code")).toHaveTextContent(
+      "UPSTREAM_ERROR",
+    );
     expect(
       screen.queryByTestId("ai-error-guide-provider"),
     ).not.toBeInTheDocument();

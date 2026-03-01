@@ -1,6 +1,6 @@
 # Proposal: issue-806-fe-rightpanel-ai-guidance-and-style
 
-更新时间：2026-03-01 16:02
+更新时间：2026-03-01 16:45
 
 ## Why
 
@@ -17,7 +17,6 @@
 
 - Affected specs:
   - `openspec/changes/fe-rightpanel-ai-guidance-and-style/specs/workbench/spec.md`
-  - `openspec/changes/fe-rightpanel-ai-guidance-and-style/specs/ai-service/spec.md`
 - Affected code:
   - `apps/desktop/renderer/src/features/ai/AiPanel.tsx`
   - `apps/desktop/renderer/src/components/layout/RightPanel.tsx`

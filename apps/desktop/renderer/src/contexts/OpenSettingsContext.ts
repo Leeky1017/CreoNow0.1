@@ -1,12 +1,7 @@
 import React from "react";
+import type { SettingsTab } from "../features/settings-dialog/SettingsDialog";
 
-export type OpenSettingsTarget =
-  | "general"
-  | "appearance"
-  | "ai"
-  | "judge"
-  | "analytics"
-  | "account";
+export type OpenSettingsTarget = SettingsTab;
 
 type OpenSettingsHandler = (target?: OpenSettingsTarget) => void;
 

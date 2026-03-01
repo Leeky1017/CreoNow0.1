@@ -1,4 +1,4 @@
-更新时间：2026-03-01 16:02
+更新时间：2026-03-01 16:45
 
 ## 1. Governance
 
@@ -9,7 +9,7 @@
 ## 2. Implementation & Tests
 
 - [x] 2.1 `DB_ERROR` 分流到引导卡并展示 remediation 命令
-- [x] 2.2 `AI_NOT_CONFIGURED` / `UPSTREAM_ERROR` 分流到 `Settings -> AI` 引导
+- [x] 2.2 `AI_NOT_CONFIGURED` 分流到 `Settings -> AI` 引导，`UPSTREAM_ERROR` 保持通用错误卡
 - [x] 2.3 `OpenSettingsContext` 扩展目标 tab，RightPanel/AppShell 打通定向打开能力
 - [x] 2.4 移除 `AiPanel` 内联 `<style>`，动画迁移到 `main.css` 并支持 reduced motion
 - [x] 2.5 新增 `AiPanel.error-guide.test.tsx` 与 `AiPanel.styles.guard.test.ts`
