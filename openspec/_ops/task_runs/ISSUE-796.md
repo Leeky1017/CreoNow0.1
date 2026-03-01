@@ -5,7 +5,6 @@
 - Issue: #796
 - Branch: task/796-fe-rightpanel-ai-tabbar-layout
 - PR: <fill-after-created>
-- Reviewed-HEAD-SHA: ac81d35ca42af5f369ff4ace0d542ae742bf21c7
 
 ## Plan
 
