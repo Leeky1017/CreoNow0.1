@@ -1,6 +1,6 @@
 # ISSUE-807
 
-更新时间：2026-03-01 17:28
+更新时间：2026-03-01 17:40
 
 - Issue: #807
 - Branch: task/807-fe-leftpanel-dialog-migration
@@ -138,6 +138,13 @@
 - Exit code: `0`
 - Key output: `OK: fast preflight checks passed`，并生成签字提交推送到任务分支。
 - Notes: 随 main 同步后，`openspec-log-guard` 再次校验暴露独立审计 `Reviewed-HEAD-SHA` 漂移，需要补齐审计记录基线并再次签字。
+
+### 2026-03-01 17:35 Gate Recovery — update-branch 后二次校准
+
+- Command: `gh pr update-branch 808 --repo Leeky1017/CreoNow`
+- Exit code: `0`
+- Key output: `✓ PR branch updated`（生成新的 merge commit）。
+- Follow-up: 新 SHA 上 `ci` 通过、`merge-serial` 通过，但 `openspec-log-guard` 报 `[MAIN_AUDIT] Reviewed-HEAD-SHA mismatch`（run `22540602964`），需按新基线再次更新审计链并签字。
 
 ## Main Session Audit
 
