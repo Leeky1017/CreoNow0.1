@@ -48,3 +48,23 @@ Test Files  196 passed (196)
 ```
 
 Zero regressions.
+
+### 2026-03-01 19:37 Main-session fresh verification
+
+- Command: `pnpm typecheck`
+- Key output: `tsc --noEmit` passed (exit 0)
+- Command: `pnpm -C apps/desktop test:run components/layout/AppShell.ai-toggle.test.tsx`
+- Key output: 1 file passed, 6 tests passed
+- Command: `pnpm -C apps/desktop test:run components/layout/AppShell.test.tsx`
+- Key output: 1 file passed, 23 tests passed
+- Evidence: Prior review blockers closed; behavior coverage and logic unification revalidated.
+
+## Main Session Audit
+
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: 64bb3e283524fc3c81757fcce92ad88d3be80765
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
