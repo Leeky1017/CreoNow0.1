@@ -259,6 +259,35 @@ textarea:focus-visible {
   animation: cursor-blink 1s step-end infinite;
 }
 
+/* AiPanel typing cursor */
+@keyframes ai-typing-cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.typing-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 14px;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background-color: var(--color-fg-default);
+  animation: ai-typing-cursor-blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typing-cursor::after {
+    animation: none;
+    opacity: 1;
+  }
+}
+
 /* Fade in up animation (Onboarding) */
 @keyframes fade-in-up {
   from {

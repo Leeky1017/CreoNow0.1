@@ -7,7 +7,10 @@ import {
 import { AiPanel } from "../../features/ai/AiPanel";
 import { ChatHistory } from "../../features/ai/ChatHistory";
 import { InfoPanel, QualityPanel } from "../../features/rightpanel";
-import { OpenSettingsContext } from "../../contexts/OpenSettingsContext";
+import {
+  OpenSettingsContext,
+  type OpenSettingsTarget,
+} from "../../contexts/OpenSettingsContext";
 import { ScrollArea } from "../primitives";
 
 export { useOpenSettings } from "../../contexts/OpenSettingsContext";
@@ -64,7 +67,7 @@ export function RightPanel(props: {
   width: number;
   collapsed: boolean;
   /** Callback to open SettingsDialog from nested components */
-  onOpenSettings?: () => void;
+  onOpenSettings?: (target?: OpenSettingsTarget) => void;
   /** Callback to open left-panel Version History */
   onOpenVersionHistory?: () => void;
   /** Callback to collapse the right panel */

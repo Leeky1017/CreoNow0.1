@@ -1,11 +1,15 @@
 import React from "react";
+import type { SettingsTab } from "../features/settings-dialog/SettingsDialog";
 
-export const OpenSettingsContext = React.createContext<(() => void) | null>(
-  null,
-);
+export type OpenSettingsTarget = SettingsTab;
 
-const noopOpenSettings = () => {};
+type OpenSettingsHandler = (target?: OpenSettingsTarget) => void;
 
-export function useOpenSettings(): () => void {
+export const OpenSettingsContext =
+  React.createContext<OpenSettingsHandler | null>(null);
+
+const noopOpenSettings: OpenSettingsHandler = () => {};
+
+export function useOpenSettings(): OpenSettingsHandler {
   return React.useContext(OpenSettingsContext) ?? noopOpenSettings;
 }

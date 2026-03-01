@@ -55,6 +55,12 @@ import {
 
 const RECENT_MODELS_STORAGE_KEY = "creonow.ai.recentModels";
 const CANDIDATE_COUNT_STORAGE_KEY = "creonow.ai.candidateCount";
+const DB_REBUILD_DEFAULT_COMMAND = "pnpm -C apps/desktop rebuild:native";
+
+type ModelsListError = {
+  code: string;
+  message: string;
+};
 
 /**
 
@@ -133,6 +139,24 @@ export function formatDbErrorDescription(args: {
     ? " Then restart the app."
     : "";
   return `${args.message}\nFix: run \`${command}\`.${restartSuffix}`;
+}
+
+/**
+ * Resolve remediation command for DB native-binding failures.
+ *
+ * Why: guide card must always offer an executable recovery command.
+ */
+function resolveDbRemediationCommand(details?: unknown): string {
+  const raw = details;
+  if (!raw || typeof raw !== "object") {
+    return DB_REBUILD_DEFAULT_COMMAND;
+  }
+  const command = (raw as DbErrorDetails).remediation?.command?.trim();
+  return command && command.length > 0 ? command : DB_REBUILD_DEFAULT_COMMAND;
+}
+
+function isProviderConfigErrorCode(code: string): boolean {
+  return code === "AI_NOT_CONFIGURED";
 }
 
 /**
@@ -222,6 +246,83 @@ function ToolButton(props: {
     >
       {props.children}
     </button>
+  );
+}
+
+function ErrorGuideCard(props: {
+  testId: string;
+  title: string;
+  description: string;
+  steps: string[];
+  errorCode: string;
+  command?: string;
+  actionLabel?: string;
+  actionTestId?: string;
+  onAction?: () => void;
+}): JSX.Element {
+  const [copied, setCopied] = React.useState(false);
+
+  async function handleCopyCommand(): Promise<void> {
+    if (!props.command || !navigator.clipboard?.writeText) {
+      return;
+    }
+    await navigator.clipboard.writeText(props.command);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1200);
+  }
+
+  return (
+    <section
+      data-testid={props.testId}
+      className="w-full rounded-[var(--radius-md)] bg-[var(--color-error-subtle)]"
+    >
+      <div className="flex">
+        <div className="w-1.5 rounded-l-[var(--radius-md)] bg-[var(--color-error)]" />
+        <div className="flex-1 px-3 py-2.5">
+          <h4 className="text-[13px] font-semibold text-[var(--color-fg-default)]">
+            {props.title}
+          </h4>
+          <p className="mt-1 text-[12px] leading-snug text-[var(--color-fg-muted)] whitespace-pre-wrap">
+            {props.description}
+          </p>
+          <ol className="mt-2 list-decimal pl-4 space-y-1 text-[12px] leading-snug text-[var(--color-fg-default)]">
+            {props.steps.map((step, index) => (
+              <li key={`${props.testId}-step-${index}`}>{step}</li>
+            ))}
+          </ol>
+          {props.command ? (
+            <div className="mt-2 flex items-center gap-2">
+              <code className="rounded-[var(--radius-sm)] bg-[var(--color-bg-base)] px-2 py-1 text-[11px] text-[var(--color-fg-default)]">
+                {props.command}
+              </code>
+              <button
+                type="button"
+                data-testid={`${props.testId}-copy-command`}
+                className="text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                onClick={() => void handleCopyCommand()}
+              >
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </div>
+          ) : null}
+          <div className="mt-2 flex items-center gap-2">
+            {props.onAction && props.actionLabel ? (
+              <button
+                type="button"
+                data-testid={props.actionTestId}
+                className="text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                onClick={props.onAction}
+              >
+                {props.actionLabel}
+              </button>
+            ) : null}
+            <span className="text-[10px] font-mono text-[var(--color-error)]">
+              {props.errorCode}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -410,9 +511,8 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
     "idle" | "loading" | "ready" | "error"
   >("idle");
 
-  const [modelsLastError, setModelsLastError] = React.useState<string | null>(
-    null,
-  );
+  const [modelsLastError, setModelsLastError] =
+    React.useState<ModelsListError | null>(null);
 
   const [lastRequest, setLastRequest] = React.useState<string | null>(null);
   const [inlineDiffConfirmOpen, setInlineDiffConfirmOpen] =
@@ -447,7 +547,10 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
       if (!res.ok) {
         setModelsStatus("error");
 
-        setModelsLastError(`${res.error.code}: ${res.error.message}`);
+        setModelsLastError({
+          code: res.error.code,
+          message: res.error.message,
+        });
 
         return;
       }
@@ -471,7 +574,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
       const cause =
         error instanceof Error ? error.message : String(error ?? "unknown");
       setModelsStatus("error");
-      setModelsLastError(`INTERNAL: ${cause}`);
+      setModelsLastError({ code: "INTERNAL", message: cause });
     }
   }, [selectedModel]);
 
@@ -1045,13 +1148,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
         type: "service_error",
 
         title: "Skills unavailable",
-        description:
-          skillsLastError.code === "DB_ERROR"
-            ? formatDbErrorDescription({
-                message: skillsLastError.message,
-                details: skillsLastError.details,
-              })
-            : skillsLastError.message,
+        description: skillsLastError.message,
         errorCode: skillsLastError.code,
       }
     : null;
@@ -1062,9 +1159,8 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
 
         title: "Models unavailable",
 
-        description: modelsLastError,
-
-        errorCode: "UPSTREAM_ERROR",
+        description: `${modelsLastError.code}: ${modelsLastError.message}`,
+        errorCode: modelsLastError.code,
       }
     : null;
 
@@ -1086,17 +1182,32 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
               ? "Rate limited"
               : "AI error",
 
-        description:
-          lastError.code === "DB_ERROR"
-            ? formatDbErrorDescription({
-                message: lastError.message,
-                details: lastError.details,
-              })
-            : lastError.message,
+        description: lastError.message,
 
         errorCode: lastError.code,
       }
     : null;
+
+  const dbGuideError =
+    skillsLastError?.code === "DB_ERROR"
+      ? skillsLastError
+      : lastError?.code === "DB_ERROR"
+        ? lastError
+        : null;
+  const dbGuideCommand = resolveDbRemediationCommand(dbGuideError?.details);
+  const showDbGuide = dbGuideError !== null;
+
+  const providerGuideCode =
+    lastError && isProviderConfigErrorCode(lastError.code)
+      ? lastError.code
+      : modelsLastError && isProviderConfigErrorCode(modelsLastError.code)
+        ? modelsLastError.code
+        : skillsLastError && isProviderConfigErrorCode(skillsLastError.code)
+          ? skillsLastError.code
+          : null;
+  const showProviderGuide = !showDbGuide && providerGuideCode !== null;
+
+  const shouldRenderGenericErrors = !showDbGuide && !showProviderGuide;
 
   return (
     <section
@@ -1132,15 +1243,49 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
           )}
 
           {/* Error Display */}
-          {skillsErrorConfig ? (
+          {showDbGuide ? (
+            <ErrorGuideCard
+              testId="ai-error-guide-db"
+              title="Native binding requires repair"
+              description={
+                dbGuideError?.message ??
+                "AI runtime dependencies are not ready for this environment."
+              }
+              steps={[
+                "Rebuild the native module in this workspace.",
+                "Restart the app after the rebuild completes.",
+              ]}
+              command={dbGuideCommand}
+              errorCode="DB_ERROR"
+            />
+          ) : null}
+
+          {showProviderGuide ? (
+            <ErrorGuideCard
+              testId="ai-error-guide-provider"
+              title="AI provider is not configured"
+              description="Open Settings -> AI and choose a provider before using AI features."
+              steps={[
+                "Open Settings and switch to the AI tab.",
+                "Select provider mode and fill base URL/API key.",
+                "Save, test connection, then retry this action.",
+              ]}
+              errorCode={providerGuideCode ?? "AI_NOT_CONFIGURED"}
+              actionLabel="Open Settings -> AI"
+              actionTestId="ai-error-guide-open-settings"
+              onAction={() => openSettings("ai")}
+            />
+          ) : null}
+
+          {shouldRenderGenericErrors && skillsErrorConfig ? (
             <AiErrorCard error={skillsErrorConfig} showDismiss={false} />
           ) : null}
 
-          {modelsErrorConfig ? (
+          {shouldRenderGenericErrors && modelsErrorConfig ? (
             <AiErrorCard error={modelsErrorConfig} showDismiss={false} />
           ) : null}
 
-          {runtimeErrorConfig ? (
+          {shouldRenderGenericErrors && runtimeErrorConfig ? (
             <AiErrorCard
               error={runtimeErrorConfig}
               errorCodeTestId="ai-error-code"
@@ -1508,42 +1653,6 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
           </div>
         </div>
       </div>
-
-      {/* CSS for typing cursor animation */}
-
-      <style>{`
-
-        .typing-cursor::after {
-
-          content: '';
-
-          display: inline-block;
-
-          width: 6px;
-
-          height: 14px;
-
-          background-color: var(--color-fg-default);
-
-          margin-left: 2px;
-
-          vertical-align: text-bottom;
-
-          animation: blink 1s step-end infinite;
-
-        }
-
-
-
-        @keyframes blink {
-
-          0%, 100% { opacity: 1; }
-
-          50% { opacity: 0; }
-
-        }
-
-      `}</style>
     </section>
   );
 }
