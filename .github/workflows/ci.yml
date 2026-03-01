@@ -84,8 +84,8 @@ jobs:
       - uses: ./.github/actions/setup-node-pnpm
       - name: Lint
         run: pnpm lint
-      - name: Lint ratchet
-        run: pnpm lint:ratchet
+      - name: Lint warning budget
+        run: pnpm lint:warning-budget
       - name: Type check
         run: pnpm typecheck
 

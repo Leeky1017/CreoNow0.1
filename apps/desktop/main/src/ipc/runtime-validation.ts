@@ -129,6 +129,92 @@ function pushIssue(
   });
 }
 
+function validateRecordSchema(
+  schema: Extract<IpcSchema, { kind: "record" }>,
+  value: unknown,
+  path: string,
+  issues: RuntimeValidationIssue[],
+): void {
+  if (!isRecord(value) || Array.isArray(value)) {
+    pushIssue(
+      issues,
+      path,
+      "must be object record",
+      renderSchema(schema),
+      value,
+    );
+    return;
+  }
+
+  for (const [key, recordValue] of Object.entries(value)) {
+    validateSchemaAtPath(schema.value, recordValue, `${path}.${key}`, issues);
+  }
+}
+
+function validateUnionSchema(
+  schema: Extract<IpcSchema, { kind: "union" }>,
+  value: unknown,
+  path: string,
+  issues: RuntimeValidationIssue[],
+): void {
+  const matchesVariant = schema.variants.some((variant) => {
+    const variantIssues: RuntimeValidationIssue[] = [];
+    validateSchemaAtPath(variant, value, path, variantIssues);
+    return variantIssues.length === 0;
+  });
+  if (!matchesVariant) {
+    pushIssue(
+      issues,
+      path,
+      "must match one union variant",
+      renderSchema(schema),
+      value,
+    );
+  }
+}
+
+function validateObjectSchema(
+  schema: Extract<IpcSchema, { kind: "object" }>,
+  value: unknown,
+  path: string,
+  issues: RuntimeValidationIssue[],
+): void {
+  if (!isRecord(value) || Array.isArray(value)) {
+    pushIssue(issues, path, "must be object", "object", value);
+    return;
+  }
+
+  for (const [fieldName, fieldSchema] of Object.entries(schema.fields)) {
+    const fieldPath = `${path}.${fieldName}`;
+    if (!(fieldName in value)) {
+      if (fieldSchema.kind !== "optional") {
+        pushIssue(
+          issues,
+          fieldPath,
+          "is required",
+          renderSchema(fieldSchema),
+          undefined,
+        );
+      }
+      continue;
+    }
+    validateSchemaAtPath(fieldSchema, value[fieldName], fieldPath, issues);
+  }
+
+  const knownFields = new Set(Object.keys(schema.fields));
+  for (const fieldName of Object.keys(value)) {
+    if (!knownFields.has(fieldName)) {
+      pushIssue(
+        issues,
+        `${path}.${fieldName}`,
+        "is not allowed",
+        "no extra fields",
+        value[fieldName],
+      );
+    }
+  }
+}
+
 function validateSchemaAtPath(
   schema: IpcSchema,
   value: unknown,
@@ -172,85 +258,20 @@ function validateSchemaAtPath(
       });
       return;
     case "record":
-      if (!isRecord(value) || Array.isArray(value)) {
-        pushIssue(
-          issues,
-          path,
-          "must be object record",
-          renderSchema(schema),
-          value,
-        );
-        return;
-      }
-      for (const [key, recordValue] of Object.entries(value)) {
-        validateSchemaAtPath(
-          schema.value,
-          recordValue,
-          `${path}.${key}`,
-          issues,
-        );
-      }
+      validateRecordSchema(schema, value, path, issues);
       return;
-    case "union": {
-      const matchesVariant = schema.variants.some((variant) => {
-        const variantIssues: RuntimeValidationIssue[] = [];
-        validateSchemaAtPath(variant, value, path, variantIssues);
-        return variantIssues.length === 0;
-      });
-      if (!matchesVariant) {
-        pushIssue(
-          issues,
-          path,
-          "must match one union variant",
-          renderSchema(schema),
-          value,
-        );
-      }
+    case "union":
+      validateUnionSchema(schema, value, path, issues);
       return;
-    }
     case "optional":
       if (value === undefined) {
         return;
       }
       validateSchemaAtPath(schema.schema, value, path, issues);
       return;
-    case "object": {
-      if (!isRecord(value) || Array.isArray(value)) {
-        pushIssue(issues, path, "must be object", "object", value);
-        return;
-      }
-
-      for (const [fieldName, fieldSchema] of Object.entries(schema.fields)) {
-        const fieldPath = `${path}.${fieldName}`;
-        if (!(fieldName in value)) {
-          if (fieldSchema.kind !== "optional") {
-            pushIssue(
-              issues,
-              fieldPath,
-              "is required",
-              renderSchema(fieldSchema),
-              undefined,
-            );
-          }
-          continue;
-        }
-        validateSchemaAtPath(fieldSchema, value[fieldName], fieldPath, issues);
-      }
-
-      const knownFields = new Set(Object.keys(schema.fields));
-      for (const fieldName of Object.keys(value)) {
-        if (!knownFields.has(fieldName)) {
-          pushIssue(
-            issues,
-            `${path}.${fieldName}`,
-            "is not allowed",
-            "no extra fields",
-            value[fieldName],
-          );
-        }
-      }
+    case "object":
+      validateObjectSchema(schema, value, path, issues);
       return;
-    }
     default:
       pushIssue(
         issues,

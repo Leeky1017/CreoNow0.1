@@ -208,6 +208,125 @@ function validateSynopsisOutput(args: {
   return { ok: true, data: true };
 }
 
+function validateSkillAvailability(args: {
+  skillId: string;
+  resolved: ResolvedRunnableSkill;
+}): ServiceResult<true> {
+  if (!args.resolved.enabled) {
+    return ipcError("UNSUPPORTED", "Skill is disabled", {
+      id: args.skillId,
+    });
+  }
+
+  if (!args.resolved.valid) {
+    return ipcError(
+      args.resolved.error_code ?? "INVALID_ARGUMENT",
+      args.resolved.error_message ?? "Skill is invalid",
+      { id: args.skillId },
+    );
+  }
+
+  return { ok: true, data: true };
+}
+
+function validateSkillDependencies(args: {
+  deps: SkillExecutorDeps;
+  skillId: string;
+  dependsOn?: string[];
+}): ServiceResult<true> {
+  const dependsOn = args.dependsOn ?? [];
+  if (dependsOn.length === 0 || !args.deps.checkDependencies) {
+    return { ok: true, data: true };
+  }
+
+  const dependencyCheck = args.deps.checkDependencies({
+    skillId: args.skillId,
+    dependsOn,
+  });
+  if (!dependencyCheck.ok) {
+    return dependencyCheck;
+  }
+
+  return { ok: true, data: true };
+}
+
+function resolveInputForPrompt(args: {
+  run: SkillExecutorRunArgs;
+  inputType?: SkillInputType;
+}): string {
+  const trimmedInput = args.run.input.trim();
+  if (trimmedInput.length > 0) {
+    return args.run.input;
+  }
+
+  if (
+    requiresDocumentContext({
+      skillId: args.run.skillId,
+      inputType: args.inputType,
+    })
+  ) {
+    return "请基于当前文档上下文继续写作。";
+  }
+
+  return args.run.input;
+}
+
+function validateSkillInput(args: {
+  run: SkillExecutorRunArgs;
+  inputType?: SkillInputType;
+}): ServiceResult<{ inputForPrompt: string }> {
+  const trimmedInput = args.run.input.trim();
+  if (
+    requiresSelectionInput({
+      skillId: args.run.skillId,
+      inputType: args.inputType,
+    }) &&
+    trimmedInput.length === 0
+  ) {
+    return ipcError("SKILL_INPUT_EMPTY", emptyInputMessage(args.run.skillId));
+  }
+
+  if (
+    requiresDocumentContext({
+      skillId: args.run.skillId,
+      inputType: args.inputType,
+    })
+  ) {
+    const projectId = args.run.context?.projectId?.trim() ?? "";
+    const documentId = args.run.context?.documentId?.trim() ?? "";
+    if (projectId.length === 0 || documentId.length === 0) {
+      return ipcError("SKILL_INPUT_EMPTY", "请先打开需要续写的文档");
+    }
+  }
+
+  return {
+    ok: true,
+    data: {
+      inputForPrompt: resolveInputForPrompt({
+        run: args.run,
+        inputType: args.inputType,
+      }),
+    },
+  };
+}
+
+function validateSkillRunOutput(args: {
+  skillId: string;
+  outputText?: string;
+  output?: SkillOutputConstraints;
+}): ServiceResult<true> {
+  if (leafSkillId(args.skillId) !== "synopsis") {
+    return { ok: true, data: true };
+  }
+  if (typeof args.outputText !== "string") {
+    return { ok: true, data: true };
+  }
+  return validateSynopsisOutput({
+    outputText: args.outputText,
+    output: args.output,
+  });
+}
+
 /**
  * Assemble Context Engine prompt when project/document context exists.
  */
@@ -248,64 +367,43 @@ export function createSkillExecutor(deps: SkillExecutorDeps): SkillExecutor {
         return resolved;
       }
 
-      if (!resolved.data.enabled) {
-        return ipcError("UNSUPPORTED", "Skill is disabled", {
-          id: args.skillId,
-        });
-      }
-      if (!resolved.data.valid) {
-        return ipcError(
-          resolved.data.error_code ?? "INVALID_ARGUMENT",
-          resolved.data.error_message ?? "Skill is invalid",
-          { id: args.skillId },
-        );
+      const availability = validateSkillAvailability({
+        skillId: args.skillId,
+        resolved: resolved.data,
+      });
+      if (!availability.ok) {
+        return availability;
       }
 
-      const dependsOn = resolved.data.dependsOn ?? [];
-      if (dependsOn.length > 0 && deps.checkDependencies) {
-        const dependencyCheck = deps.checkDependencies({
-          skillId: args.skillId,
-          dependsOn,
-        });
-        if (!dependencyCheck.ok) {
-          return dependencyCheck;
-        }
+      const dependencyCheck = validateSkillDependencies({
+        deps,
+        skillId: args.skillId,
+        dependsOn: resolved.data.dependsOn,
+      });
+      if (!dependencyCheck.ok) {
+        return dependencyCheck;
       }
 
-      const trimmedInput = args.input.trim();
-
-      if (
-        requiresSelectionInput({
-          skillId: args.skillId,
-          inputType: resolved.data.inputType,
-        }) &&
-        trimmedInput.length === 0
-      ) {
-        return ipcError("SKILL_INPUT_EMPTY", emptyInputMessage(args.skillId));
+      const inputValidation = validateSkillInput({
+        run: args,
+        inputType: resolved.data.inputType,
+      });
+      if (!inputValidation.ok) {
+        return inputValidation;
       }
 
-      if (
-        requiresDocumentContext({
-          skillId: args.skillId,
-          inputType: resolved.data.inputType,
-        })
-      ) {
-        const projectId = args.context?.projectId?.trim() ?? "";
-        const documentId = args.context?.documentId?.trim() ?? "";
-        if (projectId.length === 0 || documentId.length === 0) {
-          return ipcError("SKILL_INPUT_EMPTY", "请先打开需要续写的文档");
-        }
-      }
-
-      const inputForPrompt =
-        trimmedInput.length > 0
-          ? args.input
-          : requiresDocumentContext({
-                skillId: args.skillId,
-                inputType: resolved.data.inputType,
-              })
-            ? "请基于当前文档上下文继续写作。"
-            : args.input;
+      const { inputForPrompt } = inputValidation.data;
+      const systemPrompt = resolved.data.prompt?.system ?? "";
+      const userPrompt = renderUserPrompt({
+        template: resolved.data.prompt?.user ?? "",
+        input: inputForPrompt,
+      });
+      const runArgs: SkillExecutorRunArgs = {
+        ...args,
+        systemPrompt,
+        input: userPrompt,
+        timeoutMs: resolved.data.timeoutMs,
+      };
 
       let contextPrompt: string | undefined;
       const contextAssemblyExecutionId = `${args.skillId}:${args.ts}`;
@@ -317,6 +415,7 @@ export function createSkillExecutor(deps: SkillExecutorDeps): SkillExecutor {
         });
         if (assembled && assembled.prompt.trim().length > 0) {
           contextPrompt = assembled.prompt;
+          runArgs.system = contextPrompt;
         }
       } catch (error) {
         deps.logger?.warn("context_assembly_degraded", {
@@ -326,35 +425,19 @@ export function createSkillExecutor(deps: SkillExecutorDeps): SkillExecutor {
         });
       }
 
-      const systemPrompt = resolved.data.prompt?.system ?? "";
-      const userPrompt = renderUserPrompt({
-        template: resolved.data.prompt?.user ?? "",
-        input: inputForPrompt,
-      });
-
-      const run = await deps.runSkill({
-        ...args,
-        systemPrompt,
-        input: userPrompt,
-        timeoutMs: resolved.data.timeoutMs,
-        ...(contextPrompt ? { system: contextPrompt } : {}),
-      });
+      const run = await deps.runSkill(runArgs);
 
       if (!run.ok) {
         return run;
       }
 
-      if (
-        leafSkillId(args.skillId) === "synopsis" &&
-        typeof run.data.outputText === "string"
-      ) {
-        const synopsisValidation = validateSynopsisOutput({
-          outputText: run.data.outputText,
-          output: resolved.data.output,
-        });
-        if (!synopsisValidation.ok) {
-          return synopsisValidation;
-        }
+      const outputValidation = validateSkillRunOutput({
+        skillId: args.skillId,
+        outputText: run.data.outputText,
+        output: resolved.data.output,
+      });
+      if (!outputValidation.ok) {
+        return outputValidation;
       }
 
       return {

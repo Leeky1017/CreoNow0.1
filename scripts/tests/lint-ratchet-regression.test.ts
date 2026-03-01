@@ -56,14 +56,18 @@ const baseline: LintRatchetBaseline = {
     scripts?: Record<string, string>;
   };
   assert.equal(
-    packageJson.scripts?.["lint:ratchet"],
+    packageJson.scripts?.["lint:warning-budget"],
     "tsx scripts/lint-ratchet.ts",
+  );
+  assert.equal(
+    packageJson.scripts?.["lint:ratchet"],
+    "pnpm lint:warning-budget",
   );
 
   const ciWorkflow = readFileSync(
     path.join(repoRoot, ".github/workflows/ci.yml"),
     "utf8",
   );
-  assert.match(ciWorkflow, /Lint ratchet/);
-  assert.match(ciWorkflow, /pnpm lint:ratchet/);
+  assert.match(ciWorkflow, /Lint warning budget/);
+  assert.match(ciWorkflow, /pnpm lint:warning-budget/);
 }

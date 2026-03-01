@@ -45,6 +45,7 @@ type EslintResult = {
 
 const DEFAULT_BASELINE_PATH = path.join("scripts", "lint-baseline.json");
 const UNKNOWN_RULE = "__unknown_rule__";
+const WARNING_SEVERITY = 1;
 
 function asObject(value: unknown, fieldPath: string): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -174,7 +175,9 @@ export function evaluateLintRatchet(
   };
 }
 
-function parseEslintJson(raw: string): LintStatsSnapshot {
+export function parseLintWarningSnapshotFromEslintJson(
+  raw: string,
+): LintStatsSnapshot {
   const parsed = JSON.parse(raw) as unknown;
   if (!Array.isArray(parsed)) {
     throw new Error("invalid eslint json: expected array");
@@ -186,7 +189,7 @@ function parseEslintJson(raw: string): LintStatsSnapshot {
     const messages = fileResult.messages ?? [];
     for (const message of messages) {
       const severity = message.severity ?? 0;
-      if (severity <= 0) {
+      if (severity !== WARNING_SEVERITY) {
         continue;
       }
       const rule = message.ruleId ?? UNKNOWN_RULE;
@@ -266,10 +269,12 @@ function readEslintSnapshot(
     if (!existsSync(absPath)) {
       throw new Error(`eslint report not found: ${absPath}`);
     }
-    return parseEslintJson(readFileSync(absPath, "utf8"));
+    return parseLintWarningSnapshotFromEslintJson(
+      readFileSync(absPath, "utf8"),
+    );
   }
 
-  return parseEslintJson(runEslintJson(repoRoot));
+  return parseLintWarningSnapshotFromEslintJson(runEslintJson(repoRoot));
 }
 
 function buildBaseline(
@@ -315,8 +320,10 @@ function main(): number {
   if (shouldWriteBaseline) {
     const baseline = buildBaseline(current, args);
     writeBaselineFile(repoRoot, baselinePath, baseline);
-    console.log(`[LINT_RATCHET] BASELINE_UPDATED path=${baselinePath}`);
-    console.log(`[LINT_RATCHET] TOTAL=${baseline.snapshot.totalViolations}`);
+    console.log(`[LINT_WARNING_BUDGET] BASELINE_UPDATED path=${baselinePath}`);
+    console.log(
+      `[LINT_WARNING_BUDGET] TOTAL_WARNINGS=${baseline.snapshot.totalViolations}`,
+    );
     return 0;
   }
 
@@ -327,16 +334,16 @@ function main(): number {
 
   if (!result.ok) {
     console.error(
-      `[LINT_RATCHET] FAIL baseline=${result.baselineTotal} current=${result.currentTotal} delta=${result.totalDelta >= 0 ? `+${result.totalDelta}` : result.totalDelta}`,
+      `[LINT_WARNING_BUDGET] FAIL baseline=${result.baselineTotal} current=${result.currentTotal} delta=${result.totalDelta >= 0 ? `+${result.totalDelta}` : result.totalDelta}`,
     );
     for (const line of formatRuleDiffLines(result)) {
-      console.error(`[LINT_RATCHET] REGRESSION ${line}`);
+      console.error(`[LINT_WARNING_BUDGET] REGRESSION ${line}`);
     }
     return 1;
   }
 
   console.log(
-    `[LINT_RATCHET] PASS baseline=${result.baselineTotal} current=${result.currentTotal} delta=${result.totalDelta}`,
+    `[LINT_WARNING_BUDGET] PASS baseline=${result.baselineTotal} current=${result.currentTotal} delta=${result.totalDelta}`,
   );
   return 0;
 }

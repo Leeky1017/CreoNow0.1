@@ -1,16 +1,16 @@
 {
-  "version": "2026-02-27",
-  "generatedAt": "2026-02-27T03:27:48.340Z",
+  "version": "2026-03-01",
+  "generatedAt": "2026-03-01T03:29:56.948Z",
   "source": "eslint-json",
   "governance": {
-    "issue": "#663",
-    "reason": "C2: CreateProjectDialog error handling adds one max-lines-per-function warning"
+    "issue": "#788",
+    "reason": "Issue 788 warning budget ratchet after reducing runtime-validation/search hotspots"
   },
   "snapshot": {
-    "totalViolations": 68,
+    "totalViolations": 66,
     "byRule": {
-      "complexity": 15,
-      "max-lines-per-function": 51,
+      "complexity": 14,
+      "max-lines-per-function": 50,
       "react-hooks/exhaustive-deps": 2
     }
   }

@@ -14,6 +14,7 @@ import {
 import { createSearchReplaceService } from "../services/search/searchReplaceService";
 
 type SearchReplaceService = ReturnType<typeof createSearchReplaceService>;
+type FtsService = ReturnType<typeof createFtsService>;
 
 type DocumentIndexRow = {
   documentId: string;
@@ -157,43 +158,14 @@ function registerSearchReplaceHandlers(
   });
 }
 
-/**
- * Register `search:*` IPC handlers.
- *
- * Why: search must be deterministic and must not leak SQLite errors across IPC.
- */
-export function registerSearchIpcHandlers(deps: {
+function registerFtsHandlers(args: {
   ipcMain: IpcMain;
   db: Database.Database | null;
   logger: Logger;
-  semanticIndex?: SemanticChunkIndexService;
-  semanticRetriever?: SemanticRetriever;
-  hybridRankingService?: HybridRankingService;
+  ftsService: FtsService | null;
 }): void {
-  const ftsService = deps.db
-    ? createFtsService({ db: deps.db, logger: deps.logger })
-    : null;
-  const replaceService = deps.db
-    ? createSearchReplaceService({ db: deps.db, logger: deps.logger })
-    : null;
-  const semanticRetriever = deps.db
-    ? (deps.semanticRetriever ??
-      createSearchSemanticRetriever({
-        db: deps.db,
-        semanticIndex: deps.semanticIndex,
-      }))
-    : (deps.semanticRetriever ?? createNoopSemanticRetriever());
-  const hybridRankingService =
-    deps.hybridRankingService ??
-    (ftsService
-      ? createHybridRankingService({
-          ftsService,
-          semanticRetriever,
-          logger: deps.logger,
-        })
-      : null);
-
-  deps.ipcMain.handle(
+  const { ipcMain, db, logger, ftsService } = args;
+  ipcMain.handle(
     "search:fts:query",
     async (
       _e,
@@ -216,7 +188,7 @@ export function registerSearchIpcHandlers(deps: {
         indexState: "ready" | "rebuilding";
       }>
     > => {
-      if (!deps.db) {
+      if (!db) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
@@ -256,11 +228,11 @@ export function registerSearchIpcHandlers(deps: {
 
         if (!res.ok) {
           if (res.error.code === "INVALID_ARGUMENT") {
-            deps.logger.info("search_fts_invalid_query", {
+            logger.info("search_fts_invalid_query", {
               queryLength: queryLength,
             });
           } else {
-            deps.logger.error("search_fts_failed", {
+            logger.error("search_fts_failed", {
               code: res.error.code,
               message: res.error.message,
             });
@@ -268,23 +240,19 @@ export function registerSearchIpcHandlers(deps: {
           return { ok: false, error: res.error };
         }
 
-        deps.logger.info("search_fts_query", {
+        logger.info("search_fts_query", {
           queryLength: queryLength,
           resultCount: res.data.results.length,
           indexState: res.data.indexState,
         });
         return { ok: true, data: res.data };
       } catch (error) {
-        return toInternalSearchError(
-          deps.logger,
-          "search_fts_query_exception",
-          error,
-        );
+        return toInternalSearchError(logger, "search_fts_query_exception", error);
       }
     },
   );
 
-  deps.ipcMain.handle(
+  ipcMain.handle(
     "search:fts:reindex",
     async (
       _e,
@@ -295,7 +263,7 @@ export function registerSearchIpcHandlers(deps: {
         reindexed: number;
       }>
     > => {
-      if (!deps.db) {
+      if (!db) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
@@ -320,28 +288,36 @@ export function registerSearchIpcHandlers(deps: {
           };
         }
         if (!res.ok) {
-          deps.logger.error("search_fts_reindex_failed", {
+          logger.error("search_fts_reindex_failed", {
             code: res.error.code,
             message: res.error.message,
           });
           return { ok: false, error: res.error };
         }
 
-        deps.logger.info("search_fts_reindex", {
+        logger.info("search_fts_reindex", {
           reindexed: res.data.reindexed,
         });
         return { ok: true, data: res.data };
       } catch (error) {
         return toInternalSearchError(
-          deps.logger,
+          logger,
           "search_fts_reindex_exception",
           error,
         );
       }
     },
   );
+}
 
-  deps.ipcMain.handle(
+function registerRankingHandlers(args: {
+  ipcMain: IpcMain;
+  db: Database.Database | null;
+  logger: Logger;
+  hybridRankingService: HybridRankingService | null;
+}): void {
+  const { ipcMain, db, logger, hybridRankingService } = args;
+  ipcMain.handle(
     "search:query:strategy",
     async (
       _e,
@@ -380,7 +356,7 @@ export function registerSearchIpcHandlers(deps: {
         };
       }>
     > => {
-      if (!deps.db || !hybridRankingService) {
+      if (!db || !hybridRankingService) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
@@ -390,14 +366,14 @@ export function registerSearchIpcHandlers(deps: {
       try {
         const res = hybridRankingService.queryByStrategy(payload);
         if (!res.ok) {
-          deps.logger.error("search_query_strategy_failed", {
+          logger.error("search_query_strategy_failed", {
             code: res.error.code,
             message: res.error.message,
             strategy: payload.strategy,
           });
           return { ok: false, error: res.error };
         }
-        deps.logger.info("search_query_strategy", {
+        logger.info("search_query_strategy", {
           strategy: payload.strategy,
           resultCount: res.data.results.length,
           total: res.data.total,
@@ -405,7 +381,7 @@ export function registerSearchIpcHandlers(deps: {
         return { ok: true, data: res.data };
       } catch (error) {
         return toInternalSearchError(
-          deps.logger,
+          logger,
           "search_query_strategy_exception",
           error,
         );
@@ -413,7 +389,7 @@ export function registerSearchIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  ipcMain.handle(
     "search:rank:explain",
     async (
       _e,
@@ -449,7 +425,7 @@ export function registerSearchIpcHandlers(deps: {
         };
       }>
     > => {
-      if (!deps.db || !hybridRankingService) {
+      if (!db || !hybridRankingService) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
@@ -459,27 +435,81 @@ export function registerSearchIpcHandlers(deps: {
       try {
         const res = hybridRankingService.rankExplain(payload);
         if (!res.ok) {
-          deps.logger.error("search_rank_explain_failed", {
+          logger.error("search_rank_explain_failed", {
             code: res.error.code,
             message: res.error.message,
             strategy: payload.strategy,
           });
           return { ok: false, error: res.error };
         }
-        deps.logger.info("search_rank_explain", {
+        logger.info("search_rank_explain", {
           strategy: payload.strategy,
           explanationCount: res.data.explanations.length,
         });
         return { ok: true, data: res.data };
       } catch (error) {
         return toInternalSearchError(
-          deps.logger,
+          logger,
           "search_rank_explain_exception",
           error,
         );
       }
     },
   );
+}
 
-  registerSearchReplaceHandlers(deps.ipcMain, deps.db, deps.logger, replaceService);
+/**
+ * Register `search:*` IPC handlers.
+ *
+ * Why: search must be deterministic and must not leak SQLite errors across IPC.
+ */
+export function registerSearchIpcHandlers(deps: {
+  ipcMain: IpcMain;
+  db: Database.Database | null;
+  logger: Logger;
+  semanticIndex?: SemanticChunkIndexService;
+  semanticRetriever?: SemanticRetriever;
+  hybridRankingService?: HybridRankingService;
+}): void {
+  const ftsService = deps.db
+    ? createFtsService({ db: deps.db, logger: deps.logger })
+    : null;
+  const replaceService = deps.db
+    ? createSearchReplaceService({ db: deps.db, logger: deps.logger })
+    : null;
+  const semanticRetriever = deps.db
+    ? (deps.semanticRetriever ??
+      createSearchSemanticRetriever({
+        db: deps.db,
+        semanticIndex: deps.semanticIndex,
+      }))
+    : (deps.semanticRetriever ?? createNoopSemanticRetriever());
+  const hybridRankingService =
+    deps.hybridRankingService ??
+    (ftsService
+      ? createHybridRankingService({
+          ftsService,
+          semanticRetriever,
+          logger: deps.logger,
+        })
+      : null);
+
+  registerFtsHandlers({
+    ipcMain: deps.ipcMain,
+    db: deps.db,
+    logger: deps.logger,
+    ftsService,
+  });
+  registerRankingHandlers({
+    ipcMain: deps.ipcMain,
+    db: deps.db,
+    logger: deps.logger,
+    hybridRankingService,
+  });
+  registerSearchReplaceHandlers(
+    deps.ipcMain,
+    deps.db,
+    deps.logger,
+    replaceService,
+  );
 }
