@@ -1,7 +1,7 @@
 # ISSUE-823
 - Issue: #823
 - Branch: task/823-archive-remaining-pending-governance
-- PR: 待创建（创建后回填真实链接）
+- PR: https://github.com/Leeky1017/CreoNow/pull/824
 
 ## Plan
 - 归档剩余 active change：`fe-rightpanel-ai-guidance-and-style`
@@ -30,6 +30,10 @@
 - Command: `rulebook task create issue-823-archive-remaining-pending-governance`
 - Command: `rulebook task validate issue-823-archive-remaining-pending-governance`
 - Key output: validate 通过（warning: no spec files）
+
+### 2026-03-01 20:38 PR created
+- Command: `gh pr create --base main --head task/823-archive-remaining-pending-governance --title "docs: archive remaining pending governance artifacts (#823)" --body-file ...`
+- Key output: PR created `https://github.com/Leeky1017/CreoNow/pull/824`
 
 ## Main Session Audit
 
