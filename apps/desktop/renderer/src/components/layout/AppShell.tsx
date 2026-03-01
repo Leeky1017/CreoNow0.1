@@ -568,6 +568,16 @@ export function AppShell(): JSX.Element {
           setCommandPaletteOpen(false);
         },
       },
+      {
+        id: "open-folder",
+        label: "Open Folder",
+        group: "command",
+        category: "command",
+        onSelect: async () => {
+          await invoke("dialog:folder:open", {});
+          setCommandPaletteOpen(false);
+        },
+      },
     ];
 
     const safeFileItems = Array.isArray(fileItems) ? fileItems : [];

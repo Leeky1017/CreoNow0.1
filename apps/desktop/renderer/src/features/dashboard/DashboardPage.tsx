@@ -12,6 +12,7 @@ import {
   type ContextMenuItem,
 } from "../../components/primitives";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
+import { invoke } from "../../lib/ipcClient";
 import { CreateProjectDialog } from "../projects/CreateProjectDialog";
 import { DeleteProjectDialog } from "../projects/DeleteProjectDialog";
 import { RenameProjectDialog } from "./RenameProjectDialog";
@@ -614,6 +615,17 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
             onClick={() => setCreateDialogOpen(true)}
           >
             新建项目
+          </Button>
+          <Button
+            data-testid="dashboard-open-folder"
+            variant="secondary"
+            size="md"
+            className="mt-3"
+            onClick={async () => {
+              await invoke("dialog:folder:open", {});
+            }}
+          >
+            打开文件夹
           </Button>
         </div>
 

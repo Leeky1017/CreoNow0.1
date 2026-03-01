@@ -1,4 +1,5 @@
 import { Button, Heading, Text } from "../../components/primitives";
+import { invoke } from "../../lib/ipcClient";
 
 /**
  * Feature item definition for onboarding display.
@@ -239,7 +240,7 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps): JSX.Element
         </div>
 
         {/* Navigation footer */}
-        <div className="mt-auto flex w-full animate-fade-in-up items-center justify-center pt-8 animation-delay-300">
+        <div className="mt-auto flex w-full animate-fade-in-up flex-col items-center justify-center gap-3 pt-8 animation-delay-300">
           <Button
             data-testid="onboarding-start"
             variant="primary"
@@ -249,6 +250,17 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps): JSX.Element
           >
             开始使用
             <ArrowRightIcon />
+          </Button>
+          <Button
+            data-testid="onboarding-open-folder"
+            variant="secondary"
+            size="md"
+            onClick={async () => {
+              await invoke("dialog:folder:open", {});
+            }}
+            className="rounded-full px-8"
+          >
+            打开已有文件夹
           </Button>
         </div>
       </main>
