@@ -2,10 +2,10 @@
 
 更新时间：2026-02-28 19:20
 
-- [ ] 1.1 审阅并确认需求边界：清理 Dead UI / Mock 残留——删除 ProxySection、移除 SearchPanel mock 数据、收敛 AI 历史占位交互。不引入新功能。
-- [ ] 1.2 审阅并确认错误路径与边界路径：空结果必须走明确 EmptyState；占位交互要么闭环要么显式禁用。
-- [ ] 1.3 审阅并确认验收阈值与不可变契约：禁止 mock 数据进入生产路径；禁止"可点但无效"的幽灵交互。
-- [ ] 1.4 依赖同步检查（Dependency Sync Check）：N/A
+- [x] 1.1 审阅并确认需求边界：清理 Dead UI / Mock 残留——删除 ProxySection、移除 SearchPanel mock 数据、收敛 AI 历史占位交互。不引入新功能。
+- [x] 1.2 审阅并确认错误路径与边界路径：空结果必须走明确 EmptyState；占位交互要么闭环要么显式禁用。
+- [x] 1.3 审阅并确认验收阈值与不可变契约：禁止 mock 数据进入生产路径；禁止"可点但无效"的幽灵交互。
+- [x] 1.4 依赖同步检查（Dependency Sync Check）：N/A
 
 ### 1.5 预期实现触点
 
@@ -22,9 +22,9 @@
 
 ## 2. TDD Mapping（先测前提）
 
-- [ ] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
-- [ ] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
-- [ ] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+- [x] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
+- [x] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
+- [x] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
 
 ### Scenario → 测试映射
 
@@ -41,31 +41,31 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 `WB-FE-CLN-S1`：断言 `ProxySection.tsx` 不存在。
+- [x] 3.1 `WB-FE-CLN-S1`：断言 `ProxySection.tsx` 不存在。
   - 期望红灯原因：文件仍存在。
-- [ ] 3.2 `WB-FE-CLN-S1b`：扫描 features，断言无 ProxySection import。
+- [x] 3.2 `WB-FE-CLN-S1b`：扫描 features，断言无 ProxySection import。
   - 期望红灯原因：SettingsDialog 仍引用。
-- [ ] 3.3 `WB-FE-CLN-S2`：读取 SearchPanel.tsx，断言不含 `MOCK_`。
+- [x] 3.3 `WB-FE-CLN-S2`：读取 SearchPanel.tsx，断言不含 `MOCK_`。
   - 期望红灯原因：L68 导出 `MOCK_SEARCH_RESULTS`。
-- [ ] 3.4 `WB-FE-CLN-S3`：渲染 AI 历史列表，断言无 no-op 可点击项。
+- [x] 3.4 `WB-FE-CLN-S3`：渲染 AI 历史列表，断言无 no-op 可点击项。
   - 期望红灯原因：当前存在 placeholder handler。
 - 运行：`pnpm -C apps/desktop test:run features/__tests__/proxy-section-dead.guard` / `SearchPanel.no-mock.guard` / `AiPanel.history.interaction`
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 删除 `ProxySection.tsx` + 清理所有 import 引用 → S1/S1b 转绿
-- [ ] 4.2 SearchPanel：删除 `MOCK_SEARCH_RESULTS` + mock 分支，空结果走 EmptyState → S2 转绿
-- [ ] 4.3 AI 历史：placeholder handler → 实现闭环或 `disabled` + 说明 → S3 转绿
+- [x] 4.1 删除 `ProxySection.tsx` + 清理所有 import 引用 → S1/S1b 转绿
+- [x] 4.2 SearchPanel：删除 `MOCK_SEARCH_RESULTS` + mock 分支，空结果走 EmptyState → S2 转绿
+- [x] 4.3 AI 历史：placeholder handler → 实现闭环或 `disabled` + 说明 → S3 转绿
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 清理残余 import/类型/无用常量
-- [ ] 5.2 确认删除 ProxySection 后 Settings 布局不受影响
+- [x] 5.1 清理残余 import/类型/无用常量
+- [x] 5.2 确认删除 ProxySection 后 Settings 布局不受影响
 
 ## 6. Evidence
 
-- [ ] 6.1 记录 RUN_LOG：Red 阶段测试失败的输出
-- [ ] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
-- [ ] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
-- [ ] 6.4 记录 Dependency Sync Check（N/A）
-- [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
+- [x] 6.1 记录 RUN_LOG：Red 阶段测试失败的输出
+- [x] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
+- [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
+- [x] 6.4 记录 Dependency Sync Check（N/A）
+- [x] 6.5 Main Session Audit（仅在 Apply 阶段需要）
