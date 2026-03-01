@@ -14,6 +14,8 @@ import {
   type ContextInspectResult,
   type ContextLayerAssemblyService,
 } from "../services/context/layerAssemblyService";
+import { guardAndNormalizeProjectAccess } from "./projectAccessGuard";
+import type { ProjectSessionBindingRegistry } from "./projectSessionBinding";
 
 type ProjectRow = {
   rootPath: string;
@@ -27,6 +29,12 @@ type ContextAssemblyRegistrarDeps = {
   logger: Logger;
   contextAssemblyService: ContextLayerAssemblyService;
   inFlightByDocument: Map<string, number>;
+  projectSessionBinding?: ProjectSessionBindingRegistry;
+  resolveInspectRole?: (args: {
+    webContentsId: number;
+    projectId: string;
+    requestedBy?: string;
+  }) => string | null;
 };
 
 function estimateInputTokens(text: string): number {
@@ -40,6 +48,45 @@ function normalizeCallerRole(role: unknown): string {
   }
   const normalized = role.trim().toLowerCase();
   return normalized.length > 0 ? normalized : "unknown";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function senderWebContentsId(event: unknown): number | null {
+  if (!isRecord(event)) {
+    return null;
+  }
+  const sender = event.sender;
+  if (!isRecord(sender) || typeof sender.id !== "number") {
+    return null;
+  }
+  return sender.id;
+}
+
+function resolveTrustedInspectRole(args: {
+  event: unknown;
+  payload: ContextInspectRequest;
+  resolveInspectRole?: (args: {
+    webContentsId: number;
+    projectId: string;
+    requestedBy?: string;
+  }) => string | null;
+}): string {
+  if (!args.resolveInspectRole) {
+    return "unknown";
+  }
+  const webContentsId = senderWebContentsId(args.event);
+  if (!webContentsId) {
+    return "unknown";
+  }
+  const role = args.resolveInspectRole({
+    webContentsId,
+    projectId: args.payload.projectId.trim(),
+    requestedBy: args.payload.requestedBy,
+  });
+  return normalizeCallerRole(role);
 }
 
 function buildInputAudit(args: {
@@ -267,7 +314,7 @@ export function registerContextAssemblyHandlers(
   deps.ipcMain.handle(
     "context:prompt:inspect",
     async (
-      _e,
+      event,
       payload: ContextInspectRequest,
     ): Promise<IpcResponse<ContextInspectResult>> => {
       if (!deps.db) {
@@ -310,14 +357,50 @@ export function registerContextAssemblyHandlers(
         };
       }
 
+      const guarded = guardAndNormalizeProjectAccess({
+        event,
+        payload,
+        projectSessionBinding: deps.projectSessionBinding,
+      });
+      if (!guarded.ok) {
+        deps.logger.info("context_inspect_forbidden", {
+          code: "CONTEXT_INSPECT_FORBIDDEN",
+          projectId: payload.projectId,
+          documentId: payload.documentId,
+          callerRole: normalizeCallerRole(payload.callerRole),
+          trustedRole: "unknown",
+          requestedBy: payload.requestedBy ?? "unknown",
+          debugMode: payload.debugMode === true,
+          reason: "unbound_or_mismatched_renderer_session",
+          ...buildInputAudit({
+            additionalInput: payload.additionalInput,
+            debugMode: false,
+          }),
+        });
+        return {
+          ok: false,
+          error: {
+            code: "CONTEXT_INSPECT_FORBIDDEN",
+            message:
+              "context:prompt:inspect requires debugMode=true and an authorized renderer session role",
+          },
+        };
+      }
+
       const callerRole = normalizeCallerRole(payload.callerRole);
+      const trustedRole = resolveTrustedInspectRole({
+        event,
+        payload,
+        resolveInspectRole: deps.resolveInspectRole,
+      });
       const debugMode = payload.debugMode === true;
-      if (!debugMode || !INSPECT_ALLOWED_ROLES.has(callerRole)) {
+      if (!debugMode || !INSPECT_ALLOWED_ROLES.has(trustedRole)) {
         deps.logger.info("context_inspect_forbidden", {
           code: "CONTEXT_INSPECT_FORBIDDEN",
           projectId: payload.projectId,
           documentId: payload.documentId,
           callerRole,
+          trustedRole,
           requestedBy: payload.requestedBy ?? "unknown",
           debugMode,
           ...buildInputAudit({
@@ -330,7 +413,7 @@ export function registerContextAssemblyHandlers(
           error: {
             code: "CONTEXT_INSPECT_FORBIDDEN",
             message:
-              "context:prompt:inspect requires debugMode=true and callerRole owner/maintainer",
+              "context:prompt:inspect requires debugMode=true and an authorized renderer session role",
           },
         };
       }
