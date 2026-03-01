@@ -111,42 +111,10 @@ describe("Sidebar", () => {
       expect(screen.getByText("Explorer")).toBeInTheDocument();
     });
 
-    it("activePanel=search 应该显示 Search 标题", () => {
-      renderWithWrapper({ ...defaultProps, activePanel: "search" });
-
-      expect(screen.getByText("Search")).toBeInTheDocument();
-    });
-
     it("activePanel=outline 应该显示 Outline 标题", () => {
       renderWithWrapper({ ...defaultProps, activePanel: "outline" });
 
       expect(screen.getByText("Outline")).toBeInTheDocument();
-    });
-
-    it("activePanel=memory 应该显示 Memory 标题", () => {
-      renderWithWrapper({ ...defaultProps, activePanel: "memory" });
-
-      // MemoryPanel 内部也有 "Memory" 文本，使用更宽松的断言
-      const headers = screen.getAllByText("Memory");
-      expect(headers.length).toBeGreaterThan(0);
-    });
-
-    it("activePanel=versionHistory 应该显示 Version History 标题", () => {
-      renderWithWrapper({ ...defaultProps, activePanel: "versionHistory" });
-
-      expect(screen.getByText("Version History")).toBeInTheDocument();
-    });
-
-    it("activePanel=characters 应该显示 Characters 标题", () => {
-      renderWithWrapper({ ...defaultProps, activePanel: "characters" });
-
-      expect(screen.getByText("Characters")).toBeInTheDocument();
-    });
-
-    it("activePanel=knowledgeGraph 应该显示 Knowledge Graph 标题", () => {
-      renderWithWrapper({ ...defaultProps, activePanel: "knowledgeGraph" });
-
-      expect(screen.getByText("Knowledge Graph")).toBeInTheDocument();
     });
   });
 

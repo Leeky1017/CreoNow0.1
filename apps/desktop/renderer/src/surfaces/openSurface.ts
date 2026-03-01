@@ -9,7 +9,11 @@
  * 依赖：surfaceRegistry.ts 中定义的 surface 映射
  */
 
-import type { LeftPanelType, RightPanelType } from "../stores/layoutStore";
+import type {
+  DialogType,
+  LeftPanelType,
+  RightPanelType,
+} from "../stores/layoutStore";
 
 /**
  * Surface 打开参数
@@ -39,6 +43,8 @@ export interface SurfaceActionResult {
 export interface LayoutStoreActions {
   setActiveLeftPanel: (panel: LeftPanelType) => void;
   setActiveRightPanel: (panel: RightPanelType) => void;
+  setDialogType: (dialog: DialogType | null) => void;
+  setSpotlightOpen: (open: boolean) => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
   setPanelCollapsed: (collapsed: boolean) => void;
   setZenMode: (enabled: boolean) => void;
@@ -63,14 +69,18 @@ export interface DialogStoreActions {
  */
 const leftPanelMapping: Record<string, LeftPanelType> = {
   fileTreePanel: "files",
-  searchPanel: "search",
   outlinePanel: "outline",
+  // Note: settings 不再映射到 leftPanel，而是打开 SettingsDialog
+};
+
+const dialogMapping: Record<string, DialogType> = {
   versionHistoryPanel: "versionHistory",
   memoryPanel: "memory",
   characterPanel: "characters",
   knowledgeGraph: "knowledgeGraph",
-  // Note: settings 不再映射到 leftPanel，而是打开 SettingsDialog
 };
+
+const spotlightMapping = new Set<string>(["searchPanel"]);
 
 /**
  * Surface ID 到 RightPanelType 的映射
@@ -109,7 +119,24 @@ export function createSurfaceActions(
     if (surfaceId in leftPanelMapping) {
       const panelType = leftPanelMapping[surfaceId];
       layoutStore.setActiveLeftPanel(panelType);
+      layoutStore.setDialogType(null);
+      layoutStore.setSpotlightOpen(false);
       layoutStore.setSidebarCollapsed(false);
+      return { ok: true };
+    }
+
+    // 1.5 检查是否是弹出式 Dialog
+    if (surfaceId in dialogMapping) {
+      const dialogType = dialogMapping[surfaceId];
+      layoutStore.setDialogType(dialogType);
+      layoutStore.setSpotlightOpen(false);
+      return { ok: true };
+    }
+
+    // 1.6 检查是否是 Spotlight
+    if (spotlightMapping.has(surfaceId)) {
+      layoutStore.setDialogType(null);
+      layoutStore.setSpotlightOpen(true);
       return { ok: true };
     }
 
@@ -204,6 +231,16 @@ export function createSurfaceActions(
     // 面板不能"关闭"，只能折叠
     if (surfaceId in leftPanelMapping) {
       layoutStore.setSidebarCollapsed(true);
+      return { ok: true };
+    }
+
+    if (surfaceId in dialogMapping) {
+      layoutStore.setDialogType(null);
+      return { ok: true };
+    }
+
+    if (spotlightMapping.has(surfaceId)) {
+      layoutStore.setSpotlightOpen(false);
       return { ok: true };
     }
 

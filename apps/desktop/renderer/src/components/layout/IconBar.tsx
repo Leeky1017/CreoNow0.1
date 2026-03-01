@@ -13,6 +13,7 @@ import {
 import {
   useLayoutStore,
   LAYOUT_DEFAULTS,
+  type DialogType,
   type LeftPanelType,
 } from "../../stores/layoutStore";
 
@@ -45,7 +46,17 @@ const iconButtonActive =
  * Icon item type for panel navigation.
  */
 type IconItem = {
-  panel: LeftPanelType;
+  panel:
+    | "files"
+    | "search"
+    | "outline"
+    | "versionHistory"
+    | "memory"
+    | "characters"
+    | "knowledgeGraph";
+  behavior: "docked" | "spotlight" | "dialog";
+  dockedPanel?: LeftPanelType;
+  dialogType?: DialogType;
   Icon: LucideIcon;
   label: string;
   testId: string;
@@ -57,32 +68,55 @@ type IconItem = {
 const MAIN_ICONS: IconItem[] = [
   {
     panel: "files",
+    behavior: "docked",
+    dockedPanel: "files",
     Icon: FolderOpen,
     label: "Files",
     testId: "icon-bar-files",
   },
-  { panel: "search", Icon: Search, label: "Search", testId: "icon-bar-search" },
+  {
+    panel: "search",
+    behavior: "spotlight",
+    Icon: Search,
+    label: "Search",
+    testId: "icon-bar-search",
+  },
   {
     panel: "outline",
+    behavior: "docked",
+    dockedPanel: "outline",
     Icon: List,
     label: "Outline",
     testId: "icon-bar-outline",
   },
   {
     panel: "versionHistory",
+    behavior: "dialog",
+    dialogType: "versionHistory",
     Icon: History,
     label: "Version History",
     testId: "icon-bar-version-history",
   },
-  { panel: "memory", Icon: Brain, label: "Memory", testId: "icon-bar-memory" },
+  {
+    panel: "memory",
+    behavior: "dialog",
+    dialogType: "memory",
+    Icon: Brain,
+    label: "Memory",
+    testId: "icon-bar-memory",
+  },
   {
     panel: "characters",
+    behavior: "dialog",
+    dialogType: "characters",
     Icon: User,
     label: "Characters",
     testId: "icon-bar-characters",
   },
   {
     panel: "knowledgeGraph",
+    behavior: "dialog",
+    dialogType: "knowledgeGraph",
     Icon: Network,
     label: "Knowledge Graph",
     testId: "icon-bar-knowledge-graph",
@@ -114,6 +148,10 @@ export function IconBar({
   const setSidebarCollapsed = useLayoutStore((s) => s.setSidebarCollapsed);
   const activeLeftPanel = useLayoutStore((s) => s.activeLeftPanel);
   const setActiveLeftPanel = useLayoutStore((s) => s.setActiveLeftPanel);
+  const dialogType = useLayoutStore((s) => s.dialogType);
+  const setDialogType = useLayoutStore((s) => s.setDialogType);
+  const spotlightOpen = useLayoutStore((s) => s.spotlightOpen);
+  const setSpotlightOpen = useLayoutStore((s) => s.setSpotlightOpen);
 
   /**
    * Handle icon click with Windsurf-style toggle behavior.
@@ -121,27 +159,59 @@ export function IconBar({
    * - If clicking a different panel: switch to it and expand
    * - If clicking the current panel: toggle collapse
    */
-  const handleIconClick = (panel: LeftPanelType) => {
-    if (activeLeftPanel !== panel) {
-      setActiveLeftPanel(panel);
-      if (sidebarCollapsed) {
-        setSidebarCollapsed(false);
+  const handleIconClick = (item: IconItem) => {
+    if (item.behavior === "docked" && item.dockedPanel) {
+      if (activeLeftPanel !== item.dockedPanel) {
+        setActiveLeftPanel(item.dockedPanel);
+        if (sidebarCollapsed) {
+          setSidebarCollapsed(false);
+        }
+      } else {
+        setSidebarCollapsed(!sidebarCollapsed);
       }
-    } else {
-      setSidebarCollapsed(!sidebarCollapsed);
+      if (dialogType !== null) {
+        setDialogType(null);
+      }
+      if (spotlightOpen) {
+        setSpotlightOpen(false);
+      }
+      return;
+    }
+
+    if (item.behavior === "dialog" && item.dialogType) {
+      setDialogType(dialogType === item.dialogType ? null : item.dialogType);
+      if (spotlightOpen) {
+        setSpotlightOpen(false);
+      }
+      return;
+    }
+
+    if (item.behavior === "spotlight") {
+      setSpotlightOpen(!spotlightOpen);
+      if (dialogType !== null) {
+        setDialogType(null);
+      }
     }
   };
 
   /**
    * Render a single icon button.
    */
-  const renderIconButton = ({ panel, Icon, label, testId }: IconItem) => {
-    const isActive = activeLeftPanel === panel && !sidebarCollapsed;
+  const renderIconButton = (item: IconItem) => {
+    const { panel, Icon, label, testId } = item;
+    const isActive =
+      (item.behavior === "docked" &&
+        item.dockedPanel === activeLeftPanel &&
+        !sidebarCollapsed &&
+        dialogType === null &&
+        !spotlightOpen) ||
+      (item.behavior === "dialog" && item.dialogType === dialogType) ||
+      (item.behavior === "spotlight" && spotlightOpen);
     return (
       <button
         key={panel}
         type="button"
-        onClick={() => handleIconClick(panel)}
+        onClick={() => handleIconClick(item)}
         className={`${iconButtonBase} ${isActive ? iconButtonActive : iconButtonInactive}`}
         aria-label={label}
         aria-pressed={isActive}

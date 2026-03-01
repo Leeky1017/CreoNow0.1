@@ -19,14 +19,13 @@ export const LAYOUT_DEFAULTS = {
  *
  * Each type corresponds to an icon in IconBar and a view in LeftPanel.
  */
-export type LeftPanelType =
-  | "files"
-  | "search"
-  | "outline"
-  | "versionHistory"
+export type LeftPanelType = "files" | "outline";
+
+export type DialogType =
   | "memory"
   | "characters"
-  | "knowledgeGraph";
+  | "knowledgeGraph"
+  | "versionHistory";
 
 /**
  * Right panel tab types.
@@ -43,6 +42,8 @@ export type LayoutState = {
   zenMode: boolean;
   activeLeftPanel: LeftPanelType;
   activeRightPanel: RightPanelType;
+  dialogType: DialogType | null;
+  spotlightOpen: boolean;
   layoutResetNotice: boolean;
 };
 
@@ -55,6 +56,8 @@ export type LayoutActions = {
   resetSidebarWidth: () => void;
   resetPanelWidth: () => void;
   setActiveLeftPanel: (panel: LeftPanelType) => void;
+  setDialogType: (dialog: DialogType | null) => void;
+  setSpotlightOpen: (open: boolean) => void;
   /**
    * Set the active right panel tab.
    *
@@ -87,12 +90,7 @@ function prefKey(
 
 const LEFT_PANEL_VALUES = [
   "files",
-  "search",
   "outline",
-  "versionHistory",
-  "memory",
-  "characters",
-  "knowledgeGraph",
 ] as const;
 
 const RIGHT_PANEL_VALUES = ["ai", "info", "quality"] as const;
@@ -197,6 +195,8 @@ export function createLayoutStore(preferences: PreferenceStore) {
     zenMode: false,
     activeLeftPanel: initialActiveLeftPanel,
     activeRightPanel: initialActiveRightPanel,
+    dialogType: null,
+    spotlightOpen: false,
     layoutResetNotice: hadReset,
 
     setSidebarWidth: (width) => {
@@ -253,6 +253,12 @@ export function createLayoutStore(preferences: PreferenceStore) {
     setActiveLeftPanel: (panel) => {
       set({ activeLeftPanel: panel });
       preferences.set(prefKey("activeLeftPanel"), panel);
+    },
+    setDialogType: (dialog) => {
+      set({ dialogType: dialog });
+    },
+    setSpotlightOpen: (open) => {
+      set({ spotlightOpen: open });
     },
     setActiveRightPanel: (panel) => {
       const current = get();

@@ -1,14 +1,14 @@
 ## 1. Specification
 
-更新时间：2026-02-28 19:20
+更新时间：2026-03-01 16:04
 
-- [ ] 1.1 审阅并确认需求边界：将 Sidebar 从"万物收纳"收敛为"结构化导航"——仅保留 files/outline 停靠，search 走 Spotlight，memory/characters/knowledgeGraph/versionHistory 走 Dialog。不做面板功能重写。
-- [ ] 1.2 审阅并确认错误路径与边界路径：Dialog 关闭（Esc/backdrop/关闭按钮）；多 Dialog 互斥（同时只开一个）；Spotlight 关闭同理。
-- [ ] 1.3 审阅并确认验收阈值与不可变契约：files/outline 保持停靠不变；其余不得再占用 Sidebar 宽度。
-- [ ] 1.4 依赖同步检查（Dependency Sync Check）：
+- [x] 1.1 审阅并确认需求边界：将 Sidebar 从"万物收纳"收敛为"结构化导航"——仅保留 files/outline 停靠，search 走 Spotlight，memory/characters/knowledgeGraph/versionHistory 走 Dialog。不做面板功能重写。
+- [x] 1.2 审阅并确认错误路径与边界路径：Dialog 关闭（Esc/backdrop/关闭按钮）；多 Dialog 互斥（同时只开一个）；Spotlight 关闭同理。
+- [x] 1.3 审阅并确认验收阈值与不可变契约：files/outline 保持停靠不变；其余不得再占用 Sidebar 宽度。
+- [x] 1.4 依赖同步检查（Dependency Sync Check）：
   - [x] D1（IconBar `media` 面板处置）Owner 决策已确认 — 保留但标注 `[FUTURE]`
   - [x] D2（`graph` vs `knowledgeGraph` 命名）Owner 决策已确认 — 统一到 `knowledgeGraph`（仅改 spec，代码零改动）
-  - [ ] `fe-hotfix-searchpanel-backdrop-close` 已合并
+  - [x] `fe-hotfix-searchpanel-backdrop-close` 已合并（已归档于 `openspec/changes/archive/fe-hotfix-searchpanel-backdrop-close`）
 
 ### 1.5 预期实现触点
 
@@ -29,9 +29,9 @@
 
 ## 2. TDD Mapping（先测前提）
 
-- [ ] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
-- [ ] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
-- [ ] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+- [x] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
+- [x] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
+- [x] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
 
 ### Scenario → 测试映射
 
@@ -47,32 +47,32 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 `WB-FE-S3-S1`：读取 layoutStore.tsx，断言 LeftPanelType 仅含 "files"/"outline"。
+- [x] 3.1 `WB-FE-S3-S1`：读取 layoutStore.tsx，断言 LeftPanelType 仅含 "files"/"outline"。
   - 期望红灯原因：当前 LeftPanelType 含 7 种（files/search/outline/versionHistory/memory/characters/knowledgeGraph）。
-- [ ] 3.2 `WB-FE-S3-S2`：点击 memory 图标，断言 dialogType 变为 "memory"。
+- [x] 3.2 `WB-FE-S3-S2`：点击 memory 图标，断言 dialogType 变为 "memory"。
   - 期望红灯原因：当前 memory 图标调用 `setActiveLeftPanel("memory")`，无 dialogType state。
-- [ ] 3.3 `WB-FE-S3-S3`：点击 search 图标，断言 spotlight 渲染；按 Esc 断言关闭。
+- [x] 3.3 `WB-FE-S3-S3`：点击 search 图标，断言 spotlight 渲染；按 Esc 断言关闭。
   - 期望红灯原因：当前 search 图标调用 `setActiveLeftPanel("search")`，无 spotlight 模式。
 - 运行：`pnpm -C apps/desktop test:run components/layout/IconBar.dialog-migration`
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 `layoutStore.tsx`：LeftPanelType 缩减为 `"files" | "outline"`，新增 `dialogType` + `spotlightOpen` state → S1 转绿
-- [ ] 4.2 `IconBar.tsx`：memory/characters/knowledgeGraph/versionHistory 按钮 → `setDialogType(...)` → S2 转绿
-- [ ] 4.3 `IconBar.tsx`：search 按钮 → `setSpotlightOpen(true)`
-- [ ] 4.4 `AppShell.tsx`：根据 `dialogType` 渲染 Dialog shell + Feature 面板；`spotlightOpen` 渲染 SearchPanel Spotlight → S3 转绿
-- [ ] 4.5 `Sidebar.tsx`：移除 search/memory/characters/knowledgeGraph/versionHistory 渲染分支
+- [x] 4.1 `layoutStore.tsx`：LeftPanelType 缩减为 `"files" | "outline"`，新增 `dialogType` + `spotlightOpen` state → S1 转绿
+- [x] 4.2 `IconBar.tsx`：memory/characters/knowledgeGraph/versionHistory 按钮 → `setDialogType(...)` → S2 转绿
+- [x] 4.3 `IconBar.tsx`：search 按钮 → `setSpotlightOpen(true)`
+- [x] 4.4 `AppShell.tsx`：根据 `dialogType` 渲染 Dialog shell + Feature 面板；`spotlightOpen` 渲染 SearchPanel Spotlight → S3 转绿
+- [x] 4.5 `Sidebar.tsx`：移除 search/memory/characters/knowledgeGraph/versionHistory 渲染分支
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 统一 Dialog shell 样式（对齐 SettingsDialog：间距、header、关闭按钮、Esc）
-- [ ] 5.2 确认多 Dialog 互斥（打开新 Dialog 自动关闭旧的）
-- [ ] 5.3 确认 files/outline 面板行为完全不变
+- [x] 5.1 统一 Dialog shell 样式（对齐 SettingsDialog：间距、header、关闭按钮、Esc）
+- [x] 5.2 确认多 Dialog 互斥（打开新 Dialog 自动关闭旧的）
+- [x] 5.3 确认 files/outline 面板行为完全不变
 
 ## 6. Evidence
 
-- [ ] 6.1 记录 RUN_LOG：Red 阶段测试失败的输出
-- [ ] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
-- [ ] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
-- [ ] 6.4 记录 Dependency Sync Check：D1/D2 决策状态 + `fe-hotfix-searchpanel-backdrop-close` 状态
+- [x] 6.1 记录 RUN_LOG：Red 阶段测试失败的输出
+- [x] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
+- [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
+- [x] 6.4 记录 Dependency Sync Check：D1/D2 决策状态 + `fe-hotfix-searchpanel-backdrop-close` 状态
 - [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）

@@ -1,11 +1,6 @@
-import { CharacterCardListContainer } from "../../features/character/CharacterCardListContainer";
 import { FileTreePanel } from "../../features/files/FileTreePanel";
-import { KnowledgeGraphPanel } from "../../features/kg/KnowledgeGraphPanel";
-import { MemoryPanel } from "../../features/memory/MemoryPanel";
 import { OutlinePanelContainer } from "../../features/outline/OutlinePanelContainer";
 import { ProjectSwitcher } from "../../features/projects/ProjectSwitcher";
-import { SearchPanel } from "../../features/search/SearchPanel";
-import { VersionHistoryContainer } from "../../features/version-history/VersionHistoryContainer";
 import { ScrollArea } from "../primitives";
 import { LAYOUT_DEFAULTS, type LeftPanelType } from "../../stores/layoutStore";
 import type { ProjectListItem } from "../../stores/projectStore";
@@ -31,12 +26,7 @@ function LeftPanelHeader(props: { title: string }): JSX.Element {
  */
 const PANEL_TITLES: Record<LeftPanelType, string> = {
   files: "Explorer",
-  search: "Search",
   outline: "Outline",
-  versionHistory: "Version History",
-  memory: "Memory",
-  characters: "Characters",
-  knowledgeGraph: "Knowledge Graph",
 };
 
 /**
@@ -59,7 +49,6 @@ export function Sidebar(props: {
   onSwitchProject?: (projectId: string) => Promise<void>;
   onCreateProject?: () => void;
   onOpenVersionHistoryDocument?: (documentId: string) => void;
-  onCloseSearch?: () => void;
 }): JSX.Element {
 
   if (props.collapsed) {
@@ -90,55 +79,12 @@ export function Sidebar(props: {
           </div>
         );
 
-      case "search":
-        return props.projectId ? (
-          <SearchPanel
-            projectId={props.projectId}
-            open={true}
-            onClose={props.onCloseSearch}
-          />
-        ) : (
-          <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-            Open a project to search
-          </div>
-        );
-
       case "outline":
         return props.projectId ? (
           <OutlinePanelContainer />
         ) : (
           <div className="p-3 text-xs text-[var(--color-fg-muted)]">
             Open a document to view outline
-          </div>
-        );
-
-      case "versionHistory":
-        return props.projectId ? (
-          <VersionHistoryContainer projectId={props.projectId} />
-        ) : (
-          <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-            Open a document to view history
-          </div>
-        );
-
-      case "memory":
-        return <MemoryPanel />;
-
-      case "characters":
-        return props.projectId ? (
-          <CharacterCardListContainer projectId={props.projectId} />
-        ) : (
-          <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-            Open a project to manage characters
-          </div>
-        );
-
-      case "knowledgeGraph":
-        return props.projectId ? (
-          <KnowledgeGraphPanel projectId={props.projectId} />
-        ) : (
-          <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-            Open a project to view knowledge graph
           </div>
         );
 

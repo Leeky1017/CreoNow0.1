@@ -265,11 +265,11 @@ describe("layoutStore activeLeftPanel persistence", () => {
     const { preferences, setCalls } = createPreferenceStub({});
     const store = createLayoutStore(preferences);
 
-    store.getState().setActiveLeftPanel("knowledgeGraph" as LeftPanelType);
+    store.getState().setActiveLeftPanel("outline" as LeftPanelType);
 
     expect(setCalls).toContainEqual([
       "creonow.layout.activeLeftPanel",
-      "knowledgeGraph",
+      "outline",
     ]);
   });
 
@@ -293,5 +293,29 @@ describe("layoutStore activeLeftPanel persistence", () => {
       "creonow.layout.activeLeftPanel",
       "files",
     ]);
+  });
+});
+
+describe("layoutStore transient popup state", () => {
+  it("should default dialogType to null and spotlightOpen to false", () => {
+    const { preferences } = createPreferenceStub({});
+    const store = createLayoutStore(preferences);
+
+    expect(store.getState().dialogType).toBeNull();
+    expect(store.getState().spotlightOpen).toBe(false);
+  });
+
+  it("should update dialogType and spotlightOpen in memory only", () => {
+    const { preferences, setCalls } = createPreferenceStub({});
+    const store = createLayoutStore(preferences);
+
+    store.getState().setDialogType("memory");
+    store.getState().setSpotlightOpen(true);
+
+    expect(store.getState().dialogType).toBe("memory");
+    expect(store.getState().spotlightOpen).toBe(true);
+    expect(
+      setCalls.find(([key]) => key === "creonow.layout.activeLeftPanel"),
+    ).toBeUndefined();
   });
 });

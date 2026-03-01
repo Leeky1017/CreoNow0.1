@@ -36,15 +36,7 @@ const meta = {
     },
     activePanel: {
       control: "select",
-      options: [
-        "files",
-        "search",
-        "outline",
-        "versionHistory",
-        "memory",
-        "characters",
-        "knowledgeGraph",
-      ] as LeftPanelType[],
+      options: ["files", "outline"] as LeftPanelType[],
       description: "Active left panel view",
     },
   },
@@ -108,19 +100,6 @@ export const Collapsed: Story = {
 };
 
 /**
- * Search 面板
- */
-export const SearchPanel: Story = {
-  args: {
-    width: LAYOUT_DEFAULTS.sidebar.default,
-    collapsed: false,
-    projectId: "test-project",
-    activePanel: "search",
-  },
-  render: RenderWrapper,
-};
-
-/**
  * Outline 面板
  */
 export const OutlinePanel: Story = {
@@ -129,58 +108,6 @@ export const OutlinePanel: Story = {
     collapsed: false,
     projectId: "test-project",
     activePanel: "outline",
-  },
-  render: RenderWrapper,
-};
-
-/**
- * Version History 面板
- */
-export const VersionHistoryPanel: Story = {
-  args: {
-    width: LAYOUT_DEFAULTS.sidebar.default,
-    collapsed: false,
-    projectId: "test-project",
-    activePanel: "versionHistory",
-  },
-  render: RenderWrapper,
-};
-
-/**
- * Memory 面板
- */
-export const MemoryPanel: Story = {
-  args: {
-    width: LAYOUT_DEFAULTS.sidebar.default,
-    collapsed: false,
-    projectId: null,
-    activePanel: "memory",
-  },
-  render: RenderWrapper,
-};
-
-/**
- * Characters 面板
- */
-export const CharactersPanel: Story = {
-  args: {
-    width: LAYOUT_DEFAULTS.sidebar.default,
-    collapsed: false,
-    projectId: "test-project",
-    activePanel: "characters",
-  },
-  render: RenderWrapper,
-};
-
-/**
- * Knowledge Graph 面板
- */
-export const KnowledgeGraphPanel: Story = {
-  args: {
-    width: LAYOUT_DEFAULTS.sidebar.default,
-    collapsed: false,
-    projectId: "test-project",
-    activePanel: "knowledgeGraph",
   },
   render: RenderWrapper,
 };

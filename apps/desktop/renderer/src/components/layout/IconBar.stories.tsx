@@ -2,7 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { IconBar } from "./IconBar";
 import { layoutDecorator } from "./test-utils";
-import { useLayoutStore, type LeftPanelType } from "../../stores/layoutStore";
+import {
+  useLayoutStore,
+  type DialogType,
+  type LeftPanelType,
+} from "../../stores/layoutStore";
 
 /**
  * IconBar 组件 Story
@@ -35,6 +39,8 @@ type Story = StoryObj<typeof meta>;
  */
 function IconBarStatePreview(props: {
   activePanel: LeftPanelType;
+  dialogType?: DialogType;
+  spotlightOpen?: boolean;
   hoveredTestId?: string;
   focusVisibleTestId?: string;
   settingsOpen?: boolean;
@@ -44,11 +50,23 @@ function IconBarStatePreview(props: {
 }): JSX.Element {
   const setActiveLeftPanel = useLayoutStore((s) => s.setActiveLeftPanel);
   const setSidebarCollapsed = useLayoutStore((s) => s.setSidebarCollapsed);
+  const setDialogType = useLayoutStore((s) => s.setDialogType);
+  const setSpotlightOpen = useLayoutStore((s) => s.setSpotlightOpen);
 
   React.useEffect(() => {
     setActiveLeftPanel(props.activePanel);
     setSidebarCollapsed(false);
-  }, [props.activePanel, setActiveLeftPanel, setSidebarCollapsed]);
+    setDialogType(props.dialogType ?? null);
+    setSpotlightOpen(props.spotlightOpen ?? false);
+  }, [
+    props.activePanel,
+    props.dialogType,
+    props.spotlightOpen,
+    setActiveLeftPanel,
+    setDialogType,
+    setSidebarCollapsed,
+    setSpotlightOpen,
+  ]);
 
   const simulatedHoverClass = props.hoveredTestId
     ? `[&_[data-testid='${props.hoveredTestId}']]:bg-[var(--color-bg-hover)] [&_[data-testid='${props.hoveredTestId}']]:text-[var(--color-fg-default)]`
@@ -108,12 +126,12 @@ export const Default: Story = {
 };
 
 /**
- * 其他面板激活态（knowledgeGraph 激活）
+ * 弹出式知识图谱激活态
  */
 export const KnowledgeGraphActive: Story = {
   render: () => (
     <div style={{ display: "flex", height: "400px" }}>
-      <IconBarStatePreview activePanel="knowledgeGraph" />
+      <IconBarStatePreview activePanel="files" dialogType="knowledgeGraph" />
     </div>
   ),
 };
