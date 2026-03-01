@@ -47,6 +47,8 @@
 - 独立审计记录标准操作：
   - 生成初稿：`scripts/independent_review_record.sh --issue <N> --author <agent> --reviewer <agent> --pr-url <url>`
   - 审计签字：填写 Findings/Verification，并确保 `Decision=PASS`、`Reviewed-HEAD-SHA` 对齐代码审计基线（最终签字序列 `HEAD^^`）
+- 审计评论：审计结论必须先作为 PR comment 发布（`gh pr comment <N> --body "..."` 或 GitHub UI），再生成审计记录文件
+- 复审评论：如有二轮复审，同样以 PR comment 发布
 - `agent_worktree_setup.sh` 默认会在新 worktree 内执行 `pnpm install --frozen-lockfile`（可用 `--no-bootstrap` 关闭）。
 - `agent_pr_automerge_and_sync.sh` 在回填 RUN_LOG PR 链接后会自动执行 `main_audit_resign.sh`；并且遇到 `REVIEW_REQUIRED` 时会阻断合并，不再走 admin bypass。
 - `agent_pr_automerge_and_sync.sh` 在 GitHub TLS 抖动时会标记 `transient` 并自动重试，必要时回退到 `gh run list` 快照通道。

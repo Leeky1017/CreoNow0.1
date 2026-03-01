@@ -266,6 +266,11 @@ openspec/               rulebook/tasks/          .github/workflows/
 | 5. 提交与合并 | PR 已创建；auto-merge 已开启；三个 checks 全绿；PR 已确认合并                                       |
 | 6. 收口与归档 | 控制面 `main` 已包含任务提交；worktree 已清理；Rulebook task 已归档（允许同 PR 自归档）             |
 
+### 作为审计者时
+
+如果你被指派审计另一个 agent 的 PR，执行 `docs/delivery-skill.md` §八 审计协议。
+核心动作：读 diff → 跑验证 → 在 PR 下发评论 → 等修复 → PASS 后提交审计记录。
+
 ---
 
 ## 六、补充禁令

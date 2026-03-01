@@ -1,6 +1,6 @@
 # OpenSpec + Rulebook + GitHub 交付规则
 
-更新时间：2026-03-01 14:10
+更新时间：2026-03-01 22:00
 
 本文件是 CreoNow 的交付规则主源（Source of Truth）。
 本文件只定义约束条件和验收标准，不定义具体命令和脚本参数。
@@ -121,3 +121,61 @@ openspec/             rulebook/tasks/        .github/workflows/
 - 规则主源：`docs/references/document-timestamp-governance.md`
 - 校验脚本：`scripts/check_doc_timestamps.py`
 - CI 接入：`.github/workflows/ci.yml` 的 `doc-timestamp-gate` job（接入 required check `ci` 的 `needs`）
+
+---
+
+## 八、独立审计协议（Reviewer SOP）
+
+适用对象：被指派为 reviewer 的独立审计 Agent。
+
+### 审计步骤
+
+1. **读 PR diff**：`gh pr diff <PR_NUMBER>` 或在 GitHub UI 查看全部变更文件
+2. **读关联 spec**：`openspec/specs/<module>/spec.md` + `openspec/changes/<change>/` 下的 delta spec
+3. **跑验证命令**：至少执行 typecheck (`pnpm typecheck`) + 相关测试 (`pnpm -C apps/desktop test:run <path>`)，命令输出必须完整记录作为证据
+4. **识别问题并分级**：逐文件审查，每个问题必须引用具体文件路径和行号，附上问题代码片段与修复建议
+   - BLOCKER：违反 P1-P7 核心原则、安全漏洞、数据丢失风险 → 必须修复后才能合并
+   - SIGNIFICANT：超出 spec 范围、类型重复、死路径、测试缺失 → 应修复，可协商
+   - MINOR：措辞、格式、可读性 → 不阻塞合并，记录即可
+5. **在 PR 下发评论**：将审计结论（判定 + 问题清单 + checklist）作为 PR comment 发布，格式见下
+6. **等待修复**：如果 Decision=HOLD/FAIL，等作者修复后进行二轮复审，复审结论同样以 PR comment 发布
+7. **生成审计记录文件**：Decision=PASS 后，调用 `scripts/independent_review_record.sh` 生成 `openspec/_ops/reviews/ISSUE-<N>.md`，填写实际 Scope/Findings/Verification
+8. **提交审计记录**：作为独立 commit 提交到 task 分支（三层序列的第二层）
+
+### PR 评论格式
+
+```
+## 独立审计报告：Issue #<N>
+
+**审计人：** <独立审计 Agent 名称>
+**审计 HEAD：** `<commit SHA 前 8 位>`
+
+### 判定：PASS / HOLD — 需修复后方可合并 / FAIL
+
+## 🔴 必须修复（Blocking）
+...
+## 🟠 应当修复（Significant）
+...
+## 🟡 文档缺陷
+...
+## ⚪ 微瑕（Minor，不阻塞）
+...
+
+## 放行前必须完成的 Checklist
+| # | 项目 | 状态 |
+...
+```
+
+### Decision 判定标准
+
+- **PASS**：无 BLOCKER；SIGNIFICANT 全部已解决或已记录跟进 Issue
+- **HOLD**：存在 BLOCKER 或未解决的 SIGNIFICANT → 等修复后复审
+- **FAIL**：结构性问题无法通过局部修复解决 → 需要重新设计
+
+### 不可省略
+
+- 审计必须覆盖 PR 的全部变更文件，不得跳过
+- 至少一条验证命令（typecheck / test）必须实际执行并记录结果
+- PR 评论不可省略——即使 PASS 也要发 comment 记录审计结论
+- 每个问题必须附带证据：具体文件路径、行号、相关代码片段
+- 验证命令的完整输出（通过或失败）必须包含在 PR 评论或审计记录中
