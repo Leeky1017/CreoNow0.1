@@ -1,7 +1,7 @@
 # ISSUE-815
 - Issue: #815
 - Branch: task/815-fe-cleanup-proxysection-and-mocks
-- PR: TBD
+- PR: https://github.com/Leeky1017/CreoNow/pull/817
 
 ## Plan
 - Delete ProxySection.tsx dead code
