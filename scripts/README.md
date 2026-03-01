@@ -35,6 +35,7 @@
   - `task/<N>-<slug>` 对应 GitHub Issue `#N` 必须为 `OPEN`（阻断复用已关闭/历史 Issue）
   - `openspec/_ops/task_runs/ISSUE-<N>.md` 的 `PR` 字段不得为占位符（必须为真实链接）
   - `## Main Session Audit` 的 `Reviewed-HEAD-SHA` 不得保留占位值（如 `PENDING_SHA` / `TBD`）；命中后会本地阻断并提示执行 `scripts/main_audit_resign.sh --issue <N> --preflight-mode fast`
+  - 分支提交历史中的过程证据时序：若存在前序交付提交但 `Rulebook/RUN_LOG/OpenSpec tasks` 仅在最后签字尾段提交出现，视为“末尾集中补录”并阻断
 - `agent_pr_preflight.sh` 支持 `--mode commit|fast|full`：
   - `commit`：task 分支提交前本地快检（仅校验 staged 文件），拦截文档时间戳格式与 `openspec/_ops/task_runs/ISSUE-*.md` 缺少 `## Main Session Audit` 段落
   - `fast`：治理与签字链路快检（Issue/Rulebook/RUN_LOG/Main Audit/doc 时间戳/OpenSpec 结构）

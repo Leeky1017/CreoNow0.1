@@ -46,6 +46,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 17. **独立审计前置强制**：`task/<N>-<slug>` 分支进入合并前，必须存在 `openspec/_ops/reviews/ISSUE-<N>.md` 并通过独立审计校验：`Author-Agent != Reviewer-Agent`、`Decision=PASS`、`Reviewed-HEAD-SHA==签字提交的 HEAD^^（代码审计基线）`；由 `openspec-log-guard` 阻断未满足场景。
 18. **完成变更归档强制**：当 `openspec/changes/<change>/tasks.md` 全部勾选完成时，必须归档到 `openspec/changes/archive/`，不得继续停留在活跃目录。
 19. **Rulebook 自归档无递归**：允许当前任务在同一 PR 中将自身 Rulebook task 从 `active` 归档到 `archive`；不得仅为“归档当前任务”再创建递归 closeout issue。
+20. **过程记录时序强制**：`Rulebook/RUN_LOG/OpenSpec tasks` 必须在执行过程中持续更新，不得只在最终审计签字尾段集中回填；若分支存在前序交付提交但治理证据仅出现在最后签字尾段提交，preflight 必须阻断。
 
 ---
 
@@ -81,6 +82,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 | RUN_LOG 主会话审计缺失/未通过        | 阻断交付；先补齐 `## Main Session Audit` 并满足全部通过条件，确保签字提交仅变更 RUN_LOG     |
 | 活跃 change 已完成但未归档           | 阻断交付，先归档到 `openspec/changes/archive/` 再继续                                       |
 | 当前任务已在同 PR 归档               | 允许 preflight 通过 archive 路径校验，不要求再次创建 closeout issue                         |
+| Rulebook/RUN_LOG 仅在末尾集中补录    | 阻断交付；在执行期补充过程记录提交后重新签字，再重新 preflight                               |
 
 ---
 

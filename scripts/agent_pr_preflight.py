@@ -519,6 +519,89 @@ def collect_changed_files(repo: str) -> set[str]:
     return changed_files
 
 
+def collect_branch_commits(repo: str) -> list[str]:
+    res = run(["git", "rev-list", "--reverse", "origin/main..HEAD"], cwd=repo)
+    if res.code != 0:
+        raise RuntimeError("[GOV_EVIDENCE] failed to list branch commits (origin/main..HEAD)")
+    return [line.strip() for line in res.out.splitlines() if line.strip()]
+
+
+def collect_commit_changed_files(repo: str, sha: str) -> set[str]:
+    res = run(["git", "show", "--name-only", "--pretty=format:", sha], cwd=repo)
+    if res.code != 0:
+        raise RuntimeError(f"[GOV_EVIDENCE] failed to inspect commit files: {sha}")
+    return {line.strip() for line in res.out.splitlines() if line.strip()}
+
+
+def _is_progress_artifact_path(path: str, *, issue_number: str, task_id: str, slug: str) -> bool:
+    run_log_rel = f"openspec/_ops/task_runs/ISSUE-{issue_number}.md"
+    review_rel = f"openspec/_ops/reviews/ISSUE-{issue_number}.md"
+    if path in {run_log_rel, review_rel}:
+        return True
+
+    if path.startswith(f"rulebook/tasks/{task_id}/"):
+        return True
+    if re.match(rf"^rulebook/tasks/archive/[^/]+-{re.escape(task_id)}/", path):
+        return True
+
+    if slug:
+        if path.startswith(f"openspec/changes/{slug}/"):
+            return True
+        if path.startswith(f"openspec/changes/archive/{slug}/"):
+            return True
+
+    return False
+
+
+def validate_progress_evidence_timeline(repo: str, *, issue_number: str, task_id: str, slug: str) -> None:
+    commits = collect_branch_commits(repo)
+    if len(commits) <= 1:
+        print("(skip) progressive evidence check: <= 1 commit in branch range")
+        return
+
+    progress_indexes: list[int] = []
+    has_non_progress_before_head = False
+
+    for idx, sha in enumerate(commits):
+        changed = collect_commit_changed_files(repo, sha)
+        if not changed:
+            continue
+
+        has_progress = any(
+            _is_progress_artifact_path(path, issue_number=issue_number, task_id=task_id, slug=slug)
+            for path in changed
+        )
+        has_non_progress = any(
+            not _is_progress_artifact_path(path, issue_number=issue_number, task_id=task_id, slug=slug)
+            for path in changed
+        )
+
+        if has_progress:
+            progress_indexes.append(idx)
+        if idx < len(commits) - 1 and has_non_progress:
+            has_non_progress_before_head = True
+
+    if not progress_indexes:
+        raise RuntimeError(
+            "[GOV_EVIDENCE] branch has no progress artifacts for current issue "
+            f"(RUN_LOG/review/rulebook/change-task): issue #{issue_number}"
+        )
+
+    if has_non_progress_before_head:
+        has_progress_before_signing_tail = any(idx < len(commits) - 2 for idx in progress_indexes)
+        if not has_progress_before_signing_tail:
+            raise RuntimeError(
+                "[GOV_EVIDENCE] progress artifacts were only introduced in the final signing tail commits "
+                "(typically review/signoff). This indicates end-backfill. Update Rulebook/RUN_LOG/OpenSpec task "
+                "during execution, then re-sign main-session audit."
+            )
+
+    print(
+        "OK: progressive evidence timeline check passed "
+        f"(commits={len(commits)}, progress_commits={len(progress_indexes)})"
+    )
+
+
 def collect_staged_files(repo: str) -> set[str]:
     res = run(
         ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMR"],
@@ -622,6 +705,13 @@ def main(argv: list[str]) -> int:
             must_run(["rulebook", "task", "validate", task_id], cwd=repo)
         else:
             print(f"(skip) rulebook task validate: current task is archived at {task_location.path}")
+
+        validate_progress_evidence_timeline(
+            repo,
+            issue_number=issue_number,
+            task_id=task_id,
+            slug=slug,
+        )
 
         print("\n== Workspace checks ==")
         # Keep preflight OS-agnostic; Windows-only build/E2E are enforced in CI.
