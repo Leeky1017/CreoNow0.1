@@ -170,6 +170,7 @@ const PROJECT_SETTINGS_SCOPE_PREFIX = "project:" as const;
 const CURRENT_DOCUMENT_ID_KEY = "creonow.document.currentId" as const;
 const MAX_PROJECT_NAME_LENGTH = 120;
 const MAX_PROJECT_COUNT = 2_000;
+const PROJECT_SANDBOX_DIR_NAME = "projects" as const;
 
 const PROJECT_TYPE_SET = new Set<ProjectType>(["novel", "screenplay", "media"]);
 const PROJECT_STAGE_SET = new Set<ProjectStage>([
@@ -192,6 +193,16 @@ const NARRATIVE_PERSON_SET = new Set<NarrativePerson>([
  */
 function getProjectRootPath(userDataDir: string, projectId: string): string {
   return path.join(userDataDir, "projects", projectId);
+}
+
+function isPathInsideDirectory(targetPath: string, directoryPath: string): boolean {
+  const normalizedTargetPath = path.resolve(targetPath);
+  const normalizedDirectoryPath = path.resolve(directoryPath);
+  const relative = path.relative(normalizedDirectoryPath, normalizedTargetPath);
+  return (
+    relative.length === 0 ||
+    (!relative.startsWith("..") && !path.isAbsolute(relative))
+  );
 }
 
 /**
@@ -1186,44 +1197,88 @@ export function createProjectService(args: {
         return { ok: false, error: transition.error };
       }
 
+      const sandboxRootPath = path.join(args.userDataDir, PROJECT_SANDBOX_DIR_NAME);
+      if (!isPathInsideDirectory(project.data.rootPath, sandboxRootPath)) {
+        args.logger.error("project_lifecycle_purge_sandbox_violation", {
+          code: "PROJECT_PURGE_PERMISSION_DENIED",
+          trace_id: traceId,
+          project_id: projectId,
+          root_path: project.data.rootPath,
+          sandbox_root: sandboxRootPath,
+        });
+        return ipcError(
+          "PROJECT_PURGE_PERMISSION_DENIED",
+          "删除失败，项目路径不在沙箱目录内",
+          { projectId },
+          { traceId },
+        );
+      }
+
+      const purgeNotFoundMarker = Symbol("project_lifecycle_purge_not_found");
+      type RemoveRootFailure = { kind: "remove_root_failed"; error: unknown };
+
       try {
-        removeProjectRoot(project.data.rootPath);
+        args.db.transaction(() => {
+          const result = args.db
+            .prepare("DELETE FROM projects WHERE project_id = ?")
+            .run(projectId);
+          if (result.changes === 0) {
+            throw purgeNotFoundMarker;
+          }
+          try {
+            removeProjectRoot(project.data.rootPath);
+          } catch (error) {
+            const failure: RemoveRootFailure = { kind: "remove_root_failed", error };
+            throw failure;
+          }
+        })();
       } catch (error) {
-        const err = error as NodeJS.ErrnoException;
-        if (err?.code === "EACCES" || err?.code === "EPERM") {
-          args.logger.error("project_lifecycle_purge_permission_denied", {
-            code: "PROJECT_PURGE_PERMISSION_DENIED",
-            message: err.message,
+        if (error === purgeNotFoundMarker) {
+          return ipcError("NOT_FOUND", "项目已删除", { projectId }, { traceId });
+        }
+
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          "kind" in error &&
+          (error as RemoveRootFailure).kind === "remove_root_failed"
+        ) {
+          const removeRootError = (error as RemoveRootFailure).error;
+          const err = removeRootError as NodeJS.ErrnoException;
+          if (err?.code === "EACCES" || err?.code === "EPERM") {
+            args.logger.error("project_lifecycle_purge_permission_denied", {
+              code: "PROJECT_PURGE_PERMISSION_DENIED",
+              message: err.message,
+              trace_id: traceId,
+              project_id: projectId,
+            });
+            return ipcError(
+              "PROJECT_PURGE_PERMISSION_DENIED",
+              "删除失败，路径无写权限",
+              { projectId, rootPath: project.data.rootPath },
+              { traceId },
+            );
+          }
+
+          args.logger.error("project_lifecycle_purge_io_failed", {
+            code: "IO_ERROR",
+            message:
+              removeRootError instanceof Error
+                ? removeRootError.message
+                : String(removeRootError),
             trace_id: traceId,
             project_id: projectId,
           });
           return ipcError(
-            "PROJECT_PURGE_PERMISSION_DENIED",
-            "删除失败，路径无写权限",
-            { projectId, rootPath: project.data.rootPath },
-            { traceId },
+            "IO_ERROR",
+            "Failed to remove project files",
+            { projectId },
+            {
+              traceId,
+            },
           );
         }
 
-        args.logger.error("project_lifecycle_purge_io_failed", {
-          code: "IO_ERROR",
-          message: error instanceof Error ? error.message : String(error),
-          trace_id: traceId,
-          project_id: projectId,
-        });
-        return ipcError("IO_ERROR", "Failed to remove project files", { projectId }, {
-          traceId,
-        });
-      }
-
-      try {
-        const result = args.db
-          .prepare("DELETE FROM projects WHERE project_id = ?")
-          .run(projectId);
-        if (result.changes === 0) {
-          return ipcError("NOT_FOUND", "项目已删除", { projectId }, { traceId });
-        }
-      } catch (error) {
         args.logger.error("project_lifecycle_purge_db_failed", {
           code: "DB_ERROR",
           message: error instanceof Error ? error.message : String(error),
