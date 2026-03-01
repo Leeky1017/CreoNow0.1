@@ -1,6 +1,6 @@
 # ISSUE-807
 
-更新时间：2026-03-01 16:46
+更新时间：2026-03-01 17:11
 
 - Issue: #807
 - Branch: task/807-fe-leftpanel-dialog-migration
@@ -100,6 +100,30 @@
   - `Test Files 193 passed (193)`
   - `Tests 1565 passed (1565)`
   - `Duration 76.65s`
+
+### 2026-03-01 17:03 CI Follow-up — windows-e2e 回归复现与首轮修复验证
+
+- Command: `pnpm -C apps/desktop test:e2e -- tests/e2e/knowledge-graph.spec.ts tests/e2e/system-dialog.spec.ts`
+- Exit code: `1`
+- Key output:
+  - 首次执行：`2 failed`，失败点为 `expect(locator).not.toBeVisible()`（`getByRole("dialog")` 命中常驻 leftpanel dialog）。
+  - 首轮修复后再次执行：`1 failed / 1 passed`，剩余失败为 `knowledge-graph.spec.ts` 中 `ai-send-stop` 长时间 disabled。
+- Root cause:
+  - `KnowledgeGraph` 迁移为模态 Dialog 后，E2E 仍以 `layout-sidebar` 为容器，且使用泛化 `getByRole("dialog")` 断言确认框关闭，目标不再唯一。
+  - KG Dialog 未关闭即进入 AI 面板步骤，导致背景交互受模态层阻断。
+- Fix:
+  - 将 `knowledge-graph.spec.ts` 与 `system-dialog.spec.ts` 的 `Graph/List` 操作容器切换为 `leftpanel-dialog-knowledgeGraph`。
+  - 删除确认框断言改为具名 dialog：`name: "Delete Document?"` / `name: "Delete Entity?"`。
+  - 在 `knowledge-graph.spec.ts` 中，AI 交互前显式点击 `Close` 关闭 KG dialog。
+
+### 2026-03-01 17:10 CI Follow-up Verification — windows-e2e 定向回归转绿
+
+- Command: `pnpm -C apps/desktop test:e2e -- tests/e2e/knowledge-graph.spec.ts tests/e2e/system-dialog.spec.ts`
+- Exit code: `0`
+- Key output:
+  - `2 passed`
+  - `0 failed`
+  - `Duration 4.6s`
 
 ## Main Session Audit
 

@@ -67,9 +67,14 @@ async function createProjectViaUi(page: Page): Promise<void> {
  * Why: KG2 defaults to Graph view; list CRUD controls are rendered only in List.
  */
 async function switchKgToListMode(page: Page): Promise<void> {
-  const sidebar = page.getByTestId("layout-sidebar");
-  await expect(sidebar.getByRole("button", { name: "Graph" })).toBeVisible();
-  await sidebar.getByRole("button", { name: "List" }).click();
+  const knowledgeGraphDialog = page.getByTestId(
+    "leftpanel-dialog-knowledgeGraph",
+  );
+  await expect(knowledgeGraphDialog).toBeVisible();
+  await expect(
+    knowledgeGraphDialog.getByRole("button", { name: "Graph" }),
+  ).toBeVisible();
+  await knowledgeGraphDialog.getByRole("button", { name: "List" }).click();
   await expect(page.getByTestId("kg-entity-create")).toBeEnabled();
 }
 
@@ -94,7 +99,7 @@ test("knowledge graph: sidebar CRUD + context viewer injection (skill gated)", a
   const projectId = project.data.projectId;
 
   await page.getByTestId("icon-bar-knowledge-graph").click();
-  await expect(page.getByTestId("layout-sidebar")).toBeVisible();
+  await expect(page.getByTestId("leftpanel-dialog-knowledgeGraph")).toBeVisible();
   await switchKgToListMode(page);
 
   await page.getByTestId("kg-entity-name").fill("Alice");
@@ -123,12 +128,18 @@ test("knowledge graph: sidebar CRUD + context viewer injection (skill gated)", a
 
   await page.getByTestId(`kg-entity-delete-${entityId}`).click();
 
-  const dialog = page.getByRole("dialog");
+  const dialog = page.getByRole("dialog", { name: "Delete Entity?" });
   await expect(dialog).toBeVisible();
   await dialog.getByRole("button", { name: "Delete" }).click();
   await expect(dialog).not.toBeVisible();
 
   await expect(page.getByTestId(`kg-entity-row-${entityId}`)).toHaveCount(0);
+
+  const knowledgeGraphDialog = page.getByTestId(
+    "leftpanel-dialog-knowledgeGraph",
+  );
+  await knowledgeGraphDialog.getByRole("button", { name: "Close" }).click();
+  await expect(knowledgeGraphDialog).toHaveCount(0);
 
   const tooManyAttributes: Record<string, string> = {};
   for (let i = 0; i < 201; i += 1) {
