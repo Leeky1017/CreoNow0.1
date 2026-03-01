@@ -5,6 +5,9 @@ import { redactText } from "./redact";
 const githubTokens = [
   "gho_ABCDEF1234567890",
   "ghp_QWERTY0987654321",
+  "ghs_ZYXWVUTSRQPONMLK",
+  "ghu_A1B2C3D4E5F6G7H8",
+  "ghr_1234ABCD5678EFGH",
   "github_pat_11AA22BB33CC44DD55EE66FF77GG88HH99II",
 ];
 
@@ -24,4 +27,4 @@ const githubTokenEvidence = redaction.evidence.find(
   (item) => item.patternId === "github_token",
 );
 assert(githubTokenEvidence, "github token evidence should exist");
-assert.equal(githubTokenEvidence.matchCount, 3);
+assert.equal(githubTokenEvidence.matchCount, 6);

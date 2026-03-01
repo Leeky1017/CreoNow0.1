@@ -27,7 +27,7 @@ const PATTERNS: Pattern[] = [
   },
   {
     id: "github_token",
-    re: /\b(?:gho|ghp|github_pat)_[A-Za-z0-9_]{10,}\b/g,
+    re: /\b(?:gho|ghp|ghs|ghu|ghr|github_pat)_[A-Za-z0-9_]{10,}\b/g,
   },
   {
     id: "windows_abs_path",
