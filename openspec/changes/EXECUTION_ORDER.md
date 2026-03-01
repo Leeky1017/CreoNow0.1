@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-01 20:35
+更新时间：2026-03-01 22:30
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -28,7 +28,7 @@
 | 2 | 2-1 | `fe-spec-drift-iconbar-rightpanel-alignment` | Layout 簇 | D1/D2/D3 已决策 | 已完成并归档（PR #799） |
 | 2 | 2-2 | `fe-leftpanel-dialog-migration` | Layout 簇 | `fe-spec-drift-iconbar-rightpanel-alignment`, D1/D2 已决策 | 已完成并归档（PR #808） |
 | 2 | 2-3 | `fe-ai-panel-toggle-button` | Layout 簇 | — | 已完成并归档（PR #818） |
-| — | 收尾 | `fe-dashboard-welcome-merge-and-ghost-actions` | AppShell 簇 | `fe-cleanup-proxysection-and-mocks`, `fe-ui-open-folder-entrypoints`(第二批), 且与 leftpanel/toggle 共享 AppShell.tsx 需等其完成 | 待执行 |
+| — | 收尾 | `fe-dashboard-welcome-merge-and-ghost-actions` | AppShell 簇 | `fe-cleanup-proxysection-and-mocks`, `fe-ui-open-folder-entrypoints`(第二批), 且与 leftpanel/toggle 共享 AppShell.tsx 需等其完成 | PR #830 审计整改中 |
 
 #### 第一批文件冲突矩阵
 
@@ -52,8 +52,8 @@
 
 | Lane | 顺序 | Change | 文件冲突簇 | 依赖 | 状态 |
 |------|------|--------|-----------|------|------|
-| A | 2-1 | `fe-ipc-open-folder-contract` | Main/Preload IPC 簇 | — | 待执行 |
-| A | 2-2 | `fe-ui-open-folder-entrypoints` | main/index + Dashboard/Onboarding 簇 | `fe-ipc-open-folder-contract`；且与 `fe-skeleton-loading-states` 互斥（`DashboardPage.tsx`） | 待执行 |
+| A | 2-1 | `fe-ipc-open-folder-contract` | Main/Preload IPC 簇 | — | PR #830 审计整改中 |
+| A | 2-2 | `fe-ui-open-folder-entrypoints` | main/index + Dashboard/Onboarding 簇 | `fe-ipc-open-folder-contract`；且与 `fe-skeleton-loading-states` 互斥（`DashboardPage.tsx`） | PR #830 审计整改中 |
 | B | 2-1 | `fe-project-image-cropper` | ProjectDialog/ImageCropper 簇 | — | 待执行 |
 | C | 2-1 | `fe-error-boundary-partitioning` | AppShell/ErrorBoundary 启动簇 | — | 待执行 |
 | D | 2-1 | `fe-skeleton-loading-states` | Dashboard loading 簇 | 与 `fe-ui-open-folder-entrypoints` 互斥（`DashboardPage.tsx`） | 待执行 |
