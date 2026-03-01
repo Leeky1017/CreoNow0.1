@@ -10,6 +10,10 @@ import {
   RadioGroupRoot,
 } from "../../components/primitives/Radio";
 import { ImageUpload } from "../../components/primitives/ImageUpload";
+import {
+  ImageCropper,
+  type CropArea,
+} from "../../components/composites/ImageCropper";
 import { useProjectStore } from "../../stores/projectStore";
 import { useTemplateStore } from "../../stores/templateStore";
 import { CreateTemplateDialog } from "./CreateTemplateDialog";
@@ -41,6 +45,7 @@ interface FormContentProps {
     templateId: string;
     description: string;
     coverImage: File | null;
+    cropArea: CropArea | null;
   }) => Promise<void>;
   onOpenCreateTemplate: () => void;
 }
@@ -81,6 +86,7 @@ function FormContent({
   const [templateId, setTemplateId] = useState(defaultTemplateId);
   const [description, setDescription] = useState(initialDescription ?? "");
   const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [cropArea, setCropArea] = useState<CropArea | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [nameError, setNameError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -146,12 +152,13 @@ function FormContent({
           templateId,
           description,
           coverImage,
+          cropArea,
         });
       } finally {
         setSubmitting(false);
       }
     },
-    [coverImage, description, initialType, name, onSubmit, templateId],
+    [coverImage, cropArea, description, initialType, name, onSubmit, templateId],
   );
 
   return (
@@ -292,6 +299,12 @@ function FormContent({
           placeholder="Click or drag image to upload"
           hint="PNG, JPG up to 5MB"
         />
+        {coverImage && (
+          <ImageCropper
+            file={coverImage}
+            onCropChange={setCropArea}
+          />
+        )}
         {imageError && (
           <Text
             size="small"
