@@ -25,7 +25,6 @@ const TARGET_CAST_FILES = [
   "apps/desktop/preload/src/ipc.ts",
   "apps/desktop/main/src/ipc/ipcAcl.ts",
   "apps/desktop/renderer/src/features/outline/deriveOutline.ts",
-  "apps/desktop/renderer/src/features/settings/ProxySection.tsx",
   "apps/desktop/renderer/src/features/settings/AiSettingsSection.tsx",
 ] as const;
 
