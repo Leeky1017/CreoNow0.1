@@ -1,152 +1,50 @@
 import { Text } from "../../components/primitives";
 
 /**
-
  * Format relative time (e.g., "1m", "3h", "2d")
-
+ * Kept for future use when chat persistence is implemented.
  */
-
 function formatRelativeTime(date: Date): string {
   const now = Date.now();
-
   const diffMs = now - date.getTime();
-
   const diffMins = Math.floor(diffMs / 60000);
-
   const diffHours = Math.floor(diffMs / 3600000);
-
   const diffDays = Math.floor(diffMs / 86400000);
 
   if (diffMins < 1) return "now";
-
   if (diffMins < 60) return `${diffMins}m`;
-
   if (diffHours < 24) return `${diffHours}h`;
-
   return `${diffDays}d`;
 }
 
-/**
-
- * Mock chat history data for demonstration.
-
- * In production, this would come from a store or IPC call.
-
- */
-
-const MOCK_HISTORY: ChatHistoryItem[] = [
-  {
-    id: "chat-1",
-
-    title: "Storybook errors investigation",
-
-    timestamp: new Date(Date.now() - 60000), // 1 min ago
-
-    group: "Today",
-  },
-
-  {
-    id: "chat-2",
-
-    title: "RAG与关键字检索对比",
-
-    timestamp: new Date(Date.now() - 3600000), // 1 hour ago
-
-    group: "Today",
-  },
-
-  {
-    id: "chat-3",
-
-    title: "Phase 4 任务代码错误",
-
-    timestamp: new Date(Date.now() - 10800000), // 3 hours ago
-
-    group: "Today",
-  },
-
-  {
-    id: "chat-4",
-
-    title: "P2 UI 组件开发与交付",
-
-    timestamp: new Date(Date.now() - 86400000), // 1 day ago
-
-    group: "Yesterday",
-  },
-
-  {
-    id: "chat-5",
-
-    title: "P2 组件 Story 和测试",
-
-    timestamp: new Date(Date.now() - 86400000 * 2), // 2 days ago
-
-    group: "Yesterday",
-  },
-];
-
 type ChatHistoryItem = {
   id: string;
-
   title: string;
-
   timestamp: Date;
-
   group: "Today" | "Yesterday" | "Earlier";
 };
 
 type ChatHistoryProps = {
   open: boolean;
-
   onOpenChange: (open: boolean) => void;
-
   onSelectChat: (chatId: string) => void;
 };
 
 /**
-
  * ChatHistory renders a dropdown list of past conversations.
-
  *
-
- * Features:
-
- * - Groups chats by time (Today, Yesterday, Earlier)
-
- * - Click to load a previous conversation
-
- * - Hover to show edit/delete actions
-
+ * Currently shows an empty state because chat persistence is not yet
+ * implemented (P1 scope). When a chat store / IPC source becomes available,
+ * this component will render grouped history items via ChatHistoryItemRow.
  */
-
 export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
   if (!props.open) {
     return null;
   }
 
-  // Group items by their group property
-
-  const grouped = MOCK_HISTORY.reduce<Record<string, ChatHistoryItem[]>>(
-    (acc, item) => {
-      if (!acc[item.group]) {
-        acc[item.group] = [];
-      }
-
-      acc[item.group].push(item);
-
-      return acc;
-    },
-
-    {},
-  );
-
-  const groups = ["Today", "Yesterday", "Earlier"] as const;
-
   return (
     <>
       {/* Backdrop to close on click outside */}
-
       <div
         role="presentation"
         onClick={() => props.onOpenChange(false)}
@@ -154,7 +52,6 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
       />
 
       {/* Dropdown panel */}
-
       <div
         role="dialog"
         aria-label="Chat History"
@@ -162,51 +59,25 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
         className="absolute top-full right-0 mt-1 w-64 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
         {/* Header */}
-
         <div className="px-3 py-2 border-b border-[var(--color-border-default)]">
           <div className="flex items-center gap-2">
             <input
               type="text"
               placeholder="Search..."
-              className="flex-1 bg-transparent border-none text-[12px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-muted)] focus:outline-none"
+              disabled
+              className="flex-1 bg-transparent border-none text-[12px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-muted)] focus:outline-none opacity-50 cursor-not-allowed"
             />
           </div>
         </div>
 
-        {/* Chat list */}
-
-        <div className="max-h-80 overflow-y-auto">
-          {groups.map((group) => {
-            const items = grouped[group];
-
-            if (!items || items.length === 0) return null;
-
-            return (
-              <div key={group}>
-                {/* Group header */}
-
-                <div className="px-3 py-1.5 bg-[var(--color-bg-surface)]">
-                  <Text
-                    size="tiny"
-                    color="muted"
-                    className="uppercase tracking-wide"
-                  >
-                    {group}
-                  </Text>
-                </div>
-
-                {/* Chat items */}
-
-                {items.map((item) => (
-                  <ChatHistoryItemRow
-                    key={item.id}
-                    item={item}
-                    onSelect={() => props.onSelectChat(item.id)}
-                  />
-                ))}
-              </div>
-            );
-          })}
+        {/* Empty state — chat persistence not yet available */}
+        <div className="px-4 py-8 text-center">
+          <Text size="tiny" color="muted">
+            No conversation history yet.
+          </Text>
+          <Text size="tiny" color="muted" className="mt-1 block">
+            Chat history will appear here once chat persistence is available.
+          </Text>
         </div>
       </div>
     </>

@@ -108,7 +108,7 @@ describe("SearchPanel", () => {
       const input = screen.getByTestId("search-input");
       fireEvent.change(input, { target: { value: "design" } });
 
-      // 组件使用内置的 MOCK_SEARCH_RESULTS 数据
+      // 组件通过 searchStore 获取真实搜索结果
       // 输入后应该显示匹配的结果
     });
   });

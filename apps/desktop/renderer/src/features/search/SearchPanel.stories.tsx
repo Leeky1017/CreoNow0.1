@@ -1,10 +1,51 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import {
-  SearchPanel,
-  MOCK_SEARCH_RESULTS,
-  type SearchResultItem,
-} from "./SearchPanel";
+import { SearchPanel, type SearchResultItem } from "./SearchPanel";
+
+/**
+ * Mock data for Storybook demonstrations only.
+ * Removed from production SearchPanel.tsx per WB-FE-CLN-S2.
+ */
+const MOCK_SEARCH_RESULTS: SearchResultItem[] = [
+  {
+    id: "doc-1",
+    type: "document",
+    title: "The Architecture of Silence",
+    snippet:
+      "...visual noise. In design theory, this absence of clutter allows the user to focus purely on function. The aesthetic of silence is not empty...",
+    path: "Essays / Theory / Drafts",
+    matchScore: 98,
+    editedTime: "Edited 2m ago",
+  },
+  {
+    id: "doc-2",
+    type: "document",
+    title: "Minimalism in Digital Spaces",
+    snippet:
+      "...exploring the roots of design theory through the lens of early 20th century functionalism...",
+    path: "Research / Historical",
+  },
+  {
+    id: "mem-1",
+    type: "memory",
+    title: "Concept: Negative Space",
+    snippet: "Memory generated from design theory discussion on Jan 12.",
+    meta: "Generated Insight",
+  },
+  {
+    id: "mem-2",
+    type: "memory",
+    title: "User Preference: Typography",
+    snippet: "User prefers serif fonts for design essays.",
+    meta: "Implicit Preference",
+  },
+  {
+    id: "kg-1",
+    type: "knowledge",
+    title: "Bauhaus Movement",
+    meta: "Connected to 14 documents",
+  },
+];
 import { layoutDecorator } from "../../components/layout/test-utils";
 
 /**

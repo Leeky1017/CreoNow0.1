@@ -63,50 +63,6 @@ export async function navigateSearchResult(
 }
 
 /**
- * Mock data for demonstrating search results.
- */
-export const MOCK_SEARCH_RESULTS: SearchResultItem[] = [
-  {
-    id: "doc-1",
-    type: "document",
-    title: "The Architecture of Silence",
-    snippet:
-      "...visual noise. In design theory, this absence of clutter allows the user to focus purely on function. The aesthetic of silence is not empty...",
-    path: "Essays / Theory / Drafts",
-    matchScore: 98,
-    editedTime: "Edited 2m ago",
-  },
-  {
-    id: "doc-2",
-    type: "document",
-    title: "Minimalism in Digital Spaces",
-    snippet:
-      "...exploring the roots of design theory through the lens of early 20th century functionalism...",
-    path: "Research / Historical",
-  },
-  {
-    id: "mem-1",
-    type: "memory",
-    title: "Concept: Negative Space",
-    snippet: "Memory generated from design theory discussion on Jan 12.",
-    meta: "Generated Insight",
-  },
-  {
-    id: "mem-2",
-    type: "memory",
-    title: "User Preference: Typography",
-    snippet: "User prefers serif fonts for design essays.",
-    meta: "Implicit Preference",
-  },
-  {
-    id: "kg-1",
-    type: "knowledge",
-    title: "Bauhaus Movement",
-    meta: "Connected to 14 documents",
-  },
-];
-
-/**
  * Highlight matching text in a snippet using the search query.
  */
 function HighlightText(props: { text: string; query: string }): JSX.Element {
