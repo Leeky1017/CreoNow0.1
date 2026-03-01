@@ -1,6 +1,6 @@
 # ISSUE-796
 
-更新时间：2026-03-01 10:21
+更新时间：2026-03-01 11:30
 
 - Issue: #796
 - Branch: task/796-fe-rightpanel-ai-tabbar-layout
@@ -82,10 +82,23 @@
 - Key output: `fe-rightpanel-ai-tabbar-layout` 对应依赖列为 `—`（无上游依赖）。
 - Notes: 本 change 无 dependency drift，6.4 标记完成。
 
+### 2026-03-01 11:30 Fix — react-hooks/exhaustive-deps lint regression
+
+- Cause: `lint-ratchet` CI failed — `react-hooks/exhaustive-deps` baseline=2 current=3 delta=+1。
+- Root cause: `AiPanel.tsx` 的 `newChatSignal` useEffect 调用 `handleNewChat()` 但未列入依赖数组。
+- Fix: 引入 `handleNewChatRef` ref 持有最新回调，effect 通过 ref 调用，避免依赖数组膨胀。
+- Command: `pnpm lint 2>&1 | tail -1`
+- Exit code: `0`
+- Key output: `✖ 68 problems (0 errors, 68 warnings)` — 回到 baseline。
+- Command: `pnpm -C apps/desktop test:run AiPanel.test AiPanel.layout RightPanel.ai-tabbar-actions`
+- Exit code: `0`
+- Key output: `Test Files 3 passed (3)`，`Tests 18 passed (18)`。
+- Commit: `0e1a54ad` — `fix: resolve react-hooks/exhaustive-deps lint regression (#796)`
+
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 89989b3c821033aa13eeb2e55d6cc9e6ea265dd7
+- Reviewed-HEAD-SHA: 0e1a54ad1ab0532d6e032a6456aca10f4cb25f03
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
