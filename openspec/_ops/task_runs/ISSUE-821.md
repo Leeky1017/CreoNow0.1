@@ -1,7 +1,7 @@
 # ISSUE-821
 - Issue: #821
 - Branch: task/821-archive-815-816-and-worktree-cleanup
-- PR: 待创建（创建后回填真实链接）
+- PR: https://github.com/Leeky1017/CreoNow/pull/822
 
 ## Plan
 - 归档 `fe-cleanup-proxysection-and-mocks` 与 `fe-ai-panel-toggle-button` 到 `openspec/changes/archive/`
@@ -29,6 +29,10 @@
 - Command: `rulebook task create issue-821-archive-815-816-and-worktree-cleanup`
 - Command: `rulebook task validate issue-821-archive-815-816-and-worktree-cleanup`
 - Key output: validate 通过（warning: no spec files）
+
+### 2026-03-01 20:27 PR created
+- Command: `gh pr create --base main --head task/821-archive-815-816-and-worktree-cleanup --title "docs: archive changes for issues 815 and 816 (#821)" --body-file ...`
+- Key output: PR created `https://github.com/Leeky1017/CreoNow/pull/822`
 
 ## Main Session Audit
 

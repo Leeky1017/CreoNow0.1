@@ -15,7 +15,7 @@
 
 ## 3. Evidence & Delivery
 
-- [ ] 3.1 RUN_LOG 已落盘：`openspec/_ops/task_runs/ISSUE-821.md`
+- [x] 3.1 RUN_LOG 已落盘：`openspec/_ops/task_runs/ISSUE-821.md`
 - [ ] 3.2 独立审计记录已落盘：`openspec/_ops/reviews/ISSUE-821.md`
 - [ ] 3.3 preflight + required checks 全绿并合并到 `main`
 - [ ] 3.4 清理已完成 worktree 并记录结果
