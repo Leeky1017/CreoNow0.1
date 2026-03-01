@@ -4,7 +4,7 @@
 
 - Issue: #807
 - Branch: task/807-fe-leftpanel-dialog-migration
-- PR: TBD
+- PR: https://github.com/Leeky1017/CreoNow/pull/808
 
 ## Plan
 
@@ -54,7 +54,7 @@
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: PENDING_SHA
+- Reviewed-HEAD-SHA: 3d6f497bf5b088883a58d4ffc9a3f4d54d83743c
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
