@@ -2,7 +2,7 @@
 
 - Issue: #816
 - Branch: task/816-fe-ai-panel-toggle-button
-- PR: TBD
+- PR: https://github.com/Leeky1017/CreoNow/pull/818
 
 ## Plan
 
