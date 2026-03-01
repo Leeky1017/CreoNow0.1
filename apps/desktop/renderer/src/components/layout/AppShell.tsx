@@ -190,6 +190,7 @@ export function AppShell(): JSX.Element {
   const setDialogType = useLayoutStore((s) => s.setDialogType);
   const setSpotlightOpen = useLayoutStore((s) => s.setSpotlightOpen);
   const setActiveRightPanel = useLayoutStore((s) => s.setActiveRightPanel);
+  const activeRightPanel = useLayoutStore((s) => s.activeRightPanel);
   const setCompareMode = useEditorStore((s) => s.setCompareMode);
 
   const aiProposal = useAiStore((s) => s.proposal);
@@ -343,14 +344,19 @@ export function AppShell(): JSX.Element {
     panelVisibility.toggleSidebar();
   }, [panelVisibility]);
 
-  const toggleRightPanelVisibility = React.useCallback(() => {
+  /** Three-way AI panel toggle: collapsed→expand+ai, expanded+ai→collapse, expanded+other→switch to ai */
+  const toggleAiPanel = React.useCallback(() => {
     if (panelCollapsed) {
       setActiveRightPanel("ai");
       panelVisibility.expandRightPanel();
       return;
     }
-    panelVisibility.collapseRightPanel();
-  }, [panelCollapsed, panelVisibility, setActiveRightPanel]);
+    if (activeRightPanel === "ai") {
+      panelVisibility.collapseRightPanel();
+      return;
+    }
+    setActiveRightPanel("ai");
+  }, [panelCollapsed, activeRightPanel, panelVisibility, setActiveRightPanel]);
 
   const openVersionHistoryForDocument = React.useCallback(
     (documentId: string) => {
@@ -417,14 +423,14 @@ export function AppShell(): JSX.Element {
   const layoutActions = React.useMemo<CommandPaletteLayoutActions>(
     () => ({
       onToggleSidebar: toggleSidebarVisibility,
-      onToggleRightPanel: toggleRightPanelVisibility,
+      onToggleRightPanel: toggleAiPanel,
       onToggleZenMode: () => setZenMode(!zenMode),
       onOpenVersionHistory: openVersionHistoryPanel,
     }),
     [
       openVersionHistoryPanel,
       setZenMode,
-      toggleRightPanelVisibility,
+      toggleAiPanel,
       toggleSidebarVisibility,
       zenMode,
     ],
@@ -512,7 +518,7 @@ export function AppShell(): JSX.Element {
         group: "command",
         category: "command",
         onSelect: () => {
-          toggleRightPanelVisibility();
+          toggleAiPanel();
           setCommandPaletteOpen(false);
         },
       },
@@ -631,7 +637,7 @@ export function AppShell(): JSX.Element {
     recentCommandIds,
     setCurrentDocument,
     setZenMode,
-    toggleRightPanelVisibility,
+    toggleAiPanel,
     toggleSidebarVisibility,
     withRecentTracking,
     zenMode,
@@ -787,7 +793,7 @@ export function AppShell(): JSX.Element {
         zenMode={zenMode}
         canCreateDocument={Boolean(currentProjectId)}
         onToggleSidebar={toggleSidebarVisibility}
-        onToggleRightPanel={toggleRightPanelVisibility}
+        onToggleRightPanel={toggleAiPanel}
         onToggleZenMode={() => setZenMode(!zenMode)}
         onExitZenMode={() => setZenMode(false)}
         onOpenCommandPalette={openCommandPalette}
@@ -827,7 +833,7 @@ export function AppShell(): JSX.Element {
             leftResizer={layout.sidebarResizer}
             main={
               <main
-                className={`flex flex-1 bg-[var(--color-bg-base)] text-[var(--color-fg-muted)] text-[13px] ${
+                className={`relative flex flex-1 bg-[var(--color-bg-base)] text-[var(--color-fg-muted)] text-[13px] ${
                   currentProject
                     ? "items-stretch justify-stretch"
                     : projectItems.length > 0
@@ -837,6 +843,31 @@ export function AppShell(): JSX.Element {
                 style={{ minWidth: LAYOUT_DEFAULTS.mainMinWidth }}
               >
                 {renderMainContent()}
+                <button
+                  type="button"
+                  aria-label="AI Panel (Ctrl+L)"
+                  title="AI Panel (Ctrl+L)"
+                  onClick={toggleAiPanel}
+                  className={`absolute top-2 right-2 min-w-6 min-h-6 flex items-center justify-center rounded-[var(--radius-sm)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] z-10 ${
+                    !layout.panelCollapsed && activeRightPanel === "ai"
+                      ? "text-[var(--color-fg-accent)] bg-[var(--color-bg-selected)]"
+                      : "text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)]"
+                  }`}
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                </button>
               </main>
             }
             rightResizer={layout.panelResizer}
