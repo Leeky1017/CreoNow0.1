@@ -344,15 +344,6 @@ export function AppShell(): JSX.Element {
     panelVisibility.toggleSidebar();
   }, [panelVisibility]);
 
-  const toggleRightPanelVisibility = React.useCallback(() => {
-    if (panelCollapsed) {
-      setActiveRightPanel("ai");
-      panelVisibility.expandRightPanel();
-      return;
-    }
-    panelVisibility.collapseRightPanel();
-  }, [panelCollapsed, panelVisibility, setActiveRightPanel]);
-
   /** Three-way AI panel toggle: collapsed→expand+ai, expanded+ai→collapse, expanded+other→switch to ai */
   const toggleAiPanel = React.useCallback(() => {
     if (panelCollapsed) {
@@ -432,14 +423,14 @@ export function AppShell(): JSX.Element {
   const layoutActions = React.useMemo<CommandPaletteLayoutActions>(
     () => ({
       onToggleSidebar: toggleSidebarVisibility,
-      onToggleRightPanel: toggleRightPanelVisibility,
+      onToggleRightPanel: toggleAiPanel,
       onToggleZenMode: () => setZenMode(!zenMode),
       onOpenVersionHistory: openVersionHistoryPanel,
     }),
     [
       openVersionHistoryPanel,
       setZenMode,
-      toggleRightPanelVisibility,
+      toggleAiPanel,
       toggleSidebarVisibility,
       zenMode,
     ],
@@ -527,7 +518,7 @@ export function AppShell(): JSX.Element {
         group: "command",
         category: "command",
         onSelect: () => {
-          toggleRightPanelVisibility();
+          toggleAiPanel();
           setCommandPaletteOpen(false);
         },
       },
@@ -646,7 +637,7 @@ export function AppShell(): JSX.Element {
     recentCommandIds,
     setCurrentDocument,
     setZenMode,
-    toggleRightPanelVisibility,
+    toggleAiPanel,
     toggleSidebarVisibility,
     withRecentTracking,
     zenMode,
@@ -802,7 +793,7 @@ export function AppShell(): JSX.Element {
         zenMode={zenMode}
         canCreateDocument={Boolean(currentProjectId)}
         onToggleSidebar={toggleSidebarVisibility}
-        onToggleRightPanel={toggleRightPanelVisibility}
+        onToggleRightPanel={toggleAiPanel}
         onToggleZenMode={() => setZenMode(!zenMode)}
         onExitZenMode={() => setZenMode(false)}
         onOpenCommandPalette={openCommandPalette}

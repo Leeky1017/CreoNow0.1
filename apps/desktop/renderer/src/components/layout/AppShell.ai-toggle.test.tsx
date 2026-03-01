@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import React from "react";
 import { AppShell } from "./AppShell";
 import {
@@ -172,5 +172,76 @@ describe("WB-FE-AI-TGL: AI panel toggle button", () => {
     const className = btn.className;
     expect(className).toMatch(/min-w-6|min-w-\[24px\]/);
     expect(className).toMatch(/min-h-6|min-h-\[24px\]/);
+  });
+
+  it("WB-FE-AI-TGL-S1: click expands panel and activates ai tab when collapsed", async () => {
+    const layoutStore = createLayoutStore(mockPreferences);
+    layoutStore.setState({
+      panelCollapsed: true,
+      activeRightPanel: "info",
+    });
+    await renderApp({ layoutStoreOverride: layoutStore });
+
+    const panel = screen.getByTestId("layout-panel");
+    expect(panel).toHaveClass("hidden");
+
+    const btn = screen.getByRole("button", { name: /ai panel/i });
+    await act(async () => {
+      fireEvent.click(btn);
+    });
+
+    expect(panel).not.toHaveClass("hidden");
+    expect(screen.getByTestId("right-panel-tab-ai")).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  it("WB-FE-AI-TGL-S1b: click collapses panel when already open on ai tab", async () => {
+    const layoutStore = createLayoutStore(mockPreferences);
+    layoutStore.setState({
+      panelCollapsed: false,
+      activeRightPanel: "ai",
+    });
+    await renderApp({ layoutStoreOverride: layoutStore });
+
+    const panel = screen.getByTestId("layout-panel");
+    expect(panel).not.toHaveClass("hidden");
+
+    const btn = screen.getByRole("button", { name: /ai panel/i });
+    await act(async () => {
+      fireEvent.click(btn);
+    });
+
+    expect(panel).toHaveClass("hidden");
+  });
+
+  it("WB-FE-AI-TGL-S1c: click switches to ai tab without collapsing when panel is open on different tab", async () => {
+    const layoutStore = createLayoutStore(mockPreferences);
+    layoutStore.setState({
+      panelCollapsed: false,
+      activeRightPanel: "info",
+    });
+    await renderApp({ layoutStoreOverride: layoutStore });
+
+    const panel = screen.getByTestId("layout-panel");
+    expect(panel).not.toHaveClass("hidden");
+
+    const btn = screen.getByRole("button", { name: /ai panel/i });
+    await act(async () => {
+      fireEvent.click(btn);
+    });
+
+    // Panel should remain visible
+    expect(panel).not.toHaveClass("hidden");
+    // AI tab should now be active
+    expect(screen.getByTestId("right-panel-tab-ai")).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByTestId("right-panel-tab-info")).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
   });
 });
