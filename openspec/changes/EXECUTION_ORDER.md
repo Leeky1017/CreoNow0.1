@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-01 08:56
+更新时间：2026-03-01 10:49
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -147,6 +147,16 @@
 | hotkeys | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | EditorPane.tsx | EditorPane.tsx | — |
 
 ✅ = 无共享文件，可并行。单元格内容 = 冲突文件，不可并行。
+
+## 依赖说明
+
+- 依赖语义：`A -> B` 表示 B 进入 Red 前，A 必须完成 Green 且证据落盘（至少包含 RUN_LOG 记录与 preflight 通过）；若 B 同时带 Owner 决策阻塞，则执行门禁为“前置完成 + 决策落盘”双条件。
+- 并行/互斥规则：同批次仅当“无共享文件 + 无前置依赖 + 无决策阻塞”同时成立时可并行；冲突矩阵中非 `✅` 的共享文件关系一律互斥，按 lane 顺序串行推进。
+- Owner 决策门：凡标记 D1/D2/D3 的 change，在决策结论写入本文件并同步相关 spec 前不得进入 Red；若决策结论变化，先更新本节与“Owner 决策阻塞项”后再继续执行。
+- 第一批两条 lane 依赖边界：
+  - Lane 1（AiPanel 簇）在 `AiPanel.tsx` 范围内串行推进，不阻塞 Lane 2。
+  - Lane 2（Layout 簇）在 `IconBar.tsx`/`layoutStore.tsx`/`AppShell.tsx` 范围内串行推进，不反向阻塞 Lane 1。
+  - 跨 lane 的唯一硬依赖在收尾：`fe-dashboard-welcome-merge-and-ghost-actions` 需等待 Lane 1 的 `fe-cleanup-proxysection-and-mocks`、Lane 2 的 `fe-ai-panel-toggle-button`，并额外等待第二批 `fe-ui-open-folder-entrypoints`。
 
 ## 依赖拓扑
 
