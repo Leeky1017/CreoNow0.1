@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-02 13:12
+更新时间：2026-03-02 13:27
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -226,11 +226,11 @@
 - `fe-ui-open-folder-entrypoints`：已归档到 `openspec/changes/archive/fe-ui-open-folder-entrypoints`（merge commit `91e56f28`，PR #830）。
 - `fe-dashboard-welcome-merge-and-ghost-actions`：已归档到 `openspec/changes/archive/fe-dashboard-welcome-merge-and-ghost-actions`（merge commit `91e56f28`，PR #830）。
 
-## 依赖说明
+## 本次同步说明（ISSUE-901）
 
-- 当前子任务：`ISSUE-833`（归档 PR #830 对应 change 与治理同步）。
-- 依赖关系：`dashboard` 收尾依赖的 open-folder 链路已在 PR #830 合并，并完成三项 change 归档迁移。
-- 同步结论：第一批收尾与第二批 open-folder 链路均已“合并 + 归档”，执行顺序文档已与实际状态对齐。
+- 当前子任务：`ISSUE-901`（Wave 3a 三项归档与 EO 同步）。
+- 依赖关系：`PR #898`、`PR #899`、`PR #900` 已按串行顺序合并；closeout 由 `PR #902` 完成。
+- 同步结论：Wave 3a 三项已“合并 + 归档”，执行顺序文档已与实际状态对齐，后续可进入 Wave 3b。
 
 ## Owner 决策阻塞项
 
