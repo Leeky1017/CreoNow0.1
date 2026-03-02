@@ -70,4 +70,12 @@ pnpm -C apps/desktop typecheck
 
 ## Main Session Audit
 
-待独立审计完成后补充。
+| 字段 | 值 |
+|------|-----|
+| Audit-Owner | 待独立审计员指派 |
+| Reviewed-HEAD-SHA | 待 push 后更新 |
+| Spec-Compliance | S1 ✅ S2 ✅ S3 ✅ S4 ✅ |
+| Code-Quality | Typecheck ✅ · 全量回归 214/214 ✅ |
+| Fresh-Verification | Guard 测试全通过，全量回归无新增失败 |
+| Blocking-Issues | 无 |
+| Decision | 待审计员决定 |
