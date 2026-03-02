@@ -53,7 +53,7 @@ N/A（无上游依赖）
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 922afe89b8321d6b4469e42e66cae73ed2ba4ea7
+- Reviewed-HEAD-SHA: f47cefde7ec3bc0424b4be746e8fb8ef0fa0dac2
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
