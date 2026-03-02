@@ -4,6 +4,11 @@ import type Database from "better-sqlite3";
 import type { IpcError, IpcResponse } from "@shared/types/ipc-generated";
 import type { Logger } from "../logging/logger";
 import { createExportService } from "../services/export/exportService";
+import { guardAndNormalizeProjectAccess } from "./projectAccessGuard";
+import {
+  getProjectSessionBindingRegistry,
+  type ProjectSessionBindingRegistry,
+} from "./projectSessionBinding";
 
 type ExportPayloadError = IpcError;
 
@@ -80,8 +85,13 @@ export function registerExportIpcHandlers(deps: {
   db: Database.Database | null;
   logger: Logger;
   userDataDir: string;
+  projectSessionBinding?: ProjectSessionBindingRegistry;
 }): void {
+  const projectSessionBinding =
+    deps.projectSessionBinding ?? getProjectSessionBindingRegistry() ?? undefined;
+
   const invokeDocumentExport = async (
+    event: unknown,
     channel: string,
     payload: unknown,
     run: (args: DocumentExportPayload) => Promise<
@@ -89,6 +99,15 @@ export function registerExportIpcHandlers(deps: {
       | { ok: false; error: ExportPayloadError }
     >,
   ): Promise<IpcResponse<{ relativePath: string; bytesWritten: number }>> => {
+    const guarded = guardAndNormalizeProjectAccess({
+      event,
+      payload,
+      projectSessionBinding,
+    });
+    if (!guarded.ok) {
+      return guarded.response;
+    }
+
     const parsed = parseDocumentExportPayload(payload);
     if (!parsed.ok) {
       return { ok: false, error: parsed.error };
@@ -125,6 +144,7 @@ export function registerExportIpcHandlers(deps: {
         userDataDir: deps.userDataDir,
       });
       return invokeDocumentExport(
+        _e,
         "export:document:markdown",
         payload,
         async (args) => svc.exportMarkdown(args),
@@ -150,6 +170,7 @@ export function registerExportIpcHandlers(deps: {
         userDataDir: deps.userDataDir,
       });
       return invokeDocumentExport(
+        _e,
         "export:document:pdf",
         payload,
         async (args) => svc.exportPdf(args),
@@ -175,6 +196,7 @@ export function registerExportIpcHandlers(deps: {
         userDataDir: deps.userDataDir,
       });
       return invokeDocumentExport(
+        _e,
         "export:document:docx",
         payload,
         async (args) => svc.exportDocx(args),
@@ -201,6 +223,7 @@ export function registerExportIpcHandlers(deps: {
         userDataDir: deps.userDataDir,
       });
       return invokeDocumentExport(
+        _e,
         "export:document:txt",
         payload,
         async (args) => svc.exportTxt(args),
@@ -211,9 +234,18 @@ export function registerExportIpcHandlers(deps: {
   deps.ipcMain.handle(
     "export:project:bundle",
     async (
-      _e,
+      event,
       payload: unknown,
     ): Promise<IpcResponse<{ relativePath: string; bytesWritten: number }>> => {
+      const guarded = guardAndNormalizeProjectAccess({
+        event,
+        payload,
+        projectSessionBinding,
+      });
+      if (!guarded.ok) {
+        return guarded.response;
+      }
+
       if (!deps.db) {
         return {
           ok: false,
