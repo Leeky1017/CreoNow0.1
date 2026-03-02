@@ -30,20 +30,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-bold"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2.5"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
-            />
-            <path
-              d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+              d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"
             />
           </svg>
         </button>
@@ -63,14 +63,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-italic"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <line
               x1="19"
@@ -108,14 +111,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-underline"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M6 4v6a6 6 0 0 0 12 0V4"
@@ -144,14 +150,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-strikethrough"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M16 4H9a3 3 0 0 0-2.83 4"
@@ -183,20 +192,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-code"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <polyline
-              points="16 18 22 12 16 6"
+            <path
+              d="m16 18 6-6-6-6"
             />
-            <polyline
-              points="8 6 2 12 8 18"
+            <path
+              d="m8 6-6 6 6 6"
             />
           </svg>
         </button>
@@ -218,14 +230,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading1 lucide-heading-1"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -237,7 +252,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
               d="M12 18V6"
             />
             <path
-              d="M17 12l3-2v8"
+              d="m17 12 3-2v8"
             />
           </svg>
         </button>
@@ -256,14 +271,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading2 lucide-heading-2"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -294,14 +312,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading3 lucide-heading-3"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -338,50 +359,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-list"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="9"
-              x2="20"
-              y1="6"
-              y2="6"
+            <path
+              d="M3 5h.01"
             />
-            <line
-              x1="9"
-              x2="20"
-              y1="12"
-              y2="12"
+            <path
+              d="M3 12h.01"
             />
-            <line
-              x1="9"
-              x2="20"
-              y1="18"
-              y2="18"
+            <path
+              d="M3 19h.01"
             />
-            <circle
-              cx="4"
-              cy="6"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 5h13"
             />
-            <circle
-              cx="4"
-              cy="12"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 12h13"
             />
-            <circle
-              cx="4"
-              cy="18"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 19h13"
             />
           </svg>
         </button>
@@ -400,41 +406,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-list-ordered"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="10"
-              x2="21"
-              y1="6"
-              y2="6"
-            />
-            <line
-              x1="10"
-              x2="21"
-              y1="12"
-              y2="12"
-            />
-            <line
-              x1="10"
-              x2="21"
-              y1="18"
-              y2="18"
+            <path
+              d="M11 5h10"
             />
             <path
-              d="M4 6h1v4"
+              d="M11 12h10"
             />
             <path
-              d="M4 10h2"
+              d="M11 19h10"
             />
             <path
-              d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"
+              d="M4 4h1v5"
+            />
+            <path
+              d="M4 9h2"
+            />
+            <path
+              d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"
             />
           </svg>
         </button>
@@ -456,20 +456,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-quote"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"
+              d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
             />
             <path
-              d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"
+              d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
             />
           </svg>
         </button>
@@ -488,27 +491,30 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-square-code"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
+            <path
+              d="m10 9-3 3 3 3"
+            />
+            <path
+              d="m14 15 3-3-3-3"
+            />
             <rect
               height="18"
               rx="2"
               width="18"
               x="3"
               y="3"
-            />
-            <polyline
-              points="9 8 5 12 9 16"
-            />
-            <polyline
-              points="15 8 19 12 15 16"
             />
           </svg>
         </button>
@@ -527,20 +533,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-minus"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="3"
-              x2="21"
-              y1="12"
-              y2="12"
+            <path
+              d="M5 12h14"
             />
           </svg>
         </button>
@@ -563,14 +569,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-undo"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M3 7v6h6"
@@ -596,14 +605,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-redo"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M21 7v6h-6"
@@ -657,20 +669,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-bold"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2.5"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
-          />
-          <path
-            d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+            d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"
           />
         </svg>
       </button>
@@ -690,14 +702,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-italic"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <line
             x1="19"
@@ -735,14 +750,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-underline"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M6 4v6a6 6 0 0 0 12 0V4"
@@ -771,14 +789,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-strikethrough"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M16 4H9a3 3 0 0 0-2.83 4"
@@ -810,20 +831,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-code"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <polyline
-            points="16 18 22 12 16 6"
+          <path
+            d="m16 18 6-6-6-6"
           />
-          <polyline
-            points="8 6 2 12 8 18"
+          <path
+            d="m8 6-6 6 6 6"
           />
         </svg>
       </button>
@@ -845,14 +869,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-heading1 lucide-heading-1"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M4 12h8"
@@ -864,7 +891,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             d="M12 18V6"
           />
           <path
-            d="M17 12l3-2v8"
+            d="m17 12 3-2v8"
           />
         </svg>
       </button>
@@ -883,14 +910,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-heading2 lucide-heading-2"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M4 12h8"
@@ -921,14 +951,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-heading3 lucide-heading-3"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M4 12h8"
@@ -965,50 +998,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-list"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <line
-            x1="9"
-            x2="20"
-            y1="6"
-            y2="6"
+          <path
+            d="M3 5h.01"
           />
-          <line
-            x1="9"
-            x2="20"
-            y1="12"
-            y2="12"
+          <path
+            d="M3 12h.01"
           />
-          <line
-            x1="9"
-            x2="20"
-            y1="18"
-            y2="18"
+          <path
+            d="M3 19h.01"
           />
-          <circle
-            cx="4"
-            cy="6"
-            fill="currentColor"
-            r="1"
+          <path
+            d="M8 5h13"
           />
-          <circle
-            cx="4"
-            cy="12"
-            fill="currentColor"
-            r="1"
+          <path
+            d="M8 12h13"
           />
-          <circle
-            cx="4"
-            cy="18"
-            fill="currentColor"
-            r="1"
+          <path
+            d="M8 19h13"
           />
         </svg>
       </button>
@@ -1027,41 +1045,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-list-ordered"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <line
-            x1="10"
-            x2="21"
-            y1="6"
-            y2="6"
-          />
-          <line
-            x1="10"
-            x2="21"
-            y1="12"
-            y2="12"
-          />
-          <line
-            x1="10"
-            x2="21"
-            y1="18"
-            y2="18"
+          <path
+            d="M11 5h10"
           />
           <path
-            d="M4 6h1v4"
+            d="M11 12h10"
           />
           <path
-            d="M4 10h2"
+            d="M11 19h10"
           />
           <path
-            d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"
+            d="M4 4h1v5"
+          />
+          <path
+            d="M4 9h2"
+          />
+          <path
+            d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"
           />
         </svg>
       </button>
@@ -1083,20 +1095,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-quote"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"
+            d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
           />
           <path
-            d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"
+            d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
           />
         </svg>
       </button>
@@ -1115,27 +1130,30 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-square-code"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
+          <path
+            d="m10 9-3 3 3 3"
+          />
+          <path
+            d="m14 15 3-3-3-3"
+          />
           <rect
             height="18"
             rx="2"
             width="18"
             x="3"
             y="3"
-          />
-          <polyline
-            points="9 8 5 12 9 16"
-          />
-          <polyline
-            points="15 8 19 12 15 16"
           />
         </svg>
       </button>
@@ -1154,20 +1172,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-minus"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <line
-            x1="3"
-            x2="21"
-            y1="12"
-            y2="12"
+          <path
+            d="M5 12h14"
           />
         </svg>
       </button>
@@ -1190,14 +1208,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-undo"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M3 7v6h6"
@@ -1223,14 +1244,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-redo"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M21 7v6h-6"
@@ -1286,20 +1310,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-bold"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2.5"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
-            />
-            <path
-              d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+              d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"
             />
           </svg>
         </button>
@@ -1319,14 +1343,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-italic"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <line
               x1="19"
@@ -1364,14 +1391,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-underline"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M6 4v6a6 6 0 0 0 12 0V4"
@@ -1400,14 +1430,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-strikethrough"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M16 4H9a3 3 0 0 0-2.83 4"
@@ -1439,20 +1472,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-code"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <polyline
-              points="16 18 22 12 16 6"
+            <path
+              d="m16 18 6-6-6-6"
             />
-            <polyline
-              points="8 6 2 12 8 18"
+            <path
+              d="m8 6-6 6 6 6"
             />
           </svg>
         </button>
@@ -1474,14 +1510,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading1 lucide-heading-1"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -1493,7 +1532,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
               d="M12 18V6"
             />
             <path
-              d="M17 12l3-2v8"
+              d="m17 12 3-2v8"
             />
           </svg>
         </button>
@@ -1512,14 +1551,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading2 lucide-heading-2"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -1550,14 +1592,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading3 lucide-heading-3"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -1594,50 +1639,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-list"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="9"
-              x2="20"
-              y1="6"
-              y2="6"
+            <path
+              d="M3 5h.01"
             />
-            <line
-              x1="9"
-              x2="20"
-              y1="12"
-              y2="12"
+            <path
+              d="M3 12h.01"
             />
-            <line
-              x1="9"
-              x2="20"
-              y1="18"
-              y2="18"
+            <path
+              d="M3 19h.01"
             />
-            <circle
-              cx="4"
-              cy="6"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 5h13"
             />
-            <circle
-              cx="4"
-              cy="12"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 12h13"
             />
-            <circle
-              cx="4"
-              cy="18"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 19h13"
             />
           </svg>
         </button>
@@ -1656,41 +1686,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-list-ordered"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="10"
-              x2="21"
-              y1="6"
-              y2="6"
-            />
-            <line
-              x1="10"
-              x2="21"
-              y1="12"
-              y2="12"
-            />
-            <line
-              x1="10"
-              x2="21"
-              y1="18"
-              y2="18"
+            <path
+              d="M11 5h10"
             />
             <path
-              d="M4 6h1v4"
+              d="M11 12h10"
             />
             <path
-              d="M4 10h2"
+              d="M11 19h10"
             />
             <path
-              d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"
+              d="M4 4h1v5"
+            />
+            <path
+              d="M4 9h2"
+            />
+            <path
+              d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"
             />
           </svg>
         </button>
@@ -1712,20 +1736,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-quote"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"
+              d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
             />
             <path
-              d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"
+              d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
             />
           </svg>
         </button>
@@ -1744,27 +1771,30 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-square-code"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
+            <path
+              d="m10 9-3 3 3 3"
+            />
+            <path
+              d="m14 15 3-3-3-3"
+            />
             <rect
               height="18"
               rx="2"
               width="18"
               x="3"
               y="3"
-            />
-            <polyline
-              points="9 8 5 12 9 16"
-            />
-            <polyline
-              points="15 8 19 12 15 16"
             />
           </svg>
         </button>
@@ -1783,20 +1813,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-minus"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="3"
-              x2="21"
-              y1="12"
-              y2="12"
+            <path
+              d="M5 12h14"
             />
           </svg>
         </button>
@@ -1819,14 +1849,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-undo"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M3 7v6h6"
@@ -1852,14 +1885,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-redo"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M21 7v6h-6"
@@ -1916,20 +1952,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-bold"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2.5"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
-            />
-            <path
-              d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+              d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"
             />
           </svg>
         </button>
@@ -1949,14 +1985,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-italic"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <line
               x1="19"
@@ -1994,14 +2033,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-underline"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M6 4v6a6 6 0 0 0 12 0V4"
@@ -2030,14 +2072,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-strikethrough"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M16 4H9a3 3 0 0 0-2.83 4"
@@ -2069,20 +2114,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-code"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <polyline
-              points="16 18 22 12 16 6"
+            <path
+              d="m16 18 6-6-6-6"
             />
-            <polyline
-              points="8 6 2 12 8 18"
+            <path
+              d="m8 6-6 6 6 6"
             />
           </svg>
         </button>
@@ -2104,14 +2152,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading1 lucide-heading-1"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -2123,7 +2174,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
               d="M12 18V6"
             />
             <path
-              d="M17 12l3-2v8"
+              d="m17 12 3-2v8"
             />
           </svg>
         </button>
@@ -2142,14 +2193,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading2 lucide-heading-2"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -2180,14 +2234,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading3 lucide-heading-3"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -2224,50 +2281,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-list"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="9"
-              x2="20"
-              y1="6"
-              y2="6"
+            <path
+              d="M3 5h.01"
             />
-            <line
-              x1="9"
-              x2="20"
-              y1="12"
-              y2="12"
+            <path
+              d="M3 12h.01"
             />
-            <line
-              x1="9"
-              x2="20"
-              y1="18"
-              y2="18"
+            <path
+              d="M3 19h.01"
             />
-            <circle
-              cx="4"
-              cy="6"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 5h13"
             />
-            <circle
-              cx="4"
-              cy="12"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 12h13"
             />
-            <circle
-              cx="4"
-              cy="18"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 19h13"
             />
           </svg>
         </button>
@@ -2286,41 +2328,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-list-ordered"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="10"
-              x2="21"
-              y1="6"
-              y2="6"
-            />
-            <line
-              x1="10"
-              x2="21"
-              y1="12"
-              y2="12"
-            />
-            <line
-              x1="10"
-              x2="21"
-              y1="18"
-              y2="18"
+            <path
+              d="M11 5h10"
             />
             <path
-              d="M4 6h1v4"
+              d="M11 12h10"
             />
             <path
-              d="M4 10h2"
+              d="M11 19h10"
             />
             <path
-              d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"
+              d="M4 4h1v5"
+            />
+            <path
+              d="M4 9h2"
+            />
+            <path
+              d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"
             />
           </svg>
         </button>
@@ -2342,20 +2378,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-quote"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"
+              d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
             />
             <path
-              d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"
+              d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
             />
           </svg>
         </button>
@@ -2374,27 +2413,30 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-square-code"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
+            <path
+              d="m10 9-3 3 3 3"
+            />
+            <path
+              d="m14 15 3-3-3-3"
+            />
             <rect
               height="18"
               rx="2"
               width="18"
               x="3"
               y="3"
-            />
-            <polyline
-              points="9 8 5 12 9 16"
-            />
-            <polyline
-              points="15 8 19 12 15 16"
             />
           </svg>
         </button>
@@ -2413,20 +2455,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-minus"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="3"
-              x2="21"
-              y1="12"
-              y2="12"
+            <path
+              d="M5 12h14"
             />
           </svg>
         </button>
@@ -2449,14 +2491,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-undo"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M3 7v6h6"
@@ -2482,14 +2527,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-redo"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M21 7v6h-6"
@@ -2546,20 +2594,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-bold"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2.5"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
-            />
-            <path
-              d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+              d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"
             />
           </svg>
         </button>
@@ -2579,14 +2627,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-italic"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <line
               x1="19"
@@ -2624,14 +2675,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-underline"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M6 4v6a6 6 0 0 0 12 0V4"
@@ -2660,14 +2714,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-strikethrough"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M16 4H9a3 3 0 0 0-2.83 4"
@@ -2699,20 +2756,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-code"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <polyline
-              points="16 18 22 12 16 6"
+            <path
+              d="m16 18 6-6-6-6"
             />
-            <polyline
-              points="8 6 2 12 8 18"
+            <path
+              d="m8 6-6 6 6 6"
             />
           </svg>
         </button>
@@ -2734,14 +2794,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading1 lucide-heading-1"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -2753,7 +2816,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
               d="M12 18V6"
             />
             <path
-              d="M17 12l3-2v8"
+              d="m17 12 3-2v8"
             />
           </svg>
         </button>
@@ -2772,14 +2835,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading2 lucide-heading-2"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -2810,14 +2876,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading3 lucide-heading-3"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -2854,50 +2923,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-list"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="9"
-              x2="20"
-              y1="6"
-              y2="6"
+            <path
+              d="M3 5h.01"
             />
-            <line
-              x1="9"
-              x2="20"
-              y1="12"
-              y2="12"
+            <path
+              d="M3 12h.01"
             />
-            <line
-              x1="9"
-              x2="20"
-              y1="18"
-              y2="18"
+            <path
+              d="M3 19h.01"
             />
-            <circle
-              cx="4"
-              cy="6"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 5h13"
             />
-            <circle
-              cx="4"
-              cy="12"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 12h13"
             />
-            <circle
-              cx="4"
-              cy="18"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 19h13"
             />
           </svg>
         </button>
@@ -2916,41 +2970,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-list-ordered"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="10"
-              x2="21"
-              y1="6"
-              y2="6"
-            />
-            <line
-              x1="10"
-              x2="21"
-              y1="12"
-              y2="12"
-            />
-            <line
-              x1="10"
-              x2="21"
-              y1="18"
-              y2="18"
+            <path
+              d="M11 5h10"
             />
             <path
-              d="M4 6h1v4"
+              d="M11 12h10"
             />
             <path
-              d="M4 10h2"
+              d="M11 19h10"
             />
             <path
-              d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"
+              d="M4 4h1v5"
+            />
+            <path
+              d="M4 9h2"
+            />
+            <path
+              d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"
             />
           </svg>
         </button>
@@ -2972,20 +3020,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-quote"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"
+              d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
             />
             <path
-              d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"
+              d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
             />
           </svg>
         </button>
@@ -3004,27 +3055,30 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-square-code"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
+            <path
+              d="m10 9-3 3 3 3"
+            />
+            <path
+              d="m14 15 3-3-3-3"
+            />
             <rect
               height="18"
               rx="2"
               width="18"
               x="3"
               y="3"
-            />
-            <polyline
-              points="9 8 5 12 9 16"
-            />
-            <polyline
-              points="15 8 19 12 15 16"
             />
           </svg>
         </button>
@@ -3043,20 +3097,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-minus"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="3"
-              x2="21"
-              y1="12"
-              y2="12"
+            <path
+              d="M5 12h14"
             />
           </svg>
         </button>
@@ -3079,14 +3133,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-undo"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M3 7v6h6"
@@ -3112,14 +3169,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-redo"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M21 7v6h-6"
@@ -3173,20 +3233,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-bold"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2.5"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
-          />
-          <path
-            d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+            d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"
           />
         </svg>
       </button>
@@ -3206,14 +3266,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-italic"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <line
             x1="19"
@@ -3251,14 +3314,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-underline"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M6 4v6a6 6 0 0 0 12 0V4"
@@ -3287,14 +3353,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-strikethrough"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M16 4H9a3 3 0 0 0-2.83 4"
@@ -3326,20 +3395,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-code"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <polyline
-            points="16 18 22 12 16 6"
+          <path
+            d="m16 18 6-6-6-6"
           />
-          <polyline
-            points="8 6 2 12 8 18"
+          <path
+            d="m8 6-6 6 6 6"
           />
         </svg>
       </button>
@@ -3361,14 +3433,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-heading1 lucide-heading-1"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M4 12h8"
@@ -3380,7 +3455,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             d="M12 18V6"
           />
           <path
-            d="M17 12l3-2v8"
+            d="m17 12 3-2v8"
           />
         </svg>
       </button>
@@ -3399,14 +3474,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-heading2 lucide-heading-2"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M4 12h8"
@@ -3437,14 +3515,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-heading3 lucide-heading-3"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M4 12h8"
@@ -3481,50 +3562,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-list"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <line
-            x1="9"
-            x2="20"
-            y1="6"
-            y2="6"
+          <path
+            d="M3 5h.01"
           />
-          <line
-            x1="9"
-            x2="20"
-            y1="12"
-            y2="12"
+          <path
+            d="M3 12h.01"
           />
-          <line
-            x1="9"
-            x2="20"
-            y1="18"
-            y2="18"
+          <path
+            d="M3 19h.01"
           />
-          <circle
-            cx="4"
-            cy="6"
-            fill="currentColor"
-            r="1"
+          <path
+            d="M8 5h13"
           />
-          <circle
-            cx="4"
-            cy="12"
-            fill="currentColor"
-            r="1"
+          <path
+            d="M8 12h13"
           />
-          <circle
-            cx="4"
-            cy="18"
-            fill="currentColor"
-            r="1"
+          <path
+            d="M8 19h13"
           />
         </svg>
       </button>
@@ -3543,41 +3609,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-list-ordered"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <line
-            x1="10"
-            x2="21"
-            y1="6"
-            y2="6"
-          />
-          <line
-            x1="10"
-            x2="21"
-            y1="12"
-            y2="12"
-          />
-          <line
-            x1="10"
-            x2="21"
-            y1="18"
-            y2="18"
+          <path
+            d="M11 5h10"
           />
           <path
-            d="M4 6h1v4"
+            d="M11 12h10"
           />
           <path
-            d="M4 10h2"
+            d="M11 19h10"
           />
           <path
-            d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"
+            d="M4 4h1v5"
+          />
+          <path
+            d="M4 9h2"
+          />
+          <path
+            d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"
           />
         </svg>
       </button>
@@ -3599,20 +3659,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-quote"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"
+            d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
           />
           <path
-            d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"
+            d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
           />
         </svg>
       </button>
@@ -3631,27 +3694,30 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-square-code"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
+          <path
+            d="m10 9-3 3 3 3"
+          />
+          <path
+            d="m14 15 3-3-3-3"
+          />
           <rect
             height="18"
             rx="2"
             width="18"
             x="3"
             y="3"
-          />
-          <polyline
-            points="9 8 5 12 9 16"
-          />
-          <polyline
-            points="15 8 19 12 15 16"
           />
         </svg>
       </button>
@@ -3670,20 +3736,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-minus"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <line
-            x1="3"
-            x2="21"
-            y1="12"
-            y2="12"
+          <path
+            d="M5 12h14"
           />
         </svg>
       </button>
@@ -3706,14 +3772,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-undo"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M3 7v6h6"
@@ -3739,14 +3808,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
         type="button"
       >
         <svg
+          aria-hidden="true"
+          class="lucide lucide-redo"
           fill="none"
           height="16"
           stroke="currentColor"
           stroke-linecap="round"
           stroke-linejoin="round"
-          stroke-width="2"
+          stroke-width="1.5"
           viewBox="0 0 24 24"
           width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             d="M21 7v6h-6"
@@ -3877,20 +3949,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-bold"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2.5"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
-            />
-            <path
-              d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"
+              d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"
             />
           </svg>
         </button>
@@ -3910,14 +3982,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-italic"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <line
               x1="19"
@@ -3955,14 +4030,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-underline"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M6 4v6a6 6 0 0 0 12 0V4"
@@ -3991,14 +4069,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-strikethrough"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M16 4H9a3 3 0 0 0-2.83 4"
@@ -4030,20 +4111,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-code"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <polyline
-              points="16 18 22 12 16 6"
+            <path
+              d="m16 18 6-6-6-6"
             />
-            <polyline
-              points="8 6 2 12 8 18"
+            <path
+              d="m8 6-6 6 6 6"
             />
           </svg>
         </button>
@@ -4065,14 +4149,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading1 lucide-heading-1"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -4084,7 +4171,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
               d="M12 18V6"
             />
             <path
-              d="M17 12l3-2v8"
+              d="m17 12 3-2v8"
             />
           </svg>
         </button>
@@ -4103,14 +4190,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading2 lucide-heading-2"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -4141,14 +4231,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-heading3 lucide-heading-3"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M4 12h8"
@@ -4185,50 +4278,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-list"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="9"
-              x2="20"
-              y1="6"
-              y2="6"
+            <path
+              d="M3 5h.01"
             />
-            <line
-              x1="9"
-              x2="20"
-              y1="12"
-              y2="12"
+            <path
+              d="M3 12h.01"
             />
-            <line
-              x1="9"
-              x2="20"
-              y1="18"
-              y2="18"
+            <path
+              d="M3 19h.01"
             />
-            <circle
-              cx="4"
-              cy="6"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 5h13"
             />
-            <circle
-              cx="4"
-              cy="12"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 12h13"
             />
-            <circle
-              cx="4"
-              cy="18"
-              fill="currentColor"
-              r="1"
+            <path
+              d="M8 19h13"
             />
           </svg>
         </button>
@@ -4247,41 +4325,35 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-list-ordered"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="10"
-              x2="21"
-              y1="6"
-              y2="6"
-            />
-            <line
-              x1="10"
-              x2="21"
-              y1="12"
-              y2="12"
-            />
-            <line
-              x1="10"
-              x2="21"
-              y1="18"
-              y2="18"
+            <path
+              d="M11 5h10"
             />
             <path
-              d="M4 6h1v4"
+              d="M11 12h10"
             />
             <path
-              d="M4 10h2"
+              d="M11 19h10"
             />
             <path
-              d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"
+              d="M4 4h1v5"
+            />
+            <path
+              d="M4 9h2"
+            />
+            <path
+              d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"
             />
           </svg>
         </button>
@@ -4303,20 +4375,23 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-quote"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"
+              d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
             />
             <path
-              d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v4z"
+              d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"
             />
           </svg>
         </button>
@@ -4335,27 +4410,30 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-square-code"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
+            <path
+              d="m10 9-3 3 3 3"
+            />
+            <path
+              d="m14 15 3-3-3-3"
+            />
             <rect
               height="18"
               rx="2"
               width="18"
               x="3"
               y="3"
-            />
-            <polyline
-              points="9 8 5 12 9 16"
-            />
-            <polyline
-              points="15 8 19 12 15 16"
             />
           </svg>
         </button>
@@ -4374,20 +4452,20 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-minus"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line
-              x1="3"
-              x2="21"
-              y1="12"
-              y2="12"
+            <path
+              d="M5 12h14"
             />
           </svg>
         </button>
@@ -4410,14 +4488,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-undo"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M3 7v6h6"
@@ -4443,14 +4524,17 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           type="button"
         >
           <svg
+            aria-hidden="true"
+            class="lucide lucide-redo"
             fill="none"
             height="16"
             stroke="currentColor"
             stroke-linecap="round"
             stroke-linejoin="round"
-            stroke-width="2"
+            stroke-width="1.5"
             viewBox="0 0 24 24"
             width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M21 7v6h-6"

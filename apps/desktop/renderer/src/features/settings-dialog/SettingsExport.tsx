@@ -1,6 +1,7 @@
 import { Toggle } from "../../components/primitives/Toggle";
 import { Text } from "../../components/primitives";
 
+import { File, FileCode, FileText } from "lucide-react";
 /**
  * Export format types
  */
@@ -53,64 +54,10 @@ const dividerStyles = [
  */
 function FormatIcon({ format }: { format: ExportFormat }): JSX.Element {
   const iconMap: Record<ExportFormat, JSX.Element> = {
-    pdf: (
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-        <path d="M14 2v6h6" />
-        <path d="M10 12h4" />
-        <path d="M10 16h4" />
-      </svg>
-    ),
-    markdown: (
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z" />
-        <path d="M7 15V9l3 3 3-3v6" />
-        <path d="M17 12l-2 3m2-3l2 3m-2-3V9" />
-      </svg>
-    ),
-    word: (
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-        <path d="M14 2v6h6" />
-        <path d="M8 13l2 4 2-4 2 4" />
-      </svg>
-    ),
-    txt: (
-      <svg
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-        <path d="M14 2v6h6" />
-        <path d="M8 12h8" />
-        <path d="M8 16h8" />
-      </svg>
-    ),
+    pdf: <FileText size={24} strokeWidth={1.5} />,
+    markdown: <FileCode size={24} strokeWidth={1.5} />,
+    word: <FileText size={24} strokeWidth={1.5} />,
+    txt: <File size={24} strokeWidth={1.5} />,
   };
 
   return iconMap[format];

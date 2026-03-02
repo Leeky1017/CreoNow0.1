@@ -1,5 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { Search } from "lucide-react";
 import { SearchPanel, type SearchResultItem } from "./SearchPanel";
 
 /**
@@ -507,18 +508,7 @@ function SearchInProgressDemo(): JSX.Element {
               border: "1px solid var(--color-border-default)",
             }}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              style={{ color: "var(--color-fg-muted)" }}
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+            <Search size={16} strokeWidth={1.5} style={{ color: "var(--color-fg-muted)" }} />
             <input
               type="text"
               placeholder="Search documents, memories, knowledge..."
