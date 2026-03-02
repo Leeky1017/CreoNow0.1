@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Defers showing a loading indicator until after a threshold.
@@ -19,7 +19,6 @@ export function useDeferredLoading(
 
   useEffect(() => {
     if (!isLoading) {
-      setShowLoading(false);
       return;
     }
 
@@ -27,8 +26,11 @@ export function useDeferredLoading(
       setShowLoading(true);
     }, safeThreshold);
 
-    return () => clearTimeout(timer);
-  }, [isLoading, thresholdMs]);
+    return () => {
+      clearTimeout(timer);
+      setShowLoading(false);
+    };
+  }, [isLoading, safeThreshold]);
 
   return showLoading;
 }
