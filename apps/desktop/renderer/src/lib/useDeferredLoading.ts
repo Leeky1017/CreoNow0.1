@@ -14,6 +14,7 @@ export function useDeferredLoading(
   isLoading: boolean,
   thresholdMs = 200,
 ): boolean {
+  const safeThreshold = Math.max(0, thresholdMs);
   const [showLoading, setShowLoading] = useState(false);
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export function useDeferredLoading(
 
     const timer = setTimeout(() => {
       setShowLoading(true);
-    }, thresholdMs);
+    }, safeThreshold);
 
     return () => clearTimeout(timer);
   }, [isLoading, thresholdMs]);

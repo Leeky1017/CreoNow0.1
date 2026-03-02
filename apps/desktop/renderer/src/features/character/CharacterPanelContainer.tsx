@@ -9,6 +9,7 @@ import React from "react";
 
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
+import { useDeferredLoading } from "../../lib/useDeferredLoading";
 import { useKgStore } from "../../stores/kgStore";
 import { CharacterPanelContent } from "./CharacterPanel";
 import { CharacterPanelSkeleton } from "./CharacterPanelSkeleton";
@@ -135,9 +136,11 @@ export function CharacterPanelContainer(
     setSelectedId(characterId);
   }, []);
 
+  const showLoading = useDeferredLoading(bootstrapStatus === "loading");
+
   // Loading state
   if (bootstrapStatus === "loading") {
-    return <CharacterPanelSkeleton />;
+    return showLoading ? <CharacterPanelSkeleton /> : <></>;
   }
 
   // Error state
