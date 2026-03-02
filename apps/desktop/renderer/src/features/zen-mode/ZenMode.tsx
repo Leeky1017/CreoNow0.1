@@ -1,6 +1,7 @@
 import React from "react";
 import { ZenModeStatus } from "./ZenModeStatus";
 
+import { X } from "lucide-react";
 /**
  * ZenMode content with title and body text
  */
@@ -123,7 +124,7 @@ export function ZenMode({
       >
         <div className="absolute top-8 right-8 flex items-center gap-4">
           <span
-            className="text-[11px] tracking-wide opacity-60"
+            className="text-[var(--zen-label-size)] tracking-wide opacity-60"
             style={{ color: "var(--color-fg-placeholder)" }}
           >
             Press Esc to exit
@@ -139,7 +140,7 @@ export function ZenMode({
             onMouseEnter={(e) => {
               e.currentTarget.style.color = "var(--color-fg-default)";
               e.currentTarget.style.backgroundColor =
-                "rgba(255, 255, 255, 0.05)";
+                "var(--color-zen-hover)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = "var(--color-fg-muted)";
@@ -147,19 +148,7 @@ export function ZenMode({
             }}
             aria-label="Exit zen mode"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            <X size={20} strokeWidth={1.5} />
           </button>
         </div>
       </div>
@@ -170,7 +159,7 @@ export function ZenMode({
         aria-hidden="true"
       >
         <span
-          className="text-[11px] tracking-wide opacity-40"
+          className="text-[var(--zen-label-size)] tracking-wide opacity-40"
           style={{ color: "var(--color-fg-placeholder)" }}
         >
           Press Esc or F11 to exit
@@ -194,10 +183,10 @@ export function ZenMode({
           }
         `}</style>
 
-        <div className="w-full max-w-[720px] px-[80px] py-[120px] flex-shrink-0">
+        <div className="w-full max-w-[var(--zen-content-max-width)] px-[var(--zen-content-padding-x)] py-[var(--zen-content-padding-y)] flex-shrink-0">
           {/* Title */}
           <h1
-            className="text-[48px] leading-tight font-medium mb-12 tracking-tight"
+            className="text-[var(--zen-title-size)] leading-tight font-medium mb-12 tracking-tight"
             style={{
               fontFamily: "var(--font-family-body)",
               color: "var(--color-fg-default)",
@@ -208,7 +197,7 @@ export function ZenMode({
 
           {/* Body paragraphs */}
           <div
-            className="text-[18px] leading-[1.8] space-y-8"
+            className="text-[var(--zen-body-size)] leading-[var(--zen-body-line-height)] space-y-8"
             style={{
               fontFamily: "var(--font-family-body)",
               color: "var(--color-zen-text)",

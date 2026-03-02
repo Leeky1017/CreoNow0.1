@@ -5,12 +5,13 @@ import {
   Button,
   Input,
   Text,
-  Spinner,
   DropdownMenu,
   ContextMenu,
   type DropdownMenuItem,
   type ContextMenuItem,
 } from "../../components/primitives";
+import { useDeferredLoading } from "../../lib/useDeferredLoading";
+import { DashboardSkeleton } from "./DashboardSkeleton";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { invoke } from "../../lib/ipcClient";
 import { CreateProjectDialog } from "../projects/CreateProjectDialog";
@@ -21,6 +22,7 @@ import {
   type ProjectListItem,
 } from "../../stores/projectStore";
 
+import { FilePlus, MoreHorizontal, PenTool, Search } from "lucide-react";
 // =============================================================================
 // Types
 // =============================================================================
@@ -35,6 +37,26 @@ interface DashboardPageProps {
 // =============================================================================
 
 /**
+ * DashboardLoadingState — shows nothing for the first 200ms,
+ * then fades in a skeleton layout to avoid flash.
+ */
+function DashboardLoadingState(): JSX.Element {
+  const showSkeleton = useDeferredLoading(true, 200);
+
+  if (!showSkeleton) {
+    return (
+      <div data-testid="dashboard-loading" className="flex-1 flex items-center justify-center" />
+    );
+  }
+
+  return (
+    <div data-testid="dashboard-loading" className="flex-1">
+      <DashboardSkeleton />
+    </div>
+  );
+}
+
+/**
  * SearchBar - Global search input for projects.
  */
 function SearchBar(props: {
@@ -43,16 +65,7 @@ function SearchBar(props: {
 }): JSX.Element {
   return (
     <div className="flex items-center gap-3 text-[var(--color-fg-muted)]">
-      <svg
-        className="w-4 h-4 shrink-0"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
-      </svg>
+      <Search className="w-4 h-4 shrink-0" size={16} strokeWidth={1.5} />
       <Input
         data-testid="dashboard-search"
         value={props.value}
@@ -81,9 +94,9 @@ function HeroCard(props: {
       onKeyDown={(e) => e.key === "Enter" && onClick()}
       role="button"
       tabIndex={0}
-      className="border border-[var(--color-border-default)] min-h-[280px] flex cursor-pointer transition-all duration-300 hover:border-[var(--color-fg-muted)] animate-fade-in-up"
+      className="border border-[var(--color-border-default)] min-h-0 flex cursor-pointer transition-colors duration-300 hover:border-[var(--color-fg-muted)] animate-fade-in-up"
     >
-      <div className="flex-1 p-10 flex flex-col justify-center">
+      <div className="flex-1 min-w-0 p-10 flex flex-col justify-center">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-faint)] mb-3">
           Last edited {lastEdited}
         </div>
@@ -99,20 +112,9 @@ function HeroCard(props: {
           </span>
         </div>
       </div>
-      <div className="w-[35%] bg-[var(--color-bg-surface)] border-l border-[var(--color-border-default)] relative overflow-hidden">
+      <div className="w-[35%] max-w-[280px] hidden lg:block bg-[var(--color-bg-surface)] border-l border-[var(--color-border-default)] relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center text-[var(--color-fg-faint)]">
-          <svg
-            className="w-16 h-16 opacity-20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1"
-          >
-            <path d="M12 19l7-7 3 3-7 7-3-3z" />
-            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
-            <path d="M2 2l7.586 7.586" />
-            <circle cx="11" cy="11" r="2" />
-          </svg>
+          <PenTool className="w-16 h-16 opacity-20" size={24} strokeWidth={1.5} />
         </div>
       </div>
     </div>
@@ -124,11 +126,7 @@ function HeroCard(props: {
  */
 function MoreIcon(): JSX.Element {
   return (
-    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-      <circle cx="12" cy="12" r="1.5" />
-      <circle cx="19" cy="12" r="1.5" />
-      <circle cx="5" cy="12" r="1.5" />
-    </svg>
+    <MoreHorizontal className="w-4 h-4" size={16} strokeWidth={1.5} />
   );
 }
 
@@ -548,14 +546,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
 
   // Loading state
   if (bootstrapStatus === "loading") {
-    return (
-      <div
-        data-testid="dashboard-loading"
-        className="flex-1 flex items-center justify-center"
-      >
-        <Spinner size="lg" />
-      </div>
-    );
+    return <DashboardLoadingState />;
   }
 
   // Empty state (no projects)
@@ -584,18 +575,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
           ) : null}
 
           <div className="text-[var(--color-fg-faint)] mb-8">
-            <svg
-              className="w-20 h-20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-            >
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-              <line x1="12" y1="18" x2="12" y2="12" />
-              <line x1="9" y1="15" x2="15" y2="15" />
-            </svg>
+            <FilePlus className="w-20 h-20" size={24} strokeWidth={1.5} />
           </div>
           <Text
             as="div"

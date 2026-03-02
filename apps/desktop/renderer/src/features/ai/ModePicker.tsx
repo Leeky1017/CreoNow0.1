@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import { Button, Text } from "../../components/primitives";
 
 /**
@@ -91,17 +92,7 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
                 </div>
 
                 {selected && (
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="text-[var(--color-fg-accent)] shrink-0"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
+                  <Check size={16} strokeWidth={1.5} className="text-[var(--color-fg-accent)] shrink-0" />
                 )}
               </Button>
             );

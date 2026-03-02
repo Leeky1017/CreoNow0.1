@@ -5,6 +5,7 @@ import type { IpcError, IpcResponse } from "@shared/types/ipc-generated";
 import { Button, Checkbox, Select, Tooltip } from "../../components/primitives";
 import { invoke } from "../../lib/ipcClient";
 
+import { Check, File, FileCode, FileOutput, FileText, X } from "lucide-react";
 /**
  * Export format types
  */
@@ -123,83 +124,25 @@ const formatOptions: FormatOption[] = [
     value: "pdf",
     label: "PDF",
     description: "Portable Document",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-        <polyline points="14 2 14 8 20 8" />
-        <path d="M10 13H8v5h2" />
-        <path d="M15 15h-2v3h2" />
-        <path d="M16 13h-3v5" />
-      </svg>
-    ),
+    icon: <FileText size={20} strokeWidth={1.5} />,
   },
   {
     value: "markdown",
     label: "Markdown",
     description: ".md",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-        <polyline points="14 2 14 8 20 8" />
-        <path d="M12 18v-6" />
-        <path d="M9 15l3 3 3-3" />
-      </svg>
-    ),
+    icon: <FileCode size={20} strokeWidth={1.5} />,
   },
   {
     value: "docx",
     label: "Word",
     description: ".docx",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-        <polyline points="14 2 14 8 20 8" />
-        <path d="M8 13h8" />
-        <path d="M8 17h8" />
-        <path d="M8 9h5" />
-      </svg>
-    ),
+    icon: <FileText size={20} strokeWidth={1.5} />,
   },
   {
     value: "txt",
     label: "Plain Text",
     description: ".txt",
-    icon: (
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      >
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-        <polyline points="14 2 14 8 20 8" />
-        <line x1="8" y1="13" x2="16" y2="13" />
-        <line x1="8" y1="17" x2="12" y2="17" />
-      </svg>
-    ),
+    icon: <File size={20} strokeWidth={1.5} />,
   },
 ];
 
@@ -617,19 +560,7 @@ function ProgressView({
     <div className="flex flex-col h-[400px] items-center justify-center p-8 text-center">
       {/* Icon with pulse animation */}
       <div className="w-16 h-16 rounded-2xl bg-[var(--color-accent-subtle)] flex items-center justify-center text-[var(--color-accent)] mb-6 relative">
-        <svg
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <polyline points="14 2 14 8 20 8" />
-        </svg>
+        <FileOutput size={24} strokeWidth={1.5} />
       </div>
 
       <h3 className="text-xl font-medium text-[var(--color-fg-default)] mb-2">
@@ -674,18 +605,7 @@ function SuccessView(props: {
     >
       {/* Success icon */}
       <div className="w-16 h-16 rounded-[var(--radius-full)] bg-[var(--color-success-subtle)] flex items-center justify-center text-[var(--color-success)] mb-6 border border-[var(--color-success)]/20">
-        <svg
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <polyline points="20 6 9 17 4 12" />
-        </svg>
+        <Check size={24} strokeWidth={1.5} />
       </div>
 
       <h3 className="text-xl font-medium text-[var(--color-fg-default)] mb-2">
@@ -953,20 +873,7 @@ export function ExportDialog({
                   className={closeButtonStyles}
                   aria-label="Close"
                 >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
+                  <X size={20} strokeWidth={1.5} aria-hidden="true" />
                 </DialogPrimitive.Close>
               </div>
 

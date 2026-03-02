@@ -1,7 +1,14 @@
+import React from "react";
+
 import { Toggle } from "../../components/primitives/Toggle";
 import { Slider } from "../../components/primitives/Slider";
 import { Select } from "../../components/primitives";
 import { Text } from "../../components/primitives";
+import { i18n } from "../../i18n";
+import {
+  getLanguagePreference,
+  setLanguagePreference,
+} from "../../i18n/languagePreference";
 
 /**
  * Settings state for General page
@@ -78,6 +85,14 @@ const typographyOptions = [
 ];
 
 /**
+ * Language options
+ */
+const languageOptions = [
+  { value: "zh-CN", label: "中文 (简体)" },
+  { value: "en", label: "English" },
+];
+
+/**
  * SettingsGeneral page component
  *
  * General settings page with Writing Experience, Data & Storage, and Editor Defaults sections.
@@ -89,6 +104,16 @@ export function SettingsGeneral({
   onShowAiMarksChange,
   onSettingsChange,
 }: SettingsGeneralProps): JSX.Element {
+  const [currentLanguage, setCurrentLanguage] = React.useState(
+    () => getLanguagePreference(),
+  );
+
+  const handleLanguageChange = React.useCallback((value: string) => {
+    setCurrentLanguage(value);
+    setLanguagePreference(value);
+    void i18n.changeLanguage(value);
+  }, []);
+
   const updateSetting = <K extends keyof GeneralSettings>(
     key: K,
     value: GeneralSettings[K],
@@ -105,6 +130,25 @@ export function SettingsGeneral({
       <p className="text-[var(--color-fg-subtle)] text-sm mb-12 font-light">
         Customize your writing environment and workflow preferences.
       </p>
+
+      {/* Language Section */}
+      <div className="mb-14">
+        <h4 className={sectionLabelStyles}>Language</h4>
+        <div className="flex flex-col gap-3">
+          <label className={fieldLabelStyles}>Display Language</label>
+          <Select
+            options={languageOptions}
+            value={currentLanguage}
+            onValueChange={handleLanguageChange}
+            fullWidth
+          />
+          <Text size="small" color="placeholder" className="mt-1">
+            Changes take effect immediately.
+          </Text>
+        </div>
+      </div>
+
+      <div className={dividerStyles} />
 
       {/* Writing Experience Section */}
       <div className="mb-14">

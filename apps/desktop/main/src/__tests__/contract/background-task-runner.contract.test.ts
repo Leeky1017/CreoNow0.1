@@ -82,6 +82,27 @@ async function main(): Promise<void> {
     }
   });
 
+  await runScenario(
+    "BE-TG-S1 pre-aborted: does not invoke execute callback",
+    async () => {
+      const runner = createBackgroundTaskRunner();
+      const controller = new AbortController();
+      controller.abort(new Error("already aborted"));
+
+      let invoked = 0;
+      const result = await runner.run({
+        execute: async () => {
+          invoked += 1;
+          return "unexpected";
+        },
+        signal: controller.signal,
+        timeoutMs: 5000,
+      });
+      assert.equal(result.status, "aborted");
+      assert.equal(invoked, 0);
+    },
+  );
+
   await runScenario("BE-TG-S1 crashed: crashAll returns crashed status", async () => {
     const runner = createBackgroundTaskRunner();
     const resultPromise = runner.run({

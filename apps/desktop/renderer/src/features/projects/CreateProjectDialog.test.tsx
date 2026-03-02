@@ -298,6 +298,8 @@ describe("CreateProjectDialog", () => {
             kind: "builtin",
             id: "novel",
           },
+          coverImage: null,
+          cropArea: null,
         });
       });
     });
@@ -344,6 +346,8 @@ describe("CreateProjectDialog", () => {
             kind: "builtin",
             id: "novel",
           },
+          coverImage: null,
+          cropArea: null,
         });
       });
     });
@@ -383,6 +387,8 @@ describe("CreateProjectDialog", () => {
             kind: "builtin",
             id: "short-story",
           },
+          coverImage: null,
+          cropArea: null,
         });
       });
     });

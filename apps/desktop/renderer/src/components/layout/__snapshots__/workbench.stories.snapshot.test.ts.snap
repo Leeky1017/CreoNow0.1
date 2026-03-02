@@ -2147,23 +2147,23 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
+                      class="lucide lucide-arrow-up"
                       fill="none"
                       height="16"
                       stroke="currentColor"
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      stroke-width="2"
+                      stroke-width="1.5"
                       viewBox="0 0 24 24"
                       width="16"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <line
-                        x1="12"
-                        x2="12"
-                        y1="19"
-                        y2="5"
+                      <path
+                        d="m5 12 7-7 7 7"
                       />
-                      <polyline
-                        points="5 12 12 5 19 12"
+                      <path
+                        d="M12 19V5"
                       />
                     </svg>
                   </button>

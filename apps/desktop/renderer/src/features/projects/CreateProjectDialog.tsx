@@ -10,10 +10,15 @@ import {
   RadioGroupRoot,
 } from "../../components/primitives/Radio";
 import { ImageUpload } from "../../components/primitives/ImageUpload";
+import {
+  ImageCropper,
+  type CropArea,
+} from "../../components/composites/ImageCropper";
 import { useProjectStore } from "../../stores/projectStore";
 import { useTemplateStore } from "../../stores/templateStore";
 import { CreateTemplateDialog } from "./CreateTemplateDialog";
 
+import { Plus } from "lucide-react";
 // =============================================================================
 // Types
 // =============================================================================
@@ -41,6 +46,7 @@ interface FormContentProps {
     templateId: string;
     description: string;
     coverImage: File | null;
+    cropArea: CropArea | null;
   }) => Promise<void>;
   onOpenCreateTemplate: () => void;
 }
@@ -81,6 +87,7 @@ function FormContent({
   const [templateId, setTemplateId] = useState(defaultTemplateId);
   const [description, setDescription] = useState(initialDescription ?? "");
   const [coverImage, setCoverImage] = useState<File | null>(null);
+  const [cropArea, setCropArea] = useState<CropArea | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [nameError, setNameError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -146,12 +153,13 @@ function FormContent({
           templateId,
           description,
           coverImage,
+          cropArea,
         });
       } finally {
         setSubmitting(false);
       }
     },
-    [coverImage, description, initialType, name, onSubmit, templateId],
+    [coverImage, cropArea, description, initialType, name, onSubmit, templateId],
   );
 
   return (
@@ -245,17 +253,7 @@ function FormContent({
             onClick={onOpenCreateTemplate}
             className="h-10 px-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[var(--color-border-default)] rounded-[var(--radius-sm)] text-sm text-[var(--color-fg-muted)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-fg-default)] transition-colors"
           >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              <path d="M12 5v14M5 12h14" />
-            </svg>
+            <Plus size={16} strokeWidth={1.5} />
             Create Template
           </button>
         </div>
@@ -292,6 +290,12 @@ function FormContent({
           placeholder="Click or drag image to upload"
           hint="PNG, JPG up to 5MB"
         />
+        {coverImage && (
+          <ImageCropper
+            file={coverImage}
+            onCropChange={setCropArea}
+          />
+        )}
         {imageError && (
           <Text
             size="small"
@@ -415,6 +419,8 @@ export function CreateProjectDialog({
       type?: "novel" | "screenplay" | "media";
       templateId: string;
       description?: string;
+      coverImage?: File | null;
+      cropArea?: CropArea | null;
     }) => {
       setSubmitting(true);
       setSubmitError(null);
@@ -450,6 +456,8 @@ export function CreateProjectDialog({
           type: data.type,
           description: data.description,
           template,
+          coverImage: data.coverImage ?? null,
+          cropArea: data.cropArea ?? null,
         });
 
         if (!res.ok) {
