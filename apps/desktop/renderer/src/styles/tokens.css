@@ -45,6 +45,7 @@
   --text-scale-factor-default: 1;
   --text-scale-factor-125: 1.25;
   --text-scale-factor-150: 1.5;
+  --text-editor-paragraph-spacing: 0.75em;
 
   /* z-index 层级 §5.1 */
   --z-base: 0; /* 默认层 */
@@ -137,6 +138,10 @@
 
   /* 阴影基色 §3.7 - 几何在 :root 中定义 */
   --color-shadow: rgba(0, 0, 0, 0.5);
+
+  /* Editor selection & caret */
+  --color-selection: rgba(96, 165, 250, 0.3);
+  --color-caret: var(--color-fg-default);
 }
 
 :root[data-theme="light"] {
@@ -173,4 +178,8 @@
 
   /* 阴影基色 §3.7 - 几何在 :root 中定义 */
   --color-shadow: rgba(0, 0, 0, 0.1);
+
+  /* Editor selection & caret */
+  --color-selection: rgba(59, 130, 246, 0.3);
+  --color-caret: var(--color-fg-default);
 }

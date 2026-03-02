@@ -340,3 +340,17 @@ textarea:focus-visible {
 @utility animation-delay-400 {
   animation-delay: 0.4s;
 }
+
+/* === ProseMirror editor token overrides === */
+
+.ProseMirror ::selection {
+  background: var(--color-selection);
+}
+
+.ProseMirror {
+  caret-color: var(--color-caret);
+}
+
+.ProseMirror p + p {
+  margin-top: var(--text-editor-paragraph-spacing);
+}
