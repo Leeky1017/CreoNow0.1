@@ -9,7 +9,7 @@
 | Issue | #897 |
 | Branch | `task/897-herocard-responsive-layout` |
 | Change | `fe-dashboard-herocard-responsive-layout` |
-| PR | 待回填 |
+| PR | https://github.com/Leeky1017/CreoNow/pull/900 |
 
 ## Dependency Sync Check
 
