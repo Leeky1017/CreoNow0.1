@@ -102,9 +102,9 @@ function HeroCard(props: {
       onKeyDown={(e) => e.key === "Enter" && onClick()}
       role="button"
       tabIndex={0}
-      className="border border-[var(--color-border-default)] min-h-[280px] flex cursor-pointer transition-all duration-300 hover:border-[var(--color-fg-muted)] animate-fade-in-up"
+      className="border border-[var(--color-border-default)] min-h-0 flex cursor-pointer transition-colors duration-300 hover:border-[var(--color-fg-muted)] animate-fade-in-up"
     >
-      <div className="flex-1 p-10 flex flex-col justify-center">
+      <div className="flex-1 min-w-0 p-10 flex flex-col justify-center">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-faint)] mb-3">
           Last edited {lastEdited}
         </div>
@@ -120,7 +120,7 @@ function HeroCard(props: {
           </span>
         </div>
       </div>
-      <div className="w-[35%] bg-[var(--color-bg-surface)] border-l border-[var(--color-border-default)] relative overflow-hidden">
+      <div className="w-[35%] max-w-[280px] hidden lg:block bg-[var(--color-bg-surface)] border-l border-[var(--color-border-default)] relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center text-[var(--color-fg-faint)]">
           <svg
             className="w-16 h-16 opacity-20"
