@@ -1,12 +1,12 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-02 23:18
+更新时间：2026-03-02 23:24
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
 ## 执行策略
 
-- 当前活跃 change 数量为 **16**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-rightpanel-ai-tabbar-layout`、`fe-rightpanel-ai-guidance-and-style`、`fe-spec-drift-iconbar-rightpanel-alignment`、`fe-hotfix-searchpanel-backdrop-close`、`fe-leftpanel-dialog-migration`、`fe-cleanup-proxysection-and-mocks`、`fe-ai-panel-toggle-button`、`fe-ipc-open-folder-contract`、`fe-ui-open-folder-entrypoints`、`fe-dashboard-welcome-merge-and-ghost-actions`、`fe-project-image-cropper`、`fe-error-boundary-partitioning`、`fe-skeleton-loading-states`、`fe-i18n-language-switcher-foundation`、`fe-onboarding-flow-refresh`、`fe-searchpanel-tokenized-rewrite`、`fe-zenmode-token-escape-cleanup`、`fe-dashboard-herocard-responsive-layout`、`fe-lucide-icon-unification`、`fe-theme-switch-smoothing`、`fe-desktop-native-binding-packaging`、`fe-desktop-window-lifecycle-uplift` 已归档）。
+- 当前活跃 change 数量为 **13**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-rightpanel-ai-tabbar-layout`、`fe-rightpanel-ai-guidance-and-style`、`fe-spec-drift-iconbar-rightpanel-alignment`、`fe-hotfix-searchpanel-backdrop-close`、`fe-leftpanel-dialog-migration`、`fe-cleanup-proxysection-and-mocks`、`fe-ai-panel-toggle-button`、`fe-ipc-open-folder-contract`、`fe-ui-open-folder-entrypoints`、`fe-dashboard-welcome-merge-and-ghost-actions`、`fe-project-image-cropper`、`fe-error-boundary-partitioning`、`fe-skeleton-loading-states`、`fe-i18n-language-switcher-foundation`、`fe-onboarding-flow-refresh`、`fe-searchpanel-tokenized-rewrite`、`fe-zenmode-token-escape-cleanup`、`fe-dashboard-herocard-responsive-layout`、`fe-lucide-icon-unification`、`fe-theme-switch-smoothing`、`fe-desktop-native-binding-packaging`、`fe-desktop-window-lifecycle-uplift`、`fe-composites-p0-panel-and-command-items`、`fe-editor-tokenization-selection-and-spacing`、`fe-editor-advanced-interactions` 已归档）。
 - 执行模式：**4 批次渐进推进**（第一批核心体验 → 第二批功能补全 → 第三批设计系统回归 → 第四批独立 Issue 收口）。
 - 规则：
   - 任一 change 开始 Red 前，必须完成该 change 的依赖同步检查（Dependency Sync Check）。
@@ -111,9 +111,9 @@
 | N1 | 4-0 | `fe-desktop-native-binding-packaging` | 主进程独立簇 | — | 已完成并归档（PR #911） |
 | N2 | 4-0 | `fe-desktop-window-lifecycle-uplift` | 主进程独立簇 | — | 已完成并归档（PR #912） |
 | A | 4a-1 | `fe-i18n-language-switcher-foundation` | i18n/Onboarding/SettingsGeneral 簇 | — | 已完成并归档（PR #843） |
-| B | 4a-1 | `fe-composites-p0-panel-and-command-items` | SearchPanel/AiPanel/CommandPalette/FileTree 簇 | — | 已合并（PR #919） |
-| C | 4a-1 | `fe-editor-tokenization-selection-and-spacing` | `tokens.css` + `main.css` + typography 簇 | — | 已合并（PR #917） |
-| D | 4a-1 | `fe-editor-advanced-interactions` | EditorPane 簇 | — | PR #918 复审完成，待按串行门禁合并 |
+| B | 4a-1 | `fe-composites-p0-panel-and-command-items` | SearchPanel/AiPanel/CommandPalette/FileTree 簇 | — | 已完成并归档（PR #919） |
+| C | 4a-1 | `fe-editor-tokenization-selection-and-spacing` | `tokens.css` + `main.css` + typography 簇 | — | 已完成并归档（PR #917） |
+| D | 4a-1 | `fe-editor-advanced-interactions` | EditorPane 簇 | — | 已完成并归档（PR #918） |
 | A | 4b-1 | `fe-i18n-core-pages-keying` | SearchPanel/AiPanel/CommandPalette/Dashboard/Onboarding 簇 | `fe-i18n-language-switcher-foundation` | 待执行 |
 | B | 4b-1 | `fe-composites-p1-search-and-forms` | SettingsGeneral + Forms 簇 | `fe-composites-p0-panel-and-command-items` | 待执行 |
 | C | 4b-1 | `fe-composites-p2-empties-and-confirms` | FileTreePanel + Empty/Confirm 簇 | `fe-composites-p0-panel-and-command-items` | 待执行 |
@@ -225,12 +225,15 @@
 - `fe-ipc-open-folder-contract`：已归档到 `openspec/changes/archive/fe-ipc-open-folder-contract`（merge commit `91e56f28`，PR #830）。
 - `fe-ui-open-folder-entrypoints`：已归档到 `openspec/changes/archive/fe-ui-open-folder-entrypoints`（merge commit `91e56f28`，PR #830）。
 - `fe-dashboard-welcome-merge-and-ghost-actions`：已归档到 `openspec/changes/archive/fe-dashboard-welcome-merge-and-ghost-actions`（merge commit `91e56f28`，PR #830）。
+- `fe-composites-p0-panel-and-command-items`：已归档到 `openspec/changes/archive/fe-composites-p0-panel-and-command-items`（merge commit `f798c553`，PR #919）。
+- `fe-editor-tokenization-selection-and-spacing`：已归档到 `openspec/changes/archive/fe-editor-tokenization-selection-and-spacing`（merge commit `704f0bce`，PR #917）。
+- `fe-editor-advanced-interactions`：已归档到 `openspec/changes/archive/fe-editor-advanced-interactions`（merge commit `70bdeee8`，PR #918）。
 
-## 本次同步说明（ISSUE-901）
+## 本次同步说明（ISSUE-922）
 
-- 当前子任务：`ISSUE-901`（Wave 3a 三项归档与 EO 同步）。
-- 依赖关系：`PR #898`、`PR #899`、`PR #900` 已按串行顺序合并；closeout 由 `PR #902` 完成。
-- 同步结论：Wave 3a 三项已“合并 + 归档”，执行顺序文档已与实际状态对齐，后续可进入 Wave 3b。
+- 当前子任务：`ISSUE-922`（Wave 4a 三项归档与 EO 同步）。
+- 依赖关系：`PR #919`、`PR #917`、`PR #918` 已按串行顺序合并；本次 closeout 负责归档与执行顺序文档收口。
+- 同步结论：Wave 4a 三项已“合并 + 归档”，后续可按依赖推进 Wave 4b（`fe-composites-p1/p2`、`fe-hotkeys-shortcuts-unification`、`fe-editor-inline-diff-decoration-integration`、`fe-i18n-core-pages-keying`）。
 
 ## Owner 决策阻塞项
 
