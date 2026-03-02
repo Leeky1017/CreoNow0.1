@@ -33,7 +33,7 @@ import {
   resolveEditorLineHeightToken,
   resolveEditorScaleFactor,
 } from "./typography";
-import { buildAiStreamUndoCheckpoint } from "./aiStreamUndo";
+import { buildAiStreamUndoCheckpoint, undoAiStream } from "./aiStreamUndo";
 import type { AiStreamCheckpoint } from "./aiStreamUndo";
 
 const IS_VITEST_RUNTIME =
@@ -537,6 +537,15 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
 
     const onUpdate = () => {
       syncCapacityState(editor.state.doc.textContent.length);
+
+      // Clear AI undo checkpoint on any manual edit — the user has
+      // implicitly accepted the AI output by continuing to type.
+      if (
+        aiStreamCheckpointRef.current &&
+        !isAiRunning(aiStatus)
+      ) {
+        aiStreamCheckpointRef.current = null;
+      }
     };
 
     onUpdate();
@@ -544,7 +553,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
     return () => {
       editor.off("update", onUpdate);
     };
-  }, [editor, syncCapacityState]);
+  }, [aiStatus, editor, syncCapacityState]);
 
   const resolveEntityCompletionCandidates = React.useCallback(
     async (args: {
@@ -821,8 +830,9 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
         },
       });
 
-      // Stream finished — clear checkpoint (undo is now in TipTap history)
-      aiStreamCheckpointRef.current = null;
+      // Stream finished — checkpoint stays alive for atomic undo.
+      // Next Ctrl+Z will revert the entire AI round via undoAiStream.
+      // Checkpoint is cleared on manual user edit (see onUpdate handler).
     },
     [
       aiRun,
@@ -833,6 +843,17 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
       props.projectId,
     ],
   );
+
+  /**
+   * Revert the last AI stream output atomically.
+   * Returns true if the undo was executed, false if no checkpoint exists.
+   */
+  const handleAiUndo = React.useCallback((): boolean => {
+    if (!editor || !aiStreamCheckpointRef.current) return false;
+    const result = undoAiStream(editor, aiStreamCheckpointRef.current);
+    aiStreamCheckpointRef.current = null;
+    return result;
+  }, [editor]);
 
   const onWriteClick = React.useCallback(async (): Promise<void> => {
     await runSlashAiSkill("builtin:write");
@@ -871,6 +892,15 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
         return;
       }
 
+      // Ctrl/Cmd+Z — atomic AI undo when a checkpoint is active (ED-FE-ADV-S2)
+      if (e.key.toLowerCase() === "z" && !e.shiftKey) {
+        if (handleAiUndo()) {
+          e.preventDefault();
+          return;
+        }
+        // No active checkpoint — fall through to TipTap's default undo
+      }
+
       if (e.key.toLowerCase() === "s") {
         if (isPreviewMode) {
           e.preventDefault();
@@ -896,6 +926,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
     contentReady,
     documentId,
     editor,
+    handleAiUndo,
     isPreviewMode,
     onWriteClick,
     props.projectId,
