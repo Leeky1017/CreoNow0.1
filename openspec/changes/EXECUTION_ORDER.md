@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-02 13:27
+更新时间：2026-03-02 16:15
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -81,8 +81,8 @@
 | A | 3a-1 | `fe-searchpanel-tokenized-rewrite` | SearchPanel + `main.css` 簇 | 前置 hotfix 已归档 | 已完成并归档（PR #898） |
 | B | 3a-1 | `fe-zenmode-token-escape-cleanup` | ZenMode + `tokens.css` 簇 | — | 已完成并归档（PR #899） |
 | C | 3a-1 | `fe-dashboard-herocard-responsive-layout` | DashboardPage 簇 | — | 已完成并归档（PR #900） |
-| A | 3b-1 | `fe-lucide-icon-unification` | icon import 广撒网簇 | Wave 3a 完成后（分别与 searchpanel/zenmode/herocard 共享文件） | 待执行 |
-| B | 3b-1 | `fe-theme-switch-smoothing` | `main.css` + `tokens.css` 簇 | Wave 3a 完成后（与 searchpanel/zenmode 共享样式文件） | 待执行 |
+| A | 3b-1 | `fe-lucide-icon-unification` | icon import 广撒网簇 | Wave 3a 完成后（分别与 searchpanel/zenmode/herocard 共享文件） | PR #909 已创建，主会话审计 PASS，待独立审计 |
+| B | 3b-1 | `fe-theme-switch-smoothing` | `main.css` + `tokens.css` 簇 | Wave 3a 完成后（与 searchpanel/zenmode 共享样式文件） | PR #910 已创建，主会话审计 PASS，待独立审计 |
 | A | 3c-1 | `fe-feature-focus-visible-coverage` | AiPanel/SearchPanel/Dashboard + `main.css` + `tokens.css` 簇 | Wave 3b 完成后 | 待执行 |
 | A | 3c-2 | `fe-visual-noise-reduction` | AiPanel/Dashboard + `tokens.css` 簇 | `fe-feature-focus-visible-coverage`；且需 `fe-rightpanel-ai-tabbar-layout`, `fe-rightpanel-ai-guidance-and-style`, `fe-leftpanel-dialog-migration` | 待执行 |
 | A | 3c-3 | `fe-reduced-motion-respect` | AiPanel/SearchPanel + `main.css` + `tokens.css` 簇 | `fe-visual-noise-reduction` | 待执行 |
@@ -108,8 +108,8 @@
 
 | Lane | 顺序 | Change | 文件冲突簇 | 依赖 | 状态 |
 |------|------|--------|-----------|------|------|
-| N1 | 4-0 | `fe-desktop-native-binding-packaging` | 主进程独立簇 | — | 待执行 |
-| N2 | 4-0 | `fe-desktop-window-lifecycle-uplift` | 主进程独立簇 | — | 待执行 |
+| N1 | 4-0 | `fe-desktop-native-binding-packaging` | 主进程独立簇 | — | PR #911 已创建，主会话审计 PASS，待独立审计 |
+| N2 | 4-0 | `fe-desktop-window-lifecycle-uplift` | 主进程独立簇 | — | PR #912 已创建，主会话审计 PASS，待独立审计 |
 | A | 4a-1 | `fe-i18n-language-switcher-foundation` | i18n/Onboarding/SettingsGeneral 簇 | — | 已完成并归档（PR #843） |
 | B | 4a-1 | `fe-composites-p0-panel-and-command-items` | SearchPanel/AiPanel/CommandPalette/FileTree 簇 | — | 待执行 |
 | C | 4a-1 | `fe-editor-tokenization-selection-and-spacing` | `tokens.css` + `main.css` + typography 簇 | — | 待执行 |
