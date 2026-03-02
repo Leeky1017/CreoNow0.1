@@ -7,6 +7,7 @@ import { Textarea } from "../../components/primitives/Textarea";
 import { Text } from "../../components/primitives/Text";
 import { useTemplateStore, type TemplateStructure } from "../../stores/templateStore";
 
+import { X } from "lucide-react";
 // =============================================================================
 // Types
 // =============================================================================
@@ -43,17 +44,7 @@ function ListItem({ value, onRemove, disabled }: ListItemProps): JSX.Element {
         className="text-[var(--color-fg-muted)] hover:text-[var(--color-error)] transition-colors disabled:opacity-50"
         aria-label={`Remove ${value}`}
       >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        >
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
+        <X size={16} strokeWidth={1.5} />
       </button>
     </div>
   );

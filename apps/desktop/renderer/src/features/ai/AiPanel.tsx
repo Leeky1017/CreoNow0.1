@@ -53,6 +53,7 @@ import {
   judgeSeverityClass,
 } from "./aiPanelFormatting";
 
+import { ArrowUp } from "lucide-react";
 const RECENT_MODELS_STORAGE_KEY = "creonow.ai.recentModels";
 const CANDIDATE_COUNT_STORAGE_KEY = "creonow.ai.candidateCount";
 const DB_REBUILD_DEFAULT_COMMAND = "pnpm -C apps/desktop rebuild:native";
@@ -198,20 +199,7 @@ function SendStopButton(props: {
       ) : (
         // Send icon: arrow up
 
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <line x1="12" y1="19" x2="12" y2="5" />
-
-          <polyline points="5 12 12 5 19 12" />
-        </svg>
+        <ArrowUp size={16} strokeWidth={1.5} />
       )}
     </button>
   );

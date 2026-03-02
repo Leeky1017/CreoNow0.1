@@ -8,6 +8,7 @@ import {
 } from "../../i18n/languagePreference";
 import { invoke } from "../../lib/ipcClient";
 
+import { FolderOpen, Pencil, Sparkles } from "lucide-react";
 // =============================================================================
 // Types
 // =============================================================================
@@ -114,21 +115,7 @@ function AiConfigStep(props: { language: string }): JSX.Element {
         <div className="rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-5">
           <div className="flex items-start gap-4">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-bg-hover)] text-[var(--color-fg-default)]">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                <path d="M9 13h6" />
-                <path d="M9 17h3" />
-                <path d="M12 3v6" />
-              </svg>
+              <Sparkles size={20} strokeWidth={1.5} />
             </div>
             <div>
               <Text size="body" color="default" className="mb-1 font-medium">
@@ -146,19 +133,7 @@ function AiConfigStep(props: { language: string }): JSX.Element {
         <div className="rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-5">
           <div className="flex items-start gap-4">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-bg-hover)] text-[var(--color-fg-default)]">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 20h9" />
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-              </svg>
+              <Pencil size={20} strokeWidth={1.5} />
             </div>
             <div>
               <Text size="body" color="default" className="mb-1 font-medium">
@@ -212,17 +187,7 @@ function OpenFolderStep(props: {
           onClick={props.onOpenFolder}
           className="rounded-full px-10"
         >
-          <svg
-            className="mr-2 h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-          </svg>
+          <FolderOpen className="mr-2 h-4 w-4" size={16} strokeWidth={1.5} />
           {isEn ? "Open Folder" : "打开文件夹"}
         </Button>
 

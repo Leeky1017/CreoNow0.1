@@ -13,6 +13,7 @@ import type {
 } from "./types";
 import { ROLE_DISPLAY, RELATIONSHIP_TYPE_DISPLAY } from "./types";
 
+import { Plus } from "lucide-react";
 export interface AddRelationshipPopoverProps {
   /** Available characters to select from (excluding current character) */
   availableCharacters: Character[];
@@ -48,19 +49,7 @@ const RELATIONSHIP_TYPES: RelationshipType[] = [
  * Plus icon for trigger button
  */
 function PlusIcon() {
-  return (
-    <svg
-      width="10"
-      height="10"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
-  );
+  return <Plus size={16} strokeWidth={1.5} />;
 }
 
 /**
