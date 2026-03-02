@@ -51,7 +51,7 @@ const activeStyles = [
 
 const inactiveStyles = [
   "text-[color:var(--color-fg-muted)]",
-  "hover:bg-[rgba(255,255,255,0.03)]",
+  "hover:bg-[color:var(--color-bg-hover)]",
   "hover:text-[color:var(--color-fg-default)]",
 ].join(" ");
 
@@ -118,9 +118,9 @@ export function CommandItem({
       {/* Shortcut hint */}
       {hint && (
         <div
-          className={`ml-2 px-1.5 py-0.5 text-[11px] rounded bg-[color:var(--color-bg-selected)] border border-[rgba(255,255,255,0.05)] ${
+          className={`ml-2 px-1.5 py-0.5 text-[11px] rounded bg-[color:var(--color-bg-selected)] border border-[color:var(--color-separator)] ${
             active
-              ? "text-[color:var(--color-fg-default)] border-[rgba(255,255,255,0.1)]"
+              ? "text-[color:var(--color-fg-default)] border-[color:var(--color-border-default)]"
               : "text-[color:var(--color-fg-muted)]"
           }`}
         >

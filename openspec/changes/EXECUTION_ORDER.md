@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-02 19:21
+更新时间：2026-03-02 20:15
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -111,9 +111,9 @@
 | N1 | 4-0 | `fe-desktop-native-binding-packaging` | 主进程独立簇 | — | 已完成并归档（PR #911） |
 | N2 | 4-0 | `fe-desktop-window-lifecycle-uplift` | 主进程独立簇 | — | 已完成并归档（PR #912） |
 | A | 4a-1 | `fe-i18n-language-switcher-foundation` | i18n/Onboarding/SettingsGeneral 簇 | — | 已完成并归档（PR #843） |
-| B | 4a-1 | `fe-composites-p0-panel-and-command-items` | SearchPanel/AiPanel/CommandPalette/FileTree 簇 | — | 待执行 |
-| C | 4a-1 | `fe-editor-tokenization-selection-and-spacing` | `tokens.css` + `main.css` + typography 簇 | — | 待执行 |
-| D | 4a-1 | `fe-editor-advanced-interactions` | EditorPane 簇 | — | 待执行 |
+| B | 4a-1 | `fe-composites-p0-panel-and-command-items` | SearchPanel/AiPanel/CommandPalette/FileTree 簇 | — | PR 已创建（PR #919） |
+| C | 4a-1 | `fe-editor-tokenization-selection-and-spacing` | `tokens.css` + `main.css` + typography 簇 | — | PR 已创建（PR #917） |
+| D | 4a-1 | `fe-editor-advanced-interactions` | EditorPane 簇 | — | PR 已创建（PR #918） |
 | A | 4b-1 | `fe-i18n-core-pages-keying` | SearchPanel/AiPanel/CommandPalette/Dashboard/Onboarding 簇 | `fe-i18n-language-switcher-foundation` | 待执行 |
 | B | 4b-1 | `fe-composites-p1-search-and-forms` | SettingsGeneral + Forms 簇 | `fe-composites-p0-panel-and-command-items` | 待执行 |
 | C | 4b-1 | `fe-composites-p2-empties-and-confirms` | FileTreePanel + Empty/Confirm 簇 | `fe-composites-p0-panel-and-command-items` | 待执行 |
