@@ -90,11 +90,13 @@ describe("SearchPanel", () => {
     it("点击分类按钮应切换分类", () => {
       render(<SearchPanel projectId="test-project" open={true} />);
 
-      const allButton = screen.getByText("All");
-      expect(allButton).toBeInTheDocument();
+      const allButtonText = screen.getByText("All");
+      expect(allButtonText).toBeInTheDocument();
 
-      // All 按钮默认选中
-      expect(allButton.className).toContain("bg-[#3b82f6]");
+      // All 按钮默认选中 — Button primitive wraps children in <span>,
+      // so we check the closest <button> ancestor for the active className
+      const allButton = allButtonText.closest("button");
+      expect(allButton?.className).toContain("bg-[var(--color-info)]");
     });
   });
 

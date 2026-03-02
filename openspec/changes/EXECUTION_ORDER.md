@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-02 10:47
+更新时间：2026-03-02 11:25
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -78,9 +78,9 @@
 
 | Lane | 顺序 | Change | 文件冲突簇 | 依赖 | 状态 |
 |------|------|--------|-----------|------|------|
-| A | 3a-1 | `fe-searchpanel-tokenized-rewrite` | SearchPanel + `main.css` 簇 | 前置 hotfix 已归档 | 待执行 |
-| B | 3a-1 | `fe-zenmode-token-escape-cleanup` | ZenMode + `tokens.css` 簇 | — | 待执行 |
-| C | 3a-1 | `fe-dashboard-herocard-responsive-layout` | DashboardPage 簇 | — | 待执行 |
+| A | 3a-1 | `fe-searchpanel-tokenized-rewrite` | SearchPanel + `main.css` 簇 | 前置 hotfix 已归档 | PR #898 待审计 |
+| B | 3a-1 | `fe-zenmode-token-escape-cleanup` | ZenMode + `tokens.css` 簇 | — | PR #899 待审计 |
+| C | 3a-1 | `fe-dashboard-herocard-responsive-layout` | DashboardPage 簇 | — | PR #900 待审计 |
 | A | 3b-1 | `fe-lucide-icon-unification` | icon import 广撒网簇 | Wave 3a 完成后（分别与 searchpanel/zenmode/herocard 共享文件） | 待执行 |
 | B | 3b-1 | `fe-theme-switch-smoothing` | `main.css` + `tokens.css` 簇 | Wave 3a 完成后（与 searchpanel/zenmode 共享样式文件） | 待执行 |
 | A | 3c-1 | `fe-feature-focus-visible-coverage` | AiPanel/SearchPanel/Dashboard + `main.css` + `tokens.css` 簇 | Wave 3b 完成后 | 待执行 |
