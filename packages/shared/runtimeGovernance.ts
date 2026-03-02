@@ -38,6 +38,9 @@ export const RUNTIME_GOVERNANCE_DEFAULTS: RuntimeGovernance = {
   },
 };
 
+const IPC_MAX_PAYLOAD_BYTES_HARD_CAP =
+  RUNTIME_GOVERNANCE_DEFAULTS.ipc.maxPayloadBytes;
+
 function pickRaw(args: {
   env: RuntimeGovernanceEnv;
   primaryKey: string;
@@ -59,7 +62,11 @@ function pickRaw(args: {
   return undefined;
 }
 
-function parsePositiveInt(raw: string | undefined, fallback: number): number {
+function parsePositiveInt(
+  raw: string | undefined,
+  fallback: number,
+  maxValue?: number,
+): number {
   if (typeof raw !== "string") {
     return fallback;
   }
@@ -74,6 +81,14 @@ function parsePositiveInt(raw: string | undefined, fallback: number): number {
   const parsed = Number.parseInt(trimmed, 10);
   if (!Number.isFinite(parsed) || parsed <= 0) {
     return fallback;
+  }
+
+  if (
+    typeof maxValue === "number" &&
+    Number.isFinite(maxValue) &&
+    maxValue > 0
+  ) {
+    return Math.min(parsed, maxValue);
   }
 
   return parsed;
@@ -127,6 +142,7 @@ export function resolveRuntimeGovernanceFromEnv(
       legacyKey: "CREONOW_IPC_MAX_PAYLOAD_BYTES",
     }),
     RUNTIME_GOVERNANCE_DEFAULTS.ipc.maxPayloadBytes,
+    IPC_MAX_PAYLOAD_BYTES_HARD_CAP,
   );
 
   const aiTimeoutMs = parsePositiveInt(
