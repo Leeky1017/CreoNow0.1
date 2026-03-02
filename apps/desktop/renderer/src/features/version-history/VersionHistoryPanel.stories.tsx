@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Check, NotepadText } from "lucide-react";
+import { NotepadText } from "lucide-react";
 import React from "react";
 import {
   VersionHistoryPanel,
@@ -8,7 +8,6 @@ import {
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "../../components/primitives";
 
-import { Check } from "lucide-react";
 /**
  * Sample version data based on design spec
  *

@@ -49,7 +49,6 @@ const MOCK_SEARCH_RESULTS: SearchResultItem[] = [
 ];
 import { layoutDecorator } from "../../components/layout/test-utils";
 
-import { Search, X } from "lucide-react";
 /**
  * SearchPanel 组件 Story
  *

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ArrowUp, Check, CircleAlert, Clock, Copy, MessageSquare, Pencil, Plus, Square, Trash2 } from "lucide-react";
+import { CircleAlert, Pencil, Trash2 } from "lucide-react";
 import React from "react";
 import { AiPanel } from "./AiPanel";
 import { layoutDecorator } from "../../components/layout/test-utils";

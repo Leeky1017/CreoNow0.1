@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Camera, Pencil, Plus } from "lucide-react";
+import { Camera } from "lucide-react";
 import React from "react";
 import { CharacterPanel } from "./CharacterPanel";
 import { CharacterDetailDialog } from "./CharacterDetailDialog";
@@ -8,8 +8,6 @@ import { GroupSelector } from "./GroupSelector";
 import { AddRelationshipPopover } from "./AddRelationshipPopover";
 import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
 import type { Character, CharacterRole, CharacterGroup } from "./types";
-
-import { Pencil, Plus } from "lucide-react";
 /**
  * Sample character data for stories
  *

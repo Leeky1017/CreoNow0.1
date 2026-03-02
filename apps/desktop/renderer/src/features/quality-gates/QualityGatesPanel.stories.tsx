@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { NotepadText, X } from "lucide-react";
+import { NotepadText } from "lucide-react";
 import React from "react";
 import {
   QualityGatesPanel,
@@ -7,7 +7,6 @@ import {
   type QualitySettings,
 } from "./QualityGatesPanel";
 
-import { X } from "lucide-react";
 /**
  * Sample check data based on design spec
  *
