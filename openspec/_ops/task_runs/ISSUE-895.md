@@ -1,111 +1,42 @@
-# RUN_LOG: ISSUE-895 — SearchPanel tokenized rewrite
+# ISSUE-895
+- Issue: #895
+- Branch: task/895-searchpanel-tokenized-rewrite
+- PR: https://github.com/Leeky1017/CreoNow/pull/898
 
-更新时间：2026-03-02 12:15
-
-## Meta
-
-| 字段 | 值 |
-|------|-----|
-| Issue | #895 |
-| Branch | `task/895-searchpanel-tokenized-rewrite` |
-| Change | `fe-searchpanel-tokenized-rewrite` |
-| PR | https://github.com/Leeky1017/CreoNow/pull/898 |
-
-## Dependency Sync Check
-
-- `fe-hotfix-searchpanel-backdrop-close`：已归档（PR #798），关闭语义稳定 ✅
-- `fe-composites-p0-panel-and-command-items`：已归档，PanelContainer/CommandItem 可用 ✅
-- 结论：无漂移
+## Plan
+- 收口独立审计阻塞项：补齐 S2/S3b 测试与实现证据，并完成治理签字链。
+- 保持功能改动不回退，聚焦门禁通过（openspec-log-guard / ci / merge-serial）。
+- 通过后进入 auto-merge，串行合并回 main。
 
 ## Runs
 
-### Red 阶段（S1/S1b/S3）
+### 2026-03-02 12:10 功能阻塞修复（S2/S3b）
+- Command: `pnpm -C apps/desktop test:run features/search/SearchPanel.token-guard`
+- Key output: `6 passed (6)`，新增并通过 `WB-FE-SRCH-S2` 与 `WB-FE-SRCH-S3b` guard。
+- Command: `pnpm -C apps/desktop typecheck`
+- Key output: `exit 0`。
+- Command: `pnpm -C apps/desktop test:run`
+- Key output: `Test Files 214 passed (214)`，`Tests 1633 passed (1633)`。
 
-```
-pnpm -C apps/desktop test:run features/search/SearchPanel.token-guard
+### 2026-03-02 12:42 独立复核回放
+- Command: `pnpm -C apps/desktop typecheck`
+- Key output: `exit 0`。
+- Command: `pnpm -C apps/desktop test:run features/search/SearchPanel.token-guard`
+- Key output: `Test Files 1 passed (1)`，`Tests 6 passed (6)`。
+- Command: `pnpm -C apps/desktop test:run`
+- Key output: `Test Files 214 passed (214)`，`Tests 1633 passed (1633)`。
 
- FAIL  SearchPanel.token-guard.test.ts (4 tests | 4 failed)
-   × does not contain raw hex color values (WB-FE-SRCH-S1)    — 56 violations
-   × does not contain raw rgba values (WB-FE-SRCH-S1)         — 多处 rgba()
-   × does not contain inline style attributes (WB-FE-SRCH-S1b) — 6 个 style={{}}
-   × does not use transition-all (WB-FE-SRCH-S3)              — 5 处 transition-all
-```
-
-### Green 阶段（S1/S1b/S3）
-
-```
-pnpm -C apps/desktop test:run features/search/SearchPanel.token-guard
-
- ✓ SearchPanel.token-guard.test.ts (4 tests) 4ms
-   ✓ does not contain raw hex color values (WB-FE-SRCH-S1)
-   ✓ does not contain raw rgba values (WB-FE-SRCH-S1)
-   ✓ does not contain inline style attributes (WB-FE-SRCH-S1b)
-   ✓ does not use transition-all (WB-FE-SRCH-S3)
-```
-
-### Red 阶段（S2/S3b）— 审计后补充
-
-```
-pnpm -C apps/desktop test:run features/search/SearchPanel.token-guard
-
- FAIL  SearchPanel.token-guard.test.ts (6 tests | 2 failed)
-   ✓ does not contain raw hex color values (WB-FE-SRCH-S1)
-   ✓ does not contain raw rgba values (WB-FE-SRCH-S1)
-   ✓ does not contain inline style attributes (WB-FE-SRCH-S1b)
-   ✓ does not use transition-all (WB-FE-SRCH-S3)
-   × does not contain native <button or <input elements (WB-FE-SRCH-S2)
-     — 11 处 native <button>/<input>
-   × gates animations with motion-safe modifier (WB-FE-SRCH-S3b)
-     — 3 处未加 motion-safe: 前缀的 animate-*
-```
-
-### Green 阶段（S2/S3b）— 审计后补充
-
-```
-pnpm -C apps/desktop test:run features/search/SearchPanel.token-guard
-
- ✓ SearchPanel.token-guard.test.ts (6 tests) 5ms
-   ✓ does not contain raw hex color values (WB-FE-SRCH-S1)
-   ✓ does not contain raw rgba values (WB-FE-SRCH-S1)
-   ✓ does not contain inline style attributes (WB-FE-SRCH-S1b)
-   ✓ does not use transition-all (WB-FE-SRCH-S3)
-   ✓ does not contain native <button or <input elements (WB-FE-SRCH-S2)
-   ✓ gates animations with motion-safe modifier (WB-FE-SRCH-S3b)
-```
-
-### 全量回归
-
-```
-pnpm -C apps/desktop test:run
-
- Test Files  214 passed (214)
-      Tests  1633 passed (1633)
-```
-
-### Typecheck
-
-```
-pnpm -C apps/desktop typecheck
-> tsc -p tsconfig.json --noEmit
-(exit 0)
-```
-
-## 变更文件
-
-| 文件 | 操作 |
-|------|------|
-| `apps/desktop/renderer/src/features/search/SearchPanel.token-guard.test.ts` | 修改 — 6 个 guard 测试（+2 S2/S3b） |
-| `apps/desktop/renderer/src/features/search/SearchPanel.tsx` | 修改 — token 替换 + 原生元素 → Primitives + motion-safe |
-| `apps/desktop/renderer/src/features/search/SearchPanel.test.tsx` | 修改 — 适配 Button primitive 内 span 包装 |
+### 2026-03-02 12:45 治理签字链准备
+- Command: `scripts/independent_review_record.sh --issue 895 --author codex --reviewer claude --pr-url https://github.com/Leeky1017/CreoNow/pull/898`
+- Key output: 生成 `openspec/_ops/reviews/ISSUE-895.md`。
+- Command: `scripts/main_audit_resign.sh --issue 895 --preflight-mode fast`
+- Key output: 生成 RUN_LOG-only 签字提交并执行 fast preflight。
 
 ## Main Session Audit
-
-| 字段 | 值 |
-|------|-----|
-| Audit-Owner | 待独立审计员指派 |
-| Reviewed-HEAD-SHA | `a7c84453` |
-| Spec-Compliance | S1 ✅ S1b ✅ S2 ✅ S3 ✅ S3b ✅ |
-| Code-Quality | Typecheck ✅ · 全量回归 214/214 ✅ |
-| Fresh-Verification | 审计后补充 S2/S3b 完成，全量回归已通过 |
-| Blocking-Issues | 无 |
-| Decision | 待审计员决定 |
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: <to-be-filled by signing commit head^>
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
