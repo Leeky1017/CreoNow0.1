@@ -338,6 +338,44 @@ async function main(): Promise<void> {
     },
   );
 
+  await runScenario(
+    "Boundary should return INVALID_ARGUMENT when patch contains unknown field",
+    async () => {
+      const harness = createIpcHarness();
+      const updated = await harness.invoke<{
+        ok: boolean;
+        error?: { code?: string };
+      }>("ai:config:update", {
+        patch: {
+          unknownField: "x",
+        },
+      });
+
+      assert.equal(updated.ok, false);
+      assert.equal(updated.error?.code, "INVALID_ARGUMENT");
+    },
+  );
+
+  await runScenario(
+    "Boundary should reject mixed patch when unknown field is present",
+    async () => {
+      const harness = createIpcHarness();
+      const updated = await harness.invoke<{
+        ok: boolean;
+        error?: { code?: string };
+      }>("ai:config:update", {
+        patch: {
+          enabled: true,
+          unknownField: "x",
+        },
+      });
+
+      assert.equal(updated.ok, false);
+      assert.equal(updated.error?.code, "INVALID_ARGUMENT");
+      assert.equal(harness.db.readJson("app", "creonow.ai.proxy.enabled"), null);
+    },
+  );
+
   // S5
   await runScenario(
     "S5 should return UNSUPPORTED when encryption unavailable",
