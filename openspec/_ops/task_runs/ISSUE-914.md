@@ -20,3 +20,12 @@
 ### 2026-03-02 19:51 全量回归
 - Command: `pnpm -C apps/desktop test:run`
 - Key output: Test Files 221 passed (221), Tests 1654 passed (1654), Duration 53.09s
+
+## Main Session Audit
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: 815b7345c95d3d5d3b8b709d56ea7a1cefd3b894
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
