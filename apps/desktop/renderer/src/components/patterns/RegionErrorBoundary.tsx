@@ -10,6 +10,7 @@ interface RegionErrorBoundaryProps {
 interface RegionErrorBoundaryState {
   hasError: boolean;
   resetKey: number;
+  errorMessage: string;
 }
 
 export class RegionErrorBoundary extends React.Component<
@@ -18,11 +19,11 @@ export class RegionErrorBoundary extends React.Component<
 > {
   constructor(props: RegionErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, resetKey: 0 };
+    this.state = { hasError: false, resetKey: 0, errorMessage: "" };
   }
 
-  static getDerivedStateFromError(): Partial<RegionErrorBoundaryState> {
-    return { hasError: true };
+  static getDerivedStateFromError(error: Error): Partial<RegionErrorBoundaryState> {
+    return { hasError: true, errorMessage: error.message };
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo): void {
@@ -34,7 +35,7 @@ export class RegionErrorBoundary extends React.Component<
   }
 
   private readonly handleRetry = (): void => {
-    this.setState((prev) => ({ hasError: false, resetKey: prev.resetKey + 1 }));
+    this.setState((prev) => ({ hasError: false, resetKey: prev.resetKey + 1, errorMessage: "" }));
   };
 
   render(): JSX.Element {
@@ -42,6 +43,7 @@ export class RegionErrorBoundary extends React.Component<
       return (
         <RegionFallback
           region={this.props.region}
+          errorMessage={this.state.errorMessage}
           onRetry={this.handleRetry}
         />
       );

@@ -1,24 +1,26 @@
-import React from "react";
-
 import { Button } from "../primitives/Button";
 import { Text } from "../primitives/Text";
+
+const regionLabels: Record<string, string> = {
+  sidebar: "Sidebar",
+  editor: "Editor",
+  panel: "Panel",
+};
 
 export interface RegionFallbackProps {
   /** Which region crashed */
   region: "sidebar" | "editor" | "panel";
+  /** Optional error message for debugging context */
+  errorMessage?: string;
   /** Callback to retry/reset the region */
   onRetry?: () => void;
 }
 
 export function RegionFallback({
   region,
+  errorMessage,
   onRetry,
 }: RegionFallbackProps): JSX.Element {
-  const regionLabels: Record<string, string> = {
-    sidebar: "Sidebar",
-    editor: "Editor",
-    panel: "Panel",
-  };
   const label = regionLabels[region] ?? region;
 
   return (
@@ -29,6 +31,11 @@ export function RegionFallback({
       <Text size="small" color="muted">
         {label} encountered an error
       </Text>
+      {errorMessage && (
+        <Text size="small" color="placeholder" className="max-w-xs break-words">
+          {errorMessage}
+        </Text>
+      )}
       {onRetry && (
         <Button
           type="button"

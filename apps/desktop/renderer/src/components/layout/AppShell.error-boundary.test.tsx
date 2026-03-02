@@ -8,10 +8,6 @@ function CrashingComponent(): JSX.Element {
   throw new Error("Test crash");
 }
 
-function StableComponent(): JSX.Element {
-  return <div data-testid="stable-content">Stable</div>;
-}
-
 describe("RegionErrorBoundary", () => {
   beforeEach(() => {
     vi.spyOn(console, "error").mockImplementation(() => {});
