@@ -85,6 +85,17 @@
   --color-zen-glow: rgba(59, 130, 246, 0.03);
   --color-zen-text: rgba(255, 255, 255, 0.9);
 
+  /* Zen mode — extended tokens */
+  --color-zen-hover: rgba(255, 255, 255, 0.05);
+  --color-zen-statusbar-bg: rgba(0, 0, 0, 0.5);
+  --zen-content-max-width: 720px;
+  --zen-content-padding-x: 80px;
+  --zen-content-padding-y: 120px;
+  --zen-title-size: 48px;
+  --zen-body-size: 18px;
+  --zen-body-line-height: 1.8;
+  --zen-label-size: 11px;
+
   /* 阴影系统 §3.7 - 几何保持一致，颜色来自主题内 --color-shadow */
   --shadow-sm: 0 1px 2px var(--color-shadow);
   --shadow-md: 0 4px 8px var(--color-shadow);
