@@ -1,7 +1,7 @@
 # ISSUE-914
 - Issue: #914
 - Branch: task/914-fe-composites-p0
-- PR: <fill-after-created>
+- PR: #919
 
 ## Plan
 - 新增 PanelContainer/SidebarItem/CommandItem 三个 P0 Composite
