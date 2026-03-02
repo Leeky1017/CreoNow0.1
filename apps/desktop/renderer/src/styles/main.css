@@ -39,6 +39,24 @@ body,
   height: 100%;
 }
 
+/*
+ * 主题切换平滑过渡（WB-FE-THEME-S1 / S2）
+ * 使用 duration-fast token（100ms），消除 dark↔light 闪烁。
+ */
+html {
+  transition:
+    background-color var(--duration-fast) var(--ease-default),
+    color var(--duration-fast) var(--ease-default),
+    border-color var(--duration-fast) var(--ease-default);
+}
+
+/* WB-FE-THEME-S3: reduced motion 下禁用主题过渡 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition-duration: 0s;
+  }
+}
+
 body {
   margin: 0;
   background: var(--color-bg-base);
