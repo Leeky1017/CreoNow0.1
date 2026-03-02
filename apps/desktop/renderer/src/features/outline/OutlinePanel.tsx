@@ -1,6 +1,7 @@
 import React from "react";
 import { ScrollArea } from "../../components/primitives";
 
+import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Dot, File, FileText, Pencil, Search, Trash2 } from "lucide-react";
 // ============================================================================
 // Types
 // ============================================================================
@@ -64,167 +65,43 @@ export interface OutlinePanelProps {
 // ============================================================================
 
 function ChevronRightIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
-  );
+  return <ChevronRight size={16} strokeWidth={1.5} />;
 }
 
 function ChevronDownIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  );
+  return <ChevronDown size={16} strokeWidth={1.5} />;
 }
 
 function DocumentIcon() {
-  return (
-    <svg
-      className="w-3.5 h-3.5 mr-2 opacity-70 shrink-0"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-    </svg>
-  );
+  return <FileText className="w-3.5 h-3.5 mr-2 opacity-70 shrink-0" size={16} strokeWidth={1.5} />;
 }
 
 function DotIcon({ opacity = 0.5 }: { opacity?: number }) {
-  return (
-    <svg
-      className="w-3.5 h-3.5 mr-2 shrink-0"
-      style={{ opacity }}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <circle cx="12" cy="12" r="1" />
-    </svg>
-  );
+  return <Dot className="w-3.5 h-3.5 mr-2 shrink-0" style={{ opacity }} size={16} strokeWidth={1.5} />;
 }
 
 function EditIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-    </svg>
-  );
+  return <Pencil size={16} strokeWidth={1.5} />;
 }
 
 function DeleteIcon() {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <polyline points="3 6 5 6 21 6" />
-      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-    </svg>
-  );
+  return <Trash2 size={16} strokeWidth={1.5} />;
 }
 
 function ExpandAllIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="4 14 10 20 16 14" />
-      <polyline points="4 4 10 10 16 4" />
-    </svg>
-  );
+  return <ChevronsDownUp size={16} strokeWidth={1.5} className="rotate-180" />;
 }
 
 function CollapseAllIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="4 20 10 14 16 20" />
-      <polyline points="4 10 10 4 16 10" />
-    </svg>
-  );
+  return <ChevronsUpDown size={16} strokeWidth={1.5} className="rotate-180" />;
 }
 
 function SearchIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
+  return <Search size={16} strokeWidth={1.5} />;
 }
 
 function EmptyDocumentIcon() {
-  return (
-    <svg
-      className="w-6 h-6 text-[var(--color-fg-placeholder)] mb-2"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    >
-      <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
-      <polyline points="13 2 13 9 20 9" />
-    </svg>
-  );
+  return <File className="w-6 h-6 text-[var(--color-fg-placeholder)] mb-2" size={24} strokeWidth={1.5} />;
 }
 
 // ============================================================================

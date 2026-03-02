@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { NotepadText, X } from "lucide-react";
 import React from "react";
 import {
   QualityGatesPanel,
@@ -6,6 +7,7 @@ import {
   type QualitySettings,
 } from "./QualityGatesPanel";
 
+import { X } from "lucide-react";
 /**
  * Sample check data based on design spec
  *
@@ -254,32 +256,7 @@ const meta: Meta<typeof QualityGatesPanel> = {
           <div className="h-14 border-b border-[var(--color-separator)] flex items-center px-6 justify-between">
             <div className="flex items-center gap-4">
               <div className="w-6 h-6 rounded bg-[var(--color-info)]/20 text-[var(--color-info)] flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 256 256"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,160H40V56H216V200Z"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M176,88H80a8,8,0,0,0,0,16h96a8,8,0,0,0,0-16Z"
-                    opacity="0.5"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M176,120H80a8,8,0,0,0,0,16h96a8,8,0,0,0,0-16Z"
-                    opacity="0.5"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M136,152H80a8,8,0,0,0,0,16h56a8,8,0,0,0,0-16Z"
-                    opacity="0.5"
-                  />
-                </svg>
+                <NotepadText size={16} strokeWidth={1.5} />
               </div>
               <span className="text-sm font-medium text-[var(--color-fg-muted)]">
                 The Architecture of Silence

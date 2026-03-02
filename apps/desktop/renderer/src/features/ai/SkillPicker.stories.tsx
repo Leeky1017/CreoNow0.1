@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { fn } from "@storybook/test";
+import { ArrowUp, Clock, Plus } from "lucide-react";
 import { SkillPicker } from "./SkillPicker";
 import { layoutDecorator } from "../../components/layout/test-utils";
 
@@ -106,10 +107,7 @@ function SkillPickerDemo(props: {
               title="History"
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] rounded transition-colors"
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
+              <Clock size={16} strokeWidth={1.5} />
             </button>
             {/* New Chat button */}
             <button
@@ -117,10 +115,7 @@ function SkillPickerDemo(props: {
               title="New Chat"
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] rounded transition-colors"
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
+              <Plus size={16} strokeWidth={1.5} />
             </button>
           </div>
         </header>
@@ -172,17 +167,7 @@ function SkillPickerDemo(props: {
                 </div>
               </div>
               <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <line x1="12" y1="19" x2="12" y2="5" />
-                  <polyline points="5 12 12 5 19 12" />
-                </svg>
+                <ArrowUp size={16} strokeWidth={1.5} />
               </button>
             </div>
           </div>

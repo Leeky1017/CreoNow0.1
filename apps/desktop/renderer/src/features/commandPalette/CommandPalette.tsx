@@ -25,6 +25,7 @@ import { z } from "zod";
 import { Text } from "../../components/primitives/Text";
 import { useProjectStore } from "../../stores/projectStore";
 import "../../i18n";
+import { Download, FolderPlus, History, Maximize, PanelLeft, PanelRight, Search, Settings, SquarePen } from "lucide-react";
 
 // =============================================================================
 // Types
@@ -154,166 +155,47 @@ export interface CommandPaletteProps {
 
 /** 搜索图标 */
 function SearchIcon({ className }: { className?: string }): JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
+  return <Search className={className} size={20} strokeWidth={1.5} />;
 }
 
 /** 编辑图标 */
 function EditIcon({ className }: { className?: string }): JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34" />
-      <polygon points="18 2 22 6 12 16 8 16 8 12 18 2" />
-    </svg>
-  );
+  return <SquarePen className={className} size={16} strokeWidth={1.5} />;
 }
 
 /** 侧边栏图标 */
 function SidebarIcon({ className }: { className?: string }): JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-      <line x1="9" y1="3" x2="9" y2="21" />
-    </svg>
-  );
+  return <PanelLeft className={className} size={16} strokeWidth={1.5} />;
 }
 
 /** 导出图标 */
 function DownloadIcon({ className }: { className?: string }): JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
-    </svg>
-  );
+  return <Download className={className} size={16} strokeWidth={1.5} />;
 }
 
 /** 设置图标 */
 function SettingsIcon({ className }: { className?: string }): JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-    </svg>
-  );
+  return <Settings className={className} size={16} strokeWidth={1.5} />;
 }
 
 /** 右侧面板图标 */
 function PanelRightIcon({ className }: { className?: string }): JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-      <line x1="15" y1="3" x2="15" y2="21" />
-    </svg>
-  );
+  return <PanelRight className={className} size={16} strokeWidth={1.5} />;
 }
 
 /** 禅模式图标 */
 function MaximizeIcon({ className }: { className?: string }): JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-    </svg>
-  );
+  return <Maximize className={className} size={16} strokeWidth={1.5} />;
 }
 
 /** 版本历史图标 */
 function HistoryIcon({ className }: { className?: string }): JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M3 3v5h5" />
-      <path d="M3.05 13a9 9 0 1 0 3-6.7L3 8" />
-      <path d="M12 7v5l4 2" />
-    </svg>
-  );
+  return <History className={className} size={16} strokeWidth={1.5} />;
 }
 
 /** 文件夹加号图标（新建项目） */
 function FolderPlusIcon({ className }: { className?: string }): JSX.Element {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
-      <line x1="12" y1="11" x2="12" y2="17" />
-      <line x1="9" y1="14" x2="15" y2="14" />
-    </svg>
-  );
+  return <FolderPlus className={className} size={16} strokeWidth={1.5} />;
 }
 
 /**

@@ -3,6 +3,7 @@ import { CharacterCard } from "./CharacterCard";
 import { CharacterDetailDialog } from "./CharacterDetailDialog";
 import type { Character, CharacterGroup } from "./types";
 
+import { Plus } from "lucide-react";
 export interface CharacterPanelProps {
   /** List of characters */
   characters: Character[];
@@ -54,19 +55,7 @@ const GROUP_CONFIG: Record<CharacterGroup, { label: string }> = {
  * Plus icon for add button
  */
 function PlusIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
-  );
+  return <Plus size={16} strokeWidth={1.5} />;
 }
 
 /**

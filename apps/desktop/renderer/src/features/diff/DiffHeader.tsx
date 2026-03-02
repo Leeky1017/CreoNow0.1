@@ -1,3 +1,4 @@
+import { ArrowRight, ChevronDown, ChevronUp, Clock, X } from "lucide-react";
 import React from "react";
 
 /**
@@ -67,30 +68,10 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
             className="flex items-center gap-2 px-3 py-1.5 bg-[var(--color-bg-hover)] rounded border border-[var(--color-border-default)] text-xs text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors whitespace-nowrap"
           >
             {/* Clock icon */}
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <polyline points="12 6 12 12 8 14" />
-            </svg>
+            <Clock size={16} strokeWidth={1.5} />
             <span>{selectedBefore?.label ?? "Select version"}</span>
             {/* Caret down */}
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-[var(--color-fg-subtle)]"
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
+            <ChevronDown size={16} strokeWidth={1.5} className="text-[var(--color-fg-subtle)]" />
           </button>
 
           {/* Dropdown */}
@@ -150,18 +131,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
         </div>
 
         {/* Arrow */}
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          className="text-[var(--color-fg-subtle)]"
-        >
-          <line x1="5" y1="12" x2="19" y2="12" />
-          <polyline points="12 5 19 12 12 19" />
-        </svg>
+        <ArrowRight size={16} strokeWidth={1.5} className="text-[var(--color-fg-subtle)]" />
 
         {/* After version (current) */}
         <button
@@ -171,17 +141,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
           {/* Green dot */}
           <div className="w-2 h-2 rounded-full bg-[var(--color-success)] shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
           <span>{selectedAfter?.label ?? "Current Version"}</span>
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="text-[var(--color-fg-subtle)]"
-          >
-            <polyline points="6 9 12 15 18 9" />
-          </svg>
+          <ChevronDown size={16} strokeWidth={1.5} className="text-[var(--color-fg-subtle)]" />
         </button>
       </div>
 
@@ -231,16 +191,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
             title="Previous Change"
             className="w-8 h-8 flex items-center justify-center rounded hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <polyline points="18 15 12 9 6 15" />
-            </svg>
+            <ChevronUp size={16} strokeWidth={1.5} />
           </button>
           <span className="text-xs font-[var(--font-family-mono)] text-[var(--color-fg-muted)] px-2">
             Change{" "}
@@ -259,16 +210,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
             title="Next Change"
             className="w-8 h-8 flex items-center justify-center rounded hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
+            <ChevronDown size={16} strokeWidth={1.5} />
           </button>
         </div>
 
@@ -281,17 +223,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
           onClick={props.onClose}
           className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors p-2 rounded hover:bg-[var(--color-bg-hover)]"
         >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+          <X size={20} strokeWidth={1.5} />
         </button>
       </div>
     </header>
