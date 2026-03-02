@@ -2070,103 +2070,122 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-testid="right-panel-scroll-viewport"
       >
         <section
-          class="flex flex-col h-full min-h-0 bg-[var(--color-bg-surface)]"
+          class="flex flex-col h-full min-h-0 bg-[color:var(--color-bg-surface)] "
           data-testid="ai-panel"
         >
           <div
-            class="flex-1 flex flex-col min-h-0"
+            class="flex items-center justify-between p-3 border-b border-[color:var(--color-separator)]"
           >
             <div
-              class="flex-1 overflow-y-auto p-3 space-y-4"
+              class="flex items-center gap-2 text-[13px] text-[color:var(--color-fg-muted)] font-medium"
             >
-              <div
-                class="flex-1 flex items-center justify-center text-center py-12"
-                data-testid="ai-output"
-              >
-                <span
-                  class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)]"
-                >
-                  选中文本或输入指令，开始与 AI 协作
-                </span>
-              </div>
+              <span>
+                AI
+              </span>
             </div>
+          </div>
+          <div
+            class="flex-1 overflow-auto min-h-0"
+          >
             <div
-              class="shrink-0 px-1.5 pb-1.5 pt-2 border-t border-[var(--color-separator)]"
+              class="flex flex-col h-full min-h-0"
             >
               <div
-                class="relative border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] focus-within:border-[var(--color-border-focus)]"
+                class="flex-1 flex flex-col min-h-0"
               >
-                <textarea
-                  class="w-full min-h-[60px] max-h-[160px] px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
-                  data-testid="ai-input"
-                  placeholder="Ask the AI to help with your writing..."
-                />
                 <div
-                  class="flex items-center justify-between px-2 pb-2"
+                  class="flex-1 overflow-y-auto p-3 space-y-4"
                 >
                   <div
-                    class="flex items-center gap-1"
+                    class="flex-1 flex items-center justify-center text-center py-12"
+                    data-testid="ai-output"
                   >
-                    <button
-                      class="
-        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
-        transition-colors cursor-pointer
-        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
-      "
-                      type="button"
+                    <span
+                      class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)]"
                     >
-                      Ask
-                    </button>
-                    <button
-                      class="
-        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
-        transition-colors cursor-pointer
-        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
-      "
-                      type="button"
-                    >
-                      Loading
-                    </button>
-                    <button
-                      class="
-        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
-        transition-colors cursor-pointer
-        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
-      "
-                      data-testid="ai-skills-toggle"
-                      type="button"
-                    >
-                      Loading
-                    </button>
+                      选中文本或输入指令，开始与 AI 协作
+                    </span>
                   </div>
-                  <button
-                    class="w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    data-testid="ai-send-stop"
-                    disabled=""
-                    title="Send message"
-                    type="button"
+                </div>
+                <div
+                  class="shrink-0 px-1.5 pb-1.5 pt-2 border-t border-[var(--color-separator)]"
+                >
+                  <div
+                    class="relative border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] focus-within:border-[var(--color-border-focus)]"
                   >
-                    <svg
-                      aria-hidden="true"
-                      class="lucide lucide-arrow-up"
-                      fill="none"
-                      height="16"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1.5"
-                      viewBox="0 0 24 24"
-                      width="16"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <textarea
+                      class="w-full min-h-[60px] max-h-[160px] px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
+                      data-testid="ai-input"
+                      placeholder="Ask the AI to help with your writing..."
+                    />
+                    <div
+                      class="flex items-center justify-between px-2 pb-2"
                     >
-                      <path
-                        d="m5 12 7-7 7 7"
-                      />
-                      <path
-                        d="M12 19V5"
-                      />
-                    </svg>
-                  </button>
+                      <div
+                        class="flex items-center gap-1"
+                      >
+                        <button
+                          class="
+        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        transition-colors cursor-pointer
+        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+      "
+                          type="button"
+                        >
+                          Ask
+                        </button>
+                        <button
+                          class="
+        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        transition-colors cursor-pointer
+        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+      "
+                          type="button"
+                        >
+                          Loading
+                        </button>
+                        <button
+                          class="
+        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        transition-colors cursor-pointer
+        text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+      "
+                          data-testid="ai-skills-toggle"
+                          type="button"
+                        >
+                          Loading
+                        </button>
+                      </div>
+                      <button
+                        class="w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        data-testid="ai-send-stop"
+                        disabled=""
+                        title="Send message"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="lucide lucide-arrow-up"
+                          fill="none"
+                          height="16"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          viewBox="0 0 24 24"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m5 12 7-7 7 7"
+                          />
+                          <path
+                            d="M12 19V5"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

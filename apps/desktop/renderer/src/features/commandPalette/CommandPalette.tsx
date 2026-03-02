@@ -23,6 +23,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { Text } from "../../components/primitives/Text";
+import { CommandItem as CommandItemComposite } from "../../components/composites/CommandItem";
 import { useProjectStore } from "../../stores/projectStore";
 import "../../i18n";
 import { Download, FolderPlus, History, Maximize, PanelLeft, PanelRight, Search, Settings, SquarePen } from "lucide-react";
@@ -674,59 +675,27 @@ export function CommandPalette({
                   const isActive = flatIndex === activeIndex;
 
                   return (
-                    <div
+                    <CommandItemComposite
                       key={item.id}
                       data-testid={`command-item-${item.id}`}
                       data-index={flatIndex}
-                      role="option"
-                      aria-selected={isActive}
-                      onClick={() => void item.onSelect()}
+                      icon={item.icon}
+                      label={item.label}
+                      labelContent={
+                        <div className="flex items-center gap-2">
+                          <span>{highlightMatch(item.label, query)}</span>
+                          {item.subtext && (
+                            <span className="text-[var(--color-fg-placeholder)] ml-1.5">
+                              {item.subtext}
+                            </span>
+                          )}
+                        </div>
+                      }
+                      hint={item.shortcut}
+                      active={isActive}
+                      onSelect={() => void item.onSelect()}
                       onMouseEnter={() => setActiveIndex(flatIndex)}
-                      className={`
-                        relative h-10 flex items-center px-3 rounded-[var(--radius-sm)] cursor-pointer mb-0.5
-                        transition-colors duration-[var(--duration-fast)]
-                        ${
-                          isActive
-                            ? "bg-[var(--color-bg-hover)] text-[var(--color-fg-default)]"
-                            : "text-[var(--color-fg-muted)] hover:bg-[rgba(255,255,255,0.03)] hover:text-[var(--color-fg-default)]"
-                        }
-                      `}
-                    >
-                      {/* Active 指示器 */}
-                      {isActive && (
-                        <div className="absolute left-0 top-2.5 bottom-2.5 w-0.5 bg-[var(--color-accent-blue)] rounded-r-sm" />
-                      )}
-
-                      {/* 图标 */}
-                      {item.icon && (
-                        <div className="w-4 h-4 mr-3 flex items-center justify-center shrink-0">
-                          {item.icon}
-                        </div>
-                      )}
-
-                      {/* 文本 */}
-                      <div className="flex-1 text-[13px] truncate flex items-center gap-2">
-                        <span>{highlightMatch(item.label, query)}</span>
-                        {item.subtext && (
-                          <span className="text-[var(--color-fg-placeholder)] ml-1.5">
-                            {item.subtext}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* 快捷键 */}
-                      {item.shortcut && (
-                        <div
-                          className={`
-                          ml-2 px-1.5 py-0.5 text-[11px] rounded
-                          bg-[var(--color-bg-selected)] border border-[rgba(255,255,255,0.05)]
-                          ${isActive ? "text-[var(--color-fg-default)] border-[rgba(255,255,255,0.1)]" : "text-[var(--color-fg-muted)]"}
-                        `}
-                        >
-                          {item.shortcut}
-                        </div>
-                      )}
-                    </div>
+                    />
                   );
                 })}
               </div>

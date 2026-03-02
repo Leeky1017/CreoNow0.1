@@ -6,6 +6,7 @@ import {
 } from "../../components/features/AiDialogs";
 
 import { Button, Spinner, Text } from "../../components/primitives";
+import { PanelContainer } from "../../components/composites/PanelContainer";
 
 import { useOpenSettings } from "../../contexts/OpenSettingsContext";
 
@@ -1198,10 +1199,8 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   const shouldRenderGenericErrors = !showDbGuide && !showProviderGuide;
 
   return (
-    <section
-      data-testid="ai-panel"
-      className="flex flex-col h-full min-h-0 bg-[var(--color-bg-surface)]"
-    >
+    <PanelContainer data-testid="ai-panel" title="AI">
+      <div className="flex flex-col h-full min-h-0">
       {/* Main content area */}
       <div className="flex-1 flex flex-col min-h-0">
         {/* Scrollable content */}
@@ -1641,6 +1640,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
           </div>
         </div>
       </div>
-    </section>
+      </div>
+    </PanelContainer>
   );
 }

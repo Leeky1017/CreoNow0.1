@@ -10,6 +10,7 @@ import {
   Text,
   type ContextMenuItem,
 } from "../../components/primitives";
+import { PanelContainer } from "../../components/composites/PanelContainer";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { useEditorStore } from "../../stores/editorStore";
 import {
@@ -729,28 +730,30 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
   }
 
   return (
-    <div data-testid="sidebar-files" className="flex flex-col min-h-0">
-      <div className="flex items-center justify-between p-3 border-b border-[var(--color-separator)]">
-        <Text size="small" color="muted">
-          Files
-        </Text>
-        <Button
-          data-testid="file-create"
-          variant="secondary"
-          size="sm"
-          onClick={() => void onCreate("chapter")}
-        >
-          New
-        </Button>
-        <Button
-          data-testid="file-create-note"
-          variant="ghost"
-          size="sm"
-          onClick={() => void onCreate("note")}
-        >
-          Note
-        </Button>
-      </div>
+    <PanelContainer
+      data-testid="sidebar-files"
+      title="Files"
+      actions={
+        <>
+          <Button
+            data-testid="file-create"
+            variant="secondary"
+            size="sm"
+            onClick={() => void onCreate("chapter")}
+          >
+            New
+          </Button>
+          <Button
+            data-testid="file-create-note"
+            variant="ghost"
+            size="sm"
+            onClick={() => void onCreate("note")}
+          >
+            Note
+          </Button>
+        </>
+      }
+    >
 
       {lastError ? (
         <div
@@ -1138,6 +1141,6 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
       </div>
 
       <SystemDialog {...dialogProps} />
-    </div>
+    </PanelContainer>
   );
 }
