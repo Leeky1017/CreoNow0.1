@@ -3,6 +3,7 @@ import type { i18n as I18nInstance } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import en from "./locales/en.json";
+import { getLanguagePreference } from "./languagePreference";
 import zhCN from "./locales/zh-CN.json";
 
 export const i18n: I18nInstance = i18next.createInstance();
@@ -24,7 +25,7 @@ export function initializeI18n(): Promise<I18nInstance> {
         "zh-CN": { translation: zhCN },
         en: { translation: en },
       },
-      lng: "zh-CN",
+      lng: getLanguagePreference(),
       fallbackLng: "en",
       supportedLngs: ["zh-CN", "en"],
       interpolation: {
