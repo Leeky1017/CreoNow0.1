@@ -84,6 +84,29 @@ import { createBackgroundTaskRunner } from "../backgroundTaskRunner";
 
 /**
  * Scenario: BE-UPF-S1
+ * should short-circuit pre-aborted signal without invoking execute callback.
+ */
+{
+  const runner = createBackgroundTaskRunner();
+  const controller = new AbortController();
+  controller.abort(new Error("already_aborted"));
+
+  let invoked = 0;
+  const result = await runner.run({
+    timeoutMs: 100,
+    signal: controller.signal,
+    execute: async () => {
+      invoked += 1;
+      return "unexpected";
+    },
+  });
+
+  assert.equal(result.status, "aborted");
+  assert.equal(invoked, 0);
+}
+
+/**
+ * Scenario: BE-UPF-S1
  * should return crashed status when utility process crash signal is raised.
  */
 {

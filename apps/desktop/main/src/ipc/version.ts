@@ -11,6 +11,11 @@ import {
   type VersionSnapshotActor,
   type VersionSnapshotReason,
 } from "../services/documents/documentService";
+import { guardAndNormalizeProjectAccess } from "./projectAccessGuard";
+import {
+  getProjectSessionBindingRegistry,
+  type ProjectSessionBindingRegistry,
+} from "./projectSessionBinding";
 
 const DEFAULT_IO_RETRY_MAX_ATTEMPTS = 3;
 const DEFAULT_IO_TIMEOUT_MS = 5_000;
@@ -177,6 +182,7 @@ export function registerVersionIpcHandlers(deps: {
     rollback?: number;
     merge?: number;
   };
+  projectSessionBinding?: ProjectSessionBindingRegistry;
 }): void {
   const serviceFactory = deps.serviceFactory ?? createDocumentService;
   const ioRetryMaxAttempts = normalizeRetryMaxAttempts(deps.ioRetryMaxAttempts);
@@ -193,6 +199,8 @@ export function registerVersionIpcHandlers(deps: {
       maxDiffPayloadBytes:
         deps.maxDiffPayloadBytes ?? DEFAULT_MAX_DIFF_PAYLOAD_BYTES,
     });
+  const projectSessionBinding =
+    deps.projectSessionBinding ?? getProjectSessionBindingRegistry() ?? undefined;
 
   const rollbackConflict = (documentId: string): IpcResponse<never> => ({
     ok: false,
@@ -271,7 +279,7 @@ export function registerVersionIpcHandlers(deps: {
 
   deps.ipcMain.handle(
     "version:snapshot:create",
-    async (_e, payload: unknown): Promise<
+    async (event, payload: unknown): Promise<
       IpcResponse<{
         versionId: string;
         contentHash: string;
@@ -280,6 +288,15 @@ export function registerVersionIpcHandlers(deps: {
         compaction?: SnapshotCompactionEvent;
       }>
     > => {
+      const guarded = guardAndNormalizeProjectAccess({
+        event,
+        payload,
+        projectSessionBinding,
+      });
+      if (!guarded.ok) {
+        return guarded.response;
+      }
+
       if (!deps.db) {
         return {
           ok: false,
