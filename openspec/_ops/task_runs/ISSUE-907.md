@@ -70,7 +70,7 @@ $ pnpm typecheck
 - Rulebook task 存在: ✅
 - PR 链接已回填: ✅
 - 代码风格 & 无 any: ✅
-- Reviewed-HEAD-SHA: PLACEHOLDER
+- Reviewed-HEAD-SHA: 7c7c9699d205b61629889b752323c1a54d756b11
 
 **审计结论**: PASS — electron-builder.json 单行改动精确匹配 delta-spec；guard test 使用 node:test 直接验证 JSON 配置，架构符合 main-process 测试范式。
 
