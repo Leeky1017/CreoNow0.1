@@ -32,6 +32,9 @@ import {
   resolveEditorLineHeightToken,
   resolveEditorScaleFactor,
 } from "./typography";
+import { DragHandleExtension } from "./extensions/dragHandle";
+import { buildAiStreamUndoCheckpoint } from "./aiStreamUndo";
+import type { AiStreamCheckpoint } from "./aiStreamUndo";
 
 const IS_VITEST_RUNTIME =
   typeof process !== "undefined" && Boolean(process.env.VITEST);
@@ -368,6 +371,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
   const aiRun = useOptionalAiStore((s) => s.run);
 
   const suppressAutosaveRef = React.useRef<boolean>(false);
+  const aiStreamCheckpointRef = React.useRef<AiStreamCheckpoint | null>(null);
   const [contentReady, setContentReady] = React.useState(false);
   const [writeHovering, setWriteHovering] = React.useState(false);
   const [isSlashPanelOpen, setIsSlashPanelOpen] = React.useState(false);
@@ -800,6 +804,12 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
         return;
       }
 
+      // Capture pre-stream checkpoint for atomic undo (ED-FE-ADV-S2)
+      aiStreamCheckpointRef.current = buildAiStreamUndoCheckpoint({
+        preStreamContent: editor.state.doc.textContent,
+        cursorPos: editor.state.selection.to,
+      });
+
       aiSetSelectedSkillId(skillId);
       await aiRun({
         inputOverride: buildWriteInput(editor),
@@ -808,6 +818,9 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
           documentId,
         },
       });
+
+      // Stream finished — clear checkpoint (undo is now in TipTap history)
+      aiStreamCheckpointRef.current = null;
     },
     [
       aiRun,
