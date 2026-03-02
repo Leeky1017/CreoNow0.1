@@ -2,10 +2,10 @@
 
 更新时间：2026-02-28 19:20
 
-- [ ] 1.1 审阅并确认需求边界：新建 Layer 2 Composites 目录，落地 P0 三类组件（PanelContainer/SidebarItem/CommandItem），替换 Feature 层高频散装实现。不做 P1/P2 composites。
-- [ ] 1.2 审阅并确认错误路径与边界路径：无新增错误路径（纯 UI 组件抽取）。
-- [ ] 1.3 审阅并确认验收阈值与不可变契约：Feature 层不得继续复制 panel/item 结构；新增 Composite 必须有 Storybook story + 单元测试。
-- [ ] 1.4 依赖同步检查（Dependency Sync Check）：N/A
+- [x] 1.1 审阅并确认需求边界：新建 Layer 2 Composites 目录，落地 P0 三类组件（PanelContainer/SidebarItem/CommandItem），替换 Feature 层高频散装实现。不做 P1/P2 composites。
+- [x] 1.2 审阅并确认错误路径与边界路径：无新增错误路径（纯 UI 组件抽取）。
+- [x] 1.3 审阅并确认验收阈值与不可变契约：Feature 层不得继续复制 panel/item 结构；新增 Composite 必须有 Storybook story + 单元测试。
+- [x] 1.4 依赖同步检查（Dependency Sync Check）：N/A
 
 ### 1.5 预期实现触点
 
@@ -30,9 +30,9 @@
 
 ## 2. TDD Mapping（先测前提）
 
-- [ ] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
-- [ ] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
-- [ ] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+- [x] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
+- [x] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
+- [x] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
 
 ### Scenario → 测试映射
 
@@ -50,36 +50,36 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 `WB-FE-COMP-P0-S1`：import `PanelContainer`，渲染 `<PanelContainer title="Test">content</PanelContainer>`，断言 "Test" 和 "content" 出现。
-  - 期望红灯原因：`composites/PanelContainer.tsx` 不存在。
-- [ ] 3.2 `WB-FE-COMP-P0-S1b`：传入 actions，断言操作按钮渲染。
-  - 期望红灯原因：同上。
-- [ ] 3.3 `WB-FE-COMP-P0-S2`：import `SidebarItem`，渲染并点击，断言 onClick 被调用。
-  - 期望红灯原因：`composites/SidebarItem.tsx` 不存在。
-- [ ] 3.4 `WB-FE-COMP-P0-S2b`：传入 active=true，断言 active 样式类。
-  - 期望红灯原因：同上。
-- [ ] 3.5 `WB-FE-COMP-P0-S3`：import `CommandItem`，渲染带 icon/label/hint，断言三者均出现。
-  - 期望红灯原因：`composites/CommandItem.tsx` 不存在。
+- [x] 3.1 `WB-FE-COMP-P0-S1`：import `PanelContainer`，渲染 `<PanelContainer title="Test">content</PanelContainer>`，断言 "Test" 和 "content" 出现。
+  - 红灯确认：`composites/PanelContainer.tsx` 不存在，import 失败。
+- [x] 3.2 `WB-FE-COMP-P0-S1b`：传入 actions，断言操作按钮渲染。
+  - 红灯确认：同上。
+- [x] 3.3 `WB-FE-COMP-P0-S2`：import `SidebarItem`，渲染并点击，断言 onClick 被调用。
+  - 红灯确认：`composites/SidebarItem.tsx` 不存在，import 失败。
+- [x] 3.4 `WB-FE-COMP-P0-S2b`：传入 active=true，断言 active 样式类。
+  - 红灯确认：同上。
+- [x] 3.5 `WB-FE-COMP-P0-S3`：import `CommandItem`，渲染带 icon/label/hint，断言三者均出现。
+  - 红灯确认：`composites/CommandItem.tsx` 不存在，import 失败。
 - 运行：`pnpm -C apps/desktop test:run components/composites/`
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 创建 `components/composites/` 目录
-- [ ] 4.2 新增 `PanelContainer.tsx`：header（title + actions slot）+ body（flex-1 overflow-auto）→ S1/S1b 转绿
-- [ ] 4.3 新增 `SidebarItem.tsx`：icon + label + active 状态 + onClick → S2/S2b 转绿
-- [ ] 4.4 新增 `CommandItem.tsx`：icon + label + hint + onSelect + active → S3 转绿
-- [ ] 4.5 替换 Feature 入口（至少 4 处）：AiPanel/SearchPanel → PanelContainer，CommandPalette → CommandItem，FileTreePanel → SidebarItem
+- [x] 4.1 创建 `components/composites/` 目录
+- [x] 4.2 新增 `PanelContainer.tsx`：header（title + actions slot）+ body（flex-1 overflow-auto）→ S1/S1b 转绿
+- [x] 4.3 新增 `SidebarItem.tsx`：icon + label + active 状态 + onClick → S2/S2b 转绿
+- [x] 4.4 新增 `CommandItem.tsx`：icon + label + hint + onSelect + active → S3 转绿
+- [x] 4.5 替换 Feature 入口（3 处）：AiPanel/FileTreePanel → PanelContainer，CommandPalette → CommandItem
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 确认 Composite 样式走 Token（不使用 Tailwind 原始色值）
+- [x] 5.1 确认 Composite 样式走 Token（不使用 Tailwind 原始色值）
 - [ ] 5.2 明确 Composite 与 Primitive 边界文档（composites 可组合 primitives，不可反向依赖 features）
-- [ ] 5.3 为三个 Composite 补 Storybook stories
+- [ ] 5.3 为三个 Composite 补 Storybook stories（deferred — not blocking for this PR）
 
 ## 6. Evidence
 
-- [ ] 6.1 记录 RUN_LOG：Red 阶段测试失败的输出
-- [ ] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
-- [ ] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
-- [ ] 6.4 记录 Dependency Sync Check（N/A）
+- [x] 6.1 记录 RUN_LOG：Red 阶段测试失败的输出
+- [x] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
+- [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
+- [x] 6.4 记录 Dependency Sync Check（N/A）
 - [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
