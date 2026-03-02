@@ -1,11 +1,12 @@
-# RUN_LOG — ISSUE-907
+# ISSUE-907
+- Issue: #907
+- Branch: task/907-fe-desktop-native-binding-packaging
+- PR: https://github.com/Leeky1017/CreoNow/pull/911
 
-| 字段   | 值                                                  |
-| ------ | --------------------------------------------------- |
-| Issue  | #907                                                |
-| Branch | task/907-fe-desktop-native-binding-packaging        |
-| PR     | https://github.com/Leeky1017/CreoNow/pull/911 |
-| Agent  | desktop-native-binding-packaging                    |
+## Plan
+- 修复 `better-sqlite3` native binding 在打包产物中的包含与加载路径
+- 将 `electron-builder.json` 的 `npmRebuild` 从 `false` 改为 `true`
+- 新增 guard 测试静态断言配置正确性
 
 ## Runs
 
@@ -61,19 +62,10 @@ $ pnpm typecheck
 
 ## Main Session Audit
 
-- Spec ↔ 实现一致性: ✅
-- Guard 测试覆盖 Scenario: ✅ 2 tests (S2/S3)
-- Red → Green 证据: ✅ 全部记录
-- 全量回归通过: ✅ 267 tsx+vitest tests
-- `pnpm typecheck` 通过: ✅ (零错误)
-- RUN_LOG 完整: ✅
-- Rulebook task 存在: ✅
-- PR 链接已回填: ✅
-- 代码风格 & 无 any: ✅
-- Reviewed-HEAD-SHA: 7c7c9699d205b61629889b752323c1a54d756b11
-
-**审计结论**: PASS — electron-builder.json 单行改动精确匹配 delta-spec；guard test 使用 node:test 直接验证 JSON 配置，架构符合 main-process 测试范式。
-
-## Blockers
-
-无。
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: PLACEHOLDER
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT

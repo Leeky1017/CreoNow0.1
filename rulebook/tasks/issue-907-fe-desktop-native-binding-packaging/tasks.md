@@ -1,5 +1,7 @@
 # Tasks: fe-desktop-native-binding-packaging (#907)
 
+更新时间：2026-03-02 16:30
+
 ## Specification
 
 修复 `better-sqlite3` native binding 在打包产物中的包含与加载路径，确保打包版启动不报 `DB_ERROR`。
