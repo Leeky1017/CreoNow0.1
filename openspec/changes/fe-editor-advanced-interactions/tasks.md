@@ -1,11 +1,11 @@
 ## 1. Specification
 
-更新时间：2026-02-28 19:20
+更新时间：2026-03-02 19:45
 
-- [ ] 1.1 审阅并确认需求边界：补齐三项编辑器高级交互——block drag handle（拖拽重排）、AI stream 原子撤销（一次 Ctrl+Z 回退一轮输出）、工具栏溢出菜单（窄窗口折叠）。不做长文档虚拟化。
-- [ ] 1.2 审阅并确认错误路径与边界路径：只读模式下 drag handle 不显示；无选区时 undo 行为不变；极窄窗口下 overflow 菜单仍可操作。
-- [ ] 1.3 审阅并确认验收阈值与不可变契约：drag handle 可拖拽重排内容块；AI stream 一次 Ctrl+Z 回退整轮输出；工具栏窄屏不截断按钮。
-- [ ] 1.4 依赖同步检查（Dependency Sync Check）：N/A
+- [x] 1.1 审阅并确认需求边界：补齐三项编辑器高级交互——block drag handle（拖拽重排）、AI stream 原子撤销（一次 Ctrl+Z 回退一轮输出）、工具栏溢出菜单（窄窗口折叠）。不做长文档虚拟化。
+- [x] 1.2 审阅并确认错误路径与边界路径：只读模式下 drag handle 不显示；无选区时 undo 行为不变；极窄窗口下 overflow 菜单仍可操作。
+- [x] 1.3 审阅并确认验收阈值与不可变契约：drag handle 可拖拽重排内容块；AI stream 一次 Ctrl+Z 回退整轮输出；工具栏窄屏不截断按钮。
+- [x] 1.4 依赖同步检查（Dependency Sync Check）：N/A
 
 ### 1.5 预期实现触点
 
@@ -25,9 +25,9 @@
 
 ## 2. TDD Mapping（先测前提）
 
-- [ ] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
-- [ ] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
-- [ ] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+- [x] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
+- [x] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
+- [x] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
 
 ### Scenario → 测试映射
 
@@ -44,32 +44,32 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 `ED-FE-ADV-S1`：构造 ProseMirror doc，调用 dragHandle extension，断言 block 节点有 drag handle decoration。
+- [x] 3.1 `ED-FE-ADV-S1`：构造 ProseMirror doc，调用 dragHandle extension，断言 block 节点有 drag handle decoration。
   - 期望红灯原因：`extensions/dragHandle.ts` 不存在。
-- [ ] 3.2 `ED-FE-ADV-S1b`：editable=false，断言无 drag handle decoration。
+- [x] 3.2 `ED-FE-ADV-S1b`：editable=false，断言无 drag handle decoration。
   - 期望红灯原因：同上。
-- [ ] 3.3 `ED-FE-ADV-S2`：模拟 AI stream 写入多步，执行一次 undo，断言内容回到 stream 前。
+- [x] 3.3 `ED-FE-ADV-S2`：模拟 AI stream 写入多步，执行一次 undo，断言内容回到 stream 前。
   - 期望红灯原因：当前 AI stream 写入未使用 `addToHistory: false`，每步都入 history。
-- [ ] 3.4 `ED-FE-ADV-S3`：mock ResizeObserver 触发窄宽度，断言 "More" 菜单按钮出现。
+- [x] 3.4 `ED-FE-ADV-S3`：mock ResizeObserver 触发窄宽度，断言 "More" 菜单按钮出现。
   - 期望红灯原因：当前 EditorToolbar 无 overflow 检测和折叠逻辑。
 - 运行：`pnpm -C apps/desktop test:run features/editor/extensions/dragHandle` / `Editor.ai-stream-undo` / `EditorToolbar.overflow`
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 新增 `extensions/dragHandle.ts`：TipTap Extension，block 节点左侧渲染 drag handle decoration，editable=false 时不渲染 → S1/S1b 转绿
-- [ ] 4.2 `EditorPane.tsx`：注册 dragHandle extension；AI stream 写入使用 `addToHistory: false`，stream 结束后提交 history checkpoint → S2 转绿
-- [ ] 4.3 `EditorToolbar.tsx`：引入 ResizeObserver 检测溢出，超出部分折叠到 "More" 下拉菜单 → S3 转绿
+- [x] 4.1 新增 `extensions/dragHandle.ts`：TipTap Extension，block 节点左侧渲染 drag handle decoration，editable=false 时不渲染 → S1/S1b 转绿
+- [x] 4.2 `EditorPane.tsx`：注册 dragHandle extension；AI stream 写入使用 `addToHistory: false`，stream 结束后提交 history checkpoint → S2 转绿
+- [x] 4.3 `EditorToolbar.tsx`：引入 ResizeObserver 检测溢出，超出部分折叠到 "More" 下拉菜单 → S3 转绿
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 确认 drag handle 样式走 Token（hover 态、cursor 样式）
-- [ ] 5.2 确认 overflow 菜单的快捷键提示与原工具栏一致
-- [ ] 5.3 确认 AI stream undo 在多轮对话场景下每轮独立回退
+- [x] 5.1 确认 drag handle 样式走 Token（hover 态、cursor 样式）
+- [x] 5.2 确认 overflow 菜单的快捷键提示与原工具栏一致
+- [x] 5.3 确认 AI stream undo 在多轮对话场景下每轮独立回退
 
 ## 6. Evidence
 
-- [ ] 6.1 记录 RUN_LOG：Red 阶段测试失败的输出
-- [ ] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
-- [ ] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
-- [ ] 6.4 记录 Dependency Sync Check（N/A）
+- [x] 6.1 记录 RUN_LOG：Red 阶段测试失败的输出
+- [x] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
+- [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
+- [x] 6.4 记录 Dependency Sync Check（N/A）
 - [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
