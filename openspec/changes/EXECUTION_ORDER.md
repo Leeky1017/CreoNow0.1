@@ -1,12 +1,12 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-02 11:25
+更新时间：2026-03-02 13:12
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
 ## 执行策略
 
-- 当前活跃 change 数量为 **23**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-rightpanel-ai-tabbar-layout`、`fe-rightpanel-ai-guidance-and-style`、`fe-spec-drift-iconbar-rightpanel-alignment`、`fe-hotfix-searchpanel-backdrop-close`、`fe-leftpanel-dialog-migration`、`fe-cleanup-proxysection-and-mocks`、`fe-ai-panel-toggle-button`、`fe-ipc-open-folder-contract`、`fe-ui-open-folder-entrypoints`、`fe-dashboard-welcome-merge-and-ghost-actions`、`fe-project-image-cropper`、`fe-error-boundary-partitioning`、`fe-skeleton-loading-states`、`fe-i18n-language-switcher-foundation`、`fe-onboarding-flow-refresh` 已归档）。
+- 当前活跃 change 数量为 **20**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-rightpanel-ai-tabbar-layout`、`fe-rightpanel-ai-guidance-and-style`、`fe-spec-drift-iconbar-rightpanel-alignment`、`fe-hotfix-searchpanel-backdrop-close`、`fe-leftpanel-dialog-migration`、`fe-cleanup-proxysection-and-mocks`、`fe-ai-panel-toggle-button`、`fe-ipc-open-folder-contract`、`fe-ui-open-folder-entrypoints`、`fe-dashboard-welcome-merge-and-ghost-actions`、`fe-project-image-cropper`、`fe-error-boundary-partitioning`、`fe-skeleton-loading-states`、`fe-i18n-language-switcher-foundation`、`fe-onboarding-flow-refresh`、`fe-searchpanel-tokenized-rewrite`、`fe-zenmode-token-escape-cleanup`、`fe-dashboard-herocard-responsive-layout` 已归档）。
 - 执行模式：**4 批次渐进推进**（第一批核心体验 → 第二批功能补全 → 第三批设计系统回归 → 第四批独立 Issue 收口）。
 - 规则：
   - 任一 change 开始 Red 前，必须完成该 change 的依赖同步检查（Dependency Sync Check）。
@@ -78,9 +78,9 @@
 
 | Lane | 顺序 | Change | 文件冲突簇 | 依赖 | 状态 |
 |------|------|--------|-----------|------|------|
-| A | 3a-1 | `fe-searchpanel-tokenized-rewrite` | SearchPanel + `main.css` 簇 | 前置 hotfix 已归档 | PR #898 待审计 |
-| B | 3a-1 | `fe-zenmode-token-escape-cleanup` | ZenMode + `tokens.css` 簇 | — | PR #899 待审计 |
-| C | 3a-1 | `fe-dashboard-herocard-responsive-layout` | DashboardPage 簇 | — | PR #900 待审计 |
+| A | 3a-1 | `fe-searchpanel-tokenized-rewrite` | SearchPanel + `main.css` 簇 | 前置 hotfix 已归档 | 已完成并归档（PR #898） |
+| B | 3a-1 | `fe-zenmode-token-escape-cleanup` | ZenMode + `tokens.css` 簇 | — | 已完成并归档（PR #899） |
+| C | 3a-1 | `fe-dashboard-herocard-responsive-layout` | DashboardPage 簇 | — | 已完成并归档（PR #900） |
 | A | 3b-1 | `fe-lucide-icon-unification` | icon import 广撒网簇 | Wave 3a 完成后（分别与 searchpanel/zenmode/herocard 共享文件） | 待执行 |
 | B | 3b-1 | `fe-theme-switch-smoothing` | `main.css` + `tokens.css` 簇 | Wave 3a 完成后（与 searchpanel/zenmode 共享样式文件） | 待执行 |
 | A | 3c-1 | `fe-feature-focus-visible-coverage` | AiPanel/SearchPanel/Dashboard + `main.css` + `tokens.css` 簇 | Wave 3b 完成后 | 待执行 |
@@ -182,7 +182,7 @@
   fe-i18n-language-switcher-foundation (第四批) ──→ fe-onboarding-flow-refresh
 
 第三批（3 波推进）
-  Wave 3a: fe-searchpanel-tokenized-rewrite ∥ fe-zenmode-token-escape-cleanup ∥ fe-dashboard-herocard-responsive-layout
+  Wave 3a: fe-searchpanel-tokenized-rewrite ∥ fe-zenmode-token-escape-cleanup ∥ fe-dashboard-herocard-responsive-layout（已完成并归档，PR #898/#899/#900）
   Wave 3b: fe-lucide-icon-unification ∥ fe-theme-switch-smoothing
   Wave 3c: fe-feature-focus-visible-coverage ──→ fe-visual-noise-reduction ──→ fe-reduced-motion-respect
 
