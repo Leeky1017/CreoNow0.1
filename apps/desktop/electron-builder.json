@@ -5,7 +5,7 @@
     "output": "dist-electron"
   },
   "files": ["dist/**", "package.json"],
-  "npmRebuild": false,
+  "npmRebuild": true,
   "asar": true,
   "asarUnpack": ["**/*.node", "**/*.dll"],
   "win": {
