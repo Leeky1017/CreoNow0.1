@@ -4,7 +4,7 @@
 | -------- | --------------------------------------------- |
 | Issue    | #906                                          |
 | Branch   | `task/906-fe-theme-switch-smoothing`          |
-| PR       | TBD                                           |
+| PR       | https://github.com/Leeky1017/CreoNow/pull/910 |
 | Agent    | Theme Transition Agent                        |
 | Date     | 2026-03-02                                    |
 
