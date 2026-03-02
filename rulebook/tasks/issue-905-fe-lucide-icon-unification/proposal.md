@@ -1,5 +1,7 @@
 # Proposal: issue-905-fe-lucide-icon-unification
 
+更新时间：2026-03-02 16:30
+
 ## Why
 
 Feature 层散布着 156 处内联 `<svg>` 图标实现，导致图标规格（strokeWidth、size）不一致，难以维护和统一设计语言。

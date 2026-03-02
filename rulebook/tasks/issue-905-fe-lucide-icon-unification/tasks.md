@@ -1,5 +1,7 @@
 # Tasks: issue-905-fe-lucide-icon-unification
 
+更新时间：2026-03-02 16:30
+
 ## Specification
 - [x] 审阅并确认需求边界：Feature 层 156 处内联 `<svg>` 替换为 `lucide-react`
 - [x] 统一 `strokeWidth={1.5}`、`size={16|20|24}`
