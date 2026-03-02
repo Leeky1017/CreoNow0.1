@@ -23,6 +23,13 @@ async function bootIndexWithWhenReady(
     return {
       loadURL: vi.fn(async () => undefined),
       loadFile: vi.fn(async () => undefined),
+      isMaximized: vi.fn(() => false),
+      isFullScreen: vi.fn(() => false),
+      isMinimized: vi.fn(() => false),
+      getBounds: vi.fn(() => ({ x: 0, y: 0, width: 1280, height: 800 })),
+      on: vi.fn(),
+      restore: vi.fn(),
+      focus: vi.fn(),
     };
   });
   Object.assign(browserWindow, {
@@ -36,6 +43,7 @@ async function bootIndexWithWhenReady(
       setPath: vi.fn(),
       on: vi.fn(),
       quit: appQuit,
+      requestSingleInstanceLock: vi.fn(() => true),
     },
     BrowserWindow: browserWindow,
     ipcMain: {
@@ -137,6 +145,16 @@ async function bootIndexWithWhenReady(
   }));
   vi.doMock("../../../main/src/runtimePathResolver", () => ({
     resolvePreloadEntryPathFromBuildConfig: vi.fn(() => "/tmp/mock-preload.cjs"),
+  }));
+
+  vi.doMock("../../../main/src/windowState", () => ({
+    loadWindowState: vi.fn(() => null),
+    createDebouncedSaveWindowState: vi.fn(() => ({
+      save: vi.fn(),
+      flush: vi.fn(),
+      cancel: vi.fn(),
+    })),
+    WINDOW_STATE_DEFAULTS: { x: 0, y: 0, width: 1280, height: 800 },
   }));
 
   vi.doMock("../../../main/src/services/context/watchService", () => ({

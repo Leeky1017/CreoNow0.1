@@ -42,6 +42,11 @@ import { createCreonowWatchService } from "./services/context/watchService";
 import { createProjectLifecycle } from "./services/projects/projectLifecycle";
 import { createUtilityProcessFoundation } from "./services/utilityprocess/utilityProcessFoundation";
 import { resolvePreloadEntryPathFromBuildConfig } from "./runtimePathResolver";
+import {
+  createDebouncedSaveWindowState,
+  loadWindowState,
+  WINDOW_STATE_DEFAULTS,
+} from "./windowState";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -103,11 +108,21 @@ export function createMainWindow(logger: Logger): BrowserWindow {
   const preload = resolvePreloadPath();
   const isE2E = process.env.CREONOW_E2E === "1";
   const isWindows = process.platform === "win32";
+
+  const userDataDir = app.getPath("userData");
+  const saved = loadWindowState(userDataDir);
+  const width = saved?.width ?? WINDOW_STATE_DEFAULTS.width;
+  const height = saved?.height ?? WINDOW_STATE_DEFAULTS.height;
+
+  const positionOpts: { x: number; y: number } | Record<string, never> =
+    saved !== null ? { x: saved.x, y: saved.y } : {};
+
   const win = new BrowserWindow({
-    width: 1280,
-    height: 800,
+    width,
+    height,
     minWidth: 1024,
     minHeight: 640,
+    ...positionOpts,
     ...(isWindows ? { frame: false } : {}),
     webPreferences: {
       preload,
@@ -115,6 +130,28 @@ export function createMainWindow(logger: Logger): BrowserWindow {
       nodeIntegration: false,
       sandbox: true,
     },
+  });
+
+  // ── Window state persistence (debounced) ──
+  const debouncedSave = createDebouncedSaveWindowState(userDataDir);
+
+  const persistBounds = (): void => {
+    if (win.isMaximized() || win.isFullScreen()) {
+      return;
+    }
+    const bounds = win.getBounds();
+    debouncedSave.save({
+      x: bounds.x,
+      y: bounds.y,
+      width: bounds.width,
+      height: bounds.height,
+    });
+  };
+
+  win.on("move", persistBounds);
+  win.on("resize", persistBounds);
+  win.on("close", () => {
+    debouncedSave.flush();
   });
 
   applyBrowserWindowSecurityPolicy({
@@ -488,6 +525,12 @@ function logAppInitFatal(error: unknown): void {
 
 enableE2EUserDataIsolation();
 
+// ── Single-instance lock ──
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+}
+
 app
   .whenReady()
   .then(() => {
@@ -519,7 +562,15 @@ app
       env: process.env,
     });
 
-    createMainWindow(logger);
+    const mainWindow = createMainWindow(logger);
+
+    // ── Second-instance handling: focus existing window ──
+    app.on("second-instance", () => {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+      }
+      mainWindow.focus();
+    });
 
     app.on("activate", () => {
       if (BrowserWindow.getAllWindows().length === 0) {

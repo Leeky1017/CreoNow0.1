@@ -8,10 +8,22 @@ const appMock = {
   on: vi.fn(),
   quit: vi.fn(),
   setPath: vi.fn(),
+  getPath: vi.fn(() => "/tmp/creonow-test-user-data"),
+  requestSingleInstanceLock: vi.fn(() => true),
 };
 
 vi.mock("../../../main/src/runtimePathResolver", () => ({
   resolvePreloadEntryPathFromBuildConfig: vi.fn(() => "/tmp/mock-preload.cjs"),
+}));
+
+vi.mock("../../../main/src/windowState", () => ({
+  loadWindowState: vi.fn(() => null),
+  createDebouncedSaveWindowState: vi.fn(() => ({
+    save: vi.fn(),
+    flush: vi.fn(),
+    cancel: vi.fn(),
+  })),
+  WINDOW_STATE_DEFAULTS: { x: 0, y: 0, width: 1280, height: 800 },
 }));
 
 vi.mock("electron", () => {
@@ -20,6 +32,13 @@ vi.mock("electron", () => {
 
     loadURL = loadURLMock;
     loadFile = loadFileMock;
+    isMaximized = vi.fn(() => false);
+    isFullScreen = vi.fn(() => false);
+    isMinimized = vi.fn(() => false);
+    getBounds = vi.fn(() => ({ x: 0, y: 0, width: 1280, height: 800 }));
+    on = vi.fn();
+    restore = vi.fn();
+    focus = vi.fn();
   }
 
   return {
