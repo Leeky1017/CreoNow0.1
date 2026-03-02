@@ -45,4 +45,19 @@ describe("SettingsGeneral language selector", () => {
 
     expect(screen.getByText("Display Language")).toBeInTheDocument();
   });
+
+  it("shows current language preference as default", () => {
+    render(
+      <SettingsGeneral
+        settings={defaultGeneralSettings}
+        showAiMarks={false}
+        onShowAiMarksChange={vi.fn()}
+        onSettingsChange={vi.fn()}
+      />,
+    );
+
+    // getLanguagePreference mock returns "zh-CN", so the Select should
+    // display the matching label from languageOptions.
+    expect(screen.getByText("中文 (简体)")).toBeInTheDocument();
+  });
 });

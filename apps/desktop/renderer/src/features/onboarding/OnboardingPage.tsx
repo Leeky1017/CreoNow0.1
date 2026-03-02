@@ -93,7 +93,8 @@ function LanguageStep(props: {
  * Why: CreoNow is an AI-native writing IDE — new users benefit from
  * understanding what AI features are available, even if they skip setup.
  */
-function AiConfigStep(): JSX.Element {
+function AiConfigStep(props: { language: string }): JSX.Element {
+  const isEn = props.language === "en";
   return (
     <div data-testid="onboarding-step-2" className="w-full max-w-[480px]">
       <Heading
@@ -101,10 +102,12 @@ function AiConfigStep(): JSX.Element {
         color="default"
         className="mb-3 text-center text-2xl font-light tracking-tight"
       >
-        AI 写作助手
+        {isEn ? "AI Writing Assistant" : "AI 写作助手"}
       </Heading>
       <Text size="body" color="muted" className="mb-8 text-center">
-        CreoNow 内置 AI 写作能力，可以帮你续写、润色、激发灵感。
+        {isEn
+          ? "CreoNow has built-in AI writing capabilities for continuation, polishing, and inspiration."
+          : "CreoNow 内置 AI 写作能力，可以帮你续写、润色、激发灵感。"}
       </Text>
 
       <div className="space-y-4">
@@ -129,10 +132,12 @@ function AiConfigStep(): JSX.Element {
             </div>
             <div>
               <Text size="body" color="default" className="mb-1 font-medium">
-                智能续写与润色
+                {isEn ? "Smart Continuation & Polish" : "智能续写与润色"}
               </Text>
               <Text size="small" color="muted">
-                选中文本后唤起 AI 面板，即可获得续写、改写、润色建议。
+                {isEn
+                  ? "Select text to invoke the AI panel for continuation, rewriting, and polishing suggestions."
+                  : "选中文本后唤起 AI 面板，即可获得续写、改写、润色建议。"}
               </Text>
             </div>
           </div>
@@ -157,10 +162,12 @@ function AiConfigStep(): JSX.Element {
             </div>
             <div>
               <Text size="body" color="default" className="mb-1 font-medium">
-                AI 配置可在设置中调整
+                {isEn ? "AI Settings Are Adjustable" : "AI 配置可在设置中调整"}
               </Text>
               <Text size="small" color="muted">
-                你随时可以在「设置 → AI」中配置模型和偏好。
+                {isEn
+                  ? "You can configure AI models and preferences in Settings → AI anytime."
+                  : "你随时可以在「设置 → AI」中配置模型和偏好。"}
               </Text>
             </div>
           </div>
@@ -177,9 +184,11 @@ function AiConfigStep(): JSX.Element {
  * create a workspace folder to begin writing.
  */
 function OpenFolderStep(props: {
+  language: string;
   onOpenFolder: () => void;
   onSkip: () => void;
 }): JSX.Element {
+  const isEn = props.language === "en";
   return (
     <div data-testid="onboarding-step-3" className="w-full max-w-[480px]">
       <Heading
@@ -187,10 +196,12 @@ function OpenFolderStep(props: {
         color="default"
         className="mb-3 text-center text-2xl font-light tracking-tight"
       >
-        打开工作区
+        {isEn ? "Open Workspace" : "打开工作区"}
       </Heading>
       <Text size="body" color="muted" className="mb-8 text-center">
-        选择一个文件夹作为你的创作工作区，CreoNow 会在此管理你的项目与文档。
+        {isEn
+          ? "Choose a folder as your creative workspace. CreoNow will manage your projects and documents here."
+          : "选择一个文件夹作为你的创作工作区，CreoNow 会在此管理你的项目与文档。"}
       </Text>
 
       <div className="flex flex-col items-center gap-4">
@@ -212,7 +223,7 @@ function OpenFolderStep(props: {
           >
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
           </svg>
-          打开文件夹
+          {isEn ? "Open Folder" : "打开文件夹"}
         </Button>
 
         <Button
@@ -222,7 +233,7 @@ function OpenFolderStep(props: {
           onClick={props.onSkip}
           className="rounded-full px-8"
         >
-          跳过，稍后再选
+          {isEn ? "Skip, choose later" : "跳过，稍后再选"}
         </Button>
       </div>
     </div>
@@ -291,8 +302,12 @@ export function OnboardingPage({
   }, []);
 
   const handleOpenFolder = React.useCallback(async () => {
-    await invoke("dialog:folder:open", {});
-    onComplete();
+    const result = await invoke("dialog:folder:open", {});
+    // Only complete onboarding when user actually selected a folder;
+    // cancelled dialog returns data without selectedPath.
+    if (result.ok && result.data.selectedPath) {
+      onComplete();
+    }
   }, [onComplete]);
 
   const goNext = React.useCallback(() => {
@@ -327,10 +342,12 @@ export function OnboardingPage({
             color="default"
             className="mb-2 text-center text-4xl font-light tracking-tight md:text-5xl"
           >
-            欢迎使用 CreoNow
+            {language === "en" ? "Welcome to CreoNow" : "欢迎使用 CreoNow"}
           </Heading>
           <Text size="bodyLarge" color="muted" className="italic">
-            AI 驱动的文字创作 IDE
+            {language === "en"
+              ? "AI-powered Writing IDE"
+              : "AI 驱动的文字创作 IDE"}
           </Text>
         </div>
 
@@ -342,9 +359,10 @@ export function OnboardingPage({
               onSelect={handleLanguageSelect}
             />
           )}
-          {step === 2 && <AiConfigStep />}
+          {step === 2 && <AiConfigStep language={language} />}
           {step === 3 && (
             <OpenFolderStep
+              language={language}
               onOpenFolder={() => void handleOpenFolder()}
               onSkip={onComplete}
             />
@@ -362,10 +380,10 @@ export function OnboardingPage({
                 onClick={goBack}
                 className="rounded-full px-6"
               >
-                返回
+                {language === "en" ? "Back" : "返回"}
               </Button>
             )}
-            {step < 3 && (
+            {step === 1 && (
               <Button
                 data-testid="onboarding-next"
                 variant="primary"
@@ -373,7 +391,7 @@ export function OnboardingPage({
                 onClick={goNext}
                 className="rounded-full px-8"
               >
-                下一步
+                {language === "en" ? "Next" : "下一步"}
               </Button>
             )}
             {step === 2 && (
@@ -384,7 +402,7 @@ export function OnboardingPage({
                 onClick={goNext}
                 className="rounded-full px-6"
               >
-                跳过
+                {language === "en" ? "Skip" : "跳过"}
               </Button>
             )}
           </div>

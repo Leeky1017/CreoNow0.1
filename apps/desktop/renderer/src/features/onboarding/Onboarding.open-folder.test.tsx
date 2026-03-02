@@ -50,4 +50,37 @@ describe("Onboarding Open Folder Entry Point", () => {
 
     expect(mockInvoke).toHaveBeenCalledWith("dialog:folder:open", {});
   });
+
+  // Cancelled dialog should NOT complete onboarding
+  it("does NOT call onComplete when folder dialog is cancelled", async () => {
+    const onComplete = vi.fn();
+    mockInvoke.mockResolvedValue({
+      ok: true,
+      data: {},
+    });
+
+    render(<OnboardingPage onComplete={onComplete} />);
+    navigateToStep3();
+
+    await userEvent.click(screen.getByTestId("onboarding-open-folder"));
+
+    expect(mockInvoke).toHaveBeenCalledWith("dialog:folder:open", {});
+    expect(onComplete).not.toHaveBeenCalled();
+  });
+
+  // IPC error should NOT complete onboarding
+  it("does NOT call onComplete when folder dialog errors", async () => {
+    const onComplete = vi.fn();
+    mockInvoke.mockResolvedValue({
+      ok: false,
+      error: { code: "CANCELED", message: "cancelled" },
+    });
+
+    render(<OnboardingPage onComplete={onComplete} />);
+    navigateToStep3();
+
+    await userEvent.click(screen.getByTestId("onboarding-open-folder"));
+
+    expect(onComplete).not.toHaveBeenCalled();
+  });
 });
