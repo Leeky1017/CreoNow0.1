@@ -176,6 +176,11 @@ describe("CreateProjectDialog — ImageCropper integration", () => {
     });
     const callArgs = createAndSetCurrent.mock.calls[0][0] as Record<string, unknown>;
     expect(callArgs).toHaveProperty("name", "My Novel");
+    // coverImage and cropArea must be threaded through to createAndSetCurrent
+    expect(callArgs).toHaveProperty("coverImage");
+    expect(callArgs.coverImage).toBeInstanceOf(File);
+    expect(callArgs).toHaveProperty("cropArea");
+    expect(callArgs.cropArea).toEqual({ x: 0, y: 0, zoom: 1 });
   });
 
   it("does not show cropper when no image selected", () => {

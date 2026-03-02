@@ -428,6 +428,8 @@ export function CreateProjectDialog({
       type?: "novel" | "screenplay" | "media";
       templateId: string;
       description?: string;
+      coverImage?: File | null;
+      cropArea?: CropArea | null;
     }) => {
       setSubmitting(true);
       setSubmitError(null);
@@ -458,12 +460,13 @@ export function CreateProjectDialog({
               }
             : undefined;
 
-        // TODO: Thread coverImage/cropArea to createAndSetCurrent when IPC supports it
         const res = await createAndSetCurrent({
           name: data.name,
           type: data.type,
           description: data.description,
           template,
+          coverImage: data.coverImage ?? null,
+          cropArea: data.cropArea ?? null,
         });
 
         if (!res.ok) {
