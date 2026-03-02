@@ -57,7 +57,7 @@ $ pnpm vitest run (apps/desktop)
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: ff7677c1bc256a236aae3b593aa95adfd29e1dde
+- Reviewed-HEAD-SHA: a750ccde0a587229bb9148b4ffbd4c921d30362a
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
