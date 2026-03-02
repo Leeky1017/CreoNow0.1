@@ -1,12 +1,12 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-01 23:00
+更新时间：2026-03-02 10:47
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
 ## 执行策略
 
-- 当前活跃 change 数量为 **28**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-rightpanel-ai-tabbar-layout`、`fe-rightpanel-ai-guidance-and-style`、`fe-spec-drift-iconbar-rightpanel-alignment`、`fe-hotfix-searchpanel-backdrop-close`、`fe-leftpanel-dialog-migration`、`fe-cleanup-proxysection-and-mocks`、`fe-ai-panel-toggle-button`、`fe-ipc-open-folder-contract`、`fe-ui-open-folder-entrypoints`、`fe-dashboard-welcome-merge-and-ghost-actions` 已归档）。
+- 当前活跃 change 数量为 **23**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-rightpanel-ai-tabbar-layout`、`fe-rightpanel-ai-guidance-and-style`、`fe-spec-drift-iconbar-rightpanel-alignment`、`fe-hotfix-searchpanel-backdrop-close`、`fe-leftpanel-dialog-migration`、`fe-cleanup-proxysection-and-mocks`、`fe-ai-panel-toggle-button`、`fe-ipc-open-folder-contract`、`fe-ui-open-folder-entrypoints`、`fe-dashboard-welcome-merge-and-ghost-actions`、`fe-project-image-cropper`、`fe-error-boundary-partitioning`、`fe-skeleton-loading-states`、`fe-i18n-language-switcher-foundation`、`fe-onboarding-flow-refresh` 已归档）。
 - 执行模式：**4 批次渐进推进**（第一批核心体验 → 第二批功能补全 → 第三批设计系统回归 → 第四批独立 Issue 收口）。
 - 规则：
   - 任一 change 开始 Red 前，必须完成该 change 的依赖同步检查（Dependency Sync Check）。
@@ -54,10 +54,10 @@
 |------|------|--------|-----------|------|------|
 | A | 2-1 | `fe-ipc-open-folder-contract` | Main/Preload IPC 簇 | — | 已完成并归档（PR #830） |
 | A | 2-2 | `fe-ui-open-folder-entrypoints` | main/index + Dashboard/Onboarding 簇 | `fe-ipc-open-folder-contract`；且与 `fe-skeleton-loading-states` 互斥（`DashboardPage.tsx`） | 已完成并归档（PR #830） |
-| B | 2-1 | `fe-project-image-cropper` | ProjectDialog/ImageCropper 簇 | — | 待执行 |
-| C | 2-1 | `fe-error-boundary-partitioning` | AppShell/ErrorBoundary 启动簇 | — | 待执行 |
-| D | 2-1 | `fe-skeleton-loading-states` | Dashboard loading 簇 | 与 `fe-ui-open-folder-entrypoints` 互斥（`DashboardPage.tsx`） | 待执行 |
-| E | 2-1 | `fe-onboarding-flow-refresh` | OnboardingPage 簇 | `fe-ui-open-folder-entrypoints`, `fe-i18n-language-switcher-foundation` | 待执行 |
+| B | 2-1 | `fe-project-image-cropper` | ProjectDialog/ImageCropper 簇 | — | 已完成并归档（PR #840） |
+| C | 2-1 | `fe-error-boundary-partitioning` | AppShell/ErrorBoundary 启动簇 | — | 已完成并归档（PR #841） |
+| D | 2-1 | `fe-skeleton-loading-states` | Dashboard loading 簇 | 与 `fe-ui-open-folder-entrypoints` 互斥（`DashboardPage.tsx`） | 已完成并归档（PR #842） |
+| E | 2-1 | `fe-onboarding-flow-refresh` | OnboardingPage 簇 | `fe-ui-open-folder-entrypoints`, `fe-i18n-language-switcher-foundation` | 已完成并归档（PR #843） |
 
 #### 第二批文件冲突矩阵
 
@@ -110,7 +110,7 @@
 |------|------|--------|-----------|------|------|
 | N1 | 4-0 | `fe-desktop-native-binding-packaging` | 主进程独立簇 | — | 待执行 |
 | N2 | 4-0 | `fe-desktop-window-lifecycle-uplift` | 主进程独立簇 | — | 待执行 |
-| A | 4a-1 | `fe-i18n-language-switcher-foundation` | i18n/Onboarding/SettingsGeneral 簇 | — | 待执行 |
+| A | 4a-1 | `fe-i18n-language-switcher-foundation` | i18n/Onboarding/SettingsGeneral 簇 | — | 已完成并归档（PR #843） |
 | B | 4a-1 | `fe-composites-p0-panel-and-command-items` | SearchPanel/AiPanel/CommandPalette/FileTree 簇 | — | 待执行 |
 | C | 4a-1 | `fe-editor-tokenization-selection-and-spacing` | `tokens.css` + `main.css` + typography 簇 | — | 待执行 |
 | D | 4a-1 | `fe-editor-advanced-interactions` | EditorPane 簇 | — | 待执行 |
