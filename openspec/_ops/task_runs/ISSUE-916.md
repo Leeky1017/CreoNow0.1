@@ -2,7 +2,7 @@
 
 - Issue: #916
 - Branch: task/916-fe-editor-advanced
-- PR: <fill-after-created>
+- PR: https://github.com/Leeky1017/CreoNow/pull/918
 - Agent: slot-c-editor-advanced-agent
 
 ## Plan
