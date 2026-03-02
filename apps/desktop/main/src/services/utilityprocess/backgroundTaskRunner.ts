@@ -128,6 +128,12 @@ export function createBackgroundTaskRunner(): BackgroundTaskRunner {
       });
 
       const executionResult = (async (): Promise<BackgroundTaskResult<T>> => {
+        if (controller.signal.aborted) {
+          return timeoutTriggered
+            ? { status: "timeout", error: createTimeoutError() }
+            : { status: "aborted", error: createAbortError() };
+        }
+
         const execute = args.execute ?? args.run;
         if (!execute) {
           return {
