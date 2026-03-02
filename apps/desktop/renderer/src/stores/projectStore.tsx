@@ -42,6 +42,8 @@ export type ProjectActions = {
             files: Array<{ path: string; content?: string }>;
           };
         };
+    coverImage?: File | null;
+    cropArea?: { x: number; y: number; zoom: number } | null;
   }) => Promise<IpcResponse<ProjectInfo>>;
   createAiAssistDraft: (args: {
     prompt: string;
@@ -185,7 +187,17 @@ export function createProjectStore(deps: {
       }
     },
 
-    createAndSetCurrent: async ({ name, type, description, template }) => {
+    createAndSetCurrent: async ({
+      name,
+      type,
+      description,
+      template,
+      // coverImage and cropArea are accepted here so the renderer/store
+      // contract is complete.  They will be forwarded to IPC once
+      // project:project:create adds cover-image fields.
+      coverImage: _coverImage,
+      cropArea: _cropArea,
+    }) => {
       const created = await deps.invoke("project:project:create", {
         name,
         type,
