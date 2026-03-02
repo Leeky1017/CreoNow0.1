@@ -31,7 +31,7 @@ function createMockIpcMain() {
       }
       return await listener(
         {
-          senderFrame: { url: "about:blank" },
+          senderFrame: { url: "file:///mock-renderer/index.html" },
           sender: { id: 1 },
         } as IpcMainInvokeEvent,
         payload,
