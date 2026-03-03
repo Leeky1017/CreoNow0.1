@@ -15,6 +15,7 @@ import "@testing-library/jest-dom/vitest";
  */
 import { cleanup } from "@testing-library/react";
 import { afterEach, beforeAll } from "vitest";
+import { hotkeyManager } from "./renderer/src/lib/hotkeys/HotkeyManager";
 
 /**
  * Mock browser APIs for Radix UI compatibility
@@ -53,4 +54,6 @@ beforeAll(() => {
 
 afterEach(() => {
   cleanup();
+  // Reset the global HotkeyManager between test files to prevent cross-test interference
+  hotkeyManager.destroy();
 });

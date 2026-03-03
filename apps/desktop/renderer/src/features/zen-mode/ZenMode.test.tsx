@@ -101,7 +101,7 @@ describe("ZenMode", () => {
     const onExit = vi.fn();
     render(<ZenMode {...defaultProps} onExit={onExit} />);
 
-    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent.keyDown(document, { key: "Escape" });
     expect(onExit).toHaveBeenCalledTimes(1);
   });
 
@@ -136,7 +136,7 @@ describe("ZenMode", () => {
     const onExit = vi.fn();
     render(<ZenMode {...defaultProps} open={false} onExit={onExit} />);
 
-    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent.keyDown(document, { key: "Escape" });
     expect(onExit).not.toHaveBeenCalled();
   });
 
@@ -145,7 +145,7 @@ describe("ZenMode", () => {
     const { unmount } = render(<ZenMode {...defaultProps} onExit={onExit} />);
 
     unmount();
-    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent.keyDown(document, { key: "Escape" });
     expect(onExit).not.toHaveBeenCalled();
   });
 
@@ -157,7 +157,7 @@ describe("ZenMode", () => {
     rerender(<ZenMode {...defaultProps} open={false} onExit={onExit} />);
 
     // ESC should not trigger onExit now
-    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent.keyDown(document, { key: "Escape" });
     expect(onExit).not.toHaveBeenCalled();
   });
 

@@ -32,7 +32,7 @@ describe("HotkeyManager", () => {
     );
     manager.setActiveScope("editor");
 
-    window.dispatchEvent(
+    document.dispatchEvent(
       new KeyboardEvent("keydown", { key: "s", ctrlKey: true }),
     );
     // Higher priority global should handle it
@@ -51,7 +51,7 @@ describe("HotkeyManager", () => {
     );
     manager.setActiveScope("dialog");
 
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
     expect(editorHandler).not.toHaveBeenCalled();
   });
 
@@ -60,7 +60,7 @@ describe("HotkeyManager", () => {
     manager.register("test-1", { key: "a" }, "global", 1, handler);
     manager.unregister("test-1");
 
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
     expect(handler).not.toHaveBeenCalled();
   });
 
@@ -75,7 +75,7 @@ describe("HotkeyManager", () => {
     );
     manager.setActiveScope("editor");
 
-    window.dispatchEvent(
+    document.dispatchEvent(
       new KeyboardEvent("keydown", { key: "s", ctrlKey: true }),
     );
     expect(editorHandler).toHaveBeenCalledOnce();
@@ -92,13 +92,13 @@ describe("HotkeyManager", () => {
     );
 
     // Without shift — should NOT match
-    window.dispatchEvent(
+    document.dispatchEvent(
       new KeyboardEvent("keydown", { key: "s", ctrlKey: true }),
     );
     expect(handler).not.toHaveBeenCalled();
 
     // With shift — should match
-    window.dispatchEvent(
+    document.dispatchEvent(
       new KeyboardEvent("keydown", {
         key: "s",
         ctrlKey: true,
@@ -113,7 +113,7 @@ describe("HotkeyManager", () => {
     manager.register("test-g", { key: "p", ctrlKey: true }, "global", 1, handler);
     manager.setActiveScope("editor");
 
-    window.dispatchEvent(
+    document.dispatchEvent(
       new KeyboardEvent("keydown", { key: "p", ctrlKey: true }),
     );
     expect(handler).toHaveBeenCalledOnce();
@@ -124,7 +124,7 @@ describe("HotkeyManager", () => {
     manager.register("test-ev", { key: "x" }, "global", 1, handler);
 
     const event = new KeyboardEvent("keydown", { key: "x" });
-    window.dispatchEvent(event);
+    document.dispatchEvent(event);
     expect(handler).toHaveBeenCalledWith(event);
   });
 
@@ -139,7 +139,7 @@ describe("HotkeyManager", () => {
     );
 
     // ctrlKey should match
-    window.dispatchEvent(
+    document.dispatchEvent(
       new KeyboardEvent("keydown", { key: "s", ctrlKey: true }),
     );
     expect(handler).toHaveBeenCalledOnce();
@@ -147,7 +147,7 @@ describe("HotkeyManager", () => {
     handler.mockClear();
 
     // metaKey should match
-    window.dispatchEvent(
+    document.dispatchEvent(
       new KeyboardEvent("keydown", { key: "s", metaKey: true }),
     );
     expect(handler).toHaveBeenCalledOnce();
@@ -155,7 +155,7 @@ describe("HotkeyManager", () => {
     handler.mockClear();
 
     // No modifier — should NOT match
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "s" }));
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "s" }));
     expect(handler).not.toHaveBeenCalled();
   });
 });

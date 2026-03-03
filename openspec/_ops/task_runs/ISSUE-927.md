@@ -13,10 +13,33 @@
 ## Runs
 
 ### Red
-（待记录）
+HotkeyManager.test.ts w/ stub implementation → **6 failed, 2 passed (8)**
+- routes keydown events by scope and priority: FAIL
+- blocks editor scope when dialog scope is active: PASS (trivially)
+- unregister removes handler: PASS (trivially)
+- calls editor-scoped handler when editor scope is active: FAIL
+- matches key combo with modifiers correctly: FAIL
+- global scope handlers fire regardless of active scope: FAIL
+- passes the keyboard event to the handler: FAIL
+- modKey matches either ctrlKey or metaKey: FAIL
+
+Guard test (pre-migration baseline): **2 failed**
+- no raw addEventListener keydown in features: FAIL (scattered listeners present)
+- no raw addEventListener keydown in components: FAIL
 
 ### Green
-（待记录）
+All 3 core test suites pass:
+```
+HotkeyManager.test.ts: 8 passed
+ShortcutsPanel.test.tsx: 3 passed
+hotkey-listener-guard.test.ts: 2 passed
+Total: 13 passed (13)
+```
 
 ### Full Regression
-（待记录）
+```
+Test Files  228 passed (228)
+Tests       1687 passed (1687)
+Duration    42.73s
+```
+Zero regressions.

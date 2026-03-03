@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useDebouncedCallback } from "../../hooks/useDebouncedCallback";
+import { useHotkey } from "../../lib/hotkeys/useHotkey";
 
 type NavigationControllerProps = {
   zenMode: boolean;
@@ -18,6 +19,7 @@ type NavigationControllerProps = {
 /**
  * NavigationController owns keyboard shortcuts and visibility/navigation toggles.
  *
+ * All shortcuts are registered via the unified HotkeyManager.
  * It must not perform width allocation or resizing orchestration.
  */
 export function NavigationController(props: NavigationControllerProps): null {
@@ -30,84 +32,110 @@ export function NavigationController(props: NavigationControllerProps): null {
     300,
   );
 
-  React.useEffect(() => {
-    function onKeyDown(e: KeyboardEvent): void {
-      // F11: Toggle Zen Mode
-      if (e.key === "F11") {
-        if (e.repeat) {
-          return;
-        }
-        e.preventDefault();
+  // F11: Toggle Zen Mode
+  useHotkey(
+    "nav:toggle-zen",
+    { key: "F11" },
+    React.useCallback(
+      (e: KeyboardEvent) => {
+        if (e.repeat) return;
         props.onToggleZenMode();
-        return;
-      }
+      },
+      [props.onToggleZenMode],
+    ),
+    "global",
+    20,
+  );
 
-      // ESC in zen mode: Exit zen mode
-      if (props.zenMode && e.key === "Escape") {
-        e.preventDefault();
-        props.onExitZenMode();
-        return;
-      }
+  // ESC in zen mode: Exit zen mode
+  useHotkey(
+    "nav:exit-zen",
+    { key: "Escape" },
+    React.useCallback(() => {
+      props.onExitZenMode();
+    }, [props.onExitZenMode]),
+    "global",
+    20,
+    props.zenMode,
+  );
 
-      // Zen mode is pure writing immersion: block non-exit shortcuts to keep
-      // panel entry points inaccessible until user exits.
-      if (props.zenMode) {
-        return;
-      }
-
-      const mod = e.metaKey || e.ctrlKey;
-      if (!mod) {
-        return;
-      }
-
-      // Cmd/Ctrl+P: Command Palette
-      if (e.key.toLowerCase() === "p") {
-        e.preventDefault();
+  // Cmd/Ctrl+P: Command Palette
+  useHotkey(
+    "nav:command-palette",
+    { key: "p", modKey: true },
+    React.useCallback(() => {
+      if (!props.zenMode) {
         props.onOpenCommandPalette();
-        return;
       }
+    }, [props.zenMode, props.onOpenCommandPalette]),
+    "global",
+    15,
+  );
 
-      // Cmd/Ctrl+\: Toggle Sidebar (NOT Cmd+B per DESIGN_DECISIONS.md)
-      if (e.key === "\\") {
-        e.preventDefault();
+  // Cmd/Ctrl+\: Toggle Sidebar (NOT Cmd+B per DESIGN_DECISIONS.md)
+  useHotkey(
+    "nav:toggle-sidebar",
+    { key: "\\", modKey: true },
+    React.useCallback(() => {
+      if (!props.zenMode) {
         debouncedToggleSidebar();
-        return;
       }
+    }, [props.zenMode, debouncedToggleSidebar]),
+    "global",
+    15,
+  );
 
-      // Cmd/Ctrl+L: Toggle Right Panel
-      if (e.key.toLowerCase() === "l") {
-        e.preventDefault();
+  // Cmd/Ctrl+L: Toggle Right Panel
+  useHotkey(
+    "nav:toggle-right-panel",
+    { key: "l", modKey: true },
+    React.useCallback(() => {
+      if (!props.zenMode) {
         debouncedToggleRightPanel();
-        return;
       }
+    }, [props.zenMode, debouncedToggleRightPanel]),
+    "global",
+    15,
+  );
 
-      // Cmd/Ctrl+,: Open Settings
-      if (e.key === ",") {
-        e.preventDefault();
+  // Cmd/Ctrl+,: Open Settings
+  useHotkey(
+    "nav:open-settings",
+    { key: ",", modKey: true },
+    React.useCallback(() => {
+      if (!props.zenMode) {
         props.onOpenSettings();
-        return;
       }
+    }, [props.zenMode, props.onOpenSettings]),
+    "global",
+    15,
+  );
 
-      // Cmd/Ctrl+Shift+N: Create New Project
-      if (e.shiftKey && e.key.toLowerCase() === "n") {
-        e.preventDefault();
+  // Cmd/Ctrl+Shift+N: Create New Project
+  useHotkey(
+    "nav:create-project",
+    { key: "N", modKey: true, shiftKey: true },
+    React.useCallback(() => {
+      if (!props.zenMode) {
         props.onOpenCreateProject();
-        return;
       }
+    }, [props.zenMode, props.onOpenCreateProject]),
+    "global",
+    15,
+  );
 
-      // Cmd/Ctrl+N: Create New Document (only if project is open)
-      if (e.key.toLowerCase() === "n" && !e.shiftKey) {
-        if (!props.canCreateDocument) {
-          return;
-        }
-        e.preventDefault();
+  // Cmd/Ctrl+N: Create New Document (only if project is open)
+  useHotkey(
+    "nav:create-document",
+    { key: "n", modKey: true },
+    React.useCallback(() => {
+      if (!props.zenMode && props.canCreateDocument) {
         props.onCreateDocument();
       }
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [debouncedToggleRightPanel, debouncedToggleSidebar, props]);
+    }, [props.zenMode, props.canCreateDocument, props.onCreateDocument]),
+    "global",
+    10,
+  );
 
   return null;
 }

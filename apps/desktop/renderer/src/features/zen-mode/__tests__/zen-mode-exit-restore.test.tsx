@@ -23,19 +23,19 @@ describe("S3-ZEN-MODE-S2", () => {
     expect(sidebar).not.toHaveClass("hidden");
     expect(panel).not.toHaveClass("hidden");
 
-    fireEvent.keyDown(window, { key: "\\", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "\\", ctrlKey: true });
     act(() => {
       vi.advanceTimersByTime(350);
     });
     expect(sidebar).toHaveClass("hidden");
     expect(panel).not.toHaveClass("hidden");
 
-    fireEvent.keyDown(window, { key: "F11" });
+    fireEvent.keyDown(document, { key: "F11" });
     expect(sidebar).toHaveClass("hidden");
     expect(panel).toHaveClass("hidden");
     expect(screen.getByTestId("zen-mode")).toBeInTheDocument();
 
-    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent.keyDown(document, { key: "Escape" });
     expect(screen.queryByTestId("zen-mode")).not.toBeInTheDocument();
     expect(sidebar).toHaveClass("hidden");
     expect(panel).not.toHaveClass("hidden");

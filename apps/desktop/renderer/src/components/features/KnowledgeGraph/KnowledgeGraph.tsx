@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
+import { useHotkey } from "../../../lib/hotkeys/useHotkey";
 import { GraphToolbar } from "./GraphToolbar";
 import { GraphCanvas } from "./GraphCanvas";
 import { GraphLegend } from "./GraphLegend";
@@ -276,47 +277,60 @@ export function KnowledgeGraph({
     }
   }, [selectedNodeId, onNodeDelete, handleNodeSelect]);
 
-  // Keyboard shortcuts: Escape to close, Delete to remove
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't hijack keys while editing in dialog
-      if (editDialogOpen) return;
+  // Keyboard shortcuts: Escape to deselect, Delete/Backspace to remove
+  // (via unified HotkeyManager)
 
-      // Don't hijack keys while typing in an input/textarea/select/contenteditable
-      const active = document.activeElement as HTMLElement | null;
-      const isTyping =
-        !!active &&
-        (active.tagName === "INPUT" ||
-          active.tagName === "TEXTAREA" ||
-          active.tagName === "SELECT" ||
-          active.isContentEditable);
-      if (isTyping) return;
+  /** Guard that prevents shortcut from firing while typing or editing. */
+  const isInputFocused = useCallback((): boolean => {
+    if (editDialogOpen) return true;
+    const active = document.activeElement as HTMLElement | null;
+    return (
+      !!active &&
+      (active.tagName === "INPUT" ||
+        active.tagName === "TEXTAREA" ||
+        active.tagName === "SELECT" ||
+        active.isContentEditable)
+    );
+  }, [editDialogOpen]);
 
-      if (e.key === "Escape") {
-        if (selectedNodeId) {
-          e.preventDefault();
-          handleNodeSelect(null);
-        }
-        return;
+  useHotkey(
+    "kg:deselect",
+    { key: "Escape" },
+    useCallback(() => {
+      if (isInputFocused()) return;
+      if (selectedNodeId) {
+        handleNodeSelect(null);
       }
+    }, [isInputFocused, selectedNodeId, handleNodeSelect]),
+    "global",
+    5,
+  );
 
-      if (e.key === "Delete" || e.key === "Backspace") {
-        if (selectedNodeId && onNodeDelete) {
-          e.preventDefault();
-          handleDeleteNode();
-        }
+  useHotkey(
+    "kg:delete-node",
+    { key: "Delete" },
+    useCallback(() => {
+      if (isInputFocused()) return;
+      if (selectedNodeId && onNodeDelete) {
+        handleDeleteNode();
       }
-    };
+    }, [isInputFocused, selectedNodeId, onNodeDelete, handleDeleteNode]),
+    "global",
+    5,
+  );
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    editDialogOpen,
-    handleDeleteNode,
-    handleNodeSelect,
-    onNodeDelete,
-    selectedNodeId,
-  ]);
+  useHotkey(
+    "kg:delete-node-backspace",
+    { key: "Backspace" },
+    useCallback(() => {
+      if (isInputFocused()) return;
+      if (selectedNodeId && onNodeDelete) {
+        handleDeleteNode();
+      }
+    }, [isInputFocused, selectedNodeId, onNodeDelete, handleDeleteNode]),
+    "global",
+    5,
+  );
 
   // Save node handler (from edit dialog)
   const handleNodeSave = useCallback(

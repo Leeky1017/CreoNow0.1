@@ -1,5 +1,6 @@
 import React from "react";
 import { ZenModeStatus } from "./ZenModeStatus";
+import { useHotkey } from "../../lib/hotkeys/useHotkey";
 
 import { X } from "lucide-react";
 /**
@@ -75,20 +76,17 @@ export function ZenMode({
   stats,
   currentTime,
 }: ZenModeProps): JSX.Element | null {
-  // Handle ESC key to exit
-  React.useEffect(() => {
-    if (!open) return;
-
-    function handleKeyDown(e: KeyboardEvent): void {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onExit();
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open, onExit]);
+  // Handle ESC key to exit (via unified HotkeyManager)
+  useHotkey(
+    "zen:exit",
+    { key: "Escape" },
+    React.useCallback(() => {
+      onExit();
+    }, [onExit]),
+    "global",
+    30,
+    open,
+  );
 
   // Don't render if not open
   if (!open) return null;

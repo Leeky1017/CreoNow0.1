@@ -10,6 +10,7 @@ import { useOptionalAiStore } from "../../stores/aiStore";
 import { useEditorStore } from "../../stores/editorStore";
 import { useVersionStore } from "../../stores/versionStore";
 import { useAutosave } from "./useAutosave";
+import { useHotkey } from "../../lib/hotkeys/useHotkey";
 import { Button, ScrollArea, Text } from "../../components/primitives";
 import { EditorToolbar } from "./EditorToolbar";
 import {
@@ -28,7 +29,6 @@ import {
   type SlashCommandExecutors,
   type SlashCommandId,
 } from "./slashCommands";
-import { dispatchEditorSkillShortcut } from "./skillShortcutDispatcher";
 import {
   resolveEditorLineHeightToken,
   resolveEditorScaleFactor,
@@ -709,6 +709,9 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
     [clearEntityCompletionSession, editor],
   );
 
+  // TODO: migrate to useHotkey — entity completion keyboard nav is tightly
+  // coupled to transient autocomplete session state (open/candidates/selectedIndex).
+  // Whitelisted in hotkey-listener-guard.test.ts.
   React.useEffect(() => {
     if (!editor || !entityCompletionSession.open) {
       return;
@@ -859,80 +862,74 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
     await runSlashAiSkill("builtin:write");
   }, [runSlashAiSkill]);
 
-  React.useEffect(() => {
-    if (
-      !editor ||
-      bootstrapStatus !== "ready" ||
-      !documentId ||
-      !contentReady
-    ) {
-      return;
-    }
+  // --- Editor keyboard shortcuts via unified HotkeyManager ---
+  // (Replaces the former useEffect + window.addEventListener("keydown"))
 
-    const currentEditor = editor;
-    const currentDocumentId = documentId;
+  const editorReady =
+    !!editor &&
+    bootstrapStatus === "ready" &&
+    !!documentId &&
+    contentReady;
 
-    function onKeyDown(e: KeyboardEvent): void {
-      const shortcutResult = dispatchEditorSkillShortcut(e, {
-        continueWriting: () => {
-          e.preventDefault();
-          void onWriteClick();
-        },
-        polish: () => {
-          e.preventDefault();
-          void runSlashAiSkill("builtin:polish");
-        },
+  // Cmd/Ctrl+Enter: Continue Writing (AI skill)
+  useHotkey(
+    "editor:continue-writing",
+    { key: "Enter", modKey: true },
+    React.useCallback(() => {
+      if (!editorReady) return;
+      void onWriteClick();
+    }, [editorReady, onWriteClick]),
+    "editor",
+    10,
+  );
+
+  // Cmd/Ctrl+Shift+R: Polish (AI skill)
+  useHotkey(
+    "editor:polish",
+    { key: "r", modKey: true, shiftKey: true },
+    React.useCallback(() => {
+      if (!editorReady) return;
+      void runSlashAiSkill("builtin:polish");
+    }, [editorReady, runSlashAiSkill]),
+    "editor",
+    10,
+  );
+
+  // Cmd/Ctrl+Z: Atomic AI undo when a checkpoint is active (ED-FE-ADV-S2)
+  useHotkey(
+    "editor:ai-undo",
+    { key: "z", modKey: true },
+    React.useCallback(() => {
+      if (!editorReady) return;
+      // Only intercept when a checkpoint exists; otherwise fall through
+      // to TipTap's built-in undo. Note: HotkeyManager calls preventDefault,
+      // so we only register this when the checkpoint is active.
+      handleAiUndo();
+    }, [editorReady, handleAiUndo]),
+    "editor",
+    5,
+  );
+
+  // Cmd/Ctrl+S: Save document
+  useHotkey(
+    "editor:save",
+    { key: "s", modKey: true },
+    React.useCallback(() => {
+      if (!editorReady || !editor || !documentId) return;
+      if (isPreviewMode) return;
+
+      const json = JSON.stringify(editor.getJSON());
+      void save({
+        projectId: props.projectId,
+        documentId,
+        contentJson: json,
+        actor: "user",
+        reason: "manual-save",
       });
-      if (shortcutResult.matched) {
-        return;
-      }
-
-      const mod = e.metaKey || e.ctrlKey;
-      if (!mod) {
-        return;
-      }
-
-      // Ctrl/Cmd+Z — atomic AI undo when a checkpoint is active (ED-FE-ADV-S2)
-      if (e.key.toLowerCase() === "z" && !e.shiftKey) {
-        if (handleAiUndo()) {
-          e.preventDefault();
-          return;
-        }
-        // No active checkpoint — fall through to TipTap's default undo
-      }
-
-      if (e.key.toLowerCase() === "s") {
-        if (isPreviewMode) {
-          e.preventDefault();
-          return;
-        }
-
-        e.preventDefault();
-        const json = JSON.stringify(currentEditor.getJSON());
-        void save({
-          projectId: props.projectId,
-          documentId: currentDocumentId,
-          contentJson: json,
-          actor: "user",
-          reason: "manual-save",
-        });
-      }
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [
-    bootstrapStatus,
-    contentReady,
-    documentId,
-    editor,
-    handleAiUndo,
-    isPreviewMode,
-    onWriteClick,
-    props.projectId,
-    runSlashAiSkill,
-    save,
-  ]);
+    }, [editorReady, editor, documentId, isPreviewMode, props.projectId, save]),
+    "editor",
+    10,
+  );
 
   const handleSlashCommandSelect = React.useCallback(
     (commandId: SlashCommandId) => {

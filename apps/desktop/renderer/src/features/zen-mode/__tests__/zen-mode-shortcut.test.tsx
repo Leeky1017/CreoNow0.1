@@ -12,7 +12,7 @@ describe("S3-ZEN-MODE-S3", () => {
       </LayoutTestWrapper>,
     );
 
-    fireEvent.keyDown(window, { key: "F11" });
+    fireEvent.keyDown(document, { key: "F11" });
 
     await waitFor(() => {
       expect(screen.getByTestId("zen-mode")).toBeInTheDocument();
@@ -20,7 +20,7 @@ describe("S3-ZEN-MODE-S3", () => {
     expect(screen.getByTestId("layout-sidebar")).toHaveClass("hidden");
     expect(screen.getByTestId("layout-panel")).toHaveClass("hidden");
 
-    fireEvent.keyDown(window, { key: "F11", repeat: true });
+    fireEvent.keyDown(document, { key: "F11", repeat: true });
 
     await waitFor(() => {
       expect(screen.getByTestId("zen-mode")).toBeInTheDocument();

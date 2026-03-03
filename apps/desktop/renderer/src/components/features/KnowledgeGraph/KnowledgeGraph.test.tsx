@@ -149,7 +149,7 @@ describe("KnowledgeGraph", () => {
       />,
     );
 
-    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent.keyDown(document, { key: "Escape" });
     expect(handleSelect).toHaveBeenCalledWith(null);
   });
 
@@ -165,7 +165,7 @@ describe("KnowledgeGraph", () => {
       />,
     );
 
-    fireEvent.keyDown(window, { key: "Delete" });
+    fireEvent.keyDown(document, { key: "Delete" });
     expect(handleDelete).toHaveBeenCalledWith("1");
     expect(handleSelect).toHaveBeenCalledWith(null);
   });
@@ -185,7 +185,7 @@ describe("KnowledgeGraph", () => {
 
     // Open edit dialog
     await user.click(screen.getByText("Edit Node"));
-    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent.keyDown(document, { key: "Escape" });
 
     // Should not force-clear selection while dialog is open
     expect(handleSelect).not.toHaveBeenCalled();

@@ -38,26 +38,26 @@ describe("WB-P2-S2 NavigationController boundary", () => {
       />,
     );
 
-    fireEvent.keyDown(window, { key: "\\", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "\\", ctrlKey: true });
     expect(onToggleSidebar).toHaveBeenCalledTimes(1);
     expect(onToggleRightPanel).toHaveBeenCalledTimes(0);
 
-    fireEvent.keyDown(window, { key: "l", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "l", ctrlKey: true });
     expect(onToggleRightPanel).toHaveBeenCalledTimes(1);
 
-    fireEvent.keyDown(window, { key: "F11" });
+    fireEvent.keyDown(document, { key: "F11" });
     expect(onToggleZenMode).toHaveBeenCalledTimes(1);
 
-    fireEvent.keyDown(window, { key: "p", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "p", ctrlKey: true });
     expect(onOpenCommandPalette).toHaveBeenCalledTimes(1);
 
-    fireEvent.keyDown(window, { key: ",", ctrlKey: true });
+    fireEvent.keyDown(document, { key: ",", ctrlKey: true });
     expect(onOpenSettings).toHaveBeenCalledTimes(1);
 
-    fireEvent.keyDown(window, { key: "n", ctrlKey: true, shiftKey: true });
+    fireEvent.keyDown(document, { key: "n", ctrlKey: true, shiftKey: true });
     expect(onOpenCreateProject).toHaveBeenCalledTimes(1);
 
-    fireEvent.keyDown(window, { key: "n", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "n", ctrlKey: true });
     expect(onCreateDocument).toHaveBeenCalledTimes(1);
   });
 
@@ -86,15 +86,15 @@ describe("WB-P2-S2 NavigationController boundary", () => {
       />,
     );
 
-    fireEvent.keyDown(window, { key: "Escape" });
+    fireEvent.keyDown(document, { key: "Escape" });
     expect(onExitZenMode).toHaveBeenCalledTimes(1);
 
-    fireEvent.keyDown(window, { key: "p", ctrlKey: true });
-    fireEvent.keyDown(window, { key: "\\", ctrlKey: true });
-    fireEvent.keyDown(window, { key: "l", ctrlKey: true });
-    fireEvent.keyDown(window, { key: ",", ctrlKey: true });
-    fireEvent.keyDown(window, { key: "n", ctrlKey: true, shiftKey: true });
-    fireEvent.keyDown(window, { key: "n", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "p", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "\\", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "l", ctrlKey: true });
+    fireEvent.keyDown(document, { key: ",", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "n", ctrlKey: true, shiftKey: true });
+    fireEvent.keyDown(document, { key: "n", ctrlKey: true });
 
     expect(onOpenCommandPalette).toHaveBeenCalledTimes(0);
     expect(onToggleSidebar).toHaveBeenCalledTimes(0);
