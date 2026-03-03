@@ -35,7 +35,7 @@ describe("WB-FE-MOTION-S1: main.css contains global reduced-motion rule", () => 
     const hasGlobalOverride = reducedMotionBlocks.some((m) => {
       const blockContent = m[1];
       const targetsAllElements =
-        /\*[\s,]*\*::before[\s,]*\*::after|[\*]/.test(blockContent) ||
+        /\*[\s,]*\*::before[\s,]*\*::after|\*/.test(blockContent) ||
         /\*\s*\{/.test(blockContent);
       const hasAnimationDuration = /animation-duration/.test(blockContent);
       const hasTransitionDuration = /transition-duration/.test(blockContent);

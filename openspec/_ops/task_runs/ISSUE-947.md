@@ -12,6 +12,12 @@
 
 前置依赖 `fe-visual-noise-reduction`（PR #943）已合并至 main（commit `72feb82c`）。当前分支基于最新 `origin/main`，无上游漂移。
 
+## Plan
+
+1. 补齐 RUN_LOG 的 `## Plan` 段，满足 openspec-log-guard 必填结构。
+2. 修复 reduced-motion guard 测试中的 ESLint `no-useless-escape` 错误。
+3. 重新执行 preflight（fast）并回推 PR，确保 `ci`/`openspec-log-guard` 复绿。
+
 ## Runs
 
 ### Red Phase
