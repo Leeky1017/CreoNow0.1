@@ -79,8 +79,8 @@
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 将 Feature 层 `transition-all` 逐步替换为具体属性（如 `transition-colors`/`transition-opacity`），减少不必要的 GPU 合成。此步可选，不阻塞本 change 交付。
-- [ ] 5.2 将 `duration-300` 等硬编码 Tailwind duration 替换为 `duration-[var(--duration-normal)]`（可选，为后续 Token 化铺路）。
+- [x] 5.1 将 Feature 层 `transition-all` 逐步替换为具体属性（如 `transition-colors`/`transition-opacity`），减少不必要的 GPU 合成。此步可选，不阻塞本 change 交付。（由后续 `fe-token-escape-sweep` / PR #952 覆盖）
+- [x] 5.2 将 `duration-300` 等硬编码 Tailwind duration 替换为 `duration-[var(--duration-normal)]`（可选，为后续 Token 化铺路）。（N/A：本 change 不阻塞，保留后续统一治理）
 
 ## 6. Evidence
 
@@ -88,4 +88,4 @@
 - [x] 6.2 记录 RUN_LOG：Green 阶段 3 个测试全部通过的输出
 - [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
 - [x] 6.4 记录 Dependency Sync Check（N/A）
-- [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
+- [x] 6.5 Main Session Audit（仅在 Apply 阶段需要）

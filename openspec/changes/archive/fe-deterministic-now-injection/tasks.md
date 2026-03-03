@@ -83,4 +83,4 @@
 - [x] 6.2 记录 RUN_LOG：Green 阶段 6 个测试全部通过的输出截取
 - [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
 - [x] 6.4 记录 Dependency Sync Check（N/A）
-- [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
+- [x] 6.5 Main Session Audit（仅在 Apply 阶段需要）
