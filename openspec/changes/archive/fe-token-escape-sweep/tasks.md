@@ -76,4 +76,4 @@
 - [x] 6.2 记录 RUN_LOG：Green 阶段清扫后计数 + guard 通过输出
 - [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败（254 files / 1758 tests）
 - [x] 6.4 记录 Dependency Sync Check（N/A）
-- [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
+- [x] 6.5 Main Session Audit（仅在 Apply 阶段需要）
