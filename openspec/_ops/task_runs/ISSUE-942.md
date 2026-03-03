@@ -50,3 +50,20 @@ No `aria-relevant` needed — defaults are appropriate.
 ### Regression + Typecheck
 - `pnpm -C apps/desktop test:run`: 250 files, 1754 tests — ALL PASS
 - `pnpm typecheck`: 0 errors
+
+## Main Session Audit
+
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: 8cc68841f75e7abed59079cf2f93cda838378e80
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
+
+### 审计结论
+
+1. Delta Spec 两个 Scenario 全部被测试覆盖（S1–S4 映射 4 个文件 8 个 test），Spec-Compliance PASS
+2. 代码变更仅涉及 aria-live 属性添加（4 处源文件，共 +7 行），无功能逻辑变更，无 any，无原始色值，Code-Quality PASS
+3. 定向测试 4 files / 8 tests 通过 + 全量回归 250 files / 1754 tests 通过 + typecheck 0 errors，Fresh-Verification PASS
+4. Toast variant=error 正确分流 assertive，其余 polite；AiPanel aria-atomic=false 避免逐字播报
