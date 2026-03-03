@@ -1,11 +1,9 @@
 # ISSUE-927: fe-hotkeys-shortcuts-unification
 
-| 字段        | 值                                           |
-| ----------- | -------------------------------------------- |
-| Issue       | #927                                         |
-| Branch      | task/927-fe-hotkeys-unification               |
-| Change      | fe-hotkeys-shortcuts-unification              |
-| PR          | https://github.com/Leeky1017/CreoNow/pull/931 |
+- Issue: #927
+- Branch: task/927-fe-hotkeys-unification
+- Change: fe-hotkeys-shortcuts-unification
+- PR: https://github.com/Leeky1017/CreoNow/pull/931
 
 ## Dependency Sync Check
 - 上游 `fe-editor-advanced-interactions`: PR #918 已合并 main ✓，无漂移
@@ -43,3 +41,13 @@ Tests       1687 passed (1687)
 Duration    42.73s
 ```
 Zero regressions.
+
+
+## Main Session Audit
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: PENDING_SHA
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
