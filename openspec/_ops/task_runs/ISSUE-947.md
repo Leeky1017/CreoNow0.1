@@ -5,7 +5,7 @@
 - Issue: #947
 - Branch: `task/947-fe-reduced-motion-respect`
 - Change: `fe-reduced-motion-respect`
-- PR: TBD
+- PR: https://github.com/Leeky1017/CreoNow/pull/950
 - Agent: Worker-6-1
 
 ## Dependency Sync Check
