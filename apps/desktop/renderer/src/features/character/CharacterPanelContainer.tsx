@@ -179,7 +179,7 @@ export function CharacterPanelContainer(
           <button
             type="button"
             onClick={() => void handleCreate()}
-            className="px-4 py-2 text-sm font-medium bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] rounded-[var(--radius-md)] hover:opacity-90 transition-opacity"
+            className="focus-ring px-4 py-2 text-sm font-medium bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] rounded-[var(--radius-md)] hover:opacity-90 transition-opacity"
           >
             Create Character
           </button>

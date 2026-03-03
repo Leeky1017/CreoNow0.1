@@ -9,7 +9,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
     data-testid="character-card-list"
   >
     <button
-      class="w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+      class="focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
       data-testid="character-card-c-1"
       type="button"
     >
@@ -66,7 +66,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       </div>
     </button>
     <button
-      class="w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+      class="focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
       data-testid="character-card-c-2"
       type="button"
     >
@@ -143,7 +143,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         暂无角色，开始创建你的第一个角色
       </p>
       <button
-        class="px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
+        class="focus-ring px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
         type="button"
       >
         创建角色
@@ -162,7 +162,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
     data-testid="character-card-list"
   >
     <button
-      class="w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+      class="focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
       data-testid="character-card-c-partial"
       type="button"
     >

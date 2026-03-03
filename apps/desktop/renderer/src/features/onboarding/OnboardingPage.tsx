@@ -62,7 +62,7 @@ function LanguageStep(props: {
             type="button"
             data-testid={`onboarding-lang-${lang.value}`}
             onClick={() => props.onSelect(lang.value)}
-            className={`flex items-center gap-4 rounded-[var(--radius-lg)] border p-5 text-left transition-all duration-[var(--duration-fast)] ${
+            className={`focus-ring flex items-center gap-4 rounded-[var(--radius-lg)] border p-5 text-left transition-all duration-[var(--duration-fast)] ${
               props.selected === lang.value
                 ? "border-[var(--color-fg-accent)] bg-[var(--color-bg-selected)]"
                 : "border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)]"
