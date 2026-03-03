@@ -91,7 +91,7 @@ $ pnpm -C apps/desktop test:run InlineDiffControls
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 340f7932c2a538f2efff4ad59c1075fec0a08658
+- Reviewed-HEAD-SHA: 3bd7d1245e2694dfb999f080f55d4c733734340e
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
