@@ -1,12 +1,12 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-02 23:24
+更新时间：2026-03-02 11:25
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
 ## 执行策略
 
-- 当前活跃 change 数量为 **13**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-rightpanel-ai-tabbar-layout`、`fe-rightpanel-ai-guidance-and-style`、`fe-spec-drift-iconbar-rightpanel-alignment`、`fe-hotfix-searchpanel-backdrop-close`、`fe-leftpanel-dialog-migration`、`fe-cleanup-proxysection-and-mocks`、`fe-ai-panel-toggle-button`、`fe-ipc-open-folder-contract`、`fe-ui-open-folder-entrypoints`、`fe-dashboard-welcome-merge-and-ghost-actions`、`fe-project-image-cropper`、`fe-error-boundary-partitioning`、`fe-skeleton-loading-states`、`fe-i18n-language-switcher-foundation`、`fe-onboarding-flow-refresh`、`fe-searchpanel-tokenized-rewrite`、`fe-zenmode-token-escape-cleanup`、`fe-dashboard-herocard-responsive-layout`、`fe-lucide-icon-unification`、`fe-theme-switch-smoothing`、`fe-desktop-native-binding-packaging`、`fe-desktop-window-lifecycle-uplift`、`fe-composites-p0-panel-and-command-items`、`fe-editor-tokenization-selection-and-spacing`、`fe-editor-advanced-interactions` 已归档）。
+- 当前活跃 change 数量为 **23**（前端整改拆分，基于 `docs/frontend-overhaul-plan.md` §七，`fe-rightpanel-ai-tabbar-layout`、`fe-rightpanel-ai-guidance-and-style`、`fe-spec-drift-iconbar-rightpanel-alignment`、`fe-hotfix-searchpanel-backdrop-close`、`fe-leftpanel-dialog-migration`、`fe-cleanup-proxysection-and-mocks`、`fe-ai-panel-toggle-button`、`fe-ipc-open-folder-contract`、`fe-ui-open-folder-entrypoints`、`fe-dashboard-welcome-merge-and-ghost-actions`、`fe-project-image-cropper`、`fe-error-boundary-partitioning`、`fe-skeleton-loading-states`、`fe-i18n-language-switcher-foundation`、`fe-onboarding-flow-refresh` 已归档）。
 - 执行模式：**4 批次渐进推进**（第一批核心体验 → 第二批功能补全 → 第三批设计系统回归 → 第四批独立 Issue 收口）。
 - 规则：
   - 任一 change 开始 Red 前，必须完成该 change 的依赖同步检查（Dependency Sync Check）。
@@ -78,11 +78,11 @@
 
 | Lane | 顺序 | Change | 文件冲突簇 | 依赖 | 状态 |
 |------|------|--------|-----------|------|------|
-| A | 3a-1 | `fe-searchpanel-tokenized-rewrite` | SearchPanel + `main.css` 簇 | 前置 hotfix 已归档 | 已完成并归档（PR #898） |
-| B | 3a-1 | `fe-zenmode-token-escape-cleanup` | ZenMode + `tokens.css` 簇 | — | 已完成并归档（PR #899） |
-| C | 3a-1 | `fe-dashboard-herocard-responsive-layout` | DashboardPage 簇 | — | 已完成并归档（PR #900） |
-| A | 3b-1 | `fe-lucide-icon-unification` | icon import 广撒网簇 | Wave 3a 完成后（分别与 searchpanel/zenmode/herocard 共享文件） | 已完成并归档（PR #909） |
-| B | 3b-1 | `fe-theme-switch-smoothing` | `main.css` + `tokens.css` 簇 | Wave 3a 完成后（与 searchpanel/zenmode 共享样式文件） | 已完成并归档（PR #910） |
+| A | 3a-1 | `fe-searchpanel-tokenized-rewrite` | SearchPanel + `main.css` 簇 | 前置 hotfix 已归档 | PR #898 待审计 |
+| B | 3a-1 | `fe-zenmode-token-escape-cleanup` | ZenMode + `tokens.css` 簇 | — | PR #899 待审计 |
+| C | 3a-1 | `fe-dashboard-herocard-responsive-layout` | DashboardPage 簇 | — | PR #900 待审计 |
+| A | 3b-1 | `fe-lucide-icon-unification` | icon import 广撒网簇 | Wave 3a 完成后（分别与 searchpanel/zenmode/herocard 共享文件） | 待执行 |
+| B | 3b-1 | `fe-theme-switch-smoothing` | `main.css` + `tokens.css` 簇 | Wave 3a 完成后（与 searchpanel/zenmode 共享样式文件） | 待执行 |
 | A | 3c-1 | `fe-feature-focus-visible-coverage` | AiPanel/SearchPanel/Dashboard + `main.css` + `tokens.css` 簇 | Wave 3b 完成后 | 待执行 |
 | A | 3c-2 | `fe-visual-noise-reduction` | AiPanel/Dashboard + `tokens.css` 簇 | `fe-feature-focus-visible-coverage`；且需 `fe-rightpanel-ai-tabbar-layout`, `fe-rightpanel-ai-guidance-and-style`, `fe-leftpanel-dialog-migration` | 待执行 |
 | A | 3c-3 | `fe-reduced-motion-respect` | AiPanel/SearchPanel + `main.css` + `tokens.css` 簇 | `fe-visual-noise-reduction` | 待执行 |
@@ -108,12 +108,12 @@
 
 | Lane | 顺序 | Change | 文件冲突簇 | 依赖 | 状态 |
 |------|------|--------|-----------|------|------|
-| N1 | 4-0 | `fe-desktop-native-binding-packaging` | 主进程独立簇 | — | 已完成并归档（PR #911） |
-| N2 | 4-0 | `fe-desktop-window-lifecycle-uplift` | 主进程独立簇 | — | 已完成并归档（PR #912） |
+| N1 | 4-0 | `fe-desktop-native-binding-packaging` | 主进程独立簇 | — | 待执行 |
+| N2 | 4-0 | `fe-desktop-window-lifecycle-uplift` | 主进程独立簇 | — | 待执行 |
 | A | 4a-1 | `fe-i18n-language-switcher-foundation` | i18n/Onboarding/SettingsGeneral 簇 | — | 已完成并归档（PR #843） |
-| B | 4a-1 | `fe-composites-p0-panel-and-command-items` | SearchPanel/AiPanel/CommandPalette/FileTree 簇 | — | 已完成并归档（PR #919） |
-| C | 4a-1 | `fe-editor-tokenization-selection-and-spacing` | `tokens.css` + `main.css` + typography 簇 | — | 已完成并归档（PR #917） |
-| D | 4a-1 | `fe-editor-advanced-interactions` | EditorPane 簇 | — | 已完成并归档（PR #918） |
+| B | 4a-1 | `fe-composites-p0-panel-and-command-items` | SearchPanel/AiPanel/CommandPalette/FileTree 簇 | — | 待执行 |
+| C | 4a-1 | `fe-editor-tokenization-selection-and-spacing` | `tokens.css` + `main.css` + typography 簇 | — | 待执行 |
+| D | 4a-1 | `fe-editor-advanced-interactions` | EditorPane 簇 | — | 待执行 |
 | A | 4b-1 | `fe-i18n-core-pages-keying` | SearchPanel/AiPanel/CommandPalette/Dashboard/Onboarding 簇 | `fe-i18n-language-switcher-foundation` | 待执行 |
 | B | 4b-1 | `fe-composites-p1-search-and-forms` | SettingsGeneral + Forms 簇 | `fe-composites-p0-panel-and-command-items` | 待执行 |
 | C | 4b-1 | `fe-composites-p2-empties-and-confirms` | FileTreePanel + Empty/Confirm 簇 | `fe-composites-p0-panel-and-command-items` | 待执行 |
@@ -182,12 +182,12 @@
   fe-i18n-language-switcher-foundation (第四批) ──→ fe-onboarding-flow-refresh
 
 第三批（3 波推进）
-  Wave 3a: fe-searchpanel-tokenized-rewrite ∥ fe-zenmode-token-escape-cleanup ∥ fe-dashboard-herocard-responsive-layout（已完成并归档，PR #898/#899/#900）
-  Wave 3b: fe-lucide-icon-unification ∥ fe-theme-switch-smoothing（已完成并归档，PR #909/#910）
+  Wave 3a: fe-searchpanel-tokenized-rewrite ∥ fe-zenmode-token-escape-cleanup ∥ fe-dashboard-herocard-responsive-layout
+  Wave 3b: fe-lucide-icon-unification ∥ fe-theme-switch-smoothing
   Wave 3c: fe-feature-focus-visible-coverage ──→ fe-visual-noise-reduction ──→ fe-reduced-motion-respect
 
 第四批（独立 lane + 冲突簇波次）
-  独立 lane: fe-desktop-native-binding-packaging ∥ fe-desktop-window-lifecycle-uplift（已完成并归档，PR #911/#912）
+  独立 lane: fe-desktop-native-binding-packaging ∥ fe-desktop-window-lifecycle-uplift
 
   Wave 4a:
     fe-i18n-language-switcher-foundation
@@ -225,15 +225,12 @@
 - `fe-ipc-open-folder-contract`：已归档到 `openspec/changes/archive/fe-ipc-open-folder-contract`（merge commit `91e56f28`，PR #830）。
 - `fe-ui-open-folder-entrypoints`：已归档到 `openspec/changes/archive/fe-ui-open-folder-entrypoints`（merge commit `91e56f28`，PR #830）。
 - `fe-dashboard-welcome-merge-and-ghost-actions`：已归档到 `openspec/changes/archive/fe-dashboard-welcome-merge-and-ghost-actions`（merge commit `91e56f28`，PR #830）。
-- `fe-composites-p0-panel-and-command-items`：已归档到 `openspec/changes/archive/fe-composites-p0-panel-and-command-items`（merge commit `f798c553`，PR #919）。
-- `fe-editor-tokenization-selection-and-spacing`：已归档到 `openspec/changes/archive/fe-editor-tokenization-selection-and-spacing`（merge commit `704f0bce`，PR #917）。
-- `fe-editor-advanced-interactions`：已归档到 `openspec/changes/archive/fe-editor-advanced-interactions`（merge commit `70bdeee8`，PR #918）。
 
-## 本次同步说明（ISSUE-922）
+## 依赖说明
 
-- 当前子任务：`ISSUE-922`（Wave 4a 三项归档与 EO 同步）。
-- 依赖关系：`PR #919`、`PR #917`、`PR #918` 已按串行顺序合并；本次 closeout 负责归档与执行顺序文档收口。
-- 同步结论：Wave 4a 三项已“合并 + 归档”，后续可按依赖推进 Wave 4b（`fe-composites-p1/p2`、`fe-hotkeys-shortcuts-unification`、`fe-editor-inline-diff-decoration-integration`、`fe-i18n-core-pages-keying`）。
+- 当前子任务：`ISSUE-833`（归档 PR #830 对应 change 与治理同步）。
+- 依赖关系：`dashboard` 收尾依赖的 open-folder 链路已在 PR #830 合并，并完成三项 change 归档迁移。
+- 同步结论：第一批收尾与第二批 open-folder 链路均已“合并 + 归档”，执行顺序文档已与实际状态对齐。
 
 ## Owner 决策阻塞项
 

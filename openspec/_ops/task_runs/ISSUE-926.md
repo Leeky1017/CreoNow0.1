@@ -14,10 +14,42 @@
 ## Runs
 
 ### Red
-（待记录）
+```
+Test Files  3 failed (3)
+      Tests  no tests
+
+FAIL  EmptyState.test.tsx — Failed to resolve import "./EmptyState"
+FAIL  ConfirmDialog.test.tsx — Failed to resolve import "./ConfirmDialog"
+FAIL  InfoBar.test.tsx — Failed to resolve import "./InfoBar"
+```
+所有测试如期失败：源模块不存在。Red 确认 ✓
 
 ### Green
-（待记录）
+```
+pnpm -C apps/desktop test:run -- --reporter=verbose components/composites/EmptyState
+ ✓ renderer/src/components/composites/EmptyState.test.tsx (4 tests) 55ms
+
+pnpm -C apps/desktop test:run -- --reporter=verbose components/composites/ConfirmDialog
+ ✓ renderer/src/components/composites/ConfirmDialog.test.tsx (5 tests) 580ms
+
+pnpm -C apps/desktop test:run -- --reporter=verbose components/composites/InfoBar
+ ✓ renderer/src/components/composites/InfoBar.test.tsx (4 tests) 268ms
+
+Composite tests: 13/13 passed ✓
+```
+
+### Feature Regression
+```
+pnpm -C apps/desktop test:run -- --reporter=verbose features/files/FileTreePanel
+ — FileTreePanel empty-state migration OK ✓
+pnpm -C apps/desktop test:run -- --reporter=verbose features/character/
+ — CharacterCardList + DeleteConfirmDialog migration OK ✓
+```
 
 ### Full Regression
-（待记录）
+```
+Test Files  228 passed (228)
+      Tests  1687 passed (1687)
+   Duration  45.65s
+```
+全量回归零失败 ✓
