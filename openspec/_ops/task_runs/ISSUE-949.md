@@ -86,3 +86,20 @@ N/A — 所有前置依赖已归档合入 main。当前 worktree 已从最新 `o
 ## Blockers
 
 None.
+
+## Main Session Audit
+
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: WILL_BE_SET_BY_RESIGN
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
+
+### 审计要点
+
+1. **Spec 对齐**：4 个 Scenario（S1 color / S2 z-index / S3 motion / S4 screen）全部由 scanning guard 测试覆盖并通过。白名单机制合理（SettingsAppearancePage 色板数据 + DiffView 语义高亮 + tippy.js zIndex 类型约束）。
+2. **代码质量**：37 处 hex/rgba 替换为语义 token（27 处清扫 + 10 处白名单）；10 处数字 z-index 替换为 `var(--z-*)` token（1 处白名单）；24 处 `transition-all` 替换为精确属性（`transition-colors`/`transition-opacity`/`transition-[filter]` 等）。新增 `--z-overlay` 和 `--color-bg-overlay` token 命名合理。注释中的 issue 引用 `#571` 通过 `collectPatternViolationsStripped` 正确排除。
+3. **回归验证**：254 test files / 1758 tests 全绿，tsc --noEmit 零报错。
+4. **治理完整性**：RUN_LOG 包含 Red/Green/回归证据；Rulebook task 结构完整（含 .metadata.json）；EXECUTION_ORDER.md 已更新。
