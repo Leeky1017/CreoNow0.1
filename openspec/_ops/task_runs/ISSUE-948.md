@@ -1,11 +1,11 @@
 # RUN_LOG: ISSUE-948
 
-更新时间：2026-03-03 22:30
+更新时间：2026-03-04 02:15
 
 - Issue: #948
 - Branch: `task/948-fe-deterministic-now-injection`
 - Change: `fe-deterministic-now-injection`
-- PR: TBD
+- PR: https://github.com/Leeky1017/CreoNow/pull/951
 - Agent: Worker-6-2
 - Reviewed-HEAD-SHA: bdb64fbb0288a3c2d75358ec015b93730d52ccb5
 
