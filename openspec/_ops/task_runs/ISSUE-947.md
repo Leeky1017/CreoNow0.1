@@ -69,7 +69,7 @@ $ pnpm -C apps/desktop exec tsc --noEmit
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 2b11718bba025677de3e3519255d9c146ee58354
+- Reviewed-HEAD-SHA: 6108cfd631f3e410c3a74122a0b96885e4bce720
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
