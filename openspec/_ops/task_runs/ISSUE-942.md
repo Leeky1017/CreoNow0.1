@@ -5,7 +5,7 @@
 - Issue: #942
 - Branch: `task/942-fe-accessibility-aria-live`
 - Change: `fe-accessibility-aria-live`
-- PR: (待回填)
+- PR: https://github.com/Leeky1017/CreoNow/pull/946
 
 ## Plan
 
@@ -54,7 +54,7 @@ No `aria-relevant` needed — defaults are appropriate.
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 8cc68841f75e7abed59079cf2f93cda838378e80
+- Reviewed-HEAD-SHA: 5e49924ed7613b171b86a859ccf997ca73a77d5b
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
