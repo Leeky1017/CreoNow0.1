@@ -1,12 +1,12 @@
-# RUN_LOG — Issue #947: fe-reduced-motion-respect
+# RUN_LOG: ISSUE-947
 
-| Field    | Value                                          |
-| -------- | ---------------------------------------------- |
-| Issue    | #947                                           |
-| Branch   | `task/947-fe-reduced-motion-respect`           |
-| Change   | `openspec/changes/fe-reduced-motion-respect`   |
-| PR       | TBD                                            |
-| Agent    | Worker-6-1                                     |
+更新时间：2026-03-03 22:00
+
+- Issue: #947
+- Branch: `task/947-fe-reduced-motion-respect`
+- Change: `fe-reduced-motion-respect`
+- PR: TBD
+- Agent: Worker-6-1
 
 ## Dependency Sync Check
 
