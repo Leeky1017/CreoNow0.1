@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-02 23:24
+更新时间：2026-03-03 11:20
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -83,7 +83,7 @@
 | C | 3a-1 | `fe-dashboard-herocard-responsive-layout` | DashboardPage 簇 | — | 已完成并归档（PR #900） |
 | A | 3b-1 | `fe-lucide-icon-unification` | icon import 广撒网簇 | Wave 3a 完成后（分别与 searchpanel/zenmode/herocard 共享文件） | 已完成并归档（PR #909） |
 | B | 3b-1 | `fe-theme-switch-smoothing` | `main.css` + `tokens.css` 簇 | Wave 3a 完成后（与 searchpanel/zenmode 共享样式文件） | 已完成并归档（PR #910） |
-| A | 3c-1 | `fe-feature-focus-visible-coverage` | AiPanel/SearchPanel/Dashboard + `main.css` + `tokens.css` 簇 | Wave 3b 完成后 | 进行中（PR 待创建） |
+| A | 3c-1 | `fe-feature-focus-visible-coverage` | AiPanel/SearchPanel/Dashboard + `main.css` + `tokens.css` 簇 | Wave 3b 完成后 | 已完成（PR #928，待归档） |
 | A | 3c-2 | `fe-visual-noise-reduction` | AiPanel/Dashboard + `tokens.css` 簇 | `fe-feature-focus-visible-coverage`；且需 `fe-rightpanel-ai-tabbar-layout`, `fe-rightpanel-ai-guidance-and-style`, `fe-leftpanel-dialog-migration` | 待执行 |
 | A | 3c-3 | `fe-reduced-motion-respect` | AiPanel/SearchPanel + `main.css` + `tokens.css` 簇 | `fe-visual-noise-reduction` | 待执行 |
 
@@ -115,10 +115,10 @@
 | C | 4a-1 | `fe-editor-tokenization-selection-and-spacing` | `tokens.css` + `main.css` + typography 簇 | — | 已完成并归档（PR #917） |
 | D | 4a-1 | `fe-editor-advanced-interactions` | EditorPane 簇 | — | 已完成并归档（PR #918） |
 | A | 4b-1 | `fe-i18n-core-pages-keying` | SearchPanel/AiPanel/CommandPalette/Dashboard/Onboarding 簇 | `fe-i18n-language-switcher-foundation` | 待执行 |
-| B | 4b-1 | `fe-composites-p1-search-and-forms` | SettingsGeneral + Forms 簇 | `fe-composites-p0-panel-and-command-items` | 待执行 |
-| C | 4b-1 | `fe-composites-p2-empties-and-confirms` | FileTreePanel + Empty/Confirm 簇 | `fe-composites-p0-panel-and-command-items` | 待执行 |
+| B | 4b-1 | `fe-composites-p1-search-and-forms` | SettingsGeneral + Forms 簇 | `fe-composites-p0-panel-and-command-items` | 已完成（PR #929，待归档） |
+| C | 4b-1 | `fe-composites-p2-empties-and-confirms` | FileTreePanel + Empty/Confirm 簇 | `fe-composites-p0-panel-and-command-items` | 已完成（PR #930，待归档） |
 | D | 4b-1 | `fe-editor-inline-diff-decoration-integration` | VersionHistoryContainer + `tokens.css` 簇 | — | 待执行 |
-| E | 4b-1 | `fe-hotkeys-shortcuts-unification` | EditorPane 簇 | `fe-editor-advanced-interactions` 完成后（共享 `EditorPane.tsx`） | 待执行 |
+| E | 4b-1 | `fe-hotkeys-shortcuts-unification` | EditorPane 簇 | `fe-editor-advanced-interactions` 完成后（共享 `EditorPane.tsx`） | 已完成（PR #931，待归档） |
 | A | 4c-1 | `fe-accessibility-aria-live` | AiPanel/SearchPanel/ChatHistory 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying` 完成后（共享 `AiPanel.tsx`/`SearchPanel.tsx`） | 待执行 |
 | B | 4c-1 | `fe-command-palette-search-uplift` | CommandPalette 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying` 完成后（共享 `CommandPalette.tsx`） | 待执行 |
 | C | 4c-1 | `fe-editor-context-menu-and-tooltips` | EditorPane + Tooltip 簇 | `fe-editor-advanced-interactions`, `fe-hotkeys-shortcuts-unification` 完成后（共享 `EditorPane.tsx`） | 待执行 |
@@ -184,7 +184,7 @@
 第三批（3 波推进）
   Wave 3a: fe-searchpanel-tokenized-rewrite ∥ fe-zenmode-token-escape-cleanup ∥ fe-dashboard-herocard-responsive-layout（已完成并归档，PR #898/#899/#900）
   Wave 3b: fe-lucide-icon-unification ∥ fe-theme-switch-smoothing（已完成并归档，PR #909/#910）
-  Wave 3c: fe-feature-focus-visible-coverage ──→ fe-visual-noise-reduction ──→ fe-reduced-motion-respect
+  Wave 3c: fe-feature-focus-visible-coverage（已完成，PR #928）──→ fe-visual-noise-reduction ──→ fe-reduced-motion-respect
 
 第四批（独立 lane + 冲突簇波次）
   独立 lane: fe-desktop-native-binding-packaging ∥ fe-desktop-window-lifecycle-uplift（已完成并归档，PR #911/#912）
@@ -197,9 +197,9 @@
 
   Wave 4b:
     fe-i18n-language-switcher-foundation ──→ fe-i18n-core-pages-keying
-    fe-composites-p0-panel-and-command-items ──→ fe-composites-p1-search-and-forms
-                                          ──→ fe-composites-p2-empties-and-confirms
-    fe-editor-advanced-interactions ──→ fe-hotkeys-shortcuts-unification
+    fe-composites-p0-panel-and-command-items ──→ fe-composites-p1-search-and-forms（已完成，PR #929）
+                                          ──→ fe-composites-p2-empties-and-confirms（已完成，PR #930）
+    fe-editor-advanced-interactions ──→ fe-hotkeys-shortcuts-unification（已完成，PR #931）
     fe-editor-inline-diff-decoration-integration
 
   Wave 4c:
@@ -229,11 +229,11 @@
 - `fe-editor-tokenization-selection-and-spacing`：已归档到 `openspec/changes/archive/fe-editor-tokenization-selection-and-spacing`（merge commit `704f0bce`，PR #917）。
 - `fe-editor-advanced-interactions`：已归档到 `openspec/changes/archive/fe-editor-advanced-interactions`（merge commit `70bdeee8`，PR #918）。
 
-## 本次同步说明（ISSUE-922）
+## 本次同步说明（Round 3 串行合并收口）
 
-- 当前子任务：`ISSUE-922`（Wave 4a 三项归档与 EO 同步）。
-- 依赖关系：`PR #919`、`PR #917`、`PR #918` 已按串行顺序合并；本次 closeout 负责归档与执行顺序文档收口。
-- 同步结论：Wave 4a 三项已“合并 + 归档”，后续可按依赖推进 Wave 4b（`fe-composites-p1/p2`、`fe-hotkeys-shortcuts-unification`、`fe-editor-inline-diff-decoration-integration`、`fe-i18n-core-pages-keying`）。
+- 当前子任务：`ISSUE-924`、`ISSUE-925`、`ISSUE-926`、`ISSUE-927`（`PR #928/#929/#930/#931` 串行合并）。
+- 依赖关系：`fe-feature-focus-visible-coverage`、`fe-composites-p1-search-and-forms`、`fe-composites-p2-empties-and-confirms`、`fe-hotkeys-shortcuts-unification` 均已完成实现与门禁通过。
+- 同步结论：以上四项状态已更新为“已完成（待归档）”；Wave 4c 以后可在其余前置满足后继续推进。
 
 ## Owner 决策阻塞项
 
