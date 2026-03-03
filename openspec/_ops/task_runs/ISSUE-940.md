@@ -7,6 +7,16 @@
 - Change: `fe-visual-noise-reduction`
 - PR: https://github.com/Leeky1017/CreoNow/pull/943
 
+## Plan
+
+- [x] Dependency Sync Check（前置 change 已归档）
+- [x] Red: 编写 visual-noise-guard 守卫测试（S1/S2/S3）
+- [x] Green: 移除非功能性边框、统一 separator token
+- [x] 全量回归 + typecheck
+- [x] Commit + push → PR #943
+- [x] Main Session Audit
+- [x] Independent Review
+
 ## Dependency Sync Check
 
 前置依赖均已合并到 main：
