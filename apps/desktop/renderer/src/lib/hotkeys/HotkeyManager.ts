@@ -27,13 +27,21 @@ export interface KeyCombo {
   modKey?: boolean;
 }
 
+/**
+ * Handler return type.
+ *
+ * - Returning `void` (or `undefined`) means "handled — prevent default."
+ * - Returning `false` means "not handled — let the event propagate normally."
+ */
+export type HotkeyHandlerResult = void | false;
+
 /** Internal registration record. */
 interface Registration {
   id: string;
   combo: KeyCombo;
   scope: HotkeyScope;
   priority: number;
-  handler: (event: KeyboardEvent) => void;
+  handler: (event: KeyboardEvent) => HotkeyHandlerResult;
 }
 
 /**
@@ -89,7 +97,7 @@ export class HotkeyManager {
     combo: KeyCombo,
     scope: HotkeyScope,
     priority: number,
-    handler: (event: KeyboardEvent) => void,
+    handler: (event: KeyboardEvent) => HotkeyHandlerResult,
   ): void {
     // Lazy-init: attach listener on first registration if not already active.
     if (!this.listener) {
@@ -167,9 +175,14 @@ export class HotkeyManager {
     candidates.sort((a, b) => b.priority - a.priority);
 
     const winner = candidates[0];
-    e.preventDefault();
-    e.stopPropagation();
-    winner.handler(e);
+    const result = winner.handler(e);
+
+    // If handler returns false, let the event propagate normally (e.g. fall
+    // through to native undo when no AI checkpoint is active).
+    if (result !== false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
   }
 }
 

@@ -900,11 +900,11 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
     "editor:ai-undo",
     { key: "z", modKey: true },
     React.useCallback(() => {
-      if (!editorReady) return;
-      // Only intercept when a checkpoint exists; otherwise fall through
-      // to TipTap's built-in undo. Note: HotkeyManager calls preventDefault,
-      // so we only register this when the checkpoint is active.
-      handleAiUndo();
+      if (!editorReady) return false;
+      // Only intercept when a checkpoint exists; otherwise return false to
+      // let the event propagate to TipTap's built-in undo.
+      if (!handleAiUndo()) return false;
+      return undefined;
     }, [editorReady, handleAiUndo]),
     "editor",
     5,

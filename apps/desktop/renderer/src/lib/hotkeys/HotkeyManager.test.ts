@@ -158,4 +158,52 @@ describe("HotkeyManager", () => {
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "s" }));
     expect(handler).not.toHaveBeenCalled();
   });
+
+  it("does not call preventDefault when handler returns false", () => {
+    const handler = vi.fn(() => false as const);
+    manager.register(
+      "test-passthrough",
+      { key: "z", modKey: true },
+      "global",
+      1,
+      handler,
+    );
+
+    const event = new KeyboardEvent("keydown", {
+      key: "z",
+      ctrlKey: true,
+      cancelable: true,
+    });
+    const preventSpy = vi.spyOn(event, "preventDefault");
+    const stopSpy = vi.spyOn(event, "stopPropagation");
+
+    document.dispatchEvent(event);
+
+    expect(handler).toHaveBeenCalledOnce();
+    expect(preventSpy).not.toHaveBeenCalled();
+    expect(stopSpy).not.toHaveBeenCalled();
+  });
+
+  it("calls preventDefault when handler returns undefined", () => {
+    const handler = vi.fn();
+    manager.register(
+      "test-prevent",
+      { key: "s", modKey: true },
+      "global",
+      1,
+      handler,
+    );
+
+    const event = new KeyboardEvent("keydown", {
+      key: "s",
+      ctrlKey: true,
+      cancelable: true,
+    });
+    const preventSpy = vi.spyOn(event, "preventDefault");
+
+    document.dispatchEvent(event);
+
+    expect(handler).toHaveBeenCalledOnce();
+    expect(preventSpy).toHaveBeenCalledOnce();
+  });
 });
