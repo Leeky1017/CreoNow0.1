@@ -1,12 +1,12 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-03 16:00
+更新时间：2026-03-03 15:20
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
 ## 执行策略
 
-- 当前活跃 change 数量为 **9**（`fe-accessibility-aria-live`、`fe-command-palette-search-uplift`、`fe-deterministic-now-injection`、`fe-editor-context-menu-and-tooltips`、`fe-editor-inline-diff-decoration-integration`、`fe-i18n-core-pages-keying`、`fe-reduced-motion-respect`、`fe-token-escape-sweep`、`fe-visual-noise-reduction`）。
+- 当前活跃 change 数量为 **6**（`fe-accessibility-aria-live`、`fe-command-palette-search-uplift`、`fe-deterministic-now-injection`、`fe-reduced-motion-respect`、`fe-token-escape-sweep`、`fe-visual-noise-reduction`）。
 - 执行模式：**4 批次渐进推进**（第一批核心体验 → 第二批功能补全 → 第三批设计系统回归 → 第四批独立 Issue 收口）。
 - 规则：
   - 任一 change 开始 Red 前，必须完成该 change 的依赖同步检查（Dependency Sync Check）。
@@ -114,16 +114,16 @@
 | B | 4a-1 | `fe-composites-p0-panel-and-command-items` | SearchPanel/AiPanel/CommandPalette/FileTree 簇 | — | 已完成并归档（PR #919） |
 | C | 4a-1 | `fe-editor-tokenization-selection-and-spacing` | `tokens.css` + `main.css` + typography 簇 | — | 已完成并归档（PR #917） |
 | D | 4a-1 | `fe-editor-advanced-interactions` | EditorPane 簇 | — | 已完成并归档（PR #918） |
-| A | 4b-1 | `fe-i18n-core-pages-keying` | SearchPanel/AiPanel/CommandPalette/Dashboard/Onboarding 簇 | `fe-i18n-language-switcher-foundation` | 待执行 |
+| A | 4b-1 | `fe-i18n-core-pages-keying` | SearchPanel/AiPanel/CommandPalette/Dashboard/Onboarding 簇 | `fe-i18n-language-switcher-foundation` | 已完成并归档（PR #937） |
 | B | 4b-1 | `fe-composites-p1-search-and-forms` | SettingsGeneral + Forms 簇 | `fe-composites-p0-panel-and-command-items` | 已完成并归档（PR #929） |
 | C | 4b-1 | `fe-composites-p2-empties-and-confirms` | FileTreePanel + Empty/Confirm 簇 | `fe-composites-p0-panel-and-command-items` | 已完成并归档（PR #930） |
-| D | 4b-1 | `fe-editor-inline-diff-decoration-integration` | VersionHistoryContainer + `tokens.css` 簇 | — | PR #938 审计整改中 |
+| D | 4b-1 | `fe-editor-inline-diff-decoration-integration` | VersionHistoryContainer + `tokens.css` 簇 | — | 已完成并归档（PR #938） |
 | E | 4b-1 | `fe-hotkeys-shortcuts-unification` | EditorPane 簇 | `fe-editor-advanced-interactions` 完成后（共享 `EditorPane.tsx`） | 已完成并归档（PR #931） |
-| A | 4c-1 | `fe-accessibility-aria-live` | AiPanel/SearchPanel/ChatHistory 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying` 完成后（共享 `AiPanel.tsx`/`SearchPanel.tsx`） | 待执行 |
-| B | 4c-1 | `fe-command-palette-search-uplift` | CommandPalette 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying` 完成后（共享 `CommandPalette.tsx`） | 待执行 |
-| C | 4c-1 | `fe-editor-context-menu-and-tooltips` | EditorPane + Tooltip 簇 | `fe-editor-advanced-interactions`, `fe-hotkeys-shortcuts-unification`（已归档）完成后（共享 `EditorPane.tsx`） | 待执行 |
-| A | 4d-1 | `fe-deterministic-now-injection` | SearchPanel/Dashboard/ChatHistory/VersionHistory 簇 | `fe-accessibility-aria-live`, `fe-i18n-core-pages-keying`, `fe-editor-inline-diff-decoration-integration` 完成后 | 待执行 |
-| A | 4e-1 | `fe-token-escape-sweep` | SearchPanel + `tokens.css` + ZenMode 簇 | `fe-deterministic-now-injection`, `fe-accessibility-aria-live`, `fe-i18n-core-pages-keying`, `fe-composites-p0-panel-and-command-items`, `fe-editor-tokenization-selection-and-spacing`, `fe-editor-inline-diff-decoration-integration` 完成后 | 待执行 |
+| A | 4c-1 | `fe-accessibility-aria-live` | AiPanel/SearchPanel/ChatHistory 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying`（已归档）完成后（共享 `AiPanel.tsx`/`SearchPanel.tsx`） | 待执行 |
+| B | 4c-1 | `fe-command-palette-search-uplift` | CommandPalette 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying`（已归档）完成后（共享 `CommandPalette.tsx`） | 待执行 |
+| C | 4c-1 | `fe-editor-context-menu-and-tooltips` | EditorPane + Tooltip 簇 | `fe-editor-advanced-interactions`, `fe-hotkeys-shortcuts-unification`（已归档）完成后（共享 `EditorPane.tsx`） | 已完成并归档（PR #939） |
+| A | 4d-1 | `fe-deterministic-now-injection` | SearchPanel/Dashboard/ChatHistory/VersionHistory 簇 | `fe-accessibility-aria-live`, `fe-i18n-core-pages-keying`（已归档）, `fe-editor-inline-diff-decoration-integration`（已归档）完成后 | 待执行 |
+| A | 4e-1 | `fe-token-escape-sweep` | SearchPanel + `tokens.css` + ZenMode 簇 | `fe-deterministic-now-injection`, `fe-accessibility-aria-live`, `fe-i18n-core-pages-keying`（已归档）, `fe-composites-p0-panel-and-command-items`, `fe-editor-tokenization-selection-and-spacing`, `fe-editor-inline-diff-decoration-integration`（已归档）完成后 | 待执行 |
 
 #### 第四批文件冲突矩阵
 
@@ -196,16 +196,16 @@
     fe-editor-advanced-interactions
 
   Wave 4b:
-    fe-i18n-language-switcher-foundation ──→ fe-i18n-core-pages-keying
+    fe-i18n-language-switcher-foundation ──→ fe-i18n-core-pages-keying（已完成并归档，PR #937）
     fe-composites-p0-panel-and-command-items ──→ fe-composites-p1-search-and-forms（已完成并归档，PR #929）
                                           ──→ fe-composites-p2-empties-and-confirms（已完成并归档，PR #930）
     fe-editor-advanced-interactions ──→ fe-hotkeys-shortcuts-unification（已完成并归档，PR #931）
-    fe-editor-inline-diff-decoration-integration
+    fe-editor-inline-diff-decoration-integration（已完成并归档，PR #938）
 
   Wave 4c:
-    fe-accessibility-aria-live              (待 comp-p0 + i18n-keying 完成)
-    fe-command-palette-search-uplift        (待 comp-p0 + i18n-keying 完成)
-    fe-editor-context-menu-and-tooltips     (待 editor-advanced + hotkeys 完成)
+    fe-accessibility-aria-live              （comp-p0 + i18n-keying 前置已满足，待执行）
+    fe-command-palette-search-uplift        （comp-p0 + i18n-keying 前置已满足，待执行）
+    fe-editor-context-menu-and-tooltips     （已完成并归档，PR #939）
 
   Wave 4d:
     fe-deterministic-now-injection          (待 a11y + i18n-keying + editor-diff 完成)
@@ -232,12 +232,15 @@
 - `fe-composites-p1-search-and-forms`：已归档到 `openspec/changes/archive/fe-composites-p1-search-and-forms`（merge commit `d623ad6e`，PR #929）。
 - `fe-composites-p2-empties-and-confirms`：已归档到 `openspec/changes/archive/fe-composites-p2-empties-and-confirms`（merge commit `5365e45a`，PR #930）。
 - `fe-hotkeys-shortcuts-unification`：已归档到 `openspec/changes/archive/fe-hotkeys-shortcuts-unification`（merge commit `fd110ee1`，PR #931）。
+- `fe-i18n-core-pages-keying`：已归档到 `openspec/changes/archive/fe-i18n-core-pages-keying`（merge commit `c1cf1879`，PR #937）。
+- `fe-editor-inline-diff-decoration-integration`：已归档到 `openspec/changes/archive/fe-editor-inline-diff-decoration-integration`（merge commit `4eaadebc`，PR #938）。
+- `fe-editor-context-menu-and-tooltips`：已归档到 `openspec/changes/archive/fe-editor-context-menu-and-tooltips`（merge commit `87512187`，PR #939）。
 
-## 本次同步说明（Round 3 串行合并收口）
+## 本次同步说明（Round 4 串行合并收口）
 
-- 当前子任务：Round 3 closeout（`PR #928/#929/#930/#931` 合并后归档与 EO 同步）。
-- 依赖关系：`fe-feature-focus-visible-coverage`、`fe-composites-p1-search-and-forms`、`fe-composites-p2-empties-and-confirms`、`fe-hotkeys-shortcuts-unification` 均已完成实现与门禁通过。
-- 同步结论：以上四项已归档到 `openspec/changes/archive/`，EO 活跃集合已收敛为 9 项；Wave 4c 以后可在其余前置满足后继续推进。
+- 当前子任务：Round 4 closeout（`PR #937/#938/#939` 串行合并后归档与 EO 同步）。
+- 依赖关系：`fe-i18n-core-pages-keying`、`fe-editor-inline-diff-decoration-integration`、`fe-editor-context-menu-and-tooltips` 均已完成实现、审计整改与门禁通过。
+- 同步结论：以上三项已归档到 `openspec/changes/archive/`，EO 活跃集合已收敛为 6 项；后续按 Wave 4c→4e 继续推进剩余变更。
 
 ## Owner 决策阻塞项
 
