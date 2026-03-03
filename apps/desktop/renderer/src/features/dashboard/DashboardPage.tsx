@@ -225,7 +225,7 @@ function ProjectCard(props: {
           trigger={
             <button
               onClick={(e) => e.stopPropagation()}
-              className="text-[var(--color-fg-faint)] hover:text-[var(--color-fg-default)] transition-colors p-1 -m-1 rounded"
+              className="focus-ring text-[var(--color-fg-faint)] hover:text-[var(--color-fg-default)] transition-colors p-1 -m-1 rounded"
               data-testid="project-card-menu-trigger"
             >
               <MoreIcon />
@@ -729,7 +729,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
                   <button
                     type="button"
                     data-testid="dashboard-archived-toggle"
-                    className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+                    className="focus-ring text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
                     onClick={() => setArchivedExpanded((prev) => !prev)}
                   >
                     {archivedExpanded ? "Collapse" : "Expand"}

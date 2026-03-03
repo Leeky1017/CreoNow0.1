@@ -511,7 +511,7 @@ export function VersionHistoryContainer(
         <button
           type="button"
           data-testid="branch-merge-submit"
-          className="rounded border border-[var(--color-accent)] px-2 py-1 text-xs text-[var(--color-fg-default)] disabled:opacity-50"
+          className="focus-ring rounded border border-[var(--color-accent)] px-2 py-1 text-xs text-[var(--color-fg-default)] disabled:opacity-50"
           onClick={() => void handleMergeBranches()}
           disabled={
             branchMergeStatus === "loading" ||
@@ -543,7 +543,7 @@ export function VersionHistoryContainer(
             </div>
             <button
               type="button"
-              className="rounded border border-[var(--color-border-default)] px-2 py-1 text-[11px] text-[var(--color-fg-muted)]"
+              className="focus-ring rounded border border-[var(--color-border-default)] px-2 py-1 text-[11px] text-[var(--color-fg-muted)]"
               onClick={clearBranchMergeState}
             >
               Dismiss
@@ -647,7 +647,7 @@ export function VersionHistoryContainer(
           <button
             type="button"
             data-testid="branch-conflict-submit"
-            className="rounded border border-[var(--color-accent)] px-2 py-1 text-xs text-[var(--color-fg-default)] disabled:opacity-50"
+            className="focus-ring rounded border border-[var(--color-accent)] px-2 py-1 text-xs text-[var(--color-fg-default)] disabled:opacity-50"
             onClick={() => void handleResolveConflicts()}
             disabled={hasInvalidManualResolution}
           >

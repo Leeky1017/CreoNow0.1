@@ -46,7 +46,7 @@ export function CharacterCardList({
           <button
             type="button"
             onClick={onCreateCharacter}
-            className="px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
+            className="focus-ring px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
           >
             创建角色
           </button>
@@ -66,7 +66,7 @@ export function CharacterCardList({
           type="button"
           data-testid={`character-card-${card.id}`}
           onClick={() => onSelectCard?.(card.id)}
-          className="w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+          className="focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
         >
           <div className="flex items-start gap-3">
             {card.avatarUrl ? (

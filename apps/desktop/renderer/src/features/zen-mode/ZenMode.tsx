@@ -132,7 +132,7 @@ export function ZenMode({
           <button
             data-testid="zen-exit-button"
             onClick={onExit}
-            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+            className="focus-ring w-8 h-8 rounded-full flex items-center justify-center transition-colors"
             style={{
               color: "var(--color-fg-muted)",
               transitionDuration: "var(--duration-fast)",

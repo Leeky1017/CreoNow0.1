@@ -197,6 +197,7 @@ export function CharacterCard({
             type="button"
             onClick={handleEditClick}
             className={[
+              "focus-ring",
               "p-1.5",
               "rounded",
               "text-[var(--color-fg-placeholder)]",
@@ -214,6 +215,7 @@ export function CharacterCard({
             type="button"
             onClick={handleDeleteClick}
             className={[
+              "focus-ring",
               "p-1.5",
               "rounded",
               "text-[var(--color-fg-placeholder)]",

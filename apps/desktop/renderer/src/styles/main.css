@@ -85,6 +85,12 @@ textarea:focus-visible {
   outline-offset: var(--ring-focus-offset);
 }
 
+/* Focus Ring utility class — for elements needing explicit focus-visible styling */
+.focus-ring {
+  @apply focus-visible:outline-2 focus-visible:outline-offset-2;
+  outline-color: var(--color-focus-ring);
+}
+
 /* 滚动条（设计规范 §7.4） */
 ::-webkit-scrollbar {
   width: 6px;
