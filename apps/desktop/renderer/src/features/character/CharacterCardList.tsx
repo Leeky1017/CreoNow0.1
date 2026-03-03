@@ -1,3 +1,5 @@
+import { EmptyState } from "../../components/composites/EmptyState";
+
 export interface CharacterCardSummary {
   id: string;
   name: string;
@@ -39,18 +41,19 @@ export function CharacterCardList({
         data-testid="character-card-list-empty"
         className={`h-full flex items-center justify-center p-4 bg-[var(--color-bg-base)] ${className}`}
       >
-        <div className="text-center space-y-3">
-          <p className="text-sm text-[var(--color-fg-muted)]">
-            暂无角色，开始创建你的第一个角色
-          </p>
-          <button
-            type="button"
-            onClick={onCreateCharacter}
-            className="focus-ring px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
-          >
-            创建角色
-          </button>
-        </div>
+        <EmptyState
+          title="暂无角色"
+          description="开始创建你的第一个角色"
+          action={
+            <button
+              type="button"
+              onClick={onCreateCharacter}
+              className="focus-ring px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
+            >
+              创建角色
+            </button>
+          }
+        />
       </section>
     );
   }
