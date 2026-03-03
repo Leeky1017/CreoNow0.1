@@ -34,7 +34,27 @@ Error: Failed to resolve import "./ToolbarGroup" from "renderer/src/components/c
 红灯确认：3 个测试文件全部因模块不存在而失败 ✓
 
 ### Green
-（待填充）
+
+```
+$ pnpm -C apps/desktop test:run -- --reporter=verbose components/composites/SearchInput
+ ✓ renderer/src/components/composites/SearchInput.test.tsx (3 tests) 274ms
+ ✓ renderer/src/components/composites/FormField.test.tsx (2 tests) 293ms
+ ✓ renderer/src/components/composites/ToolbarGroup.test.tsx (1 test) 37ms
+
+ Test Files  228 passed (228)
+      Tests  1680 passed (1680)
+   Duration  45.36s
+```
+
+6/6 Composite 测试全部绿灯 ✓
 
 ### Full Regression
-（待填充）
+
+```
+$ pnpm -C apps/desktop test:run 2>&1 | tail -5
+ Test Files  228 passed (228)
+      Tests  1680 passed (1680)
+   Duration  44.54s
+```
+
+全量回归通过，无新增失败 ✓
