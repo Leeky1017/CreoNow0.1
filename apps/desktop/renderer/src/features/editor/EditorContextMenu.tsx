@@ -11,6 +11,7 @@ import {
   Underline,
   Undo,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
 import { captureSelectionRef } from "../ai/applySelection";
@@ -21,8 +22,8 @@ import { useOptionalAiStore } from "../../stores/aiStore";
 /* ------------------------------------------------------------------ */
 
 const AI_CONTEXT_ACTIONS = [
-  { id: "builtin:polish", label: "润色", testId: "ctx-ai-polish" },
-  { id: "builtin:rewrite", label: "改写", testId: "ctx-ai-rewrite" },
+  { id: "builtin:polish", labelKey: "editor.contextMenu.aiPolish", testId: "ctx-ai-polish" },
+  { id: "builtin:rewrite", labelKey: "editor.contextMenu.aiRewrite", testId: "ctx-ai-rewrite" },
 ] as const;
 
 /* ------------------------------------------------------------------ */
@@ -97,6 +98,7 @@ export function EditorContextMenu({
   editor,
   children,
 }: EditorContextMenuProps): JSX.Element {
+  const { t } = useTranslation();
   const setSelectionSnapshot = useOptionalAiStore(
     (s) => s.setSelectionSnapshot,
   );
@@ -169,7 +171,7 @@ export function EditorContextMenu({
             onSelect={handleCopy}
           >
             <ClipboardCopy size={16} strokeWidth={1.5} />
-            复制
+            {t("editor.contextMenu.copy")}
             <span className={shortcutClass}>
               {EDITOR_SHORTCUTS.bold.display().replace("B", "C").replace("⌘C", "⌘C")}
             </span>
@@ -182,7 +184,7 @@ export function EditorContextMenu({
             onSelect={() => void handlePaste()}
           >
             <ClipboardPaste size={16} strokeWidth={1.5} />
-            粘贴
+            {t("editor.contextMenu.paste")}
           </ContextMenu.Item>
 
           <ContextMenu.Separator className={separatorClass} />
@@ -194,7 +196,7 @@ export function EditorContextMenu({
             onSelect={handleUndo}
           >
             <Undo size={16} strokeWidth={1.5} />
-            撤销
+            {t("editor.contextMenu.undo")}
             <span className={shortcutClass}>
               {EDITOR_SHORTCUTS.undo.display()}
             </span>
@@ -207,7 +209,7 @@ export function EditorContextMenu({
             onSelect={handleRedo}
           >
             <Redo size={16} strokeWidth={1.5} />
-            重做
+            {t("editor.contextMenu.redo")}
             <span className={shortcutClass}>
               {EDITOR_SHORTCUTS.redo.display()}
             </span>
@@ -216,7 +218,7 @@ export function EditorContextMenu({
           <ContextMenu.Separator className={separatorClass} />
 
           {/* ---- Formatting ---- */}
-          <ContextMenu.Label className={labelClass}>格式</ContextMenu.Label>
+          <ContextMenu.Label className={labelClass}>{t("editor.contextMenu.format")}</ContextMenu.Label>
 
           <ContextMenu.Item
             data-testid="ctx-bold"
@@ -225,7 +227,7 @@ export function EditorContextMenu({
             onSelect={handleBold}
           >
             <Bold size={16} strokeWidth={1.5} />
-            加粗
+            {t("editor.contextMenu.bold")}
             <span className={shortcutClass}>
               {EDITOR_SHORTCUTS.bold.display()}
             </span>
@@ -238,7 +240,7 @@ export function EditorContextMenu({
             onSelect={handleItalic}
           >
             <Italic size={16} strokeWidth={1.5} />
-            斜体
+            {t("editor.contextMenu.italic")}
             <span className={shortcutClass}>
               {EDITOR_SHORTCUTS.italic.display()}
             </span>
@@ -251,7 +253,7 @@ export function EditorContextMenu({
             onSelect={handleUnderline}
           >
             <Underline size={16} strokeWidth={1.5} />
-            下划线
+            {t("editor.contextMenu.underline")}
             <span className={shortcutClass}>
               {EDITOR_SHORTCUTS.underline.display()}
             </span>
@@ -271,7 +273,7 @@ export function EditorContextMenu({
               onSelect={() => handleAiAction(action.id)}
             >
               <Sparkles size={16} strokeWidth={1.5} />
-              {action.label}
+              {t(action.labelKey)}
             </ContextMenu.Item>
           ))}
         </ContextMenu.Content>

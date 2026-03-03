@@ -37,5 +37,19 @@
     "infoPanel": {
       "openVersionHistory": "View Version History"
     }
+  },
+  "editor": {
+    "contextMenu": {
+      "copy": "Copy",
+      "paste": "Paste",
+      "undo": "Undo",
+      "redo": "Redo",
+      "format": "Format",
+      "bold": "Bold",
+      "italic": "Italic",
+      "underline": "Underline",
+      "aiPolish": "Polish",
+      "aiRewrite": "Rewrite"
+    }
   }
 }

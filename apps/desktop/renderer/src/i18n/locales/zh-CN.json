@@ -37,5 +37,19 @@
     "infoPanel": {
       "openVersionHistory": "查看版本历史"
     }
+  },
+  "editor": {
+    "contextMenu": {
+      "copy": "复制",
+      "paste": "粘贴",
+      "undo": "撤销",
+      "redo": "重做",
+      "format": "格式",
+      "bold": "加粗",
+      "italic": "斜体",
+      "underline": "下划线",
+      "aiPolish": "润色",
+      "aiRewrite": "改写"
+    }
   }
 }
