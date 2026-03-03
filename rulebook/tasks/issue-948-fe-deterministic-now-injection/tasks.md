@@ -1,5 +1,5 @@
 # Tasks: fe-deterministic-now-injection
-更新时间：2026-03-03 22:30
+更新时间：2026-03-04 03:30
 
 ## TDD Mapping
 
@@ -14,29 +14,29 @@
 
 ## Red Phase
 
-- [ ] S1 — formatRelativeTime not exported → TypeError
-- [ ] S2 — formatRelativeTime not exported → TypeError
-- [ ] S3 — `now` field ignored → flashKey mismatch
-- [ ] S4 — formatTimestamp not exported → TypeError
-- [ ] S5 — computeDateRange not exported → TypeError
-- [ ] S6 — `now` field ignored → timestamp mismatch
+- [x] S1 — formatRelativeTime not exported → TypeError
+- [x] S2 — formatRelativeTime not exported → TypeError
+- [x] S3 — `now` field ignored → flashKey mismatch
+- [x] S4 — formatTimestamp not exported → TypeError
+- [x] S5 — computeDateRange not exported → TypeError
+- [x] S6 — `now` field ignored → timestamp mismatch
 
 ## Green Phase
 
-- [ ] S1 — export + add `now` parameter to Dashboard `formatRelativeTime`
-- [ ] S2 — export + add `now` parameter to ProjectSwitcher `formatRelativeTime`
-- [ ] S3 — add `now` to `NavigateSearchResultArgs` + use in flashKey
-- [ ] S4 — export + add `now` parameter to `formatTimestamp`
-- [ ] S5 — extract + export `computeDateRange(now)`, use in component
-- [ ] S6 — add `now` to `buildAiStreamUndoCheckpoint` args
+- [x] S1 — export + add `now` parameter to Dashboard `formatRelativeTime`
+- [x] S2 — export + add `now` parameter to ProjectSwitcher `formatRelativeTime`
+- [x] S3 — add `now` to `NavigateSearchResultArgs` + use in flashKey
+- [x] S4 — export + add `now` parameter to `formatTimestamp`
+- [x] S5 — extract + export `computeDateRange(now)`, use in component
+- [x] S6 — add `now` to `buildAiStreamUndoCheckpoint` args
 
 ## Refactor
 
-- [ ] Evaluate merging Dashboard/ProjectSwitcher `formatRelativeTime` into shared util
+- [x] Evaluate merging Dashboard/ProjectSwitcher `formatRelativeTime` into shared util — 结论：不合并，两者返回格式和依赖差异较大
 
 ## Evidence
 
-- [ ] Red output recorded in RUN_LOG
-- [ ] Green output recorded in RUN_LOG
-- [ ] Full regression pass recorded
-- [ ] TypeCheck pass recorded
+- [x] Red output recorded in RUN_LOG
+- [x] Green output recorded in RUN_LOG
+- [x] Full regression pass recorded
+- [x] TypeCheck pass recorded
