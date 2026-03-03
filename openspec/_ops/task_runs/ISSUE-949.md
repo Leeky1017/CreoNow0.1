@@ -5,7 +5,7 @@
 - Issue: #949
 - Branch: `task/949-fe-token-escape-sweep`
 - Change: `fe-token-escape-sweep`
-- PR: TBD
+- PR: https://github.com/Leeky1017/CreoNow/pull/952
 - Agent: Worker-6-3
 
 ## Dependency Sync Check
