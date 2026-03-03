@@ -1,12 +1,12 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-03 17:08
+更新时间：2026-03-03 21:00
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
 ## 执行策略
 
-- 当前活跃 change 数量为 **4**（`fe-accessibility-aria-live`、`fe-deterministic-now-injection`、`fe-reduced-motion-respect`、`fe-token-escape-sweep`）。
+- 当前活跃 change 数量为 **3**（`fe-deterministic-now-injection`、`fe-reduced-motion-respect`、`fe-token-escape-sweep`）。
 - 执行模式：**4 批次渐进推进**（第一批核心体验 → 第二批功能补全 → 第三批设计系统回归 → 第四批独立 Issue 收口）。
 - 规则：
   - 任一 change 开始 Red 前，必须完成该 change 的依赖同步检查（Dependency Sync Check）。
@@ -119,7 +119,7 @@
 | C | 4b-1 | `fe-composites-p2-empties-and-confirms` | FileTreePanel + Empty/Confirm 簇 | `fe-composites-p0-panel-and-command-items` | 已完成并归档（PR #930） |
 | D | 4b-1 | `fe-editor-inline-diff-decoration-integration` | VersionHistoryContainer + `tokens.css` 簇 | — | 已完成并归档（PR #938） |
 | E | 4b-1 | `fe-hotkeys-shortcuts-unification` | EditorPane 簇 | `fe-editor-advanced-interactions` 完成后（共享 `EditorPane.tsx`） | 已完成并归档（PR #931） |
-| A | 4c-1 | `fe-accessibility-aria-live` | AiPanel/SearchPanel/ChatHistory 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying`（已归档）完成后（共享 `AiPanel.tsx`/`SearchPanel.tsx`） | 待执行 |
+| A | 4c-1 | `fe-accessibility-aria-live` | AiPanel/SearchPanel/ChatHistory 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying`（已归档）完成后（共享 `AiPanel.tsx`/`SearchPanel.tsx`） | 已完成并归档（PR #946） |
 | B | 4c-1 | `fe-command-palette-search-uplift` | CommandPalette 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying`（已归档）完成后（共享 `CommandPalette.tsx`） | 已完成并归档（PR #944） |
 | C | 4c-1 | `fe-editor-context-menu-and-tooltips` | EditorPane + Tooltip 簇 | `fe-editor-advanced-interactions`, `fe-hotkeys-shortcuts-unification`（已归档）完成后（共享 `EditorPane.tsx`） | 已完成并归档（PR #939） |
 | A | 4d-1 | `fe-deterministic-now-injection` | SearchPanel/Dashboard/ChatHistory/VersionHistory 簇 | `fe-accessibility-aria-live`, `fe-i18n-core-pages-keying`（已归档）, `fe-editor-inline-diff-decoration-integration`（已归档）完成后 | 待执行 |
@@ -203,7 +203,7 @@
     fe-editor-inline-diff-decoration-integration（已完成并归档，PR #938）
 
   Wave 4c:
-    fe-accessibility-aria-live              （comp-p0 + i18n-keying 前置已满足，待执行）
+    fe-accessibility-aria-live              （已完成并归档，PR #946）
     fe-command-palette-search-uplift        （已完成并归档，PR #944）
     fe-editor-context-menu-and-tooltips     （已完成并归档，PR #939）
 

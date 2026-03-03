@@ -620,6 +620,7 @@ export function SearchPanel(props: {
 
         {/* Results container */}
         <div
+          aria-live="polite"
           className="flex-1 overflow-y-auto bg-[var(--color-bg-surface)]"
         >
           {!hasQuery && !hasResults ? (

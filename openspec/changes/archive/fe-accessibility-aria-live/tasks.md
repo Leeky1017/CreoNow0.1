@@ -2,10 +2,10 @@
 
 更新时间：2026-02-28 19:20
 
-- [ ] 1.1 审阅并确认需求边界：为关键动态更新区域补齐 `aria-live` 语义。`polite` 用于非紧急更新（搜索结果、保存状态、AI 流式输出），`assertive` 仅用于错误/关键失败。不改功能逻辑。
-- [ ] 1.2 审阅并确认错误路径与边界路径：assertive 仅用于错误/关键失败提示，避免过度播报干扰用户。
-- [ ] 1.3 审阅并确认验收阈值与不可变契约：AI 流式输出、搜索结果列表、自动保存状态、Toast 必须可被屏幕阅读器感知。
-- [ ] 1.4 依赖同步检查（Dependency Sync Check）：N/A
+- [x] 1.1 审阅并确认需求边界：为关键动态更新区域补齐 `aria-live` 语义。`polite` 用于非紧急更新（搜索结果、保存状态、AI 流式输出），`assertive` 仅用于错误/关键失败。不改功能逻辑。
+- [x] 1.2 审阅并确认错误路径与边界路径：assertive 仅用于错误/关键失败提示，避免过度播报干扰用户。
+- [x] 1.3 审阅并确认验收阈值与不可变契约：AI 流式输出、搜索结果列表、自动保存状态、Toast 必须可被屏幕阅读器感知。
+- [x] 1.4 依赖同步检查（Dependency Sync Check）：N/A
 
 ### 1.5 预期实现触点
 
@@ -23,9 +23,9 @@
 
 ## 2. TDD Mapping（先测前提）
 
-- [ ] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
-- [ ] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
-- [ ] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+- [x] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
+- [x] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
+- [x] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
 
 ### Scenario → 测试映射
 
@@ -42,32 +42,32 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 `WB-FE-ARIA-S1`：渲染 AiPanel（mock AI store），查找流式输出容器，断言 `aria-live="polite"`。
+- [x] 3.1 `WB-FE-ARIA-S1`：渲染 AiPanel（mock AI store），查找流式输出容器，断言 `aria-live="polite"`。
   - 期望红灯原因：当前 AiPanel 流式输出容器无 aria-live 属性。
-- [ ] 3.2 `WB-FE-ARIA-S2`：渲染 SearchPanel（mock search store），查找结果列表容器，断言 `aria-live="polite"`。
+- [x] 3.2 `WB-FE-ARIA-S2`：渲染 SearchPanel（mock search store），查找结果列表容器，断言 `aria-live="polite"`。
   - 期望红灯原因：当前 SearchPanel 结果列表无 aria-live。
-- [ ] 3.3 `WB-FE-ARIA-S3`：渲染 error Toast，断言 `aria-live="assertive"`；渲染 info Toast，断言 `aria-live="polite"`。
+- [x] 3.3 `WB-FE-ARIA-S3`：渲染 error Toast，断言 `aria-live="assertive"`；渲染 info Toast，断言 `aria-live="polite"`。
   - 期望红灯原因：当前 Toast 无 aria-live 属性。
-- [ ] 3.4 `WB-FE-ARIA-S4`：渲染 SaveIndicator，断言状态文本有 `aria-live="polite"`。
+- [x] 3.4 `WB-FE-ARIA-S4`：渲染 SaveIndicator，断言状态文本有 `aria-live="polite"`。
   - 期望红灯原因：当前 SaveIndicator 无 aria-live。
 - 运行：`pnpm -C apps/desktop test:run AiPanel.aria-live` / `SearchPanel.aria-live` / `Toast.aria-live` / `SaveIndicator.aria-live`
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 `AiPanel.tsx`：流式输出容器添加 `aria-live="polite" aria-atomic="false"` → S1 转绿
-- [ ] 4.2 `SearchPanel.tsx`：结果列表容器添加 `aria-live="polite"` → S2 转绿
-- [ ] 4.3 `Toast.tsx`：根据 variant 添加 `aria-live="assertive"`（error）/ `aria-live="polite"`（其余） → S3 转绿
-- [ ] 4.4 `SaveIndicator.tsx`：状态文本添加 `aria-live="polite"` → S4 转绿
+- [x] 4.1 `AiPanel.tsx`：流式输出容器添加 `aria-live="polite" aria-atomic="false"` → S1 转绿
+- [x] 4.2 `SearchPanel.tsx`：结果列表容器添加 `aria-live="polite"` → S2 转绿
+- [x] 4.3 `Toast.tsx`：根据 variant 添加 `aria-live="assertive"`（error）/ `aria-live="polite"`（其余） → S3 转绿
+- [x] 4.4 `SaveIndicator.tsx`：状态文本添加 `aria-live="polite"` → S4 转绿
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 确认 AI 流式输出的 `aria-atomic="false"` 不会导致逐字播报（应播报新增段落）
-- [ ] 5.2 评估是否需要 `aria-relevant="additions text"` 精细控制播报内容
+- [x] 5.1 确认 AI 流式输出的 `aria-atomic="false"` 不会导致逐字播报（应播报新增段落）
+- [x] 5.2 评估是否需要 `aria-relevant="additions text"` 精细控制播报内容
 
 ## 6. Evidence
 
-- [ ] 6.1 记录 RUN_LOG：Red 阶段测试失败的输出
-- [ ] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
-- [ ] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
-- [ ] 6.4 记录 Dependency Sync Check（N/A）
-- [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
+- [x] 6.1 记录 RUN_LOG：Red 阶段测试失败的输出
+- [x] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
+- [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
+- [x] 6.4 记录 Dependency Sync Check（N/A）
+- [x] 6.5 Main Session Audit（仅在 Apply 阶段需要）
