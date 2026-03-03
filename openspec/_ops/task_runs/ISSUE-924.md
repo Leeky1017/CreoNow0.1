@@ -5,7 +5,10 @@
 - Change: fe-feature-focus-visible-coverage
 - PR: https://github.com/Leeky1017/CreoNow/pull/928
 
-## Dependency Sync Check
+## Plan
+- 补齐 Feature 层所有可交互元素的 focus-visible 焦点反馈样式，新增 Design Token 和 guard 测试防退化。
+
+
 - 上游 Wave 3b：lucide #909 ✓, theme-switch #910 ✓ — 均已合并 main，无漂移
 
 ## Runs
