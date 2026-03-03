@@ -2,10 +2,10 @@
 
 更新时间：2026-02-28 19:20
 
-- [ ] 1.1 审阅并确认需求边界：将 Inline Diff 从独立面板渲染改为 TipTap/ProseMirror decoration 集成，使版本差异在编辑器正文中高亮呈现。不做多版本同时对比。
-- [ ] 1.2 审阅并确认错误路径与边界路径：diff 数据缺失时不渲染 decoration（静默降级）；关闭对比模式后 decoration 必须被完全移除。
-- [ ] 1.3 审阅并确认验收阈值与不可变契约：对比模式开启时，插入行绿色高亮、删除行红色高亮（走 Token `--color-success-subtle`/`--color-error-subtle`）；关闭后编辑器恢复正常。
-- [ ] 1.4 依赖同步检查（Dependency Sync Check）：建议先行 `fe-leftpanel-dialog-migration`（若版本历史入口形态迁移）
+- [x] 1.1 审阅并确认需求边界：将 Inline Diff 从独立面板渲染改为 TipTap/ProseMirror decoration 集成，使版本差异在编辑器正文中高亮呈现。不做多版本同时对比。
+- [x] 1.2 审阅并确认错误路径与边界路径：diff 数据缺失时不渲染 decoration（静默降级）；关闭对比模式后 decoration 必须被完全移除。
+- [x] 1.3 审阅并确认验收阈值与不可变契约：对比模式开启时，插入行绿色高亮、删除行红色高亮（走 Token `--color-success-subtle`/`--color-error-subtle`）；关闭后编辑器恢复正常。
+- [x] 1.4 依赖同步检查（Dependency Sync Check）：`fe-leftpanel-dialog-migration` 已归档完成（PR #808），无漂移。
 
 ### 1.5 预期实现触点
 
@@ -27,9 +27,9 @@
 
 ## 2. TDD Mapping（先测前提）
 
-- [ ] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
-- [ ] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
-- [ ] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+- [x] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
+- [x] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
+- [x] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
 
 ### Scenario → 测试映射
 
@@ -47,40 +47,36 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 `VC-FE-DIFF-S1`：已有 `createInlineDiffDecorations()` 纯函数，此测试可能直接绿灯（作为回归基线）。
-- [ ] 3.2 `VC-FE-DIFF-S2`：构造 TipTap editor 实例，注册 `InlineDiffExtension`，注入 diff 数据，断言 view 中存在 decoration。
-  - 期望红灯原因：当前 `InlineDiffExtension` 是空壳（`decorations: []`），不产生 ProseMirror DecorationSet。
-- [ ] 3.3 `VC-FE-DIFF-S3`：注入 diff → 清除 → 断言 decoration 为空。
-  - 期望红灯原因：同上，Extension 未实现。
-- [ ] 3.4 `VC-FE-DIFF-S4`：断言 decoration 的 CSS class 包含语义 Token 引用。
-  - 期望红灯原因：无 decoration 产出。
+- [x] 3.1 `VC-FE-DIFF-S1`：已有 `createInlineDiffDecorations()` 纯函数，测试直接绿灯（回归基线）。
+- [x] 3.2 `VC-FE-DIFF-S2`：构造 TipTap editor + InlineDiffExtension，注入 diff 数据，断言 DecorationSet 非空。
+  - 红灯原因：`TypeError: Cannot set properties of undefined (setting 'diffs')` — 空壳无 storage。
+- [x] 3.3 `VC-FE-DIFF-S3`：注入 diff → 清除 → 断言 DecorationSet 为空。
+  - 红灯原因：同上。
+- [x] 3.4 `VC-FE-DIFF-S4`：断言 decoration CSS class 包含 `inline-diff-removed`。
+  - 红灯原因：同上。
 - 运行：`pnpm -C apps/desktop test:run features/editor/__tests__/inlineDiff.decoration`
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 `inlineDiff.ts`：将 `InlineDiffExtension` 从空壳改为真正的 TipTap Extension：
-  - 使用 `Extension.create({ addProseMirrorPlugins() { ... } })`
-  - Plugin 内维护 `DecorationSet`，根据 storage 中的 `InlineDiffDecoration[]` 生成 `Decoration.inline` 节点
-  - 插入行 class：`inline-diff-added`（样式引用 `--color-success-subtle`）
-  - 删除行 class：`inline-diff-removed`（样式引用 `--color-error-subtle`）
-  → S2 + S4 转绿
-- [ ] 4.2 实现 diff 数据清除逻辑：storage 置空时 `DecorationSet.empty` → S3 转绿
-- [ ] 4.3 `main.css`：新增 decoration 样式：
-  ```css
-  .inline-diff-added { background: var(--color-success-subtle); }
-  .inline-diff-removed { background: var(--color-error-subtle); text-decoration: line-through; }
-  ```
-- [ ] 4.4 `VersionHistoryContainer.tsx`：对比触发时将 diff 数据写入 editor extension storage（替代传给 InlineDiffControls）
+- [x] 4.1 `inlineDiff.ts`：将 `InlineDiffExtension` 从空壳改为真正的 TipTap Extension：
+  - `Extension.create({ name: 'inlineDiff', addStorage(), addProseMirrorPlugins() })`
+  - Plugin 使用 `PluginKey('inlineDiff')` + `DecorationSet` + `diffToDecorationSet()` 纯函数
+  - 插入行 class：`inline-diff-added`
+  - 删除行 class：`inline-diff-removed`
+  → S2 + S4 转绿 ✓
+- [x] 4.2 清除逻辑：storage.diffs 置空 + setMeta → `DecorationSet.empty` → S3 转绿 ✓
+- [x] 4.3 `main.css`：新增 `.inline-diff-added` / `.inline-diff-removed` 样式 ✓
+- [ ] 4.4 `VersionHistoryContainer.tsx`：对比触发时将 diff 数据写入 editor extension storage（后续集成，不在本 PR 范围）
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 抽取 `diffToDecorationSet()` 纯函数：`InlineDiffDecoration[] → DecorationSet`，便于独立测试
-- [ ] 5.2 评估 InlineDiffControls.tsx 是否可简化为 decoration widget（Accept/Reject 按钮嵌入编辑器行内）
+- [x] 5.1 抽取 `diffToDecorationSet()` 纯函数：已在 Green 阶段直接实现为独立导出函数
+- [ ] 5.2 评估 InlineDiffControls.tsx 是否可简化为 decoration widget（后续迭代）
 
 ## 6. Evidence
 
-- [ ] 6.1 记录 RUN_LOG：Red 阶段 S2/S3/S4 失败的输出
-- [ ] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
-- [ ] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
-- [ ] 6.4 记录 Dependency Sync Check：确认 `fe-leftpanel-dialog-migration` 状态
+- [x] 6.1 记录 RUN_LOG：Red 阶段 S2/S3/S4 失败的输出 ✓
+- [x] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出 ✓
+- [x] 6.3 记录 RUN_LOG：全量回归 236 文件 1716 测试全绿 ✓
+- [x] 6.4 Dependency Sync Check：`fe-leftpanel-dialog-migration` 已归档完成，无漂移 ✓
 - [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
