@@ -2,7 +2,7 @@ import React from "react";
 import { ScrollArea } from "../../components/primitives";
 import { SearchInput } from "../../components/composites/SearchInput";
 
-import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Dot, File, FileText, Pencil, Search, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Dot, File, FileText, Pencil, Trash2 } from "lucide-react";
 // ============================================================================
 // Types
 // ============================================================================
@@ -97,9 +97,6 @@ function CollapseAllIcon() {
   return <ChevronsUpDown size={16} strokeWidth={1.5} className="rotate-180" />;
 }
 
-function SearchIcon() {
-  return <Search size={16} strokeWidth={1.5} />;
-}
 
 function EmptyDocumentIcon() {
   return <File className="w-6 h-6 text-[var(--color-fg-placeholder)] mb-2" size={24} strokeWidth={1.5} />;
