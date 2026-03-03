@@ -58,7 +58,7 @@ pnpm typecheck → tsc --noEmit → clean (0 errors)
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 60c4009fe2d1a685945e0f65bbc67bb04eaf2c66
+- Reviewed-HEAD-SHA: 136a86efb79591de8543ab3cad078c21c8285119
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
