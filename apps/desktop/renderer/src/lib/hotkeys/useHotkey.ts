@@ -32,26 +32,21 @@ export function useHotkey(
   priority = 0,
   enabled = true,
 ): void {
+  const { key, ctrlKey, shiftKey, altKey, metaKey, modKey } = combo;
   useEffect(() => {
     if (!enabled) {
       hotkeyManager.unregister(id);
       return;
     }
-    hotkeyManager.register(id, combo, scope, priority, handler);
+    hotkeyManager.register(
+      id,
+      { key, ctrlKey, shiftKey, altKey, metaKey, modKey },
+      scope,
+      priority,
+      handler,
+    );
     return () => {
       hotkeyManager.unregister(id);
     };
-  }, [
-    id,
-    combo.key,
-    combo.ctrlKey,
-    combo.shiftKey,
-    combo.altKey,
-    combo.metaKey,
-    combo.modKey,
-    handler,
-    scope,
-    priority,
-    enabled,
-  ]);
+  }, [id, key, ctrlKey, shiftKey, altKey, metaKey, modKey, handler, scope, priority, enabled]);
 }
