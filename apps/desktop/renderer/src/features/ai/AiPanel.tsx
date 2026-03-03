@@ -1,4 +1,5 @@
 ﻿import React from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   AiErrorCard,
@@ -407,6 +408,7 @@ type AiPanelProps = {
 
 export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   useAiStream();
+  const { t } = useTranslation();
 
   const openSettings = useOpenSettings();
 
@@ -806,7 +808,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
           projectId,
           traceId: lastRunId,
           text: outputText,
-          contextSummary: lastRequest ?? "AI 面板上下文摘要",
+          contextSummary: lastRequest ?? t("ai.contextSummary"),
         });
         if (res.ok) {
           return;
@@ -828,7 +830,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
         evaluatedRunIdRef.current = null;
       }
     });
-  }, [lastRequest, lastRunId, outputText, projectId, status]);
+  }, [lastRequest, lastRunId, outputText, projectId, status, t]);
 
   const diffText = proposal
     ? unifiedDiff({
@@ -1302,11 +1304,11 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                   >
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-[12px] font-semibold text-[var(--color-fg-default)]">
-                        方案 {index + 1}
+                        {t("ai.candidate", { index: index + 1 })}
                       </span>
                       {isSelected ? (
                         <span className="text-[11px] text-[var(--color-fg-accent)]">
-                          已选择
+                          {t("ai.candidateSelected")}
                         </span>
                       ) : null}
                     </div>
@@ -1332,7 +1334,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                 onClick={() => void onRegenerateAll()}
                 disabled={working}
               >
-                全部不满意，重新生成
+                {t("ai.regenerateAll")}
               </Button>
             </div>
           ) : null}
@@ -1353,7 +1355,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                 className="flex-1 flex items-center justify-center text-center py-12"
               >
                 <Text size="small" color="muted">
-                  选中文本或输入指令，开始与 AI 协作
+                  {t("ai.emptyHint")}
                 </Text>
               </div>
             )
@@ -1378,7 +1380,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                     data-testid="ai-judge-pass"
                     className="text-[12px] text-[var(--color-fg-default)]"
                   >
-                    质量校验通过
+                    {t("ai.judgePass")}
                   </span>
                 ) : (
                   judgeResult.labels.map((label) => (
@@ -1396,7 +1398,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
               </Text>
               {judgeResult.partialChecksSkipped ? (
                 <Text data-testid="ai-judge-partial" size="small" color="muted">
-                  部分校验已跳过
+                  {t("ai.judgePartialSkipped")}
                 </Text>
               ) : null}
             </div>
@@ -1415,20 +1417,20 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                   </span>
                 </span>
                 <span>
-                  输出:{" "}
+                  {t("ai.usageOutput")}{" "}
                   <span data-testid="ai-usage-completion-tokens">
                     {formatTokenValue(usageStats.completionTokens)}
                   </span>
                 </span>
                 <span>
-                  本会话累计:{" "}
+                  {t("ai.usageSessionTotal")}{" "}
                   <span data-testid="ai-usage-session-total-tokens">
                     {formatTokenValue(usageStats.sessionTotalTokens)}
                   </span>
                 </span>
                 {typeof usageStats.estimatedCostUsd === "number" ? (
                   <span>
-                    费用估算:{" "}
+                    {t("ai.usageCostEstimate")}{" "}
                     <span data-testid="ai-usage-estimated-cost">
                       {formatUsd(usageStats.estimatedCostUsd)}
                     </span>
@@ -1441,7 +1443,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
           {/* Applied Status */}
           {applyStatus === "applied" && (
             <Text data-testid="ai-apply-status" size="small" color="muted">
-              Applied &amp; saved
+              {t("ai.appliedSaved")}
             </Text>
           )}
 

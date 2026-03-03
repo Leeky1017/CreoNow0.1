@@ -159,6 +159,16 @@ textarea:focus-visible {
   color: var(--color-fg-default);
 }
 
+/* ---- Inline Diff decorations (version compare) ---- */
+.inline-diff-added {
+  background: var(--color-success-subtle);
+}
+
+.inline-diff-removed {
+  background: var(--color-error-subtle);
+  text-decoration: line-through;
+}
+
 .cn-window-titlebar {
   display: flex;
   flex-shrink: 0;

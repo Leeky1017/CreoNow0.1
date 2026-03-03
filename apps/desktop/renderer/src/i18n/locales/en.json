@@ -51,5 +51,141 @@
       "aiPolish": "Polish",
       "aiRewrite": "Rewrite"
     }
+  },
+  "dashboard": {
+    "searchPlaceholder": "Search across projects...",
+    "heroLastEdited": "Last edited {{time}}",
+    "untitledProject": "Untitled Project",
+    "heroSubtitle": "Continue where you left off. Your creative journey awaits.",
+    "openProjectHint": "Open this project to continue writing.",
+    "newDraft": "New Draft",
+    "createNew": "Create New",
+    "continueWriting": "Continue Writing",
+    "recentProjects": "Recent Projects",
+    "startSomethingNew": "Start Something New",
+    "dismiss": "Dismiss",
+    "emptyTitle": "Create your first writing project",
+    "emptySubtitle": "Start your creative workflow with a new project.",
+    "createFirst": "Create Project",
+    "openFolder": "Open Folder",
+    "noResults": "No matching results",
+    "archived": "Archived ({{count}})",
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "menu": {
+      "open": "Open",
+      "rename": "Rename",
+      "duplicate": "Duplicate",
+      "archive": "Archive",
+      "unarchive": "Unarchive",
+      "delete": "Delete"
+    },
+    "confirm": {
+      "archiveTitle": "Archive project?",
+      "unarchiveTitle": "Unarchive project?",
+      "archiveDesc": "\"{{name}}\" will move to Archived projects.",
+      "unarchiveDesc": "\"{{name}}\" will be restored to active projects.",
+      "archiveAction": "Archive",
+      "unarchiveAction": "Unarchive",
+      "cancel": "Cancel"
+    },
+    "stage": {
+      "outline": "Outline",
+      "draft": "Draft",
+      "revision": "Revision",
+      "final": "Final",
+      "default": "Project"
+    },
+    "time": {
+      "justNow": "just now",
+      "minutesAgo": "{{count}} minute(s) ago",
+      "hoursAgo": "{{count}} hour(s) ago",
+      "daysAgo": "{{count}} day(s) ago"
+    }
+  },
+  "search": {
+    "placeholder": "Search documents, memories, knowledge...",
+    "emptyStateHint": "Enter a search term to find documents",
+    "rebuildingIndex": "Rebuilding index, please try again later",
+    "rebuildingQuery": "Query: \"{{query}}\"",
+    "errorTitle": "Search failed, please retry",
+    "retrySearch": "Retry Search",
+    "noResults": "No matching results",
+    "noResultsQuery": "Query: \"{{query}}\"",
+    "suggestionsTitle": "Suggestions",
+    "suggestionsText": "Try checking your spelling or using different keywords",
+    "searchAllProjects": "Search in all projects",
+    "clearSearch": "Clear search",
+    "categories": {
+      "all": "All",
+      "documents": "Documents",
+      "memories": "Memories",
+      "knowledge": "Knowledge",
+      "assets": "Assets"
+    },
+    "filters": {
+      "semanticSearch": "Semantic Search",
+      "includeArchived": "Include Archived",
+      "scope": "Scope",
+      "currentProject": "Current Project"
+    },
+    "results": {
+      "match": "{{count}} match(es)",
+      "result": "{{count}} result(s)",
+      "searchTime": "Search took {{time}}",
+      "viewMore": "View {{count}} more results"
+    },
+    "resultTypes": {
+      "documents": "Documents",
+      "memories": "Memories",
+      "knowledgeGraph": "Knowledge Graph",
+      "entity": "Entity",
+      "highRelevance": "High Relevance"
+    },
+    "footer": {
+      "toNavigate": "to navigate",
+      "toOpen": "to open",
+      "toClose": "to close"
+    }
+  },
+  "ai": {
+    "contextSummary": "AI panel context summary",
+    "candidate": "Candidate {{index}}",
+    "candidateSelected": "Selected",
+    "regenerateAll": "Unsatisfied, regenerate all",
+    "emptyHint": "Select text or enter a prompt to collaborate with AI",
+    "judgePass": "Quality check passed",
+    "judgePartialSkipped": "Some checks were skipped",
+    "usageOutput": "Output:",
+    "usageSessionTotal": "Session total:",
+    "usageCostEstimate": "Cost estimate:",
+    "appliedSaved": "Applied & saved"
+  },
+  "onboarding": {
+    "welcome": "Welcome to CreoNow",
+    "subtitle": "AI-powered Writing IDE",
+    "selectLanguage": "Select Language / 选择语言",
+    "selectLanguageHint": "Choose your preferred display language.",
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip",
+    "langOptions": {
+      "zhCN": { "label": "中文 (简体)", "description": "简体中文界面" },
+      "en": { "label": "English", "description": "English interface" }
+    },
+    "step2": {
+      "title": "AI Writing Assistant",
+      "subtitle": "CreoNow has built-in AI writing capabilities for continuation, polishing, and inspiration.",
+      "feature1Title": "Smart Continuation & Polish",
+      "feature1Desc": "Select text to invoke the AI panel for continuation, rewriting, and polishing suggestions.",
+      "feature2Title": "AI Settings Are Adjustable",
+      "feature2Desc": "You can configure AI models and preferences in Settings → AI anytime."
+    },
+    "step3": {
+      "title": "Open Workspace",
+      "subtitle": "Choose a folder as your creative workspace. CreoNow will manage your projects and documents here.",
+      "openFolder": "Open Folder",
+      "skipLater": "Skip, choose later"
+    }
   }
 }

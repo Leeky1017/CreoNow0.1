@@ -34,6 +34,7 @@
     "@tiptap/extension-bubble-menu": "^2.27.2",
     "@tiptap/extension-link": "^2.27.2",
     "@tiptap/extension-underline": "^2.27.2",
+    "@tiptap/pm": "^2.27.2",
     "@tiptap/react": "^2.26.0",
     "@tiptap/starter-kit": "^2.26.0",
     "@types/d3-force": "^3.0.10",

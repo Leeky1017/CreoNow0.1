@@ -54,15 +54,15 @@ describe("SearchPanel", () => {
       expect(input).toBeInTheDocument();
       expect(input).toHaveAttribute(
         "placeholder",
-        "Search documents, memories, knowledge...",
+        "搜索文档、记忆、知识...",
       );
     });
 
     it("应该显示分类过滤按钮", () => {
       render(<SearchPanel projectId="test-project" open={true} />);
 
-      // 组件使用分类过滤器（All, Documents, Memories, Knowledge, Assets）
-      expect(screen.getByText("All")).toBeInTheDocument();
+      // 组件使用分类过滤器（全部, 文档, 记忆, 知识, 素材）
+      expect(screen.getByText("全部")).toBeInTheDocument();
     });
 
     it("应该有模态背景遮罩", () => {
@@ -90,7 +90,7 @@ describe("SearchPanel", () => {
     it("点击分类按钮应切换分类", () => {
       render(<SearchPanel projectId="test-project" open={true} />);
 
-      const allButtonText = screen.getByText("All");
+      const allButtonText = screen.getByText("全部");
       expect(allButtonText).toBeInTheDocument();
 
       // All 按钮默认选中 — Button primitive wraps children in <span>,

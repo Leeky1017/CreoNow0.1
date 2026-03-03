@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-03 11:35
+更新时间：2026-03-03 16:00
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -117,7 +117,7 @@
 | A | 4b-1 | `fe-i18n-core-pages-keying` | SearchPanel/AiPanel/CommandPalette/Dashboard/Onboarding 簇 | `fe-i18n-language-switcher-foundation` | 待执行 |
 | B | 4b-1 | `fe-composites-p1-search-and-forms` | SettingsGeneral + Forms 簇 | `fe-composites-p0-panel-and-command-items` | 已完成并归档（PR #929） |
 | C | 4b-1 | `fe-composites-p2-empties-and-confirms` | FileTreePanel + Empty/Confirm 簇 | `fe-composites-p0-panel-and-command-items` | 已完成并归档（PR #930） |
-| D | 4b-1 | `fe-editor-inline-diff-decoration-integration` | VersionHistoryContainer + `tokens.css` 簇 | — | 待执行 |
+| D | 4b-1 | `fe-editor-inline-diff-decoration-integration` | VersionHistoryContainer + `tokens.css` 簇 | — | PR #938 审计整改中 |
 | E | 4b-1 | `fe-hotkeys-shortcuts-unification` | EditorPane 簇 | `fe-editor-advanced-interactions` 完成后（共享 `EditorPane.tsx`） | 已完成并归档（PR #931） |
 | A | 4c-1 | `fe-accessibility-aria-live` | AiPanel/SearchPanel/ChatHistory 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying` 完成后（共享 `AiPanel.tsx`/`SearchPanel.tsx`） | 待执行 |
 | B | 4c-1 | `fe-command-palette-search-uplift` | CommandPalette 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying` 完成后（共享 `CommandPalette.tsx`） | 待执行 |

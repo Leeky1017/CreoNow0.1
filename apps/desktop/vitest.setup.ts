@@ -9,6 +9,15 @@
 import "@testing-library/jest-dom/vitest";
 
 /**
+ * i18n 初始化
+ *
+ * 确保所有使用 useTranslation() 的组件在测试中能获取翻译值，
+ * 而非返回裸 key。使用 "en" 作为测试默认语言，与原有英文断言
+ * 保持一致。如需测试 zh-CN，测试文件可自行 changeLanguage。
+ */
+import { initializeI18n } from "./renderer/src/i18n";
+
+/**
  * 清理 DOM
  *
  * 每个测试后自动清理 DOM，确保测试隔离
@@ -25,7 +34,11 @@ import { hotkeyManager } from "./renderer/src/lib/hotkeys/HotkeyManager";
  *
  * @see https://github.com/radix-ui/primitives/issues/1822
  */
-beforeAll(() => {
+beforeAll(async () => {
+  // Ensure i18n is fully initialized before any component renders.
+  // Default language is zh-CN (from getLanguagePreference() fallback).
+  await initializeI18n();
+
   // Pointer Capture API
   if (!Element.prototype.hasPointerCapture) {
     Element.prototype.hasPointerCapture = () => false;
