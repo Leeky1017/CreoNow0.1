@@ -12,6 +12,12 @@
 
 N/A — 所有前置依赖已归档合入 main。当前 worktree 已从最新 `origin/main`（72feb82c）创建。
 
+## Plan
+
+1. 补齐 RUN_LOG 的 `## Plan` 段，满足 openspec-log-guard 必填要求。
+2. 保持既有 token sweep 代码不变，仅做治理结构修复并重验 preflight（fast）。
+3. 更新独立审计记录与 Main Session Audit 签字链，确保门禁可过。
+
 ## Runs
 
 ### Run 1 — RED phase (guard tests)
