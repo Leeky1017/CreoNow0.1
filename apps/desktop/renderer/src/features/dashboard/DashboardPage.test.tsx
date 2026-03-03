@@ -380,7 +380,7 @@ describe("DashboardPage", () => {
         expect(screen.getByTestId("dashboard-page")).toBeInTheDocument();
       });
 
-      expect(screen.getByText("Archived (1)")).toBeInTheDocument();
+      expect(screen.getByText("已归档 (1)")).toBeInTheDocument();
       expect(screen.queryByText("Archived Draft")).not.toBeInTheDocument();
 
       await userEvent.click(screen.getByTestId("dashboard-archived-toggle"));

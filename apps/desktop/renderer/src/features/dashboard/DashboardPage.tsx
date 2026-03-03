@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import {
@@ -23,6 +24,7 @@ import {
 } from "../../stores/projectStore";
 
 import { FilePlus, MoreHorizontal, PenTool, Search } from "lucide-react";
+import { i18n } from "../../i18n";
 // =============================================================================
 // Types
 // =============================================================================
@@ -63,6 +65,7 @@ function SearchBar(props: {
   value: string;
   onChange: (value: string) => void;
 }): JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-3 text-[var(--color-fg-muted)]">
       <Search className="w-4 h-4 shrink-0" size={16} strokeWidth={1.5} />
@@ -70,7 +73,7 @@ function SearchBar(props: {
         data-testid="dashboard-search"
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
-        placeholder="Search across projects..."
+        placeholder={t("dashboard.searchPlaceholder")}
         className="bg-transparent border-none text-sm w-[300px] placeholder:text-[var(--color-fg-faint)]"
       />
     </div>
@@ -84,8 +87,9 @@ function HeroCard(props: {
   project: ProjectListItem;
   onClick: () => void;
 }): JSX.Element {
+  const { t } = useTranslation();
   const { project, onClick } = props;
-  const lastEdited = formatRelativeTime(project.updatedAt);
+  const lastEdited = formatRelativeTime(project.updatedAt, t);
 
   return (
     <div
@@ -98,17 +102,17 @@ function HeroCard(props: {
     >
       <div className="flex-1 min-w-0 p-10 flex flex-col justify-center">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-faint)] mb-3">
-          Last edited {lastEdited}
+          {t("dashboard.heroLastEdited", { time: lastEdited })}
         </div>
         <h2 className="text-[28px] font-normal tracking-[-0.02em] text-[var(--color-fg-default)] mb-4 leading-tight">
-          {project.name || "Untitled Project"}
+          {project.name || t("dashboard.untitledProject")}
         </h2>
         <p className="text-[15px] text-[var(--color-fg-muted)] leading-relaxed max-w-[500px] mb-8">
-          Continue where you left off. Your creative journey awaits.
+          {t("dashboard.heroSubtitle")}
         </p>
         <div className="flex gap-3">
           <span className="text-[11px] uppercase tracking-[0.05em] text-[var(--color-fg-faint)] border border-[var(--color-border-default)] px-2.5 py-1 rounded-full">
-            {formatStageTag(project.stage)}
+            {formatStageTag(project.stage, t)}
           </span>
         </div>
       </div>
@@ -143,6 +147,7 @@ function ProjectCard(props: {
   onArchiveToggle?: (projectId: string, archived: boolean) => void;
   onDelete?: (projectId: string) => void;
 }): JSX.Element {
+  const { t } = useTranslation();
   const { project, onClick, onRename, onDuplicate, onArchiveToggle, onDelete } =
     props;
   const dateStr = formatDate(project.updatedAt);
@@ -158,7 +163,7 @@ function ProjectCard(props: {
       const items: (DropdownMenuItem | ContextMenuItem)[] = [
         {
           key: "open",
-          label: "Open",
+          label: t("dashboard.menu.open"),
           onSelect: onClick,
         },
       ];
@@ -166,7 +171,7 @@ function ProjectCard(props: {
       if (onRename) {
         items.push({
           key: "rename",
-          label: "Rename",
+          label: t("dashboard.menu.rename"),
           onSelect: () => onRename(project.projectId),
         });
       }
@@ -174,7 +179,7 @@ function ProjectCard(props: {
       if (onDuplicate) {
         items.push({
           key: "duplicate",
-          label: "Duplicate",
+          label: t("dashboard.menu.duplicate"),
           onSelect: () => onDuplicate(project.projectId),
         });
       }
@@ -182,7 +187,7 @@ function ProjectCard(props: {
       if (onArchiveToggle) {
         items.push({
           key: "archive",
-          label: isArchived ? "Unarchive" : "Archive",
+          label: isArchived ? t("dashboard.menu.unarchive") : t("dashboard.menu.archive"),
           onSelect: () => onArchiveToggle(project.projectId, !isArchived),
         });
       }
@@ -190,7 +195,7 @@ function ProjectCard(props: {
       if (onDelete) {
         items.push({
           key: "delete",
-          label: "Delete",
+          label: t("dashboard.menu.delete"),
           onSelect: () => onDelete(project.projectId),
           destructive: true,
         });
@@ -237,16 +242,16 @@ function ProjectCard(props: {
       </div>
 
       <h3 className="text-[16px] text-[var(--color-fg-default)] mb-2 leading-snug line-clamp-2">
-        {project.name || "Untitled Project"}
+        {project.name || t("dashboard.untitledProject")}
       </h3>
 
       <p className="text-[13px] text-[var(--color-fg-muted)] leading-relaxed line-clamp-3 flex-1">
-        Open this project to continue writing.
+        {t("dashboard.openProjectHint")}
       </p>
 
       <div className="mt-auto pt-4 border-t border-[var(--color-border-default)] flex justify-between items-center">
         <span className="text-[11px] uppercase tracking-[0.05em] text-[var(--color-fg-faint)]">
-          {formatStageTag(project.stage)}
+          {formatStageTag(project.stage, t)}
         </span>
       </div>
     </div>
@@ -260,6 +265,7 @@ function ProjectCard(props: {
  * NewDraftCard - Dashed card for creating new projects.
  */
 function NewDraftCard(props: { onClick: () => void }): JSX.Element {
+  const { t } = useTranslation();
   return (
     <div
       data-testid="dashboard-new-draft"
@@ -273,7 +279,7 @@ function NewDraftCard(props: { onClick: () => void }): JSX.Element {
         +
       </div>
       <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-muted)]">
-        New Draft
+        {t("dashboard.newDraft")}
       </div>
     </div>
   );
@@ -301,10 +307,14 @@ function SectionTitle(props: {
 // Utility Functions
 // =============================================================================
 
+type TFunction = (key: string, options?: Record<string, unknown>) => string;
+
 /**
- * Format timestamp to relative time string.
+ * Format timestamp to relative time string using i18n keys.
+ *
+ * Why: Relative time strings ("just now", "5 minutes ago") vary by locale.
  */
-function formatRelativeTime(timestamp: number): string {
+function formatRelativeTime(timestamp: number, t: TFunction): string {
   const now = Date.now();
   const diff = now - timestamp;
 
@@ -312,38 +322,45 @@ function formatRelativeTime(timestamp: number): string {
   const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
 
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
-  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
-  if (days < 7) return `${days} day${days === 1 ? "" : "s"} ago`;
+  if (minutes < 1) return t("dashboard.time.justNow");
+  if (minutes < 60) return t("dashboard.time.minutesAgo", { count: minutes });
+  if (hours < 24) return t("dashboard.time.hoursAgo", { count: hours });
+  if (days < 7) return t("dashboard.time.daysAgo", { count: days });
 
   return formatDate(timestamp);
 }
 
 /**
  * Format timestamp to short date string.
+ *
+ * Why: Uses i18n.language so the month name matches the user's locale.
  */
 function formatDate(timestamp: number): string {
   const date = new Date(timestamp);
-  const month = date.toLocaleString("en-US", { month: "short" });
+  const locale = i18n.language === "zh-CN" ? "zh-CN" : i18n.language;
+  const month = date.toLocaleString(locale, { month: "short" });
   const day = date.getDate();
   return `${month} ${day}`;
 }
 
+/**
+ * Map project stage to an i18n-keyed display label.
+ */
 function formatStageTag(
   stage: "outline" | "draft" | "revision" | "final" | undefined,
+  t: TFunction,
 ): string {
   switch (stage) {
     case "outline":
-      return "大纲";
+      return t("dashboard.stage.outline");
     case "draft":
-      return "初稿";
+      return t("dashboard.stage.draft");
     case "revision":
-      return "修改";
+      return t("dashboard.stage.revision");
     case "final":
-      return "定稿";
+      return t("dashboard.stage.final");
     default:
-      return "项目";
+      return t("dashboard.stage.default");
   }
 }
 
@@ -358,6 +375,7 @@ function formatStageTag(
  * continue recent work, or start new drafts. Based on design/Variant/designs/05-dashboard-sidebar-full.html.
  */
 export function DashboardPage(props: DashboardPageProps): JSX.Element {
+  const { t } = useTranslation();
   const items = useProjectStore((s) => s.items);
   const bootstrapStatus = useProjectStore((s) => s.bootstrapStatus);
   const bootstrap = useProjectStore((s) => s.bootstrap);
@@ -498,16 +516,16 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
       const projectName =
         project?.name?.trim().length && project.name
           ? project.name
-          : "Untitled Project";
-      const title = archived ? "Archive project?" : "Unarchive project?";
+          : t("dashboard.untitledProject");
+      const title = archived ? t("dashboard.confirm.archiveTitle") : t("dashboard.confirm.unarchiveTitle");
       const description = archived
-        ? `"${projectName}" will move to Archived projects.`
-        : `"${projectName}" will be restored to active projects.`;
+        ? t("dashboard.confirm.archiveDesc", { name: projectName })
+        : t("dashboard.confirm.unarchiveDesc", { name: projectName });
       const confirmed = await confirm({
         title,
         description,
-        primaryLabel: archived ? "Archive" : "Unarchive",
-        secondaryLabel: "Cancel",
+        primaryLabel: archived ? t("dashboard.confirm.archiveAction") : t("dashboard.confirm.unarchiveAction"),
+        secondaryLabel: t("dashboard.confirm.cancel"),
       });
       if (!confirmed) {
         return;
@@ -568,7 +586,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
                   size="sm"
                   onClick={() => clearError()}
                 >
-                  Dismiss
+                  {t("dashboard.dismiss")}
                 </Button>
               </div>
             </div>
@@ -583,10 +601,10 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
             color="default"
             className="text-lg font-medium mb-2"
           >
-            开始创建你的第一个创作项目
+            {t("dashboard.emptyTitle")}
           </Text>
           <Text size="small" color="muted" className="mb-8 text-center">
-            从一个新项目开始你的创作流程。
+            {t("dashboard.emptySubtitle")}
           </Text>
           <Button
             data-testid="dashboard-create-first"
@@ -594,7 +612,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
             size="md"
             onClick={() => setCreateDialogOpen(true)}
           >
-            新建项目
+            {t("dashboard.createFirst")}
           </Button>
           <Button
             data-testid="dashboard-open-folder"
@@ -605,7 +623,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
               await invoke("dialog:folder:open", {});
             }}
           >
-            打开文件夹
+            {t("dashboard.openFolder")}
           </Button>
         </div>
 
@@ -635,7 +653,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
               onClick={() => setCreateDialogOpen(true)}
               className="rounded-full px-5"
             >
-              Create New
+              {t("dashboard.createNew")}
             </Button>
           </div>
         </header>
@@ -649,7 +667,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
               {lastError.code}: {lastError.message}
             </Text>
             <Button variant="secondary" size="sm" onClick={() => clearError()}>
-              Dismiss
+              {t("dashboard.dismiss")}
             </Button>
           </div>
         ) : null}
@@ -662,7 +680,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
               <SectionTitle
                 className="animate-fade-in-up"
               >
-                Continue Writing
+                {t("dashboard.continueWriting")}
               </SectionTitle>
               <div className="mb-16">
                 <HeroCard
@@ -681,7 +699,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
               <SectionTitle
                 className="mt-8 animate-fade-in-up animation-delay-200"
               >
-                Recent Projects
+                {t("dashboard.recentProjects")}
               </SectionTitle>
 
               <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 animate-fade-in-up animation-delay-300">
@@ -703,7 +721,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
               {searchQuery && filteredProjects.length === 0 && (
                 <div className="text-center py-12">
                   <Text size="body" color="muted">
-                    未找到匹配结果
+                    {t("dashboard.noResults")}
                   </Text>
                 </div>
               )}
@@ -714,7 +732,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
           {gridProjects.length === 0 && !searchQuery && heroProject && (
             <div className="mt-8">
               <SectionTitle className="animate-fade-in-up animation-delay-200">
-                Start Something New
+                {t("dashboard.startSomethingNew")}
               </SectionTitle>
               <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 animate-fade-in-up animation-delay-300">
                 <NewDraftCard onClick={() => setCreateDialogOpen(true)} />
@@ -732,12 +750,12 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
                     className="focus-ring text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
                     onClick={() => setArchivedExpanded((prev) => !prev)}
                   >
-                    {archivedExpanded ? "Collapse" : "Expand"}
+                    {archivedExpanded ? t("dashboard.collapse") : t("dashboard.expand")}
                   </button>
                 }
                 className="animate-fade-in-up animation-delay-200"
               >
-                Archived ({archivedProjects.length})
+                {t("dashboard.archived", { count: archivedProjects.length })}
               </SectionTitle>
               {archivedExpanded ? (
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6 animate-fade-in-up animation-delay-300">

@@ -1,0 +1,9 @@
+{
+  "id": "fe-i18n-core-pages-keying",
+  "issue": 934,
+  "branch": "task/934-fe-i18n-core-pages-keying",
+  "change": "fe-i18n-core-pages-keying",
+  "status": "in-progress",
+  "created": "2026-03-03",
+  "dependencies": ["fe-i18n-language-switcher-foundation"]
+}

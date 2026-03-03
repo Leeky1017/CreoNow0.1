@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { useHotkey } from "../../lib/hotkeys/useHotkey";
 import { Button } from "../../components/primitives/Button";
@@ -222,6 +223,7 @@ function MemoryResultItem(props: {
   query: string;
   onClick: () => void;
 }): JSX.Element {
+  const { t } = useTranslation();
   const { item, query, onClick } = props;
 
   return (
@@ -242,7 +244,7 @@ function MemoryResultItem(props: {
             <HighlightText text={item.title} query={query} />
           </h4>
           <span className="text-[10px] font-mono text-[var(--color-success)] bg-[var(--color-success-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-success-subtle)] opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-            High Relevance
+            {t("search.resultTypes.highRelevance")}
           </span>
         </div>
         <p className="text-xs text-[var(--color-fg-placeholder)] group-hover:text-[var(--color-fg-muted)] transition-colors leading-relaxed line-clamp-1">
@@ -267,6 +269,7 @@ function KnowledgeResultItem(props: {
   query: string;
   onClick: () => void;
 }): JSX.Element {
+  const { t } = useTranslation();
   const { item, query, onClick } = props;
 
   return (
@@ -288,7 +291,7 @@ function KnowledgeResultItem(props: {
         {item.meta && (
           <div className="flex items-center gap-2">
             <span className="text-[10px] text-[var(--color-fg-placeholder)] border border-[var(--color-separator)] px-1.5 py-0.5 rounded">
-              Entity
+              {t("search.resultTypes.entity")}
             </span>
             <span className="text-[10px] text-[var(--color-fg-placeholder)]">{item.meta}</span>
           </div>
@@ -307,6 +310,7 @@ function ResultGroup(props: {
   children: React.ReactNode;
   hasBorderTop?: boolean;
 }): JSX.Element {
+  const { t } = useTranslation();
   return (
     <div
       className={`py-2 ${props.hasBorderTop ? "border-t border-[var(--color-separator)]" : ""}`}
@@ -316,7 +320,7 @@ function ResultGroup(props: {
           {props.title}
         </span>
         <span className="text-[10px] font-mono text-[var(--color-fg-placeholder)]">
-          {props.count} {props.count === 1 ? "match" : "matches"}
+          {t("search.results.match", { count: props.count })}
         </span>
       </div>
       {props.children}
@@ -378,6 +382,7 @@ export function SearchPanel(props: {
     mockIndexState,
   } = props;
 
+  const { t } = useTranslation();
   const query = useSearchStore((s) => s.query);
   const storeItems = useSearchStore((s) => s.items);
   const status = useSearchStore((s) => s.status);
@@ -533,7 +538,7 @@ export function SearchPanel(props: {
               value={effectiveQuery}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleInputKeyDown}
-              placeholder="Search documents, memories, knowledge..."
+              placeholder={t("search.placeholder")}
               className="flex-1 !bg-transparent !border-none !outline-none !text-lg !text-white !placeholder-[var(--color-fg-placeholder)] !font-[var(--font-family-ui)] !font-light !h-8 !px-0 !rounded-none"
             />
             {effectiveStatus === "loading" && <Spinner size="sm" />}
@@ -552,27 +557,27 @@ export function SearchPanel(props: {
           {/* Category filters */}
           <div className="flex items-center gap-2 px-4 pb-4 overflow-x-auto">
             <CategoryButton
-              label="All"
+              label={t("search.categories.all")}
               active={category === "all"}
               onClick={() => setCategory("all")}
             />
             <CategoryButton
-              label="Documents"
+              label={t("search.categories.documents")}
               active={category === "documents"}
               onClick={() => setCategory("documents")}
             />
             <CategoryButton
-              label="Memories"
+              label={t("search.categories.memories")}
               active={category === "memories"}
               onClick={() => setCategory("memories")}
             />
             <CategoryButton
-              label="Knowledge"
+              label={t("search.categories.knowledge")}
               active={category === "knowledge"}
               onClick={() => setCategory("knowledge")}
             />
             <CategoryButton
-              label="Assets"
+              label={t("search.categories.assets")}
               active={category === "assets"}
               onClick={() => setCategory("assets")}
             />
@@ -585,13 +590,13 @@ export function SearchPanel(props: {
             <div className="flex items-center gap-6">
               <Toggle
                 id="semantic-toggle"
-                label="Semantic Search"
+                label={t("search.filters.semanticSearch")}
                 checked={semanticSearch}
                 onCheckedChange={setSemanticSearch}
               />
               <Toggle
                 id="archived-toggle"
-                label="Include Archived"
+                label={t("search.filters.includeArchived")}
                 checked={includeArchived}
                 onCheckedChange={setIncludeArchived}
               />
@@ -599,14 +604,14 @@ export function SearchPanel(props: {
 
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-[var(--color-fg-placeholder)] uppercase tracking-wider font-medium">
-                Scope
+                {t("search.filters.scope")}
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 className="!flex !items-center !gap-1.5 !px-2 !py-1 !h-auto !rounded !bg-[var(--color-separator)] !border !border-[var(--color-separator)] !text-xs !text-[var(--color-fg-muted)] hover:!text-white hover:!border-white/10"
               >
-                <span>Current Project</span>
+                <span>{t("search.filters.currentProject")}</span>
                 <ChevronDown className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
               </Button>
             </div>
@@ -622,7 +627,7 @@ export function SearchPanel(props: {
             <div className="flex flex-col items-center justify-center py-16 px-8">
               <Search className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4" size={24} strokeWidth={1.5} />
               <p className="text-sm text-[var(--color-fg-muted)] text-center">
-                Enter a search term to find documents
+                {t("search.emptyStateHint")}
               </p>
             </div>
           ) : hasQuery && effectiveIndexState === "rebuilding" ? (
@@ -630,10 +635,10 @@ export function SearchPanel(props: {
             <div className="flex flex-col items-center justify-center py-16 px-8">
               <RefreshCw className="w-16 h-16 text-[var(--color-info)] mb-4 motion-safe:animate-pulse" size={24} strokeWidth={1.5} />
               <p className="text-sm font-medium text-white text-center mb-2">
-                正在重建索引，请稍后重试
+                {t("search.rebuildingIndex")}
               </p>
               <p className="text-xs text-[var(--color-fg-muted)] text-center">
-                查询词：&ldquo;{effectiveQuery}&rdquo;
+                {t("search.rebuildingQuery", { query: effectiveQuery })}
               </p>
             </div>
           ) : hasQuery && hasError ? (
@@ -641,7 +646,7 @@ export function SearchPanel(props: {
             <div className="flex flex-col items-center justify-center py-16 px-8">
               <TriangleAlert className="w-16 h-16 text-[var(--color-error)] mb-4" size={24} strokeWidth={1.5} />
               <p className="text-sm font-medium text-white text-center mb-2">
-                搜索失败，请重试
+                {t("search.errorTitle")}
               </p>
               <p className="text-xs text-[var(--color-fg-muted)] text-center">
                 {lastError.message}
@@ -651,7 +656,7 @@ export function SearchPanel(props: {
                 onClick={handleRetrySearch}
                 className="mt-6 !px-4 !py-2 !h-auto !bg-[var(--color-info)] !text-white !text-sm !font-medium !rounded-lg hover:!bg-[var(--color-info)] hover:!brightness-110"
               >
-                重试搜索
+                {t("search.retrySearch")}
               </Button>
             </div>
           ) : hasQuery && !hasResults && effectiveStatus !== "loading" ? (
@@ -659,17 +664,17 @@ export function SearchPanel(props: {
             <div className="flex flex-col items-center justify-center py-16 px-8">
               <Frown className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4" size={24} strokeWidth={1.5} />
               <p className="text-sm font-medium text-white text-center mb-2">
-                未找到匹配结果
+                {t("search.noResults")}
               </p>
               <p className="text-xs text-[var(--color-fg-muted)] text-center">
-                查询词：&ldquo;{effectiveQuery}&rdquo;
+                {t("search.noResultsQuery", { query: effectiveQuery })}
               </p>
               <div className="mt-6 p-4 bg-[var(--color-separator)] rounded-lg border border-[var(--color-separator)]">
                 <p className="text-[10px] text-[var(--color-fg-placeholder)] font-medium uppercase tracking-wider mb-2">
-                  建议
+                  {t("search.suggestionsTitle")}
                 </p>
                 <p className="text-xs text-[var(--color-fg-muted)]">
-                  建议检查拼写或使用不同关键词
+                  {t("search.suggestionsText")}
                 </p>
               </div>
               <Button
@@ -677,14 +682,14 @@ export function SearchPanel(props: {
                 className="mt-6 !px-4 !py-2 !h-auto !bg-[var(--color-info)] !text-white !text-sm !font-medium !rounded-lg hover:!bg-[var(--color-info)] hover:!brightness-110"
               >
                 <Globe className="w-4 h-4" size={16} strokeWidth={1.5} />
-                Search in all projects
+                {t("search.searchAllProjects")}
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => setQuery("")}
                 className="mt-3 !h-auto !text-xs !text-[var(--color-fg-muted)] hover:!text-white"
               >
-                Clear search
+                {t("search.clearSearch")}
               </Button>
             </div>
           ) : (
@@ -693,7 +698,7 @@ export function SearchPanel(props: {
               {/* Documents group */}
               {documentItems.length > 0 &&
                 (category === "all" || category === "documents") && (
-                  <ResultGroup title="Documents" count={documentItems.length}>
+                  <ResultGroup title={t("search.resultTypes.documents")} count={documentItems.length}>
                     {documentItems.map((item, index) => (
                       <DocumentResultItem
                         key={item.id}
@@ -715,7 +720,7 @@ export function SearchPanel(props: {
               {memoryItems.length > 0 &&
                 (category === "all" || category === "memories") && (
                   <ResultGroup
-                    title="Memories"
+                    title={t("search.resultTypes.memories")}
                     count={memoryItems.length}
                     hasBorderTop={documentItems.length > 0}
                   >
@@ -734,7 +739,7 @@ export function SearchPanel(props: {
               {knowledgeItems.length > 0 &&
                 (category === "all" || category === "knowledge") && (
                   <ResultGroup
-                    title="Knowledge Graph"
+                    title={t("search.resultTypes.knowledgeGraph")}
                     count={knowledgeItems.length}
                     hasBorderTop={
                       documentItems.length > 0 || memoryItems.length > 0
@@ -758,7 +763,7 @@ export function SearchPanel(props: {
                     variant="ghost"
                     className="!text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-info)] !py-2 w-full !h-auto"
                   >
-                    View {totalResults - 5} more results
+                    {t("search.results.viewMore", { count: totalResults - 5 })}
                   </Button>
                 </div>
               )}
@@ -774,11 +779,11 @@ export function SearchPanel(props: {
             {hasResults && (
               <>
                 <span className="text-xs text-[var(--color-fg-muted)] font-medium">
-                  {totalResults} {totalResults === 1 ? "result" : "results"}
+                  {t("search.results.result", { count: totalResults })}
                 </span>
                 <div className="h-3 w-px bg-white/10" />
                 <span className="text-[10px] text-[var(--color-fg-placeholder)]">
-                  Search took 0.04s
+                  {t("search.results.searchTime", { time: "0.04s" })}
                 </span>
               </>
             )}
@@ -797,15 +802,15 @@ export function SearchPanel(props: {
               icon={
                 <ChevronDown className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
               }
-              label="to navigate"
+              label={t("search.footer.toNavigate")}
             />
             <KeyHint
               icon={
                 <CornerDownLeft className="w-3 h-3" size={16} strokeWidth={1.5} />
               }
-              label="to open"
+              label={t("search.footer.toOpen")}
             />
-            <KeyHint text="esc" label="to close" />
+            <KeyHint text="esc" label={t("search.footer.toClose")} />
           </div>
         </div>
       </div>

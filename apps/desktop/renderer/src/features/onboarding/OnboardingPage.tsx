@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button, Heading, Text } from "../../components/primitives";
 import { i18n } from "../../i18n";
@@ -34,9 +35,10 @@ function LanguageStep(props: {
   selected: string;
   onSelect: (lng: string) => void;
 }): JSX.Element {
+  const { t } = useTranslation();
   const languages = [
-    { value: "zh-CN", label: "中文 (简体)", description: "简体中文界面" },
-    { value: "en", label: "English", description: "English interface" },
+    { value: "zh-CN", key: "zhCN" },
+    { value: "en", key: "en" },
   ];
 
   return (
@@ -46,10 +48,10 @@ function LanguageStep(props: {
         color="default"
         className="mb-3 text-center text-2xl font-light tracking-tight"
       >
-        选择语言 / Select Language
+        {t("onboarding.selectLanguage")}
       </Heading>
       <Text size="body" color="muted" className="mb-8 text-center">
-        Choose your preferred display language.
+        {t("onboarding.selectLanguageHint")}
       </Text>
 
       <div
@@ -75,10 +77,10 @@ function LanguageStep(props: {
             </div>
             <div>
               <Text size="body" color="default" className="font-medium">
-                {lang.label}
+                {t(`onboarding.langOptions.${lang.key}.label`)}
               </Text>
               <Text size="small" color="muted">
-                {lang.description}
+                {t(`onboarding.langOptions.${lang.key}.description`)}
               </Text>
             </div>
           </button>
@@ -94,8 +96,8 @@ function LanguageStep(props: {
  * Why: CreoNow is an AI-native writing IDE — new users benefit from
  * understanding what AI features are available, even if they skip setup.
  */
-function AiConfigStep(props: { language: string }): JSX.Element {
-  const isEn = props.language === "en";
+function AiConfigStep(): JSX.Element {
+  const { t } = useTranslation();
   return (
     <div data-testid="onboarding-step-2" className="w-full max-w-[480px]">
       <Heading
@@ -103,12 +105,10 @@ function AiConfigStep(props: { language: string }): JSX.Element {
         color="default"
         className="mb-3 text-center text-2xl font-light tracking-tight"
       >
-        {isEn ? "AI Writing Assistant" : "AI 写作助手"}
+        {t("onboarding.step2.title")}
       </Heading>
       <Text size="body" color="muted" className="mb-8 text-center">
-        {isEn
-          ? "CreoNow has built-in AI writing capabilities for continuation, polishing, and inspiration."
-          : "CreoNow 内置 AI 写作能力，可以帮你续写、润色、激发灵感。"}
+        {t("onboarding.step2.subtitle")}
       </Text>
 
       <div className="space-y-4">
@@ -119,12 +119,10 @@ function AiConfigStep(props: { language: string }): JSX.Element {
             </div>
             <div>
               <Text size="body" color="default" className="mb-1 font-medium">
-                {isEn ? "Smart Continuation & Polish" : "智能续写与润色"}
+                {t("onboarding.step2.feature1Title")}
               </Text>
               <Text size="small" color="muted">
-                {isEn
-                  ? "Select text to invoke the AI panel for continuation, rewriting, and polishing suggestions."
-                  : "选中文本后唤起 AI 面板，即可获得续写、改写、润色建议。"}
+                {t("onboarding.step2.feature1Desc")}
               </Text>
             </div>
           </div>
@@ -137,12 +135,10 @@ function AiConfigStep(props: { language: string }): JSX.Element {
             </div>
             <div>
               <Text size="body" color="default" className="mb-1 font-medium">
-                {isEn ? "AI Settings Are Adjustable" : "AI 配置可在设置中调整"}
+                {t("onboarding.step2.feature2Title")}
               </Text>
               <Text size="small" color="muted">
-                {isEn
-                  ? "You can configure AI models and preferences in Settings → AI anytime."
-                  : "你随时可以在「设置 → AI」中配置模型和偏好。"}
+                {t("onboarding.step2.feature2Desc")}
               </Text>
             </div>
           </div>
@@ -159,11 +155,10 @@ function AiConfigStep(props: { language: string }): JSX.Element {
  * create a workspace folder to begin writing.
  */
 function OpenFolderStep(props: {
-  language: string;
   onOpenFolder: () => void;
   onSkip: () => void;
 }): JSX.Element {
-  const isEn = props.language === "en";
+  const { t } = useTranslation();
   return (
     <div data-testid="onboarding-step-3" className="w-full max-w-[480px]">
       <Heading
@@ -171,12 +166,10 @@ function OpenFolderStep(props: {
         color="default"
         className="mb-3 text-center text-2xl font-light tracking-tight"
       >
-        {isEn ? "Open Workspace" : "打开工作区"}
+        {t("onboarding.step3.title")}
       </Heading>
       <Text size="body" color="muted" className="mb-8 text-center">
-        {isEn
-          ? "Choose a folder as your creative workspace. CreoNow will manage your projects and documents here."
-          : "选择一个文件夹作为你的创作工作区，CreoNow 会在此管理你的项目与文档。"}
+        {t("onboarding.step3.subtitle")}
       </Text>
 
       <div className="flex flex-col items-center gap-4">
@@ -188,7 +181,7 @@ function OpenFolderStep(props: {
           className="rounded-full px-10"
         >
           <FolderOpen className="mr-2 h-4 w-4" size={16} strokeWidth={1.5} />
-          {isEn ? "Open Folder" : "打开文件夹"}
+          {t("onboarding.step3.openFolder")}
         </Button>
 
         <Button
@@ -198,7 +191,7 @@ function OpenFolderStep(props: {
           onClick={props.onSkip}
           className="rounded-full px-8"
         >
-          {isEn ? "Skip, choose later" : "跳过，稍后再选"}
+          {t("onboarding.step3.skipLater")}
         </Button>
       </div>
     </div>
@@ -259,6 +252,7 @@ export function OnboardingPage({
   const [language, setLanguage] = React.useState(() =>
     getLanguagePreference(),
   );
+  const { t } = useTranslation();
 
   const handleLanguageSelect = React.useCallback((lng: string) => {
     setLanguage(lng);
@@ -307,12 +301,10 @@ export function OnboardingPage({
             color="default"
             className="mb-2 text-center text-4xl font-light tracking-tight md:text-5xl"
           >
-            {language === "en" ? "Welcome to CreoNow" : "欢迎使用 CreoNow"}
+            {t("onboarding.welcome")}
           </Heading>
           <Text size="bodyLarge" color="muted" className="italic">
-            {language === "en"
-              ? "AI-powered Writing IDE"
-              : "AI 驱动的文字创作 IDE"}
+            {t("onboarding.subtitle")}
           </Text>
         </div>
 
@@ -324,10 +316,9 @@ export function OnboardingPage({
               onSelect={handleLanguageSelect}
             />
           )}
-          {step === 2 && <AiConfigStep language={language} />}
+          {step === 2 && <AiConfigStep />}
           {step === 3 && (
             <OpenFolderStep
-              language={language}
               onOpenFolder={() => void handleOpenFolder()}
               onSkip={onComplete}
             />
@@ -345,7 +336,7 @@ export function OnboardingPage({
                 onClick={goBack}
                 className="rounded-full px-6"
               >
-                {language === "en" ? "Back" : "返回"}
+                {t("onboarding.back")}
               </Button>
             )}
             {step === 1 && (
@@ -356,7 +347,7 @@ export function OnboardingPage({
                 onClick={goNext}
                 className="rounded-full px-8"
               >
-                {language === "en" ? "Next" : "下一步"}
+                {t("onboarding.next")}
               </Button>
             )}
             {step === 2 && (
@@ -367,7 +358,7 @@ export function OnboardingPage({
                 onClick={goNext}
                 className="rounded-full px-6"
               >
-                {language === "en" ? "Skip" : "跳过"}
+                {t("onboarding.skip")}
               </Button>
             )}
           </div>
