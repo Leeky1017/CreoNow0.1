@@ -17,7 +17,7 @@ describe("S3-ZEN-MODE-S1", () => {
     main.focus();
     expect(document.activeElement).toBe(main);
 
-    fireEvent.keyDown(window, { key: "F11" });
+    fireEvent.keyDown(document, { key: "F11" });
 
     expect(screen.getByTestId("layout-sidebar")).toHaveClass("hidden");
     expect(screen.getByTestId("layout-panel")).toHaveClass("hidden");

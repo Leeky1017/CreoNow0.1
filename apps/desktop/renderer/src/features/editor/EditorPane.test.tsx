@@ -177,7 +177,7 @@ describe("EditorPane", () => {
     await screen.findByTestId("editor-pane");
     await screen.findByTestId("tiptap-editor");
 
-    fireEvent.keyDown(window, { key: "s", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "s", ctrlKey: true });
 
     await waitFor(() => {
       expect(saveCalls).toContainEqual({

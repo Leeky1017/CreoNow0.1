@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useHotkey } from "../../lib/hotkeys/useHotkey";
 import { Button } from "../../components/primitives/Button";
 import { Input } from "../../components/primitives/Input";
 import { ListItem } from "../../components/primitives/ListItem";
@@ -429,24 +430,45 @@ export function SearchPanel(props: {
   }, [open]);
 
   // Handle keyboard shortcuts — only when panel is open
-  React.useEffect(() => {
-    if (!open) return;
-    function handleKeyDown(e: KeyboardEvent): void {
-      if (e.key === "Escape" && onClose) {
+  useHotkey(
+    "search:close",
+    { key: "Escape" },
+    React.useCallback(() => {
+      if (onClose) {
         onClose();
       }
-      if (e.key === "ArrowDown") {
+    }, [onClose]),
+    "global",
+    25,
+    open,
+  );
+
+  useHotkey(
+    "search:nav-down",
+    { key: "ArrowDown" },
+    React.useCallback(
+      (e: KeyboardEvent) => {
         e.preventDefault();
         setActiveIndex((prev) => Math.min(prev + 1, totalResults - 1));
-      }
-      if (e.key === "ArrowUp") {
-        e.preventDefault();
-        setActiveIndex((prev) => Math.max(prev - 1, 0));
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [onClose, totalResults, open]);
+      },
+      [totalResults],
+    ),
+    "global",
+    25,
+    open,
+  );
+
+  useHotkey(
+    "search:nav-up",
+    { key: "ArrowUp" },
+    React.useCallback((e: KeyboardEvent) => {
+      e.preventDefault();
+      setActiveIndex((prev) => Math.max(prev - 1, 0));
+    }, []),
+    "global",
+    25,
+    open,
+  );
 
   function handleInputKeyDown(e: React.KeyboardEvent): void {
     if (e.key === "Enter") {

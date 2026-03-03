@@ -282,7 +282,7 @@ describe("AppShell", () => {
 
       // 触发 Ctrl + \
       await act(async () => {
-        fireEvent.keyDown(window, { key: "\\", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "\\", ctrlKey: true });
       });
 
       // 侧边栏应该隐藏
@@ -297,7 +297,7 @@ describe("AppShell", () => {
 
       // 触发 Ctrl + L
       await act(async () => {
-        fireEvent.keyDown(window, { key: "l", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "l", ctrlKey: true });
       });
 
       // 面板应该隐藏
@@ -316,7 +316,7 @@ describe("AppShell", () => {
       expect(panel).toHaveClass("hidden");
 
       await act(async () => {
-        fireEvent.keyDown(window, { key: "l", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "l", ctrlKey: true });
       });
 
       expect(panel).not.toHaveClass("hidden");
@@ -335,7 +335,7 @@ describe("AppShell", () => {
 
       // 触发 F11
       await act(async () => {
-        fireEvent.keyDown(window, { key: "F11" });
+        fireEvent.keyDown(document, { key: "F11" });
       });
 
       // Zen 模式下侧边栏和面板都应该隐藏
@@ -350,12 +350,12 @@ describe("AppShell", () => {
 
       // 进入 Zen 模式
       await act(async () => {
-        fireEvent.keyDown(window, { key: "F11" });
+        fireEvent.keyDown(document, { key: "F11" });
       });
 
       // 按 Escape 退出
       await act(async () => {
-        fireEvent.keyDown(window, { key: "Escape" });
+        fireEvent.keyDown(document, { key: "Escape" });
       });
 
       // 侧边栏应该恢复显示
@@ -367,11 +367,11 @@ describe("AppShell", () => {
       await renderWithWrapper();
 
       await act(async () => {
-        fireEvent.keyDown(window, { key: "F11" });
+        fireEvent.keyDown(document, { key: "F11" });
       });
 
       await act(async () => {
-        fireEvent.keyDown(window, { key: "p", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "p", ctrlKey: true });
       });
 
       expect(screen.queryByTestId("command-palette")).not.toBeInTheDocument();
@@ -381,14 +381,14 @@ describe("AppShell", () => {
       await renderWithWrapper();
 
       await act(async () => {
-        fireEvent.keyDown(window, { key: "F11" });
+        fireEvent.keyDown(document, { key: "F11" });
       });
 
       const panel = screen.getByTestId("layout-panel");
       expect(panel).toHaveClass("hidden");
 
       await act(async () => {
-        fireEvent.keyDown(window, { key: "l", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "l", ctrlKey: true });
       });
 
       expect(panel).toHaveClass("hidden");
@@ -399,7 +399,7 @@ describe("AppShell", () => {
 
       // 触发 Ctrl + P
       await act(async () => {
-        fireEvent.keyDown(window, { key: "p", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "p", ctrlKey: true });
       });
 
       // 命令面板应该打开
@@ -493,7 +493,7 @@ describe("AppShell", () => {
       await renderWithWrapper();
 
       await act(async () => {
-        fireEvent.keyDown(window, { key: "p", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "p", ctrlKey: true });
       });
 
       const input = await screen.findByPlaceholderText("搜索命令或文件...");
@@ -569,9 +569,9 @@ describe("AppShell", () => {
 
       // 快速连按 3 次
       await act(async () => {
-        fireEvent.keyDown(window, { key: "\\", ctrlKey: true });
-        fireEvent.keyDown(window, { key: "\\", ctrlKey: true });
-        fireEvent.keyDown(window, { key: "\\", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "\\", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "\\", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "\\", ctrlKey: true });
       });
 
       // Advance past debounce window
@@ -595,9 +595,9 @@ describe("AppShell", () => {
 
       // 快速连按 3 次
       await act(async () => {
-        fireEvent.keyDown(window, { key: "l", ctrlKey: true });
-        fireEvent.keyDown(window, { key: "l", ctrlKey: true });
-        fireEvent.keyDown(window, { key: "l", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "l", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "l", ctrlKey: true });
+        fireEvent.keyDown(document, { key: "l", ctrlKey: true });
       });
 
       // Advance past debounce window
