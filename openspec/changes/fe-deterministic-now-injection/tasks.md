@@ -1,11 +1,11 @@
 ## 1. Specification
 
-更新时间：2026-02-28 19:20
+更新时间：2026-03-03 22:30
 
-- [ ] 1.1 审阅并确认需求边界：将所有直接调用 `Date.now()` 的 UI helper 改为可注入 `now` 参数，使测试可控、行为可复现。不做时间库全量重构。
-- [ ] 1.2 审阅并确认错误路径与边界路径：`now` 未提供时默认 `Date.now()`（保持现有运行时行为不变）。
-- [ ] 1.3 审阅并确认验收阈值与不可变契约：所有时间相关测试必须使用注入 `now` 或 `vi.useFakeTimers()`，禁止裸调 `Date.now()`。
-- [ ] 1.4 依赖同步检查（Dependency Sync Check）：N/A
+- [x] 1.1 审阅并确认需求边界：将所有直接调用 `Date.now()` 的 UI helper 改为可注入 `now` 参数，使测试可控、行为可复现。不做时间库全量重构。
+- [x] 1.2 审阅并确认错误路径与边界路径：`now` 未提供时默认 `Date.now()`（保持现有运行时行为不变）。
+- [x] 1.3 审阅并确认验收阈值与不可变契约：所有时间相关测试必须使用注入 `now` 或 `vi.useFakeTimers()`，禁止裸调 `Date.now()`。
+- [x] 1.4 依赖同步检查（Dependency Sync Check）：N/A
 
 ### 1.5 预期实现触点
 
@@ -26,9 +26,9 @@
 
 ## 2. TDD Mapping（先测前提）
 
-- [ ] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
-- [ ] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
-- [ ] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
+- [x] 2.1 将 delta spec 的每个 Scenario 映射为至少一个测试用例
+- [x] 2.2 为每个测试标注对应 Scenario ID，建立可追踪关系
+- [x] 2.3 设定门禁：未出现 Red（失败测试）不得进入实现
 
 ### Scenario → 测试映射
 
@@ -47,36 +47,35 @@
 
 ## 3. Red（先写失败测试）
 
-- [ ] 3.1 `WB-FE-NOW-S1`：新建测试文件，导入 `DashboardPage.tsx` 的 `formatRelativeTime`，传入 `(timestamp, fixedNow)`。
+- [x] 3.1 `WB-FE-NOW-S1`：新建测试文件，导入 `DashboardPage.tsx` 的 `formatRelativeTime`，传入 `(timestamp, fixedNow)`。
   - 期望红灯原因：当前函数签名不接受第二个参数，内部硬编码 `Date.now()`，测试中注入的 `now` 被忽略，断言结果不稳定。
   - 运行：`pnpm -C apps/desktop test:run features/dashboard/__tests__/formatRelativeTime.determinism`
-- [ ] 3.2 `WB-FE-NOW-S2`：新建测试文件，导入 `ChatHistory.tsx` 的 `formatRelativeTime`，传入 `(date, fixedNow)`。
+- [x] 3.2 `WB-FE-NOW-S2`：新建测试文件，导入 `ProjectSwitcher.tsx` 的 `formatRelativeTime`，传入 `(updatedAt, fixedNow)`。
   - 期望红灯原因：同上，函数不接受 `now` 参数。
-- [ ] 3.3 `WB-FE-NOW-S3`：新建测试文件，使用 `vi.useFakeTimers()` 固定时间后调用 flashKey 生成逻辑。
+- [x] 3.3 `WB-FE-NOW-S3`：新建测试文件，使用 `vi.useFakeTimers()` 固定时间后调用 flashKey 生成逻辑。
   - 期望红灯原因：`SearchPanel.tsx` L54 的 `Date.now()` 内联在回调中，无法通过参数注入控制；若未导出该逻辑则需先提取。
-- [ ] 3.4 `WB-FE-NOW-S4`：新建测试文件，测试 `VersionHistoryContainer` 的时间计算。
+- [x] 3.4 `WB-FE-NOW-S4`：新建测试文件，测试 `VersionHistoryContainer` 的时间计算。
   - 期望红灯原因：`now` 硬编码在组件内部。
-- [ ] 3.5 `WB-FE-NOW-S5`：新建测试文件，测试 `AnalyticsPage` 的日期范围计算。
+- [x] 3.5 `WB-FE-NOW-S5`：新建测试文件，测试 `AnalyticsPage` 的日期范围计算。
   - 期望红灯原因：`Date.now()` 内联在组件 effect 中。
 
 ## 4. Green（最小实现通过）
 
-- [ ] 4.1 `DashboardPage.tsx`：将 `formatRelativeTime(timestamp)` 改为 `formatRelativeTime(timestamp, now = Date.now())`，内部使用 `now` 替代 `Date.now()`。→ S1 转绿
-- [ ] 4.2 `ChatHistory.tsx`：将 `formatRelativeTime(date)` 改为 `formatRelativeTime(date, now = Date.now())`。→ S2 转绿
-  - 同时将 mock 数据中的 `Date.now() - ...` 改为固定时间戳常量。
-- [ ] 4.3 `SearchPanel.tsx`：将 L54 的 `Date.now()` 提取为可注入参数或独立 helper `generateFlashKey(docId, anchor, now?)`。→ S3 转绿
-- [ ] 4.4 `VersionHistoryContainer.tsx`：将 L58 的 `const now = Date.now()` 改为接受 props 或参数注入。→ S4 转绿
-- [ ] 4.5 `AnalyticsPage.tsx`：将 L101-102 的 `Date.now()` 提取为可注入参数。→ S5 转绿
+- [x] 4.1 `DashboardPage.tsx`：将 `formatRelativeTime(timestamp)` 改为 `formatRelativeTime(timestamp, now = Date.now())`，内部使用 `now` 替代 `Date.now()`。→ S1 转绿
+- [x] 4.2 `ProjectSwitcher.tsx`：将 `formatRelativeTime(updatedAt)` 改为 `formatRelativeTime(updatedAt, now = Date.now())`。→ S2 转绿
+- [x] 4.3 `SearchPanel.tsx`：将 L54 的 `Date.now()` 提取为可注入参数，通过 `NavigateSearchResultArgs.now` 注入。→ S3 转绿
+- [x] 4.4 `VersionHistoryContainer.tsx`：将 L58 的 `const now = Date.now()` 改为接受 props 或参数注入。→ S4 转绿
+- [x] 4.5 `AnalyticsPage.tsx`：将 L101-102 的 `Date.now()` 提取为 `computeDateRange(now)` 函数并 export。→ S5 转绿
 
 ## 5. Refactor（保持绿灯）
 
-- [ ] 5.1 评估是否将两处 `formatRelativeTime`（Dashboard 版 vs ChatHistory 版）合并为共享 `lib/time.ts` 工具函数，统一签名 `(timestamp: number, now?: number) => string`。
-- [ ] 5.2 若合并，更新所有调用点并确认测试仍绿。
+- [x] 5.1 评估是否将两处 `formatRelativeTime`（Dashboard 版 vs ProjectSwitcher 版）合并为共享 `lib/time.ts` 工具函数，统一签名 `(timestamp: number, now?: number) => string`。—— 结论：不合并，两者返回格式和依赖差异较大。
+- [x] 5.2 若合并，更新所有调用点并确认测试仍绿。 —— N/A
 
 ## 6. Evidence
 
-- [ ] 6.1 记录 RUN_LOG：Red 阶段 5 个测试全部失败的输出截取
-- [ ] 6.2 记录 RUN_LOG：Green 阶段 5 个测试全部通过的输出截取
-- [ ] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
-- [ ] 6.4 记录 Dependency Sync Check（N/A）
+- [x] 6.1 记录 RUN_LOG：Red 阶段 6 个测试全部失败的输出截取
+- [x] 6.2 记录 RUN_LOG：Green 阶段 6 个测试全部通过的输出截取
+- [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
+- [x] 6.4 记录 Dependency Sync Check（N/A）
 - [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
