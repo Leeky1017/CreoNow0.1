@@ -210,6 +210,7 @@ function ProjectCard(props: {
       onDelete,
       project.projectId,
       isArchived,
+      t,
     ]);
 
   const cardContent = (
@@ -532,7 +533,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
       }
       await setProjectArchived({ projectId, archived });
     },
-    [confirm, items, setProjectArchived],
+    [confirm, items, setProjectArchived, t],
   );
 
   /**

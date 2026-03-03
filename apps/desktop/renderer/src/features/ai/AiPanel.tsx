@@ -829,7 +829,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
         evaluatedRunIdRef.current = null;
       }
     });
-  }, [lastRequest, lastRunId, outputText, projectId, status]);
+  }, [lastRequest, lastRunId, outputText, projectId, status, t]);
 
   const diffText = proposal
     ? unifiedDiff({

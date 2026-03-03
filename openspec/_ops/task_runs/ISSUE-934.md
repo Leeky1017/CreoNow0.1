@@ -1,12 +1,19 @@
 # ISSUE-934 RUN_LOG
 
-| Field       | Value                                          |
-| ----------- | ---------------------------------------------- |
-| Issue       | #934                                           |
-| Branch      | `task/934-fe-i18n-core-pages-keying`           |
-| Worktree    | `.worktrees/issue-934-fe-i18n-core-pages-keying` |
-| PR          | TBD                                            |
-| Change      | `fe-i18n-core-pages-keying`                    |
+- Issue: #934
+- Branch: task/934-fe-i18n-core-pages-keying
+- PR: https://github.com/Leeky1017/CreoNow/pull/937
+- Change: fe-i18n-core-pages-keying
+- Worktree: .worktrees/issue-934-fe-i18n-core-pages-keying
+
+## Plan
+
+1. 编写 5 个 guard 测试（Dashboard/Search/AI/Onboarding i18n + date-format-locale）
+2. 逐页面迁移硬编码字符串为 `t()` key（~90 处）
+3. 将 `formatDate`/`formatRelativeTime` 的 `en-US` 硬编码改为 `i18n.language`
+4. 补齐 `zh-CN.json` + `en.json` 翻译（136 个新 key）
+5. 初始化测试环境 i18n（vitest.setup.ts）
+6. 全量回归 + TypeScript 检查
 
 ## Dependency Sync Check
 
@@ -82,3 +89,23 @@ tsc --noEmit  ✓  (zero errors)
 $ git commit  →  a659b5c5
 $ git push origin task/934-fe-i18n-core-pages-keying  →  remote created
 ```
+
+## Main Session Audit
+
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: 0bdf01d9c7c634ccc00dfb0505b62085a81981ce
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
+
+### 审查摘要
+
+1. Diff 审查：4 页面（Dashboard/Search/AI/Onboarding）硬编码完全迁移到 `t()` key
+2. formatDate/formatRelativeTime locale 参数化正确
+3. 136 个 locale key 中英文对称（locale-parity guard 通过）
+4. 5 个 guard 测试覆盖中文硬编码、英文硬编码、日期 locale 三类回归
+5. 测试回归 240/240 文件、1720/1720 test 全绿
+6. TypeScript 0 errors
+7. zh-CN 英文残留已修复（onboarding.selectLanguageHint）
