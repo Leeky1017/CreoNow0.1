@@ -7,7 +7,6 @@
 - Change: `fe-deterministic-now-injection`
 - PR: https://github.com/Leeky1017/CreoNow/pull/951
 - Agent: Worker-6-2
-- Reviewed-HEAD-SHA: beb44e846afd98d25b2e7c4e792f6aa7cb63a054
 
 ## Dependency Sync Check
 
@@ -78,7 +77,7 @@ pnpm -C apps/desktop exec tsc --noEmit
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 13939fb07bf4b88cd0ad55920a5a84c6c1d3b58f
+- Reviewed-HEAD-SHA: WILL_BE_SET_BY_RESIGN
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
