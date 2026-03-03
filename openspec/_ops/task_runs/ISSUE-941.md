@@ -4,7 +4,7 @@
 
 Issue: #941
 Branch: `task/941-fe-command-palette-search`
-- PR: (待回填)
+- PR: https://github.com/Leeky1017/CreoNow/pull/944
 
 ## Dependency Sync Check
 - `fe-composites-p0-panel-and-command-items` ✓ (PR #919 merged)
