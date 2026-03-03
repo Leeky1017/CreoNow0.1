@@ -143,6 +143,7 @@ export function Toast({
       onOpenChange={onOpenChange}
       duration={duration}
       className={`${toastStyles} ${variantStyle.border}`}
+      aria-live={variant === "error" ? "assertive" : "polite"}
     >
       <div className="flex-1 min-w-0">
         <ToastPrimitive.Title className="text-sm font-medium text-[var(--color-fg-default)]">

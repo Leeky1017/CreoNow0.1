@@ -52,6 +52,7 @@ export function SaveIndicator(props: {
   return (
     <span
       data-testid="editor-autosave-status"
+      aria-live="polite"
       data-status={displayStatus}
       onClick={() => {
         if (isError) {

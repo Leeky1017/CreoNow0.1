@@ -1341,7 +1341,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
 
           {/* AI Response - no box, just text flow */}
           {activeOutputText ? (
-            <div data-testid="ai-output" className="w-full">
+            <div data-testid="ai-output" className="w-full" aria-live="polite" aria-atomic="false">
               <div className="text-[13px] leading-relaxed text-[var(--color-fg-default)] whitespace-pre-wrap">
                 {activeOutputText}
                 {status === "streaming" && <span className="typing-cursor" />}
@@ -1352,6 +1352,8 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
             !working && (
               <div
                 data-testid="ai-output"
+                aria-live="polite"
+                aria-atomic="false"
                 className="flex-1 flex items-center justify-center text-center py-12"
               >
                 <Text size="small" color="muted">

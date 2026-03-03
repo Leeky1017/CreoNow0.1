@@ -2097,6 +2097,8 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                   class="flex-1 overflow-y-auto p-3 space-y-4"
                 >
                   <div
+                    aria-atomic="false"
+                    aria-live="polite"
                     class="flex-1 flex items-center justify-center text-center py-12"
                     data-testid="ai-output"
                   >
