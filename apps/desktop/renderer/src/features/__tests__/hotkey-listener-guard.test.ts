@@ -35,7 +35,7 @@ function getFilesRecursively(dir: string, ext: string): string[] {
 }
 
 function basename(p: string): string {
-  return p.split("/").pop() ?? p;
+  return p.split(/[\\/]/).pop() ?? p;
 }
 
 describe("hotkey listener guard", () => {
