@@ -5,7 +5,7 @@
 | Issue       | #926                                         |
 | Branch      | task/926-fe-composites-p2                     |
 | Change      | fe-composites-p2-empties-and-confirms         |
-| PR          | 待回填                                       |
+| PR          | https://github.com/Leeky1017/CreoNow/pull/930 |
 
 ## Dependency Sync Check
 - 上游 `fe-composites-p0`: PR #919 已合并 main ✓，无漂移
