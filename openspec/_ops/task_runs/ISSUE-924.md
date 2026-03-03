@@ -13,7 +13,18 @@
 ## Runs
 
 ### Red
-（待填充）
+
+```
+Test Files  1 failed (1)
+     Tests  3 failed (3)
+
+× S1: Found 93 raw <button> without focus-visible treatment
+  (features/ai/AiPanel.tsx, SkillManagerDialog.tsx, SkillPicker.tsx,
+   character/*, dashboard/*, editor/*, files/*, version-history/*,
+   onboarding/*, projects/*, settings-dialog/*, zen-mode/*, etc.)
+× S2: tokens.css does not contain --color-focus-ring
+× S3: main.css does not contain .focus-ring utility
+```
 
 ### Green
 （待填充）
