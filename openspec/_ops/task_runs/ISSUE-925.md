@@ -5,7 +5,7 @@
 | Issue       | #925                                         |
 | Branch      | task/925-fe-composites-p1                     |
 | Change      | fe-composites-p1-search-and-forms             |
-| PR          | 待回填                                       |
+| PR          | https://github.com/Leeky1017/CreoNow/pull/929 |
 
 ## Dependency Sync Check
 - 上游 `fe-composites-p0`: PR #919 已合并 main ✓（commit `f798c553`），无漂移
