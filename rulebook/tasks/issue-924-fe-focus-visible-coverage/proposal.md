@@ -4,6 +4,10 @@
 
 本任务引用 `openspec/changes/fe-feature-focus-visible-coverage/` 中的 delta spec。
 
+## Why
+
+前端 Feature 层大量 <button> 缺少 focus-visible 焦点反馈，键盘导航用户无法识别当前焦点位置。此任务补齐基础可访问性缺口，通过 Design Token 与 guard 测试防止未来退化。
+
 ## 目标
 
 补齐 Feature 层所有可交互元素的 `focus-visible` 焦点反馈样式。
