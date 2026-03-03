@@ -1,9 +1,0 @@
-{
-  "id": "fe-visual-noise-reduction",
-  "issue": 940,
-  "branch": "task/940-fe-visual-noise-reduction",
-  "change": "fe-visual-noise-reduction",
-  "status": "in-progress",
-  "created": "2026-03-03",
-  "dependencies": ["fe-feature-focus-visible-coverage", "fe-rightpanel-ai-tabbar-layout", "fe-rightpanel-ai-guidance-and-style", "fe-leftpanel-dialog-migration"]
-}

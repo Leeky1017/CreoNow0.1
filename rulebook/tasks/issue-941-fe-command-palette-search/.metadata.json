@@ -1,9 +1,0 @@
-{
-  "id": "fe-command-palette-search-uplift",
-  "issue": 941,
-  "branch": "task/941-fe-command-palette-search",
-  "change": "fe-command-palette-search-uplift",
-  "status": "in-progress",
-  "created": "2026-03-03",
-  "dependencies": ["fe-composites-p0-panel-and-command-items", "fe-i18n-core-pages-keying"]
-}
