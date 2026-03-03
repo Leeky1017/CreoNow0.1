@@ -5,7 +5,10 @@
 - Change: fe-composites-p2-empties-and-confirms
 - PR: https://github.com/Leeky1017/CreoNow/pull/930
 
-## Dependency Sync Check
+## Plan
+- 新增 P2 级 Composite 组件（EmptyState / ConfirmDialog / InfoBar），迁移 Feature 层散装空状态和确认弹窗。
+
+
 - 上游 `fe-composites-p0`: PR #919 已合并 main ✓，无漂移
 - 上游 `fe-composites-p1`: 已合并 main ✓，无漂移
 
