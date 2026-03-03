@@ -7,6 +7,10 @@
 - `openspec/changes/fe-composites-p1-search-and-forms/proposal.md`
 - `openspec/changes/fe-composites-p1-search-and-forms/specs/workbench/spec.md`
 
+## Why
+
+Feature 层搜索框和表单字段大量内联实现，缺乏统一交互与可访问性。新增 P1 级 Composite 组件（SearchInput / FormField / ToolbarGroup）统一复用模式，降低维护成本。
+
 ## 概述
 
 新增 P1 Composite 组件（SearchInput / FormField / ToolbarGroup），并在 Feature 层完成替换示范：

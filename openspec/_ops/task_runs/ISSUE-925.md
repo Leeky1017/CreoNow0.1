@@ -1,11 +1,9 @@
 # ISSUE-925: fe-composites-p1-search-and-forms
 
-| 字段        | 值                                           |
-| ----------- | -------------------------------------------- |
-| Issue       | #925                                         |
-| Branch      | task/925-fe-composites-p1                     |
-| Change      | fe-composites-p1-search-and-forms             |
-| PR          | https://github.com/Leeky1017/CreoNow/pull/929 |
+- Issue: #925
+- Branch: task/925-fe-composites-p1
+- Change: fe-composites-p1-search-and-forms
+- PR: https://github.com/Leeky1017/CreoNow/pull/929
 
 ## Dependency Sync Check
 - 上游 `fe-composites-p0`: PR #919 已合并 main ✓（commit `f798c553`），无漂移
@@ -58,3 +56,13 @@ $ pnpm -C apps/desktop test:run 2>&1 | tail -5
 ```
 
 全量回归通过，无新增失败 ✓
+
+
+## Main Session Audit
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: PENDING_SHA
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
