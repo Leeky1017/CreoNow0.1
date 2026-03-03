@@ -64,4 +64,21 @@ $ pnpm -C apps/desktop exec tsc --noEmit
 
 1. `3e568786` — `test: add reduced-motion guard tests (Red) (#947)`
 2. `066645f7` — `feat: add global reduced-motion and motion token overrides (#947)`
-3. (docs commit pending)
+3. `3c87c0b1` — `docs: add RUN_LOG and rulebook for issue #947 (#947)`
+
+## Main Session Audit
+
+- Audit-Owner: main-session
+- Reviewed-HEAD-SHA: 3c87c0b16519e2c2c59fe19e99543d55b0de1cce
+- Spec-Compliance: PASS
+- Code-Quality: PASS
+- Fresh-Verification: PASS
+- Blocking-Issues: 0
+- Decision: ACCEPT
+
+### 审计要点
+
+1. **Spec 对齐**：三个 Scenario（S1 全局规则 / S2 token 覆盖 / S3 内联 keyframes 清理）全部由 guard 测试覆盖并通过。
+2. **代码质量**：全局 reduced motion 使用 `0.01ms !important` + `animation-iteration-count: 1 !important`（Web 标准最佳实践）；tokens.css 对五个 duration token 覆盖为 `0ms`；SearchPanel 内联 `@keyframes slideDown` 成功外提至 main.css。
+3. **回归验证**：251 test files / 1757 tests 全绿，tsc --noEmit 零报错。
+4. **治理完整性**：RUN_LOG 包含 Dependency Sync Check + Red/Green/回归证据；Rulebook task 结构完整。
