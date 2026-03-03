@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-03 21:00
+更新时间：2026-03-03 22:10
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -85,7 +85,7 @@
 | B | 3b-1 | `fe-theme-switch-smoothing` | `main.css` + `tokens.css` 簇 | Wave 3a 完成后（与 searchpanel/zenmode 共享样式文件） | 已完成并归档（PR #910） |
 | A | 3c-1 | `fe-feature-focus-visible-coverage` | AiPanel/SearchPanel/Dashboard + `main.css` + `tokens.css` 簇 | Wave 3b 完成后 | 已完成并归档（PR #928） |
 | A | 3c-2 | `fe-visual-noise-reduction` | AiPanel/Dashboard + `tokens.css` 簇 | `fe-feature-focus-visible-coverage`；且需 `fe-rightpanel-ai-tabbar-layout`, `fe-rightpanel-ai-guidance-and-style`, `fe-leftpanel-dialog-migration` | 已完成并归档（PR #943） |
-| A | 3c-3 | `fe-reduced-motion-respect` | AiPanel/SearchPanel + `main.css` + `tokens.css` 簇 | `fe-visual-noise-reduction` | 待执行 |
+| A | 3c-3 | `fe-reduced-motion-respect` | AiPanel/SearchPanel + `main.css` + `tokens.css` 簇 | `fe-visual-noise-reduction` | 进行中（PR #950） |
 
 #### 第三批文件冲突矩阵
 
