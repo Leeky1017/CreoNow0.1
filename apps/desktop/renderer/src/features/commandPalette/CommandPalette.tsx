@@ -27,6 +27,7 @@ import { CommandItem as CommandItemComposite } from "../../components/composites
 import { useProjectStore } from "../../stores/projectStore";
 import "../../i18n";
 import { Download, FolderPlus, History, Maximize, PanelLeft, PanelRight, Search, Settings, SquarePen } from "lucide-react";
+import { fuzzyFilter } from "./fuzzyMatch";
 
 // =============================================================================
 // Types
@@ -277,23 +278,19 @@ function resolveCategory(command: CommandItem): "recent" | "file" | "command" {
 }
 
 /**
- * 过滤命令列表
+ * 过滤命令列表（使用 fuzzy match）
  */
 function filterCommands(commands: CommandItem[], query: string): CommandItem[] {
-  const normalizedQuery = query.trim().toLowerCase();
+  const normalizedQuery = query.trim();
   if (!normalizedQuery) {
     return commands.filter((cmd) => resolveCategory(cmd) !== "file");
   }
 
-  return commands.filter((cmd) => {
-    if (resolveCategory(cmd) === "recent") {
-      return false;
-    }
-    return (
-      cmd.label.toLowerCase().includes(normalizedQuery) ||
-      cmd.subtext?.toLowerCase().includes(normalizedQuery)
-    );
-  });
+  // 先排除 recent 项，然后用 fuzzy match 过滤
+  const searchable = commands.filter(
+    (cmd) => resolveCategory(cmd) !== "recent",
+  );
+  return fuzzyFilter(searchable, normalizedQuery);
 }
 
 // =============================================================================
