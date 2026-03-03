@@ -186,7 +186,7 @@ function SendStopButton(props: {
     <button
       data-testid="ai-send-stop"
       type="button"
-      className="w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      className="focus-ring w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       onClick={props.isWorking ? props.onStop : props.onSend}
       disabled={props.disabled}
       title={props.isWorking ? "Stop generating" : "Send message"}
@@ -223,7 +223,7 @@ function ToolButton(props: {
       data-testid={props.testId}
       type="button"
       className={`
-        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
         transition-colors cursor-pointer
         ${
           props.active
@@ -287,7 +287,7 @@ function ErrorGuideCard(props: {
               <button
                 type="button"
                 data-testid={`${props.testId}-copy-command`}
-                className="text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
                 onClick={() => void handleCopyCommand()}
               >
                 {copied ? "Copied" : "Copy"}
@@ -299,7 +299,7 @@ function ErrorGuideCard(props: {
               <button
                 type="button"
                 data-testid={props.actionTestId}
-                className="text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
                 onClick={props.onAction}
               >
                 {props.actionLabel}
@@ -357,7 +357,7 @@ export function CodeBlock(props: {
           <button
             type="button"
             onClick={handleCopy}
-            className="px-2 py-0.5 text-[11px] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
+            className="focus-ring px-2 py-0.5 text-[11px] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
           >
             {copied ? "Copied!" : "Copy"}
           </button>
@@ -366,7 +366,7 @@ export function CodeBlock(props: {
             <button
               type="button"
               onClick={props.onApply}
-              className="px-2 py-0.5 text-[11px] text-[var(--color-fg-accent)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
+              className="focus-ring px-2 py-0.5 text-[11px] text-[var(--color-fg-accent)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
             >
               Apply
             </button>
@@ -1293,7 +1293,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                     data-testid={`ai-candidate-card-${index + 1}`}
                     type="button"
                     onClick={() => onSelectCandidate(candidate.id)}
-                    className={`w-full text-left rounded-[var(--radius-md)] border px-3 py-2 transition-colors ${
+                    className={`focus-ring w-full text-left rounded-[var(--radius-md)] border px-3 py-2 transition-colors ${
                       isSelected
                         ? "border-[var(--color-accent)] bg-[var(--color-bg-selected)]"
                         : "border-[var(--color-border-default)] bg-[var(--color-bg-base)] hover:bg-[var(--color-bg-hover)]"
@@ -1515,7 +1515,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                   <button
                     type="button"
                     data-testid="ai-selection-reference-close"
-                    className="h-5 w-5 shrink-0 rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                    className="focus-ring h-5 w-5 shrink-0 rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
                     onClick={() => setSelectionSnapshot(null)}
                     title="Dismiss selection reference"
                   >

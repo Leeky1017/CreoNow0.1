@@ -367,7 +367,7 @@ function HoverActions({
       <button
         type="button"
         onClick={() => onRestore?.(versionId)}
-        className="p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+        className="focus-ring p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
         title="Restore"
       >
         <RestoreIcon />
@@ -375,7 +375,7 @@ function HoverActions({
       <button
         type="button"
         onClick={() => onCompare?.(versionId)}
-        className="p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+        className="focus-ring p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
         title="Compare"
       >
         <CompareIcon />
@@ -383,7 +383,7 @@ function HoverActions({
       <button
         type="button"
         onClick={() => onPreview?.(versionId)}
-        className="p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+        className="focus-ring p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
         title="Preview"
       >
         <PreviewIcon />
@@ -715,7 +715,7 @@ export function VersionHistoryPanelContent({
           <button
             type="button"
             onClick={onClose}
-            className={closeButtonStyles}
+            className={`focus-ring ${closeButtonStyles}`}
             aria-label="Close version history"
           >
             <CloseIcon />
@@ -755,7 +755,7 @@ export function VersionHistoryPanelContent({
         <button
           type="button"
           onClick={onConfigureAutoSave}
-          className="text-[11px] text-[var(--color-accent-muted)] hover:text-[var(--color-accent)] transition-colors hover:underline"
+          className="focus-ring text-[11px] text-[var(--color-accent-muted)] hover:text-[var(--color-accent)] transition-colors hover:underline"
         >
           Configure auto-save settings
         </button>

@@ -11,6 +11,7 @@ import {
   type ContextMenuItem,
 } from "../../components/primitives";
 import { PanelContainer } from "../../components/composites/PanelContainer";
+import { EmptyState } from "../../components/composites/EmptyState";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { useEditorStore } from "../../stores/editorStore";
 import {
@@ -781,19 +782,20 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
             Loading files…
           </Text>
         ) : items.length === 0 ? (
-          <div className="p-3 flex flex-col gap-2">
-            <Text size="small" color="muted" className="block">
-              暂无文件，开始创建你的第一个文件
-            </Text>
-            <Button
-              data-testid="file-create-empty"
-              variant="secondary"
-              size="sm"
-              onClick={() => void onCreate("chapter")}
-            >
-              新建文件
-            </Button>
-          </div>
+          <EmptyState
+            title="暂无文件"
+            description="开始创建你的第一个文件"
+            action={
+              <Button
+                data-testid="file-create-empty"
+                variant="secondary"
+                size="sm"
+                onClick={() => void onCreate("chapter")}
+              >
+                新建文件
+              </Button>
+            }
+          />
         ) : (
           <div className="flex flex-col gap-1 p-2">
             {visibleNodes.map((entry) => {

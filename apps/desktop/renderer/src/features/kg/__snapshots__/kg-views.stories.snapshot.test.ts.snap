@@ -9,7 +9,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
     data-testid="character-card-list"
   >
     <button
-      class="w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+      class="focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
       data-testid="character-card-c-1"
       type="button"
     >
@@ -66,7 +66,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       </div>
     </button>
     <button
-      class="w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+      class="focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
       data-testid="character-card-c-2"
       type="button"
     >
@@ -135,19 +135,29 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
     data-testid="character-card-list-empty"
   >
     <div
-      class="text-center space-y-3"
+      class="flex flex-col items-center justify-center gap-3 p-6 text-center "
+      role="status"
     >
+      <h3
+        class="text-sm font-semibold text-[color:var(--color-fg-default)]"
+      >
+        暂无角色
+      </h3>
       <p
-        class="text-sm text-[var(--color-fg-muted)]"
+        class="text-xs text-[color:var(--color-fg-muted)] max-w-[240px] leading-relaxed"
       >
-        暂无角色，开始创建你的第一个角色
+        开始创建你的第一个角色
       </p>
-      <button
-        class="px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
-        type="button"
+      <div
+        class="mt-1"
       >
-        创建角色
-      </button>
+        <button
+          class="focus-ring px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
+          type="button"
+        >
+          创建角色
+        </button>
+      </div>
     </div>
   </section>
 </div>
@@ -162,7 +172,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
     data-testid="character-card-list"
   >
     <button
-      class="w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+      class="focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
       data-testid="character-card-c-partial"
       type="button"
     >

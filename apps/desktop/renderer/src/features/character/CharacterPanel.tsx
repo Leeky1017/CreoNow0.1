@@ -67,6 +67,7 @@ function EmptyGroupState({ onClick }: { onClick?: () => void }) {
       type="button"
       onClick={onClick}
       className={[
+        "focus-ring",
         "w-full",
         "px-4",
         "py-8",
@@ -241,6 +242,7 @@ export function CharacterPanelContent({
             type="button"
             onClick={onCreate}
             className={[
+              "focus-ring",
               "flex",
               "items-center",
               "justify-center",

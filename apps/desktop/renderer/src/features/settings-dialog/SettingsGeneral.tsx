@@ -3,7 +3,7 @@ import React from "react";
 import { Toggle } from "../../components/primitives/Toggle";
 import { Slider } from "../../components/primitives/Slider";
 import { Select } from "../../components/primitives";
-import { Text } from "../../components/primitives";
+import { FormField } from "../../components/composites/FormField";
 import { i18n } from "../../i18n";
 import {
   getLanguagePreference,
@@ -58,13 +58,6 @@ const dividerStyles = [
   "bg-[var(--color-border-default)]",
   "my-12",
 ].join(" ");
-
-/**
- * Field label styles
- */
-const fieldLabelStyles = ["text-[13px]", "text-[var(--color-fg-muted)]"].join(
-  " ",
-);
 
 /**
  * Backup interval options
@@ -134,18 +127,14 @@ export function SettingsGeneral({
       {/* Language Section */}
       <div className="mb-14">
         <h4 className={sectionLabelStyles}>Language</h4>
-        <div className="flex flex-col gap-3">
-          <label className={fieldLabelStyles}>Display Language</label>
+        <FormField label="Display Language" htmlFor="display-language" help="Changes take effect immediately.">
           <Select
             options={languageOptions}
             value={currentLanguage}
             onValueChange={handleLanguageChange}
             fullWidth
           />
-          <Text size="small" color="placeholder" className="mt-1">
-            Changes take effect immediately.
-          </Text>
-        </div>
+        </FormField>
       </div>
 
       <div className={dividerStyles} />
@@ -198,20 +187,14 @@ export function SettingsGeneral({
             }
           />
 
-          <div className="flex flex-col gap-3 mt-2">
-            <h3 className="text-[14px] text-[var(--color-fg-default)] font-medium">
-              Backup Interval
-            </h3>
+          <FormField label="Backup Interval" htmlFor="backup-interval" help="Last backup: 2 minutes ago" className="mt-2">
             <Select
               options={backupIntervalOptions}
               value={settings.backupInterval}
               onValueChange={(value) => updateSetting("backupInterval", value)}
               fullWidth
             />
-            <Text size="small" color="placeholder" className="mt-1">
-              Last backup: 2 minutes ago
-            </Text>
-          </div>
+          </FormField>
         </div>
       </div>
 
@@ -231,8 +214,7 @@ export function SettingsGeneral({
         </div>
 
         <div className="grid grid-cols-2 gap-8">
-          <div className="flex flex-col gap-3">
-            <label className={fieldLabelStyles}>Default Typography</label>
+          <FormField label="Default Typography" htmlFor="default-typography">
             <Select
               options={typographyOptions}
               value={settings.defaultTypography}
@@ -241,10 +223,9 @@ export function SettingsGeneral({
               }
               fullWidth
             />
-          </div>
+          </FormField>
 
-          <div className="flex flex-col gap-3">
-            <label className={fieldLabelStyles}>Interface Scale</label>
+          <FormField label="Interface Scale" htmlFor="interface-scale">
             <Slider
               min={80}
               max={120}
@@ -253,7 +234,7 @@ export function SettingsGeneral({
               onValueChange={(value) => updateSetting("interfaceScale", value)}
               showLabels
             />
-          </div>
+          </FormField>
         </div>
       </div>
     </div>

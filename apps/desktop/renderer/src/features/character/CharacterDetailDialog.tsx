@@ -277,6 +277,7 @@ function TraitTag({
           type="button"
           onClick={onRemove}
           className={[
+            "focus-ring",
             "opacity-0",
             "group-hover:opacity-100",
             "text-[var(--color-fg-placeholder)]",
@@ -339,7 +340,7 @@ function RelationshipItem({
           <button
             type="button"
             onClick={onRemove}
-            className="opacity-0 group-hover:opacity-100 text-[var(--color-fg-placeholder)] hover:text-[var(--color-error)] transition-all"
+            className="focus-ring opacity-0 group-hover:opacity-100 text-[var(--color-fg-placeholder)] hover:text-[var(--color-error)] transition-all"
             aria-label={`Remove relationship with ${relationship.characterName}`}
           >
             <CloseIcon />
@@ -365,6 +366,7 @@ function ChapterLink({
       type="button"
       onClick={onNavigate}
       className={[
+        "focus-ring",
         "group",
         "flex",
         "items-center",
@@ -640,7 +642,7 @@ export function CharacterDetailDialog({
                   aria-expanded={isProfileExpanded}
                   aria-controls={profileContentId}
                   aria-label={isProfileExpanded ? "Collapse profile" : "Expand profile"}
-                  className="text-[10px] text-[var(--color-fg-placeholder)] hover:text-[var(--color-fg-muted)] inline-flex items-center gap-1 font-medium transition-colors"
+                  className="focus-ring text-[10px] text-[var(--color-fg-placeholder)] hover:text-[var(--color-fg-muted)] inline-flex items-center gap-1 font-medium transition-colors"
                 >
                   <span aria-hidden="true">
                     {isProfileExpanded ? "Collapse" : "Expand"}

@@ -2126,7 +2126,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                       >
                         <button
                           class="
-        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
         transition-colors cursor-pointer
         text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
       "
@@ -2136,7 +2136,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                         </button>
                         <button
                           class="
-        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
         transition-colors cursor-pointer
         text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
       "
@@ -2146,7 +2146,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                         </button>
                         <button
                           class="
-        px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
+        focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
         transition-colors cursor-pointer
         text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
       "
@@ -2157,7 +2157,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                         </button>
                       </div>
                       <button
-                        class="w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="focus-ring w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         data-testid="ai-send-stop"
                         disabled=""
                         title="Send message"

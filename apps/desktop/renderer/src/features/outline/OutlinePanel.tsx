@@ -1,7 +1,8 @@
 import React from "react";
 import { ScrollArea } from "../../components/primitives";
+import { SearchInput } from "../../components/composites/SearchInput";
 
-import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Dot, File, FileText, Pencil, Search, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Dot, File, FileText, Pencil, Trash2 } from "lucide-react";
 // ============================================================================
 // Types
 // ============================================================================
@@ -96,9 +97,6 @@ function CollapseAllIcon() {
   return <ChevronsUpDown size={16} strokeWidth={1.5} className="rotate-180" />;
 }
 
-function SearchIcon() {
-  return <Search size={16} strokeWidth={1.5} />;
-}
 
 function EmptyDocumentIcon() {
   return <File className="w-6 h-6 text-[var(--color-fg-placeholder)] mb-2" size={24} strokeWidth={1.5} />;
@@ -179,43 +177,7 @@ function formatWordCount(count: number): string {
 // Sub-components
 // ============================================================================
 
-/**
- * Search input component
- */
-function SearchInput({
-  value,
-  onChange,
-  onClear,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  onClear: () => void;
-}) {
-  return (
-    <div className="relative mx-3 mb-2">
-      <div className="absolute left-2 top-1/2 -translate-y-1/2 text-[var(--color-fg-muted)]">
-        <SearchIcon />
-      </div>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="Filter outline..."
-        className="w-full h-7 pl-7 pr-7 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] text-xs text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none focus:border-[var(--color-border-focus)]"
-        data-testid="outline-search-input"
-      />
-      {value && (
-        <button
-          type="button"
-          onClick={onClear}
-          className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
-        >
-          ×
-        </button>
-      )}
-    </div>
-  );
-}
+/* SearchInput: replaced by composites/SearchInput */
 
 /**
  * Drag indicator line shown during drag operations
@@ -905,11 +867,13 @@ export function OutlinePanel({
       </div>
 
       {/* Search Input */}
-      <div className="pt-2">
+      <div className="pt-2 px-3 pb-2">
         <SearchInput
           value={searchQuery}
           onChange={setSearchQuery}
           onClear={() => setSearchQuery("")}
+          placeholder="Filter outline..."
+          data-testid="outline-search-input"
         />
       </div>
 

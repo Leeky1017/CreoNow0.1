@@ -56,7 +56,8 @@ describe("OutlinePanel", () => {
     render(<OutlinePanel items={longItems} onNavigate={onNavigate} />);
 
     const viewport = screen.getByTestId("outline-scroll-viewport");
-    const searchInput = screen.getByTestId("outline-search-input");
+    const searchContainer = screen.getByTestId("outline-search-input");
+    const searchInput = screen.getByRole("searchbox");
     const expandAllButton = screen.getByRole("button", {
       name: "Expand all outline items",
     });
@@ -66,7 +67,7 @@ describe("OutlinePanel", () => {
 
     expect(viewport).toBeInTheDocument();
     expect(viewport.className).toContain("overflow-y-auto");
-    expect(viewport).not.toContainElement(searchInput);
+    expect(viewport).not.toContainElement(searchContainer);
     expect(viewport).not.toContainElement(expandAllButton);
     expect(viewport).not.toContainElement(collapseAllButton);
 
@@ -202,7 +203,7 @@ describe("OutlinePanel", () => {
     const user = userEvent.setup();
     render(<OutlinePanel items={SAMPLE_ITEMS} />);
 
-    const searchInput = screen.getByTestId("outline-search-input");
+    const searchInput = screen.getByRole("searchbox");
     await user.type(searchInput, "intro");
 
     // Only "Introduction" should be visible
@@ -214,7 +215,7 @@ describe("OutlinePanel", () => {
     const user = userEvent.setup();
     render(<OutlinePanel items={SAMPLE_ITEMS} />);
 
-    const searchInput = screen.getByTestId("outline-search-input");
+    const searchInput = screen.getByRole("searchbox");
     await user.type(searchInput, "xyz123nonexistent");
 
     expect(screen.getByText(/No results for/)).toBeInTheDocument();
@@ -224,11 +225,11 @@ describe("OutlinePanel", () => {
     const user = userEvent.setup();
     render(<OutlinePanel items={SAMPLE_ITEMS} />);
 
-    const searchInput = screen.getByTestId("outline-search-input");
+    const searchInput = screen.getByRole("searchbox");
     await user.type(searchInput, "intro");
 
     // Click clear button
-    const clearButton = screen.getByText("×");
+    const clearButton = screen.getByRole("button", { name: /clear search/i });
     await user.click(clearButton);
 
     // All items should be visible again
