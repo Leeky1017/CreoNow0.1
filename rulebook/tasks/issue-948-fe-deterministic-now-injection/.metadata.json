@@ -1,1 +1,5 @@
-{"status": "active", "createdAt": "2026-03-03T22:30:00.000Z", "updatedAt": "2026-03-03T22:30:00.000Z"}
+{
+  "status": "active",
+  "createdAt": "2026-03-03T22:30:00+08:00",
+  "updatedAt": "2026-03-03T22:30:00+08:00"
+}
