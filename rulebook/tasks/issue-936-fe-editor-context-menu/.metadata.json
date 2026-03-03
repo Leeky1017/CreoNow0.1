@@ -1,0 +1,9 @@
+{
+  "id": "fe-editor-context-menu-and-tooltips",
+  "issue": 936,
+  "branch": "task/936-fe-editor-context-menu",
+  "change": "fe-editor-context-menu-and-tooltips",
+  "status": "in-progress",
+  "created": "2026-03-03",
+  "dependencies": ["fe-editor-advanced-interactions", "fe-hotkeys-shortcuts-unification"]
+}

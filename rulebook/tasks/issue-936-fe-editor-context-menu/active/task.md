@@ -1,5 +1,7 @@
 # Task: fe-editor-context-menu-and-tooltips
 
+更新时间：2026-03-03 16:00
+
 Issue: #936
 Branch: `task/936-fe-editor-context-menu`
 Change: `openspec/changes/fe-editor-context-menu-and-tooltips`
@@ -22,7 +24,7 @@ Change: `openspec/changes/fe-editor-context-menu-and-tooltips`
 - [x] Refactor: icon size fix (14→16), aria-label, unused imports
 - [x] Full regression (237/237, 1714/1714) + typecheck (0 errors)
 - [x] Commit: `76d0b6da`
-- [ ] Push + PR
+- [x] Push + PR
 
 ## Verification
 
