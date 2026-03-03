@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-03 22:10
+更新时间：2026-03-03 21:05
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -85,7 +85,7 @@
 | B | 3b-1 | `fe-theme-switch-smoothing` | `main.css` + `tokens.css` 簇 | Wave 3a 完成后（与 searchpanel/zenmode 共享样式文件） | 已完成并归档（PR #910） |
 | A | 3c-1 | `fe-feature-focus-visible-coverage` | AiPanel/SearchPanel/Dashboard + `main.css` + `tokens.css` 簇 | Wave 3b 完成后 | 已完成并归档（PR #928） |
 | A | 3c-2 | `fe-visual-noise-reduction` | AiPanel/Dashboard + `tokens.css` 簇 | `fe-feature-focus-visible-coverage`；且需 `fe-rightpanel-ai-tabbar-layout`, `fe-rightpanel-ai-guidance-and-style`, `fe-leftpanel-dialog-migration` | 已完成并归档（PR #943） |
-| A | 3c-3 | `fe-reduced-motion-respect` | AiPanel/SearchPanel + `main.css` + `tokens.css` 簇 | `fe-visual-noise-reduction` | 进行中（PR #950） |
+| A | 3c-3 | `fe-reduced-motion-respect` | AiPanel/SearchPanel + `main.css` + `tokens.css` 簇 | `fe-visual-noise-reduction` | 已完成（PR #950，待归档） |
 
 #### 第三批文件冲突矩阵
 
@@ -122,8 +122,8 @@
 | A | 4c-1 | `fe-accessibility-aria-live` | AiPanel/SearchPanel/ChatHistory 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying`（已归档）完成后（共享 `AiPanel.tsx`/`SearchPanel.tsx`） | 已完成并归档（PR #946） |
 | B | 4c-1 | `fe-command-palette-search-uplift` | CommandPalette 簇 | `fe-composites-p0-panel-and-command-items`, `fe-i18n-core-pages-keying`（已归档）完成后（共享 `CommandPalette.tsx`） | 已完成并归档（PR #944） |
 | C | 4c-1 | `fe-editor-context-menu-and-tooltips` | EditorPane + Tooltip 簇 | `fe-editor-advanced-interactions`, `fe-hotkeys-shortcuts-unification`（已归档）完成后（共享 `EditorPane.tsx`） | 已完成并归档（PR #939） |
-| A | 4d-1 | `fe-deterministic-now-injection` | SearchPanel/Dashboard/ChatHistory/VersionHistory 簇 | `fe-accessibility-aria-live`, `fe-i18n-core-pages-keying`（已归档）, `fe-editor-inline-diff-decoration-integration`（已归档）完成后 | 待执行 |
-| A | 4e-1 | `fe-token-escape-sweep` | SearchPanel + `tokens.css` + ZenMode 簇 | `fe-deterministic-now-injection`, `fe-accessibility-aria-live`, `fe-i18n-core-pages-keying`（已归档）, `fe-composites-p0-panel-and-command-items`, `fe-editor-tokenization-selection-and-spacing`, `fe-editor-inline-diff-decoration-integration`（已归档）完成后 | 待执行 |
+| A | 4d-1 | `fe-deterministic-now-injection` | SearchPanel/Dashboard/ChatHistory/VersionHistory 簇 | `fe-accessibility-aria-live`, `fe-i18n-core-pages-keying`（已归档）, `fe-editor-inline-diff-decoration-integration`（已归档）完成后 | 进行中（PR #951） |
+| A | 4e-1 | `fe-token-escape-sweep` | SearchPanel + `tokens.css` + ZenMode 簇 | `fe-deterministic-now-injection`, `fe-accessibility-aria-live`, `fe-i18n-core-pages-keying`（已归档）, `fe-composites-p0-panel-and-command-items`, `fe-editor-tokenization-selection-and-spacing`, `fe-editor-inline-diff-decoration-integration`（已归档）完成后 | 待执行（PR #952） |
 
 #### 第四批文件冲突矩阵
 
