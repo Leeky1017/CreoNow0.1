@@ -1,6 +1,6 @@
 # Active Changes Execution Order
 
-更新时间：2026-03-03 17:05
+更新时间：2026-03-03 17:08
 
 适用范围：`openspec/changes/` 下所有非 `archive/`、非 `_template/` 的活跃 change。
 
@@ -184,7 +184,7 @@
 第三批（3 波推进）
   Wave 3a: fe-searchpanel-tokenized-rewrite ∥ fe-zenmode-token-escape-cleanup ∥ fe-dashboard-herocard-responsive-layout（已完成并归档，PR #898/#899/#900）
   Wave 3b: fe-lucide-icon-unification ∥ fe-theme-switch-smoothing（已完成并归档，PR #909/#910）
-  Wave 3c: fe-feature-focus-visible-coverage（已完成并归档，PR #928）──→ fe-visual-noise-reduction ──→ fe-reduced-motion-respect
+  Wave 3c: fe-feature-focus-visible-coverage（已完成并归档，PR #928）──→ fe-visual-noise-reduction（已完成并归档，PR #943）──→ fe-reduced-motion-respect
 
 第四批（独立 lane + 冲突簇波次）
   独立 lane: fe-desktop-native-binding-packaging ∥ fe-desktop-window-lifecycle-uplift（已完成并归档，PR #911/#912）
@@ -204,7 +204,7 @@
 
   Wave 4c:
     fe-accessibility-aria-live              （comp-p0 + i18n-keying 前置已满足，待执行）
-    fe-command-palette-search-uplift        （comp-p0 + i18n-keying 前置已满足，待执行）
+    fe-command-palette-search-uplift        （已完成并归档，PR #944）
     fe-editor-context-menu-and-tooltips     （已完成并归档，PR #939）
 
   Wave 4d:
