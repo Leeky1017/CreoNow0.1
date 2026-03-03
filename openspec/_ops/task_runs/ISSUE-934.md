@@ -53,4 +53,32 @@ Test Files  1 failed (1) | Tests  1 failed (1)
 
 ### Green Phase
 
-TBD — will record after implementation.
+#### All guard tests pass
+```
+$ pnpm -C apps/desktop test:run --reporter=verbose 'i18n-guard' 'date-format-locale'
+✓ OnboardingPage.i18n-guard.test.ts (2 tests)
+✓ Dashboard.i18n-guard.test.ts (2 tests)
+✓ SearchPanel.i18n-guard.test.ts (2 tests)
+✓ AiPanel.i18n-guard.test.ts (2 tests)
+✓ date-format-locale.guard.test.ts (1 test)
+Test Files  5 passed (5) | Tests  9 passed (9)
+```
+
+#### Full regression
+```
+$ pnpm -C apps/desktop test:run
+Test Files  240 passed (240) | Tests  1720 passed (1720)
+Duration  46.72s
+```
+
+#### TypeScript
+```
+$ pnpm typecheck
+tsc --noEmit  ✓  (zero errors)
+```
+
+#### Commit & Push
+```
+$ git commit  →  a659b5c5
+$ git push origin task/934-fe-i18n-core-pages-keying  →  remote created
+```
