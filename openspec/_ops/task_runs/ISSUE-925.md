@@ -5,7 +5,10 @@
 - Change: fe-composites-p1-search-and-forms
 - PR: https://github.com/Leeky1017/CreoNow/pull/929
 
-## Dependency Sync Check
+## Plan
+- 新增 P1 级 Composite 组件（SearchInput / FormField / ToolbarGroup），替换 Feature 层内联实现。
+
+
 - 上游 `fe-composites-p0`: PR #919 已合并 main ✓（commit `f798c553`），无漂移
 
 ## Runs
