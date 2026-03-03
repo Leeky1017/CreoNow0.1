@@ -61,7 +61,7 @@
 ## 5. Refactor（保持绿灯）
 
 - [x] 5.1 确认移除 border 后间距足够表达层级（视觉回归检查）
-- [ ] 5.2 若 PanelContainer Composite 已就绪，将 panel 分隔样式收敛到 Composite 层（不适用，跳过）
+- [x] 5.2 若 PanelContainer Composite 已就绪，将 panel 分隔样式收敛到 Composite 层（不适用，跳过）
 
 ## 6. Evidence
 
@@ -69,4 +69,4 @@
 - [x] 6.2 记录 RUN_LOG：Green 阶段全部通过的输出
 - [x] 6.3 记录 RUN_LOG：`pnpm -C apps/desktop test:run` 全量回归无新增失败
 - [x] 6.4 记录 Dependency Sync Check：确认上游 change 状态
-- [ ] 6.5 Main Session Audit（仅在 Apply 阶段需要）
+- [x] 6.5 Main Session Audit（仅在 Apply 阶段需要）
