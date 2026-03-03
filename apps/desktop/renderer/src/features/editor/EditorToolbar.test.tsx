@@ -164,7 +164,9 @@ describe("EditorToolbar", () => {
     try {
       render(<ToolbarHarness initialContent="<p>Tooltip check</p>" />);
       const boldButton = await screen.findByTestId("toolbar-bold");
-      expect(boldButton).toHaveAttribute("title", "Bold (⌘B)");
+      // After Tooltip migration, the native title attribute is replaced by a
+      // Radix Tooltip. We verify the button still has the correct aria-label.
+      expect(boldButton).toHaveAttribute("aria-label", "Bold");
     } finally {
       Object.defineProperty(window.navigator, "platform", {
         configurable: true,

@@ -22,15 +22,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Bold"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-bold"
-            title="Bold (Ctrl+B)"
             type="button"
           >
             <svg
@@ -55,15 +55,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Italic"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-italic"
-            title="Italic (Ctrl+I)"
             type="button"
           >
             <svg
@@ -103,15 +103,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Underline"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-underline"
-            title="Underline (Ctrl+U)"
             type="button"
           >
             <svg
@@ -142,15 +142,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Strikethrough"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-strike"
-            title="Strikethrough (Ctrl+Shift+X)"
             type="button"
           >
             <svg
@@ -184,15 +184,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Inline Code"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-code"
-            title="Inline Code (Ctrl+E)"
             type="button"
           >
             <svg
@@ -223,14 +223,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 1"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h1"
-            title="Heading 1 (Ctrl+1)"
             type="button"
           >
             <svg
@@ -264,14 +264,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 2"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h2"
-            title="Heading 2 (Ctrl+2)"
             type="button"
           >
             <svg
@@ -305,14 +305,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 3"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h3"
-            title="Heading 3 (Ctrl+3)"
             type="button"
           >
             <svg
@@ -352,14 +352,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Bullet List"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-bullet-list"
-            title="Bullet List (Ctrl+Shift+8)"
             type="button"
           >
             <svg
@@ -399,14 +399,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Numbered List"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-ordered-list"
-            title="Numbered List (Ctrl+Shift+7)"
             type="button"
           >
             <svg
@@ -449,14 +449,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Quote"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-blockquote"
-            title="Quote (Ctrl+Shift+B)"
             type="button"
           >
             <svg
@@ -484,14 +484,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Code Block"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-code-block"
-            title="Code Block (Ctrl+Alt+C)"
             type="button"
           >
             <svg
@@ -526,14 +526,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Horizontal Rule"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-hr"
-            title="Horizontal Rule"
             type="button"
           >
             <svg
@@ -561,15 +561,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Undo"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+            data-state="closed"
             data-testid="toolbar-undo"
             disabled=""
-            title="Undo (Ctrl+Z)"
             type="button"
           >
             <svg
@@ -597,15 +597,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Redo"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+            data-state="closed"
             data-testid="toolbar-redo"
             disabled=""
-            title="Redo (Ctrl+Y)"
             type="button"
           >
             <svg
@@ -666,15 +666,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Bold"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+          data-state="closed"
           data-testid="toolbar-bold"
-          title="Bold (Ctrl+B)"
           type="button"
         >
           <svg
@@ -699,15 +699,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Italic"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+          data-state="closed"
           data-testid="toolbar-italic"
-          title="Italic (Ctrl+I)"
           type="button"
         >
           <svg
@@ -747,15 +747,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Underline"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+          data-state="closed"
           data-testid="toolbar-underline"
-          title="Underline (Ctrl+U)"
           type="button"
         >
           <svg
@@ -786,15 +786,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Strikethrough"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+          data-state="closed"
           data-testid="toolbar-strike"
-          title="Strikethrough (Ctrl+Shift+X)"
           type="button"
         >
           <svg
@@ -828,15 +828,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Inline Code"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+          data-state="closed"
           data-testid="toolbar-code"
-          title="Inline Code (Ctrl+E)"
           type="button"
         >
           <svg
@@ -867,14 +867,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Heading 1"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-h1"
-          title="Heading 1 (Ctrl+1)"
           type="button"
         >
           <svg
@@ -908,14 +908,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Heading 2"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-h2"
-          title="Heading 2 (Ctrl+2)"
           type="button"
         >
           <svg
@@ -949,14 +949,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Heading 3"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-h3"
-          title="Heading 3 (Ctrl+3)"
           type="button"
         >
           <svg
@@ -996,14 +996,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Bullet List"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-bullet-list"
-          title="Bullet List (Ctrl+Shift+8)"
           type="button"
         >
           <svg
@@ -1043,14 +1043,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Numbered List"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-ordered-list"
-          title="Numbered List (Ctrl+Shift+7)"
           type="button"
         >
           <svg
@@ -1093,14 +1093,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Quote"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-blockquote"
-          title="Quote (Ctrl+Shift+B)"
           type="button"
         >
           <svg
@@ -1128,14 +1128,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Code Block"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-code-block"
-          title="Code Block (Ctrl+Alt+C)"
           type="button"
         >
           <svg
@@ -1170,14 +1170,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Horizontal Rule"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-hr"
-          title="Horizontal Rule"
           type="button"
         >
           <svg
@@ -1205,15 +1205,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Undo"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+          data-state="closed"
           data-testid="toolbar-undo"
           disabled=""
-          title="Undo (Ctrl+Z)"
           type="button"
         >
           <svg
@@ -1241,15 +1241,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Redo"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+          data-state="closed"
           data-testid="toolbar-redo"
           disabled=""
-          title="Redo (Ctrl+Y)"
           type="button"
         >
           <svg
@@ -1312,15 +1312,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Bold"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-bold"
-            title="Bold (Ctrl+B)"
             type="button"
           >
             <svg
@@ -1345,15 +1345,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Italic"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-italic"
-            title="Italic (Ctrl+I)"
             type="button"
           >
             <svg
@@ -1393,15 +1393,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Underline"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-underline"
-            title="Underline (Ctrl+U)"
             type="button"
           >
             <svg
@@ -1432,15 +1432,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Strikethrough"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-strike"
-            title="Strikethrough (Ctrl+Shift+X)"
             type="button"
           >
             <svg
@@ -1474,15 +1474,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Inline Code"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-code"
-            title="Inline Code (Ctrl+E)"
             type="button"
           >
             <svg
@@ -1513,14 +1513,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 1"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h1"
-            title="Heading 1 (Ctrl+1)"
             type="button"
           >
             <svg
@@ -1554,14 +1554,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 2"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h2"
-            title="Heading 2 (Ctrl+2)"
             type="button"
           >
             <svg
@@ -1595,14 +1595,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 3"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h3"
-            title="Heading 3 (Ctrl+3)"
             type="button"
           >
             <svg
@@ -1642,14 +1642,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Bullet List"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-bullet-list"
-            title="Bullet List (Ctrl+Shift+8)"
             type="button"
           >
             <svg
@@ -1689,14 +1689,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Numbered List"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-ordered-list"
-            title="Numbered List (Ctrl+Shift+7)"
             type="button"
           >
             <svg
@@ -1739,14 +1739,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Quote"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-blockquote"
-            title="Quote (Ctrl+Shift+B)"
             type="button"
           >
             <svg
@@ -1774,14 +1774,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Code Block"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-code-block"
-            title="Code Block (Ctrl+Alt+C)"
             type="button"
           >
             <svg
@@ -1816,14 +1816,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Horizontal Rule"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-hr"
-            title="Horizontal Rule"
             type="button"
           >
             <svg
@@ -1851,15 +1851,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Undo"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+            data-state="closed"
             data-testid="toolbar-undo"
             disabled=""
-            title="Undo (Ctrl+Z)"
             type="button"
           >
             <svg
@@ -1887,15 +1887,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Redo"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+            data-state="closed"
             data-testid="toolbar-redo"
             disabled=""
-            title="Redo (Ctrl+Y)"
             type="button"
           >
             <svg
@@ -1959,15 +1959,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Bold"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-bold"
-            title="Bold (Ctrl+B)"
             type="button"
           >
             <svg
@@ -1992,15 +1992,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Italic"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-italic"
-            title="Italic (Ctrl+I)"
             type="button"
           >
             <svg
@@ -2040,15 +2040,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Underline"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-underline"
-            title="Underline (Ctrl+U)"
             type="button"
           >
             <svg
@@ -2079,15 +2079,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Strikethrough"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-strike"
-            title="Strikethrough (Ctrl+Shift+X)"
             type="button"
           >
             <svg
@@ -2121,15 +2121,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Inline Code"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-code"
-            title="Inline Code (Ctrl+E)"
             type="button"
           >
             <svg
@@ -2160,14 +2160,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 1"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h1"
-            title="Heading 1 (Ctrl+1)"
             type="button"
           >
             <svg
@@ -2201,14 +2201,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 2"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h2"
-            title="Heading 2 (Ctrl+2)"
             type="button"
           >
             <svg
@@ -2242,14 +2242,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 3"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h3"
-            title="Heading 3 (Ctrl+3)"
             type="button"
           >
             <svg
@@ -2289,14 +2289,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Bullet List"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-bullet-list"
-            title="Bullet List (Ctrl+Shift+8)"
             type="button"
           >
             <svg
@@ -2336,14 +2336,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Numbered List"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-ordered-list"
-            title="Numbered List (Ctrl+Shift+7)"
             type="button"
           >
             <svg
@@ -2386,14 +2386,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Quote"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-blockquote"
-            title="Quote (Ctrl+Shift+B)"
             type="button"
           >
             <svg
@@ -2421,14 +2421,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Code Block"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-code-block"
-            title="Code Block (Ctrl+Alt+C)"
             type="button"
           >
             <svg
@@ -2463,14 +2463,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Horizontal Rule"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-hr"
-            title="Horizontal Rule"
             type="button"
           >
             <svg
@@ -2498,15 +2498,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Undo"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+            data-state="closed"
             data-testid="toolbar-undo"
             disabled=""
-            title="Undo (Ctrl+Z)"
             type="button"
           >
             <svg
@@ -2534,15 +2534,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Redo"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+            data-state="closed"
             data-testid="toolbar-redo"
             disabled=""
-            title="Redo (Ctrl+Y)"
             type="button"
           >
             <svg
@@ -2606,15 +2606,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Bold"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-bold"
-            title="Bold (Ctrl+B)"
             type="button"
           >
             <svg
@@ -2639,15 +2639,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Italic"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-italic"
-            title="Italic (Ctrl+I)"
             type="button"
           >
             <svg
@@ -2687,15 +2687,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Underline"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-underline"
-            title="Underline (Ctrl+U)"
             type="button"
           >
             <svg
@@ -2726,15 +2726,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Strikethrough"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-strike"
-            title="Strikethrough (Ctrl+Shift+X)"
             type="button"
           >
             <svg
@@ -2768,15 +2768,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Inline Code"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-code"
-            title="Inline Code (Ctrl+E)"
             type="button"
           >
             <svg
@@ -2807,14 +2807,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 1"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h1"
-            title="Heading 1 (Ctrl+1)"
             type="button"
           >
             <svg
@@ -2848,14 +2848,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 2"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h2"
-            title="Heading 2 (Ctrl+2)"
             type="button"
           >
             <svg
@@ -2889,14 +2889,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 3"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h3"
-            title="Heading 3 (Ctrl+3)"
             type="button"
           >
             <svg
@@ -2936,14 +2936,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Bullet List"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-bullet-list"
-            title="Bullet List (Ctrl+Shift+8)"
             type="button"
           >
             <svg
@@ -2983,14 +2983,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Numbered List"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-ordered-list"
-            title="Numbered List (Ctrl+Shift+7)"
             type="button"
           >
             <svg
@@ -3033,14 +3033,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Quote"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-blockquote"
-            title="Quote (Ctrl+Shift+B)"
             type="button"
           >
             <svg
@@ -3068,14 +3068,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Code Block"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-code-block"
-            title="Code Block (Ctrl+Alt+C)"
             type="button"
           >
             <svg
@@ -3110,14 +3110,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Horizontal Rule"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-hr"
-            title="Horizontal Rule"
             type="button"
           >
             <svg
@@ -3145,15 +3145,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Undo"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+            data-state="closed"
             data-testid="toolbar-undo"
             disabled=""
-            title="Undo (Ctrl+Z)"
             type="button"
           >
             <svg
@@ -3181,15 +3181,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Redo"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+            data-state="closed"
             data-testid="toolbar-redo"
             disabled=""
-            title="Redo (Ctrl+Y)"
             type="button"
           >
             <svg
@@ -3250,15 +3250,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Bold"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+          data-state="closed"
           data-testid="toolbar-bold"
-          title="Bold (Ctrl+B)"
           type="button"
         >
           <svg
@@ -3283,15 +3283,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Italic"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+          data-state="closed"
           data-testid="toolbar-italic"
-          title="Italic (Ctrl+I)"
           type="button"
         >
           <svg
@@ -3331,15 +3331,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Underline"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+          data-state="closed"
           data-testid="toolbar-underline"
-          title="Underline (Ctrl+U)"
           type="button"
         >
           <svg
@@ -3370,15 +3370,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Strikethrough"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+          data-state="closed"
           data-testid="toolbar-strike"
-          title="Strikethrough (Ctrl+Shift+X)"
           type="button"
         >
           <svg
@@ -3412,15 +3412,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Inline Code"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+          data-state="closed"
           data-testid="toolbar-code"
-          title="Inline Code (Ctrl+E)"
           type="button"
         >
           <svg
@@ -3451,14 +3451,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Heading 1"
           aria-pressed="true"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-h1"
-          title="Heading 1 (Ctrl+1)"
           type="button"
         >
           <svg
@@ -3492,14 +3492,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Heading 2"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-h2"
-          title="Heading 2 (Ctrl+2)"
           type="button"
         >
           <svg
@@ -3533,14 +3533,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Heading 3"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-h3"
-          title="Heading 3 (Ctrl+3)"
           type="button"
         >
           <svg
@@ -3580,14 +3580,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Bullet List"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-bullet-list"
-          title="Bullet List (Ctrl+Shift+8)"
           type="button"
         >
           <svg
@@ -3627,14 +3627,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Numbered List"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-ordered-list"
-          title="Numbered List (Ctrl+Shift+7)"
           type="button"
         >
           <svg
@@ -3677,14 +3677,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Quote"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-blockquote"
-          title="Quote (Ctrl+Shift+B)"
           type="button"
         >
           <svg
@@ -3712,14 +3712,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Code Block"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-code-block"
-          title="Code Block (Ctrl+Alt+C)"
           type="button"
         >
           <svg
@@ -3754,14 +3754,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Horizontal Rule"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+          data-state="closed"
           data-testid="toolbar-hr"
-          title="Horizontal Rule"
           type="button"
         >
           <svg
@@ -3789,15 +3789,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Undo"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+          data-state="closed"
           data-testid="toolbar-undo"
           disabled=""
-          title="Undo (Ctrl+Z)"
           type="button"
         >
           <svg
@@ -3825,15 +3825,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
           aria-label="Redo"
           aria-pressed="false"
           class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+          data-state="closed"
           data-testid="toolbar-redo"
           disabled=""
-          title="Redo (Ctrl+Y)"
           type="button"
         >
           <svg
@@ -3971,15 +3971,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Bold"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-bold"
-            title="Bold (Ctrl+B)"
             type="button"
           >
             <svg
@@ -4004,15 +4004,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Italic"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-italic"
-            title="Italic (Ctrl+I)"
             type="button"
           >
             <svg
@@ -4052,15 +4052,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Underline"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-underline"
-            title="Underline (Ctrl+U)"
             type="button"
           >
             <svg
@@ -4091,15 +4091,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Strikethrough"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-strike"
-            title="Strikethrough (Ctrl+Shift+X)"
             type="button"
           >
             <svg
@@ -4133,15 +4133,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Inline Code"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-        
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+          
+        "
+            data-state="closed"
             data-testid="toolbar-code"
-            title="Inline Code (Ctrl+E)"
             type="button"
           >
             <svg
@@ -4172,14 +4172,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 1"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h1"
-            title="Heading 1 (Ctrl+1)"
             type="button"
           >
             <svg
@@ -4213,14 +4213,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 2"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h2"
-            title="Heading 2 (Ctrl+2)"
             type="button"
           >
             <svg
@@ -4254,14 +4254,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Heading 3"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-h3"
-            title="Heading 3 (Ctrl+3)"
             type="button"
           >
             <svg
@@ -4301,14 +4301,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Bullet List"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-bullet-list"
-            title="Bullet List (Ctrl+Shift+8)"
             type="button"
           >
             <svg
@@ -4348,14 +4348,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Numbered List"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-ordered-list"
-            title="Numbered List (Ctrl+Shift+7)"
             type="button"
           >
             <svg
@@ -4398,14 +4398,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Quote"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-blockquote"
-            title="Quote (Ctrl+Shift+B)"
             type="button"
           >
             <svg
@@ -4433,14 +4433,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Code Block"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-code-block"
-            title="Code Block (Ctrl+Alt+C)"
             type="button"
           >
             <svg
@@ -4475,14 +4475,14 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Horizontal Rule"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-pointer
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-pointer
+        "
+            data-state="closed"
             data-testid="toolbar-hr"
-            title="Horizontal Rule"
             type="button"
           >
             <svg
@@ -4510,15 +4510,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Undo"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+            data-state="closed"
             data-testid="toolbar-undo"
             disabled=""
-            title="Undo (Ctrl+Z)"
             type="button"
           >
             <svg
@@ -4546,15 +4546,15 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
             aria-label="Redo"
             aria-pressed="false"
             class="
-        flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-        transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-        text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
-        cursor-not-allowed opacity-40
-      "
+          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
+          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
+          text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]
+          cursor-not-allowed opacity-40
+        "
+            data-state="closed"
             data-testid="toolbar-redo"
             disabled=""
-            title="Redo (Ctrl+Y)"
             type="button"
           >
             <svg
@@ -4611,12 +4611,12 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
   >
     <button
       class="
-          pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
-          cursor-not-allowed border-[var(--color-border-default)] bg-[var(--color-bg-raised)] text-[var(--color-fg-muted)] opacity-70
-        "
+            pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
+            cursor-not-allowed border-[var(--color-border-default)] bg-[var(--color-bg-raised)] text-[var(--color-fg-muted)] opacity-70
+          "
+      data-state="closed"
       data-testid="write-button-trigger"
       disabled=""
-      title="触发续写技能"
       type="button"
     >
       续写
@@ -4640,12 +4640,12 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
   >
     <button
       class="
-          pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
-          cursor-not-allowed border-[var(--color-border-default)] bg-[var(--color-bg-raised)] text-[var(--color-fg-muted)] opacity-70
-        "
+            pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
+            cursor-not-allowed border-[var(--color-border-default)] bg-[var(--color-bg-raised)] text-[var(--color-fg-muted)] opacity-70
+          "
+      data-state="closed"
       data-testid="write-button-trigger"
       disabled=""
-      title="生成中..."
       type="button"
     >
       续写中...
@@ -4669,11 +4669,11 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
   >
     <button
       class="
-          pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
-          cursor-pointer border-[var(--color-border-accent)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
-        "
+            pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
+            cursor-pointer border-[var(--color-border-accent)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+          "
+      data-state="closed"
       data-testid="write-button-trigger"
-      title="触发续写技能"
       type="button"
     >
       续写

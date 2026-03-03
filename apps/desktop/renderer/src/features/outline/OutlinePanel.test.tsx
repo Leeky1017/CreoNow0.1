@@ -450,7 +450,7 @@ describe("OutlinePanel", () => {
     const item = screen.getByTestId("outline-item-h2-intro");
     await user.hover(item);
 
-    const deleteButton = item.querySelector('button[title*="Delete"]');
+    const deleteButton = item.querySelector('button[aria-label*="Delete"]');
     expect(deleteButton).toBeInTheDocument();
     await user.click(deleteButton!);
 
@@ -465,7 +465,7 @@ describe("OutlinePanel", () => {
     render(<OutlinePanel items={SAMPLE_ITEMS} />);
 
     expect(screen.getByText("Outline")).toBeInTheDocument();
-    expect(screen.getByTitle("Expand All")).toBeInTheDocument();
-    expect(screen.getByTitle("Collapse All")).toBeInTheDocument();
+    expect(screen.getByLabelText("Expand all outline items")).toBeInTheDocument();
+    expect(screen.getByLabelText("Collapse all outline items")).toBeInTheDocument();
   });
 });

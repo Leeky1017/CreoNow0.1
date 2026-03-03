@@ -36,7 +36,7 @@ describe("DiffViewPanel", () => {
 
     expect(document.body).toHaveTextContent("Change 1 of 2");
 
-    await user.click(screen.getByTitle("Next Change"));
+    await user.click(screen.getByLabelText("Next Change"));
     expect(document.body).toHaveTextContent("Change 2 of 2");
   });
 

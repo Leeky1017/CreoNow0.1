@@ -1,5 +1,6 @@
 import { Bot, Columns2, Eye, RotateCcw, Shield, User, X } from "lucide-react";
 import { Button } from "../../components/primitives";
+import { Tooltip } from "../../components/primitives/Tooltip";
 
 /**
  * Version author types
@@ -364,30 +365,33 @@ function HoverActions({
         "duration-[var(--duration-fast)]",
       ].join(" ")}
     >
-      <button
-        type="button"
-        onClick={() => onRestore?.(versionId)}
-        className="focus-ring p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-        title="Restore"
-      >
-        <RestoreIcon />
-      </button>
-      <button
-        type="button"
-        onClick={() => onCompare?.(versionId)}
-        className="focus-ring p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-        title="Compare"
-      >
-        <CompareIcon />
-      </button>
-      <button
-        type="button"
-        onClick={() => onPreview?.(versionId)}
-        className="focus-ring p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-        title="Preview"
-      >
-        <PreviewIcon />
-      </button>
+      <Tooltip content="Restore">
+        <button
+          type="button"
+          onClick={() => onRestore?.(versionId)}
+          className="focus-ring p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+        >
+          <RestoreIcon />
+        </button>
+      </Tooltip>
+      <Tooltip content="Compare">
+        <button
+          type="button"
+          onClick={() => onCompare?.(versionId)}
+          className="focus-ring p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+        >
+          <CompareIcon />
+        </button>
+      </Tooltip>
+      <Tooltip content="Preview">
+        <button
+          type="button"
+          onClick={() => onPreview?.(versionId)}
+          className="focus-ring p-1.5 rounded-md hover:bg-[rgba(255,255,255,0.1)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+        >
+          <PreviewIcon />
+        </button>
+      </Tooltip>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { Text } from "../../components/primitives";
+import { Tooltip } from "../../components/primitives/Tooltip";
 import { Slider } from "../../components/primitives/Slider";
 
 /**
@@ -183,19 +184,19 @@ export function SettingsAppearancePage({
           {accentColors.map(({ value, label }) => {
             const isSelected = settings.accentColor === value;
             return (
-              <button
-                key={value}
-                type="button"
-                onClick={() => updateSetting("accentColor", value)}
-                className={`w-8 h-8 rounded-full border-2 transition-all duration-[var(--duration-fast)] ${
-                  isSelected
-                    ? "ring-2 ring-offset-2 ring-offset-[var(--color-bg-surface)] ring-[var(--color-ring-focus)]"
-                    : "hover:scale-110"
-                }`}
-                style={{ backgroundColor: value }}
-                title={label}
-                aria-label={`Select ${label} accent color`}
-              />
+              <Tooltip key={value} content={label}>
+                <button
+                  type="button"
+                  onClick={() => updateSetting("accentColor", value)}
+                  className={`w-8 h-8 rounded-full border-2 transition-all duration-[var(--duration-fast)] ${
+                    isSelected
+                      ? "ring-2 ring-offset-2 ring-offset-[var(--color-bg-surface)] ring-[var(--color-ring-focus)]"
+                      : "hover:scale-110"
+                  }`}
+                  style={{ backgroundColor: value }}
+                  aria-label={`Select ${label} accent color`}
+                />
+              </Tooltip>
             );
           })}
         </div>

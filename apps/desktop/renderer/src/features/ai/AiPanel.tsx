@@ -7,6 +7,7 @@ import {
 } from "../../components/features/AiDialogs";
 
 import { Button, Spinner, Text } from "../../components/primitives";
+import { Tooltip } from "../../components/primitives/Tooltip";
 import { PanelContainer } from "../../components/composites/PanelContainer";
 
 import { useOpenSettings } from "../../contexts/OpenSettingsContext";
@@ -184,14 +185,14 @@ function SendStopButton(props: {
   onStop: () => void;
 }): JSX.Element {
   return (
-    <button
-      data-testid="ai-send-stop"
-      type="button"
-      className="focus-ring w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-      onClick={props.isWorking ? props.onStop : props.onSend}
-      disabled={props.disabled}
-      title={props.isWorking ? "Stop generating" : "Send message"}
-    >
+    <Tooltip content={props.isWorking ? "Stop generating" : "Send message"}>
+      <button
+        data-testid="ai-send-stop"
+        type="button"
+        className="focus-ring w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        onClick={props.isWorking ? props.onStop : props.onSend}
+        disabled={props.disabled}
+      >
       {props.isWorking ? (
         // Stop icon: circle with square
 
@@ -204,11 +205,11 @@ function SendStopButton(props: {
         <ArrowUp size={16} strokeWidth={1.5} />
       )}
     </button>
+    </Tooltip>
   );
 }
 
 /**
-
  * ToolButton - Small button for input toolbar
 
  */
@@ -1514,15 +1515,16 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                       {selectionPreview}
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    data-testid="ai-selection-reference-close"
-                    className="focus-ring h-5 w-5 shrink-0 rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
-                    onClick={() => setSelectionSnapshot(null)}
-                    title="Dismiss selection reference"
-                  >
-                    ×
-                  </button>
+                  <Tooltip content="Dismiss selection reference">
+                    <button
+                      type="button"
+                      data-testid="ai-selection-reference-close"
+                      className="focus-ring h-5 w-5 shrink-0 rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                      onClick={() => setSelectionSnapshot(null)}
+                    >
+                      ×
+                    </button>
+                  </Tooltip>
                 </div>
               </div>
             ) : null}

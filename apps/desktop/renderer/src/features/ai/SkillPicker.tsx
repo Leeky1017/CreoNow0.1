@@ -1,6 +1,7 @@
 import type { SkillListItem } from "../../stores/aiStore";
 
 import { Text } from "../../components/primitives";
+import { Tooltip } from "../../components/primitives/Tooltip";
 import { resolveSkillsForPicker } from "./scopeResolver";
 
 import { Plus } from "lucide-react";
@@ -55,16 +56,17 @@ export function SkillPicker(props: {
             SKILL
           </Text>
 
-          <button
-            type="button"
-            title="SKILL Settings"
-            className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
-            onClick={() => {
-              props.onOpenSettings?.();
-            }}
-          >
-            <Plus size={16} strokeWidth={1.5} />
-          </button>
+          <Tooltip content="SKILL Settings">
+            <button
+              type="button"
+              className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
+              onClick={() => {
+                props.onOpenSettings?.();
+              }}
+            >
+              <Plus size={16} strokeWidth={1.5} />
+            </button>
+          </Tooltip>
         </div>
 
         <div className="mt-2 max-h-72 overflow-auto space-y-3">

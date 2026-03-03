@@ -1,5 +1,6 @@
 import React from "react";
 import { ScrollArea } from "../../components/primitives";
+import { Tooltip } from "../../components/primitives/Tooltip";
 import { SearchInput } from "../../components/composites/SearchInput";
 
 import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Dot, File, FileText, Pencil, Trash2 } from "lucide-react";
@@ -256,28 +257,32 @@ function HoverActions({
 }) {
   return (
     <div className="ml-auto flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-fast)] shrink-0">
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onEdit();
-        }}
-        className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-        title="Edit (F2)"
-      >
-        <EditIcon />
-      </button>
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onDelete();
-        }}
-        className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-        title="Delete (Del)"
-      >
-        <DeleteIcon />
-      </button>
+      <Tooltip content="Edit (F2)">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit();
+          }}
+          className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+          aria-label="Edit"
+        >
+          <EditIcon />
+        </button>
+      </Tooltip>
+      <Tooltip content="Delete (Del)">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+          aria-label="Delete"
+        >
+          <DeleteIcon />
+        </button>
+      </Tooltip>
     </div>
   );
 }
@@ -845,24 +850,26 @@ export function OutlinePanel({
           Outline
         </span>
         <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={expandAll}
-            className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
-            title="Expand All"
-            aria-label="Expand all outline items"
-          >
-            <ExpandAllIcon />
-          </button>
-          <button
-            type="button"
-            onClick={collapseAll}
-            className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
-            title="Collapse All"
-            aria-label="Collapse all outline items"
-          >
-            <CollapseAllIcon />
-          </button>
+          <Tooltip content="Expand All">
+            <button
+              type="button"
+              onClick={expandAll}
+              className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
+              aria-label="Expand all outline items"
+            >
+              <ExpandAllIcon />
+            </button>
+          </Tooltip>
+          <Tooltip content="Collapse All">
+            <button
+              type="button"
+              onClick={collapseAll}
+              className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
+              aria-label="Collapse all outline items"
+            >
+              <CollapseAllIcon />
+            </button>
+          </Tooltip>
         </div>
       </div>
 

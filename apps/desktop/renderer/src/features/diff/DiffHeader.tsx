@@ -1,5 +1,6 @@
 import { ArrowRight, ChevronDown, ChevronUp, Clock, X } from "lucide-react";
 import React from "react";
+import { Tooltip } from "../../components/primitives/Tooltip";
 
 /**
  * View mode for diff display.
@@ -184,15 +185,17 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
 
         {/* Change navigation */}
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={props.onPreviousChange}
-            disabled={props.currentChangeIndex <= 0}
-            title="Previous Change"
-            className="w-8 h-8 flex items-center justify-center rounded hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          >
-            <ChevronUp size={16} strokeWidth={1.5} />
-          </button>
+          <Tooltip content="Previous Change">
+            <button
+              type="button"
+              onClick={props.onPreviousChange}
+              disabled={props.currentChangeIndex <= 0}
+              className="w-8 h-8 flex items-center justify-center rounded hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Previous Change"
+            >
+              <ChevronUp size={16} strokeWidth={1.5} />
+            </button>
+          </Tooltip>
           <span className="text-xs font-[var(--font-family-mono)] text-[var(--color-fg-muted)] px-2">
             Change{" "}
             <span className="text-[var(--color-fg-default)]">
@@ -203,15 +206,17 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               {props.totalChanges}
             </span>
           </span>
-          <button
-            type="button"
-            onClick={props.onNextChange}
-            disabled={props.currentChangeIndex >= props.totalChanges - 1}
-            title="Next Change"
-            className="w-8 h-8 flex items-center justify-center rounded hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-          >
-            <ChevronDown size={16} strokeWidth={1.5} />
-          </button>
+          <Tooltip content="Next Change">
+            <button
+              type="button"
+              onClick={props.onNextChange}
+              disabled={props.currentChangeIndex >= props.totalChanges - 1}
+              className="w-8 h-8 flex items-center justify-center rounded hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              aria-label="Next Change"
+            >
+              <ChevronDown size={16} strokeWidth={1.5} />
+            </button>
+          </Tooltip>
         </div>
 
         {/* Separator */}

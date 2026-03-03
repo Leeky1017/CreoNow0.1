@@ -12,6 +12,7 @@ import { useVersionStore } from "../../stores/versionStore";
 import { useAutosave } from "./useAutosave";
 import { useHotkey } from "../../lib/hotkeys/useHotkey";
 import { Button, ScrollArea, Text } from "../../components/primitives";
+import { Tooltip } from "../../components/primitives/Tooltip";
 import { EditorToolbar } from "./EditorToolbar";
 import {
   EditorBubbleMenu,
@@ -19,6 +20,7 @@ import {
 } from "./EditorBubbleMenu";
 import { resolveFinalDocumentEditDecision } from "./finalDocumentEditGuard";
 import { WriteButton } from "./WriteButton";
+import { EditorContextMenu } from "./EditorContextMenu";
 import { SlashCommandExtension } from "./extensions/slashCommand";
 import { DragHandleExtension } from "./extensions/dragHandle";
 import { SlashCommandPanel } from "./SlashCommandPanel";
@@ -1015,15 +1017,16 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
             正在预览 {previewTimestamp ?? "历史"} 的版本
           </Text>
           <div className="flex items-center gap-2">
-            <Button
-              data-testid="preview-restore-placeholder"
-              variant="secondary"
-              size="sm"
-              disabled={true}
-              title="将在 version-control-p2 中接入完整恢复流程"
-            >
-              恢复到此版本
-            </Button>
+            <Tooltip content="将在 version-control-p2 中接入完整恢复流程">
+              <Button
+                data-testid="preview-restore-placeholder"
+                variant="secondary"
+                size="sm"
+                disabled={true}
+              >
+                恢复到此版本
+              </Button>
+            </Tooltip>
             <Button
               data-testid="preview-return-current"
               variant="secondary"
@@ -1071,13 +1074,15 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
         onMouseEnter={() => setWriteHovering(true)}
         onMouseLeave={() => setWriteHovering(false)}
       >
-        <ScrollArea
-          data-testid="editor-content-scroll"
-          viewportTestId="editor-content-scroll-viewport"
-          className="h-full"
-        >
-          <EditorContent editor={editor} className="h-full" />
-        </ScrollArea>
+        <EditorContextMenu editor={editor}>
+          <ScrollArea
+            data-testid="editor-content-scroll"
+            viewportTestId="editor-content-scroll-viewport"
+            className="h-full"
+          >
+            <EditorContent editor={editor} className="h-full" />
+          </ScrollArea>
+        </EditorContextMenu>
         <EntityCompletionPanel
           session={entityCompletionSession}
           onSelectCandidate={applyEntityCompletionCandidate}
