@@ -1,4 +1,5 @@
 # Proposal: fe-composites-p2-empties-and-confirms
+更新时间：2026-03-03 09:37
 
 引用自 `openspec/changes/fe-composites-p2-empties-and-confirms/proposal.md`。
 
