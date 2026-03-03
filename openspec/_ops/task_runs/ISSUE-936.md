@@ -98,7 +98,7 @@ pnpm typecheck → 0 errors
 ## Main Session Audit
 
 - Audit-Owner: main-session
-- Reviewed-HEAD-SHA: 3a1150088471dfbb969b76941d49516249f77720
+- Reviewed-HEAD-SHA: 80b3582264cb20c73e4656bb84f13e28ce779eb9
 - Spec-Compliance: PASS
 - Code-Quality: PASS
 - Fresh-Verification: PASS
