@@ -1,4 +1,5 @@
 # Tasks: issue-925-fe-composites-p1
+更新时间：2026-03-03 09:37
 
 ## 1. Specification
 - [ ] 1.1 审阅需求边界：新增 P1 Composites（SearchInput/FormField/ToolbarGroup）
