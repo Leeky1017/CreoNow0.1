@@ -25,6 +25,9 @@
 - 状态管理统一使用 Zustand，禁止 React Context 传递可变状态
 - 组件必须先有 Storybook Story 再集成到页面
 - L1/L2 组件通过 props 接收数据，禁止直接调用 Store 或 IPC
+- L3 Feature 组件禁止使用原生 HTML 交互元素（`<button>`、`<input>`、`<select>`），必须使用 L1 Primitives（根因：75 文件 / 357 处违规）
+- 禁止使用 Tailwind 内置阴影类（`shadow-lg`、`shadow-xl`、`shadow-2xl`），必须走 `--shadow-*` Design Token（根因：19 文件违规）
+- 所有用户可见文本必须通过 `t()` / i18n 输出，禁止 JSX 中直接写裸字符串字面量（根因：~500+ 处英文硬编码）
 
 ## 后端约束
 

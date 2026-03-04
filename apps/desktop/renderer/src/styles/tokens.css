@@ -2,7 +2,6 @@
   /* Focus ring */
   --ring-focus-width: 2px;
   --ring-focus-offset: 2px;
-  --color-focus-ring: rgba(59, 130, 246, 0.5);
 
   /* Spacing (4px grid) §3.8 */
   --space-0: 0px;
@@ -41,12 +40,68 @@
 
   /* Editor typography */
   --text-editor-size: 16px;
+  --text-editor-weight: 400;
   --text-editor-line-height: 1.8;
   --text-editor-line-height-cjk: 1.95;
   --text-scale-factor-default: 1;
   --text-scale-factor-125: 1.25;
   --text-scale-factor-150: 1.5;
   --text-editor-paragraph-spacing: 0.75em;
+
+  /* 字体族 */
+  --font-family-ui:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-family-body: "Lora", "Crimson Pro", Georgia, serif;
+  --font-family-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+
+  /* Typography 预设 — 来源: DESIGN_DECISIONS.md §4.2 */
+  /* 页面标题 */
+  --text-page-title-size: 24px;
+  --text-page-title-weight: 600;
+  --text-page-title-line-height: 1.2;
+  --text-page-title-letter-spacing: -0.02em;
+
+  /* 卡片标题 */
+  --text-card-title-size: 16px;
+  --text-card-title-weight: 600;
+  --text-card-title-line-height: 1.3;
+  --text-card-title-letter-spacing: -0.01em;
+
+  /* 小标题 */
+  --text-subtitle-size: 14px;
+  --text-subtitle-weight: 500;
+  --text-subtitle-line-height: 1.4;
+
+  /* UI 正文 */
+  --text-body-size: 13px;
+  --text-body-weight: 400;
+  --text-body-line-height: 1.5;
+
+  /* 辅助信息 */
+  --text-caption-size: 12px;
+  --text-caption-weight: 400;
+  --text-caption-line-height: 1.4;
+
+  /* 大写标签 */
+  --text-label-size: 10px;
+  --text-label-weight: 500;
+  --text-label-line-height: 1.2;
+  --text-label-letter-spacing: 0.1em;
+
+  /* 侧栏树节点 */
+  --text-tree-size: 13px;
+  --text-tree-weight: 400;
+  --text-tree-line-height: 1.3;
+
+  /* 状态栏 */
+  --text-status-size: 11px;
+  --text-status-weight: 400;
+  --text-status-line-height: 1.2;
+
+  /* 代码/等宽 */
+  --text-mono-size: 13px;
+  --text-mono-weight: 400;
+  --text-mono-line-height: 1.5;
 
   /* z-index 层级 §5.1 */
   --z-base: 0; /* 默认层 */
@@ -104,6 +159,27 @@
   --shadow-md: 0 4px 8px var(--color-shadow);
   --shadow-lg: 0 8px 16px var(--color-shadow);
   --shadow-xl: 0 16px 32px var(--color-shadow);
+
+  /* 布局固定尺寸 — 来源: DESIGN_DECISIONS.md §2.1 */
+  --size-icon-bar: 48px; /* Icon Bar 宽度 */
+  --size-status-bar: 28px; /* 状态栏高度 */
+  --size-min-window-width: 1024px; /* 最小窗口宽度 */
+  --size-min-window-height: 640px; /* 最小窗口高度 */
+  --size-min-content-width: 400px; /* 主内容最小宽度 */
+
+  /* 可调整尺寸 - Sidebar */
+  --size-sidebar-default: 240px;
+  --size-sidebar-min: 180px;
+  --size-sidebar-max: 400px;
+
+  /* 可调整尺寸 - Panel */
+  --size-panel-default: 320px;
+  --size-panel-min: 280px;
+  --size-panel-max: 480px;
+
+  /* 图标规格 */
+  --size-icon: 24px; /* 图标尺寸 */
+  --size-icon-button: 40px; /* 图标点击区域 */
 }
 
 :root[data-theme="dark"] {
@@ -138,7 +214,12 @@
 
   /* Focus ring */
   --color-ring-focus: rgba(255, 255, 255, 0.4);
-  --color-focus-ring: rgba(96, 165, 250, 0.5);
+
+  /* 强调色（纯白系，极简主义） */
+  --color-accent: #ffffff;
+  --color-accent-hover: rgba(255, 255, 255, 0.9);
+  --color-accent-muted: rgba(255, 255, 255, 0.6);
+  --color-accent-subtle: rgba(255, 255, 255, 0.1);
 
   /* 阴影基色 §3.7 - 几何在 :root 中定义 */
   --color-shadow: rgba(0, 0, 0, 0.5);
@@ -180,7 +261,12 @@
 
   /* Focus ring */
   --color-ring-focus: rgba(0, 0, 0, 0.15);
-  --color-focus-ring: rgba(59, 130, 246, 0.5);
+
+  /* 强调色（深色系） */
+  --color-accent: #1a1a1a;
+  --color-accent-hover: rgba(26, 26, 26, 0.9);
+  --color-accent-muted: rgba(26, 26, 26, 0.6);
+  --color-accent-subtle: rgba(26, 26, 26, 0.1);
 
   /* 阴影基色 §3.7 - 几何在 :root 中定义 */
   --color-shadow: rgba(0, 0, 0, 0.1);
