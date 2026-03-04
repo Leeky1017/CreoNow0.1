@@ -319,7 +319,7 @@ export function VersionHistoryContainer(
       const timestamp = item ? formatTimestamp(item.createdAt) : t("versionHistory.container.history");
       void startPreview(documentId, { versionId, timestamp });
     },
-    [documentId, items, startPreview],
+    [documentId, items, startPreview, t],
   );
 
   React.useEffect(() => {

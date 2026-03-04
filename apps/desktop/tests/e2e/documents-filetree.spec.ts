@@ -50,14 +50,14 @@ function parseDocumentId(testId: string): string {
 async function invokeFileRowContextAction(args: {
   page: Page;
   documentId: string;
-  actionLabel: "Rename" | "Delete";
+  actionKey: "rename" | "delete";
 }): Promise<void> {
   const row = args.page.getByTestId(`file-row-${args.documentId}`);
   await expect(row).toBeVisible();
   await row.scrollIntoViewIfNeeded();
   await row.click({ button: "right" });
 
-  const menuItem = args.page.getByRole("menuitem", { name: args.actionLabel });
+  const menuItem = args.page.getByTestId(`context-menu-item-${args.actionKey}`);
   await expect(menuItem).toBeVisible();
   await menuItem.click();
 }
@@ -102,7 +102,7 @@ test("documents filetree: create/switch/rename/delete + current restore", async 
   await invokeFileRowContextAction({
     page,
     documentId: docAId,
-    actionLabel: "Rename",
+    actionKey: "rename",
   });
   await page.getByTestId(`file-rename-input-${docAId}`).fill("Doc A");
   await page.getByTestId(`file-rename-confirm-${docAId}`).click();
@@ -233,12 +233,12 @@ test("documents filetree: create/switch/rename/delete + current restore", async 
   await invokeFileRowContextAction({
     page,
     documentId: docBId,
-    actionLabel: "Delete",
+    actionKey: "delete",
   });
 
-  const dialog = page.getByRole("dialog");
+  const dialog = page.getByTestId("system-dialog-delete");
   await expect(dialog).toBeVisible();
-  await dialog.getByRole("button", { name: "Delete" }).click();
+  await dialog.getByTestId("system-dialog-primary").click();
   await expect(dialog).not.toBeVisible();
 
   await expect(page.getByTestId(`file-row-${docBId}`)).toHaveCount(0);

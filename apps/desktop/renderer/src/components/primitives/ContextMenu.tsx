@@ -134,6 +134,7 @@ export function ContextMenu({
           {items.map((item) => (
             <ContextMenuPrimitive.Item
               key={item.key}
+              data-testid={`context-menu-item-${item.key}`}
               className={item.destructive ? destructiveItemStyles : itemStyles}
               onSelect={item.onSelect}
               disabled={item.disabled}
