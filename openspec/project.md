@@ -1,6 +1,6 @@
 # CreoNow
 
-更新时间：2026-02-21 11:57
+更新时间：2026-03-04 16:00
 
 AI 驱动的文字创作 IDE，Electron + React 18 + TypeScript + TipTap 2，Windows-first。
 
@@ -26,8 +26,7 @@ CreoNow/
 ├── design/Variant/         # 设计资产 & Design Token
 ├── openspec/               # 项目规范（本目录）
 │   ├── specs/              #   按模块组织的主规范（Source of Truth）
-│   ├── changes/            #   进行中的变更（Delta Specs）
-│   └── _ops/task_runs/     #   RUN_LOGs（执行证据）
+│   └── changes/            #   进行中的变更（Delta Specs）
 ├── scripts/                # 自动化脚本
 └── .github/workflows/      # CI/CD
 ```
@@ -75,14 +74,14 @@ CreoNow/
 | Database         | SQLite（better-sqlite3）                                       |
 | Test framework   | Vitest                                                         |
 | E2E              | Playwright                                                     |
-| CI               | GitHub Actions（`ci` + `openspec-log-guard` + `merge-serial`） |
+| CI               | GitHub Actions（`ci` + `merge-serial`）                            |
 | Commit format    | `<type>: <summary> (#N)`                                       |
 
 ## Prohibitions
 
 - 禁止跳过 spec 直接写代码
 - 禁止先写实现再补测试
-- 禁止直接修改主 spec（必须走 Proposal → Apply → Archive）
+- 禁止直接修改主 spec（大型变更必须走 Proposal → Apply 流程；小型修复可直接 PR）
 - 禁止 silent failure（异常必须有错误码、错误信息和日志）
 - 禁止「先合并再修」（CI 不绿就不合并）
 - 禁止手动合并 PR（必须用 auto-merge）

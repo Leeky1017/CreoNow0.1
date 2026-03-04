@@ -1,6 +1,6 @@
 # 文件组织
 
-更新时间：2026-02-21 11:57
+更新时间：2026-03-04 16:00
 
 ## 仓库顶层
 
@@ -10,7 +10,6 @@ CreoNow/
 ├── packages/shared/        # 跨进程共享代码（IPC 类型等）
 ├── design/                 # 设计资产 & Design Token
 ├── openspec/               # 项目规范
-├── rulebook/               # 任务拆解与执行证据
 ├── scripts/                # 自动化脚本
 ├── docs/                   # 文档（产品、交付规则、参考）
 ├── .github/                # CI/CD 工作流
@@ -68,26 +67,11 @@ openspec/
 ├── project.md                  # 项目概述（Agent 第二入口）
 ├── specs/                      # 主规范（Source of Truth）
 │   └── <module>/spec.md
-├── changes/                    # 进行中的变更（Delta Specs）
-│   ├── EXECUTION_ORDER.md      # 多活跃 change 的执行顺序（≥2 时必需）
-│   ├── _template/              # change 撰写模板
-│   └── <change-name>/
-│       ├── proposal.md
-│       ├── tasks.md
-│       └── specs/<module>/spec.md
-└── _ops/
-    └── task_runs/              # RUN_LOGs
-        └── ISSUE-<N>.md
-```
-
-## Rulebook
-
-```
-rulebook/
-└── tasks/
-    ├── issue-<N>-<slug>/       # 活跃任务
-    └── archive/                # 已归档任务
-        └── issue-<N>-<slug>/
+└── changes/                    # 进行中的变更（Delta Specs）
+    └── <change-name>/
+        ├── proposal.md
+        ├── tasks.md
+        └── specs/<module>/spec.md
 ```
 
 ## 设计

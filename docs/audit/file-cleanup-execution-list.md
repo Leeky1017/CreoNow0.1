@@ -1,6 +1,8 @@
 # 文件清理执行清单
 
-更新时间：2026-03-04 15:00
+更新时间：2026-03-04 16:00
+
+> **⚠️ 本文档已被取代**：实际执行时采用了更彻底的策略（直接 `git rm` 删除而非 `git mv` 归档），详见 [Full MD Audit and Cleanup Verdicts](./full-md-audit-and-cleanup-verdicts.md)。以下内容保留作为历史参考，不再作为执行指南。
 
 > "除却巫山不是云。"——清除噪音，让真正重要的东西显现。
 
@@ -218,7 +220,7 @@ ls scripts/validate_main_session_audit_ci.py  # 应返回 No such file
 | 活跃路径中的治理文件 | 568 个（151 Rulebook + 374 RUN_LOG + 43 Review） | **0 个** |
 | 活跃路径中的治理体积 | 8.1 MB | **~0** |
 | CI workflows | 3 个 | **2 个** |
-| CI jobs（每 PR） | 14 + log-guard | **13**（含 2 新增质量检查） |
+| CI jobs（每 PR） | 14 + log-guard | **14**（含 2 新增质量检查） |
 | Required checks | 3 个 | **2 个** |
 | 治理脚本 | 6 个 | **0-1 个** |
 | Agent 每任务治理开销 | 6-8 个 .md + 4+ commits | **0 个 .md + 1-2 commits** |

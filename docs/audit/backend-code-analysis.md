@@ -1,6 +1,6 @@
 # CreoNow 后端代码专项审计报告
 
-更新时间：2026-03-04 15:00
+更新时间：2026-03-04 16:00
 
 > "好风凭借力，送我上青云。"——后端是 CreoNow 的底盘，底盘稳了，才有资格谈上层建筑。
 
@@ -180,6 +180,13 @@ skillScheduler.ts:132 — 技能调度事件（应改为 logger.error）
 ---
 
 ## 五、后端改进路线图
+
+### 第零阶段：CI coverage-gate 拆分（立即可做）
+
+当前 `coverage-gate` job 仅执行前端覆盖率检查（`pnpm test:coverage:desktop`），后端覆盖率不在 CI 门禁中。
+这意味着后端测试盲区（4 个零测试模块）无法被 CI 自动发现。
+
+**建议**：拆分 coverage-gate 为前端 + 后端两部分，详见 [CI 简化提案 §八](../audit/ci-simplification-proposal.md#八coverage-gate-拆分建议)。
 
 ### 第一阶段：补齐测试盲区（1-2 周）
 

@@ -1,6 +1,6 @@
 # CN 前端困境根因诊断与治理改革方案
 
-更新时间：2026-03-04 15:00
+更新时间：2026-03-04 16:00
 
 > 「善战者，求之于势，不责于人。」——《孙子兵法》
 >
@@ -15,8 +15,8 @@
 | 一 | 来源与范围 | 审计背景与数据来源 |
 | 二 | 核心数据一览 | 前端关键指标 |
 | 三 | 五个根本病因 | 系统性诊断 |
-| 四 | i18n 症状 | 最具代表性的问题 |
-| 五 | Token 系统 | 高合规率下的结构性分裂 |
+| 四 | i18n 症状 | 最具代表性的问题（含英文硬编码数据） |
+| 五 | Token 系统 | 高合规率下的结构性分裂（含双源真相分析） |
 | 六 | 38 个 fe-* Change | 分类与结论 |
 | 七 | 为什么别人用 AI 能做好 | 与业界对比 |
 | 八 | 治理流程改革方案 | 改革建议 |
@@ -255,6 +255,33 @@ Storybook → 产品的断裂链：
 "已配置" / "未配置" / "连接成功" / "AI 配置" / "保存" / "测试连接"
 ```
 
+### 英文硬编码——比中文更严重的隐患
+
+> **致命盲区**：原诊断仅关注 CJK 字符硬编码。实际上，英文裸字符串的硬编码数量**远超中文**，
+> 且 CJK-only grep 检测（`[\x{4e00}-\x{9fff}...]`）完全无法发现。
+
+| 文件 | 英文硬编码处数 | 典型示例 |
+|------|---------------|----------|
+| ExportDialog.tsx | **~107** | `"Export"`, `"PDF"`, `"Markdown"`, `"Cancel"` |
+| QualityGatesPanel.tsx | **~79** | `"Quality Gates"`, `"Pass"`, `"Fail"`, `"Score"` |
+| KnowledgeGraphPanel.tsx | **~50** | `"Add Entity"`, `"Relationship"`, `"Delete"` |
+| VersionHistoryPanel.tsx | **~50** | `"Restore"`, `"Version"`, `"Current"`, `"Compare"` |
+| SettingsDialog.tsx | **~40** | `"Settings"`, `"General"`, `"Save"`, `"Cancel"` |
+
+**英文硬编码总量保守估计 ~500+ 处**，是中文硬编码（~322 行）的 **1.5 倍以上**。
+
+这意味着：
+1. 即使把所有中文换成 `t()` 调用，应用仍充满英文裸字符串
+2. 社区用户如果要做日文/韩文翻译，仍然需要改数百个文件
+3. **任何仅检测 CJK 字符的门禁（包括本文 §八提到的 guard 测试）都是假安全**
+
+### ESLint 替代 grep 的必要性
+
+基于以上发现，i18n 合规检测**必须**采用 ESLint AST 级方案（`eslint-plugin-i18next`），
+而非 shell grep。ESLint 可以检测所有语言的裸字符串字面量，不受字符编码限制。
+
+详见 [CI 简化提案 §九](./ci-simplification-proposal.md#九eslint-集成策略替代独立-ci-jobs)。
+
 ---
 
 ## 五、Token 系统：表面高合规率下的结构性分裂
@@ -303,6 +330,42 @@ Storybook → 产品的断裂链：
 --color-accent 系列                                    （强调色，DESIGN_DECISIONS 已定义但 tokens.css 缺失）
 --color-window-close-hover                             （窗口控件色）
 ```
+
+### Token 双源真相（Dual SSOT）——结构性隐患
+
+> **核心发现**：项目存在两个 Token 定义文件，内容不同步。
+
+| 文件 | 行数 | 内容 | 角色 |
+|------|------|------|------|
+| `design/system/01-tokens.css` | 370 行 | 含 Typography + Layout 变量 | 设计规范源 |
+| `apps/desktop/renderer/src/styles/tokens.css` | 203 行 | 缺少 Typography + Layout；含自创 token | 生产实际使用 |
+
+**不一致点**：
+
+1. **Typography 变量**（`--font-*`, `--text-*`, `--leading-*`）：设计源有定义，生产文件缺失
+2. **Layout 变量**（`--sidebar-*`, `--panel-*`）：设计源有定义，生产文件缺失
+3. **自创 Token**：生产文件含 `--color-focus-ring`（应为 `--color-ring-focus`），值也不同
+4. **Focus-ring 重复**：`--color-ring-focus`（spec 定义，`rgba(255,255,255,0.5)`）vs `--color-focus-ring`（自创，`rgba(59,130,246,0.5)` 蓝色）
+
+**影响**：
+- Agent 不知道该引用哪个文件
+- `docs/references/design-ui-architecture.md` 指向 `design/system/01-tokens.css`
+- `design/DESIGN_DECISIONS.md` 指向 `apps/desktop/renderer/src/styles/tokens.css`
+- 结果是两份文档各自为政，新 Token 可能只加到一个文件
+
+### 前端样式漂移的五个根因
+
+> 设计系统的治理链条从顶层到底层全线断裂。
+
+| # | 根因 | 数据证据 |
+|---|------|----------|
+| 1 | **Feature 层不复用 Primitives** | 75 个 Feature 文件使用原生 `<button>`（357 处匹配），不使用 `<Button>` 组件 |
+| 2 | **tokens.css 与 DESIGN_DECISIONS.md 漂移** | 重复 focus-ring token，自创 token，Typography/Layout 缺失 |
+| 3 | **Shadow 系统双轨** | 19 个文件使用 Tailwind 内置 `shadow-lg/2xl`，不走 `--shadow-*` token |
+| 4 | **Tailwind 原始色逃逸** | 5 个文件使用 `bg-red-600` 等原始色；12 个文件硬编码 `rgba`/hex |
+| 5 | **Token 双源真相** | 设计源 370 行 vs 生产 203 行，Typography + Layout 段整体缺失 |
+
+**因果链**：Token 双源 → Agent 引用错误源 → 新组件自创 Token → Feature 层绕过 Primitives → 阴影/颜色不受主题控制 → 浅色主题视觉崩坏
 
 ---
 
@@ -398,12 +461,16 @@ Storybook → 产品的断裂链：
 
 **不要** 42 个 `X.i18n-guard.test.ts`。
 
-**要** 1 个 `all-files-i18n-compliance.test.ts`，扫描所有 .tsx 文件。
+**首选方案**：ESLint 自定义规则（`eslint-plugin-i18next` + `eslint-plugin-tailwindcss`），
+集成到 `pnpm lint`，IDE 实时反馈 + CI 自动阻塞：
 
-同理：
+- `no-literal-string`：检测所有语言的裸字符串（不仅 CJK）
+- Tailwind 规则：禁止原始色值（`bg-red-600`）和非 token 阴影（`shadow-lg`）
+
+**过渡方案**（ESLint 就绪前）：
+- 1 个 `all-files-i18n-compliance.test.ts`，扫描所有 .tsx 文件
 - 1 个 `all-files-token-compliance.test.ts`（硬编码颜色/阴影/z-index）
 - 1 个 `all-files-a11y-guard.test.ts`（aria 属性）
-- ESLint 自定义规则（替代所有静态源码扫描 guard）
 
 ### 8.3 按用户场景组织 change
 

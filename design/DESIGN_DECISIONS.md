@@ -200,7 +200,7 @@ body,
 
 ```
 文件位置: apps/desktop/renderer/src/styles/tokens.css
-Tailwind 映射: tailwind.config.ts 中通过 theme.extend.colors 引用 CSS Variables
+Tailwind 映射: Tailwind CSS 4 CSS-first 配置——通过 @theme 块在 CSS 中直接引用 CSS Variables（不使用 tailwind.config.ts）
 使用方式: MUST 使用 CSS Variable，禁止硬编码颜色值
 主题切换: MUST 在 <html>（document.documentElement）设置 data-theme="dark" | "light"
 ```
@@ -1183,71 +1183,29 @@ apps/desktop/renderer/src/
 
 ### A.2 Tailwind 映射
 
-```typescript
-// tailwind.config.ts
-export default {
-  theme: {
-    extend: {
-      colors: {
-        bg: {
-          base: "var(--color-bg-base)",
-          surface: "var(--color-bg-surface)",
-          raised: "var(--color-bg-raised)",
-          hover: "var(--color-bg-hover)",
-          active: "var(--color-bg-active)",
-          selected: "var(--color-bg-selected)",
-        },
-        fg: {
-          default: "var(--color-fg-default)",
-          muted: "var(--color-fg-muted)",
-          subtle: "var(--color-fg-subtle)",
-          placeholder: "var(--color-fg-placeholder)",
-          disabled: "var(--color-fg-disabled)",
-          inverse: "var(--color-fg-inverse)",
-        },
-        border: {
-          default: "var(--color-border-default)",
-          hover: "var(--color-border-hover)",
-          focus: "var(--color-border-focus)",
-        },
-        // ... 其他颜色
-      },
-      spacing: {
-        // 使用 CSS Variables
-      },
-      borderRadius: {
-        sm: "var(--radius-sm)",
-        md: "var(--radius-md)",
-        lg: "var(--radius-lg)",
-        xl: "var(--radius-xl)",
-        "2xl": "var(--radius-2xl)",
-        full: "var(--radius-full)",
-      },
-      boxShadow: {
-        sm: "var(--shadow-sm)",
-        md: "var(--shadow-md)",
-        lg: "var(--shadow-lg)",
-        xl: "var(--shadow-xl)",
-      },
-      transitionTimingFunction: {
-        default: "var(--ease-default)",
-      },
-      transitionDuration: {
-        fast: "var(--duration-fast)",
-        normal: "var(--duration-normal)",
-        slow: "var(--duration-slow)",
-      },
-      zIndex: {
-        sticky: "var(--z-sticky)",
-        dropdown: "var(--z-dropdown)",
-        popover: "var(--z-popover)",
-        modal: "var(--z-modal)",
-        toast: "var(--z-toast)",
-        tooltip: "var(--z-tooltip)",
-      },
-    },
-  },
-};
+> **注意**：项目使用 Tailwind CSS 4 CSS-first 配置（`@theme` / `@layer`），
+> 不再使用 `tailwind.config.ts`。以下代码仅为说明 Token → Tailwind 的映射关系，
+> 实际配置通过 CSS `@theme` 块完成。
+
+```css
+/* 在 CSS 中通过 @theme 块配置（Tailwind CSS 4 方式） */
+@theme {
+  --color-bg-base: var(--color-bg-base);
+  --color-bg-surface: var(--color-bg-surface);
+  --color-bg-raised: var(--color-bg-raised);
+  --color-bg-hover: var(--color-bg-hover);
+  --color-bg-active: var(--color-bg-active);
+  --color-bg-selected: var(--color-bg-selected);
+  /* ... 其他颜色 */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+}
 ```
 
 ### A.3 Radix UI 约束

@@ -33,18 +33,21 @@
 
 ## 原子组件 (P1)
 
-| 组件     | 文件          | 状态   |
-| -------- | ------------- | ------ |
-| Badge    | `Badge.md`    | 待创建 |
-| Avatar   | `Avatar.md`   | 待创建 |
-| Icon     | `Icon.md`     | 待创建 |
-| Spinner  | `Spinner.md`  | 待创建 |
-| Text     | `Text.md`     | 待创建 |
-| Heading  | `Heading.md`  | 待创建 |
-| Skeleton | `Skeleton.md` | 待创建 |
-| Checkbox | `Checkbox.md` | 待创建 |
-| Select   | `Select.md`   | 待创建 |
-| Textarea | `Textarea.md` | 待创建 |
+> **状态说明**：以下组件均已在 `apps/desktop/renderer/src/components/primitives/` 中实现。
+> "卡片待写"表示组件代码已存在但规格卡片尚未撰写。
+
+| 组件     | 文件          | 状态     |
+| -------- | ------------- | -------- |
+| Badge    | `Badge.md`    | 卡片待写 |
+| Avatar   | `Avatar.md`   | 卡片待写 |
+| Icon     | `Icon.md`     | 卡片待写 |
+| Spinner  | `Spinner.md`  | 卡片待写 |
+| Text     | `Text.md`     | 卡片待写 |
+| Heading  | `Heading.md`  | 卡片待写 |
+| Skeleton | `Skeleton.md` | 卡片待写 |
+| Checkbox | `Checkbox.md` | 卡片待写 |
+| Select   | `Select.md`   | 卡片待写 |
+| Textarea | `Textarea.md` | 卡片待写 |
 
 ---
 

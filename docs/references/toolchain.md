@@ -1,5 +1,7 @@
 # 工具链
 
+更新时间：2026-03-04 16:00
+
 ## 包管理与构建
 
 | 用途     | 工具                      | 约束                               |
@@ -33,7 +35,6 @@
 | -------------------- | ------------------------------------------ | ------------------------------- |
 | CI                   | GitHub Actions                             | 三个 required checks            |
 | `ci`                 | `.github/workflows/ci.yml`                 | lint + typecheck + test + build |
-| `openspec-log-guard` | `.github/workflows/openspec-log-guard.yml` | RUN_LOG 与 Rulebook 校验        |
 | `merge-serial`       | `.github/workflows/merge-serial.yml`       | 串行合并队列                    |
 | 合并策略             | auto-merge                                 | 禁止手动合并                    |
 
@@ -44,8 +45,8 @@
 | `agent_controlplane_sync.sh`     | 同步控制面 `origin/main`                   |
 | `agent_worktree_setup.sh`        | 创建 `.worktrees/issue-<N>-<slug>`         |
 | `agent_worktree_cleanup.sh`      | 清理 worktree                              |
-| `agent_pr_preflight.py`          | PR 提交前校验（Rulebook、OpenSpec、Issue） |
-| `agent_pr_automerge_and_sync.sh` | 创建 PR + 开启 auto-merge + 回填 RUN_LOG   |
+| `agent_pr_preflight.py`          | PR 提交前校验（Branch、Issue）         |
+| `agent_pr_automerge_and_sync.sh` | 创建 PR + 开启 auto-merge              |
 | `ipc-acceptance-gate.ts`         | IPC 契约验收门禁                           |
 | `contract-generate.ts`           | IPC 契约代码生成                           |
 

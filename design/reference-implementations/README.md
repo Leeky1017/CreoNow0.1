@@ -17,11 +17,15 @@
 
 ## 黄金标准组件列表
 
+> **状态说明**：24 个 L1 Primitives 组件和 10 个 L2 Composites 组件已在
+> `apps/desktop/renderer/src/components/` 中实现。以下列表中的"待提取"表示实现已存在
+> 但尚未正式提取为黄金标准参考实现并放入本目录。
+
 | 组件   | 目录      | 状态   | 说明         |
 | ------ | --------- | ------ | ------------ |
-| Button | `Button/` | 待创建 | 交互组件模式 |
-| Input  | `Input/`  | 待创建 | 表单组件模式 |
-| Card   | `Card/`   | 待创建 | 容器组件模式 |
+| Button | `Button/` | 待提取 | 交互组件模式——实现位于 `components/primitives/Button/` |
+| Input  | `Input/`  | 待提取 | 表单组件模式——实现位于 `components/primitives/Input/` |
+| Card   | `Card/`   | 待提取 | 容器组件模式——实现位于 `components/primitives/Card/` |
 
 ---
 

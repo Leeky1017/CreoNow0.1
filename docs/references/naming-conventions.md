@@ -1,5 +1,7 @@
 # 命名约定
 
+更新时间：2026-03-04 16:00
+
 ## Git 实体
 
 | 实体     | 格式                                   | 示例                               |
@@ -9,7 +11,6 @@
 | Commit   | `<type>: <summary> (#<N>)`             | `feat: add memory decay (#42)`     |
 | PR title | `<summary> (#<N>)`                     | `Add memory decay (#42)`           |
 | PR body  | 必须包含 `Closes #<N>`                 | `Closes #42`                       |
-| RUN_LOG  | `openspec/_ops/task_runs/ISSUE-<N>.md` | `ISSUE-42.md`                      |
 | Worktree | `.worktrees/issue-<N>-<slug>`          | `.worktrees/issue-42-memory-decay` |
 
 Commit type 可选值：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
@@ -43,10 +44,3 @@ Commit type 可选值：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` 
 | Proposal        | `openspec/changes/<change>/proposal.md`            |
 | Tasks           | `openspec/changes/<change>/tasks.md`               |
 | Execution Order | `openspec/changes/EXECUTION_ORDER.md`              |
-
-## Rulebook 命名
-
-| 实体          | 格式                                       |
-| ------------- | ------------------------------------------ |
-| Active task   | `rulebook/tasks/issue-<N>-<slug>/`         |
-| Archived task | `rulebook/tasks/archive/issue-<N>-<slug>/` |

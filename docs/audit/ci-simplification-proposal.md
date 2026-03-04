@@ -1,6 +1,6 @@
 # CI 简化提案
 
-更新时间：2026-03-04 15:00
+更新时间：2026-03-04 16:00
 
 > "善战者，无智名，无勇功。"——好的 CI 不是门禁越多越好，而是每道门禁都守住了真正的质量底线。
 
@@ -17,7 +17,9 @@
 | 五 | 新增 Job 实现 | i18n + token lint YAML |
 | 六 | dependency-audit | 改为 Weekly Cron |
 | 七 | 治理脚本处理 | 需移除/修改的脚本 |
-| 八 | 实施清单 | 执行步骤 |
+| 八 | coverage-gate 拆分 | 后端覆盖率门禁建议 |
+| 九 | ESLint 集成策略 | 替代独立 CI jobs |
+| 十 | 实施清单 | 执行步骤 |
 
 ---
 
@@ -87,8 +89,12 @@
 
 | Job | 作用 | 触发条件 | 阻塞合并 |
 |-----|------|----------|----------|
-| `i18n-completeness` | 扫描 `renderer/src/` 中的硬编码中日韩字符 | renderer 文件变更 | **是** |
+| `i18n-completeness` | 扫描 `renderer/src/` 中的硬编码字符串（CJK + 英文裸文本） | renderer 文件变更 | **是** |
 | `token-compliance` | 扫描非语义化 Tailwind 色值 | renderer 文件变更 | **是** |
+
+> **推荐方案变更**：`i18n-completeness` 和 `token-compliance` 均建议以 ESLint 自定义规则实现，
+> 集成到现有 `lint-and-typecheck` job，**不再作为独立 CI job**。
+> 这样既利用 AST 级精准检测，又不增加 CI job 数量。
 
 ### 2.4 不变的 jobs
 
@@ -141,7 +147,7 @@ ci.yml
 └── ci (gate)
 ```
 
-对比改前：14 jobs → 13 jobs（-1 doc-timestamp-gate，+2 前端质量）
+对比改前：14 jobs → 14 jobs（-2 doc-timestamp-gate/dependency-audit，+2 前端质量 i18n/token）
 实际阻塞合并的 check：从 3 个 → 2 个
 dependency-audit：移到 weekly cron，不计入 PR 流程
 
@@ -150,6 +156,38 @@ dependency-audit：移到 weekly cron，不计入 PR 流程
 ## 五、新增 Job 实现方案
 
 ### 5.1 i18n-completeness
+
+> **重要修正**：原方案使用 shell `grep` 仅扫描 CJK 字符（`[\x{4e00}-\x{9fff}...]`），这存在致命缺陷——
+> 将中文硬编码改为英文硬编码即可绕过检测（实际上英文硬编码的问题同样严重，甚至更多）。
+>
+> **正确方案**：使用 ESLint AST 级检测（`eslint-plugin-i18next`），集成到现有 `lint-and-typecheck` job，
+> **无需新增独立 CI job**。ESLint 可以检测所有语言的裸字符串字面量，而非仅限 CJK。
+
+#### 方案 A（推荐）：ESLint 规则集成
+
+```bash
+# 安装
+pnpm add -D eslint-plugin-i18next
+
+# .eslintrc 或 eslint.config.js 中配置
+# rules:
+#   "i18next/no-literal-string": ["warn", {
+#     "ignore": ["^[A-Z_]+$", "^\\d+$"],
+#     "ignoreCallee": ["console.*", "logger.*"],
+#     "ignoreAttribute": ["data-testid", "className", "key", "id", "name", "type"]
+#   }]
+```
+
+优势：
+- AST 级别解析，不会被字符编码绕过
+- 区分 JSX 文本、属性值、变量赋值等上下文
+- 集成到已有 `pnpm lint`，无额外 CI 成本
+- 可渐进采用（先 `warn` 后 `error`）
+
+#### 方案 B（过渡期补充）：增强版 Shell 扫描
+
+如需在 ESLint 规则就绪前先行守护，可用以下增强版脚本（同时检测中文和英文裸字符串），
+但这只是临时方案，长期应迁移到 ESLint。
 
 ```yaml
   i18n-completeness:
@@ -161,25 +199,33 @@ dependency-audit：移到 weekly cron，不计入 PR 流程
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Check hardcoded CJK strings
+      - name: Check hardcoded strings (CJK + bare English)
         run: |
           # 扫描 renderer/src 中的 .tsx/.ts 文件（排除测试和 stories）
-          # 查找包含 CJK 字符的字符串字面量
-          VIOLATIONS=$(find apps/desktop/renderer/src \
+          # 检测 CJK 字符串 + JSX 中的英文裸文本
+          FILES=$(find apps/desktop/renderer/src \
             -name '*.tsx' -o -name '*.ts' | \
-            grep -v '\.test\.' | grep -v '\.spec\.' | grep -v '\.stories\.' | \
+            grep -v '\.test\.' | grep -v '\.spec\.' | grep -v '\.stories\.')
+
+          # 1. CJK 硬编码
+          CJK_VIOLATIONS=$(echo "$FILES" | \
             xargs grep -Pn '[\x{4e00}-\x{9fff}\x{3040}-\x{309f}\x{30a0}-\x{30ff}]' \
-            --include='*.tsx' --include='*.ts' \
             2>/dev/null || true)
+
+          # 2. JSX 中的英文裸文本（简化检测，会有误报）
+          # 仅作为信号，不作为 CI 阻塞
           
-          if [ -n "$VIOLATIONS" ]; then
+          if [ -n "$CJK_VIOLATIONS" ]; then
             echo "❌ Found hardcoded CJK strings in production files:"
-            echo "$VIOLATIONS"
+            echo "$CJK_VIOLATIONS"
             echo ""
             echo "Please use i18n (useTranslation / t()) instead."
             exit 1
           fi
           echo "✅ No hardcoded CJK strings found."
+          echo ""
+          echo "⚠️  Note: This check only catches CJK characters."
+          echo "    English hardcoded strings require ESLint (eslint-plugin-i18next)."
 ```
 
 ### 5.2 token-compliance
@@ -265,7 +311,51 @@ jobs:
 
 ---
 
-## 八、实施清单
+## 八、coverage-gate 拆分建议
+
+当前 `coverage-gate` job 仅执行 `pnpm test:coverage:desktop`（覆盖前端），后端覆盖率未纳入 CI 门禁。
+
+建议拆分为：
+
+| Job | 命令 | 覆盖范围 |
+|-----|------|----------|
+| `coverage-gate-renderer` | `pnpm test:coverage:renderer` | 前端（renderer/） |
+| `coverage-gate-core` | `pnpm test:coverage:core` | 后端（main/） |
+
+或作为同一个 job 的两个 step：
+
+```yaml
+  coverage-gate:
+    steps:
+      - name: Frontend coverage
+        run: pnpm test:coverage:renderer
+      - name: Backend coverage
+        run: pnpm test:coverage:core
+```
+
+后端有 4 个模块零测试（search/fts、stats、judge、shared/concurrency），拆分后可精准暴露盲区。
+
+---
+
+## 九、ESLint 集成策略（替代独立 CI jobs）
+
+i18n 和 token 合规检查均建议以 ESLint 规则实现，集成到已有的 `lint-and-typecheck` job：
+
+| 检查项 | ESLint 方案 | 备注 |
+|--------|------------|------|
+| i18n 硬编码 | `eslint-plugin-i18next` (`no-literal-string`) | AST 级，所有语言 |
+| Token 逃逸 | 自定义 ESLint 规则或 `eslint-plugin-tailwindcss` | 检测 `bg-red-600` 等原始色值 |
+| shadow 双轨 | Token 合规规则同时覆盖 | 检测 `shadow-lg` 等非 token 阴影 |
+
+这样的好处：
+1. **零新增 CI jobs**——lint-and-typecheck 已有，直接扩展规则
+2. **AST 精准度**——不会被字符编码绕过
+3. **IDE 实时反馈**——开发时即刻看到违规，无需等 CI
+4. **渐进采用**——先 `warn` 不阻塞，稳定后升级为 `error`
+
+---
+
+## 十、实施清单
 
 1. [ ] 删除 `.github/workflows/openspec-log-guard.yml`
 2. [ ] 从 ci.yml 中移除 `doc-timestamp-gate` job

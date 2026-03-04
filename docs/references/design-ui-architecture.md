@@ -1,10 +1,14 @@
 # 设计与 UI 架构
 
+更新时间：2026-03-04 16:00
+
 ## 设计基准
 
 - 设计 SSOT：`design/DESIGN_DECISIONS.md`
 - 所有 UI 实现必须严格遵循设计规范，禁止偏移
-- Token 定义：`design/system/01-tokens.css`
+- Token 定义源（设计规范）：`design/system/01-tokens.css`
+- Token 生产文件：`apps/desktop/renderer/src/styles/tokens.css`
+- Token 同步规则：任何新增/修改 Token 必须同时更新设计源和生产文件，两者保持一致
 
 ## Design Token 规则
 

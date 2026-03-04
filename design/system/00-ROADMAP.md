@@ -1,6 +1,12 @@
 # AI 前端开发执行路线图
 
-> **角色**: AI 执行必读文档  
+> **⚠️ 本文档已过时**：项目实际开发未按 Phase 0-6 顺序执行。
+> 24 个 L1 Primitives + 10 个 L2 Composites + 完整的 Feature 层均已实现，
+> Storybook 有 66 个 story，测试有 1,778 个用例。
+> 本文档保留作为历史参考，当前前端状态请参见
+> [前端诊断报告](../../docs/audit/amp-cn-frontend-issues-and-i18n-problems-analysis.md)。
+
+> **角色**: AI 执行必读文档（已过时）  
 > **目的**: 提供明确的执行顺序和验收标准  
 > **来源**: DESIGN_DECISIONS.md 拆分
 

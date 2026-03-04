@@ -1,6 +1,6 @@
 # 文档时间戳治理
 
-更新时间：2026-02-21 11:57
+更新时间：2026-03-04 16:00
 
 ## 目标
 
@@ -20,14 +20,10 @@
 - `README*.md`
 - `docs/**`
 - `openspec/**`
-- `rulebook/tasks/**`
 
 ### 例外（不纳入门禁校验）
 
 - `docs/Notion/**`（历史导入/草案，默认不作为事实来源）
-- `openspec/_ops/task_runs/**`（RUN_LOG，证据落盘，保持历史稳定）
-- `openspec/changes/archive/**`（历史归档 change，不可篡改）
-- `rulebook/tasks/archive/**`（历史归档 task，默认不修改）
 
 ## 自动校验
 
