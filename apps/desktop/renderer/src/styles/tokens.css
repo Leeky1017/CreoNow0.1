@@ -221,6 +221,21 @@
   --color-accent-muted: rgba(255, 255, 255, 0.6);
   --color-accent-subtle: rgba(255, 255, 255, 0.1);
 
+  /* Diff 语义色（dark） */
+  --color-diff-added-bg: rgba(34, 197, 94, 0.2);
+  --color-diff-added-text: #4ade80;
+  --color-diff-removed-bg: rgba(239, 68, 68, 0.2);
+  --color-diff-removed-text: #f87171;
+
+  /* 按钮状态色（dark） */
+  --color-btn-danger-bg: var(--color-error);
+  --color-btn-danger-hover: #dc2626;
+  --color-btn-success-bg: var(--color-success);
+  --color-btn-success-hover: #16a34a;
+
+  /* 窗口控件色（dark） */
+  --color-window-close-hover: #cc2b3e;
+
   /* 阴影基色 §3.7 - 几何在 :root 中定义 */
   --color-shadow: rgba(0, 0, 0, 0.5);
 
@@ -267,6 +282,21 @@
   --color-accent-hover: rgba(26, 26, 26, 0.9);
   --color-accent-muted: rgba(26, 26, 26, 0.6);
   --color-accent-subtle: rgba(26, 26, 26, 0.1);
+
+  /* Diff 语义色（light） */
+  --color-diff-added-bg: rgba(34, 197, 94, 0.12);
+  --color-diff-added-text: #16a34a;
+  --color-diff-removed-bg: rgba(239, 68, 68, 0.12);
+  --color-diff-removed-text: #dc2626;
+
+  /* 按钮状态色（light） */
+  --color-btn-danger-bg: var(--color-error);
+  --color-btn-danger-hover: #b91c1c;
+  --color-btn-success-bg: var(--color-success);
+  --color-btn-success-hover: #15803d;
+
+  /* 窗口控件色（light） */
+  --color-window-close-hover: #cc2b3e;
 
   /* 阴影基色 §3.7 - 几何在 :root 中定义 */
   --color-shadow: rgba(0, 0, 0, 0.1);
