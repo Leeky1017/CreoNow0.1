@@ -19,6 +19,7 @@
     "test:integration": "tsx scripts/run-discovered-tests.ts --mode integration",
     "test:discovery:consistency": "tsx scripts/test-discovery-consistency-gate.ts",
     "test:coverage:desktop": "pnpm -C apps/desktop test:coverage",
+    "test:coverage:core": "pnpm -C apps/desktop test:coverage:core",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:warning-budget": "tsx scripts/lint-ratchet.ts",

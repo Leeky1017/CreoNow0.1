@@ -303,10 +303,17 @@ EOF
   PR_NUMBER="${PR_URL##*/}"
 fi
 
+if [[ "$SKIP_PREFLIGHT" != "true" ]]; then
+  set +e
+  scripts/agent_pr_preflight.sh
+  PREFLIGHT_RC=$?
+  set -e
+fi
+
 backfill_runlog_pr_link "$PR_NUMBER"
 if [[ "$RUNLOG_BACKFILLED" == "true" && "$SKIP_PREFLIGHT" != "true" ]]; then
   set +e
-  scripts/main_audit_resign.sh --issue "$ISSUE_NUMBER" --preflight-mode fast
+  scripts/agent_pr_preflight.sh
   PREFLIGHT_RC=$?
   set -e
 fi
@@ -394,9 +401,9 @@ while true; do
   fi
 
   if [[ "$MERGE_STATE" == "BEHIND" ]]; then
-    echo "WARN: PR #${PR_NUMBER} is behind base; rebasing, re-signing main audit, and re-running checks." >&2
+    echo "WARN: PR #${PR_NUMBER} is behind base; rebasing and re-running preflight/checks." >&2
     rebase_onto_origin_main
-    scripts/main_audit_resign.sh --issue "$ISSUE_NUMBER" --preflight-mode fast
+    scripts/agent_pr_preflight.sh
     watch_checks_with_resilience "$PR_NUMBER"
     continue
   fi
