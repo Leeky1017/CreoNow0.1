@@ -246,8 +246,8 @@ export function UnifiedDiffView(props: {
             data-line-index={index}
             className={`
               flex group transition-colors
-              ${isRemoved ? "bg-[rgba(239,68,68,0.1)]" : ""}
-              ${isAdded ? "bg-[rgba(34,197,94,0.1)]" : ""}
+              ${isRemoved ? "bg-[var(--color-diff-removed-bg)]" : ""}
+              ${isAdded ? "bg-[var(--color-diff-added-bg)]" : ""}
               ${isContext ? "hover:bg-[var(--color-bg-hover)]" : ""}
               ${isCurrentChange ? "ring-1 ring-inset ring-[var(--color-accent)]" : ""}
             `}
@@ -256,8 +256,8 @@ export function UnifiedDiffView(props: {
             <div
               className={`
                 w-20 shrink-0 flex select-none text-[11px] border-r border-[var(--color-separator)]
-                ${isRemoved ? "bg-[rgba(239,68,68,0.05)]" : ""}
-                ${isAdded ? "bg-[rgba(34,197,94,0.05)]" : ""}
+                ${isRemoved ? "bg-[var(--color-diff-removed-gutter-bg)]" : ""}
+                ${isAdded ? "bg-[var(--color-diff-added-gutter-bg)]" : ""}
                 ${isContext ? "bg-[var(--color-bg-base)]" : ""}
               `}
             >
@@ -298,8 +298,8 @@ export function UnifiedDiffView(props: {
             <div
               className={`
                 flex-1 px-4 py-1 whitespace-pre-wrap break-words
-                ${isRemoved ? "text-[rgba(239,68,68,0.7)] line-through decoration-[rgba(239,68,68,0.4)]" : ""}
-                ${isAdded ? "text-[rgba(34,197,94,0.9)]" : ""}
+                ${isRemoved ? "text-[var(--color-diff-removed-text)] line-through decoration-[var(--color-diff-removed-decoration)]" : ""}
+                ${isAdded ? "text-[var(--color-diff-added-text)]" : ""}
                 ${(isRemoved || isAdded) && underlineClass ? underlineClass : ""}
                 ${isContext ? "text-[var(--color-fg-muted)]" : ""}
               `}

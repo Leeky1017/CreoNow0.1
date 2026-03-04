@@ -185,7 +185,7 @@ export function SplitDiffView(props: SplitDiffViewProps): JSX.Element {
                 key={idx}
                 className={`
                   px-4 leading-6 whitespace-pre-wrap
-                  ${line.type === "removed" ? "bg-[rgba(239,68,68,0.1)] text-[rgba(239,68,68,0.7)] line-through decoration-[rgba(239,68,68,0.4)]" : ""}
+                  ${line.type === "removed" ? "bg-[var(--color-diff-removed-bg)] text-[var(--color-diff-removed-text)] line-through decoration-[var(--color-diff-removed-decoration)]" : ""}
                   ${line.type === "removed" && underlineClass ? underlineClass : ""}
                   ${line.type === "context" ? "text-[var(--color-fg-muted)]" : ""}
                   ${line.type === "empty" ? "text-transparent" : ""}
@@ -225,7 +225,7 @@ export function SplitDiffView(props: SplitDiffViewProps): JSX.Element {
                 key={idx}
                 className={`
                   px-4 leading-6 whitespace-pre-wrap
-                  ${line.type === "added" ? "bg-[rgba(34,197,94,0.1)] text-[rgba(34,197,94,0.9)]" : ""}
+                  ${line.type === "added" ? "bg-[var(--color-diff-added-bg)] text-[var(--color-diff-added-text)]" : ""}
                   ${line.type === "added" && underlineClass ? underlineClass : ""}
                   ${line.type === "context" ? "text-[var(--color-fg-muted)]" : ""}
                   ${line.type === "empty" ? "text-transparent" : ""}

@@ -217,7 +217,7 @@ textarea:focus-visible {
 }
 
 .cn-window-control-btn--close:hover {
-  background: #cc2b3e;
+  background: var(--color-window-close-hover);
   color: var(--color-fg-inverse);
 }
 
