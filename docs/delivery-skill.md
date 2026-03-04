@@ -96,11 +96,11 @@ openspec/             .github/workflows/
 
 ## 七、文档时间戳治理（强制对齐）
 
-为减少文档静默漂移造成的误导，受管文档必须包含时间戳，并通过 CI/Preflight 自动校验阻断缺失场景。
+为减少文档静默漂移造成的误导，受管文档必须包含时间戳。
 
 - 规则主源：`docs/references/document-timestamp-governance.md`
 - 校验脚本：`scripts/check_doc_timestamps.py`
-- CI 接入：`.github/workflows/ci.yml` 的 `doc-timestamp-gate` job（接入 required check `ci` 的 `needs`）
+- 文档时间戳由 `scripts/check_doc_timestamps.py` 在本地校验（preflight），不阻塞 CI 合并。
 
 ---
 
@@ -114,13 +114,12 @@ openspec/             .github/workflows/
 2. **读关联 spec**：`openspec/specs/<module>/spec.md` + `openspec/changes/<change>/` 下的 delta spec
 3. **跑验证命令**：至少执行 typecheck (`pnpm typecheck`) + 相关测试 (`pnpm -C apps/desktop test:run <path>`)，命令输出必须完整记录作为证据
 4. **识别问题并分级**：逐文件审查，每个问题必须引用具体文件路径和行号，附上问题代码片段与修复建议
-   - BLOCKER：违反 P1-P7 核心原则、安全漏洞、数据丢失风险 → 必须修复后才能合并
+   - BLOCKER：违反核心原则、安全漏洞、数据丢失风险 → 必须修复后才能合并
    - SIGNIFICANT：超出 spec 范围、类型重复、死路径、测试缺失 → 应修复，可协商
    - MINOR：措辞、格式、可读性 → 不阻塞合并，记录即可
 5. **在 PR 下发评论**：将审计结论（判定 + 问题清单 + checklist）作为 PR comment 发布，格式见下
 6. **等待修复**：如果 Decision=HOLD/FAIL，等作者修复后进行二轮复审，复审结论同样以 PR comment 发布
-7. **生成审计记录文件**：Decision=PASS 后，调用 `scripts/independent_review_record.sh` 生成 `openspec/_ops/reviews/ISSUE-<N>.md`，填写实际 Scope/Findings/Verification
-8. **提交审计记录**：作为独立 commit 提交到 task 分支（三层序列的第二层）
+7. **发布审计结论**：Decision=PASS 后，在 PR comment 中发布最终审计结论（含判定、问题清单、验证结果）
 
 ### PR 评论格式
 
@@ -158,4 +157,4 @@ openspec/             .github/workflows/
 - 至少一条验证命令（typecheck / test）必须实际执行并记录结果
 - PR 评论不可省略——即使 PASS 也要发 comment 记录审计结论
 - 每个问题必须附带证据：具体文件路径、行号、相关代码片段
-- 验证命令的完整输出（通过或失败）必须包含在 PR 评论或审计记录中
+- 验证命令的完整输出（通过或失败）必须包含在 PR 评论中

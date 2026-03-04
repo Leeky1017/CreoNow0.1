@@ -1,0 +1,7 @@
+{
+  "name": "eslint-plugin-creonow",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Custom ESLint rules for CreoNow (Design Token compliance)",
+  "main": "index.cjs"
+}

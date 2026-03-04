@@ -1,16 +1,18 @@
 {
-  "version": "2026-03-01",
-  "generatedAt": "2026-03-01T03:29:56.948Z",
+  "version": "2026-03-04",
+  "generatedAt": "2026-03-04T08:50:51.460Z",
   "source": "eslint-json",
   "governance": {
-    "issue": "#788",
-    "reason": "Issue 788 warning budget ratchet after reducing runtime-validation/search hotspots"
+    "issue": "#959",
+    "reason": "Add i18next and token-compliance ESLint rules (warn level)"
   },
   "snapshot": {
-    "totalViolations": 66,
+    "totalViolations": 509,
     "byRule": {
-      "complexity": 14,
-      "max-lines-per-function": 50,
+      "complexity": 12,
+      "creonow/no-raw-tailwind-tokens": 15,
+      "i18next/no-literal-string": 432,
+      "max-lines-per-function": 48,
       "react-hooks/exhaustive-deps": 2
     }
   }
