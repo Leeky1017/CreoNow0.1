@@ -108,5 +108,8 @@ const actualWithApprovedDrift: CrossModuleContractActual = {
     path.join(repoRoot, "scripts/agent_pr_preflight.py"),
     "utf8",
   );
-  assert.match(preflight, /cross-module:check/);
+  assert.match(preflight, /Branch naming: task\/<N>-<slug>/);
+  assert.match(preflight, /Issue state: must be OPEN/);
+  assert.match(preflight, /PR body: must contain Closes #<N>/);
+  assert.doesNotMatch(preflight, /cross-module:check/);
 }

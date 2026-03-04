@@ -173,11 +173,9 @@ const integrationSentinel =
   "apps/desktop/tests/integration/runtime-governance-consistency.test.ts";
 const perfSentinel =
   "apps/desktop/tests/perf/project-lifecycle.benchmark.test.ts";
-const phase4IntegrationSentinels = [
-  "apps/desktop/tests/integration/governance/phase4-deliverables.spec.ts",
-  "apps/desktop/tests/integration/i18n/phase4-i18n-strategy.spec.ts",
-  "scripts/tests/phase4-branch-strategy.spec.ts",
-  "scripts/tests/phase4-ci-gates.spec.ts",
+const integrationDiscoverySentinels = [
+  "scripts/tests/lint-ratchet-regression.test.ts",
+  "scripts/tests/path-alias-migration-check.test.ts",
 ] as const;
 
 assert.match(
@@ -201,7 +199,7 @@ assert.equal(
   true,
   "integration discovery should include perf suites",
 );
-for (const sentinel of phase4IntegrationSentinels) {
+for (const sentinel of integrationDiscoverySentinels) {
   assert.equal(
     integrationPlan.files.some((file) => file.endsWith(sentinel)),
     true,
@@ -218,7 +216,7 @@ const integrationExecutionTargets = integrationPlan.commands
   )
   .map((command) => command.args[2] ?? "");
 
-for (const sentinel of phase4IntegrationSentinels) {
+for (const sentinel of integrationDiscoverySentinels) {
   assert.equal(
     integrationExecutionTargets.some((file) => file.endsWith(sentinel)),
     true,

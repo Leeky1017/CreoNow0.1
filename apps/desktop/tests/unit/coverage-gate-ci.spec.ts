@@ -8,7 +8,8 @@ const ciWorkflow = readFileSync(ciWorkflowPath, "utf8");
 
 // M5-S1: CI must include coverage gate job and artifact upload [ADDED]
 assert.match(ciWorkflow, /^\s*coverage-gate:\s*$/m);
-assert.match(ciWorkflow, /name:\s*Coverage gate/m);
+assert.match(ciWorkflow, /name:\s*Frontend coverage/m);
+assert.match(ciWorkflow, /name:\s*Backend coverage/m);
 assert.match(ciWorkflow, /name:\s*Upload coverage artifacts/m);
 
 // M5-S2: aggregate ci gate must depend on coverage-gate [ADDED]
