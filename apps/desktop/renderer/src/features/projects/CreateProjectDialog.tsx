@@ -503,7 +503,7 @@ export function CreateProjectDialog({
         setSubmitting(false);
       }
     },
-    [createAndSetCurrent, customs, onOpenChange, presets],
+    [createAndSetCurrent, customs, onOpenChange, presets, t],
   );
 
   const handleAiGenerate = useCallback(async () => {
@@ -525,7 +525,7 @@ export function CreateProjectDialog({
     } finally {
       setAiGenerating(false);
     }
-  }, [aiPrompt, createAiAssistDraft]);
+  }, [aiPrompt, createAiAssistDraft, t]);
 
   const handleTemplateCreated = useCallback(
     (_id: string) => {
