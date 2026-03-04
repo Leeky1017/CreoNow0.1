@@ -3,7 +3,15 @@
  *
  * Forbids raw Tailwind color values (e.g., bg-red-600, text-gray-300)
  * and built-in shadow classes (shadow-lg, shadow-xl, shadow-2xl)
- * in JSX className attributes. Enforces use of semantic Design Tokens.
+ * in ANY string literal or template literal. This covers all usage patterns:
+ *   - className="bg-red-600"           (direct JSX attribute)
+ *   - className={`shadow-lg ${x}`}     (template literal)
+ *   - ["shadow-2xl", ...].join(" ")    (array → join)
+ *   - cn("hover:bg-red-600", ...)      (clsx/cn helper)
+ *   - { color: "text-blue-400" }       (object property value)
+ *
+ * The regex patterns are specific enough (e.g., bg-red-600) that false
+ * positives on non-Tailwind strings are essentially impossible.
  *
  * @see docs/references/design-ui-architecture.md
  */
@@ -14,7 +22,7 @@ const rule = {
     type: "suggestion",
     docs: {
       description:
-        "Disallow raw Tailwind color values and built-in shadow classes in className attributes. Use semantic Design Tokens instead.",
+        "Disallow raw Tailwind color values and built-in shadow classes in any string literal. Use semantic Design Tokens instead.",
     },
     messages: {
       rawColor:
@@ -27,15 +35,18 @@ const rule = {
 
   create(context) {
     // Matches: bg-red-600, text-gray-300, border-blue-500, ring-emerald-200, etc.
+    // Also matches modifier prefixes: hover:bg-red-600, focus:text-gray-300
+    // Also matches opacity suffixes: shadow-red-500/20, bg-red-600/50
     const RAW_COLOR_RE =
-      /\b(?:bg|text|border|ring|shadow|outline|fill|stroke|from|via|to|divide|placeholder|accent|caret|decoration)-(?:red|blue|green|yellow|purple|pink|indigo|violet|cyan|teal|emerald|lime|amber|orange|fuchsia|rose|sky|slate|gray|zinc|neutral|stone|warm)-\d{1,3}\b/g;
+      /\b(?:[\w-]*:)?(?:bg|text|border|ring|shadow|outline|fill|stroke|from|via|to|divide|placeholder|accent|caret|decoration)-(?:red|blue|green|yellow|purple|pink|indigo|violet|cyan|teal|emerald|lime|amber|orange|fuchsia|rose|sky|slate|gray|zinc|neutral|stone|warm)-\d{1,3}(?:\/\d{1,3})?\b/g;
 
     // Matches: shadow-lg, shadow-xl, shadow-2xl (but not shadow-[custom] or shadow-surface etc.)
-    const RAW_SHADOW_RE = /\bshadow-(?:sm|md|lg|xl|2xl)\b/g;
+    // Also with modifier prefixes: hover:shadow-lg, data-[state=active]:shadow-sm
+    const RAW_SHADOW_RE = /\b(?:[\w[\]=-]*:)?shadow-(?:sm|md|lg|xl|2xl)\b/g;
 
     /**
      * Check a string value for raw Tailwind tokens.
-     * @param {import("eslint").AST.Token | import("estree").Node} node
+     * @param {import("estree").Node} node
      * @param {string} value
      */
     function checkValue(node, value) {
@@ -50,30 +61,35 @@ const rule = {
       }
     }
 
+    /**
+     * Returns true if this node is inside a JSDoc / block comment context
+     * (i.e. we should skip it — comments are not AST Literal nodes anyway,
+     * but template-tag descriptions sometimes are).
+     */
+    function isInsideComment(node) {
+      const parent = node.parent;
+      // Skip string literals that are the expression of an ExpressionStatement
+      // at the Program/top level (often stray doc strings that got parsed).
+      return (
+        parent &&
+        parent.type === "ExpressionStatement" &&
+        parent.parent &&
+        parent.parent.type === "Program"
+      );
+    }
+
     return {
-      // className="bg-red-600 shadow-lg"
-      JSXAttribute(node) {
-        if (
-          node.name &&
-          node.name.name === "className" &&
-          node.value
-        ) {
-          // Direct string literal: className="..."
-          if (node.value.type === "Literal" && typeof node.value.value === "string") {
-            checkValue(node.value, node.value.value);
-          }
-          // JSX expression: className={"..."} or className={`...`}
-          if (node.value.type === "JSXExpressionContainer") {
-            const expr = node.value.expression;
-            if (expr.type === "Literal" && typeof expr.value === "string") {
-              checkValue(expr, expr.value);
-            }
-            if (expr.type === "TemplateLiteral") {
-              for (const quasi of expr.quasis) {
-                checkValue(quasi, quasi.value.raw);
-              }
-            }
-          }
+      // Scan ALL string literals
+      Literal(node) {
+        if (typeof node.value !== "string") return;
+        if (isInsideComment(node)) return;
+        checkValue(node, node.value);
+      },
+
+      // Scan ALL template literals
+      TemplateLiteral(node) {
+        for (const quasi of node.quasis) {
+          checkValue(quasi, quasi.value.raw);
         }
       },
     };
