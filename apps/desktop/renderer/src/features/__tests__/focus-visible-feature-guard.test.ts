@@ -151,13 +151,13 @@ describe("WB-FE-A11Y-FV-S1: feature layer <button> focus-visible coverage", () =
 });
 
 /* ------------------------------------------------------------------ */
-/*  S2: tokens.css defines --color-focus-ring                          */
+/*  S2: tokens.css defines --color-ring-focus                          */
 /* ------------------------------------------------------------------ */
 
 describe("WB-FE-A11Y-FV-S2: tokens.css focus-ring token", () => {
-  it("defines --color-focus-ring token", () => {
+  it("defines --color-ring-focus token", () => {
     const content = readFileSync(TOKENS_CSS, "utf-8");
-    expect(content).toContain("--color-focus-ring");
+    expect(content).toContain("--color-ring-focus");
   });
 });
 
@@ -166,9 +166,9 @@ describe("WB-FE-A11Y-FV-S2: tokens.css focus-ring token", () => {
 /* ------------------------------------------------------------------ */
 
 describe("WB-FE-A11Y-FV-S3: main.css .focus-ring utility", () => {
-  it("defines .focus-ring class that references --color-focus-ring", () => {
+  it("defines .focus-ring class that references --color-ring-focus", () => {
     const content = readFileSync(MAIN_CSS, "utf-8");
     expect(content).toContain(".focus-ring");
-    expect(content).toContain("--color-focus-ring");
+    expect(content).toContain("--color-ring-focus");
   });
 });

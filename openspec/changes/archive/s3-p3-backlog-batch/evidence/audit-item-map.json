@@ -1,0 +1,144 @@
+[
+  {
+    "auditId": "A1-L-001",
+    "source": "CN-Code-Audit-2026-02-14/A1-代码膨胀审计.md",
+    "file": "apps/desktop/renderer/src/features/outline/OutlinePanel.tsx",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S4"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-drift-guard.test.ts"
+    ]
+  },
+  {
+    "auditId": "A1-L-002",
+    "source": "CN-Code-Audit-2026-02-14/A1-代码膨胀审计.md",
+    "file": "apps/desktop/renderer/src/features/quality-gates/QualityGatesPanel.tsx",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S4"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-drift-guard.test.ts"
+    ]
+  },
+  {
+    "auditId": "A2-L-001",
+    "source": "CN-Code-Audit-2026-02-14/A2-行为偏差审计.md",
+    "file": "apps/desktop/renderer/src/components/layout/AppShell.tsx",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S3"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/unit/sprint3/backlog-batch-recurrence-guards.test.ts"
+    ]
+  },
+  {
+    "auditId": "A2-L-002",
+    "source": "CN-Code-Audit-2026-02-14/A2-行为偏差审计.md",
+    "file": "apps/desktop/main/src/services/skills/skillService.ts",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S2", "CMI-S3-BB-S3"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/unit/sprint3/backlog-batch-recurrence-guards.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-contract-stability.test.ts"
+    ]
+  },
+  {
+    "auditId": "A3-L-001",
+    "source": "CN-Code-Audit-2026-02-14/A3-质量陷阱审计.md",
+    "file": "apps/desktop/tests/unit/kg/recognition-silent-degrade.test.ts",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S3"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/unit/sprint3/backlog-batch-recurrence-guards.test.ts"
+    ]
+  },
+  {
+    "auditId": "A4-L-001",
+    "source": "CN-Code-Audit-2026-02-14/A4-安全与规范审计.md",
+    "file": "apps/desktop/main/src/services/documents/documentService.ts",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S2"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-contract-stability.test.ts"
+    ]
+  },
+  {
+    "auditId": "A4-L-002",
+    "source": "CN-Code-Audit-2026-02-14/A4-安全与规范审计.md",
+    "file": "docs/references/tech-stack.md",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S2", "CMI-S3-BB-S4"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-contract-stability.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-drift-guard.test.ts"
+    ]
+  },
+  {
+    "auditId": "A5-L-001",
+    "source": "CN-Code-Audit-2026-02-14/A5-架构合规审计.md",
+    "file": ".eslintrc.cjs",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S4"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-drift-guard.test.ts"
+    ]
+  },
+  {
+    "auditId": "A5-L-002",
+    "source": "CN-Code-Audit-2026-02-14/A5-架构合规审计.md",
+    "file": "apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.tsx",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S4"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-drift-guard.test.ts"
+    ]
+  },
+  {
+    "auditId": "A6-L-001",
+    "source": "CN-Code-Audit-2026-02-14/A6-健壮性审计.md",
+    "file": "apps/desktop/preload/src/aiStreamBridge.ts",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S3"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/unit/sprint3/backlog-batch-recurrence-guards.test.ts"
+    ]
+  },
+  {
+    "auditId": "A6-L-002",
+    "source": "CN-Code-Audit-2026-02-14/A6-健壮性审计.md",
+    "file": "apps/desktop/renderer/src/features/character/AddRelationshipPopover.tsx",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S3"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/unit/sprint3/backlog-batch-recurrence-guards.test.ts"
+    ]
+  },
+  {
+    "auditId": "A7-L-017",
+    "source": "CN-Code-Audit-2026-02-14/A7-可维护性审计.md",
+    "file": "apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.tsx",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S4"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-drift-guard.test.ts"
+    ]
+  },
+  {
+    "auditId": "A7-L-018",
+    "source": "CN-Code-Audit-2026-02-14/A7-可维护性审计.md",
+    "file": "apps/desktop/renderer/src/features/version-history/VersionHistoryContainer.tsx",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S4"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-drift-guard.test.ts"
+    ]
+  },
+  {
+    "auditId": "A7-L-019",
+    "source": "CN-Code-Audit-2026-02-14/A7-可维护性审计.md",
+    "file": "apps/desktop/tests/e2e/command-palette.spec.ts",
+    "scenarioIds": ["CMI-S3-BB-S1", "CMI-S3-BB-S4"],
+    "verificationTests": [
+      "apps/desktop/tests/integration/sprint3/backlog-batch-coverage.test.ts",
+      "apps/desktop/tests/integration/sprint3/backlog-batch-drift-guard.test.ts"
+    ]
+  }
+]
