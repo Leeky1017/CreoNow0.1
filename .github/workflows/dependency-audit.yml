@@ -1,0 +1,15 @@
+name: Dependency Audit (Weekly)
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # 每周一 09:00 UTC
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node-pnpm
+      - name: Supply chain audit (high+)
+        run: pnpm audit --audit-level high

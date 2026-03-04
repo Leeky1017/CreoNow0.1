@@ -18,7 +18,8 @@
     "storybook:build": "storybook build -o storybook-static",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:core": "vitest run --coverage --config vitest.config.core.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
