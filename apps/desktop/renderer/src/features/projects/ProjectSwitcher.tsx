@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import type { ProjectListItem } from "../../stores/projectStore";
 
@@ -66,6 +67,7 @@ export function formatRelativeTime(
  * Why: PM-2 requires a visible loading indicator when switching takes >1s.
  */
 export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const [debouncedQuery, setDebouncedQuery] = React.useState("");
@@ -198,7 +200,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
             data-testid="project-switcher-current-name"
             className="truncate text-left"
           >
-            {currentProject?.name ?? "选择项目"}
+            {currentProject?.name ?? t('projects.switcher.selectProject')}
           </span>
         </span>
         <span
@@ -220,20 +222,20 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
               data-testid="project-switcher-search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="搜索项目"
+              placeholder={t('projects.switcher.searchPlaceholder')}
               className="h-7 w-full rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2 text-xs text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-muted)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)]"
             />
           </div>
 
           {filteredProjects.length === 0 ? (
             <div className="space-y-2 p-3 text-xs text-[var(--color-fg-muted)]">
-              <div>暂无项目</div>
+              <div>{t('projects.switcher.noProjects')}</div>
               <button
                 type="button"
                 onClick={handleCreateProject}
                 className="h-7 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] px-2 text-xs text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
               >
-                创建新项目
+                {t('projects.switcher.createNew')}
               </button>
             </div>
           ) : (

@@ -1,6 +1,5 @@
+import { useTranslation } from 'react-i18next';
 import { Tooltip } from "../../components/primitives/Tooltip";
-
-export const WRITE_BUTTON_LABEL = "续写";
 
 export function WriteButton(props: {
   visible: boolean;
@@ -8,6 +7,8 @@ export function WriteButton(props: {
   running?: boolean;
   onClick: () => void;
 }): JSX.Element | null {
+  const { t } = useTranslation();
+
   if (!props.visible) {
     return null;
   }
@@ -17,7 +18,7 @@ export function WriteButton(props: {
       data-testid="write-button-group"
       className="pointer-events-none absolute bottom-3 right-3 z-[var(--z-dropdown)]"
     >
-      <Tooltip content={props.running ? "生成中..." : "触发续写技能"}>
+      <Tooltip content={props.running ? t('editor.writeButton.generating') : t('editor.writeButton.tooltip')}>
         <button
           type="button"
           data-testid="write-button-trigger"
@@ -32,7 +33,7 @@ export function WriteButton(props: {
             }
           `}
         >
-          {props.running ? "续写中..." : WRITE_BUTTON_LABEL}
+          {props.running ? t('editor.writeButton.writing') : t('editor.writeButton.label')}
         </button>
       </Tooltip>
     </div>

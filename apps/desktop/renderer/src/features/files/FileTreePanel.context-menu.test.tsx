@@ -120,17 +120,17 @@ describe("FileTreePanel context menu actions", () => {
       fireEvent.contextMenu(screen.getByTestId("file-row-doc-1"));
     });
 
-    const renameItem = await screen.findByRole("menuitem", { name: "Rename" });
-    const deleteItem = await screen.findByRole("menuitem", { name: "Delete" });
-    const copyItem = await screen.findByRole("menuitem", { name: "Copy" });
+    const renameItem = await screen.findByRole("menuitem", { name: "重命名" });
+    const deleteItem = await screen.findByRole("menuitem", { name: "删除" });
+    const copyItem = await screen.findByRole("menuitem", { name: "复制" });
     const moveItem = await screen.findByRole("menuitem", {
-      name: "Move to Folder",
+      name: "移动到文件夹",
     });
     const historyItem = await screen.findByRole("menuitem", {
-      name: "Version History",
+      name: "版本历史",
     });
     const statusItem = await screen.findByRole("menuitem", {
-      name: "Mark as Final",
+      name: "标记为定稿",
     });
 
     expect(renameItem).toBeInTheDocument();
@@ -146,14 +146,14 @@ describe("FileTreePanel context menu actions", () => {
     expect(createAndSetCurrent).toHaveBeenCalledWith({
       projectId: "proj-1",
       type: "chapter",
-      title: "未命名章节 Copy",
+      title: "未命名章节 副本",
     });
 
     await act(async () => {
       fireEvent.contextMenu(screen.getByTestId("file-row-doc-1"));
     });
 
-    fireEvent.click(await screen.findByRole("menuitem", { name: "Move to Folder" }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "移动到文件夹" }));
     await flushFileTreeAsyncUpdates();
 
     expect(moveToFolder).toHaveBeenCalledWith({

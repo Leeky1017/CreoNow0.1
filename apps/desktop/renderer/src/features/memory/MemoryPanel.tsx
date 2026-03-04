@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import type { IpcError, IpcResponseData } from "@shared/types/ipc-generated";
 import { Button, Card, Text } from "../../components/primitives";
@@ -12,18 +13,18 @@ type MemorySettings = IpcResponseData<"memory:settings:get">;
 
 type CategoryGroup = {
   category: SemanticCategory;
-  label: string;
+  labelKey: string;
 };
 
 const CATEGORY_GROUPS: CategoryGroup[] = [
-  { category: "style", label: "写作风格" },
-  { category: "structure", label: "叙事结构" },
-  { category: "character", label: "角色偏好" },
-  { category: "pacing", label: "节奏偏好" },
-  { category: "vocabulary", label: "词汇偏好" },
+  { category: "style", labelKey: "memory.panel.categoryStyle" },
+  { category: "structure", labelKey: "memory.panel.categoryStructure" },
+  { category: "character", labelKey: "memory.panel.categoryCharacter" },
+  { category: "pacing", labelKey: "memory.panel.categoryPacing" },
+  { category: "vocabulary", labelKey: "memory.panel.categoryVocabulary" },
 ];
 
-function normalizePanelLoadError(cause: unknown): IpcError {
+function normalizePanelLoadError(cause: unknown, fallbackMessage: string): IpcError {
   if (
     typeof cause === "object" &&
     cause !== null &&
@@ -38,7 +39,7 @@ function normalizePanelLoadError(cause: unknown): IpcError {
   }
   return {
     code: "INTERNAL_ERROR",
-    message: "Memory 面板加载失败",
+    message: fallbackMessage,
   };
 }
 
@@ -56,6 +57,7 @@ function formatUpdatedAt(ts: number | null): string {
  * directly user-controllable and decoupled from legacy entry CRUD workflows.
  */
 export function MemoryPanel(): JSX.Element {
+  const { t } = useTranslation();
   const projectId = useProjectStore(
     (state) => state.current?.projectId ?? null,
   );
@@ -117,9 +119,9 @@ export function MemoryPanel(): JSX.Element {
       setStatus("ready");
     } catch (cause) {
       setStatus("error");
-      setError(normalizePanelLoadError(cause));
+      setError(normalizePanelLoadError(cause, t('memory.panel.loadError')));
     }
-  }, [projectId]);
+  }, [projectId, t]);
 
   React.useEffect(() => {
     void loadPanelData();
@@ -205,7 +207,7 @@ export function MemoryPanel(): JSX.Element {
 
     const normalized = editingText.trim();
     if (normalized.length === 0) {
-      setError({ code: "INVALID_ARGUMENT", message: "规则文本不能为空" });
+      setError({ code: "INVALID_ARGUMENT", message: t('memory.panel.ruleTextRequired') });
       return;
     }
 
@@ -235,7 +237,7 @@ export function MemoryPanel(): JSX.Element {
       return;
     }
 
-    const confirmed = window.confirm("确认删除这条偏好规则吗？");
+    const confirmed = window.confirm(t('memory.panel.confirmDeleteRule'));
     if (!confirmed) {
       return;
     }
@@ -256,7 +258,7 @@ export function MemoryPanel(): JSX.Element {
 
     const normalized = draftRule.trim();
     if (normalized.length === 0) {
-      setError({ code: "INVALID_ARGUMENT", message: "规则文本不能为空" });
+      setError({ code: "INVALID_ARGUMENT", message: t('memory.panel.ruleTextRequired') });
       return;
     }
 
@@ -345,7 +347,7 @@ export function MemoryPanel(): JSX.Element {
           }`}
           onClick={() => setActiveScope("global")}
         >
-          全局
+          {t('memory.panel.globalTab')}
         </button>
         <button
           type="button"
@@ -358,7 +360,7 @@ export function MemoryPanel(): JSX.Element {
           } disabled:opacity-50 disabled:cursor-not-allowed`}
           onClick={() => setActiveScope("project")}
         >
-          本项目
+          {t('memory.panel.projectTab')}
         </button>
       </div>
 
@@ -369,7 +371,7 @@ export function MemoryPanel(): JSX.Element {
           className="shrink-0 px-2.5 py-2 border-[var(--color-warning)] text-[var(--color-warning)]"
         >
           <Text size="small" className="text-[var(--color-warning)]">
-            学习已暂停：新情景仍记录，但不会触发蒸馏更新
+            {t('memory.panel.learningPaused')}
           </Text>
         </Card>
       ) : null}
@@ -381,7 +383,7 @@ export function MemoryPanel(): JSX.Element {
           className="shrink-0 px-2.5 py-2 border-[var(--color-warning)] text-[var(--color-warning)]"
         >
           <Text size="small" className="text-[var(--color-warning)]">
-            检测到 {conflictCount} 条偏好冲突，请优先处理。
+            {t('memory.panel.conflictsDetected', { count: conflictCount })}
           </Text>
         </Card>
       ) : null}
@@ -414,7 +416,7 @@ export function MemoryPanel(): JSX.Element {
         {status === "loading" ? (
           <div className="h-full flex items-center justify-center">
             <Text size="small" color="muted">
-              加载中...
+              {t('memory.panel.loading')}
             </Text>
           </div>
         ) : filteredRules.length === 0 ? (
@@ -423,10 +425,10 @@ export function MemoryPanel(): JSX.Element {
               ✦
             </div>
             <Text size="small" color="muted">
-              AI 正在学习你的写作偏好，使用越多越精准
+              {t('memory.panel.aiLearningHint')}
             </Text>
             <Button size="sm" onClick={() => setComposerOpen(true)}>
-              手动添加规则
+              {t('memory.panel.addRuleManually')}
             </Button>
           </div>
         ) : (
@@ -434,7 +436,7 @@ export function MemoryPanel(): JSX.Element {
             {groupedRules.map((group) => (
               <div key={group.category} className="flex flex-col gap-2">
                 <Text size="small" color="muted">
-                  {group.label}
+                  {t(group.labelKey)}
                 </Text>
                 {group.items.map((rule) => {
                   const isEditing = editingRuleId === rule.id;
@@ -453,11 +455,11 @@ export function MemoryPanel(): JSX.Element {
                                 className="text-xs text-[var(--color-fg-muted)]"
                                 htmlFor={`memory-edit-${rule.id}`}
                               >
-                                规则文本
+                                {t('memory.panel.ruleText')}
                               </label>
                               <textarea
                                 id={`memory-edit-${rule.id}`}
-                                aria-label="规则文本"
+                                aria-label={t('memory.panel.ruleText')}
                                 value={editingText}
                                 onChange={(event) =>
                                   setEditingText(event.target.value)
@@ -469,7 +471,7 @@ export function MemoryPanel(): JSX.Element {
                                   size="sm"
                                   onClick={() => void handleSaveEdit(rule.id)}
                                 >
-                                  保存修改
+                                  {t('memory.panel.saveChanges')}
                                 </Button>
                                 <Button
                                   size="sm"
@@ -479,7 +481,7 @@ export function MemoryPanel(): JSX.Element {
                                     setEditingText("");
                                   }}
                                 >
-                                  取消
+                                  {t('memory.panel.cancel')}
                                 </Button>
                               </div>
                             </div>
@@ -493,12 +495,12 @@ export function MemoryPanel(): JSX.Element {
                               </Text>
                               <div className="mt-2 flex items-center gap-2 text-xs text-[var(--color-fg-muted)]">
                                 <span>
-                                  置信度 {Math.round(rule.confidence * 100)}%
+                                  {t('memory.panel.confidence', { value: Math.round(rule.confidence * 100) })}
                                 </span>
                                 {rule.userConfirmed ? (
-                                  <span>已确认</span>
+                                  <span>{t('memory.panel.confirmed')}</span>
                                 ) : null}
-                                {rule.userModified ? <span>已修改</span> : null}
+                                {rule.userModified ? <span>{t('memory.panel.modified')}</span> : null}
                               </div>
                             </>
                           )}
@@ -512,21 +514,21 @@ export function MemoryPanel(): JSX.Element {
                               disabled={rule.userConfirmed}
                               onClick={() => void handleConfirmRule(rule.id)}
                             >
-                              确认
+                              {t('memory.panel.confirm')}
                             </Button>
                             <Button
                               size="sm"
                               variant="ghost"
                               onClick={() => startEdit(rule)}
                             >
-                              修改
+                              {t('memory.panel.modify')}
                             </Button>
                             <Button
                               size="sm"
                               variant="danger"
                               onClick={() => void handleDeleteRule(rule.id)}
                             >
-                              删除
+                              {t('memory.panel.delete')}
                             </Button>
                           </div>
                         ) : null}
@@ -545,14 +547,14 @@ export function MemoryPanel(): JSX.Element {
         className="shrink-0 p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
       >
         <div className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]">
-          <span>交互记录数 {interactionCount}</span>
-          <span>最近更新 {formatUpdatedAt(latestUpdateAt)}</span>
+          <span>{t('memory.panel.interactionCount', { count: interactionCount })}</span>
+          <span>{t('memory.panel.lastUpdate', { time: formatUpdatedAt(latestUpdateAt) })}</span>
         </div>
       </Card>
 
       <div className="shrink-0 flex items-center gap-2">
         <Button size="sm" onClick={() => setComposerOpen(true)}>
-          手动添加规则
+          {t('memory.panel.addRuleManually')}
         </Button>
         <Button
           size="sm"
@@ -560,7 +562,7 @@ export function MemoryPanel(): JSX.Element {
           loading={distilling}
           onClick={() => void handleDistill()}
         >
-          更新偏好
+          {t('memory.panel.updatePreferences')}
         </Button>
         <Button
           size="sm"
@@ -568,8 +570,8 @@ export function MemoryPanel(): JSX.Element {
           onClick={() => void handleLearningToggle()}
         >
           {settings?.preferenceLearningEnabled === false
-            ? "恢复学习"
-            : "暂停学习"}
+            ? t('memory.panel.resumeLearning')
+            : t('memory.panel.pauseLearning')}
         </Button>
       </div>
 
@@ -583,11 +585,11 @@ export function MemoryPanel(): JSX.Element {
               className="text-xs text-[var(--color-fg-muted)]"
               htmlFor="memory-rule-create-input"
             >
-              新增规则
+              {t('memory.panel.addRule')}
             </label>
             <textarea
               id="memory-rule-create-input"
-              aria-label="新增规则"
+              aria-label={t('memory.panel.addRule')}
               value={draftRule}
               onChange={(event) => setDraftRule(event.target.value)}
               className="min-h-[72px] rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 py-1.5 text-sm"
@@ -596,7 +598,7 @@ export function MemoryPanel(): JSX.Element {
               className="text-xs text-[var(--color-fg-muted)]"
               htmlFor="memory-rule-category"
             >
-              分类
+              {t('memory.panel.category')}
             </label>
             <select
               id="memory-rule-category"
@@ -608,13 +610,13 @@ export function MemoryPanel(): JSX.Element {
             >
               {CATEGORY_GROUPS.map((group) => (
                 <option key={group.category} value={group.category}>
-                  {group.label}
+                  {t(group.labelKey)}
                 </option>
               ))}
             </select>
             <div className="flex items-center gap-2">
               <Button size="sm" onClick={() => void handleCreateRule()}>
-                保存规则
+                {t('memory.panel.saveRule')}
               </Button>
               <Button
                 size="sm"
@@ -624,7 +626,7 @@ export function MemoryPanel(): JSX.Element {
                   setDraftRule("");
                 }}
               >
-                取消
+                {t('memory.panel.cancel')}
               </Button>
             </div>
           </div>

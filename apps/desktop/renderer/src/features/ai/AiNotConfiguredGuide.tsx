@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { Button } from "../../components/primitives/Button";
 import { Card } from "../../components/primitives/Card";
 import { Text } from "../../components/primitives/Text";
@@ -11,6 +13,8 @@ import { Text } from "../../components/primitives/Text";
 export function AiNotConfiguredGuide(props: {
   onNavigateToSettings: () => void;
 }): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <Card
       data-testid="ai-not-configured-guide"
@@ -18,11 +22,11 @@ export function AiNotConfiguredGuide(props: {
       className="flex flex-col items-center gap-3 p-6 rounded-[var(--radius-lg)]"
     >
       <Text size="body" weight="bold">
-        请先在设置中配置 AI 服务
+        {t('ai.notConfigured.title')}
       </Text>
 
       <Text size="small" color="muted" className="text-center">
-        需要配置 API Key 才能使用 AI 功能。支持 OpenAI、Anthropic 及兼容代理。
+        {t('ai.notConfigured.description')}
       </Text>
 
       <Button
@@ -30,7 +34,7 @@ export function AiNotConfiguredGuide(props: {
         size="sm"
         onClick={props.onNavigateToSettings}
       >
-        前往设置
+        {t('ai.notConfigured.goToSettings')}
       </Button>
     </Card>
   );

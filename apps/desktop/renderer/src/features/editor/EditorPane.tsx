@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { EditorContent, useEditor, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -44,8 +45,6 @@ const IS_VITEST_RUNTIME =
 export const EDITOR_DOCUMENT_CHARACTER_LIMIT = 1_000_000;
 export const LARGE_PASTE_THRESHOLD_CHARS = 2 * 1024 * 1024;
 const LARGE_PASTE_CHUNK_SIZE = 64 * 1024;
-const CAPACITY_WARNING_TEXT =
-  "文档已达到 1000000 字符上限，建议拆分文档后继续写作。";
 const WRITE_CONTEXT_WINDOW = 240;
 const ENTITY_COMPLETION_LOOKBACK_CHARS = 96;
 const ENTITY_COMPLETION_TRIGGER = "@";
@@ -341,6 +340,7 @@ export function sanitizePastedHtml(inputHtml: string): string {
  * EditorPane mounts TipTap editor and wires autosave to the DB SSOT.
  */
 export function EditorPane(props: { projectId: string }): JSX.Element {
+  const { t } = useTranslation();
   const bootstrapStatus = useEditorStore((s) => s.bootstrapStatus);
   const documentId = useEditorStore((s) => s.documentId);
   const documentStatus = useEditorStore((s) => s.documentStatus);
@@ -391,10 +391,10 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
     (nextCount: number) => {
       setDocumentCharacterCount(nextCount);
       setCapacityWarning(
-        shouldWarnDocumentCapacity(nextCount) ? CAPACITY_WARNING_TEXT : null,
+        shouldWarnDocumentCapacity(nextCount) ? t('editor.pane.charLimitReached') : null,
       );
     },
-    [setCapacityWarning, setDocumentCharacterCount],
+    [setCapacityWarning, setDocumentCharacterCount, t],
   );
 
   React.useEffect(() => {
@@ -461,7 +461,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
         const shouldContinueOverflow =
           !overflow ||
           window.confirm(
-            "粘贴内容超过文档容量上限，超限部分需要确认继续。是否继续粘贴？",
+            t('editor.pane.pasteLimitExceeded'),
           );
 
         const allowedLength = shouldContinueOverflow
@@ -1014,17 +1014,17 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
           className="flex items-center justify-between gap-3 border-b border-[var(--color-border-default)] bg-[var(--color-bg-raised)] px-4 py-2"
         >
           <Text size="small" color="muted">
-            正在预览 {previewTimestamp ?? "历史"} 的版本
+            {t('editor.pane.previewingVersion', { timestamp: previewTimestamp ?? t('editor.pane.history') })}
           </Text>
           <div className="flex items-center gap-2">
-            <Tooltip content="将在 version-control-p2 中接入完整恢复流程">
+            <Tooltip content={t('editor.pane.restoreTooltip')}>
               <Button
                 data-testid="preview-restore-placeholder"
                 variant="secondary"
                 size="sm"
                 disabled={true}
               >
-                恢复到此版本
+                {t('editor.pane.restoreVersion')}
               </Button>
             </Tooltip>
             <Button
@@ -1033,7 +1033,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
               size="sm"
               onClick={exitPreview}
             >
-              返回当前版本
+              {t('editor.pane.backToCurrent')}
             </Button>
           </div>
         </div>

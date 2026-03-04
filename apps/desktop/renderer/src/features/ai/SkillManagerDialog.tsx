@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import type { IpcError, IpcResponseData } from "@shared/types/ipc-generated";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { Dialog, Text } from "../../components/primitives";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
+import { i18n } from "../../i18n";
 import { invoke } from "../../lib/ipcClient";
 
 export type CustomSkillListItem =
@@ -38,7 +40,7 @@ function buildSkillDraftFromDescription(
   "name" | "description" | "promptTemplate" | "inputType" | "contextRulesText"
 > {
   const normalized = description.trim();
-  const shortName = normalized.slice(0, 16) || "AI 生成技能";
+  const shortName = normalized.slice(0, 16) || i18n.t("ai.skillManager.aiGeneratedSkill");
 
   return {
     name: shortName,
@@ -61,11 +63,11 @@ function parseContextRulesText(
       parsed === null ||
       Array.isArray(parsed)
     ) {
-      return { ok: false, message: "contextRules 必须是 JSON 对象" };
+      return { ok: false, message: i18n.t("ai.skillManager.contextRulesMustBeObject") };
     }
     return { ok: true, data: parsed as CustomSkillContextRules };
   } catch {
-    return { ok: false, message: "contextRules 不是合法 JSON" };
+    return { ok: false, message: i18n.t("ai.skillManager.contextRulesInvalidJson") };
   }
 }
 
@@ -100,10 +102,11 @@ export function SkillManagerDialog(props: {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const { confirm, dialogProps } = useConfirmDialog();
+  const { t } = useTranslation();
 
   const title = useMemo(
-    () => (editingId ? "编辑自定义技能" : "创建自定义技能"),
-    [editingId],
+    () => (editingId ? t("ai.skillManager.editTitle") : t("ai.skillManager.createTitle")),
+    [editingId, t],
   );
 
   async function loadCustomSkills(): Promise<void> {
@@ -140,7 +143,7 @@ export function SkillManagerDialog(props: {
   async function handleAiGenerate(): Promise<void> {
     const prompt = aiDescription.trim();
     if (prompt.length === 0) {
-      setFormError("请先输入技能需求描述");
+      setFormError(t("ai.skillManager.enterDescriptionFirst"));
       return;
     }
 
@@ -164,10 +167,10 @@ export function SkillManagerDialog(props: {
 
   async function handleDelete(item: CustomSkillListItem): Promise<void> {
     const confirmed = await confirm({
-      title: `确定删除技能"${item.name}"？`,
-      description: "此操作不可撤销",
-      primaryLabel: "删除",
-      secondaryLabel: "取消",
+      title: t("ai.skillManager.confirmDeleteTitle", { name: item.name }),
+      description: t("ai.skillManager.irreversible"),
+      primaryLabel: t("ai.skillManager.delete"),
+      secondaryLabel: t("ai.skillManager.cancel"),
     });
     if (!confirmed) {
       return;
@@ -273,8 +276,8 @@ export function SkillManagerDialog(props: {
             resetForm();
           }
         }}
-        title="技能管理"
-        description="手动创建、AI 辅助创建、编辑和删除自定义技能。"
+        title={t("ai.skillManager.dialogTitle")}
+        description={t("ai.skillManager.dialogDescription")}
         footer={
           <>
             <button
@@ -283,7 +286,7 @@ export function SkillManagerDialog(props: {
               onClick={resetForm}
               data-testid="skill-manager-reset"
             >
-              重置
+              {t("ai.skillManager.reset")}
             </button>
             <button
               type="button"
@@ -292,7 +295,7 @@ export function SkillManagerDialog(props: {
               disabled={submitting}
               data-testid="skill-manager-save"
             >
-              {submitting ? "保存中..." : editingId ? "保存修改" : "创建技能"}
+              {submitting ? t("ai.skillManager.saving") : editingId ? t("ai.skillManager.saveChanges") : t("ai.skillManager.createSkill")}
             </button>
           </>
         }
@@ -300,12 +303,12 @@ export function SkillManagerDialog(props: {
         <div className="space-y-4" data-testid="skill-manager-dialog">
           <section className="space-y-2">
             <Text size="tiny" color="muted" className="uppercase tracking-wide">
-              AI 辅助创建
+              {t("ai.skillManager.aiAssisted")}
             </Text>
             <textarea
               value={aiDescription}
               onChange={(e) => setAiDescription(e.target.value)}
-              placeholder="例如：创建一个技能，把选中文本改写成鲁迅风格"
+              placeholder={t("ai.skillManager.aiPlaceholder")}
               className="w-full min-h-20 rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
               data-testid="skill-manager-ai-description"
             />
@@ -315,7 +318,7 @@ export function SkillManagerDialog(props: {
               onClick={() => void handleAiGenerate()}
               data-testid="skill-manager-ai-generate"
             >
-              AI 生成配置
+              {t("ai.skillManager.aiGenerateConfig")}
             </button>
           </section>
 
@@ -325,7 +328,7 @@ export function SkillManagerDialog(props: {
             </Text>
 
             <label className="block text-xs text-[var(--color-fg-muted)]">
-              名称
+              {t("ai.skillManager.fieldName")}
               <input
                 value={form.name}
                 onChange={(e) =>
@@ -342,7 +345,7 @@ export function SkillManagerDialog(props: {
             </label>
 
             <label className="block text-xs text-[var(--color-fg-muted)]">
-              描述
+              {t("ai.skillManager.fieldDescription")}
               <input
                 value={form.description}
                 onChange={(e) =>
@@ -359,7 +362,7 @@ export function SkillManagerDialog(props: {
             </label>
 
             <label className="block text-xs text-[var(--color-fg-muted)]">
-              Prompt 模板
+              {t("ai.skillManager.fieldPromptTemplate")}
               <textarea
                 value={form.promptTemplate}
                 onChange={(e) =>
@@ -368,7 +371,7 @@ export function SkillManagerDialog(props: {
                     promptTemplate: e.target.value,
                   }))
                 }
-                placeholder="包含 {{input}} 占位符"
+                placeholder={t("ai.skillManager.promptPlaceholder")}
                 className="mt-1 w-full min-h-20 rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
                 data-testid="skill-form-prompt-template"
               />
@@ -384,7 +387,7 @@ export function SkillManagerDialog(props: {
 
             <div className="grid grid-cols-2 gap-2">
               <label className="block text-xs text-[var(--color-fg-muted)]">
-                输入类型
+                {t("ai.skillManager.fieldInputType")}
                 <select
                   value={form.inputType}
                   onChange={(e) =>
@@ -396,13 +399,13 @@ export function SkillManagerDialog(props: {
                   className="mt-1 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
                   data-testid="skill-form-input-type"
                 >
-                  <option value="selection">选中文本</option>
-                  <option value="document">文档上下文</option>
+                  <option value="selection">{t("ai.skillManager.inputTypeSelection")}</option>
+                  <option value="document">{t("ai.skillManager.inputTypeDocument")}</option>
                 </select>
               </label>
 
               <label className="block text-xs text-[var(--color-fg-muted)]">
-                作用域
+                {t("ai.skillManager.fieldScope")}
                 <select
                   value={form.scope}
                   onChange={(e) =>
@@ -414,8 +417,8 @@ export function SkillManagerDialog(props: {
                   className="mt-1 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
                   data-testid="skill-form-scope"
                 >
-                  <option value="project">项目级</option>
-                  <option value="global">全局</option>
+                  <option value="project">{t("ai.skillManager.scopeProject")}</option>
+                  <option value="global">{t("ai.skillManager.scopeGlobal")}</option>
                 </select>
               </label>
             </div>
@@ -449,7 +452,7 @@ export function SkillManagerDialog(props: {
                 }
                 data-testid="skill-form-enabled"
               />
-              启用技能
+              {t("ai.skillManager.enableSkill")}
             </label>
           </section>
 
@@ -464,15 +467,15 @@ export function SkillManagerDialog(props: {
 
           <section className="space-y-2">
             <Text size="tiny" color="muted" className="uppercase tracking-wide">
-              自定义技能列表
+              {t("ai.skillManager.customSkillList")}
             </Text>
             {loading ? (
               <Text size="small" color="muted">
-                加载中...
+                {t("ai.skillManager.loading")}
               </Text>
             ) : items.length === 0 ? (
               <Text size="small" color="muted">
-                暂无自定义技能
+                {t("ai.skillManager.noCustomSkills")}
               </Text>
             ) : (
               <div className="space-y-2" data-testid="skill-manager-list">
@@ -487,7 +490,7 @@ export function SkillManagerDialog(props: {
                           {item.name}
                         </Text>
                         <Text size="tiny" color="muted">
-                          {item.scope === "project" ? "项目级" : "全局"} ·{" "}
+                          {item.scope === "project" ? t("ai.skillManager.scopeProject") : t("ai.skillManager.scopeGlobal")} ·{" "}
                           {item.inputType}
                         </Text>
                       </div>
@@ -498,7 +501,7 @@ export function SkillManagerDialog(props: {
                           onClick={() => handleEdit(item)}
                           data-testid={`skill-item-edit-${item.id}`}
                         >
-                          编辑
+                          {t("ai.skillManager.edit")}
                         </button>
                         <button
                           type="button"
@@ -506,7 +509,7 @@ export function SkillManagerDialog(props: {
                           onClick={() => void handleDelete(item)}
                           data-testid={`skill-item-delete-${item.id}`}
                         >
-                          删除
+                          {t("ai.skillManager.delete")}
                         </button>
                       </div>
                     </div>

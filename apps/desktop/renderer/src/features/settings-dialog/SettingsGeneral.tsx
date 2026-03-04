@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Toggle } from "../../components/primitives/Toggle";
 import { Slider } from "../../components/primitives/Slider";
@@ -78,14 +79,6 @@ const typographyOptions = [
 ];
 
 /**
- * Language options
- */
-const languageOptions = [
-  { value: "zh-CN", label: "中文 (简体)" },
-  { value: "en", label: "English" },
-];
-
-/**
  * SettingsGeneral page component
  *
  * General settings page with Writing Experience, Data & Storage, and Editor Defaults sections.
@@ -97,6 +90,13 @@ export function SettingsGeneral({
   onShowAiMarksChange,
   onSettingsChange,
 }: SettingsGeneralProps): JSX.Element {
+  const { t } = useTranslation();
+
+  const languageOptions = React.useMemo(() => [
+    { value: "zh-CN", label: t('settingsDialog.general.zhCN') },
+    { value: "en", label: "English" },
+  ], [t]);
+
   const [currentLanguage, setCurrentLanguage] = React.useState(
     () => getLanguagePreference(),
   );
@@ -207,7 +207,7 @@ export function SettingsGeneral({
         <div className="flex flex-col gap-8 mb-8">
           <Toggle
             label="Differentiate AI edits"
-            description="When enabled, AI-generated entries in Version History show an extra “AI 修改” marker."
+            description={`When enabled, AI-generated entries in Version History show an extra \u201c${t('settingsDialog.general.aiModifyMarker')}\u201d marker.`}
             checked={showAiMarks}
             onCheckedChange={onShowAiMarksChange}
           />

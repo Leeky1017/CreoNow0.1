@@ -1,19 +1,11 @@
 import type { SkillListItem } from "../../stores/aiStore";
 
+import { useTranslation } from "react-i18next";
 import { Text } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 import { resolveSkillsForPicker } from "./scopeResolver";
 
 import { Plus } from "lucide-react";
-function scopeLabel(scope: SkillListItem["scope"]): string {
-  if (scope === "builtin") {
-    return "内置";
-  }
-  if (scope === "global") {
-    return "全局";
-  }
-  return "项目";
-}
 
 /**
  * SkillPicker renders grouped skill entries and scope controls.
@@ -29,6 +21,18 @@ export function SkillPicker(props: {
   onUpdateScope?: (skillId: string, scope: "global" | "project") => void;
   onCreateSkill?: () => void;
 }): JSX.Element | null {
+  const { t } = useTranslation();
+
+  function scopeLabel(scope: SkillListItem["scope"]): string {
+    if (scope === "builtin") {
+      return t("ai.skillPicker.builtin");
+    }
+    if (scope === "global") {
+      return t("ai.skillPicker.global");
+    }
+    return t("ai.skillPicker.project");
+  }
+
   if (!props.open) {
     return null;
   }
@@ -72,7 +76,7 @@ export function SkillPicker(props: {
         <div className="mt-2 max-h-72 overflow-auto space-y-3">
           <section>
             <Text size="tiny" color="muted" className="uppercase tracking-wide">
-              内置技能
+              {t("ai.skillPicker.builtinSkills")}
             </Text>
             <div className="mt-1.5 space-y-1.5">
               {grouped.builtin.map((item) => {
@@ -83,7 +87,7 @@ export function SkillPicker(props: {
                   : !item.valid
                     ? "Invalid"
                     : item.isProjectOverride
-                      ? "项目级覆盖"
+                      ? t("ai.skillPicker.projectOverride")
                       : scopeLabel(item.scope);
 
                 return (
@@ -134,7 +138,7 @@ export function SkillPicker(props: {
                           props.onToggleSkill?.(item.id, !item.enabled)
                         }
                       >
-                        {item.enabled ? "停用" : "启用"}
+                        {item.enabled ? t("ai.skillPicker.disable") : t("ai.skillPicker.enable")}
                       </button>
                     )}
                   </div>
@@ -145,13 +149,13 @@ export function SkillPicker(props: {
 
           <section>
             <Text size="tiny" color="muted" className="uppercase tracking-wide">
-              自定义技能
+              {t("ai.skillPicker.customSkills")}
             </Text>
 
             {!hasCustomSkills ? (
               <div className="mt-1.5 p-2 rounded-[10px] border border-dashed border-[var(--color-border-default)] bg-[var(--color-bg-base)]">
                 <Text size="small" color="muted">
-                  暂无自定义技能，点击创建或用自然语言描述需求
+                  {t("ai.skillPicker.noCustomSkillsHint")}
                 </Text>
                 <button
                   type="button"
@@ -164,18 +168,18 @@ export function SkillPicker(props: {
                     props.onOpenSettings?.();
                   }}
                 >
-                  创建技能
+                  {t("ai.skillPicker.createSkill")}
                 </button>
               </div>
             ) : (
               <div className="mt-1.5 space-y-2">
                 <div>
                   <Text size="tiny" color="muted">
-                    全局技能
+                    {t("ai.skillPicker.globalSkills")}
                   </Text>
                   {grouped.global.length === 0 ? (
                     <Text size="tiny" color="muted" className="mt-1 block">
-                      暂无全局技能
+                      {t("ai.skillPicker.noGlobalSkills")}
                     </Text>
                   ) : (
                     <div className="mt-1 space-y-1.5">
@@ -234,7 +238,7 @@ export function SkillPicker(props: {
                                   props.onUpdateScope?.(item.id, "project")
                                 }
                               >
-                                降级为项目
+                                {t("ai.skillPicker.demoteToProject")}
                               </button>
                             )}
 
@@ -247,7 +251,7 @@ export function SkillPicker(props: {
                                   props.onToggleSkill?.(item.id, !item.enabled)
                                 }
                               >
-                                {item.enabled ? "停用" : "启用"}
+                                {item.enabled ? t("ai.skillPicker.disable") : t("ai.skillPicker.enable")}
                               </button>
                             )}
                           </div>
@@ -259,11 +263,11 @@ export function SkillPicker(props: {
 
                 <div>
                   <Text size="tiny" color="muted">
-                    项目技能
+                    {t("ai.skillPicker.projectSkills")}
                   </Text>
                   {grouped.project.length === 0 ? (
                     <Text size="tiny" color="muted" className="mt-1 block">
-                      暂无项目技能
+                      {t("ai.skillPicker.noProjectSkills")}
                     </Text>
                   ) : (
                     <div className="mt-1 space-y-1.5">
@@ -275,7 +279,7 @@ export function SkillPicker(props: {
                           : !item.valid
                             ? "Invalid"
                             : item.isProjectOverride
-                              ? "项目级覆盖"
+                              ? t("ai.skillPicker.projectOverride")
                               : scopeLabel(item.scope);
 
                         return (
@@ -324,7 +328,7 @@ export function SkillPicker(props: {
                                   props.onUpdateScope?.(item.id, "global")
                                 }
                               >
-                                提升为全局
+                                {t("ai.skillPicker.promoteToGlobal")}
                               </button>
                             )}
 
@@ -337,7 +341,7 @@ export function SkillPicker(props: {
                                   props.onToggleSkill?.(item.id, !item.enabled)
                                 }
                               >
-                                {item.enabled ? "停用" : "启用"}
+                                {item.enabled ? t("ai.skillPicker.disable") : t("ai.skillPicker.enable")}
                               </button>
                             )}
                           </div>

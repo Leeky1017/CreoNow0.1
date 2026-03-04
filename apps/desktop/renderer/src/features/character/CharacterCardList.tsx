@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { EmptyState } from "../../components/composites/EmptyState";
 
 export interface CharacterCardSummary {
@@ -35,6 +37,8 @@ export function CharacterCardList({
   onCreateCharacter,
   className = "",
 }: CharacterCardListProps): JSX.Element {
+  const { t } = useTranslation();
+
   if (cards.length === 0) {
     return (
       <section
@@ -42,15 +46,15 @@ export function CharacterCardList({
         className={`h-full flex items-center justify-center p-4 bg-[var(--color-bg-base)] ${className}`}
       >
         <EmptyState
-          title="暂无角色"
-          description="开始创建你的第一个角色"
+          title={t('character.cardList.emptyTitle')}
+          description={t('character.cardList.emptyDescription')}
           action={
             <button
               type="button"
               onClick={onCreateCharacter}
               className="focus-ring px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
             >
-              创建角色
+              {t('character.cardList.createCharacter')}
             </button>
           }
         />

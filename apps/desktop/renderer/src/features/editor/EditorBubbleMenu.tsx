@@ -1,6 +1,7 @@
 import React from "react";
 import type { Editor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react";
+import { useTranslation } from 'react-i18next';
 
 import { InlineFormatButton } from "./InlineFormatButton";
 import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
@@ -17,22 +18,22 @@ export const EDITOR_INLINE_BUBBLE_MENU_PLUGIN_KEY = "cn-editor-inline-bubble";
 const BUBBLE_AI_SKILLS = [
   {
     id: "builtin:polish",
-    label: "润色",
+    labelKey: "editor.bubbleMenu.polish",
     testId: "bubble-ai-polish",
   },
   {
     id: "builtin:rewrite",
-    label: "改写",
+    labelKey: "editor.bubbleMenu.rewrite",
     testId: "bubble-ai-rewrite",
   },
   {
     id: "builtin:describe",
-    label: "描写",
+    labelKey: "editor.bubbleMenu.describe",
     testId: "bubble-ai-describe",
   },
   {
     id: "builtin:dialogue",
-    label: "对白",
+    labelKey: "editor.bubbleMenu.dialogue",
     testId: "bubble-ai-dialogue",
   },
 ] as const;
@@ -86,6 +87,7 @@ export function EditorBubbleMenu(props: {
   editor: Editor | null;
 }): JSX.Element | null {
   const { editor } = props;
+  const { t } = useTranslation();
   const [visible, setVisible] = React.useState(false);
   const [placement, setPlacement] = React.useState<BubblePlacement>("top");
   const projectId = useEditorStore((s) => s.projectId);
@@ -256,12 +258,12 @@ export function EditorBubbleMenu(props: {
             key={skill.id}
             type="button"
             data-testid={skill.testId}
-            aria-label={`AI ${skill.label}`}
+            aria-label={`AI ${t(skill.labelKey)}`}
             disabled={aiDisabled}
             className="rounded-[var(--radius-sm)] px-2 py-1 text-xs text-[var(--color-fg-default)] transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-raised)] disabled:cursor-not-allowed disabled:opacity-40"
             onClick={() => handleAiSkillClick(skill.id)}
           >
-            {skill.label}
+            {t(skill.labelKey)}
           </button>
         ))}
       </div>

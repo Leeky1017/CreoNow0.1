@@ -50,6 +50,27 @@
       "underline": "Underline",
       "aiPolish": "Polish",
       "aiRewrite": "Rewrite"
+    },
+    "bubbleMenu": {
+      "polish": "Polish",
+      "rewrite": "Rewrite",
+      "describe": "Describe",
+      "dialogue": "Dialogue"
+    },
+    "writeButton": {
+      "label": "Continue Writing",
+      "generating": "Generating...",
+      "tooltip": "Trigger continue-writing skill",
+      "writing": "Writing..."
+    },
+    "pane": {
+      "charLimitReached": "Document has reached the 1,000,000 character limit. Consider splitting the document to continue writing.",
+      "pasteLimitExceeded": "Pasted content exceeds the document capacity limit. Continue pasting?",
+      "previewingVersion": "Previewing version from {{timestamp}}",
+      "history": "history",
+      "restoreTooltip": "Full restore flow will be available in version-control-p2",
+      "restoreVersion": "Restore to this version",
+      "backToCurrent": "Back to current version"
     }
   },
   "dashboard": {
@@ -159,7 +180,66 @@
     "usageOutput": "Output:",
     "usageSessionTotal": "Session total:",
     "usageCostEstimate": "Cost estimate:",
-    "appliedSaved": "Applied & saved"
+    "appliedSaved": "Applied & saved",
+    "notConfigured": {
+      "title": "Please configure AI service in Settings first",
+      "description": "An API Key is required to use AI features. Supports OpenAI, Anthropic, and compatible proxies.",
+      "goToSettings": "Go to Settings"
+    },
+    "skillPicker": {
+      "builtin": "Built-in",
+      "global": "Global",
+      "project": "Project",
+      "builtinSkills": "Built-in Skills",
+      "projectOverride": "Project Override",
+      "disable": "Disable",
+      "enable": "Enable",
+      "customSkills": "Custom Skills",
+      "noCustomSkillsHint": "No custom skills yet. Click to create or describe your needs in natural language.",
+      "createSkill": "Create Skill",
+      "globalSkills": "Global Skills",
+      "noGlobalSkills": "No global skills",
+      "demoteToProject": "Demote to Project",
+      "projectSkills": "Project Skills",
+      "noProjectSkills": "No project skills",
+      "promoteToGlobal": "Promote to Global"
+    },
+    "skillManager": {
+      "aiGeneratedSkill": "AI Generated Skill",
+      "contextRulesMustBeObject": "contextRules must be a JSON object",
+      "contextRulesInvalidJson": "contextRules is not valid JSON",
+      "editTitle": "Edit Custom Skill",
+      "createTitle": "Create Custom Skill",
+      "enterDescriptionFirst": "Please enter a skill description first",
+      "confirmDeleteTitle": "Delete skill \"{{name}}\"?",
+      "irreversible": "This action cannot be undone",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "dialogTitle": "Skill Manager",
+      "dialogDescription": "Create manually, create with AI assistance, edit and delete custom skills.",
+      "reset": "Reset",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes",
+      "createSkill": "Create Skill",
+      "aiAssisted": "AI Assisted",
+      "aiPlaceholder": "E.g.: Create a skill to rewrite selected text in Lu Xun's style",
+      "aiGenerateConfig": "AI Generate Config",
+      "fieldName": "Name",
+      "fieldDescription": "Description",
+      "fieldPromptTemplate": "Prompt Template",
+      "promptPlaceholder": "Contains {{input}} placeholder",
+      "fieldInputType": "Input Type",
+      "inputTypeSelection": "Selected Text",
+      "inputTypeDocument": "Document Context",
+      "fieldScope": "Scope",
+      "scopeProject": "Project",
+      "scopeGlobal": "Global",
+      "enableSkill": "Enable Skill",
+      "customSkillList": "Custom Skill List",
+      "loading": "Loading...",
+      "noCustomSkills": "No custom skills yet",
+      "edit": "Edit"
+    }
   },
   "onboarding": {
     "welcome": "Welcome to CreoNow",
@@ -186,6 +266,256 @@
       "subtitle": "Choose a folder as your creative workspace. CreoNow will manage your projects and documents here.",
       "openFolder": "Open Folder",
       "skipLater": "Skip, choose later"
+    }
+  },
+  "character": {
+    "cardList": {
+      "emptyTitle": "No Characters",
+      "emptyDescription": "Create your first character",
+      "createCharacter": "Create Character"
+    },
+    "container": {
+      "age": "Age: {{value}}",
+      "role": "Role: {{value}}",
+      "traits": "Traits: {{value}}",
+      "noKeyAttributes": "No key attributes",
+      "typeLabel": "Character",
+      "relationSummary": "{{count}} relationship(s)",
+      "newCharacter": "New Character",
+      "thisCharacter": "This character",
+      "deleteTitle": "Delete character?",
+      "deleteDescription": "Deleting character \"{{name}}\" will remove its associated relationships. This action cannot be undone.",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    }
+  },
+  "memory": {
+    "create": {
+      "title": "Add New Memory",
+      "description": "This memory will be saved at the \"{{scope}}\" level",
+      "cancel": "Cancel",
+      "saving": "Saving...",
+      "save": "Save",
+      "type": "Memory Type",
+      "typePreference": "Preference — Writing style, language habits",
+      "typeFact": "Fact — Character settings, world-building",
+      "typeNote": "Note — Temporary reminders, to-dos",
+      "content": "Memory Content",
+      "examplePreference": "e.g. I prefer concise, powerful prose — avoid excessive adjective stacking",
+      "exampleFact": "e.g. Protagonist Chen Mo is a 35-year-old detective, calm but psychologically scarred",
+      "exampleNote": "e.g. Remember to add a misleading suspect in Chapter 7",
+      "layerHint": "💡 Memory level is determined by the currently selected Tab. Memories added after switching Tabs will be saved to the corresponding level."
+    },
+    "panel": {
+      "categoryStyle": "Writing Style",
+      "categoryStructure": "Narrative Structure",
+      "categoryCharacter": "Character Preferences",
+      "categoryPacing": "Pacing Preferences",
+      "categoryVocabulary": "Vocabulary Preferences",
+      "loadError": "Memory panel failed to load",
+      "ruleTextRequired": "Rule text cannot be empty",
+      "confirmDeleteRule": "Are you sure you want to delete this preference rule?",
+      "globalTab": "Global",
+      "projectTab": "This Project",
+      "learningPaused": "Learning paused: new episodes are still recorded, but distillation updates will not be triggered",
+      "conflictsDetected": "{{count}} preference conflicts detected — please resolve them first.",
+      "loading": "Loading...",
+      "aiLearningHint": "AI is learning your writing preferences — the more you use it, the more accurate it becomes",
+      "addRuleManually": "Add Rule Manually",
+      "ruleText": "Rule Text",
+      "saveChanges": "Save Changes",
+      "cancel": "Cancel",
+      "confidence": "Confidence {{value}}%",
+      "confirmed": "Confirmed",
+      "modified": "Modified",
+      "confirm": "Confirm",
+      "modify": "Edit",
+      "delete": "Delete",
+      "interactionCount": "Interactions: {{count}}",
+      "lastUpdate": "Last updated: {{time}}",
+      "updatePreferences": "Update Preferences",
+      "resumeLearning": "Resume Learning",
+      "pauseLearning": "Pause Learning",
+      "addRule": "New Rule",
+      "category": "Category",
+      "saveRule": "Save Rule"
+    },
+    "settings": {
+      "title": "Memory Settings",
+      "description": "Control how AI uses and learns from your memories",
+      "done": "Done",
+      "enableInjection": "Enable Memory Injection",
+      "injectionDesc": "AI will reference your memories when writing",
+      "enableLearning": "Enable Preference Learning",
+      "learningDesc": "AI will learn writing preferences from your feedback",
+      "privacyMode": "Privacy Mode",
+      "privacyDesc": "Reduce storage of identifiable content fragments",
+      "learningThreshold": "Learning Threshold",
+      "thresholdDesc": "How many identical signals before triggering learning (default 3)"
+    }
+  },
+  "projects": {
+    "create": {
+      "createFailed": "Failed to create project, please try again",
+      "enterIntentFirst": "Please enter your creative intent first",
+      "aiUnavailable": "AI-assisted creation is temporarily unavailable. Please create manually or try again later",
+      "modeLabel": "Creation mode",
+      "manualCreate": "Manual",
+      "aiAssisted": "AI Assisted",
+      "aiPlaceholder": "e.g., Create a campus mystery novel with a high school girl detective as the protagonist",
+      "generating": "Generating…",
+      "generateDraft": "Generate Draft",
+      "draftInfo": "{{name}} ({{type}})",
+      "draftStats": "Chapters: {{chapters}}, Characters: {{characters}}",
+      "useDraft": "Use this draft to continue manually"
+    },
+    "delete": {
+      "description": "Deleting project \"{{name}}\" will permanently remove all documents ({{count}} total), knowledge graph data, and version history. Please enter the project name to confirm.",
+      "title": "Confirm Delete Project",
+      "cancel": "Cancel",
+      "confirm": "Confirm Delete",
+      "inputHint": "Enter the project name to confirm:"
+    },
+    "switcher": {
+      "selectProject": "Select Project",
+      "searchPlaceholder": "Search projects",
+      "noProjects": "No projects",
+      "createNew": "Create New Project"
+    }
+  },
+  "files": {
+    "tree": {
+      "panelTitle": "Files",
+      "newButton": "New",
+      "noteButton": "Note",
+      "dismiss": "Dismiss",
+      "loading": "Loading files…",
+      "emptyTitle": "No Files",
+      "emptyDescription": "Start by creating your first file",
+      "newFile": "New File",
+      "untitledChapter": "Untitled Chapter",
+      "untitledNote": "Untitled Note",
+      "untitledSetting": "Untitled Setting",
+      "untitledTimeline": "Untitled Timeline",
+      "untitledCharacter": "Untitled Character",
+      "untitled": "Untitled",
+      "copySuffix": "{{title}} Copy",
+      "deleteTitle": "Delete Document?",
+      "deleteDescription": "This action cannot be undone. The document and its version history will be permanently deleted.",
+      "deleteConfirm": "Delete",
+      "deleteCancel": "Cancel",
+      "rename": "Rename",
+      "copy": "Copy",
+      "moveToFolder": "Move to Folder",
+      "delete": "Delete",
+      "versionHistory": "Version History",
+      "markAsDraft": "Mark as Draft",
+      "markAsFinal": "Mark as Final",
+      "collapse": "Collapse",
+      "expand": "Expand"
+    }
+  },
+  "versionHistory": {
+    "container": {
+      "autosave": "Auto Save",
+      "manualSave": "Manual Save",
+      "statusChange": "Status Change",
+      "aiModify": "AI Modification",
+      "restoreVersion": "Restore Version",
+      "versionSnapshot": "Version Snapshot",
+      "history": "History"
+    },
+    "panel": {
+      "aiModify": "AI Modification",
+      "autosave": "Auto Save",
+      "manualSave": "Manual Save",
+      "statusChange": "Status Change",
+      "reason": "Reason:",
+      "affectedParagraphs": "{{count}} paragraphs affected",
+      "changePreview": "Change Preview"
+    }
+  },
+  "settings": {
+    "ai": {
+      "notConfigured": "Not configured",
+      "configured": "Configured",
+      "connectionSuccess": "Connection successful ({{latency}}ms)",
+      "title": "AI Configuration",
+      "save": "Save",
+      "testConnection": "Test Connection"
+    }
+  },
+  "settingsDialog": {
+    "account": {
+      "comingSoon": "Coming Soon"
+    },
+    "general": {
+      "zhCN": "Chinese (Simplified)",
+      "aiModifyMarker": "AI Modification"
+    }
+  },
+  "kg": {
+    "timeline": {
+      "empty": "No event timeline yet",
+      "emptyHint": "Create event entities to organize by chapter and drag to reorder"
+    },
+    "graph": {
+      "emptyTitle": "No entities yet. Click to add your first character or location",
+      "emptyHint": "You can drag nodes and create relationships in the graph",
+      "addNode": "Add Node"
+    },
+    "nodeDetail": {
+      "deleteNode": "Delete Node"
+    },
+    "nodeEdit": {
+      "typeCharacter": "Character",
+      "typeLocation": "Location",
+      "typeEvent": "Event",
+      "typeItem": "Item",
+      "typeFaction": "Faction",
+      "createTitle": "Create New Node",
+      "editTitle": "Edit Node: {{label}}",
+      "create": "Create",
+      "save": "Save",
+      "createDescription": "Add a new knowledge graph node",
+      "editDescription": "Modify node properties and information",
+      "cancel": "Cancel",
+      "nameLabel": "Name *",
+      "namePlaceholder": "Enter node name...",
+      "typeLabel": "Type",
+      "roleLabel": "Role",
+      "rolePlaceholder": "E.g.: Protagonist, Villain, Mentor...",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Enter detailed description of the node...",
+      "propertiesLabel": "Properties",
+      "addProperty": "+ Add Property",
+      "noProperties": "No properties yet. Click above to add",
+      "propertyNamePlaceholder": "Property name",
+      "propertyValuePlaceholder": "Property value",
+      "deleteProperty": "Delete property"
+    }
+  },
+  "patterns": {
+    "emptyState": {
+      "firstFileTitle": "Create your first file",
+      "firstFileDescription": "Create a new file to start your creative journey",
+      "firstFileAction": "New File",
+      "noFiles": "No Files",
+      "noFilesDescription": "No files in this folder",
+      "noFilesAction": "New File",
+      "noSearchResults": "No matching results",
+      "noSearchResultsDescription": "Try searching with different keywords",
+      "noSearchResultsAction": "Clear Search",
+      "noCharacters": "No Characters",
+      "noCharactersDescription": "Create characters to enrich your story",
+      "noCharactersAction": "Create Character",
+      "noContent": "No Content",
+      "noContentDescription": "There's no content here yet",
+      "noContentAction": "Get Started"
+    },
+    "errorState": {
+      "close": "Close",
+      "defaultTitle": "Something went wrong"
     }
   }
 }

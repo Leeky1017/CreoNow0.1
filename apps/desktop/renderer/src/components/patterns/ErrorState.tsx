@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button, Text, Heading } from "../primitives";
 
 /**
@@ -144,6 +145,7 @@ function DismissButton({
   onClick: () => void;
   className?: string;
 }): JSX.Element {
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -162,7 +164,7 @@ function DismissButton({
       ]
         .filter(Boolean)
         .join(" ")}
-      aria-label="关闭"
+      aria-label={t('patterns.errorState.close')}
     >
       <svg
         className="w-4 h-4"
@@ -393,6 +395,7 @@ function FullPageError({
   ErrorStateProps,
   "variant" | "dismissible" | "onDismiss"
 >): JSX.Element {
+  const { t } = useTranslation();
   const colors = severityColors[severity ?? "error"];
 
   return (
@@ -421,7 +424,7 @@ function FullPageError({
 
       {/* Title */}
       <Heading level="h2" className="mb-3">
-        {title ?? "出错了"}
+        {title ?? t('patterns.errorState.defaultTitle')}
       </Heading>
 
       {/* Message */}

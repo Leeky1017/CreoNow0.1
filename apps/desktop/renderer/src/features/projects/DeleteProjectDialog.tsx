@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button, Dialog, Input, Text } from "../../components/primitives";
 
@@ -17,6 +18,7 @@ export interface DeleteProjectDialogProps {
  * Why: PM-2 requires explicit second confirmation to prevent accidental purge.
  */
 export function DeleteProjectDialog(props: DeleteProjectDialogProps): JSX.Element {
+  const { t } = useTranslation();
   const [typedName, setTypedName] = React.useState("");
 
   React.useEffect(() => {
@@ -27,13 +29,13 @@ export function DeleteProjectDialog(props: DeleteProjectDialogProps): JSX.Elemen
 
   const canDelete = typedName === props.projectName && !props.submitting;
 
-  const description = `删除项目"${props.projectName}"将永久删除所有文档（${props.documentCount} 篇）、知识图谱数据和版本历史。请输入项目名称确认删除。`;
+  const description = t('projects.delete.description', { name: props.projectName, count: props.documentCount });
 
   return (
     <Dialog
       open={props.open}
       onOpenChange={props.onOpenChange}
-      title="确认删除项目"
+      title={t('projects.delete.title')}
       description={description}
       footer={
         <>
@@ -43,7 +45,7 @@ export function DeleteProjectDialog(props: DeleteProjectDialogProps): JSX.Elemen
             onClick={() => props.onOpenChange(false)}
             disabled={Boolean(props.submitting)}
           >
-            取消
+            {t('projects.delete.cancel')}
           </Button>
           <Button
             data-testid="delete-project-confirm-button"
@@ -58,14 +60,14 @@ export function DeleteProjectDialog(props: DeleteProjectDialogProps): JSX.Elemen
               void props.onConfirm();
             }}
           >
-            确认删除
+            {t('projects.delete.confirm')}
           </Button>
         </>
       }
     >
       <div className="space-y-3">
         <Text size="small" color="muted">
-          请输入项目名以确认：
+          {t('projects.delete.inputHint')}
         </Text>
         <Input
           data-testid="delete-project-name-input"

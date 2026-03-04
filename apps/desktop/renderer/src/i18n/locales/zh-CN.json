@@ -50,6 +50,27 @@
       "underline": "下划线",
       "aiPolish": "润色",
       "aiRewrite": "改写"
+    },
+    "bubbleMenu": {
+      "polish": "润色",
+      "rewrite": "改写",
+      "describe": "描写",
+      "dialogue": "对白"
+    },
+    "writeButton": {
+      "label": "续写",
+      "generating": "生成中...",
+      "tooltip": "触发续写技能",
+      "writing": "续写中..."
+    },
+    "pane": {
+      "charLimitReached": "文档已达到 1000000 字符上限，建议拆分文档后继续写作。",
+      "pasteLimitExceeded": "粘贴内容超过文档容量上限，超限部分需要确认继续。是否继续粘贴？",
+      "previewingVersion": "正在预览 {{timestamp}} 的版本",
+      "history": "历史",
+      "restoreTooltip": "将在 version-control-p2 中接入完整恢复流程",
+      "restoreVersion": "恢复到此版本",
+      "backToCurrent": "返回当前版本"
     }
   },
   "dashboard": {
@@ -159,7 +180,66 @@
     "usageOutput": "输出：",
     "usageSessionTotal": "本会话累计：",
     "usageCostEstimate": "费用估算：",
-    "appliedSaved": "已应用并保存"
+    "appliedSaved": "已应用并保存",
+    "notConfigured": {
+      "title": "请先在设置中配置 AI 服务",
+      "description": "需要配置 API Key 才能使用 AI 功能。支持 OpenAI、Anthropic 及兼容代理。",
+      "goToSettings": "前往设置"
+    },
+    "skillPicker": {
+      "builtin": "内置",
+      "global": "全局",
+      "project": "项目",
+      "builtinSkills": "内置技能",
+      "projectOverride": "项目级覆盖",
+      "disable": "停用",
+      "enable": "启用",
+      "customSkills": "自定义技能",
+      "noCustomSkillsHint": "暂无自定义技能，点击创建或用自然语言描述需求",
+      "createSkill": "创建技能",
+      "globalSkills": "全局技能",
+      "noGlobalSkills": "暂无全局技能",
+      "demoteToProject": "降级为项目",
+      "projectSkills": "项目技能",
+      "noProjectSkills": "暂无项目技能",
+      "promoteToGlobal": "提升为全局"
+    },
+    "skillManager": {
+      "aiGeneratedSkill": "AI 生成技能",
+      "contextRulesMustBeObject": "contextRules 必须是 JSON 对象",
+      "contextRulesInvalidJson": "contextRules 不是合法 JSON",
+      "editTitle": "编辑自定义技能",
+      "createTitle": "创建自定义技能",
+      "enterDescriptionFirst": "请先输入技能需求描述",
+      "confirmDeleteTitle": "确定删除技能\"{{name}}\"？",
+      "irreversible": "此操作不可撤销",
+      "delete": "删除",
+      "cancel": "取消",
+      "dialogTitle": "技能管理",
+      "dialogDescription": "手动创建、AI 辅助创建、编辑和删除自定义技能。",
+      "reset": "重置",
+      "saving": "保存中...",
+      "saveChanges": "保存修改",
+      "createSkill": "创建技能",
+      "aiAssisted": "AI 辅助创建",
+      "aiPlaceholder": "例如：创建一个技能，把选中文本改写成鲁迅风格",
+      "aiGenerateConfig": "AI 生成配置",
+      "fieldName": "名称",
+      "fieldDescription": "描述",
+      "fieldPromptTemplate": "Prompt 模板",
+      "promptPlaceholder": "包含 {{input}} 占位符",
+      "fieldInputType": "输入类型",
+      "inputTypeSelection": "选中文本",
+      "inputTypeDocument": "文档上下文",
+      "fieldScope": "作用域",
+      "scopeProject": "项目级",
+      "scopeGlobal": "全局",
+      "enableSkill": "启用技能",
+      "customSkillList": "自定义技能列表",
+      "loading": "加载中...",
+      "noCustomSkills": "暂无自定义技能",
+      "edit": "编辑"
+    }
   },
   "onboarding": {
     "welcome": "欢迎使用 CreoNow",
@@ -186,6 +266,256 @@
       "subtitle": "选择一个文件夹作为你的创作工作区，CreoNow 会在此管理你的项目与文档。",
       "openFolder": "打开文件夹",
       "skipLater": "跳过，稍后再选"
+    }
+  },
+  "character": {
+    "cardList": {
+      "emptyTitle": "暂无角色",
+      "emptyDescription": "开始创建你的第一个角色",
+      "createCharacter": "创建角色"
+    },
+    "container": {
+      "age": "年龄: {{value}}",
+      "role": "定位: {{value}}",
+      "traits": "特征: {{value}}",
+      "noKeyAttributes": "暂无关键属性",
+      "typeLabel": "角色",
+      "relationSummary": "关系 {{count}} 条",
+      "newCharacter": "新角色",
+      "thisCharacter": "该角色",
+      "deleteTitle": "删除角色？",
+      "deleteDescription": "删除角色 \"{{name}}\" 将移除其关联关系，此操作不可撤销。",
+      "delete": "删除",
+      "cancel": "取消"
+    }
+  },
+  "memory": {
+    "create": {
+      "title": "添加新记忆",
+      "description": "这条记忆将保存在「{{scope}}」层级",
+      "cancel": "取消",
+      "saving": "保存中...",
+      "save": "保存",
+      "type": "记忆类型",
+      "typePreference": "偏好 — 写作风格、语言习惯",
+      "typeFact": "事实 — 角色设定、世界观",
+      "typeNote": "笔记 — 临时提醒、待办事项",
+      "content": "记忆内容",
+      "examplePreference": "例如：我喜欢简洁有力的文风，避免过多形容词堆砌",
+      "exampleFact": "例如：主角陈默是一名 35 岁的刑警，性格沉稳但有心理创伤",
+      "exampleNote": "例如：记得在第七章增加一个误导性嫌疑人",
+      "layerHint": "💡 记忆层级由当前选中的 Tab 决定。切换 Tab 后添加的记忆会保存到对应层级。"
+    },
+    "panel": {
+      "categoryStyle": "写作风格",
+      "categoryStructure": "叙事结构",
+      "categoryCharacter": "角色偏好",
+      "categoryPacing": "节奏偏好",
+      "categoryVocabulary": "词汇偏好",
+      "loadError": "Memory 面板加载失败",
+      "ruleTextRequired": "规则文本不能为空",
+      "confirmDeleteRule": "确认删除这条偏好规则吗？",
+      "globalTab": "全局",
+      "projectTab": "本项目",
+      "learningPaused": "学习已暂停：新情景仍记录，但不会触发蒸馏更新",
+      "conflictsDetected": "检测到 {{count}} 条偏好冲突，请优先处理。",
+      "loading": "加载中...",
+      "aiLearningHint": "AI 正在学习你的写作偏好，使用越多越精准",
+      "addRuleManually": "手动添加规则",
+      "ruleText": "规则文本",
+      "saveChanges": "保存修改",
+      "cancel": "取消",
+      "confidence": "置信度 {{value}}%",
+      "confirmed": "已确认",
+      "modified": "已修改",
+      "confirm": "确认",
+      "modify": "修改",
+      "delete": "删除",
+      "interactionCount": "交互记录数 {{count}}",
+      "lastUpdate": "最近更新 {{time}}",
+      "updatePreferences": "更新偏好",
+      "resumeLearning": "恢复学习",
+      "pauseLearning": "暂停学习",
+      "addRule": "新增规则",
+      "category": "分类",
+      "saveRule": "保存规则"
+    },
+    "settings": {
+      "title": "记忆设置",
+      "description": "控制 AI 如何使用和学习你的记忆",
+      "done": "完成",
+      "enableInjection": "启用记忆注入",
+      "injectionDesc": "AI 在写作时会参考你的记忆",
+      "enableLearning": "启用偏好学习",
+      "learningDesc": "AI 会从你的反馈中学习写作偏好",
+      "privacyMode": "隐私模式",
+      "privacyDesc": "减少存储可识别的内容片段",
+      "learningThreshold": "学习阈值",
+      "thresholdDesc": "收到多少次相同信号后触发学习（默认 3）"
+    }
+  },
+  "projects": {
+    "create": {
+      "createFailed": "项目创建失败，请重试",
+      "enterIntentFirst": "请先输入创作意图",
+      "aiUnavailable": "AI 辅助创建暂时不可用，请手动创建或稍后重试",
+      "modeLabel": "创建模式",
+      "manualCreate": "手动创建",
+      "aiAssisted": "AI 辅助",
+      "aiPlaceholder": "例如：帮我创建一部校园推理小说，主角是高中女生侦探",
+      "generating": "生成中…",
+      "generateDraft": "生成草案",
+      "draftInfo": "{{name}}（{{type}}）",
+      "draftStats": "章节：{{chapters}}，角色：{{characters}}",
+      "useDraft": "使用此草案继续手动创建"
+    },
+    "delete": {
+      "description": "删除项目\"{{name}}\"将永久删除所有文档（{{count}} 篇）、知识图谱数据和版本历史。请输入项目名称确认删除。",
+      "title": "确认删除项目",
+      "cancel": "取消",
+      "confirm": "确认删除",
+      "inputHint": "请输入项目名以确认："
+    },
+    "switcher": {
+      "selectProject": "选择项目",
+      "searchPlaceholder": "搜索项目",
+      "noProjects": "暂无项目",
+      "createNew": "创建新项目"
+    }
+  },
+  "files": {
+    "tree": {
+      "panelTitle": "文件",
+      "newButton": "新建",
+      "noteButton": "笔记",
+      "dismiss": "关闭",
+      "loading": "加载文件中…",
+      "emptyTitle": "暂无文件",
+      "emptyDescription": "开始创建你的第一个文件",
+      "newFile": "新建文件",
+      "untitledChapter": "未命名章节",
+      "untitledNote": "未命名笔记",
+      "untitledSetting": "未命名设定",
+      "untitledTimeline": "未命名时间线",
+      "untitledCharacter": "未命名角色",
+      "untitled": "未命名",
+      "copySuffix": "{{title}} 副本",
+      "deleteTitle": "删除文档？",
+      "deleteDescription": "此操作不可撤销。文档及其版本历史将被永久删除。",
+      "deleteConfirm": "删除",
+      "deleteCancel": "取消",
+      "rename": "重命名",
+      "copy": "复制",
+      "moveToFolder": "移动到文件夹",
+      "delete": "删除",
+      "versionHistory": "版本历史",
+      "markAsDraft": "标记为草稿",
+      "markAsFinal": "标记为定稿",
+      "collapse": "收起",
+      "expand": "展开"
+    }
+  },
+  "versionHistory": {
+    "container": {
+      "autosave": "自动保存",
+      "manualSave": "手动保存",
+      "statusChange": "状态变更",
+      "aiModify": "AI 修改",
+      "restoreVersion": "恢复版本",
+      "versionSnapshot": "版本快照",
+      "history": "历史"
+    },
+    "panel": {
+      "aiModify": "AI 修改",
+      "autosave": "自动保存",
+      "manualSave": "手动保存",
+      "statusChange": "状态变更",
+      "reason": "原因:",
+      "affectedParagraphs": "{{count}} 段落受影响",
+      "changePreview": "变更预览"
+    }
+  },
+  "settings": {
+    "ai": {
+      "notConfigured": "未配置",
+      "configured": "已配置",
+      "connectionSuccess": "连接成功 ({{latency}}ms)",
+      "title": "AI 配置",
+      "save": "保存",
+      "testConnection": "测试连接"
+    }
+  },
+  "settingsDialog": {
+    "account": {
+      "comingSoon": "即将推出"
+    },
+    "general": {
+      "zhCN": "中文 (简体)",
+      "aiModifyMarker": "AI 修改"
+    }
+  },
+  "kg": {
+    "timeline": {
+      "empty": "暂无事件时间线",
+      "emptyHint": "创建事件实体后可按章节组织并拖拽排序"
+    },
+    "graph": {
+      "emptyTitle": "暂无实体，点击添加你的第一个角色或地点",
+      "emptyHint": "你可以在关系图中拖拽节点并建立关系",
+      "addNode": "添加节点"
+    },
+    "nodeDetail": {
+      "deleteNode": "删除节点"
+    },
+    "nodeEdit": {
+      "typeCharacter": "角色 (Character)",
+      "typeLocation": "地点 (Location)",
+      "typeEvent": "事件 (Event)",
+      "typeItem": "物品 (Item)",
+      "typeFaction": "阵营 (Faction)",
+      "createTitle": "创建新节点",
+      "editTitle": "编辑节点: {{label}}",
+      "create": "创建",
+      "save": "保存",
+      "createDescription": "添加一个新的知识图谱节点",
+      "editDescription": "修改节点的属性和信息",
+      "cancel": "取消",
+      "nameLabel": "名称 *",
+      "namePlaceholder": "输入节点名称...",
+      "typeLabel": "类型",
+      "roleLabel": "角色定位",
+      "rolePlaceholder": "如: 主角、反派、导师...",
+      "descriptionLabel": "描述",
+      "descriptionPlaceholder": "输入节点的详细描述...",
+      "propertiesLabel": "属性",
+      "addProperty": "+ 添加属性",
+      "noProperties": "暂无属性，点击上方添加",
+      "propertyNamePlaceholder": "属性名",
+      "propertyValuePlaceholder": "属性值",
+      "deleteProperty": "删除属性"
+    }
+  },
+  "patterns": {
+    "emptyState": {
+      "firstFileTitle": "开始创建你的第一个文件",
+      "firstFileDescription": "创建一个新文件开始你的创作之旅",
+      "firstFileAction": "新建文件",
+      "noFiles": "暂无文件",
+      "noFilesDescription": "此文件夹中没有任何文件",
+      "noFilesAction": "新建文件",
+      "noSearchResults": "未找到匹配结果",
+      "noSearchResultsDescription": "尝试使用不同的关键词进行搜索",
+      "noSearchResultsAction": "清除搜索",
+      "noCharacters": "暂无角色",
+      "noCharactersDescription": "创建角色来丰富你的故事",
+      "noCharactersAction": "创建角色",
+      "noContent": "暂无内容",
+      "noContentDescription": "这里还没有任何内容",
+      "noContentAction": "开始"
+    },
+    "errorState": {
+      "close": "关闭",
+      "defaultTitle": "出错了"
     }
   }
 }

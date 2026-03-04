@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { IpcResponseData } from "@shared/types/ipc-generated";
 
 import { Button } from "../../components/primitives/Button";
@@ -19,6 +20,7 @@ type AiSettings = IpcResponseData<"ai:config:get">;
  * Design reference: audit/06 §3.1 — AI configuration interface.
  */
 export function AiSettingsSection(): JSX.Element {
+  const { t } = useTranslation();
   const [status, setStatus] = React.useState<"idle" | "loading">("idle");
   const [settings, setSettings] = React.useState<AiSettings | null>(null);
   const [providerMode, setProviderMode] = React.useState<
@@ -60,15 +62,15 @@ export function AiSettingsSection(): JSX.Element {
 
   function resolveApiKeyPlaceholder(): string {
     if (!settings) {
-      return "未配置";
+      return t('settings.ai.notConfigured');
     }
     if (providerMode === "anthropic-byok") {
-      return settings.anthropicByokApiKeyConfigured ? "已配置" : "未配置";
+      return settings.anthropicByokApiKeyConfigured ? t('settings.ai.configured') : t('settings.ai.notConfigured');
     }
     if (providerMode === "openai-byok") {
-      return settings.openAiByokApiKeyConfigured ? "已配置" : "未配置";
+      return settings.openAiByokApiKeyConfigured ? t('settings.ai.configured') : t('settings.ai.notConfigured');
     }
-    return settings.openAiCompatibleApiKeyConfigured ? "已配置" : "未配置";
+    return settings.openAiCompatibleApiKeyConfigured ? t('settings.ai.configured') : t('settings.ai.notConfigured');
   }
 
   async function onSave(): Promise<void> {
@@ -121,7 +123,7 @@ export function AiSettingsSection(): JSX.Element {
     }
 
     if (res.data.ok) {
-      setTestResult(`连接成功 (${res.data.latencyMs}ms)`);
+      setTestResult(t('settings.ai.connectionSuccess', { latency: res.data.latencyMs }));
       return;
     }
 
@@ -137,7 +139,7 @@ export function AiSettingsSection(): JSX.Element {
       className="flex flex-col gap-2.5 p-3 rounded-[var(--radius-lg)]"
     >
       <Text size="body" weight="bold">
-        AI 配置
+        {t('settings.ai.title')}
       </Text>
 
       <div className="flex flex-col gap-1.5">
@@ -210,7 +212,7 @@ export function AiSettingsSection(): JSX.Element {
           onClick={() => void onSave()}
           disabled={status === "loading"}
         >
-          保存
+          {t('settings.ai.save')}
         </Button>
         <Button
           data-testid="ai-test-btn"
@@ -219,7 +221,7 @@ export function AiSettingsSection(): JSX.Element {
           onClick={() => void onTest()}
           disabled={status === "loading"}
         >
-          测试连接
+          {t('settings.ai.testConnection')}
         </Button>
       </div>
     </Card>

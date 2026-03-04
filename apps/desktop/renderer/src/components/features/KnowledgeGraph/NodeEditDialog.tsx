@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Dialog } from "../../primitives/Dialog";
 import { Button } from "../../primitives/Button";
 import { Input } from "../../primitives/Input";
@@ -7,31 +8,15 @@ import { Textarea } from "../../primitives/Textarea";
 import type { GraphNode, NodeEditDialogProps, NodeType } from "./types";
 
 /**
- * Node type options for the select dropdown
+ * Node type color variables
  */
-const nodeTypeOptions: Array<{
-  value: NodeType;
-  label: string;
-  colorVar: string;
-}> = [
-  {
-    value: "character",
-    label: "角色 (Character)",
-    colorVar: "var(--color-node-character)",
-  },
-  {
-    value: "location",
-    label: "地点 (Location)",
-    colorVar: "var(--color-node-location)",
-  },
-  { value: "event", label: "事件 (Event)", colorVar: "var(--color-node-event)" },
-  { value: "item", label: "物品 (Item)", colorVar: "var(--color-node-item)" },
-  {
-    value: "faction",
-    label: "阵营 (Faction)",
-    colorVar: "var(--color-node-other)",
-  },
-];
+const nodeTypeColorVars: Record<NodeType, string> = {
+  character: "var(--color-node-character)",
+  location: "var(--color-node-location)",
+  event: "var(--color-node-event)",
+  item: "var(--color-node-item)",
+  faction: "var(--color-node-other)",
+};
 
 /**
  * Label styles
@@ -59,6 +44,16 @@ export function NodeEditDialog({
   onSave,
   mode = "edit",
 }: NodeEditDialogProps): JSX.Element {
+  const { t } = useTranslation();
+
+  const nodeTypeOptions = useMemo(() => [
+    { value: "character" as NodeType, label: t('kg.nodeEdit.typeCharacter'), colorVar: nodeTypeColorVars.character },
+    { value: "location" as NodeType, label: t('kg.nodeEdit.typeLocation'), colorVar: nodeTypeColorVars.location },
+    { value: "event" as NodeType, label: t('kg.nodeEdit.typeEvent'), colorVar: nodeTypeColorVars.event },
+    { value: "item" as NodeType, label: t('kg.nodeEdit.typeItem'), colorVar: nodeTypeColorVars.item },
+    { value: "faction" as NodeType, label: t('kg.nodeEdit.typeFaction'), colorVar: nodeTypeColorVars.faction },
+  ], [t]);
+
   // Form state - initialized from node prop (component is keyed by node.id)
   const [label, setLabel] = useState(node?.label ?? "");
   const [type, setType] = useState<NodeType>(node?.type ?? "character");
@@ -69,9 +64,7 @@ export function NodeEditDialog({
   const [attributes, setAttributes] = useState<
     Array<{ key: string; value: string }>
   >(node?.metadata?.attributes ?? []);
-  const typeColor =
-    nodeTypeOptions.find((o) => o.value === type)?.colorVar ??
-    "var(--color-fg-muted)";
+  const typeColor = nodeTypeColorVars[type] ?? "var(--color-fg-muted)";
 
   /**
    * Handle adding a new attribute
@@ -127,19 +120,19 @@ export function NodeEditDialog({
     onOpenChange(false);
   };
 
-  const title = mode === "create" ? "创建新节点" : `编辑节点: ${node?.label || ""}`;
-  const submitLabel = mode === "create" ? "创建" : "保存";
+  const title = mode === "create" ? t('kg.nodeEdit.createTitle') : t('kg.nodeEdit.editTitle', { label: node?.label || '' });
+  const submitLabel = mode === "create" ? t('kg.nodeEdit.create') : t('kg.nodeEdit.save');
 
   return (
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
       title={title}
-      description={mode === "create" ? "添加一个新的知识图谱节点" : "修改节点的属性和信息"}
+      description={mode === "create" ? t('kg.nodeEdit.createDescription') : t('kg.nodeEdit.editDescription')}
       footer={
         <>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            取消
+            {t('kg.nodeEdit.cancel')}
           </Button>
           <Button variant="primary" onClick={handleSubmit} disabled={!label.trim()}>
             {submitLabel}
@@ -150,11 +143,11 @@ export function NodeEditDialog({
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* Name */}
         <div>
-          <label className={labelStyles}>名称 *</label>
+          <label className={labelStyles}>{t('kg.nodeEdit.nameLabel')}</label>
           <Input
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            placeholder="输入节点名称..."
+            placeholder={t('kg.nodeEdit.namePlaceholder')}
             fullWidth
             autoFocus
           />
@@ -164,7 +157,7 @@ export function NodeEditDialog({
         <div>
           <label className={labelStyles}>
             <span className="flex items-center gap-2">
-              类型
+              {t('kg.nodeEdit.typeLabel')}
               <span
                 className="w-2 h-2 rounded-full"
                 style={{ backgroundColor: typeColor }}
@@ -183,11 +176,11 @@ export function NodeEditDialog({
         {/* Role (for characters) */}
         {(type === "character" || type === "faction") && (
           <div>
-            <label className={labelStyles}>角色定位</label>
+            <label className={labelStyles}>{t('kg.nodeEdit.roleLabel')}</label>
             <Input
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              placeholder="如: 主角、反派、导师..."
+              placeholder={t('kg.nodeEdit.rolePlaceholder')}
               fullWidth
             />
           </div>
@@ -195,11 +188,11 @@ export function NodeEditDialog({
 
         {/* Description */}
         <div>
-          <label className={labelStyles}>描述</label>
+          <label className={labelStyles}>{t('kg.nodeEdit.descriptionLabel')}</label>
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="输入节点的详细描述..."
+            placeholder={t('kg.nodeEdit.descriptionPlaceholder')}
             rows={3}
             fullWidth
             className="resize-none"
@@ -209,19 +202,19 @@ export function NodeEditDialog({
         {/* Attributes */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className={labelStyles + " mb-0"}>属性</label>
+            <label className={labelStyles + " mb-0"}>{t('kg.nodeEdit.propertiesLabel')}</label>
             <button
               type="button"
               onClick={handleAddAttribute}
               className="text-[11px] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
             >
-              + 添加属性
+              {t('kg.nodeEdit.addProperty')}
             </button>
           </div>
           
           {attributes.length === 0 ? (
             <p className="text-xs text-[var(--color-fg-subtle)] italic">
-              暂无属性，点击上方添加
+              {t('kg.nodeEdit.noProperties')}
             </p>
           ) : (
             <div className="flex flex-col gap-2">
@@ -230,21 +223,21 @@ export function NodeEditDialog({
                   <Input
                     value={attr.key}
                     onChange={(e) => handleUpdateAttribute(index, "key", e.target.value)}
-                    placeholder="属性名"
+                    placeholder={t('kg.nodeEdit.propertyNamePlaceholder')}
                     className="flex-1"
                   />
                   <span className="text-[var(--color-fg-subtle)]">:</span>
                   <Input
                     value={attr.value}
                     onChange={(e) => handleUpdateAttribute(index, "value", e.target.value)}
-                    placeholder="属性值"
+                    placeholder={t('kg.nodeEdit.propertyValuePlaceholder')}
                     className="flex-1"
                   />
                   <button
                     type="button"
                     onClick={() => handleRemoveAttribute(index)}
                     className="w-8 h-8 flex items-center justify-center text-[var(--color-fg-subtle)] hover:text-[var(--color-error)] transition-colors"
-                    aria-label="删除属性"
+                    aria-label={t('kg.nodeEdit.deleteProperty')}
                   >
                     <svg
                       width="14"

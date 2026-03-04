@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Button, Text, Heading } from "../primitives";
 
 /**
@@ -36,38 +37,39 @@ export interface EmptyStateProps {
 }
 
 /**
- * Default content for each variant (design spec §12.1)
+ * Build variant defaults using i18n translations (design spec §12.1)
  */
-const variantDefaults: Record<
-  EmptyStateVariant,
-  { title: string; description: string; actionLabel: string }
-> = {
-  project: {
-    title: "开始创建你的第一个文件",
-    description: "创建一个新文件开始你的创作之旅",
-    actionLabel: "新建文件",
-  },
-  files: {
-    title: "暂无文件",
-    description: "此文件夹中没有任何文件",
-    actionLabel: "新建文件",
-  },
-  search: {
-    title: "未找到匹配结果",
-    description: "尝试使用不同的关键词进行搜索",
-    actionLabel: "清除搜索",
-  },
-  characters: {
-    title: "暂无角色",
-    description: "创建角色来丰富你的故事",
-    actionLabel: "创建角色",
-  },
-  generic: {
-    title: "暂无内容",
-    description: "这里还没有任何内容",
-    actionLabel: "开始",
-  },
-};
+function getVariantDefaults(
+  t: (key: string) => string,
+): Record<EmptyStateVariant, { title: string; description: string; actionLabel: string }> {
+  return {
+    project: {
+      title: t('patterns.emptyState.firstFileTitle'),
+      description: t('patterns.emptyState.firstFileDescription'),
+      actionLabel: t('patterns.emptyState.firstFileAction'),
+    },
+    files: {
+      title: t('patterns.emptyState.noFiles'),
+      description: t('patterns.emptyState.noFilesDescription'),
+      actionLabel: t('patterns.emptyState.noFilesAction'),
+    },
+    search: {
+      title: t('patterns.emptyState.noSearchResults'),
+      description: t('patterns.emptyState.noSearchResultsDescription'),
+      actionLabel: t('patterns.emptyState.noSearchResultsAction'),
+    },
+    characters: {
+      title: t('patterns.emptyState.noCharacters'),
+      description: t('patterns.emptyState.noCharactersDescription'),
+      actionLabel: t('patterns.emptyState.noCharactersAction'),
+    },
+    generic: {
+      title: t('patterns.emptyState.noContent'),
+      description: t('patterns.emptyState.noContentDescription'),
+      actionLabel: t('patterns.emptyState.noContentAction'),
+    },
+  };
+}
 
 /**
  * Default illustration SVG component
@@ -179,7 +181,8 @@ export function EmptyState({
   onSecondaryAction,
   className = "",
 }: EmptyStateProps): JSX.Element {
-  const defaults = variantDefaults[variant];
+  const { t } = useTranslation();
+  const defaults = getVariantDefaults(t)[variant];
 
   // Use provided values or fall back to variant defaults
   const displayTitle = title ?? defaults.title;

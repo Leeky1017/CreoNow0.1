@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
@@ -15,29 +16,36 @@ export interface CharacterCardListContainerProps {
   projectId: string;
 }
 
-function toSummary(character: Character): CharacterCardSummary {
+function toSummary(
+  character: Character,
+  t: (key: string, options?: Record<string, unknown>) => string,
+): CharacterCardSummary {
   const keyAttributes: string[] = [];
 
   if (typeof character.age === "number") {
-    keyAttributes.push(`年龄: ${character.age}`);
+    keyAttributes.push(t('character.container.age', { value: character.age }));
   }
   if (character.role) {
-    keyAttributes.push(`定位: ${character.role}`);
+    keyAttributes.push(t('character.container.role', { value: character.role }));
   }
   if (character.traits.length > 0) {
-    keyAttributes.push(`特征: ${character.traits.slice(0, 2).join(" / ")}`);
+    keyAttributes.push(
+      t('character.container.traits', { value: character.traits.slice(0, 2).join(" / ") }),
+    );
   }
   if (keyAttributes.length === 0) {
-    keyAttributes.push("暂无关键属性");
+    keyAttributes.push(t('character.container.noKeyAttributes'));
   }
 
   return {
     id: character.id,
     name: character.name,
-    typeLabel: "角色",
+    typeLabel: t('character.container.typeLabel'),
     avatarUrl: character.avatarUrl,
     keyAttributes: keyAttributes.slice(0, 3),
-    relationSummary: `关系 ${character.relationships.length} 条`,
+    relationSummary: t('character.container.relationSummary', {
+      count: character.relationships.length,
+    }),
   };
 }
 
@@ -47,6 +55,7 @@ function toSummary(character: Character): CharacterCardSummary {
 export function CharacterCardListContainer({
   projectId,
 }: CharacterCardListContainerProps): JSX.Element {
+  const { t } = useTranslation();
   const bootstrapStatus = useKgStore((state) => state.bootstrapStatus);
   const entities = useKgStore((state) => state.entities);
   const relations = useKgStore((state) => state.relations);
@@ -72,8 +81,8 @@ export function CharacterCardListContainer({
   );
 
   const cardSummaries = React.useMemo(
-    () => characters.map(toSummary),
-    [characters],
+    () => characters.map((c) => toSummary(c, t)),
+    [characters, t],
   );
 
   const selectedCharacter = React.useMemo(
@@ -83,7 +92,7 @@ export function CharacterCardListContainer({
 
   const handleCreateCharacter = React.useCallback(async () => {
     const created = await entityCreate({
-      name: "新角色",
+      name: t('character.container.newCharacter'),
       type: "character",
       description: "",
     });
@@ -92,7 +101,7 @@ export function CharacterCardListContainer({
     }
     setSelectedId(created.data.id);
     setDialogOpen(true);
-  }, [entityCreate]);
+  }, [entityCreate, t]);
 
   const handleSaveCharacter = React.useCallback(
     async (character: Character) => {
@@ -113,12 +122,12 @@ export function CharacterCardListContainer({
       const target = characters.find(
         (character) => character.id === characterId,
       );
-      const label = target?.name ?? "该角色";
+      const label = target?.name ?? t('character.container.thisCharacter');
       const confirmed = await confirm({
-        title: "删除角色？",
-        description: `删除角色 "${label}" 将移除其关联关系，此操作不可撤销。`,
-        primaryLabel: "删除",
-        secondaryLabel: "取消",
+        title: t('character.container.deleteTitle'),
+        description: t('character.container.deleteDescription', { name: label }),
+        primaryLabel: t('character.container.delete'),
+        secondaryLabel: t('character.container.cancel'),
       });
       if (!confirmed) {
         return;
@@ -129,7 +138,7 @@ export function CharacterCardListContainer({
         setDialogOpen(false);
       }
     },
-    [characters, confirm, entityDelete, selectedId],
+    [characters, confirm, entityDelete, selectedId, t],
   );
 
   if (bootstrapStatus === "loading") {

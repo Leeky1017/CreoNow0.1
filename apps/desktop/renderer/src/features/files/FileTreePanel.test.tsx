@@ -55,14 +55,14 @@ describe("FileTreePanel", () => {
     it("应该显示 Files 标题", () => {
       render(<FileTreePanel projectId="test-project" />);
 
-      expect(screen.getByText("Files")).toBeInTheDocument();
+      expect(screen.getByText("文件")).toBeInTheDocument();
     });
 
     it("应该显示 New 按钮", () => {
       render(<FileTreePanel projectId="test-project" />);
 
       expect(screen.getByTestId("file-create")).toBeInTheDocument();
-      expect(screen.getByText("New")).toBeInTheDocument();
+      expect(screen.getByText("新建")).toBeInTheDocument();
     });
   });
 
@@ -112,7 +112,7 @@ describe("FileTreePanel", () => {
 
       render(<FileTreePanel projectId="test-project" />);
 
-      expect(screen.getByText("Loading files…")).toBeInTheDocument();
+      expect(screen.getByText("加载文件中…")).toBeInTheDocument();
     });
   });
 
@@ -148,7 +148,7 @@ describe("FileTreePanel", () => {
 
       expect(screen.getByRole("alert")).toBeInTheDocument();
       expect(screen.getByText(/IO_ERROR/)).toBeInTheDocument();
-      expect(screen.getByText("Dismiss")).toBeInTheDocument();
+      expect(screen.getByText("关闭")).toBeInTheDocument();
     });
   });
 

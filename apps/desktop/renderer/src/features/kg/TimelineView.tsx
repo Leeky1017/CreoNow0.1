@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export interface TimelineEventItem {
   id: string;
@@ -55,6 +56,7 @@ export function TimelineView({
   onOpenEvent,
   className = "",
 }: TimelineViewProps): JSX.Element {
+  const { t } = useTranslation();
   const [orderedEvents, setOrderedEvents] = React.useState<TimelineEventItem[]>(
     () => sortEvents(events),
   );
@@ -88,9 +90,9 @@ export function TimelineView({
         className={`h-full flex items-center justify-center bg-[var(--color-bg-base)] ${className}`}
       >
         <div className="text-center space-y-2">
-          <p className="text-sm text-[var(--color-fg-muted)]">暂无事件时间线</p>
+          <p className="text-sm text-[var(--color-fg-muted)]">{t('kg.timeline.empty')}</p>
           <p className="text-xs text-[var(--color-fg-subtle)]">
-            创建事件实体后可按章节组织并拖拽排序
+            {t('kg.timeline.emptyHint')}
           </p>
         </div>
       </section>

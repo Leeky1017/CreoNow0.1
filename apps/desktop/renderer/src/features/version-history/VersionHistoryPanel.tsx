@@ -1,4 +1,5 @@
 import { Bot, Columns2, Eye, RotateCcw, Shield, User, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 
@@ -236,12 +237,13 @@ function AuthorBadge({
  * Explicit AI modification marker shown only when user enables the preference.
  */
 function AiMarkTag(props: { versionId: string }): JSX.Element {
+  const { t } = useTranslation();
   return (
     <span
       data-testid={`ai-mark-tag-${props.versionId}`}
       className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium leading-none bg-[var(--color-info)] text-[var(--color-bg-surface)]"
     >
-      AI 修改
+      {t("versionHistory.panel.aiModify")}
     </span>
   );
 }
@@ -256,17 +258,18 @@ function VersionMeta({
   reason?: string;
   affectedParagraphs?: number;
 }) {
+  const { t } = useTranslation();
   if (!reason && affectedParagraphs === undefined) {
     return null;
   }
 
   // Map raw reason to human-readable text
   const getReasonText = (r: string): string => {
-    if (r === "autosave") return "自动保存";
-    if (r === "manual-save") return "手动保存";
-    if (r === "status-change") return "状态变更";
-    if (r === "ai-accept") return "AI 修改";
-    if (r.startsWith("ai-apply:")) return "AI 修改";
+    if (r === "autosave") return t("versionHistory.panel.autosave");
+    if (r === "manual-save") return t("versionHistory.panel.manualSave");
+    if (r === "status-change") return t("versionHistory.panel.statusChange");
+    if (r === "ai-accept") return t("versionHistory.panel.aiModify");
+    if (r.startsWith("ai-apply:")) return t("versionHistory.panel.aiModify");
     return r;
   };
 
@@ -274,14 +277,14 @@ function VersionMeta({
     <div className="flex items-center gap-2 text-[10px] text-[var(--color-fg-placeholder)] mt-1">
       {reason && (
         <span className="flex items-center gap-1">
-          <span className="opacity-60">原因:</span>
+          <span className="opacity-60">{t("versionHistory.panel.reason")}</span>
           <span>{getReasonText(reason)}</span>
         </span>
       )}
       {affectedParagraphs !== undefined && affectedParagraphs > 0 && (
         <>
           {reason && <span className="opacity-40">·</span>}
-          <span>{affectedParagraphs} 段落受影响</span>
+          <span>{t("versionHistory.panel.affectedParagraphs", { count: affectedParagraphs })}</span>
         </>
       )}
     </div>
@@ -292,12 +295,13 @@ function VersionMeta({
  * Diff summary preview
  */
 function DiffSummaryPreview({ summary }: { summary?: string }) {
+  const { t } = useTranslation();
   if (!summary) return null;
 
   return (
     <div className="mt-2 p-2 bg-[var(--color-bg-raised)] rounded border border-[var(--color-separator)] text-[11px] text-[var(--color-fg-muted)] font-mono leading-relaxed">
       <span className="text-[var(--color-fg-placeholder)] text-[9px] uppercase tracking-wider block mb-1">
-        变更预览
+        {t("versionHistory.panel.changePreview")}
       </span>
       <span className="line-clamp-2">{summary}</span>
     </div>
@@ -416,6 +420,7 @@ function VersionCard({
   onPreview?: (id: string) => void;
   showAiMarks?: boolean;
 }) {
+  const { t } = useTranslation();
   const baseCardStyles = [
     "group",
     "relative",
@@ -553,7 +558,7 @@ function VersionCard({
       {version.affectedParagraphs !== undefined &&
         version.affectedParagraphs > 0 && (
           <div className="text-[10px] text-[var(--color-fg-placeholder)] mt-1 mb-1">
-            {version.affectedParagraphs} 段落受影响
+            {t("versionHistory.panel.affectedParagraphs", { count: version.affectedParagraphs })}
           </div>
         )}
 

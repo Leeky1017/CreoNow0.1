@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "../../components/primitives/Button";
 import { Dialog } from "../../components/primitives/Dialog";
@@ -344,6 +345,8 @@ export function CreateProjectDialog({
   open,
   onOpenChange,
 }: CreateProjectDialogProps): JSX.Element {
+  const { t } = useTranslation();
+
   // Project store
   const createAndSetCurrent = useProjectStore((s) => s.createAndSetCurrent);
   const createAiAssistDraft = useProjectStore((s) => s.createAiAssistDraft);
@@ -489,7 +492,7 @@ export function CreateProjectDialog({
         const message =
           error instanceof Error && error.message.length > 0
             ? error.message
-            : "项目创建失败，请重试";
+            : t('projects.create.createFailed');
         setSubmitError({ code, message });
         console.error("[CreateProjectDialog] createProject failed:", {
           operation: "createAndSetCurrent",
@@ -500,12 +503,12 @@ export function CreateProjectDialog({
         setSubmitting(false);
       }
     },
-    [createAndSetCurrent, customs, onOpenChange, presets],
+    [createAndSetCurrent, customs, onOpenChange, presets, t],
   );
 
   const handleAiGenerate = useCallback(async () => {
     if (aiPrompt.trim().length === 0) {
-      setAiErrorMessage("请先输入创作意图");
+      setAiErrorMessage(t('projects.create.enterIntentFirst'));
       return;
     }
 
@@ -514,7 +517,7 @@ export function CreateProjectDialog({
     try {
       const res = await createAiAssistDraft({ prompt: aiPrompt });
       if (!res.ok) {
-        setAiErrorMessage("AI 辅助创建暂时不可用，请手动创建或稍后重试");
+        setAiErrorMessage(t('projects.create.aiUnavailable'));
         return;
       }
 
@@ -522,7 +525,7 @@ export function CreateProjectDialog({
     } finally {
       setAiGenerating(false);
     }
-  }, [aiPrompt, createAiAssistDraft]);
+  }, [aiPrompt, createAiAssistDraft, t]);
 
   const handleTemplateCreated = useCallback(
     (_id: string) => {
@@ -565,7 +568,7 @@ export function CreateProjectDialog({
       >
         {open ? (
           <div className="space-y-4">
-            <div role="tablist" aria-label="创建模式" className="flex gap-2">
+            <div role="tablist" aria-label={t('projects.create.modeLabel')} className="flex gap-2">
               <button
                 type="button"
                 role="tab"
@@ -573,7 +576,7 @@ export function CreateProjectDialog({
                 onClick={() => setMode("manual")}
                 className="h-8 px-3 text-xs rounded-[var(--radius-sm)] border border-[var(--color-border-default)]"
               >
-                手动创建
+                {t('projects.create.manualCreate')}
               </button>
               <button
                 type="button"
@@ -582,7 +585,7 @@ export function CreateProjectDialog({
                 onClick={() => setMode("ai-assist")}
                 className="h-8 px-3 text-xs rounded-[var(--radius-sm)] border border-[var(--color-border-default)]"
               >
-                AI 辅助
+                {t('projects.create.aiAssisted')}
               </button>
             </div>
 
@@ -606,7 +609,7 @@ export function CreateProjectDialog({
                   data-testid="create-project-ai-prompt"
                   value={aiPrompt}
                   onChange={(e) => setAiPrompt(e.target.value)}
-                  placeholder="例如：帮我创建一部校园推理小说，主角是高中女生侦探"
+                  placeholder={t('projects.create.aiPlaceholder')}
                   rows={4}
                   fullWidth
                 />
@@ -617,7 +620,7 @@ export function CreateProjectDialog({
                   loading={aiGenerating}
                   onClick={() => void handleAiGenerate()}
                 >
-                  {aiGenerating ? "生成中…" : "生成草案"}
+                  {aiGenerating ? t('projects.create.generating') : t('projects.create.generateDraft')}
                 </Button>
 
                 {aiErrorMessage ? (
@@ -634,18 +637,17 @@ export function CreateProjectDialog({
                 {aiDraft ? (
                   <div className="space-y-2 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] p-3">
                     <Text size="small" color="default">
-                      {aiDraft.name}（{aiDraft.type}）
+                      {t('projects.create.draftInfo', { name: aiDraft.name, type: aiDraft.type })}
                     </Text>
                     <Text size="small" color="muted">
-                      章节：{aiDraft.chapterOutlines.length}，角色：
-                      {aiDraft.characters.length}
+                      {t('projects.create.draftStats', { chapters: aiDraft.chapterOutlines.length, characters: aiDraft.characters.length })}
                     </Text>
                     <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => setMode("manual")}
                     >
-                      使用此草案继续手动创建
+                      {t('projects.create.useDraft')}
                     </Button>
                   </div>
                 ) : null}

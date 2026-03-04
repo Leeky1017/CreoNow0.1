@@ -50,14 +50,14 @@ function parseDocumentId(testId: string): string {
 async function invokeFileRowContextAction(args: {
   page: Page;
   documentId: string;
-  actionLabel: "Delete";
+  actionKey: "delete";
 }): Promise<void> {
   const row = args.page.getByTestId(`file-row-${args.documentId}`);
   await expect(row).toBeVisible();
   await row.scrollIntoViewIfNeeded();
   await row.click({ button: "right" });
 
-  const menuItem = args.page.getByRole("menuitem", { name: args.actionLabel });
+  const menuItem = args.page.getByTestId(`context-menu-item-${args.actionKey}`);
   await expect(menuItem).toBeVisible();
   await menuItem.click();
 }
@@ -123,24 +123,23 @@ test("system dialog: cancel/confirm across file tree + knowledge graph", async (
   await invokeFileRowContextAction({
     page,
     documentId: docToDeleteId,
-    actionLabel: "Delete",
+    actionKey: "delete",
   });
 
-  const documentDialog = page.getByRole("dialog", { name: "Delete Document?" });
+  const documentDialog = page.getByTestId("system-dialog-delete");
   await expect(documentDialog).toBeVisible();
-  await expect(documentDialog.getByText("Delete Document?")).toBeVisible();
-  await documentDialog.getByRole("button", { name: "Cancel" }).click();
+  await documentDialog.getByTestId("system-dialog-secondary").click();
   await expect(documentDialog).not.toBeVisible();
   await expect(page.getByTestId(`file-row-${docToDeleteId}`)).toBeVisible();
 
   await invokeFileRowContextAction({
     page,
     documentId: docToDeleteId,
-    actionLabel: "Delete",
+    actionKey: "delete",
   });
 
   await expect(documentDialog).toBeVisible();
-  await documentDialog.getByRole("button", { name: "Delete" }).click();
+  await documentDialog.getByTestId("system-dialog-primary").click();
   await expect(documentDialog).not.toBeVisible();
   await expect(page.getByTestId(`file-row-${docToDeleteId}`)).toHaveCount(0);
 

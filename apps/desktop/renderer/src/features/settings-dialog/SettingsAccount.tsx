@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Avatar, Button, Text } from "../../components/primitives";
 
 /**
@@ -60,8 +61,6 @@ const cardStyles = [
   "bg-[var(--color-bg-raised)]",
 ].join(" ");
 
-const accountActionComingSoonLabel = "即将推出";
-
 /**
  * Plan badge component
  */
@@ -104,6 +103,7 @@ export function SettingsAccount({
   onLogout: _onLogout,
   onDeleteAccount,
 }: SettingsAccountProps): JSX.Element {
+  const { t } = useTranslation();
   void _onLogout; // Reserved for future use
   return (
     <div className="max-w-[560px]">
@@ -172,7 +172,7 @@ export function SettingsAccount({
             )}
           </div>
           <Text size="small" color="muted" as="p" className="mt-3">
-            {accountActionComingSoonLabel}
+            {t('settingsDialog.account.comingSoon')}
           </Text>
         </div>
       </div>
@@ -203,7 +203,7 @@ export function SettingsAccount({
             </Button>
           </div>
           <Text size="small" color="muted" as="p" className="mt-3">
-            {accountActionComingSoonLabel}
+            {t('settingsDialog.account.comingSoon')}
           </Text>
         </div>
       </div>

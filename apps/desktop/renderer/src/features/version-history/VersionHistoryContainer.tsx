@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   VersionHistoryPanelContent,
   type TimeGroup,
@@ -16,6 +17,7 @@ import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { RESTORE_VERSION_CONFIRM_COPY } from "./restoreConfirmCopy";
 import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore";
+import { i18n } from "../../i18n";
 
 /**
  * Map backend actor to UI author type.
@@ -110,24 +112,24 @@ function getTimeGroupLabel(createdAt: number): string {
  */
 function getDescription(reason: string): string {
   if (reason === "autosave") {
-    return "自动保存";
+    return i18n.t("versionHistory.container.autosave");
   }
   if (reason === "manual-save") {
-    return "手动保存";
+    return i18n.t("versionHistory.container.manualSave");
   }
   if (reason === "status-change") {
-    return "状态变更";
+    return i18n.t("versionHistory.container.statusChange");
   }
   if (reason === "ai-accept") {
-    return "AI 修改";
+    return i18n.t("versionHistory.container.aiModify");
   }
   if (reason === "restore") {
-    return "恢复版本";
+    return i18n.t("versionHistory.container.restoreVersion");
   }
   if (reason.startsWith("ai-apply:")) {
-    return "AI 修改";
+    return i18n.t("versionHistory.container.aiModify");
   }
-  return reason || "版本快照";
+  return reason || i18n.t("versionHistory.container.versionSnapshot");
 }
 
 /**
@@ -192,6 +194,7 @@ type VersionHistoryContainerProps = {
 export function VersionHistoryContainer(
   props: VersionHistoryContainerProps,
 ): JSX.Element {
+  const { t } = useTranslation();
   const documentId = useEditorStore((s) => s.documentId);
   const bootstrapEditor = useEditorStore((s) => s.bootstrapForProject);
   const { startCompare } = useVersionCompare();
@@ -313,10 +316,10 @@ export function VersionHistoryContainer(
       if (!documentId) return;
 
       const item = items.find((candidate) => candidate.versionId === versionId);
-      const timestamp = item ? formatTimestamp(item.createdAt) : "历史";
+      const timestamp = item ? formatTimestamp(item.createdAt) : t("versionHistory.container.history");
       void startPreview(documentId, { versionId, timestamp });
     },
-    [documentId, items, startPreview],
+    [documentId, items, startPreview, t],
   );
 
   React.useEffect(() => {

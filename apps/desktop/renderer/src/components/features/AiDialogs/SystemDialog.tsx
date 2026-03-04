@@ -504,6 +504,7 @@ export function SystemDialog({
         <DialogPrimitive.Overlay className={overlayStyles} />
         <DialogPrimitive.Content
           className={contentStyles}
+          data-testid={`system-dialog-${type}`}
           onKeyDown={handleKeyDown}
         >
           {/* Icon */}
@@ -530,6 +531,7 @@ export function SystemDialog({
               <>
                 <button
                   type="button"
+                  data-testid="system-dialog-secondary"
                   className={cancelButtonStyles}
                   onClick={handleSecondaryAction}
                   disabled={isLoading}
@@ -539,6 +541,7 @@ export function SystemDialog({
                 <button
                   ref={primaryButtonRef}
                   type="button"
+                  data-testid="system-dialog-primary"
                   className={deleteButtonStyles}
                   onClick={handlePrimaryAction}
                   disabled={isLoading}

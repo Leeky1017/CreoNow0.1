@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button, Select, Text, Textarea } from "../../components/primitives";
 import { Dialog } from "../../components/primitives/Dialog";
@@ -21,6 +22,7 @@ export function MemoryCreateDialog(props: {
   scope: MemoryScope;
   scopeLabel: string;
 }): JSX.Element {
+  const { t } = useTranslation();
   const create = useMemoryStore((s) => s.create);
 
   const [type, setType] = React.useState<MemoryType>("preference");
@@ -56,8 +58,8 @@ export function MemoryCreateDialog(props: {
     <Dialog
       open={props.open}
       onOpenChange={props.onOpenChange}
-      title="添加新记忆"
-      description={`这条记忆将保存在「${props.scopeLabel}」层级`}
+      title={t('memory.create.title')}
+      description={t('memory.create.description', { scope: props.scopeLabel })}
       footer={
         <div className="flex gap-2 justify-end">
           <Button
@@ -65,7 +67,7 @@ export function MemoryCreateDialog(props: {
             size="md"
             onClick={() => props.onOpenChange(false)}
           >
-            取消
+            {t('memory.create.cancel')}
           </Button>
           <Button
             variant="primary"
@@ -73,7 +75,7 @@ export function MemoryCreateDialog(props: {
             onClick={() => void handleSubmit()}
             disabled={!content.trim() || isSubmitting}
           >
-            {isSubmitting ? "保存中..." : "保存"}
+            {isSubmitting ? t('memory.create.saving') : t('memory.create.save')}
           </Button>
         </div>
       }
@@ -82,16 +84,16 @@ export function MemoryCreateDialog(props: {
         {/* Type selector */}
         <div className="flex flex-col gap-2">
           <Text size="small" color="muted">
-            记忆类型
+            {t('memory.create.type')}
           </Text>
           <Select
             data-testid="memory-create-type"
             value={type}
             onValueChange={(value) => setType(value as MemoryType)}
             options={[
-              { value: "preference", label: "偏好 — 写作风格、语言习惯" },
-              { value: "fact", label: "事实 — 角色设定、世界观" },
-              { value: "note", label: "笔记 — 临时提醒、待办事项" },
+              { value: "preference", label: t('memory.create.typePreference') },
+              { value: "fact", label: t('memory.create.typeFact') },
+              { value: "note", label: t('memory.create.typeNote') },
             ]}
             className="w-full"
           />
@@ -100,7 +102,7 @@ export function MemoryCreateDialog(props: {
         {/* Content input */}
         <div className="flex flex-col gap-2">
           <Text size="small" color="muted">
-            记忆内容
+            {t('memory.create.content')}
           </Text>
           <Textarea
             data-testid="memory-create-content"
@@ -108,10 +110,10 @@ export function MemoryCreateDialog(props: {
             onChange={(e) => setContent(e.target.value)}
             placeholder={
               type === "preference"
-                ? "例如：我喜欢简洁有力的文风，避免过多形容词堆砌"
+                ? t('memory.create.examplePreference')
                 : type === "fact"
-                  ? "例如：主角陈默是一名 35 岁的刑警，性格沉稳但有心理创伤"
-                  : "例如：记得在第七章增加一个误导性嫌疑人"
+                  ? t('memory.create.exampleFact')
+                  : t('memory.create.exampleNote')
             }
             className="min-h-[120px]"
           />
@@ -120,8 +122,7 @@ export function MemoryCreateDialog(props: {
         {/* Scope info */}
         <div className="flex items-center gap-2 p-2 rounded bg-[var(--color-bg-subtle)]">
           <Text size="tiny" color="muted">
-            💡 记忆层级由当前选中的 Tab 决定。切换 Tab
-            后添加的记忆会保存到对应层级。
+            {t('memory.create.layerHint')}
           </Text>
         </div>
       </div>

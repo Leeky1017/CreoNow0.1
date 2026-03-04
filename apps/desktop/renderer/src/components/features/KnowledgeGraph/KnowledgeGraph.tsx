@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useHotkey } from "../../../lib/hotkeys/useHotkey";
 import { GraphToolbar } from "./GraphToolbar";
 import { GraphCanvas } from "./GraphCanvas";
@@ -38,6 +39,7 @@ const mainStyles = ["flex-1", "relative", "overflow-hidden"].join(" ");
  * Empty state component
  */
 function EmptyState({ onAddNode }: { onAddNode: () => void }): JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="absolute inset-0 flex items-center justify-center">
       <div className="text-center space-y-4">
@@ -60,10 +62,10 @@ function EmptyState({ onAddNode }: { onAddNode: () => void }): JSX.Element {
         </div>
         <div>
           <p className="text-sm text-[var(--color-fg-muted)]">
-            暂无实体，点击添加你的第一个角色或地点
+            {t('kg.graph.emptyTitle')}
           </p>
           <p className="text-xs text-[var(--color-fg-subtle)] mt-1">
-            你可以在关系图中拖拽节点并建立关系
+            {t('kg.graph.emptyHint')}
           </p>
         </div>
         <button
@@ -81,7 +83,7 @@ function EmptyState({ onAddNode }: { onAddNode: () => void }): JSX.Element {
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          添加节点
+          {t('kg.graph.addNode')}
         </button>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { Button, Checkbox, Input, Text } from "../../components/primitives";
 import { Dialog } from "../../components/primitives/Dialog";
 import { useMemoryStore } from "../../stores/memoryStore";
@@ -15,6 +17,7 @@ export function MemorySettingsDialog(props: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }): JSX.Element {
+  const { t } = useTranslation();
   const settings = useMemoryStore((s) => s.settings);
   const updateSettings = useMemoryStore((s) => s.updateSettings);
 
@@ -22,15 +25,15 @@ export function MemorySettingsDialog(props: {
     <Dialog
       open={props.open}
       onOpenChange={props.onOpenChange}
-      title="记忆设置"
-      description="控制 AI 如何使用和学习你的记忆"
+      title={t('memory.settings.title')}
+      description={t('memory.settings.description')}
       footer={
         <Button
           variant="primary"
           size="md"
           onClick={() => props.onOpenChange(false)}
         >
-          完成
+          {t('memory.settings.done')}
         </Button>
       }
     >
@@ -44,10 +47,10 @@ export function MemorySettingsDialog(props: {
             })
           }
           disabled={!settings}
-          label="启用记忆注入"
+          label={t('memory.settings.enableInjection')}
         />
         <Text size="tiny" color="muted" className="-mt-2 ml-6">
-          AI 在写作时会参考你的记忆
+          {t('memory.settings.injectionDesc')}
         </Text>
 
         <Checkbox
@@ -59,10 +62,10 @@ export function MemorySettingsDialog(props: {
             })
           }
           disabled={!settings}
-          label="启用偏好学习"
+          label={t('memory.settings.enableLearning')}
         />
         <Text size="tiny" color="muted" className="-mt-2 ml-6">
-          AI 会从你的反馈中学习写作偏好
+          {t('memory.settings.learningDesc')}
         </Text>
 
         <Checkbox
@@ -74,15 +77,15 @@ export function MemorySettingsDialog(props: {
             })
           }
           disabled={!settings}
-          label="隐私模式"
+          label={t('memory.settings.privacyMode')}
         />
         <Text size="tiny" color="muted" className="-mt-2 ml-6">
-          减少存储可识别的内容片段
+          {t('memory.settings.privacyDesc')}
         </Text>
 
         <div className="flex items-center gap-3 mt-2">
           <Text size="small" color="muted">
-            学习阈值
+            {t('memory.settings.learningThreshold')}
           </Text>
           <Input
             data-testid="memory-settings-threshold"
@@ -100,7 +103,7 @@ export function MemorySettingsDialog(props: {
           />
         </div>
         <Text size="tiny" color="muted" className="-mt-2">
-          收到多少次相同信号后触发学习（默认 3）
+          {t('memory.settings.thresholdDesc')}
         </Text>
       </div>
     </Dialog>

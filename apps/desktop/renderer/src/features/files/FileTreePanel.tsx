@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   Button,
@@ -82,24 +83,24 @@ function iconForType(type: DocumentType): string {
 }
 
 /**
- * Resolve untitled title by document type.
+ * Resolve untitled title i18n key by document type.
  *
  * Why: new document enters rename mode and needs deterministic initial text.
  */
-function defaultTitleByType(type: DocumentType): string {
+function defaultTitleI18nKey(type: DocumentType): string {
   switch (type) {
     case "chapter":
-      return "Untitled Chapter";
+      return "files.tree.untitledChapter";
     case "note":
-      return "Untitled Note";
+      return "files.tree.untitledNote";
     case "setting":
-      return "Untitled Setting";
+      return "files.tree.untitledSetting";
     case "timeline":
-      return "Untitled Timeline";
+      return "files.tree.untitledTimeline";
     case "character":
-      return "Untitled Character";
+      return "files.tree.untitledCharacter";
     default:
-      return "Untitled";
+      return "files.tree.untitled";
   }
 }
 
@@ -280,6 +281,7 @@ function buildReorderedDocumentIds(args: {
  * Why: P1 requires sortable tree hierarchy with keyboard/context interactions.
  */
 export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
+  const { t } = useTranslation();
   const items = useFileStore((s) => s.items);
   const currentDocumentId = useFileStore((s) => s.currentDocumentId);
   const bootstrapStatus = useFileStore((s) => s.bootstrapStatus);
@@ -459,7 +461,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
     setEditing({
       mode: "rename",
       documentId: res.data.documentId,
-      title: defaultTitleByType(type),
+      title: t(defaultTitleI18nKey(type)),
     });
   }
 
@@ -467,7 +469,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
     const res = await createAndSetCurrent({
       projectId: props.projectId,
       type: item.type,
-      title: `${item.title} Copy`,
+      title: t('files.tree.copySuffix', { title: item.title }),
     });
     if (!res.ok) {
       return;
@@ -515,11 +517,10 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
 
   async function onDelete(documentId: string): Promise<void> {
     const confirmed = await confirm({
-      title: "Delete Document?",
-      description:
-        "This action cannot be undone. The document and its version history will be permanently deleted.",
-      primaryLabel: "Delete",
-      secondaryLabel: "Cancel",
+      title: t('files.tree.deleteTitle'),
+      description: t('files.tree.deleteDescription'),
+      primaryLabel: t('files.tree.deleteConfirm'),
+      secondaryLabel: t('files.tree.deleteCancel'),
     });
     if (!confirmed) {
       return;
@@ -733,7 +734,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
   return (
     <PanelContainer
       data-testid="sidebar-files"
-      title="Files"
+      title={t('files.tree.panelTitle')}
       actions={
         <>
           <Button
@@ -742,7 +743,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
             size="sm"
             onClick={() => void onCreate("chapter")}
           >
-            New
+            {t('files.tree.newButton')}
           </Button>
           <Button
             data-testid="file-create-note"
@@ -750,7 +751,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
             size="sm"
             onClick={() => void onCreate("note")}
           >
-            Note
+            {t('files.tree.noteButton')}
           </Button>
         </>
       }
@@ -765,7 +766,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
             {lastError.code}: {lastError.message}
           </Text>
           <Button variant="secondary" size="sm" onClick={() => clearError()}>
-            Dismiss
+            {t('files.tree.dismiss')}
           </Button>
         </div>
       ) : null}
@@ -779,12 +780,12 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
       >
         {bootstrapStatus !== "ready" ? (
           <Text size="small" color="muted" className="p-3 block">
-            Loading files…
+            {t('files.tree.loading')}
           </Text>
         ) : items.length === 0 ? (
           <EmptyState
-            title="暂无文件"
-            description="开始创建你的第一个文件"
+            title={t('files.tree.emptyTitle')}
+            description={t('files.tree.emptyDescription')}
             action={
               <Button
                 data-testid="file-create-empty"
@@ -792,7 +793,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                 size="sm"
                 onClick={() => void onCreate("chapter")}
               >
-                新建文件
+                {t('files.tree.newFile')}
               </Button>
             }
           />
@@ -822,7 +823,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
               const contextMenuItems: ContextMenuItem[] = [
                 {
                   key: "rename",
-                  label: "Rename",
+                  label: t('files.tree.rename'),
                   onSelect: () => {
                     setEditing({
                       mode: "rename",
@@ -833,12 +834,12 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                 },
                 {
                   key: "copy",
-                  label: "Copy",
+                  label: t('files.tree.copy'),
                   onSelect: () => void onCopy(item),
                 },
                 {
                   key: "move",
-                  label: "Move to Folder",
+                  label: t('files.tree.moveToFolder'),
                   disabled: moveToFolderDisabled,
                   onSelect: () => {
                     if (!moveTargetFolderId) {
@@ -852,13 +853,13 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                 },
                 {
                   key: "delete",
-                  label: "Delete",
+                  label: t('files.tree.delete'),
                   onSelect: () => void onDelete(item.documentId),
                   destructive: true,
                 },
                 {
                   key: "version-history",
-                  label: "Version History",
+                  label: t('files.tree.versionHistory'),
                   onSelect: () => {
                     props.onOpenVersionHistory?.(item.documentId);
                   },
@@ -866,7 +867,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                 {
                   key: "status",
                   label:
-                    item.status === "final" ? "Mark as Draft" : "Mark as Final",
+                    item.status === "final" ? t('files.tree.markAsDraft') : t('files.tree.markAsFinal'),
                   onSelect: () =>
                     void onToggleStatus({
                       documentId: item.documentId,
@@ -1009,8 +1010,8 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                           className="shrink-0 w-4 text-[10px] text-[var(--color-fg-muted)]"
                           aria-label={
                             expandedFolderIds.has(item.documentId)
-                              ? "Collapse"
-                              : "Expand"
+                              ? t('files.tree.collapse')
+                              : t('files.tree.expand')
                           }
                         >
                           {expandedFolderIds.has(item.documentId) ? "▾" : "▸"}
@@ -1067,7 +1068,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                               }}
                               className="justify-start w-full"
                             >
-                              Rename
+                              {t('files.tree.rename')}
                             </Button>
                           </PopoverClose>
                           <PopoverClose asChild>
@@ -1078,7 +1079,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                               onClick={() => void onCopy(item)}
                               className="justify-start w-full"
                             >
-                              Copy
+                              {t('files.tree.copy')}
                             </Button>
                           </PopoverClose>
                           <PopoverClose asChild>
@@ -1098,7 +1099,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                               }}
                               className="justify-start w-full"
                             >
-                              Move to Folder
+                              {t('files.tree.moveToFolder')}
                             </Button>
                           </PopoverClose>
                           <PopoverClose asChild>
@@ -1116,8 +1117,8 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                               className="justify-start w-full"
                             >
                               {item.status === "final"
-                                ? "Mark as Draft"
-                                : "Mark as Final"}
+                                ? t('files.tree.markAsDraft')
+                                : t('files.tree.markAsFinal')}
                             </Button>
                           </PopoverClose>
                           <PopoverClose asChild>
@@ -1128,7 +1129,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                               onClick={() => void onDelete(item.documentId)}
                               className="justify-start w-full text-[var(--color-error)]"
                             >
-                              Delete
+                              {t('files.tree.delete')}
                             </Button>
                           </PopoverClose>
                         </div>

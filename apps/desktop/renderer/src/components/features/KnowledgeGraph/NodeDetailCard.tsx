@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "../../primitives/Button";
 import { Avatar } from "../../primitives/Avatar";
 import { Badge } from "../../primitives/Badge";
@@ -64,6 +65,7 @@ export function NodeDetailCard({
   onDelete,
   onClose,
 }: NodeDetailCardProps): JSX.Element {
+  const { t } = useTranslation();
   const { label, type, avatar, metadata } = node;
   const { role, attributes, description } = metadata || {};
   const typeColor = typeColorVars[type];
@@ -111,7 +113,7 @@ export function NodeDetailCard({
               onClick={onDelete}
               className="p-1 text-[var(--color-fg-subtle)] hover:text-[var(--color-error)] transition-colors"
               aria-label="Delete node"
-              title="删除节点"
+              title={t('kg.nodeDetail.deleteNode')}
             >
               <svg
                 width="16"
