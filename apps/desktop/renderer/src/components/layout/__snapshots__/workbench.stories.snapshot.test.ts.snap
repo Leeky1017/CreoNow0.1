@@ -2105,7 +2105,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                     <span
                       class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)]"
                     >
-                      选中文本或输入指令，开始与 AI 协作
+                      Select text or enter a prompt to collaborate with AI
                     </span>
                   </div>
                 </div>
@@ -2421,7 +2421,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
             disabled=""
             type="button"
           >
-            查看版本历史
+            View Version History
           </button>
         </div>
       </div>
@@ -2526,7 +2526,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
             disabled=""
             type="button"
           >
-            查看版本历史
+            View Version History
           </button>
         </div>
       </div>

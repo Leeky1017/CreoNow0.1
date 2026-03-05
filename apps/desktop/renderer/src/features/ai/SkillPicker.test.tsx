@@ -6,7 +6,7 @@ import { SkillPicker } from "./SkillPicker";
 const sampleSkills = [
   {
     id: "builtin:rewrite",
-    name: "改写",
+    name: "Rewrite",
     enabled: true,
     valid: true,
     scope: "builtin" as const,
@@ -15,7 +15,7 @@ const sampleSkills = [
   },
   {
     id: "global:formal-rewrite",
-    name: "正式风格改写",
+    name: "正式风格Rewrite",
     enabled: true,
     valid: true,
     scope: "global" as const,
@@ -24,7 +24,7 @@ const sampleSkills = [
   },
   {
     id: "project:formal-rewrite",
-    name: "正式风格改写",
+    name: "正式风格Rewrite",
     enabled: true,
     valid: true,
     scope: "project" as const,
@@ -54,9 +54,9 @@ describe("SkillPicker scope management", () => {
       />,
     );
 
-    expect(screen.getByText("内置技能")).toBeInTheDocument();
-    expect(screen.getByText("全局技能")).toBeInTheDocument();
-    expect(screen.getByText("项目技能")).toBeInTheDocument();
+    expect(screen.getByText("Built-in Skills")).toBeInTheDocument();
+    expect(screen.getByText("Global Skills")).toBeInTheDocument();
+    expect(screen.getByText("Project Skills")).toBeInTheDocument();
   });
 
   it("should render custom-empty state when there are no global/project skills", () => {
@@ -73,10 +73,10 @@ describe("SkillPicker scope management", () => {
     );
 
     expect(
-      screen.getByText("暂无自定义技能，点击创建或用自然语言描述需求"),
+      screen.getByText("No custom skills yet. Click to create or describe your needs in natural language."),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "创建技能" }),
+      screen.getByRole("button", { name: "Create Skill" }),
     ).toBeInTheDocument();
   });
 
@@ -108,9 +108,9 @@ describe("SkillPicker scope management", () => {
       />,
     );
 
-    const formalRows = screen.getAllByText("正式风格改写");
+    const formalRows = screen.getAllByText("正式风格Rewrite");
     expect(formalRows).toHaveLength(1);
-    expect(screen.getByText("项目级覆盖")).toBeInTheDocument();
+    expect(screen.getByText("Project Override")).toBeInTheDocument();
   });
 
   it("should still allow selecting enabled skill", async () => {

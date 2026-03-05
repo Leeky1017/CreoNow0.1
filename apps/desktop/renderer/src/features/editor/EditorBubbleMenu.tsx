@@ -244,7 +244,7 @@ export function EditorBubbleMenu(props: {
       </InlineFormatButton>
       <InlineFormatButton
         testId="bubble-link"
-        label="Link"
+        label={t('editor.bubbleMenu.link')}
         isActive={editor.isActive("link")}
         disabled={inlineDisabled}
         onClick={toggleLink}

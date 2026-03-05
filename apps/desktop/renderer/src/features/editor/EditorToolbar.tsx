@@ -1,4 +1,6 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { Editor } from "@tiptap/react";
 
 import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
@@ -110,7 +112,7 @@ type ToolbarItemSeparator = { kind: "separator" };
 
 type ToolbarItem = ToolbarItemButton | ToolbarItemSeparator;
 
-function buildToolbarItems(): ToolbarItem[] {
+function buildToolbarItems(t: TFunction): ToolbarItem[] {
   return [
     /* Text formatting (inline) */
     { kind: "button", testId: "toolbar-bold", label: EDITOR_SHORTCUTS.bold.label, shortcutDisplay: () => EDITOR_SHORTCUTS.bold.display(), icon: "bold", getActive: (e) => e.isActive("bold"), getDisabled: (_e, d, i) => d || i, run: (e) => e.chain().focus().toggleBold().run(), inline: true },
@@ -131,7 +133,7 @@ function buildToolbarItems(): ToolbarItem[] {
     /* Blocks */
     { kind: "button", testId: "toolbar-blockquote", label: EDITOR_SHORTCUTS.blockquote.label, shortcutDisplay: () => EDITOR_SHORTCUTS.blockquote.display(), icon: "blockquote", getActive: (e) => e.isActive("blockquote"), getDisabled: (_e, d) => d, run: (e) => e.chain().focus().toggleBlockquote().run() },
     { kind: "button", testId: "toolbar-code-block", label: EDITOR_SHORTCUTS.codeBlock.label, shortcutDisplay: () => EDITOR_SHORTCUTS.codeBlock.display(), icon: "codeBlock", getActive: (e) => e.isActive("codeBlock"), getDisabled: (_e, d) => d, run: (e) => e.chain().focus().toggleCodeBlock().run() },
-    { kind: "button", testId: "toolbar-hr", label: "Horizontal Rule", icon: "horizontalRule", getActive: () => false, getDisabled: (_e, d) => d, run: (e) => e.chain().focus().setHorizontalRule().run() },
+    { kind: "button", testId: "toolbar-hr", label: t('editor.toolbar.horizontalRule'), icon: "horizontalRule", getActive: () => false, getDisabled: (_e, d) => d, run: (e) => e.chain().focus().setHorizontalRule().run() },
     { kind: "separator" },
     /* History */
     { kind: "button", testId: "toolbar-undo", label: EDITOR_SHORTCUTS.undo.label, shortcutDisplay: () => EDITOR_SHORTCUTS.undo.display(), icon: "undo", getActive: () => false, getDisabled: (e, d) => d || !e.can().undo(), run: (e) => e.chain().focus().undo().run() },
@@ -207,7 +209,15 @@ export interface EditorToolbarProps {
 }
 
 /** Stable reference to toolbar item definitions (same shape every render) */
-const TOOLBAR_ITEMS = buildToolbarItems();
+const TOOLBAR_ITEMS_CACHE = new WeakMap<TFunction, ToolbarItem[]>();
+function getToolbarItems(t: TFunction): ToolbarItem[] {
+  let items = TOOLBAR_ITEMS_CACHE.get(t);
+  if (!items) {
+    items = buildToolbarItems(t);
+    TOOLBAR_ITEMS_CACHE.set(t, items);
+  }
+  return items;
+}
 
 /**
  * EditorToolbar provides formatting controls for the TipTap editor.
@@ -223,8 +233,10 @@ export function EditorToolbar({
   disabled = false,
   className,
 }: EditorToolbarProps): JSX.Element | null {
+  const { t } = useTranslation();
   const { containerRef, isOverflowing } = useOverflowDetection();
   const [overflowMenuOpen, setOverflowMenuOpen] = React.useState(false);
+  const TOOLBAR_ITEMS = getToolbarItems(t);
 
   if (!editor) {
     return null;
@@ -253,7 +265,7 @@ export function EditorToolbar({
         <div className="relative ml-auto flex-shrink-0">
           <ToolbarButton
             testId="toolbar-overflow-trigger"
-            label="More"
+            label={t('editor.toolbar.more')}
             onClick={() => setOverflowMenuOpen((prev) => !prev)}
             isActive={overflowMenuOpen}
           >

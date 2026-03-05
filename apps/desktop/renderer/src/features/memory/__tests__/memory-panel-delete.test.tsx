@@ -82,7 +82,7 @@ describe("MemoryPanel delete", () => {
 
     await screen.findByText("错误偏好规则");
 
-    await user.click(screen.getByRole("button", { name: "删除" }));
+    await user.click(screen.getByRole("button", { name: "Delete" }));
 
     await waitFor(() => {
       expect(invokeMock).toHaveBeenCalledWith("memory:semantic:delete", {

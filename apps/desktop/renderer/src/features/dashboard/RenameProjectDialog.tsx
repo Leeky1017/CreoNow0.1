@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "../../components/primitives/Button";
 import { Dialog } from "../../components/primitives/Dialog";
@@ -22,6 +23,7 @@ type RenameProjectDialogProps = {
 export function RenameProjectDialog(
   props: RenameProjectDialogProps,
 ): JSX.Element {
+  const { t } = useTranslation();
   const [name, setName] = React.useState(props.initialName);
   const [nameError, setNameError] = React.useState<string | null>(null);
 
@@ -40,21 +42,21 @@ export function RenameProjectDialog(
       e.preventDefault();
       const trimmed = name.trim();
       if (!trimmed) {
-        setNameError("Project name is required.");
+        setNameError(t('dashboard.rename.nameRequired'));
         return;
       }
       setNameError(null);
       await props.onSubmit(trimmed);
     },
-    [name, props],
+    [name, props, t],
   );
 
   return (
     <Dialog
       open={props.open}
       onOpenChange={props.onOpenChange}
-      title="Rename Project"
-      description="Update the project name shown in Dashboard."
+      title={t('dashboard.rename.title')}
+      description={t('dashboard.rename.description')}
       footer={
         <>
           <Button
@@ -64,7 +66,7 @@ export function RenameProjectDialog(
             onClick={() => props.onOpenChange(false)}
             disabled={props.submitting}
           >
-            Cancel
+            {t('dashboard.rename.cancel')}
           </Button>
           <Button
             data-testid="rename-project-submit"
@@ -74,7 +76,7 @@ export function RenameProjectDialog(
             size="sm"
             disabled={props.submitting}
           >
-            {props.submitting ? "Renaming..." : "Rename"}
+            {props.submitting ? t('dashboard.rename.renaming') : t('dashboard.rename.rename')}
           </Button>
         </>
       }
@@ -87,7 +89,7 @@ export function RenameProjectDialog(
       >
         <div>
           <Text size="small" color="muted" as="div" className="mb-2">
-            Project Name
+            {t('dashboard.rename.projectName')}
           </Text>
           <Input
             data-testid="rename-project-name"

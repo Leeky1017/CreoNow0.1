@@ -522,7 +522,7 @@ describe("EditorPane", () => {
         content: [
           {
             type: "paragraph",
-            content: [{ type: "text", text: "历史版本内容" }],
+            content: [{ type: "text", text: "History版本内容" }],
           },
         ],
       }),
@@ -539,7 +539,7 @@ describe("EditorPane", () => {
 
     expect(
       await screen.findByTestId("editor-preview-banner"),
-    ).toHaveTextContent("正在预览 2 小时前 的版本");
+    ).toHaveTextContent("Previewing version from 2 小时前");
 
     const editor = await screen.findByTestId("tiptap-editor");
     await waitFor(() => {
@@ -563,7 +563,7 @@ describe("EditorPane", () => {
       previewContentJson: JSON.stringify({
         type: "doc",
         content: [
-          { type: "paragraph", content: [{ type: "text", text: "历史版本" }] },
+          { type: "paragraph", content: [{ type: "text", text: "History版本" }] },
         ],
       }),
       previewError: null,
@@ -578,7 +578,7 @@ describe("EditorPane", () => {
     );
 
     const returnButton = await screen.findByRole("button", {
-      name: "返回当前版本",
+      name: "Back to current version",
     });
     fireEvent.click(returnButton);
 

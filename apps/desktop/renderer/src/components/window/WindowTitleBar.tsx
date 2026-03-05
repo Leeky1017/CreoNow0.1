@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { invoke } from "../../lib/ipcClient";
 import { useProjectStore } from "../../stores/projectStore";
@@ -67,6 +68,7 @@ function CloseIcon(): JSX.Element {
  * and control buttons in renderer.
  */
 export function WindowTitleBar(): JSX.Element | null {
+  const { t } = useTranslation();
   const currentProjectId = useProjectStore((s) => s.current?.projectId ?? null);
   const projectItems = useProjectStore((s) => s.items);
   const [state, setState] = React.useState<WindowControlState | null>(null);
@@ -137,7 +139,7 @@ export function WindowTitleBar(): JSX.Element | null {
         <button
           type="button"
           className="cn-window-control-btn"
-          aria-label="Minimize"
+          aria-label={t('workbench.titleBar.minimize')}
           onClick={() => void handleMinimize()}
         >
           <MinimizeIcon />
@@ -155,7 +157,7 @@ export function WindowTitleBar(): JSX.Element | null {
         <button
           type="button"
           className="cn-window-control-btn cn-window-control-btn--close"
-          aria-label="Close"
+          aria-label={t('workbench.titleBar.close')}
           onClick={() => void handleClose()}
         >
           <CloseIcon />

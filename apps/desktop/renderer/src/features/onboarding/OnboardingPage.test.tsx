@@ -23,7 +23,7 @@ describe("OnboardingPage", () => {
 
     expect(screen.getByTestId("onboarding-page")).toBeInTheDocument();
     expect(screen.getByTestId("onboarding-logo")).toBeInTheDocument();
-    expect(screen.getByText("欢迎使用 CreoNow")).toBeInTheDocument();
+    expect(screen.getByText("Welcome to CreoNow")).toBeInTheDocument();
   });
 
   it("starts on step 1 by default", () => {

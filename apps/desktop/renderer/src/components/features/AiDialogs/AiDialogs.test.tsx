@@ -295,7 +295,7 @@ describe("AiDiffModal", () => {
       />,
     );
 
-    expect(screen.getByText(/2 paragraphs/i)).toBeInTheDocument();
+    expect(screen.getByText(/2 paragraph/i)).toBeInTheDocument();
   });
 
   it("displays before and after labels", () => {

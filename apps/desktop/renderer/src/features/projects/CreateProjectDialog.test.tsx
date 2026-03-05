@@ -156,13 +156,13 @@ describe("CreateProjectDialog", () => {
       expect(screen.getByTestId("create-project-dialog")).toBeInTheDocument();
     });
 
-    it("应该显示 Create New Project 标题", () => {
+    it("应该显示 Create New Project Title", () => {
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
       expect(screen.getByText("Create New Project")).toBeInTheDocument();
     });
 
-    it("应该显示名称输入框", () => {
+    it("应该显示Name输入框", () => {
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
       expect(screen.getByTestId("create-project-name")).toBeInTheDocument();
@@ -190,7 +190,7 @@ describe("CreateProjectDialog", () => {
       expect(screen.getByText("Other")).toBeInTheDocument();
     });
 
-    it("应该显示描述输入框", () => {
+    it("应该显示Description输入框", () => {
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
       expect(
@@ -209,7 +209,7 @@ describe("CreateProjectDialog", () => {
   // 表单测试
   // ===========================================================================
   describe("表单", () => {
-    it("名称输入框应有 placeholder", () => {
+    it("Name输入框应有 placeholder", () => {
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
       const input = screen.getByTestId("create-project-name");
@@ -225,7 +225,7 @@ describe("CreateProjectDialog", () => {
       expect(input).toHaveValue("My Project");
     });
 
-    it("名称输入框应有 autoFocus", () => {
+    it("Name输入框应有 autoFocus", () => {
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
       const input = screen.getByTestId("create-project-name");
@@ -237,7 +237,7 @@ describe("CreateProjectDialog", () => {
   // 验证测试
   // ===========================================================================
   describe("验证", () => {
-    it("空名称应该显示错误", async () => {
+    it("空Name应该显示错误", async () => {
       const user = userEvent.setup();
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
@@ -247,7 +247,7 @@ describe("CreateProjectDialog", () => {
       expect(screen.getByText("Project name is required")).toBeInTheDocument();
     });
 
-    it("只有空格的名称应该显示错误", async () => {
+    it("只有空格的Name应该显示错误", async () => {
       const user = userEvent.setup();
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
@@ -304,7 +304,7 @@ describe("CreateProjectDialog", () => {
       });
     });
 
-    it("点击 Create Template 应打开 CreateTemplateDialog", async () => {
+    it("点击 Create Template 应to open CreateTemplateDialog", async () => {
       const user = userEvent.setup();
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
@@ -352,7 +352,7 @@ describe("CreateProjectDialog", () => {
       });
     });
 
-    it("用户手动选择模板后不应被默认模板同步覆盖", async () => {
+    it("User手动Select模板后不应被默认模板同步覆盖", async () => {
       const { useProjectStore } = await import("../../stores/projectStore");
       const createAndSetCurrent = vi.fn().mockResolvedValue({
         ok: true,
@@ -398,7 +398,7 @@ describe("CreateProjectDialog", () => {
   // 错误状态测试
   // ===========================================================================
   describe("错误状态", () => {
-    it("有错误时应显示错误信息", async () => {
+    it("有错误时应显示错误Info", async () => {
       const { useProjectStore } = await import("../../stores/projectStore");
       vi.mocked(useProjectStore).mockImplementation((selector) => {
         const state = createMockProjectState({
@@ -416,7 +416,7 @@ describe("CreateProjectDialog", () => {
       expect(screen.getByText(/Failed to create project/)).toBeInTheDocument();
     });
 
-    it("项目创建返回错误时应显示可见错误并记录诊断上下文", async () => {
+    it("ProjectCreateGo back错误时应显示可见错误并记录诊断上下文", async () => {
       const { useProjectStore } = await import("../../stores/projectStore");
       const createAndSetCurrent: ProjectStore["createAndSetCurrent"] = vi
         .fn()
@@ -466,7 +466,7 @@ describe("CreateProjectDialog", () => {
       }
     });
 
-    it("项目创建抛异常时应展示错误并输出诊断日志", async () => {
+    it("ProjectCreate抛异常时应展示错误并输出诊断日志", async () => {
       const { useProjectStore } = await import("../../stores/projectStore");
       const createAndSetCurrent: ProjectStore["createAndSetCurrent"] = vi
         .fn()
@@ -550,7 +550,7 @@ describe("CreateProjectDialog", () => {
   // 清理测试
   // ===========================================================================
   describe("清理", () => {
-    it("关闭时应清除错误", async () => {
+    it("Close时应Clear错误", async () => {
       const { useProjectStore } = await import("../../stores/projectStore");
       const clearError = vi.fn();
       vi.mocked(useProjectStore).mockImplementation((selector) => {
@@ -568,27 +568,27 @@ describe("CreateProjectDialog", () => {
   });
 
   // ===========================================================================
-  // PM1-S3 AI 辅助降级测试
+  // PM1-S3 AI Assisted降级测试
   // ===========================================================================
-  describe("AI 辅助降级", () => {
+  describe("AI Assisted降级", () => {
     it("should show fallback message and keep manual mode available", async () => {
       const user = userEvent.setup();
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
-      await user.click(screen.getByRole("tab", { name: "AI 辅助" }));
+      await user.click(screen.getByRole("tab", { name: "AI Assisted" }));
       await user.type(
         screen.getByTestId("create-project-ai-prompt"),
-        "帮我创建一部校园推理小说",
+        "帮我Create一部校园推理小说",
       );
       await user.click(screen.getByTestId("create-project-ai-generate"));
 
       await waitFor(() => {
         expect(
-          screen.getByText("AI 辅助创建暂时不可用，请手动创建或稍后重试"),
+          screen.getByText("AI-assisted creation is temporarily unavailable. Please create manually or try again later"),
         ).toBeInTheDocument();
       });
 
-      expect(screen.getByRole("tab", { name: "手动创建" })).toBeInTheDocument();
+      expect(screen.getByRole("tab", { name: "Manual" })).toBeInTheDocument();
     });
   });
 });

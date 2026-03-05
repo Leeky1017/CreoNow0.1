@@ -9,14 +9,14 @@ describe("AiNotConfiguredGuide", () => {
     render(<AiNotConfiguredGuide onNavigateToSettings={vi.fn()} />);
 
     expect(
-      screen.getByText(/请先在设置中配置 AI 服务/),
+      screen.getByText(/Please configure AI service in Settings first/),
     ).toBeInTheDocument();
   });
 
   it("has settings navigation button", () => {
     render(<AiNotConfiguredGuide onNavigateToSettings={vi.fn()} />);
 
-    const button = screen.getByRole("button", { name: /设置/i });
+    const button = screen.getByRole("button", { name: /Settings/i });
     expect(button).toBeInTheDocument();
   });
 
@@ -24,7 +24,7 @@ describe("AiNotConfiguredGuide", () => {
     const onNav = vi.fn();
     render(<AiNotConfiguredGuide onNavigateToSettings={onNav} />);
 
-    const button = screen.getByRole("button", { name: /设置/i });
+    const button = screen.getByRole("button", { name: /Settings/i });
     await userEvent.click(button);
 
     expect(onNav).toHaveBeenCalledTimes(1);

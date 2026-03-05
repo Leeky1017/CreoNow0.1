@@ -1,5 +1,6 @@
 import React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
+import { useTranslation } from "react-i18next";
 
 /**
  * Select option item
@@ -258,7 +259,7 @@ export function Select({
   value,
   onValueChange,
   defaultValue,
-  placeholder = "Select...",
+  placeholder,
   options,
   disabled = false,
   name,
@@ -268,6 +269,8 @@ export function Select({
   portalContainer,
   ...triggerProps
 }: SelectProps): JSX.Element {
+  const { t } = useTranslation();
+  const resolvedPlaceholder = placeholder ?? t("primitives.select.placeholder");
   const contentClassName = [getZIndexClass(layer), contentStyles].join(" ");
   const triggerClasses = [triggerStyles, fullWidth ? "w-full" : "", className]
     .filter(Boolean)
@@ -286,7 +289,7 @@ export function Select({
         disabled={disabled}
         className={triggerClasses}
       >
-        <SelectPrimitive.Value placeholder={placeholder} />
+        <SelectPrimitive.Value placeholder={resolvedPlaceholder} />
         <SelectPrimitive.Icon>
           <ChevronDownIcon className="text-[var(--color-fg-muted)]" />
         </SelectPrimitive.Icon>

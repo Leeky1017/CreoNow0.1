@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { GraphNodeProps, NodeType } from "./types";
 
 /**
@@ -147,6 +148,7 @@ export function GraphNode({
   onClick,
   onDragStart,
 }: GraphNodeProps): JSX.Element {
+  const { t } = useTranslation();
   const { id, label, type, avatar, position } = node;
   const isEventType = type === "event";
   const color = nodeColorVars[type];
@@ -227,7 +229,7 @@ export function GraphNode({
           className="absolute -right-2 -top-2 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-white rounded"
           style={{ backgroundColor: color }}
         >
-          Dragging
+          {t('kg.graph.dragging')}
         </span>
       )}
     </div>

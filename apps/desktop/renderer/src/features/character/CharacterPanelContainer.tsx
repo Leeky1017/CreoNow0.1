@@ -6,6 +6,7 @@
  */
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
@@ -36,6 +37,7 @@ export interface CharacterPanelContainerProps {
 export function CharacterPanelContainer(
   props: CharacterPanelContainerProps,
 ): JSX.Element {
+  const { t } = useTranslation();
   const { projectId } = props;
 
   // KG store state
@@ -72,7 +74,7 @@ export function CharacterPanelContainer(
    */
   const handleCreate = React.useCallback(async () => {
     const res = await entityCreate({
-      name: "New Character",
+      name: t('character.panelContainer.newCharacter'),
       type: "character",
       description: "",
     });
@@ -81,7 +83,7 @@ export function CharacterPanelContainer(
       // Select the newly created character
       setSelectedId(res.data.id);
     }
-  }, [entityCreate]);
+  }, [entityCreate, t]);
 
   /**
    * Update a character's KG entity.
@@ -106,13 +108,13 @@ export function CharacterPanelContainer(
   const handleDelete = React.useCallback(
     async (characterId: string) => {
       const character = characters.find((c) => c.id === characterId);
-      const name = character?.name ?? "this character";
+      const name = character?.name ?? t('character.panelContainer.thisCharacter');
 
       const confirmed = await confirm({
-        title: "Delete Character?",
-        description: `"${name}" and all their relationships will be permanently deleted.`,
-        primaryLabel: "Delete",
-        secondaryLabel: "Cancel",
+        title: t('character.panelContainer.deleteTitle'),
+        description: t('character.panelContainer.deleteDescription', { name }),
+        primaryLabel: t('character.panelContainer.deleteLabel'),
+        secondaryLabel: t('character.panelContainer.cancelLabel'),
       });
 
       if (!confirmed) {
@@ -126,7 +128,7 @@ export function CharacterPanelContainer(
         setSelectedId(null);
       }
     },
-    [characters, confirm, entityDelete, selectedId],
+    [characters, confirm, entityDelete, selectedId, t],
   );
 
   /**
@@ -151,7 +153,7 @@ export function CharacterPanelContainer(
         data-testid="character-panel-error"
       >
         <span className="text-sm text-[var(--color-error-default)]">
-          Failed to load characters
+          {t('character.panelContainer.loadError')}
         </span>
         <span className="text-xs text-[var(--color-fg-muted)]">
           {lastError.code}: {lastError.message}
@@ -170,10 +172,10 @@ export function CharacterPanelContainer(
         >
           <div className="text-center space-y-2">
             <p className="text-sm text-[var(--color-fg-muted)]">
-              No characters yet
+              {t('character.panelContainer.emptyTitle')}
             </p>
             <p className="text-xs text-[var(--color-fg-placeholder)]">
-              Create your first character to start building your story&apos;s cast
+              {t('character.panelContainer.emptyDescription')}
             </p>
           </div>
           <button
@@ -181,7 +183,7 @@ export function CharacterPanelContainer(
             onClick={() => void handleCreate()}
             className="focus-ring px-4 py-2 text-sm font-medium bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] rounded-[var(--radius-md)] hover:opacity-90 transition-opacity"
           >
-            Create Character
+            {t('character.panelContainer.createCharacter')}
           </button>
         </div>
         <SystemDialog {...dialogProps} />

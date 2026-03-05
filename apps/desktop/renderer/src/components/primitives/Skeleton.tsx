@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * Skeleton variants
@@ -85,6 +86,7 @@ export function Skeleton({
   style,
   ...props
 }: SkeletonProps): JSX.Element {
+  const { t } = useTranslation();
   const defaults = defaultDimensions[variant];
 
   const computedWidth =
@@ -122,7 +124,7 @@ export function Skeleton({
       aria-busy="true"
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-label="Loading..."
+      aria-label={t('primitives.skeleton.loading')}
       {...props}
     />
   );

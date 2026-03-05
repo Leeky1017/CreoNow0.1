@@ -70,6 +70,7 @@ function StatItem(props: {
 function DocumentInfoSection(props: {
   document: DocumentListItem | null;
 }): JSX.Element {
+  const { t } = useTranslation();
   const { document } = props;
 
   if (!document) {
@@ -81,7 +82,7 @@ function DocumentInfoSection(props: {
           color="muted"
           className="text-center"
         >
-          No document selected
+          {t('rightPanel.info.noDocumentSelected')}
         </Text>
       </Card>
     );
@@ -90,16 +91,16 @@ function DocumentInfoSection(props: {
   return (
     <section>
       <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-        Current Document
+        {t('rightPanel.info.currentDocument')}
       </Heading>
       <Card className="p-3 rounded-[var(--radius-md)]">
         <StatItem
-          label="Title"
-          value={document.title || "Untitled"}
+          label={t('rightPanel.info.title')}
+          value={document.title || t('rightPanel.info.untitled')}
           testId="info-panel-doc-title"
         />
         <StatItem
-          label="Updated"
+          label={t('rightPanel.info.updated')}
           value={formatDate(document.updatedAt)}
           testId="info-panel-doc-updated"
         />
@@ -116,17 +117,18 @@ function TodayStatsSection(props: {
   error: IpcError | null;
   loading: boolean;
 }): JSX.Element {
+  const { t } = useTranslation();
   const { stats, error, loading } = props;
 
   if (loading) {
     return (
       <section>
         <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-          Today&apos;s Progress
+          {t('rightPanel.info.todaysProgress')}
         </Heading>
         <Card className="p-3 rounded-[var(--radius-md)]">
           <Text size="small" color="muted" className="text-center">
-            Loading...
+            {t('rightPanel.info.loading')}
           </Text>
         </Card>
       </section>
@@ -137,7 +139,7 @@ function TodayStatsSection(props: {
     return (
       <section>
         <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-          Today&apos;s Progress
+          {t('rightPanel.info.todaysProgress')}
         </Heading>
         <Card className="p-3 rounded-[var(--radius-md)] border-[var(--color-error)]/20">
           <Text
@@ -158,11 +160,11 @@ function TodayStatsSection(props: {
     return (
       <section>
         <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-          Today&apos;s Progress
+          {t('rightPanel.info.todaysProgress')}
         </Heading>
         <Card className="p-3 rounded-[var(--radius-md)]">
           <Text size="small" color="muted" className="text-center">
-            No stats available
+            {t('rightPanel.info.noStatsAvailable')}
           </Text>
         </Card>
       </section>
@@ -172,26 +174,26 @@ function TodayStatsSection(props: {
   return (
     <section>
       <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-        Today&apos;s Progress
+        {t('rightPanel.info.todaysProgress')}
       </Heading>
       <Card className="p-3 rounded-[var(--radius-md)]">
         <StatItem
-          label="Words written"
+          label={t('rightPanel.info.wordsWritten')}
           value={stats.wordsWritten.toLocaleString()}
           testId="info-panel-words-written"
         />
         <StatItem
-          label="Writing time"
+          label={t('rightPanel.info.writingTime')}
           value={formatDuration(stats.writingSeconds)}
           testId="info-panel-writing-time"
         />
         <StatItem
-          label="Skills used"
+          label={t('rightPanel.info.skillsUsed')}
           value={stats.skillsUsed}
           testId="info-panel-skills-used"
         />
         <StatItem
-          label="Documents created"
+          label={t('rightPanel.info.documentsCreated')}
           value={stats.documentsCreated}
           testId="info-panel-docs-created"
         />
@@ -274,7 +276,7 @@ export function InfoPanel(props: InfoPanelProps = {}): JSX.Element {
       className="flex flex-col gap-4 p-4 h-full overflow-auto"
     >
       <Heading level="h3" className="font-bold text-[15px]">
-        Info
+        {t('rightPanel.info.panelTitle')}
       </Heading>
 
       <DocumentInfoSection document={currentDocument} />

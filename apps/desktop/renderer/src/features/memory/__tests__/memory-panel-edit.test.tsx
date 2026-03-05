@@ -100,12 +100,12 @@ describe("MemoryPanel edit", () => {
 
     await screen.findByText("动作场景偏好短句");
 
-    await user.click(screen.getByRole("button", { name: "修改" }));
+    await user.click(screen.getByRole("button", { name: "Edit" }));
 
-    const editor = await screen.findByLabelText("规则文本");
+    const editor = await screen.findByLabelText("Rule Text");
     await user.clear(editor);
     await user.type(editor, "动作场景偏好短句（修订）");
-    await user.click(screen.getByRole("button", { name: "保存修改" }));
+    await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
     await waitFor(() => {
       expect(invokeMock).toHaveBeenCalledWith(

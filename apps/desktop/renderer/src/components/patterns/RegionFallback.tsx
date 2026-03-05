@@ -1,10 +1,11 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "../primitives/Button";
 import { Text } from "../primitives/Text";
 
-const regionLabels: Record<string, string> = {
-  sidebar: "Sidebar",
-  editor: "Editor",
-  panel: "Panel",
+const regionLabelKeys: Record<string, string> = {
+  sidebar: "patterns.regionFallback.sidebar",
+  editor: "patterns.regionFallback.editor",
+  panel: "patterns.regionFallback.panel",
 };
 
 export interface RegionFallbackProps {
@@ -21,7 +22,8 @@ export function RegionFallback({
   errorMessage,
   onRetry,
 }: RegionFallbackProps): JSX.Element {
-  const label = regionLabels[region] ?? region;
+  const { t } = useTranslation();
+  const label = t(regionLabelKeys[region] ?? region);
 
   return (
     <div
@@ -29,7 +31,7 @@ export function RegionFallback({
       className="flex h-full w-full flex-col items-center justify-center gap-3 p-4 text-center"
     >
       <Text size="small" color="muted">
-        {label} encountered an error
+        {t("patterns.regionFallback.errorMessage", { label })}
       </Text>
       {errorMessage && (
         <Text size="small" color="placeholder" className="max-w-xs break-words">
@@ -44,7 +46,7 @@ export function RegionFallback({
           onClick={onRetry}
           data-testid={`region-fallback-retry-${region}`}
         >
-          Reload {label}
+          {t("patterns.regionFallback.reloadLabel", { label })}
         </Button>
       )}
     </div>

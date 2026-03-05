@@ -21,30 +21,30 @@ describe("MemoryCreateDialog", () => {
   // 渲染测试
   // ===========================================================================
   describe("渲染", () => {
-    it("打开时应该渲染 Dialog", () => {
+    it("to open时应该渲染 Dialog", () => {
       render(
         <MemoryCreateDialog
           open={true}
           onOpenChange={vi.fn()}
           scope="global"
-          scopeLabel="全局"
+          scopeLabel="Global"
         />,
       );
 
-      expect(screen.getByText("添加新记忆")).toBeInTheDocument();
+      expect(screen.getByText("Add New Memory")).toBeInTheDocument();
     });
 
-    it("关闭时不应该渲染内容", () => {
+    it("Close时不应该渲染内容", () => {
       render(
         <MemoryCreateDialog
           open={false}
           onOpenChange={vi.fn()}
           scope="global"
-          scopeLabel="全局"
+          scopeLabel="Global"
         />,
       );
 
-      expect(screen.queryByText("添加新记忆")).not.toBeInTheDocument();
+      expect(screen.queryByText("Add New Memory")).not.toBeInTheDocument();
     });
 
     it("应该显示当前 scope 的说明", () => {
@@ -53,11 +53,11 @@ describe("MemoryCreateDialog", () => {
           open={true}
           onOpenChange={vi.fn()}
           scope="project"
-          scopeLabel="项目"
+          scopeLabel="Project"
         />,
       );
 
-      expect(screen.getByText(/项目/)).toBeInTheDocument();
+      expect(screen.getByText(/Project/)).toBeInTheDocument();
     });
   });
 
@@ -65,13 +65,13 @@ describe("MemoryCreateDialog", () => {
   // 表单元素测试
   // ===========================================================================
   describe("表单元素", () => {
-    it("应该显示类型选择器", () => {
+    it("应该显示TypeSelect器", () => {
       render(
         <MemoryCreateDialog
           open={true}
           onOpenChange={vi.fn()}
           scope="global"
-          scopeLabel="全局"
+          scopeLabel="Global"
         />,
       );
 
@@ -84,25 +84,25 @@ describe("MemoryCreateDialog", () => {
           open={true}
           onOpenChange={vi.fn()}
           scope="global"
-          scopeLabel="全局"
+          scopeLabel="Global"
         />,
       );
 
       expect(screen.getByTestId("memory-create-content")).toBeInTheDocument();
     });
 
-    it("应该显示类型标签", () => {
+    it("应该显示Type标签", () => {
       render(
         <MemoryCreateDialog
           open={true}
           onOpenChange={vi.fn()}
           scope="global"
-          scopeLabel="全局"
+          scopeLabel="Global"
         />,
       );
 
-      expect(screen.getByText("记忆类型")).toBeInTheDocument();
-      expect(screen.getByText("记忆内容")).toBeInTheDocument();
+      expect(screen.getByText("Memory Type")).toBeInTheDocument();
+      expect(screen.getByText("Memory Content")).toBeInTheDocument();
     });
   });
 
@@ -110,32 +110,32 @@ describe("MemoryCreateDialog", () => {
   // 按钮测试
   // ===========================================================================
   describe("按钮", () => {
-    it("应该显示取消和保存按钮", () => {
+    it("应该显示to cancel和Save按钮", () => {
       render(
         <MemoryCreateDialog
           open={true}
           onOpenChange={vi.fn()}
           scope="global"
-          scopeLabel="全局"
+          scopeLabel="Global"
         />,
       );
 
-      expect(screen.getByText("取消")).toBeInTheDocument();
-      expect(screen.getByText("保存")).toBeInTheDocument();
+      expect(screen.getByText("Cancel")).toBeInTheDocument();
+      expect(screen.getByText("Save")).toBeInTheDocument();
     });
 
-    it("点击取消按钮应该调用 onOpenChange(false)", () => {
+    it("点击to cancel按钮应该调用 onOpenChange(false)", () => {
       const onOpenChange = vi.fn();
       render(
         <MemoryCreateDialog
           open={true}
           onOpenChange={onOpenChange}
           scope="global"
-          scopeLabel="全局"
+          scopeLabel="Global"
         />,
       );
 
-      const cancelButton = screen.getByText("取消");
+      const cancelButton = screen.getByText("Cancel");
       cancelButton.click();
 
       expect(onOpenChange).toHaveBeenCalledWith(false);
@@ -146,43 +146,43 @@ describe("MemoryCreateDialog", () => {
   // 不同 scope 测试
   // ===========================================================================
   describe("不同 scope", () => {
-    it("全局 scope 应该显示正确说明", () => {
+    it("Global scope 应该显示正确说明", () => {
       render(
         <MemoryCreateDialog
           open={true}
           onOpenChange={vi.fn()}
           scope="global"
-          scopeLabel="全局"
+          scopeLabel="Global"
         />,
       );
 
-      expect(screen.getByText(/全局/)).toBeInTheDocument();
+      expect(screen.getByText(/Global/)).toBeInTheDocument();
     });
 
-    it("项目 scope 应该显示正确说明", () => {
+    it("Project scope 应该显示正确说明", () => {
       render(
         <MemoryCreateDialog
           open={true}
           onOpenChange={vi.fn()}
           scope="project"
-          scopeLabel="项目"
+          scopeLabel="Project"
         />,
       );
 
-      expect(screen.getByText(/项目/)).toBeInTheDocument();
+      expect(screen.getByText(/Project/)).toBeInTheDocument();
     });
 
-    it("文档 scope 应该显示正确说明", () => {
+    it("Documents scope 应该显示正确说明", () => {
       render(
         <MemoryCreateDialog
           open={true}
           onOpenChange={vi.fn()}
           scope="document"
-          scopeLabel="文档"
+          scopeLabel="Documents"
         />,
       );
 
-      expect(screen.getByText(/文档/)).toBeInTheDocument();
+      expect(screen.getByText(/Documents/)).toBeInTheDocument();
     });
   });
 });

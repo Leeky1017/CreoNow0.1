@@ -1,10 +1,15 @@
-import { describe, it, expect, vi } from "vitest";
+import { beforeAll, describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import type { IpcError } from "@shared/types/ipc-generated";
 import { ExportDialog } from "./ExportDialog";
 import * as ipcClient from "../../lib/ipcClient";
+import { i18n } from "../../i18n";
+
+beforeAll(async () => {
+  await i18n.changeLanguage("en");
+});
 
 describe("ExportDialog", () => {
   it("renders config view with Markdown selected by default", () => {

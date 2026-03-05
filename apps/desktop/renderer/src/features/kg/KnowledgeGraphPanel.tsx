@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button, Card, Input, Select, Text } from "../../components/primitives";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
@@ -136,10 +137,11 @@ function ViewModeToggle(props: {
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
 }): JSX.Element {
+  const { t } = useTranslation();
   const entries: Array<{ mode: ViewMode; label: string }> = [
-    { mode: "graph", label: "Graph" },
-    { mode: "timeline", label: "Timeline" },
-    { mode: "list", label: "List" },
+    { mode: "graph", label: t('kg.panel.viewGraph') },
+    { mode: "timeline", label: t('kg.panel.viewTimeline') },
+    { mode: "list", label: t('kg.panel.viewList') },
   ];
   return (
     <div className="flex items-center gap-1">
@@ -147,6 +149,7 @@ function ViewModeToggle(props: {
         <button
           key={entry.mode}
           type="button"
+          data-testid={`kg-view-${entry.mode}`}
           onClick={() => props.onViewModeChange(entry.mode)}
           className={`px-2 py-1 text-xs rounded transition-colors ${
             props.viewMode === entry.mode
@@ -168,6 +171,7 @@ function ViewModeToggle(props: {
  * data for context injection. Graph view provides visual exploration.
  */
 export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
+  const { t } = useTranslation();
   const bootstrapStatus = useKgStore((s) => s.bootstrapStatus);
   const entities = useKgStore((s) => s.entities);
   const relations = useKgStore((s) => s.relations);
@@ -250,11 +254,10 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
 
   async function onDeleteEntity(entityId: string): Promise<void> {
     const confirmed = await confirm({
-      title: "Delete Entity?",
-      description:
-        "This entity and all its relations will be permanently deleted.",
-      primaryLabel: "Delete",
-      secondaryLabel: "Cancel",
+      title: t('kg.panel.deleteEntityTitle'),
+      description: t('kg.panel.deleteEntityDescription'),
+      primaryLabel: t('kg.panel.delete'),
+      secondaryLabel: t('kg.panel.cancel'),
     });
     if (!confirmed) {
       return;
@@ -272,10 +275,10 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
    */
   async function onDeleteRelation(relationId: string): Promise<void> {
     const confirmed = await confirm({
-      title: "Delete Relation?",
-      description: "This relation will be permanently deleted.",
-      primaryLabel: "Delete",
-      secondaryLabel: "Cancel",
+      title: t('kg.panel.deleteRelationTitle'),
+      description: t('kg.panel.deleteRelationDescription'),
+      primaryLabel: t('kg.panel.delete'),
+      secondaryLabel: t('kg.panel.cancel'),
     });
     if (!confirmed) {
       return;
@@ -527,7 +530,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
     const position = { x: 300, y: 200 };
 
     const res = await entityCreate({
-      name: "New Entity",
+      name: t('kg.panel.newEntity'),
       type: nodeTypeToEntityType(nodeType),
       description: "",
     });
@@ -609,7 +612,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
         {/* Header with view toggle */}
         <div className="flex items-center justify-between p-3 border-b border-[var(--color-separator)] shrink-0">
           <Text size="small" color="muted">
-            Knowledge Graph
+            {t('kg.panel.title')}
           </Text>
           <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
         </div>
@@ -630,7 +633,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                 onClick={clearError}
                 className="ml-auto"
               >
-                Dismiss
+                {t('kg.panel.dismiss')}
               </Button>
             </div>
             <Text size="small" className="mt-1.5 block">
@@ -668,7 +671,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
       >
         <div className="flex items-center justify-between p-3 border-b border-[var(--color-separator)] shrink-0">
           <Text size="small" color="muted">
-            Knowledge Graph
+            {t('kg.panel.title')}
           </Text>
           <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
         </div>
@@ -710,7 +713,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
     <section data-testid="sidebar-kg" className="flex flex-col gap-3 min-h-0">
       <div className="flex items-center justify-between p-3 border-b border-[var(--color-separator)]">
         <Text size="small" color="muted">
-          Knowledge Graph
+          {t('kg.panel.title')}
         </Text>
         <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
       </div>
@@ -730,7 +733,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
               onClick={clearError}
               className="ml-auto"
             >
-              Dismiss
+              {t('kg.panel.dismiss')}
             </Button>
           </div>
           <Text size="small" className="mt-1.5 block">
@@ -742,32 +745,32 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
       <div className="flex-1 overflow-auto min-h-0">
         <div className="p-3">
           <Text size="small" color="muted">
-            Entities
+            {t('kg.panel.entities')}
           </Text>
 
           <div className="flex flex-col gap-2 mt-2 pb-3 border-b border-[var(--color-separator)]">
             <Input
               data-testid="kg-entity-name"
-              placeholder="Name"
+              placeholder={t('kg.panel.namePlaceholder')}
               value={createName}
               onChange={(e) => setCreateName(e.target.value)}
               fullWidth
             />
             <Input
-              placeholder="Type (optional)"
+              placeholder={t('kg.panel.typePlaceholder')}
               value={createType}
               onChange={(e) => setCreateType(e.target.value)}
               fullWidth
             />
             <Input
-              placeholder="Description (optional)"
+              placeholder={t('kg.panel.descriptionPlaceholder')}
               value={createDescription}
               onChange={(e) => setCreateDescription(e.target.value)}
               fullWidth
             />
             <Input
               data-testid="kg-entity-aliases"
-              placeholder="Aliases (comma separated)"
+              placeholder={t('kg.panel.aliasesPlaceholder')}
               value={createAliasesInput}
               onChange={(e) => setCreateAliasesInput(e.target.value)}
               fullWidth
@@ -780,13 +783,13 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
               disabled={!isReady}
               className="self-start"
             >
-              Create entity
+              {t('kg.panel.createEntity')}
             </Button>
           </div>
 
           {entities.length === 0 ? (
             <Text size="small" color="muted" className="mt-3 block">
-              No entities yet.
+              {t('kg.panel.noEntities')}
             </Text>
           ) : (
             <div className="mt-3 flex flex-col gap-2">
@@ -841,7 +844,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                               lastSeenState: evt.target.value,
                             })
                           }
-                          placeholder="Last seen state (optional)"
+                          placeholder={t('kg.panel.lastSeenStatePlaceholder')}
                           fullWidth
                         />
                         <Input
@@ -891,14 +894,14 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                             size="sm"
                             onClick={() => void onSaveEdit()}
                           >
-                            Save
+                            {t('kg.panel.save')}
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => setEditing({ mode: "idle" })}
                           >
-                            Cancel
+                            {t('kg.panel.cancel')}
                           </Button>
                         </>
                       ) : (
@@ -919,7 +922,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                               })
                             }
                           >
-                            Edit
+                            {t('kg.panel.edit')}
                           </Button>
                           <Button
                             data-testid={`kg-entity-delete-${e.id}`}
@@ -927,7 +930,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                             size="sm"
                             onClick={() => void onDeleteEntity(e.id)}
                           >
-                            Delete
+                            {t('kg.panel.delete')}
                           </Button>
                         </>
                       )}
@@ -940,7 +943,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
 
           <div className="mt-4">
             <Text size="small" color="muted">
-              Relations
+              {t('kg.panel.relations')}
             </Text>
 
             <div className="mt-2 flex flex-col gap-2 pb-3 border-b border-[var(--color-separator)]">
@@ -955,7 +958,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                     type: e.type,
                   }),
                 }))}
-                placeholder="Select entity..."
+                placeholder={t('kg.panel.selectEntityPlaceholder')}
                 fullWidth
               />
 
@@ -970,13 +973,13 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                     type: e.type,
                   }),
                 }))}
-                placeholder="Select entity..."
+                placeholder={t('kg.panel.selectEntityPlaceholder')}
                 fullWidth
               />
 
               <Input
                 data-testid="kg-relation-type"
-                placeholder="Relation type (e.g. knows)"
+                placeholder={t('kg.panel.relationTypePlaceholder')}
                 value={relType}
                 onChange={(e) => setRelType(e.target.value)}
                 disabled={!isReady}
@@ -991,13 +994,13 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                 disabled={!isReady}
                 className="self-start"
               >
-                Create relation
+                {t('kg.panel.createRelation')}
               </Button>
             </div>
 
             {relations.length === 0 ? (
               <Text size="small" color="muted" className="mt-3 block">
-                No relations yet.
+                {t('kg.panel.noRelations')}
               </Text>
             ) : (
               <div className="mt-3 flex flex-col gap-2">
@@ -1038,14 +1041,14 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                               size="sm"
                               onClick={() => void onSaveEdit()}
                             >
-                              Save
+                              {t('kg.panel.save')}
                             </Button>
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => setEditing({ mode: "idle" })}
                             >
-                              Cancel
+                              {t('kg.panel.cancel')}
                             </Button>
                           </>
                         ) : (
@@ -1061,7 +1064,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                               })
                               }
                             >
-                              Edit
+                              {t('kg.panel.edit')}
                             </Button>
                             <Button
                               data-testid={`kg-relation-delete-${r.id}`}
@@ -1071,7 +1074,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                                 void onDeleteRelation(r.id)
                               }
                             >
-                              Delete
+                              {t('kg.panel.delete')}
                             </Button>
                           </>
                         )}

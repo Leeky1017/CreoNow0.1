@@ -70,7 +70,7 @@ describe("Dashboard search (PM1-S8)", () => {
     await user.type(searchInput, "不存在");
 
     await waitFor(() => {
-      expect(screen.getByText("未找到匹配结果")).toBeInTheDocument();
+      expect(screen.getByText("No matching results")).toBeInTheDocument();
     });
   });
 });

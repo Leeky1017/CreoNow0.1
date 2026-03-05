@@ -144,9 +144,9 @@ describe("ProjectSwitcher", () => {
 
     fireEvent.click(screen.getByTestId("project-switcher-trigger"));
 
-    expect(screen.getByText("暂无项目")).toBeInTheDocument();
+    expect(screen.getByText("No projects")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "创建新项目" }),
+      screen.getByRole("button", { name: "Create New Project" }),
     ).toBeInTheDocument();
   });
 

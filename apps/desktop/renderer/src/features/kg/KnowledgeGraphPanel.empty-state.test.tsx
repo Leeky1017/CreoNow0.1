@@ -48,10 +48,10 @@ describe("KnowledgeGraphPanel.empty-state", () => {
     render(<KnowledgeGraphPanel projectId="project-empty" />);
 
     expect(
-      screen.getByText("暂无实体，点击添加你的第一个角色或地点"),
+      screen.getByText("No entities yet. Click to add your first character or location"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "添加节点" }),
-    ).toBeInTheDocument();
+      screen.getAllByRole("button", { name: "Add Node" }).length,
+    ).toBeGreaterThanOrEqual(1);
   });
 });

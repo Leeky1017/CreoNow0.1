@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 /**
  * ZenModeStatus props
  */
@@ -37,8 +39,7 @@ export function ZenModeStatus({
   readTimeMinutes,
   currentTime,
 }: ZenModeStatusProps): JSX.Element {
-  // Format word count with comma separators
-  const formattedWordCount = wordCount.toLocaleString();
+  const { t } = useTranslation();
 
   return (
     <div
@@ -67,7 +68,7 @@ export function ZenModeStatus({
             color: "var(--color-fg-muted)",
           }}
         >
-          {formattedWordCount} words
+          {t('zenMode.status.wordCount', { count: wordCount })}
         </span>
 
         <StatusDot />
@@ -95,7 +96,7 @@ export function ZenModeStatus({
             color: "var(--color-fg-muted)",
           }}
         >
-          {readTimeMinutes} min read
+          {t('zenMode.status.readTime', { minutes: readTimeMinutes })}
         </span>
 
         {/* Current time (optional) */}

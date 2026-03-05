@@ -5,6 +5,7 @@
  * Provides a two-step selection flow: select character, then select relationship type.
  */
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Popover, Button, Avatar } from "../../components/primitives";
 import type {
   Character,
@@ -78,6 +79,7 @@ export function AddRelationshipPopover({
   portalContainer,
   layer = "popover",
 }: AddRelationshipPopoverProps): JSX.Element {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const [selectedCharacter, setSelectedCharacter] =
     React.useState<Character | null>(null);
@@ -156,7 +158,7 @@ export function AddRelationshipPopover({
             className="text-[10px] text-[var(--color-info)] hover:text-[var(--color-info)]/80 flex items-center gap-1 font-medium transition-colors"
           >
             <PlusIcon />
-            Add Relation
+            {t('character.addRelation.triggerLabel')}
           </button>
         )
       }
@@ -167,14 +169,14 @@ export function AddRelationshipPopover({
         {/* Header */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
           <h3 className="text-sm font-medium text-[var(--color-fg-default)]">
-            Add Relationship
+            {t('character.addRelation.title')}
           </h3>
         </div>
 
         {/* Character Selection */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
           <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold mb-2">
-            Select Character
+            {t('character.addRelation.selectCharacter')}
           </div>
           {selectableCharacters.length > 0 ? (
             <div className="space-y-1 max-h-[160px] overflow-y-auto -mx-2 px-2">
@@ -223,7 +225,7 @@ export function AddRelationshipPopover({
             </div>
           ) : (
             <div className="text-xs text-[var(--color-fg-placeholder)] py-4 text-center">
-              No characters available
+              {t('character.addRelation.noCharacters')}
             </div>
           )}
         </div>
@@ -231,7 +233,7 @@ export function AddRelationshipPopover({
         {/* Relationship Type Selection */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
           <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold mb-2">
-            Relationship Type
+            {t('character.addRelation.relationshipType')}
           </div>
           <div className="flex flex-wrap gap-2">
             {RELATIONSHIP_TYPES.map((type) => {
@@ -265,7 +267,7 @@ export function AddRelationshipPopover({
         {/* Footer */}
         <div className="px-4 py-3 flex justify-end gap-2">
           <Button variant="ghost" size="sm" onClick={handleClose}>
-            Cancel
+            {t('character.addRelation.cancel')}
           </Button>
           <Button
             variant="primary"
@@ -273,7 +275,7 @@ export function AddRelationshipPopover({
             onClick={handleAdd}
             disabled={!canAdd}
           >
-            Add
+            {t('character.addRelation.add')}
           </Button>
         </div>
       </div>

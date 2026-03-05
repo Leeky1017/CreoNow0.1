@@ -5,6 +5,7 @@
  * Displays all available roles (Protagonist, Antagonist, etc.) with color-coded options.
  */
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Popover } from "../../components/primitives";
 import type { CharacterRole } from "./types";
 import { ROLE_DISPLAY } from "./types";
@@ -54,6 +55,7 @@ export function RoleSelector({
   portalContainer,
   layer = "popover",
 }: RoleSelectorProps): JSX.Element {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const currentRole = ROLE_DISPLAY[value];
 
@@ -96,7 +98,7 @@ export function RoleSelector({
     >
       <div className="min-w-[160px] py-1 -mx-2 -my-2">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
-          Select Role
+          {t('character.roleSelector.selectRole')}
         </div>
         {ROLE_OPTIONS.map((role) => {
           const config = ROLE_DISPLAY[role];

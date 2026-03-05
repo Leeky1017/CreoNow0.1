@@ -58,6 +58,6 @@ describe("SettingsGeneral language selector", () => {
 
     // getLanguagePreference mock returns "zh-CN", so the Select should
     // display the matching label from languageOptions.
-    expect(screen.getByText("中文 (简体)")).toBeInTheDocument();
+    expect(screen.getByText("Chinese (Simplified)")).toBeInTheDocument();
   });
 });

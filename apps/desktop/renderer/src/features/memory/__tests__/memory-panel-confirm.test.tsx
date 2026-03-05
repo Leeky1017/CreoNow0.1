@@ -100,7 +100,7 @@ describe("MemoryPanel confirm", () => {
 
     await screen.findByText("动作场景偏好短句");
 
-    await user.click(screen.getByRole("button", { name: "确认" }));
+    await user.click(screen.getByRole("button", { name: "Confirm" }));
 
     await waitFor(() => {
       expect(invokeMock).toHaveBeenCalledWith(

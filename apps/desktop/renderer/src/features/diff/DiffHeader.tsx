@@ -1,5 +1,6 @@
 import { ArrowRight, ChevronDown, ChevronUp, Clock, X } from "lucide-react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Tooltip } from "../../components/primitives/Tooltip";
 
 /**
@@ -48,6 +49,7 @@ type DiffHeaderProps = {
  * DiffHeader provides version selection, view mode toggle, and change navigation.
  */
 export function DiffHeader(props: DiffHeaderProps): JSX.Element {
+  const { t } = useTranslation();
   const [beforeDropdownOpen, setBeforeDropdownOpen] = React.useState(false);
 
   const selectedBefore = props.versions.find(
@@ -70,7 +72,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
           >
             {/* Clock icon */}
             <Clock size={16} strokeWidth={1.5} />
-            <span>{selectedBefore?.label ?? "Select version"}</span>
+            <span>{selectedBefore?.label ?? t('diff.header.selectVersion')}</span>
             {/* Caret down */}
             <ChevronDown size={16} strokeWidth={1.5} className="text-[var(--color-fg-subtle)]" />
           </button>
@@ -85,7 +87,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               />
               <div className="absolute top-full left-0 mt-2 w-64 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-lg shadow-[0_18px_48px_var(--color-shadow)] z-[var(--z-popover)] p-1 overflow-hidden">
                 <div className="px-3 py-2 text-[10px] text-[var(--color-fg-subtle)] uppercase tracking-wider font-medium">
-                  History
+                  {t('diff.header.history')}
                 </div>
                 {props.versions
                   .filter((v) => v.id !== "current")
@@ -119,8 +121,8 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
                           </div>
                           <div className="text-[10px] text-[var(--color-fg-subtle)]">
                             {version.type === "auto"
-                              ? "Auto-saved"
-                              : "Manual save"}
+                              ? t('diff.header.autoSaved')
+                              : t('diff.header.manualSave')}
                           </div>
                         </div>
                       </button>
@@ -141,7 +143,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
         >
           {/* Green dot */}
           <div className="w-2 h-2 rounded-full bg-[var(--color-success)] shadow-[0_0_8px_var(--color-success-subtle)]" />
-          <span>{selectedAfter?.label ?? "Current Version"}</span>
+          <span>{selectedAfter?.label ?? t('diff.header.currentVersion')}</span>
           <ChevronDown size={16} strokeWidth={1.5} className="text-[var(--color-fg-subtle)]" />
         </button>
       </div>
@@ -162,7 +164,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               }
             `}
           >
-            Split
+            {t('diff.header.split')}
           </button>
           <button
             type="button"
@@ -176,7 +178,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               }
             `}
           >
-            Unified
+            {t('diff.header.unified')}
           </button>
         </div>
 
@@ -185,34 +187,34 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
 
         {/* Change navigation */}
         <div className="flex items-center gap-2">
-          <Tooltip content="Previous Change">
+          <Tooltip content={t('diff.header.previousChange')}>
             <button
               type="button"
               onClick={props.onPreviousChange}
               disabled={props.currentChangeIndex <= 0}
               className="w-8 h-8 flex items-center justify-center rounded hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Previous Change"
+              aria-label={t('diff.header.previousChange')}
             >
               <ChevronUp size={16} strokeWidth={1.5} />
             </button>
           </Tooltip>
           <span className="text-xs font-[var(--font-family-mono)] text-[var(--color-fg-muted)] px-2">
-            Change{" "}
+            {t('diff.header.changeLabel')}{" "}
             <span className="text-[var(--color-fg-default)]">
               {props.totalChanges > 0 ? props.currentChangeIndex + 1 : 0}
             </span>{" "}
-            of{" "}
+            {t('diff.header.of')}{" "}
             <span className="text-[var(--color-fg-default)]">
               {props.totalChanges}
             </span>
           </span>
-          <Tooltip content="Next Change">
+          <Tooltip content={t('diff.header.nextChange')}>
             <button
               type="button"
               onClick={props.onNextChange}
               disabled={props.currentChangeIndex >= props.totalChanges - 1}
               className="w-8 h-8 flex items-center justify-center rounded hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Next Change"
+              aria-label={t('diff.header.nextChange')}
             >
               <ChevronDown size={16} strokeWidth={1.5} />
             </button>

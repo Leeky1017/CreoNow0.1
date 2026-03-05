@@ -94,7 +94,7 @@ describe("MemoryPanel", () => {
     render(<MemoryPanel />);
 
     expect(
-      await screen.findByText("AI 正在学习你的写作偏好，使用越多越精准"),
+      await screen.findByText("AI is learning your writing preferences — the more you use it, the more accurate it becomes"),
     ).toBeInTheDocument();
   });
 

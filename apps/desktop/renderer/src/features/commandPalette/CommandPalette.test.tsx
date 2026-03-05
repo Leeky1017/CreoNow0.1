@@ -94,13 +94,13 @@ function createSpecCategoryCommands(): CommandItem[] {
     },
     {
       id: "command-open-third",
-      label: "打开第三章",
+      label: "to open第三章",
       group: "command",
       onSelect: vi.fn(),
     },
     {
       id: "command-open-settings",
-      label: "打开设置",
+      label: "Open Settings",
       group: "command",
       onSelect: vi.fn(),
     },
@@ -155,7 +155,7 @@ describe("CommandPalette", () => {
       expect(screen.queryByTestId("command-palette")).not.toBeInTheDocument();
     });
 
-    it("应该显示搜索输入框", () => {
+    it("应该显示Search输入框", () => {
       const commands = createMockCommands();
       render(
         <CommandPalette
@@ -166,7 +166,7 @@ describe("CommandPalette", () => {
       );
 
       expect(
-        screen.getByPlaceholderText("搜索命令或文件..."),
+        screen.getByPlaceholderText("Search commands or files..."),
       ).toBeInTheDocument();
     });
 
@@ -180,12 +180,12 @@ describe("CommandPalette", () => {
         />,
       );
 
-      expect(screen.getByText("导航")).toBeInTheDocument();
-      expect(screen.getByText("选择")).toBeInTheDocument();
-      expect(screen.getByText("关闭")).toBeInTheDocument();
+      expect(screen.getByText("Navigate")).toBeInTheDocument();
+      expect(screen.getByText("Select")).toBeInTheDocument();
+      expect(screen.getByText("Close")).toBeInTheDocument();
     });
 
-    it("应该显示分组标题", () => {
+    it("应该显示分组Title", () => {
       const commands = createMockCommands();
       render(
         <CommandPalette
@@ -199,7 +199,7 @@ describe("CommandPalette", () => {
       expect(screen.getByText("Recent Files")).toBeInTheDocument();
     });
 
-    it("应该显示命令项", () => {
+    it("应该显示Command项", () => {
       const commands = createMockCommands();
       render(
         <CommandPalette
@@ -228,7 +228,7 @@ describe("CommandPalette", () => {
       expect(screen.getByText("⌘B")).toBeInTheDocument();
     });
 
-    it("应该显示子文本（文件路径）", () => {
+    it("应该显示子文本（Files路径）", () => {
       const commands = createMockCommands();
       render(
         <CommandPalette
@@ -241,7 +241,7 @@ describe("CommandPalette", () => {
       expect(screen.getByText("src/components")).toBeInTheDocument();
     });
 
-    it("默认命令应包含 Version History 入口", () => {
+    it("默认Command应包含 Version History 入口", () => {
       render(
         <CommandPalette
           open={true}
@@ -310,7 +310,7 @@ describe("CommandPalette", () => {
       expect(screen.getByRole("listbox")).toBeInTheDocument();
     });
 
-    it("命令项应该有 option role", () => {
+    it("Command项应该有 option role", () => {
       const commands = createMockCommands();
       render(
         <CommandPalette
@@ -326,10 +326,10 @@ describe("CommandPalette", () => {
   });
 
   // ===========================================================================
-  // 搜索过滤测试
+  // Search过滤测试
   // ===========================================================================
-  describe("搜索过滤", () => {
-    it("输入搜索词应该过滤命令", async () => {
+  describe("Search过滤", () => {
+    it("输入Search词应该过滤Command", async () => {
       const user = userEvent.setup();
       const commands = createMockCommands();
       render(
@@ -340,10 +340,10 @@ describe("CommandPalette", () => {
         />,
       );
 
-      const input = screen.getByPlaceholderText("搜索命令或文件...");
+      const input = screen.getByPlaceholderText("Search commands or files...");
       await user.type(input, "setting");
 
-      // 应该只显示包含 "setting" 的命令（使用 testid 因为高亮会分割文本）
+      // 应该只显示包含 "setting" 的Command（使用 testid 因为高亮会分割文本）
       expect(
         screen.getByTestId("command-item-open-settings"),
       ).toBeInTheDocument();
@@ -355,7 +355,7 @@ describe("CommandPalette", () => {
       ).not.toBeInTheDocument();
     });
 
-    it("搜索应该不区分大小写", async () => {
+    it("Search应该不区分大小写", async () => {
       const user = userEvent.setup();
       const commands = createMockCommands();
       render(
@@ -366,7 +366,7 @@ describe("CommandPalette", () => {
         />,
       );
 
-      const input = screen.getByPlaceholderText("搜索命令或文件...");
+      const input = screen.getByPlaceholderText("Search commands or files...");
       await user.type(input, "SETTING");
 
       // 使用 testid 因为高亮会分割文本
@@ -375,7 +375,7 @@ describe("CommandPalette", () => {
       ).toBeInTheDocument();
     });
 
-    it("搜索子文本（文件路径）", async () => {
+    it("Search子文本（Files路径）", async () => {
       const user = userEvent.setup();
       const commands = createMockCommands();
       render(
@@ -386,7 +386,7 @@ describe("CommandPalette", () => {
         />,
       );
 
-      const input = screen.getByPlaceholderText("搜索命令或文件...");
+      const input = screen.getByPlaceholderText("Search commands or files...");
       await user.type(input, "src/components");
 
       expect(screen.getByTestId("command-item-file-app")).toBeInTheDocument();
@@ -406,13 +406,13 @@ describe("CommandPalette", () => {
         />,
       );
 
-      const input = screen.getByPlaceholderText("搜索命令或文件...");
+      const input = screen.getByPlaceholderText("Search commands or files...");
       await user.type(input, "xyznonexistent");
 
-      expect(screen.getByText("未找到匹配结果")).toBeInTheDocument();
+      expect(screen.getByText("No matching results")).toBeInTheDocument();
     });
 
-    it("空查询时应仅展示最近使用和命令，不展示文件分组", () => {
+    it("空查询时应仅展示Recently Used和Command，不展示Files分组", () => {
       const commands = createSpecCategoryCommands();
       render(
         <CommandPalette
@@ -422,15 +422,15 @@ describe("CommandPalette", () => {
         />,
       );
 
-      expect(screen.getByText("最近使用")).toBeInTheDocument();
-      expect(screen.getByText("命令")).toBeInTheDocument();
-      expect(screen.queryByText("文件")).not.toBeInTheDocument();
+      expect(screen.getByText("Recent")).toBeInTheDocument();
+      expect(screen.getByText("Command")).toBeInTheDocument();
+      expect(screen.queryByText("File")).not.toBeInTheDocument();
       expect(
         screen.queryByTestId("command-item-file-third"),
       ).not.toBeInTheDocument();
     });
 
-    it("输入后应展示匹配的文件和命令分组", async () => {
+    it("输入后应展示匹配的Files和Command分组", async () => {
       const user = userEvent.setup();
       const commands = createSpecCategoryCommands();
       render(
@@ -441,11 +441,11 @@ describe("CommandPalette", () => {
         />,
       );
 
-      const input = screen.getByPlaceholderText("搜索命令或文件...");
+      const input = screen.getByPlaceholderText("Search commands or files...");
       await user.type(input, "第三章");
 
-      expect(screen.getByText("文件")).toBeInTheDocument();
-      expect(screen.getByText("命令")).toBeInTheDocument();
+      expect(screen.getByText("File")).toBeInTheDocument();
+      expect(screen.getByText("Command")).toBeInTheDocument();
       expect(screen.getByTestId("command-item-file-third")).toBeInTheDocument();
       expect(
         screen.getByTestId("command-item-command-open-third"),
@@ -457,7 +457,7 @@ describe("CommandPalette", () => {
   });
 
   describe("分页", () => {
-    it("查询结果超过 100 项时首屏只显示 100 项并可滚动加载下一批", async () => {
+    it("查询Result超过 100 项时首屏只显示 100 项并可滚动加载下一批", async () => {
       const user = userEvent.setup();
       const commands = createManyCommands(250);
       render(
@@ -468,7 +468,7 @@ describe("CommandPalette", () => {
         />,
       );
 
-      const input = screen.getByPlaceholderText("搜索命令或文件...");
+      const input = screen.getByPlaceholderText("Search commands or files...");
       await user.type(input, "Command");
 
       const listbox = screen.getByRole("listbox");
@@ -499,9 +499,9 @@ describe("CommandPalette", () => {
   });
 
   // ===========================================================================
-  // 键盘导航测试
+  // 键盘to navigate测试
   // ===========================================================================
-  describe("键盘导航", () => {
+  describe("键盘to navigate", () => {
     it("按 ↓ 应该移动到下一项", () => {
       const commands = createMockCommands();
       render(
@@ -599,7 +599,7 @@ describe("CommandPalette", () => {
       expect(lastItem).toHaveAttribute("aria-selected", "true");
     });
 
-    it("按 Enter 应该执行选中的命令", () => {
+    it("按 Enter 应该执行选中的Command", () => {
       const commands = createMockCommands();
       render(
         <CommandPalette
@@ -616,7 +616,7 @@ describe("CommandPalette", () => {
       expect(commands[0].onSelect).toHaveBeenCalled();
     });
 
-    it("按 Escape 应该关闭面板", () => {
+    it("按 Escape 应该ClosePanel", () => {
       const onOpenChange = vi.fn();
       const commands = createMockCommands();
       render(
@@ -656,7 +656,7 @@ describe("CommandPalette", () => {
       }
     });
 
-    it("点击弹窗内部不应关闭", () => {
+    it("点击弹窗内部不应Close", () => {
       const onOpenChange = vi.fn();
       const commands = createMockCommands();
       render(
@@ -673,7 +673,7 @@ describe("CommandPalette", () => {
       expect(onOpenChange).not.toHaveBeenCalled();
     });
 
-    it("点击命令项应该执行命令", () => {
+    it("点击Command项应该执行Command", () => {
       const commands = createMockCommands();
       render(
         <CommandPalette
@@ -716,7 +716,7 @@ describe("CommandPalette", () => {
   // Active 指示器测试
   // ===========================================================================
   describe("Active 指示器", () => {
-    it("active 项应该有左侧蓝色指示器", () => {
+    it("active 项应该有左侧Blue指示器", () => {
       const commands = createMockCommands();
       render(
         <CommandPalette
@@ -736,15 +736,15 @@ describe("CommandPalette", () => {
   });
 
   // ===========================================================================
-  // 空列表测试
+  // 空List测试
   // ===========================================================================
-  describe("空列表", () => {
-    it("空命令列表应该显示空状态", () => {
+  describe("空List", () => {
+    it("空CommandList应该显示空状态", () => {
       render(
         <CommandPalette open={true} onOpenChange={vi.fn()} commands={[]} />,
       );
 
-      expect(screen.getByText("未找到匹配结果")).toBeInTheDocument();
+      expect(screen.getByText("No matching results")).toBeInTheDocument();
     });
   });
 

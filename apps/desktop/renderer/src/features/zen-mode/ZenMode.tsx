@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ZenModeStatus } from "./ZenModeStatus";
 import { useHotkey } from "../../lib/hotkeys/useHotkey";
 
@@ -76,6 +77,7 @@ export function ZenMode({
   stats,
   currentTime,
 }: ZenModeProps): JSX.Element | null {
+  const { t } = useTranslation();
   // Handle ESC key to exit (via unified HotkeyManager)
   useHotkey(
     "zen:exit",
@@ -125,7 +127,7 @@ export function ZenMode({
             className="text-[var(--zen-label-size)] tracking-wide opacity-60"
             style={{ color: "var(--color-fg-placeholder)" }}
           >
-            Press Esc to exit
+            {t('zenMode.pressEscToExit')}
           </span>
           <button
             data-testid="zen-exit-button"
@@ -144,7 +146,7 @@ export function ZenMode({
               e.currentTarget.style.color = "var(--color-fg-muted)";
               e.currentTarget.style.backgroundColor = "transparent";
             }}
-            aria-label="Exit zen mode"
+            aria-label={t('zenMode.exitAriaLabel')}
           >
             <X size={20} strokeWidth={1.5} />
           </button>
@@ -160,7 +162,7 @@ export function ZenMode({
           className="text-[var(--zen-label-size)] tracking-wide opacity-40"
           style={{ color: "var(--color-fg-placeholder)" }}
         >
-          Press Esc or F11 to exit
+          {t('zenMode.pressEscOrF11ToExit')}
         </span>
       </div>
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import type { IpcChannelSpec } from "@shared/types/ipc-generated";
 import { invoke } from "../../lib/ipcClient";
@@ -25,6 +26,7 @@ function formatState(state: JudgeModelState): string {
  * Why: P0 requires a stable, E2E-testable status + ensure entry without silent failure.
  */
 export function JudgeSection(): JSX.Element {
+  const { t } = useTranslation();
   const [state, setState] = React.useState<JudgeModelState | null>(null);
   const [errorText, setErrorText] = React.useState<string | null>(null);
   const {
@@ -97,12 +99,12 @@ export function JudgeSection(): JSX.Element {
       className="p-3 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)]"
     >
       <Heading level="h4" className="mb-1.5 font-bold">
-        Judge model
+        {t('settings.judge.title')}
       </Heading>
       <Text size="small" color="muted" as="div" className="mb-2.5">
-        Status:{" "}
+        {t('settings.judge.status')}{" "}
         <Text data-testid="judge-status" size="small" color="default" as="span">
-          {viewState ? formatState(viewState) : "loading"}
+          {viewState ? formatState(viewState) : t('settings.judge.loading')}
         </Text>
       </Text>
 
@@ -116,7 +118,7 @@ export function JudgeSection(): JSX.Element {
           loading={ensureBusy}
           className="bg-[var(--color-bg-selected)]"
         >
-          Ensure
+          {t('settings.judge.ensure')}
         </Button>
 
         {displayError ? (

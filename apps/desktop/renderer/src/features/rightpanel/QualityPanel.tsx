@@ -1,4 +1,6 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 import type { IpcChannelSpec, IpcError } from "@shared/types/ipc-generated";
 import { Card } from "../../components/primitives/Card";
@@ -24,19 +26,19 @@ type ConstraintsData =
 /**
  * Format judge state into a human-readable label with status indicator.
  */
-function formatJudgeState(state: JudgeModelState): {
+function formatJudgeState(state: JudgeModelState, t: TFunction): {
   label: string;
   status: "ready" | "downloading" | "error" | "not_ready";
 } {
   switch (state.status) {
     case "ready":
-      return { label: "Ready", status: "ready" };
+      return { label: t('rightPanel.quality.ready'), status: "ready" };
     case "downloading":
-      return { label: "Downloading...", status: "downloading" };
+      return { label: t('rightPanel.quality.downloading'), status: "downloading" };
     case "not_ready":
-      return { label: "Not ready", status: "not_ready" };
+      return { label: t('rightPanel.quality.notReady'), status: "not_ready" };
     case "error":
-      return { label: `Error (${state.error.code})`, status: "error" };
+      return { label: t('rightPanel.quality.errorWithCode', { code: state.error.code }), status: "error" };
   }
 }
 
@@ -77,6 +79,7 @@ function JudgeStatusSection(props: {
   onEnsure: () => void;
   ensureBusy: boolean;
 }): JSX.Element {
+  const { t } = useTranslation();
   const { state, error, loading, onEnsure, ensureBusy } = props;
 
   if (loading) {
@@ -86,7 +89,7 @@ function JudgeStatusSection(props: {
           <div className="flex items-center gap-2">
             <StatusDot status="loading" />
             <Text size="small" color="muted">
-              Loading judge status...
+              {t('rightPanel.quality.loadingJudgeStatus')}
             </Text>
           </div>
         </div>
@@ -120,13 +123,13 @@ function JudgeStatusSection(props: {
     return (
       <Card className="p-3 rounded-[var(--radius-md)]">
         <Text size="small" color="muted">
-          Judge status unavailable
+          {t('rightPanel.quality.judgeStatusUnavailable')}
         </Text>
       </Card>
     );
   }
 
-  const { label, status } = formatJudgeState(state);
+  const { label, status } = formatJudgeState(state, t);
 
   return (
     <Card className="p-3 rounded-[var(--radius-md)]">
@@ -134,9 +137,10 @@ function JudgeStatusSection(props: {
         <div className="flex items-center gap-2">
           <StatusDot status={status} />
           <Text size="small" color="default">
-            Judge Model:{" "}
+            {t('rightPanel.quality.judgeModelLabel')}{" "}
             <span
               data-testid="quality-panel-judge-status"
+              data-status={status}
               className="font-medium"
             >
               {label}
@@ -152,7 +156,7 @@ function JudgeStatusSection(props: {
             disabled={ensureBusy}
             loading={ensureBusy}
           >
-            {status === "not_ready" ? "Initialize" : "Retry"}
+            {status === "not_ready" ? t('rightPanel.quality.initialize') : t('rightPanel.quality.retry')}
           </Button>
         )}
       </div>
@@ -168,13 +172,14 @@ function ConstraintsSection(props: {
   error: IpcError | null;
   loading: boolean;
 }): JSX.Element {
+  const { t } = useTranslation();
   const { constraints, error, loading } = props;
 
   if (loading) {
     return (
       <Card className="p-3 rounded-[var(--radius-md)]">
         <Text size="small" color="muted">
-          Loading constraints...
+          {t('rightPanel.quality.loadingConstraints')}
         </Text>
       </Card>
     );
@@ -203,12 +208,12 @@ function ConstraintsSection(props: {
     <Card className="p-3 rounded-[var(--radius-md)]">
       <div className="flex items-center justify-between">
         <Text size="small" color="default">
-          Constraints:{" "}
+          {t('rightPanel.quality.constraintsLabel')}{" "}
           <span
             data-testid="quality-panel-constraints-count"
             className="font-medium"
           >
-            {count} {count === 1 ? "rule" : "rules"}
+            {t('rightPanel.quality.rulesCount', { count })}
           </span>
         </Text>
       </div>
@@ -224,7 +229,7 @@ function ConstraintsSection(props: {
           ))}
           {count > 5 && (
             <span className="inline-block px-2 py-0.5 text-[10px] rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]">
-              +{count - 5} more
+              {t('rightPanel.quality.moreCount', { count: count - 5 })}
             </span>
           )}
         </div>
@@ -242,6 +247,7 @@ function ConstraintsSection(props: {
 function buildCheckGroups(
   judgeState: JudgeModelState | null,
   constraints: ConstraintsData | null,
+  t: TFunction,
 ): CheckGroup[] {
   const groups: CheckGroup[] = [];
 
@@ -258,14 +264,14 @@ function buildCheckGroups(
 
     groups.push({
       id: "system",
-      name: "System",
+      name: t('rightPanel.quality.systemGroup'),
       checks: [
         {
           id: "judge-model",
-          name: "Judge Model",
-          description: "Local AI model for quality evaluation",
+          name: t('rightPanel.quality.judgeModelCheck'),
+          description: t('rightPanel.quality.judgeModelDescription'),
           status: judgeStatus,
-          resultValue: judgeState.status === "ready" ? "Available" : undefined,
+          resultValue: judgeState.status === "ready" ? t('rightPanel.quality.available') : undefined,
         },
       ],
     });
@@ -276,14 +282,14 @@ function buildCheckGroups(
     const constraintCount = constraints.items.length;
     groups.push({
       id: "constraints",
-      name: "Writing Constraints",
+      name: t('rightPanel.quality.writingConstraints'),
       checks: [
         {
           id: "active-constraints",
-          name: "Active Constraints",
-          description: "Custom writing rules for this project",
+          name: t('rightPanel.quality.activeConstraints'),
+          description: t('rightPanel.quality.activeConstraintsDescription'),
           status: constraintCount > 0 ? "passed" : "warning",
-          resultValue: `${constraintCount} ${constraintCount === 1 ? "rule" : "rules"} defined`,
+          resultValue: t('rightPanel.quality.rulesDefinedCount', { count: constraintCount }),
         },
       ],
     });
@@ -341,6 +347,7 @@ function derivePanelStatus(
  * ```
  */
 export function QualityPanel(): JSX.Element {
+  const { t } = useTranslation();
   const projectId = useProjectStore((s) => s.current?.projectId ?? null);
 
   // Judge model state
@@ -451,7 +458,7 @@ export function QualityPanel(): JSX.Element {
   const effectiveJudgeError = ensureError ?? judgeError;
 
   // Build check groups and panel status
-  const checkGroups = buildCheckGroups(effectiveJudgeState, constraints);
+  const checkGroups = buildCheckGroups(effectiveJudgeState, constraints, t);
   const panelStatus = derivePanelStatus(
     effectiveJudgeState,
     effectiveJudgeError,
@@ -474,7 +481,7 @@ export function QualityPanel(): JSX.Element {
         className="flex flex-col gap-4 p-4 h-full overflow-auto"
       >
         <Heading level="h3" className="font-bold text-[15px]">
-          Quality
+          {t('rightPanel.quality.panelTitle')}
         </Heading>
 
         <Card className="p-4 rounded-[var(--radius-md)]">
@@ -484,13 +491,13 @@ export function QualityPanel(): JSX.Element {
             color="muted"
             className="text-center"
           >
-            No project selected
+            {t('rightPanel.quality.noProjectSelected')}
           </Text>
         </Card>
 
         <section>
           <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-            Judge Model
+            {t('rightPanel.quality.judgeModelHeading')}
           </Heading>
           <JudgeStatusSection
             state={effectiveJudgeState}
@@ -510,7 +517,7 @@ export function QualityPanel(): JSX.Element {
       <div className="p-4 space-y-4 border-b border-[var(--color-separator)]">
         <section>
           <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-            Judge Model
+            {t('rightPanel.quality.judgeModelHeading')}
           </Heading>
           <JudgeStatusSection
             state={effectiveJudgeState}
@@ -523,7 +530,7 @@ export function QualityPanel(): JSX.Element {
 
         <section>
           <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-            Project Constraints
+            {t('rightPanel.quality.projectConstraints')}
           </Heading>
           <ConstraintsSection
             constraints={constraints}

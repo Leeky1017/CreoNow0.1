@@ -1,4 +1,6 @@
 import { Search, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
 import { Button } from "../primitives/Button";
 
 // =============================================================================
@@ -106,11 +108,14 @@ export function SearchInput({
   value,
   onChange,
   onClear,
-  placeholder = "Search...",
+  placeholder,
   shortcutHint,
   className = "",
   "data-testid": testId,
 }: SearchInputProps): JSX.Element {
+  const { t } = useTranslation();
+  const resolvedPlaceholder = placeholder ?? t('search.inputPlaceholder');
+
   return (
     <div
       className={`${containerStyles} ${className}`}
@@ -124,9 +129,9 @@ export function SearchInput({
         role="searchbox"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         className={inputStyles}
-        aria-label={placeholder}
+        aria-label={resolvedPlaceholder}
       />
       {value && (
         <div className={clearButtonStyles}>
@@ -134,7 +139,7 @@ export function SearchInput({
             variant="ghost"
             size="sm"
             onClick={onClear}
-            aria-label="Clear search"
+            aria-label={t('search.clearSearch')}
             className="h-5 w-5 p-0"
           >
             <X size={12} strokeWidth={1.5} />

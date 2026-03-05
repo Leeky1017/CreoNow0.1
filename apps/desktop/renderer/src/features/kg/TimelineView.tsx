@@ -105,7 +105,7 @@ export function TimelineView({
     >
       <div className="shrink-0 p-3 border-b border-[var(--color-border-default)]">
         <p className="text-xs text-[var(--color-fg-muted)] uppercase tracking-wide">
-          Timeline
+          {t('kg.timelineView.title')}
         </p>
       </div>
 

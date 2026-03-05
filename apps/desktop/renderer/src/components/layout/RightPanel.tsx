@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   LAYOUT_DEFAULTS,
   useLayoutStore,
@@ -45,12 +46,12 @@ const tabButtonInactive =
  */
 const RIGHT_PANEL_TABS: Array<{
   type: RightPanelType;
-  label: string;
+  labelKey: string;
   testId: string;
 }> = [
-  { type: "ai", label: "AI", testId: "right-panel-tab-ai" },
-  { type: "info", label: "Info", testId: "right-panel-tab-info" },
-  { type: "quality", label: "Quality", testId: "right-panel-tab-quality" },
+  { type: "ai", labelKey: "workbench.rightPanel.tabAi", testId: "right-panel-tab-ai" },
+  { type: "info", labelKey: "workbench.rightPanel.tabInfo", testId: "right-panel-tab-info" },
+  { type: "quality", labelKey: "workbench.rightPanel.tabQuality", testId: "right-panel-tab-quality" },
 ];
 
 /**
@@ -73,6 +74,7 @@ export function RightPanel(props: {
   /** Callback to collapse the right panel */
   onCollapse?: () => void;
 }): JSX.Element {
+  const { t } = useTranslation();
   const activeRightPanel = useLayoutStore((s) => s.activeRightPanel);
   const setActiveRightPanel = useLayoutStore((s) => s.setActiveRightPanel);
   const [aiHistoryOpen, setAiHistoryOpen] = React.useState(false);
@@ -130,7 +132,7 @@ export function RightPanel(props: {
           data-testid="right-panel-tab-bar"
           className="flex items-center gap-1 px-2 py-2 border-b border-[var(--color-separator)]"
         >
-          {RIGHT_PANEL_TABS.map(({ type, label, testId }) => {
+          {RIGHT_PANEL_TABS.map(({ type, labelKey, testId }) => {
             const isActive = activeRightPanel === type;
             return (
               <button
@@ -141,7 +143,7 @@ export function RightPanel(props: {
                 aria-pressed={isActive}
                 data-testid={testId}
               >
-                {label}
+                {t(labelKey)}
               </button>
             );
           })}
@@ -152,7 +154,7 @@ export function RightPanel(props: {
                 type="button"
                 data-testid="right-panel-ai-history-action"
                 onClick={() => setAiHistoryOpen((v) => !v)}
-                title="History"
+                title={t("workbench.rightPanel.historyTitle")}
                 className={`w-6 h-6 flex items-center justify-center rounded transition-colors ${
                   aiHistoryOpen
                     ? "text-[var(--color-fg-default)] bg-[var(--color-bg-selected)]"
@@ -175,7 +177,7 @@ export function RightPanel(props: {
                 type="button"
                 data-testid="right-panel-ai-new-chat-action"
                 onClick={() => setAiNewChatSignal((prev) => prev + 1)}
-                title="New Chat"
+                title={t("workbench.rightPanel.newChatTitle")}
                 className="w-6 h-6 flex items-center justify-center rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
               >
                 <svg
@@ -209,7 +211,7 @@ export function RightPanel(props: {
               data-testid="right-panel-collapse-btn"
               onClick={props.onCollapse}
               className="text-xs px-1.5 py-1 rounded-[var(--radius-sm)] text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] cursor-pointer transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)]"
-              aria-label="Collapse panel"
+              aria-label={t("workbench.rightPanel.collapsePanel")}
             >
               ✕
             </button>

@@ -1,6 +1,8 @@
 import React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import type { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
 import type { IpcError, IpcResponse } from "@shared/types/ipc-generated";
 import { Button, Checkbox, Select, Tooltip } from "../../components/primitives";
 import { invoke } from "../../lib/ipcClient";
@@ -88,22 +90,24 @@ export const defaultExportOptions: ExportOptions = {
 /**
  * Progress steps configuration
  */
-const progressSteps: ProgressStep[] = [
-  { label: "Preparing...", threshold: 30 },
-  { label: "Exporting...", threshold: 70 },
-  { label: "Finalizing...", threshold: 100 },
-];
+function getProgressSteps(t: TFunction): ProgressStep[] {
+  return [
+    { label: t('export.progress.preparing'), threshold: 30 },
+    { label: t('export.progress.exporting'), threshold: 70 },
+    { label: t('export.progress.finalizing'), threshold: 100 },
+  ];
+}
 
 /**
  * Get current step label based on progress
  */
-function getProgressStepLabel(progress: number): string {
-  for (const step of progressSteps) {
+function getProgressStepLabel(progress: number, steps: ProgressStep[]): string {
+  for (const step of steps) {
     if (progress < step.threshold) {
       return step.label;
     }
   }
-  return progressSteps[progressSteps.length - 1].label;
+  return steps[steps.length - 1].label;
 }
 
 /**
@@ -119,32 +123,34 @@ interface FormatOption {
 /**
  * Format options
  */
-const formatOptions: FormatOption[] = [
-  {
-    value: "pdf",
-    label: "PDF",
-    description: "Portable Document",
-    icon: <FileText size={20} strokeWidth={1.5} />,
-  },
-  {
-    value: "markdown",
-    label: "Markdown",
-    description: ".md",
-    icon: <FileCode size={20} strokeWidth={1.5} />,
-  },
-  {
-    value: "docx",
-    label: "Word",
-    description: ".docx",
-    icon: <FileText size={20} strokeWidth={1.5} />,
-  },
-  {
-    value: "txt",
-    label: "Plain Text",
-    description: ".txt",
-    icon: <File size={20} strokeWidth={1.5} />,
-  },
-];
+function getFormatOptions(t: TFunction): FormatOption[] {
+  return [
+    {
+      value: "pdf",
+      label: "PDF",
+      description: t('export.format.pdfDescription'),
+      icon: <FileText size={20} strokeWidth={1.5} />,
+    },
+    {
+      value: "markdown",
+      label: "Markdown",
+      description: ".md",
+      icon: <FileCode size={20} strokeWidth={1.5} />,
+    },
+    {
+      value: "docx",
+      label: "Word",
+      description: ".docx",
+      icon: <FileText size={20} strokeWidth={1.5} />,
+    },
+    {
+      value: "txt",
+      label: t('export.format.plainText'),
+      description: ".txt",
+      icon: <File size={20} strokeWidth={1.5} />,
+    },
+  ];
+}
 
 /**
  * Format-specific unsupported reasons.
@@ -161,11 +167,13 @@ function getUnsupportedReason(format: ExportFormat): string | null {
 /**
  * Page size options for Select
  */
-const pageSizeOptions = [
-  { value: "a4", label: "A4" },
-  { value: "letter", label: "Letter" },
-  { value: "legal", label: "Legal" },
-];
+function getPageSizeOptions(t: TFunction) {
+  return [
+    { value: "a4", label: "A4" },
+    { value: "letter", label: t('export.pageSize.letter') },
+    { value: "legal", label: t('export.pageSize.legal') },
+  ];
+}
 
 // ============================================================================
 // Styles
@@ -280,6 +288,7 @@ function FormatCard({
   isSelected: boolean;
   disabledReason?: string;
 }) {
+  const { t } = useTranslation();
   const disabled =
     typeof disabledReason === "string" && disabledReason.length > 0;
 
@@ -292,7 +301,7 @@ function FormatCard({
     >
       {disabled ? (
         <div className="absolute top-3 left-3 text-[10px] px-1.5 py-0.5 rounded bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]">
-          UNSUPPORTED
+          {t('export.format.unsupported')}
         </div>
       ) : null}
 
@@ -349,13 +358,14 @@ function PreviewThumbnail({
   format: ExportFormat;
   pageSize: PageSize;
 }) {
+  const { t } = useTranslation();
   const formatLabel = format.toUpperCase();
   const pageSizeLabel = pageSize.toUpperCase();
 
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <span className={labelStyles}>Preview</span>
+        <span className={labelStyles}>{t('export.config.previewLabel')}</span>
         <span className="text-[10px] text-[var(--color-fg-placeholder)] bg-[var(--color-bg-hover)] px-1.5 py-0.5 rounded">
           {formatLabel} • {pageSizeLabel}
         </span>
@@ -398,6 +408,7 @@ function ConfigView({
   error: IpcError | null;
   onDismissError: () => void;
 }) {
+  const { t } = useTranslation();
   const isPdfFormat = options.format === "pdf";
 
   return (
@@ -421,7 +432,7 @@ function ConfigView({
                 onClick={onDismissError}
                 className="shrink-0"
               >
-                Dismiss
+                {t('export.action.dismiss')}
               </Button>
             </div>
           </div>
@@ -429,7 +440,7 @@ function ConfigView({
 
         {/* Format Selection */}
         <div>
-          <span className={labelStyles}>Format</span>
+          <span className={labelStyles}>{t('export.config.formatLabel')}</span>
           <RadioGroupPrimitive.Root
             value={options.format}
             onValueChange={(value) =>
@@ -437,7 +448,7 @@ function ConfigView({
             }
             className="grid grid-cols-2 gap-3 auto-rows-[100px]"
           >
-            {formatOptions.map((option) => (
+            {getFormatOptions(t).map((option) => (
               <FormatCard
                 key={option.value}
                 option={option}
@@ -452,7 +463,7 @@ function ConfigView({
         <div className="grid grid-cols-2 gap-6">
           {/* Settings Column */}
           <div className="space-y-3">
-            <span className={labelStyles}>Settings</span>
+            <span className={labelStyles}>{t('export.config.settingsLabel')}</span>
 
             <Checkbox
               checked={options.includeMetadata}
@@ -462,7 +473,7 @@ function ConfigView({
                   includeMetadata: checked === true,
                 })
               }
-              label="Include metadata"
+              label={t('export.config.includeMetadata')}
             />
 
             <Checkbox
@@ -473,7 +484,7 @@ function ConfigView({
                   versionHistory: checked === true,
                 })
               }
-              label="Version history"
+              label={t('export.config.versionHistory')}
             />
 
             <Checkbox
@@ -484,19 +495,19 @@ function ConfigView({
                   embedImages: checked === true,
                 })
               }
-              label="Embed images"
+              label={t('export.config.embedImages')}
             />
           </div>
 
           {/* Page Size Column */}
           <div className="space-y-3">
-            <span className={labelStyles}>Page Size</span>
+            <span className={labelStyles}>{t('export.config.pageSizeLabel')}</span>
             <Select
               value={options.pageSize}
               onValueChange={(value) =>
                 onOptionsChange({ ...options, pageSize: value as PageSize })
               }
-              options={pageSizeOptions}
+              options={getPageSizeOptions(t)}
               disabled={!isPdfFormat}
               fullWidth
             />
@@ -522,7 +533,7 @@ function ConfigView({
         <div className="flex-1" />
         <div className="flex gap-3">
           <Button variant="ghost" onClick={onCancel}>
-            Cancel
+            {t('export.action.cancel')}
           </Button>
           <Button
             variant="primary"
@@ -530,7 +541,7 @@ function ConfigView({
             data-testid="export-submit"
             disabled={exportDisabledReason !== null}
           >
-            Export
+            {t('export.action.export')}
           </Button>
         </div>
       </div>
@@ -554,6 +565,7 @@ function ProgressView({
   progressStep: string;
   onCancel: () => void;
 }) {
+  const { t } = useTranslation();
   const formatLabel = format.toUpperCase();
 
   return (
@@ -564,10 +576,10 @@ function ProgressView({
       </div>
 
       <h3 className="text-xl font-medium text-[var(--color-fg-default)] mb-2">
-        Exporting Document
+        {t('export.progress.title')}
       </h3>
       <p className="text-[var(--color-fg-muted)] text-sm mb-8">
-        Converting &ldquo;{documentTitle}&rdquo; to {formatLabel}...
+        {t('export.progress.converting', { title: documentTitle, format: formatLabel })}
       </p>
 
       {/* Progress bar */}
@@ -585,7 +597,7 @@ function ProgressView({
       </div>
 
       <Button variant="ghost" onClick={onCancel} className="mt-8">
-        Cancel
+        {t('export.action.cancel')}
       </Button>
     </div>
   );
@@ -598,6 +610,7 @@ function SuccessView(props: {
   result: { relativePath: string; bytesWritten: number };
   onDone: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       data-testid="export-success"
@@ -609,15 +622,15 @@ function SuccessView(props: {
       </div>
 
       <h3 className="text-xl font-medium text-[var(--color-fg-default)] mb-2">
-        Export Complete
+        {t('export.success.title')}
       </h3>
       <p className="text-[var(--color-fg-muted)] text-sm mb-8">
-        Your file has been written under your app profile exports folder.
+        {t('export.success.description')}
       </p>
 
       <div className="w-full max-w-sm mb-8 text-left">
         <div className="text-[10px] font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-[0.1em] mb-2">
-          Result
+          {t('export.success.resultLabel')}
         </div>
         <div className="p-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] space-y-1">
           <div className="text-xs text-[var(--color-fg-muted)]">
@@ -642,11 +655,12 @@ function SuccessView(props: {
       </div>
 
       <Button
+        data-testid="export-done"
         variant="primary"
         onClick={props.onDone}
         className="!bg-white !text-black hover:!bg-gray-200"
       >
-        Done
+        {t('export.action.done')}
       </Button>
     </div>
   );
@@ -685,7 +699,7 @@ export function ExportDialog({
   onOpenChange,
   projectId = null,
   documentId = null,
-  documentTitle = "Untitled Document",
+  documentTitle,
   estimatedSize = "~2.4 MB",
   initialOptions,
   onExport,
@@ -696,6 +710,8 @@ export function ExportDialog({
   result: controlledResult,
   error: controlledError,
 }: ExportDialogProps): JSX.Element {
+  const { t } = useTranslation();
+  const displayTitle = documentTitle ?? t('export.defaultDocumentTitle');
   // Internal state for uncontrolled mode
   const [internalView, setInternalView] = React.useState<ExportView>("config");
   const [internalProgress, setInternalProgress] = React.useState(0);
@@ -713,7 +729,8 @@ export function ExportDialog({
   // Use controlled or internal values
   const view = controlledView ?? internalView;
   const progress = controlledProgress ?? internalProgress;
-  const progressStep = controlledProgressStep ?? getProgressStepLabel(progress);
+  const steps = getProgressSteps(t);
+  const progressStep = controlledProgressStep ?? getProgressStepLabel(progress, steps);
   const error = controlledError ?? lastError;
   const exportResult = controlledResult ?? result;
 
@@ -747,14 +764,14 @@ export function ExportDialog({
   const exportDisabledReason = React.useMemo(() => {
     const trimmedProjectId = projectId?.trim() ?? "";
     if (trimmedProjectId.length === 0) {
-      return "NO_PROJECT: Please open a project first";
+      return t('export.error.noProject');
     }
     const unsupported = getUnsupportedReason(options.format);
     if (unsupported) {
       return `UNSUPPORTED: ${unsupported}`;
     }
     return null;
-  }, [options.format, projectId]);
+  }, [options.format, projectId, t]);
 
   const handleExport = async () => {
     setLastError(null);
@@ -803,7 +820,7 @@ export function ExportDialog({
         message:
           error instanceof Error
             ? error.message
-            : "Export failed due to unknown error",
+            : t('export.error.unknown'),
       });
       setInternalView("config");
       setInternalProgress(0);
@@ -863,15 +880,15 @@ export function ExportDialog({
               <div className="flex items-start justify-between p-6 pb-4 border-b border-[var(--color-separator)]">
                 <div>
                   <DialogPrimitive.Title className="text-lg font-medium text-[var(--color-fg-default)] mb-1">
-                    Export Document
+                    {t('export.dialog.title')}
                   </DialogPrimitive.Title>
                   <DialogPrimitive.Description className="text-sm text-[var(--color-fg-muted)]">
-                    {documentTitle}
+                    {displayTitle}
                   </DialogPrimitive.Description>
                 </div>
                 <DialogPrimitive.Close
                   className={closeButtonStyles}
-                  aria-label="Close"
+                  aria-label={t('export.dialog.close')}
                 >
                   <X size={20} strokeWidth={1.5} aria-hidden="true" />
                 </DialogPrimitive.Close>
@@ -893,13 +910,13 @@ export function ExportDialog({
           {view === "progress" && (
             <>
               <DialogPrimitive.Title className="sr-only">
-                Exporting Document
+                {t('export.progress.title')}
               </DialogPrimitive.Title>
               <DialogPrimitive.Description className="sr-only">
-                Export in progress. Please wait.
+                {t('export.progress.description')}
               </DialogPrimitive.Description>
               <ProgressView
-                documentTitle={documentTitle}
+                documentTitle={displayTitle}
                 format={options.format}
                 progress={progress}
                 progressStep={progressStep}
@@ -911,10 +928,10 @@ export function ExportDialog({
           {view === "success" && (
             <>
               <DialogPrimitive.Title className="sr-only">
-                Export Complete
+                {t('export.success.title')}
               </DialogPrimitive.Title>
               <DialogPrimitive.Description className="sr-only">
-                Export completed successfully.
+                {t('export.success.srDescription')}
               </DialogPrimitive.Description>
               {exportResult ? (
                 <SuccessView result={exportResult} onDone={handleDone} />

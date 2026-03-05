@@ -52,17 +52,17 @@ describe("FileTreePanel", () => {
       expect(panel).toBeInTheDocument();
     });
 
-    it("应该显示 Files 标题", () => {
+    it("应该显示 Files Title", () => {
       render(<FileTreePanel projectId="test-project" />);
 
-      expect(screen.getByText("文件")).toBeInTheDocument();
+      expect(screen.getByText("Files")).toBeInTheDocument();
     });
 
     it("应该显示 New 按钮", () => {
       render(<FileTreePanel projectId="test-project" />);
 
       expect(screen.getByTestId("file-create")).toBeInTheDocument();
-      expect(screen.getByText("新建")).toBeInTheDocument();
+      expect(screen.getByText("New")).toBeInTheDocument();
     });
   });
 
@@ -70,17 +70,17 @@ describe("FileTreePanel", () => {
   // 空状态测试
   // ===========================================================================
   describe("空状态", () => {
-    it("当无文档时应显示空状态提示", () => {
+    it("当无Documents时应显示空状态提示", () => {
       render(<FileTreePanel projectId="test-project" />);
 
       expect(
-        screen.getByText("暂无文件"),
+        screen.getByText("No Files"),
       ).toBeInTheDocument();
       expect(
-        screen.getByText("开始创建你的第一个文件"),
+        screen.getByText("Start by creating your first file"),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: "新建文件" }),
+        screen.getByRole("button", { name: "New File" }),
       ).toBeInTheDocument();
     });
   });
@@ -112,7 +112,7 @@ describe("FileTreePanel", () => {
 
       render(<FileTreePanel projectId="test-project" />);
 
-      expect(screen.getByText("加载文件中…")).toBeInTheDocument();
+      expect(screen.getByText("Loading files…")).toBeInTheDocument();
     });
   });
 
@@ -120,7 +120,7 @@ describe("FileTreePanel", () => {
   // 错误状态测试
   // ===========================================================================
   describe("错误状态", () => {
-    it("有错误时应显示错误信息", async () => {
+    it("有错误时应显示错误Info", async () => {
       const { useFileStore } = await import("../../stores/fileStore");
       vi.mocked(useFileStore).mockImplementation((selector) => {
         const state = {
@@ -148,15 +148,15 @@ describe("FileTreePanel", () => {
 
       expect(screen.getByRole("alert")).toBeInTheDocument();
       expect(screen.getByText(/IO_ERROR/)).toBeInTheDocument();
-      expect(screen.getByText("关闭")).toBeInTheDocument();
+      expect(screen.getByText("Dismiss")).toBeInTheDocument();
     });
   });
 
   // ===========================================================================
-  // 文档列表测试
+  // DocumentsList测试
   // ===========================================================================
-  describe("文档列表", () => {
-    it("应该渲染文档列表项", async () => {
+  describe("DocumentsList", () => {
+    it("应该渲染DocumentsList项", async () => {
       const { useFileStore } = await import("../../stores/fileStore");
       vi.mocked(useFileStore).mockImplementation((selector) => {
         const state = {
@@ -202,7 +202,7 @@ describe("FileTreePanel", () => {
       expect(screen.getByText("Document 2")).toBeInTheDocument();
     });
 
-    it("选中项应有 aria-selected 属性", async () => {
+    it("选中项应有 aria-selected Properties", async () => {
       const { useFileStore } = await import("../../stores/fileStore");
       vi.mocked(useFileStore).mockImplementation((selector) => {
         const state = {
@@ -246,7 +246,7 @@ describe("FileTreePanel", () => {
       expect(selectedItem).toHaveAttribute("aria-selected", "true");
     });
 
-    it("打开 ⋯ 菜单后应显示 Rename 和 Delete", async () => {
+    it("to open ⋯ 菜单后应显示 Rename 和 Delete", async () => {
       const { useFileStore } = await import("../../stores/fileStore");
       vi.mocked(useFileStore).mockImplementation((selector) => {
         const state = {
@@ -288,7 +288,7 @@ describe("FileTreePanel", () => {
   // 样式测试
   // ===========================================================================
   describe("样式", () => {
-    it("应该有 flex column 布局", () => {
+    it("应该有 flex column Layout", () => {
       render(<FileTreePanel projectId="test-project" />);
 
       const panel = screen.getByTestId("sidebar-files");

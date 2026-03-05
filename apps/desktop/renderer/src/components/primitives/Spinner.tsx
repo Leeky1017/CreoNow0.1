@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * Spinner sizes
@@ -45,10 +46,12 @@ const sizeMap: Record<SpinnerSize, number> = {
  */
 export function Spinner({
   size = "md",
-  label = "Loading",
+  label,
   className = "",
   ...props
 }: SpinnerProps): JSX.Element {
+  const { t } = useTranslation();
+  const resolvedLabel = label ?? t('primitives.spinner.loading');
   const dimension = sizeMap[size];
 
   const classes = ["animate-spin", "text-current", className]
@@ -64,7 +67,7 @@ export function Spinner({
       width={dimension}
       height={dimension}
       role="status"
-      aria-label={label}
+      aria-label={resolvedLabel}
       {...props}
     >
       <circle

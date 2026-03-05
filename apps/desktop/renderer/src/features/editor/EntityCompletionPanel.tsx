@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { EntityCompletionSession } from "../../stores/editorStore";
 
 type EntityCompletionPanelProps = {
@@ -8,6 +9,7 @@ type EntityCompletionPanelProps = {
 export function EntityCompletionPanel(
   props: EntityCompletionPanelProps,
 ): JSX.Element | null {
+  const { t } = useTranslation();
   const { session } = props;
 
   if (!session.open) {
@@ -18,7 +20,7 @@ export function EntityCompletionPanel(
     <div
       data-testid="entity-completion-panel"
       role="listbox"
-      aria-label="Entity completion candidates"
+      aria-label={t('editor.entityCompletion.ariaLabel')}
       className="min-w-[240px] rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-1 shadow-[var(--shadow-lg)]"
       style={{
         position: "fixed",
@@ -32,7 +34,7 @@ export function EntityCompletionPanel(
           className="px-2 py-1 text-xs text-[var(--color-fg-muted)]"
           data-testid="entity-completion-loading-state"
         >
-          Loading entities...
+          {t('editor.entityCompletion.loading')}
         </div>
       ) : null}
 
@@ -66,7 +68,7 @@ export function EntityCompletionPanel(
           className="px-2 py-1 text-xs text-[var(--color-fg-muted)]"
           data-testid="entity-completion-empty-state"
         >
-          No matching entities.
+          {t('editor.entityCompletion.noMatching')}
         </div>
       ) : null}
 
@@ -75,7 +77,7 @@ export function EntityCompletionPanel(
           className="px-2 py-1 text-xs text-[var(--color-status-error)]"
           data-testid="entity-completion-error-state"
         >
-          {session.message ?? "Entity suggestions unavailable."}
+          {session.message ?? t('editor.entityCompletion.unavailable')}
         </div>
       ) : null}
     </div>

@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "../../components/primitives/Button";
 import { Dialog } from "../../components/primitives/Dialog";
@@ -32,6 +33,7 @@ interface ListItemProps {
 }
 
 function ListItem({ value, onRemove, disabled }: ListItemProps): JSX.Element {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-2 px-3 py-2 bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)]">
       <span className="flex-1 text-sm text-[var(--color-fg-default)] truncate">
@@ -42,7 +44,7 @@ function ListItem({ value, onRemove, disabled }: ListItemProps): JSX.Element {
         onClick={onRemove}
         disabled={disabled}
         className="text-[var(--color-fg-muted)] hover:text-[var(--color-error)] transition-colors disabled:opacity-50"
-        aria-label={`Remove ${value}`}
+        aria-label={t('projects.template.removeItem', { value })}
       >
         <X size={16} strokeWidth={1.5} />
       </button>
@@ -61,6 +63,7 @@ interface AddItemInputProps {
 }
 
 function AddItemInput({ placeholder, onAdd, disabled }: AddItemInputProps): JSX.Element {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
 
   const handleAdd = useCallback(() => {
@@ -99,7 +102,7 @@ function AddItemInput({ placeholder, onAdd, disabled }: AddItemInputProps): JSX.
         onClick={handleAdd}
         disabled={disabled || !value.trim()}
       >
-        Add
+        {t('projects.template.add')}
       </Button>
     </div>
   );
@@ -123,6 +126,7 @@ export function CreateTemplateDialog({
   onOpenChange,
   onCreated,
 }: CreateTemplateDialogProps): JSX.Element {
+  const { t } = useTranslation();
   const createTemplate = useTemplateStore((s) => s.createTemplate);
 
   const [name, setName] = useState("");
@@ -174,7 +178,7 @@ export function CreateTemplateDialog({
 
       const trimmedName = name.trim();
       if (!trimmedName) {
-        setError("Template name is required");
+        setError(t('projects.template.nameRequired'));
         return;
       }
 
@@ -196,20 +200,20 @@ export function CreateTemplateDialog({
         onCreated?.(template.id);
         onOpenChange(false);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to create template");
+        setError(err instanceof Error ? err.message : t('projects.template.createFailed'));
       } finally {
         setSubmitting(false);
       }
     },
-    [name, description, folders, files, createTemplate, onCreated, onOpenChange],
+    [name, description, folders, files, createTemplate, onCreated, onOpenChange, t],
   );
 
   return (
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Create Template"
-      description="Create a reusable template for new projects."
+      title={t('projects.template.title')}
+      description={t('projects.template.description')}
       footer={
         <>
           <Button
@@ -218,7 +222,7 @@ export function CreateTemplateDialog({
             onClick={() => onOpenChange(false)}
             disabled={submitting}
           >
-            Cancel
+            {t('projects.template.cancel')}
           </Button>
           <Button
             data-testid="create-template-submit"
@@ -228,7 +232,7 @@ export function CreateTemplateDialog({
             type="submit"
             form={formId}
           >
-            {submitting ? "Creating..." : "Create Template"}
+            {submitting ? t('projects.template.creating') : t('projects.template.createTemplate')}
           </Button>
         </>
       }
@@ -243,7 +247,7 @@ export function CreateTemplateDialog({
         <div>
           <label className="block mb-2">
             <Text size="small" color="muted">
-              Template Name <span className="text-[var(--color-error)]">*</span>
+              {t('projects.template.templateName')} <span className="text-[var(--color-error)]">*</span>
             </Text>
           </label>
           <Input
@@ -251,7 +255,7 @@ export function CreateTemplateDialog({
             value={name}
             onChange={(e) => setName(e.target.value)}
             autoFocus
-            placeholder="e.g., Sci-Fi Novel"
+            placeholder={t('projects.template.namePlaceholder')}
             fullWidth
             error={!!error && !name.trim()}
           />
@@ -261,15 +265,15 @@ export function CreateTemplateDialog({
         <div>
           <label className="block mb-2">
             <Text size="small" color="muted">
-              Description{" "}
-              <span className="opacity-50 text-xs">(Optional)</span>
+              {t('projects.template.templateDescription')}{" "}
+              <span className="opacity-50 text-xs">({t('projects.template.optional')})</span>
             </Text>
           </label>
           <Textarea
             data-testid="create-template-description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Brief description of this template..."
+            placeholder={t('projects.template.descriptionPlaceholder')}
             fullWidth
             rows={2}
           />
@@ -279,8 +283,8 @@ export function CreateTemplateDialog({
         <div>
           <label className="block mb-2">
             <Text size="small" color="muted">
-              Initial Folders{" "}
-              <span className="opacity-50 text-xs">(Optional)</span>
+              {t('projects.template.initialFolders')}{" "}
+              <span className="opacity-50 text-xs">({t('projects.template.optional')})</span>
             </Text>
           </label>
           <div className="space-y-2">
@@ -293,7 +297,7 @@ export function CreateTemplateDialog({
               />
             ))}
             <AddItemInput
-              placeholder="e.g., chapters"
+              placeholder={t('projects.template.folderPlaceholder')}
               onAdd={handleAddFolder}
               disabled={submitting}
             />
@@ -304,8 +308,8 @@ export function CreateTemplateDialog({
         <div>
           <label className="block mb-2">
             <Text size="small" color="muted">
-              Initial Files{" "}
-              <span className="opacity-50 text-xs">(Optional)</span>
+              {t('projects.template.initialFiles')}{" "}
+              <span className="opacity-50 text-xs">({t('projects.template.optional')})</span>
             </Text>
           </label>
           <div className="space-y-2">
@@ -318,7 +322,7 @@ export function CreateTemplateDialog({
               />
             ))}
             <AddItemInput
-              placeholder="e.g., outline.md"
+              placeholder={t('projects.template.filePlaceholder')}
               onAdd={handleAddFile}
               disabled={submitting}
             />

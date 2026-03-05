@@ -1,4 +1,5 @@
 import { Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button, Text } from "../../components/primitives";
 
 /**
@@ -9,13 +10,15 @@ import { Button, Text } from "../../components/primitives";
 
 export type AiMode = "agent" | "plan" | "ask";
 
-const MODES: { id: AiMode; name: string; description: string }[] = [
-  { id: "agent", name: "Agent", description: "Autonomous task execution" },
+function getModes(t: (key: string) => string): { id: AiMode; name: string; description: string }[] {
+  return [
+    { id: "agent", name: t('ai.modePicker.modeAgent'), description: t('ai.modePicker.modeAgentDesc') },
 
-  { id: "plan", name: "Plan", description: "Create detailed plans first" },
+    { id: "plan", name: t('ai.modePicker.modePlan'), description: t('ai.modePicker.modePlanDesc') },
 
-  { id: "ask", name: "Ask", description: "Simple Q&A interaction" },
-];
+    { id: "ask", name: t('ai.modePicker.modeAsk'), description: t('ai.modePicker.modeAskDesc') },
+  ];
+}
 
 type ModePickerProps = {
   open: boolean;
@@ -34,9 +37,13 @@ type ModePickerProps = {
  */
 
 export function ModePicker(props: ModePickerProps): JSX.Element | null {
+  const { t } = useTranslation();
+
   if (!props.open) {
     return null;
   }
+
+  const modes = getModes(t);
 
   return (
     <>
@@ -52,18 +59,18 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
 
       <div
         role="dialog"
-        aria-label="Select Mode"
+        aria-label={t('ai.modePicker.selectMode')}
         onClick={(e) => e.stopPropagation()}
         className="absolute bottom-full left-0 right-0 mb-1 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
         <div className="px-2.5 py-2 border-b border-[var(--color-separator)]">
           <Text size="tiny" color="muted" className="uppercase tracking-wide">
-            Mode
+            {t('ai.modePicker.sectionTitle')}
           </Text>
         </div>
 
         <div className="py-1">
-          {MODES.map((mode) => {
+          {modes.map((mode) => {
             const selected = mode.id === props.selectedMode;
 
             return (
@@ -109,6 +116,6 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
 
  */
 
-export function getModeName(mode: AiMode): string {
-  return MODES.find((m) => m.id === mode)?.name ?? mode;
+export function getModeName(mode: AiMode, t: (key: string) => string): string {
+  return getModes(t).find((m) => m.id === mode)?.name ?? mode;
 }

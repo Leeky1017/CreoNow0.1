@@ -2,6 +2,7 @@ import React from "react";
 import { VersionPane, type VersionContent } from "./VersionPane";
 
 import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 type MultiVersionCompareProps = {
   /** Versions to compare (2-4) */
   versions: VersionContent[];
@@ -26,6 +27,7 @@ type MultiVersionCompareProps = {
 export function MultiVersionCompare(
   props: MultiVersionCompareProps,
 ): JSX.Element {
+  const { t } = useTranslation();
   const { versions, syncScroll = true } = props;
   const count = Math.min(versions.length, 4);
 
@@ -69,11 +71,11 @@ export function MultiVersionCompare(
       <header className="h-12 flex items-center justify-between px-4 border-b border-[var(--color-separator)] bg-[var(--color-bg-raised)] shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium text-[var(--color-fg-default)]">
-            Comparing {count} Versions
+            {t('diff.multiVersion.comparingVersions', { count })}
           </span>
           {syncScroll && (
             <span className="text-[10px] text-[var(--color-fg-subtle)] px-2 py-0.5 bg-[var(--color-bg-hover)] rounded">
-              Sync Scroll
+              {t('diff.multiVersion.syncScroll')}
             </span>
           )}
         </div>

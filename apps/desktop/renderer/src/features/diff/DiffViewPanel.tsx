@@ -1,4 +1,6 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { DiffHeader, type DiffViewMode, type VersionInfo } from "./DiffHeader";
 import { DiffFooter } from "./DiffFooter";
 import {
@@ -45,11 +47,13 @@ type DiffViewPanelProps = {
 /**
  * Default mock versions for demonstration.
  */
-const defaultVersions: VersionInfo[] = [
-  { id: "2h", label: "Version from 2h ago", type: "auto" },
-  { id: "yesterday", label: "Yesterday, 4:20 PM", type: "manual" },
-  { id: "current", label: "Current Version", type: "current" },
-];
+function getDefaultVersions(t: TFunction): VersionInfo[] {
+  return [
+    { id: "2h", label: t('diff.panel.version2hAgo'), type: "auto" },
+    { id: "yesterday", label: t('diff.panel.versionYesterday'), type: "manual" },
+    { id: "current", label: t('diff.panel.versionCurrent'), type: "current" },
+  ];
+}
 
 /**
  * DiffViewPanel is the complete diff viewer component.
@@ -60,6 +64,8 @@ const defaultVersions: VersionInfo[] = [
  * - DiffFooter (statistics, action buttons)
  */
 export function DiffViewPanel(props: DiffViewPanelProps): JSX.Element {
+  const { t } = useTranslation();
+  const defaultVersions = React.useMemo(() => getDefaultVersions(t), [t]);
   const versions = props.versions ?? defaultVersions;
 
   // Parse diff

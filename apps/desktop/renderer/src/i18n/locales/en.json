@@ -7,6 +7,8 @@
       "currentDocument": "Current Document"
     },
     "commandPalette": {
+      "ariaLabel": "Command Palette",
+      "searchAriaLabel": "Search commands",
       "searchPlaceholder": "Search commands or files...",
       "emptyResult": "No matching results",
       "footer": {
@@ -36,6 +38,66 @@
     },
     "infoPanel": {
       "openVersionHistory": "View Version History"
+    },
+    "appShell": {
+      "savingStatus": "Saving...",
+      "savedStatus": "Saved",
+      "saveFailedStatus": "Save failed",
+      "dialogTitle": {
+        "memory": "Memory",
+        "characters": "Characters",
+        "knowledgeGraph": "Knowledge Graph",
+        "versionHistory": "Version History"
+      },
+      "command": {
+        "openSettings": "Open Settings",
+        "export": "Export…",
+        "toggleSidebar": "Toggle Sidebar",
+        "toggleRightPanel": "Toggle Right Panel",
+        "toggleZenMode": "Toggle Zen Mode",
+        "createNewDocument": "Create New Document",
+        "openVersionHistory": "Open Version History",
+        "createNewProject": "Create New Project",
+        "openFolder": "Open Folder"
+      },
+      "aiPanelLabel": "AI Panel (Ctrl+L)"
+    },
+    "leftPanel": {
+      "close": "Close",
+      "dialogPanelDescription": "Dialog panel for {{title}}"
+    },
+    "rightPanel": {
+      "tabAi": "AI",
+      "tabInfo": "Info",
+      "tabQuality": "Quality",
+      "historyTitle": "History",
+      "newChatTitle": "New Chat",
+      "collapsePanel": "Collapse panel"
+    },
+    "sidebar": {
+      "panelTitle": {
+        "explorer": "Explorer",
+        "outline": "Outline"
+      },
+      "noProjectOpen": "No project open",
+      "openDocumentForOutline": "Open a document to view outline"
+    },
+    "iconBar": {
+      "files": "Files",
+      "search": "Search",
+      "outline": "Outline",
+      "versionHistory": "Version History",
+      "memory": "Memory",
+      "characters": "Characters",
+      "knowledgeGraph": "Knowledge Graph",
+      "settings": "Settings"
+    },
+    "infoBar": {
+      "dismiss": "Dismiss"
+    },
+    "titleBar": {
+      "minimize": "Minimize",
+      "close": "Close"
     }
   },
   "editor": {
@@ -52,6 +114,7 @@
       "aiRewrite": "Rewrite"
     },
     "bubbleMenu": {
+      "link": "Link",
       "polish": "Polish",
       "rewrite": "Rewrite",
       "describe": "Describe",
@@ -71,6 +134,25 @@
       "restoreTooltip": "Full restore flow will be available in version-control-p2",
       "restoreVersion": "Restore to this version",
       "backToCurrent": "Back to current version"
+    },
+    "toolbar": {
+      "horizontalRule": "Horizontal Rule",
+      "more": "More"
+    },
+    "entityCompletion": {
+      "ariaLabel": "Entity completion candidates",
+      "loading": "Loading entities...",
+      "noMatching": "No matching entities.",
+      "unavailable": "Entity suggestions unavailable."
+    },
+    "inlineDiff": {
+      "noChanges": "No inline diff changes",
+      "accept": "Accept",
+      "reject": "Reject"
+    },
+    "slashCommand": {
+      "searchPlaceholder": "Search slash commands...",
+      "noCommandsFound": "No commands found."
     }
   },
   "dashboard": {
@@ -122,6 +204,15 @@
       "minutesAgo": "{{count}} minute(s) ago",
       "hoursAgo": "{{count}} hour(s) ago",
       "daysAgo": "{{count}} day(s) ago"
+    },
+    "rename": {
+      "nameRequired": "Project name is required.",
+      "title": "Rename Project",
+      "description": "Update the project name shown in Dashboard.",
+      "cancel": "Cancel",
+      "renaming": "Renaming...",
+      "rename": "Rename",
+      "projectName": "Project Name"
     }
   },
   "search": {
@@ -167,7 +258,8 @@
       "toNavigate": "to navigate",
       "toOpen": "to open",
       "toClose": "to close"
-    }
+    },
+    "inputPlaceholder": "Search..."
   },
   "ai": {
     "contextSummary": "AI panel context summary",
@@ -187,6 +279,7 @@
       "goToSettings": "Go to Settings"
     },
     "skillPicker": {
+      "ariaLabel": "SKILL",
       "builtin": "Built-in",
       "global": "Global",
       "project": "Project",
@@ -239,6 +332,108 @@
       "loading": "Loading...",
       "noCustomSkills": "No custom skills yet",
       "edit": "Edit"
+    },
+    "diff": {
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "pending": "Pending",
+      "reviewChanges": "Review Changes",
+      "modifyCount": "This will modify {{count}} paragraph(s)",
+      "changeNav": "Change {{current}} of {{total}}",
+      "acceptThisChange": "Accept this change",
+      "rejectThisChange": "Reject this change",
+      "before": "Before",
+      "after": "After",
+      "rejectAll": "Reject All",
+      "acceptAll": "Accept All",
+      "statsAdded": "+{{count}} added",
+      "statsRemoved": "-{{count}} removed",
+      "statsAccepted": "{{count}} accepted",
+      "statsRejected": "{{count}} rejected",
+      "editManually": "Edit Manually",
+      "applied": "Applied!",
+      "applying": "Applying...",
+      "applyChanges": "Apply Changes"
+    },
+    "error": {
+      "retrying": "Retrying...",
+      "success": "Success!",
+      "failed": "Failed",
+      "tryAgain": "Try Again",
+      "retry": "Retry",
+      "dismiss": "Dismiss",
+      "countdownRetry": "Try again in {{seconds}}s",
+      "readyToRetry": "Ready to retry",
+      "upgradePlan": "Upgrade Plan",
+      "viewUsage": "View Usage",
+      "checkStatus": "Check Status"
+    },
+    "inlineConfirm": {
+      "accept": "Accept",
+      "applying": "Applying...",
+      "reject": "Reject",
+      "viewDiff": "View Diff"
+    },
+    "panel": {
+      "stopGenerating": "Stop generating",
+      "sendMessage": "Send message",
+      "copied": "Copied",
+      "copy": "Copy",
+      "applyCode": "Apply",
+      "generating": "Generating...",
+      "thinking": "Thinking...",
+      "queueStatus": "Queue #{{position}} ({{count}} waiting)",
+      "dbErrorTitle": "Native binding requires repair",
+      "dbErrorFallback": "AI runtime dependencies are not ready for this environment.",
+      "dbStep1": "Rebuild the native module in this workspace.",
+      "dbStep2": "Restart the app after the rebuild completes.",
+      "providerTitle": "AI provider is not configured",
+      "providerDescription": "Open Settings -> AI and choose a provider before using AI features.",
+      "providerStep1": "Open Settings and switch to the AI tab.",
+      "providerStep2": "Select provider mode and fill base URL/API key.",
+      "providerStep3": "Save, test connection, then retry this action.",
+      "openSettingsAi": "Open Settings -> AI",
+      "skillsUnavailable": "Skills unavailable",
+      "modelsUnavailable": "Models unavailable",
+      "timeout": "Timeout",
+      "rateLimited": "Rate limited",
+      "aiError": "AI error",
+      "usagePrompt": "Prompt:",
+      "selectionFromEditor": "Selection from editor",
+      "dismissSelection": "Dismiss selection reference",
+      "inputPlaceholder": "Ask the AI to help with your writing...",
+      "loading": "Loading",
+      "skill": "SKILL",
+      "applyArmed": "Apply (armed)",
+      "apply": "Apply",
+      "confirmApply": "Confirm Apply",
+      "backToDiff": "Back to Diff",
+      "reject": "Reject"
+    },
+    "chatHistory": {
+      "ariaLabel": "Chat History",
+      "searchPlaceholder": "Search...",
+      "emptyTitle": "No conversation history yet.",
+      "emptyDescription": "Chat history will appear here once chat persistence is available."
+    },
+    "modePicker": {
+      "modeAgent": "Agent",
+      "modeAgentDesc": "Autonomous task execution",
+      "modePlan": "Plan",
+      "modePlanDesc": "Create detailed plans first",
+      "modeAsk": "Ask",
+      "modeAskDesc": "Simple Q&A interaction",
+      "selectMode": "Select Mode",
+      "sectionTitle": "Mode"
+    },
+    "modelPicker": {
+      "selectModel": "Select Model",
+      "searchPlaceholder": "Search all models",
+      "groupBy": "Group by",
+      "noGroup": "No group",
+      "modelsTitle": "Models",
+      "recentlyUsed": "Recently Used",
+      "noModelsFound": "No models found."
     }
   },
   "onboarding": {
@@ -250,8 +445,14 @@
     "back": "Back",
     "skip": "Skip",
     "langOptions": {
-      "zhCN": { "label": "中文 (简体)", "description": "简体中文界面" },
-      "en": { "label": "English", "description": "English interface" }
+      "zhCN": {
+        "label": "中文 (简体)",
+        "description": "简体中文界面"
+      },
+      "en": {
+        "label": "English",
+        "description": "English interface"
+      }
     },
     "step2": {
       "title": "AI Writing Assistant",
@@ -287,6 +488,80 @@
       "deleteDescription": "Deleting character \"{{name}}\" will remove its associated relationships. This action cannot be undone.",
       "delete": "Delete",
       "cancel": "Cancel"
+    },
+    "addRelation": {
+      "triggerLabel": "Add Relation",
+      "title": "Add Relationship",
+      "selectCharacter": "Select Character",
+      "noCharacters": "No characters available",
+      "relationshipType": "Relationship Type",
+      "cancel": "Cancel",
+      "add": "Add"
+    },
+    "detail": {
+      "removeTrait": "Remove {{trait}} trait",
+      "removeRelationship": "Remove relationship with {{name}}",
+      "namePlaceholder": "Character Name",
+      "close": "Close",
+      "profile": "Profile",
+      "collapseProfile": "Collapse profile",
+      "expandProfile": "Expand profile",
+      "collapse": "Collapse",
+      "expand": "Expand",
+      "age": "Age",
+      "birthDate": "Birth Date",
+      "zodiac": "Zodiac",
+      "archetype": "Archetype",
+      "features": "Features",
+      "selectZodiacPlaceholder": "Select zodiac...",
+      "selectArchetypePlaceholder": "Select archetype...",
+      "addFeaturePlaceholder": "+ Add feature",
+      "personality": "Personality",
+      "addTraitPlaceholder": "+ Add trait",
+      "birth": "Birth",
+      "traits": "Traits",
+      "appearanceDescription": "Appearance & Description",
+      "descriptionPlaceholder": "Describe the character...",
+      "relationships": "Relationships",
+      "noOtherCharacters": "No other characters",
+      "noRelationships": "No relationships added yet",
+      "appearances": "Appearances",
+      "chapters": "Chapters",
+      "noAppearances": "Character hasn't appeared in any chapters yet",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "editCharacterTitle": "Edit Character: {{name}}",
+      "editCharacterDescription": "Edit character details including name, description, traits, and relationships."
+    },
+    "panel": {
+      "groupMain": "Main Characters",
+      "groupSupporting": "Supporting",
+      "groupOthers": "Others",
+      "noCharacters": "No characters",
+      "title": "CHARACTERS",
+      "addCharacter": "Add new character"
+    },
+    "panelContainer": {
+      "newCharacter": "New Character",
+      "thisCharacter": "this character",
+      "deleteTitle": "Delete Character?",
+      "deleteDescription": "\"{{name}}\" and all their relationships will be permanently deleted.",
+      "deleteLabel": "Delete",
+      "cancelLabel": "Cancel",
+      "loadError": "Failed to load characters",
+      "emptyTitle": "No characters yet",
+      "emptyDescription": "Create your first character to start building your story's cast",
+      "createCharacter": "Create Character"
+    },
+    "groupSelector": {
+      "selectGroup": "Select Group"
+    },
+    "roleSelector": {
+      "selectRole": "Select Role"
+    },
+    "deleteConfirm": {
+      "title": "Delete Character"
     }
   },
   "memory": {
@@ -356,6 +631,10 @@
   },
   "projects": {
     "create": {
+      "dialogTitle": "Create New Project",
+      "dialogDescription": "Start a new writing project with a template.",
+      "descriptionPlaceholder": "Brief description of your project...",
+      "imagePlaceholder": "Click or drag image to upload",
       "createFailed": "Failed to create project, please try again",
       "enterIntentFirst": "Please enter your creative intent first",
       "aiUnavailable": "AI-assisted creation is temporarily unavailable. Please create manually or try again later",
@@ -381,6 +660,26 @@
       "searchPlaceholder": "Search projects",
       "noProjects": "No projects",
       "createNew": "Create New Project"
+    },
+    "template": {
+      "removeItem": "Remove {{value}}",
+      "add": "Add",
+      "nameRequired": "Template name is required",
+      "createFailed": "Failed to create template",
+      "title": "Create Template",
+      "description": "Create a reusable template for new projects.",
+      "cancel": "Cancel",
+      "creating": "Creating...",
+      "createTemplate": "Create Template",
+      "templateName": "Template Name",
+      "namePlaceholder": "e.g., Sci-Fi Novel",
+      "templateDescription": "Description",
+      "optional": "Optional",
+      "descriptionPlaceholder": "Brief description of this template...",
+      "initialFolders": "Initial Folders",
+      "folderPlaceholder": "e.g., chapters",
+      "initialFiles": "Initial Files",
+      "filePlaceholder": "e.g., outline.md"
     }
   },
   "files": {
@@ -426,6 +725,7 @@
       "history": "History"
     },
     "panel": {
+      "closeAriaLabel": "Close version history",
       "aiModify": "AI Modification",
       "autosave": "Auto Save",
       "manualSave": "Manual Save",
@@ -433,6 +733,18 @@
       "reason": "Reason:",
       "affectedParagraphs": "{{count}} paragraphs affected",
       "changePreview": "Change Preview"
+    },
+    "preview": {
+      "actorUser": "User",
+      "actorAi": "AI",
+      "actorAutoSave": "Auto-save",
+      "close": "Close",
+      "title": "Version Preview",
+      "description": "Read-only historical snapshot.",
+      "loading": "Loading version content...",
+      "actorLabel": "Actor:",
+      "timestampLabel": "Timestamp:",
+      "reasonLabel": "Reason:"
     }
   },
   "settings": {
@@ -443,6 +755,44 @@
       "title": "AI Configuration",
       "save": "Save",
       "testConnection": "Test Connection"
+    },
+    "aiSection": {
+      "provider": "Provider",
+      "providerOpenAiProxy": "OpenAI-compatible (Proxy)",
+      "providerOpenAiByok": "OpenAI (BYOK)",
+      "providerAnthropicByok": "Anthropic (BYOK)",
+      "baseUrl": "Base URL",
+      "apiKey": "API Key"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "theme": "Theme",
+      "system": "System",
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "judge": {
+      "title": "Judge model",
+      "status": "Status:",
+      "loading": "loading",
+      "ensure": "Ensure"
+    },
+    "general": {
+      "displayLanguage": "Display Language",
+      "displayLanguageHelp": "Changes take effect immediately.",
+      "focusMode": "Focus Mode",
+      "focusModeDescription": "Dims all interface elements except the editor when you start typing to reduce distractions.",
+      "typewriterScroll": "Typewriter Scroll",
+      "typewriterScrollDescription": "Keeps your active line of text vertically centered on the screen as you write.",
+      "smartPunctuation": "Smart Punctuation",
+      "smartPunctuationDescription": "Automatically convert straight quotes to curly quotes and double hyphens to em-dashes.",
+      "localAutoSave": "Local Auto-Save",
+      "localAutoSaveDescription": "Automatically save changes to your browser's local storage.",
+      "backupInterval": "Backup Interval",
+      "backupIntervalHelp": "Last backup: 2 minutes ago",
+      "differentiateAiEdits": "Differentiate AI edits",
+      "defaultTypography": "Default Typography",
+      "interfaceScale": "Interface Scale"
     }
   },
   "settingsDialog": {
@@ -452,6 +802,50 @@
     "general": {
       "zhCN": "Chinese (Simplified)",
       "aiModifyMarker": "AI Modification"
+    },
+    "appearance": {
+      "colorWhite": "White",
+      "colorBlue": "Blue",
+      "colorGreen": "Green",
+      "colorOrange": "Orange",
+      "colorPurple": "Purple",
+      "colorPink": "Pink",
+      "themeLight": "Light",
+      "themeDark": "Dark",
+      "themeSystem": "System",
+      "title": "Appearance",
+      "subtitle": "Personalize the look and feel of your workspace.",
+      "theme": "Theme",
+      "accentColor": "Accent Color",
+      "selectAccentColor": "Select {{color}} accent color",
+      "fontSize": "Font Size",
+      "editorFontSize": "Editor font size"
+    },
+    "dialog": {
+      "navGeneral": "General",
+      "navAppearance": "Appearance",
+      "navAi": "AI",
+      "navJudge": "Judge",
+      "navAnalytics": "Analytics",
+      "navAccount": "Account",
+      "title": "Settings",
+      "close": "Close",
+      "description": "Configure application settings including appearance, AI, judge, and analytics."
+    },
+    "export": {
+      "formatPdf": "PDF",
+      "formatPdfSub": "Portable Document",
+      "formatMarkdown": "Markdown",
+      "formatWord": "Word",
+      "formatTxt": "Plain Text",
+      "title": "Export & Share",
+      "subtitle": "Configure default export format and sharing options.",
+      "defaultFormat": "Default Export Format",
+      "options": "Export Options",
+      "includeMetadata": "Include Metadata",
+      "includeMetadataDescription": "Include document title, author, creation date, and word count in exported files.",
+      "autoGenerateFilename": "Auto-generate Filename",
+      "autoGenerateFilenameDescription": "Automatically create filenames based on document title and export date."
     }
   },
   "kg": {
@@ -462,10 +856,19 @@
     "graph": {
       "emptyTitle": "No entities yet. Click to add your first character or location",
       "emptyHint": "You can drag nodes and create relationships in the graph",
-      "addNode": "Add Node"
+      "addNode": "Add Node",
+      "dragging": "Dragging"
     },
     "nodeDetail": {
-      "deleteNode": "Delete Node"
+      "deleteNode": "Delete Node",
+      "character": "Character",
+      "location": "Location",
+      "event": "Event",
+      "item": "Item",
+      "faction": "Faction",
+      "close": "Close",
+      "editNode": "Edit Node",
+      "viewDetails": "View Details"
     },
     "nodeEdit": {
       "typeCharacter": "Character",
@@ -493,6 +896,59 @@
       "propertyNamePlaceholder": "Property name",
       "propertyValuePlaceholder": "Property value",
       "deleteProperty": "Delete property"
+    },
+    "panel": {
+      "viewGraph": "Graph",
+      "viewTimeline": "Timeline",
+      "viewList": "List",
+      "title": "Knowledge Graph",
+      "dismiss": "Dismiss",
+      "entities": "Entities",
+      "namePlaceholder": "Name",
+      "typePlaceholder": "Type (optional)",
+      "descriptionPlaceholder": "Description (optional)",
+      "aliasesPlaceholder": "Aliases (comma separated)",
+      "lastSeenStatePlaceholder": "Last seen state (optional)",
+      "createEntity": "Create entity",
+      "noEntities": "No entities yet.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "relations": "Relations",
+      "selectEntityPlaceholder": "Select entity...",
+      "relationTypePlaceholder": "Relation type (e.g. knows)",
+      "createRelation": "Create relation",
+      "noRelations": "No relations yet.",
+      "deleteEntityTitle": "Delete Entity?",
+      "deleteEntityDescription": "This entity and all its relations will be permanently deleted.",
+      "deleteRelationTitle": "Delete Relation?",
+      "deleteRelationDescription": "This relation will be permanently deleted.",
+      "newEntity": "New Entity"
+    },
+    "legend": {
+      "title": "Graph Legend",
+      "character": "Character",
+      "location": "Location",
+      "event": "Event",
+      "item": "Item",
+      "faction": "Faction"
+    },
+    "toolbar": {
+      "all": "All",
+      "roles": "Roles",
+      "locations": "Locations",
+      "events": "Events",
+      "items": "Items",
+      "factions": "Factions",
+      "goBack": "Go back",
+      "title": "Knowledge Graph",
+      "zoomOut": "Zoom out",
+      "zoomIn": "Zoom in",
+      "addNode": "Add Node"
+    },
+    "timelineView": {
+      "title": "Timeline"
     }
   },
   "patterns": {
@@ -516,6 +972,288 @@
     "errorState": {
       "close": "Close",
       "defaultTitle": "Something went wrong"
+    },
+    "error": {
+      "title": "App crashed",
+      "description": "A render error occurred. You can reload the app or copy details for diagnostics.",
+      "reloadApp": "Reload App",
+      "copyDetails": "Copy error details",
+      "copied": "Error details copied.",
+      "copyFailed": "Failed to copy error details."
+    },
+    "regionFallback": {
+      "sidebar": "Sidebar",
+      "editor": "Editor",
+      "panel": "Panel",
+      "errorMessage": "{{label}} encountered an error",
+      "reloadLabel": "Reload {{label}}"
+    }
+  },
+  "export": {
+    "progress": {
+      "preparing": "Preparing...",
+      "exporting": "Exporting...",
+      "finalizing": "Finalizing...",
+      "title": "Exporting Document",
+      "converting": "Converting “{{title}}” to {{format}}...",
+      "description": "Export in progress. Please wait."
+    },
+    "format": {
+      "pdfDescription": "Portable Document",
+      "plainText": "Plain Text",
+      "unsupported": "UNSUPPORTED"
+    },
+    "pageSize": {
+      "letter": "Letter",
+      "legal": "Legal"
+    },
+    "config": {
+      "formatLabel": "Format",
+      "settingsLabel": "Settings",
+      "pageSizeLabel": "Page Size",
+      "previewLabel": "Preview",
+      "includeMetadata": "Include metadata",
+      "versionHistory": "Version history",
+      "embedImages": "Embed images"
+    },
+    "action": {
+      "cancel": "Cancel",
+      "export": "Export",
+      "dismiss": "Dismiss",
+      "done": "Done"
+    },
+    "success": {
+      "title": "Export Complete",
+      "description": "Your file has been written under your app profile exports folder.",
+      "resultLabel": "Result",
+      "srDescription": "Export completed successfully."
+    },
+    "dialog": {
+      "title": "Export Document",
+      "close": "Close"
+    },
+    "defaultDocumentTitle": "Untitled Document",
+    "error": {
+      "noProject": "NO_PROJECT: Please open a project first",
+      "unknown": "Export failed due to unknown error"
+    }
+  },
+  "systemDialog": {
+    "delete": {
+      "title": "Delete Document?",
+      "description": "This action cannot be undone. The document and its version history will be permanently deleted.",
+      "primaryLabel": "Delete",
+      "secondaryLabel": "Cancel"
+    },
+    "unsavedChanges": {
+      "title": "Unsaved Changes",
+      "description": "You have unsaved changes. Do you want to save your progress before leaving?",
+      "primaryLabel": "Save",
+      "secondaryLabel": "Cancel",
+      "tertiaryLabel": "Discard"
+    },
+    "exportComplete": {
+      "title": "Export Complete",
+      "description": "Your document has been exported successfully. It has been saved to your local downloads folder.",
+      "primaryLabel": "Open File",
+      "secondaryLabel": "Done"
+    },
+    "processing": "Processing...",
+    "done": "Done!",
+    "keyboard": {
+      "toConfirm": "to confirm",
+      "toCancel": "to cancel"
+    }
+  },
+  "analytics": {
+    "title": "Analytics",
+    "statistics": "Statistics",
+    "refresh": "Refresh",
+    "todayWords": "Today words",
+    "todayTime": "Today time",
+    "todaySkills": "Today skills",
+    "todayDocs": "Today docs",
+    "rangeLast7d": "Range (last 7d)",
+    "words": "words",
+    "skills": "skills"
+  },
+  "diff": {
+    "footer": {
+      "addedLines": "+{{count}} lines",
+      "removedLines": "-{{count}} lines",
+      "changeCount_one": "{{count}} change",
+      "changeCount_other": "{{count}} changes",
+      "hunkLabel": "Hunk {{current}}/{{total}}",
+      "decision": {
+        "accepted": "accepted",
+        "rejected": "rejected"
+      },
+      "rejectHunk": "Reject Hunk",
+      "acceptHunk": "Accept Hunk",
+      "rejectAll": "Reject All",
+      "acceptAll": "Accept All",
+      "restoring": "Restoring...",
+      "restore": "Restore"
+    },
+    "header": {
+      "selectVersion": "Select version",
+      "history": "History",
+      "autoSaved": "Auto-saved",
+      "manualSave": "Manual save",
+      "currentVersion": "Current Version",
+      "split": "Split",
+      "unified": "Unified",
+      "previousChange": "Previous Change",
+      "changeLabel": "Change",
+      "of": "of",
+      "nextChange": "Next Change"
+    },
+    "view": {
+      "noChanges": "No changes to display"
+    },
+    "panel": {
+      "version2hAgo": "Version from 2h ago",
+      "versionYesterday": "Yesterday, 4:20 PM",
+      "versionCurrent": "Current Version"
+    },
+    "multiVersion": {
+      "comparingVersions": "Comparing {{count}} Versions",
+      "syncScroll": "Sync Scroll"
+    },
+    "split": {
+      "noChanges": "No changes to display",
+      "before": "Before",
+      "after": "After"
+    }
+  },
+  "outline": {
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "editShortcut": "Edit (F2)",
+    "deleteShortcut": "Delete (Del)",
+    "edit": "Edit",
+    "delete": "Delete",
+    "emptyTitle": "No outline yet.",
+    "emptyDescription": "Headings appear here automatically.",
+    "noResults": "No results for “{{query}}”",
+    "dragging": "DRAGGING",
+    "title": "Outline",
+    "expandAll": "Expand All",
+    "collapseAll": "Collapse All",
+    "expandAllAria": "Expand all outline items",
+    "collapseAllAria": "Collapse all outline items",
+    "ariaLabel": "Document outline",
+    "filterPlaceholder": "Filter outline...",
+    "selectedCount": "{{count}} selected",
+    "clearSelection": "Clear",
+    "syncWithEditor": "Sync with editor"
+  },
+  "qualityGates": {
+    "statusAllPassed": "All Passed",
+    "statusIssuesFound_one": "{{count}} Issue Found",
+    "statusIssuesFound_other": "{{count}} Issues Found",
+    "statusErrors_one": "{{count}} Error",
+    "statusErrors_other": "{{count}} Errors",
+    "statusRunning": "Running checks...",
+    "ignored": "Ignored",
+    "fixIssue": "Fix Issue",
+    "ignore": "Ignore",
+    "viewInEditor": "View in Editor",
+    "ignoredCount": "{{count}} Ignored",
+    "checksCount": "{{passed}}/{{total}} checks",
+    "frequencyOnDemand": "On demand",
+    "frequencyAfterEdit": "After every edit",
+    "frequencyEvery5Min": "Every 5 minutes",
+    "settings": "Settings",
+    "runOnSave": "Run checks on save",
+    "blockOnErrors": "Block save on errors",
+    "checkFrequency": "Check frequency",
+    "title": "Quality Gates",
+    "closeAriaLabel": "Close quality gates panel",
+    "runAllChecks": "Run All Checks",
+    "allPassedMessage": "Your content meets all quality standards."
+  },
+  "rightPanel": {
+    "info": {
+      "noDocumentSelected": "No document selected",
+      "currentDocument": "Current Document",
+      "title": "Title",
+      "untitled": "Untitled",
+      "updated": "Updated",
+      "todaysProgress": "Today's Progress",
+      "loading": "Loading...",
+      "noStatsAvailable": "No stats available",
+      "wordsWritten": "Words written",
+      "writingTime": "Writing time",
+      "skillsUsed": "Skills used",
+      "documentsCreated": "Documents created",
+      "panelTitle": "Info"
+    },
+    "quality": {
+      "ready": "Ready",
+      "downloading": "Downloading...",
+      "notReady": "Not ready",
+      "errorWithCode": "Error ({{code}})",
+      "loadingJudgeStatus": "Loading judge status...",
+      "judgeStatusUnavailable": "Judge status unavailable",
+      "judgeModelLabel": "Judge Model:",
+      "initialize": "Initialize",
+      "retry": "Retry",
+      "loadingConstraints": "Loading constraints...",
+      "constraintsLabel": "Constraints:",
+      "rulesCount_one": "{{count}} rule",
+      "rulesCount_other": "{{count}} rules",
+      "moreCount": "+{{count}} more",
+      "systemGroup": "System",
+      "judgeModelCheck": "Judge Model",
+      "judgeModelDescription": "Local AI model for quality evaluation",
+      "available": "Available",
+      "writingConstraints": "Writing Constraints",
+      "activeConstraints": "Active Constraints",
+      "activeConstraintsDescription": "Custom writing rules for this project",
+      "rulesDefinedCount_one": "{{count}} rule defined",
+      "rulesDefinedCount_other": "{{count}} rules defined",
+      "panelTitle": "Quality",
+      "noProjectSelected": "No project selected",
+      "judgeModelHeading": "Judge Model",
+      "projectConstraints": "Project Constraints"
+    }
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts"
+  },
+  "zenMode": {
+    "pressEscToExit": "Press Esc to exit",
+    "exitAriaLabel": "Exit zen mode",
+    "pressEscOrF11ToExit": "Press Esc or F11 to exit",
+    "status": {
+      "wordCount": "{{count}} words",
+      "readTime": "{{minutes}} min read"
+    }
+  },
+  "primitives": {
+    "dialog": {
+      "close": "Close"
+    },
+    "imageUpload": {
+      "placeholder": "Click or drag image to upload",
+      "hint": "PNG, JPG up to 5MB",
+      "previewAlt": "Preview",
+      "remove": "Remove",
+      "errorNotImage": "Please select an image file",
+      "errorTooLarge": "File size must be less than {{maxMB}}MB"
+    },
+    "select": {
+      "placeholder": "Select..."
+    },
+    "toast": {
+      "close": "Close"
+    },
+    "skeleton": {
+      "loading": "Loading..."
+    },
+    "spinner": {
+      "loading": "Loading"
     }
   }
 }

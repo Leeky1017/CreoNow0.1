@@ -87,7 +87,7 @@ test("ai apply: success path writes actor=ai version + main.log evidence", async
   await expect(mainDiff).toBeVisible();
   await expect(mainDiff).toContainText("-world");
   await expect(mainDiff).toContainText("E2E_RESULT");
-  await page.getByRole("button", { name: "Accept All" }).click();
+  await page.getByTestId("ai-accept-all").click();
   await expect(mainDiff).toHaveCount(0);
 
   const documentId =
@@ -133,7 +133,7 @@ test("ai apply: conflict path blocks overwrite + logs ai_apply_conflict", async 
   await page.getByTestId("ai-send-stop").click();
   const mainDiff = page.getByRole("main").getByTestId("ai-diff");
   await expect(mainDiff).toBeVisible();
-  await page.getByRole("button", { name: "Reject All" }).click();
+  await page.getByTestId("ai-reject-all").click();
 
   await expect(mainDiff).toHaveCount(0);
 

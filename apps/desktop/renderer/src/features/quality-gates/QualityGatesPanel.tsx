@@ -1,4 +1,5 @@
 import { ChevronDown, CircleCheck, CircleX, Loader2, MapPin, Play, Settings, TriangleAlert, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../../components/primitives";
 
 // ============================================================================
@@ -233,25 +234,26 @@ function PanelStatusIndicator({
   status: PanelStatus;
   issuesCount?: number;
 }) {
+  const { t } = useTranslation();
   const statusConfig = {
     "all-passed": {
       color: "bg-[var(--color-success)]",
-      text: "All Passed",
+      text: t('qualityGates.statusAllPassed'),
       textColor: "text-[var(--color-success)]",
     },
     "issues-found": {
       color: "bg-[var(--color-warning)]",
-      text: `${issuesCount ?? 0} Issue${issuesCount !== 1 ? "s" : ""} Found`,
+      text: t('qualityGates.statusIssuesFound', { count: issuesCount ?? 0 }),
       textColor: "text-[var(--color-warning)]",
     },
     errors: {
       color: "bg-[var(--color-error)]",
-      text: `${issuesCount ?? 0} Error${issuesCount !== 1 ? "s" : ""}`,
+      text: t('qualityGates.statusErrors', { count: issuesCount ?? 0 }),
       textColor: "text-[var(--color-error)]",
     },
     running: {
       color: "bg-[var(--color-info)]",
-      text: "Running checks...",
+      text: t('qualityGates.statusRunning'),
       textColor: "text-[var(--color-info)]",
     },
   };
@@ -373,6 +375,8 @@ function IssueCard({
   onViewInEditor?: (checkId: string, issueId: string) => void;
   isFixing?: boolean;
 }) {
+  const { t } = useTranslation();
+
   if (issue.ignored) {
     return (
       <div className="p-3 bg-[var(--color-bg-raised)] rounded-lg border border-[var(--color-separator)] opacity-50">
@@ -380,7 +384,7 @@ function IssueCard({
           {issue.description}
         </p>
         <span className="text-[10px] text-[var(--color-fg-placeholder)] mt-1 inline-block">
-          Ignored
+          {t('qualityGates.ignored')}
         </span>
       </div>
     );
@@ -418,7 +422,7 @@ function IssueCard({
           loading={isFixing}
           className="!h-6 !text-[10px] !px-2"
         >
-          Fix Issue
+          {t('qualityGates.fixIssue')}
         </Button>
         <Button
           variant="ghost"
@@ -426,7 +430,7 @@ function IssueCard({
           onClick={() => onIgnore?.(checkId, issue.id)}
           className="!h-6 !text-[10px] !px-2"
         >
-          Ignore
+          {t('qualityGates.ignore')}
         </Button>
         <Button
           variant="ghost"
@@ -434,7 +438,7 @@ function IssueCard({
           onClick={() => onViewInEditor?.(checkId, issue.id)}
           className="!h-6 !text-[10px] !px-2"
         >
-          View in Editor
+          {t('qualityGates.viewInEditor')}
         </Button>
       </div>
     </div>
@@ -461,6 +465,7 @@ function CheckItemRow({
   onViewInEditor?: (checkId: string, issueId: string) => void;
   fixingIssueId?: string | null;
 }) {
+  const { t } = useTranslation();
   const hasIssues = check.issues && check.issues.length > 0;
   const activeIssues = check.issues?.filter((i) => !i.ignored) ?? [];
   const issueCount = activeIssues.length;
@@ -501,7 +506,7 @@ function CheckItemRow({
             )}
             {check.ignoredCount && check.ignoredCount > 0 && (
               <span className="text-[10px] text-[var(--color-fg-placeholder)]">
-                {check.ignoredCount} Ignored
+                {t('qualityGates.ignoredCount', { count: check.ignoredCount })}
               </span>
             )}
           </div>
@@ -561,6 +566,7 @@ function CheckGroupAccordion({
   onViewInEditor?: (checkId: string, issueId: string) => void;
   fixingIssueId?: string | null;
 }) {
+  const { t } = useTranslation();
   const checkCount = group.checks.length;
   const passedCount = group.checks.filter((c) => c.status === "passed").length;
 
@@ -575,7 +581,7 @@ function CheckGroupAccordion({
             {group.name}
           </span>
           <span className="text-[11px] text-[var(--color-fg-muted)]">
-            {passedCount}/{checkCount} checks
+            {t('qualityGates.checksCount', { passed: passedCount, total: checkCount })}
           </span>
         </div>
       </div>
@@ -611,10 +617,11 @@ function SettingsSection({
   expanded: boolean;
   onToggle?: () => void;
 }) {
+  const { t } = useTranslation();
   const frequencyOptions: { value: CheckFrequency; label: string }[] = [
-    { value: "on-demand", label: "On demand" },
-    { value: "after-edit", label: "After every edit" },
-    { value: "every-5-minutes", label: "Every 5 minutes" },
+    { value: "on-demand", label: t('qualityGates.frequencyOnDemand') },
+    { value: "after-edit", label: t('qualityGates.frequencyAfterEdit') },
+    { value: "every-5-minutes", label: t('qualityGates.frequencyEvery5Min') },
   ];
 
   return (
@@ -627,7 +634,7 @@ function SettingsSection({
         <div className="flex items-center gap-2">
           <SettingsIcon />
           <span className="text-[13px] font-medium text-[var(--color-fg-default)]">
-            Settings
+            {t('qualityGates.settings')}
           </span>
         </div>
         <ChevronIcon expanded={expanded} />
@@ -638,7 +645,7 @@ function SettingsSection({
           <div className="pt-4 space-y-4">
             <SettingsToggle
               id="run-on-save"
-              label="Run checks on save"
+              label={t('qualityGates.runOnSave')}
               checked={settings.runOnSave}
               onChange={(checked) =>
                 onSettingsChange?.({ ...settings, runOnSave: checked })
@@ -646,7 +653,7 @@ function SettingsSection({
             />
             <SettingsToggle
               id="block-on-errors"
-              label="Block save on errors"
+              label={t('qualityGates.blockOnErrors')}
               checked={settings.blockOnErrors}
               onChange={(checked) =>
                 onSettingsChange?.({ ...settings, blockOnErrors: checked })
@@ -657,7 +664,7 @@ function SettingsSection({
                 htmlFor="check-frequency"
                 className="text-[13px] text-[var(--color-fg-default)]"
               >
-                Check frequency
+                {t('qualityGates.checkFrequency')}
               </label>
               <select
                 id="check-frequency"
@@ -776,6 +783,7 @@ export function QualityGatesPanelContent({
   fixingIssueId,
   showCloseButton = true,
 }: QualityGatesPanelContentProps): JSX.Element {
+  const { t } = useTranslation();
   return (
     <div
       className={panelContentStyles}
@@ -785,7 +793,7 @@ export function QualityGatesPanelContent({
       <div className={headerStyles}>
         <div>
           <h2 className="text-[15px] font-semibold text-[var(--color-fg-default)] tracking-tight">
-            Quality Gates
+            {t('qualityGates.title')}
           </h2>
           <div className="mt-2">
             <PanelStatusIndicator
@@ -799,7 +807,7 @@ export function QualityGatesPanelContent({
             type="button"
             onClick={onClose}
             className={closeButtonStyles}
-            aria-label="Close quality gates panel"
+            aria-label={t('qualityGates.closeAriaLabel')}
           >
             <CloseIcon />
           </button>
@@ -810,6 +818,7 @@ export function QualityGatesPanelContent({
       <div className={scrollAreaStyles}>
         {/* Run All Checks button */}
         <Button
+          data-testid="quality-run-all-checks"
           variant="secondary"
           size="sm"
           onClick={onRunAllChecks}
@@ -818,7 +827,7 @@ export function QualityGatesPanelContent({
           className="!justify-center !gap-2"
         >
           <PlayIcon />
-          Run All Checks
+          {t('qualityGates.runAllChecks')}
         </Button>
 
         {/* Success message when all passed */}
@@ -826,7 +835,7 @@ export function QualityGatesPanelContent({
           <div className="p-4 bg-[var(--color-success-subtle)] border border-[var(--color-success)]/20 rounded-[var(--radius-lg)] text-center">
             <CheckCircleIcon />
             <p className="text-[13px] text-[var(--color-success)] mt-2">
-              Your content meets all quality standards.
+              {t('qualityGates.allPassedMessage')}
             </p>
           </div>
         )}

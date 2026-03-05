@@ -7,6 +7,7 @@
  * @module features/shortcuts/ShortcutsPanel
  */
 
+import { useTranslation } from "react-i18next";
 import { getAllShortcuts, type ShortcutDef } from "../../config/shortcuts";
 
 /**
@@ -16,6 +17,7 @@ import { getAllShortcuts, type ShortcutDef } from "../../config/shortcuts";
  * two-column list: label on the left, key display on the right.
  */
 export function ShortcutsPanel(): JSX.Element {
+  const { t } = useTranslation();
   const shortcuts: ShortcutDef[] = getAllShortcuts();
 
   return (
@@ -28,7 +30,7 @@ export function ShortcutsPanel(): JSX.Element {
         className="text-[length:var(--font-size-lg)] font-semibold"
         style={{ color: "var(--color-fg-default)" }}
       >
-        Keyboard Shortcuts
+        {t('shortcuts.title')}
       </h2>
 
       <ul className="flex flex-col gap-[var(--spacing-xs)]" role="list">

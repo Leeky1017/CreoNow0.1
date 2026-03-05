@@ -51,7 +51,7 @@ export function SkillPicker(props: {
 
       <div
         role="dialog"
-        aria-label="SKILL"
+        aria-label={t('ai.skillPicker.ariaLabel')}
         onClick={(e) => e.stopPropagation()}
         className="absolute bottom-full left-0 right-0 mb-1 p-2.5 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)]"
       >

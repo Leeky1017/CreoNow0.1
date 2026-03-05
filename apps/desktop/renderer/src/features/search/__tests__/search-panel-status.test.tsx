@@ -47,8 +47,8 @@ describe("Search Panel status rendering (S3-SEARCH-PANEL-S3)", () => {
   it("renders distinct empty and error states", async () => {
     const { rerender } = render(<SearchPanel projectId="proj_1" open={true} />);
 
-    expect(screen.getByText("未找到匹配结果")).toBeInTheDocument();
-    expect(screen.queryByText("搜索失败，请重试")).not.toBeInTheDocument();
+    expect(screen.getByText("No matching results")).toBeInTheDocument();
+    expect(screen.queryByText("Search failed, please retry")).not.toBeInTheDocument();
 
     mockSearchState = createSearchState({
       status: "error",
@@ -59,9 +59,9 @@ describe("Search Panel status rendering (S3-SEARCH-PANEL-S3)", () => {
     });
     rerender(<SearchPanel projectId="proj_1" open={true} />);
 
-    expect(screen.queryByText("未找到匹配结果")).not.toBeInTheDocument();
-    expect(screen.getByText("搜索失败，请重试")).toBeInTheDocument();
-    const retryButton = screen.getByRole("button", { name: "重试搜索" });
+    expect(screen.queryByText("No matching results")).not.toBeInTheDocument();
+    expect(screen.getByText("Search failed, please retry")).toBeInTheDocument();
+    const retryButton = screen.getByRole("button", { name: "Retry Search" });
     fireEvent.click(retryButton);
 
     await waitFor(() => {

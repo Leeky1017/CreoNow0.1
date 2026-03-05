@@ -44,13 +44,13 @@ beforeEach(() => {
 });
 
 describe("AiSettingsSection", () => {
-  it('S0 should show "未配置" and no error when no key configured', async () => {
+  it('S0 should show "Not configured" and no error when no key configured', async () => {
     render(<AiSettingsSection />);
 
     await waitFor(() => {
       expect(screen.getByTestId("ai-api-key")).toHaveAttribute(
         "placeholder",
-        "未配置",
+        "Not configured",
       );
     });
 
@@ -88,7 +88,7 @@ describe("AiSettingsSection", () => {
     await waitFor(() => {
       expect(mockInvoke).toHaveBeenCalledWith("ai:config:test", {});
       expect(screen.getByTestId("ai-test-result")).toHaveTextContent(
-        "连接成功",
+        "Connection successful",
       );
       expect(screen.getByTestId("ai-test-result")).toHaveTextContent("42ms");
     });
@@ -182,7 +182,7 @@ describe("AiSettingsSection", () => {
     });
   });
 
-  it('S5 should show "已配置" placeholder when key exists', async () => {
+  it('S5 should show "Configured" placeholder when key exists', async () => {
     mockInvoke.mockImplementation((channel: string) => {
       if (channel === "ai:config:get") {
         return Promise.resolve({
@@ -202,12 +202,12 @@ describe("AiSettingsSection", () => {
     await waitFor(() => {
       expect(screen.getByTestId("ai-api-key")).toHaveAttribute(
         "placeholder",
-        "已配置",
+        "Configured",
       );
     });
   });
 
-  it('S6 should show "未配置" placeholder when no key', async () => {
+  it('S6 should show "Not configured" placeholder when no key', async () => {
     mockInvoke.mockImplementation((channel: string) => {
       if (channel === "ai:config:get") {
         return Promise.resolve({
@@ -227,7 +227,7 @@ describe("AiSettingsSection", () => {
     await waitFor(() => {
       expect(screen.getByTestId("ai-api-key")).toHaveAttribute(
         "placeholder",
-        "未配置",
+        "Not configured",
       );
     });
   });

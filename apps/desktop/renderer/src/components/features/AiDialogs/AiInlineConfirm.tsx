@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import type { AiInlineConfirmProps, InlineConfirmState } from "./types";
 
 /**
@@ -262,6 +263,7 @@ export function AiInlineConfirm({
   className = "",
   showComparison = true,
 }: AiInlineConfirmProps): JSX.Element {
+  const { t } = useTranslation();
   const [state, setState] = useState<InlineConfirmState>("pending");
 
   const handleAccept = useCallback(async () => {
@@ -349,11 +351,11 @@ export function AiInlineConfirm({
             className={acceptButtonStyles}
             onClick={handleAccept}
             disabled={isApplying}
-            title="Accept"
+            title={t('ai.inlineConfirm.accept')}
           >
             {isApplying ? <Spinner /> : <CheckIcon />}
             <span className={labelStyles}>
-              {isApplying ? "Applying..." : "Accept"}
+              {isApplying ? t('ai.inlineConfirm.applying') : t('ai.inlineConfirm.accept')}
             </span>
           </button>
 
@@ -364,10 +366,10 @@ export function AiInlineConfirm({
             className={rejectButtonStyles}
             onClick={handleReject}
             disabled={isApplying}
-            title="Reject"
+            title={t('ai.inlineConfirm.reject')}
           >
             <XIcon />
-            <span className={labelStyles}>Reject</span>
+            <span className={labelStyles}>{t('ai.inlineConfirm.reject')}</span>
           </button>
 
           {onViewDiff && (
@@ -378,7 +380,7 @@ export function AiInlineConfirm({
                 className={diffButtonStyles}
                 onClick={onViewDiff}
                 disabled={isApplying}
-                title="View Diff"
+                title={t('ai.inlineConfirm.viewDiff')}
               >
                 <DiffIcon />
               </button>

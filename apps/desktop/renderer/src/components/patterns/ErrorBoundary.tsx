@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "../primitives/Button";
 import { Text } from "../primitives/Text";
@@ -87,67 +88,88 @@ export class ErrorBoundary extends React.Component<
     }
 
     return (
-      <div
-        data-testid="app-error-boundary"
-        className="h-full w-full bg-[var(--color-bg-base)] p-6"
-      >
-        <div className="mx-auto max-w-2xl rounded-[var(--radius-lg)] border border-[var(--color-separator)] bg-[var(--color-bg-surface)] p-6 shadow-[var(--shadow-lg)]">
-          <h1 className="text-lg font-semibold text-[var(--color-fg-default)]">
-            App crashed
-          </h1>
-          <p className="mt-2 text-sm text-[var(--color-fg-muted)]">
-            A render error occurred. You can reload the app or copy details for
-            diagnostics.
-          </p>
-
-          {this.state.details ? (
-            <pre
-              data-testid="app-error-details"
-              className="mt-4 max-h-60 overflow-auto rounded-[var(--radius-sm)] border border-[var(--color-separator)] bg-[var(--color-bg-hover)] p-3 text-xs text-[var(--color-fg-muted)]"
-            >
-              {this.state.details}
-            </pre>
-          ) : null}
-
-          <div className="mt-5 flex flex-wrap gap-3">
-            <Button
-              type="button"
-              size="sm"
-              variant="secondary"
-              onClick={this.handleReload}
-            >
-              Reload App
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="secondary"
-              onClick={() => void this.handleCopyDetails()}
-            >
-              Copy error details
-            </Button>
-          </div>
-
-          {this.state.copyStatus === "copied" ? (
-            <Text
-              data-testid="app-error-copy-status"
-              size="small"
-              className="mt-3 text-[var(--color-success)]"
-            >
-              Error details copied.
-            </Text>
-          ) : null}
-          {this.state.copyStatus === "failed" ? (
-            <Text
-              data-testid="app-error-copy-status"
-              size="small"
-              className="mt-3 text-[var(--color-error)]"
-            >
-              Failed to copy error details.
-            </Text>
-          ) : null}
-        </div>
-      </div>
+      <ErrorBoundaryFallbackUI
+        details={this.state.details}
+        copyStatus={this.state.copyStatus}
+        onReload={this.handleReload}
+        onCopyDetails={() => void this.handleCopyDetails()}
+      />
     );
   }
+}
+
+/**
+ * Extracted functional component so we can use the useTranslation hook
+ * (hooks cannot be used in class components).
+ */
+function ErrorBoundaryFallbackUI(props: {
+  details: string;
+  copyStatus: "idle" | "copied" | "failed";
+  onReload: () => void;
+  onCopyDetails: () => void;
+}): JSX.Element {
+  const { t } = useTranslation();
+
+  return (
+    <div
+      data-testid="app-error-boundary"
+      className="h-full w-full bg-[var(--color-bg-base)] p-6"
+    >
+      <div className="mx-auto max-w-2xl rounded-[var(--radius-lg)] border border-[var(--color-separator)] bg-[var(--color-bg-surface)] p-6 shadow-[var(--shadow-lg)]">
+        <h1 className="text-lg font-semibold text-[var(--color-fg-default)]">
+          {t("patterns.error.title")}
+        </h1>
+        <p className="mt-2 text-sm text-[var(--color-fg-muted)]">
+          {t("patterns.error.description")}
+        </p>
+
+        {props.details ? (
+          <pre
+            data-testid="app-error-details"
+            className="mt-4 max-h-60 overflow-auto rounded-[var(--radius-sm)] border border-[var(--color-separator)] bg-[var(--color-bg-hover)] p-3 text-xs text-[var(--color-fg-muted)]"
+          >
+            {props.details}
+          </pre>
+        ) : null}
+
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={props.onReload}
+          >
+            {t("patterns.error.reloadApp")}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            onClick={props.onCopyDetails}
+          >
+            {t("patterns.error.copyDetails")}
+          </Button>
+        </div>
+
+        {props.copyStatus === "copied" ? (
+          <Text
+            data-testid="app-error-copy-status"
+            size="small"
+            className="mt-3 text-[var(--color-success)]"
+          >
+            {t("patterns.error.copied")}
+          </Text>
+        ) : null}
+        {props.copyStatus === "failed" ? (
+          <Text
+            data-testid="app-error-copy-status"
+            size="small"
+            className="mt-3 text-[var(--color-error)]"
+          >
+            {t("patterns.error.copyFailed")}
+          </Text>
+        ) : null}
+      </div>
+    </div>
+  );
 }

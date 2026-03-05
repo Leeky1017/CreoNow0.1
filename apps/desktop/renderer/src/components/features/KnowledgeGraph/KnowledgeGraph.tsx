@@ -132,6 +132,8 @@ export function KnowledgeGraph({
   enableEditDialog = true,
   className = "",
 }: KnowledgeGraphProps): JSX.Element {
+  const { t } = useTranslation();
+
   // Internal state for uncontrolled mode
   const [internalSelectedId, setInternalSelectedId] = useState<string | null>(
     null,
@@ -407,7 +409,7 @@ export function KnowledgeGraph({
               <button
                 onClick={handleAddNode}
                 className="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-lg flex items-center justify-center transition-transform hover:scale-105"
-                aria-label="Add node"
+                aria-label={t('kg.graph.addNode')}
               >
                 <svg
                   width="20"

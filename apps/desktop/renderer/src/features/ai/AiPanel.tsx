@@ -184,8 +184,10 @@ function SendStopButton(props: {
 
   onStop: () => void;
 }): JSX.Element {
+  const { t } = useTranslation();
+
   return (
-    <Tooltip content={props.isWorking ? "Stop generating" : "Send message"}>
+    <Tooltip content={props.isWorking ? t('ai.panel.stopGenerating') : t('ai.panel.sendMessage')}>
       <button
         data-testid="ai-send-stop"
         type="button"
@@ -262,6 +264,8 @@ function ErrorGuideCard(props: {
     window.setTimeout(() => setCopied(false), 1200);
   }
 
+  const { t } = useTranslation();
+
   return (
     <section
       data-testid={props.testId}
@@ -292,7 +296,7 @@ function ErrorGuideCard(props: {
                 className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
                 onClick={() => void handleCopyCommand()}
               >
-                {copied ? "Copied" : "Copy"}
+                {copied ? t('ai.panel.copied') : t('ai.panel.copy')}
               </button>
             </div>
           ) : null}
@@ -334,6 +338,7 @@ export function CodeBlock(props: {
 
   onApply?: () => void;
 }): JSX.Element {
+  const { t } = useTranslation();
   const [copied, setCopied] = React.useState(false);
 
   function handleCopy(): void {
@@ -361,7 +366,7 @@ export function CodeBlock(props: {
             onClick={handleCopy}
             className="focus-ring px-2 py-0.5 text-[11px] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
           >
-            {copied ? "Copied!" : "Copy"}
+            {copied ? t('ai.panel.copied') : t('ai.panel.copy')}
           </button>
 
           {props.onApply && (
@@ -370,7 +375,7 @@ export function CodeBlock(props: {
               onClick={props.onApply}
               className="focus-ring px-2 py-0.5 text-[11px] text-[var(--color-fg-accent)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
             >
-              Apply
+              {t('ai.panel.applyCode')}
             </button>
           )}
         </div>
@@ -1139,7 +1144,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
     ? {
         type: "service_error",
 
-        title: "Skills unavailable",
+        title: t('ai.panel.skillsUnavailable'),
         description: skillsLastError.message,
         errorCode: skillsLastError.code,
       }
@@ -1149,7 +1154,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
     ? {
         type: "service_error",
 
-        title: "Models unavailable",
+        title: t('ai.panel.modelsUnavailable'),
 
         description: `${modelsLastError.code}: ${modelsLastError.message}`,
         errorCode: modelsLastError.code,
@@ -1168,11 +1173,11 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
 
         title:
           lastError.code === "TIMEOUT" || lastError.code === "SKILL_TIMEOUT"
-            ? "Timeout"
+            ? t('ai.panel.timeout')
             : lastError.code === "RATE_LIMITED" ||
                 lastError.code === "AI_RATE_LIMITED"
-              ? "Rate limited"
-              : "AI error",
+              ? t('ai.panel.rateLimited')
+              : t('ai.panel.aiError'),
 
         description: lastError.message,
 
@@ -1222,11 +1227,11 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
             <div className="flex items-center gap-2 text-[12px] text-[var(--color-fg-muted)]">
               <Spinner size="sm" />
               <span>
-                {status === "streaming" ? "Generating..." : "Thinking..."}
+                {status === "streaming" ? t('ai.panel.generating') : t('ai.panel.thinking')}
               </span>
               {typeof queuePosition === "number" && queuePosition > 0 ? (
                 <span data-testid="ai-queue-status">
-                  Queue #{queuePosition} ({queuedCount} waiting)
+                  {t('ai.panel.queueStatus', { position: queuePosition, count: queuedCount })}
                 </span>
               ) : null}
             </div>
@@ -1236,14 +1241,14 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
           {showDbGuide ? (
             <ErrorGuideCard
               testId="ai-error-guide-db"
-              title="Native binding requires repair"
+              title={t('ai.panel.dbErrorTitle')}
               description={
                 dbGuideError?.message ??
-                "AI runtime dependencies are not ready for this environment."
+                t('ai.panel.dbErrorFallback')
               }
               steps={[
-                "Rebuild the native module in this workspace.",
-                "Restart the app after the rebuild completes.",
+                t('ai.panel.dbStep1'),
+                t('ai.panel.dbStep2'),
               ]}
               command={dbGuideCommand}
               errorCode="DB_ERROR"
@@ -1253,15 +1258,15 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
           {showProviderGuide ? (
             <ErrorGuideCard
               testId="ai-error-guide-provider"
-              title="AI provider is not configured"
-              description="Open Settings -> AI and choose a provider before using AI features."
+              title={t('ai.panel.providerTitle')}
+              description={t('ai.panel.providerDescription')}
               steps={[
-                "Open Settings and switch to the AI tab.",
-                "Select provider mode and fill base URL/API key.",
-                "Save, test connection, then retry this action.",
+                t('ai.panel.providerStep1'),
+                t('ai.panel.providerStep2'),
+                t('ai.panel.providerStep3'),
               ]}
               errorCode={providerGuideCode ?? "AI_NOT_CONFIGURED"}
-              actionLabel="Open Settings -> AI"
+              actionLabel={t('ai.panel.openSettingsAi')}
               actionTestId="ai-error-guide-open-settings"
               onAction={() => openSettings("ai")}
             />
@@ -1413,7 +1418,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
             >
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[var(--color-fg-muted)]">
                 <span>
-                  Prompt:{" "}
+                  {t('ai.panel.usagePrompt')}{" "}
                   <span data-testid="ai-usage-prompt-tokens">
                     {formatTokenValue(usageStats.promptTokens)}
                   </span>
@@ -1464,7 +1469,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                   disabled={!canApply}
                   className="flex-1"
                 >
-                  {inlineDiffConfirmOpen ? "Apply (armed)" : "Apply"}
+                  {inlineDiffConfirmOpen ? t('ai.panel.applyArmed') : t('ai.panel.apply')}
                 </Button>
                 {inlineDiffConfirmOpen ? (
                   <Button
@@ -1475,7 +1480,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                     disabled={!canApply}
                     className="flex-1"
                   >
-                    Confirm Apply
+                    {t('ai.panel.confirmApply')}
                   </Button>
                 ) : null}
                 <Button
@@ -1489,7 +1494,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                   }
                   disabled={applyStatus === "applying"}
                 >
-                  {inlineDiffConfirmOpen ? "Back to Diff" : "Reject"}
+                  {inlineDiffConfirmOpen ? t('ai.panel.backToDiff') : t('ai.panel.reject')}
                 </Button>
               </div>
             </>
@@ -1508,7 +1513,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                 <div className="flex items-start gap-2">
                   <div className="min-w-0 flex-1">
                     <div className="text-[10px] uppercase tracking-wide text-[var(--color-fg-muted)]">
-                      Selection from editor
+                      {t('ai.panel.selectionFromEditor')}
                     </div>
                     <div
                       data-testid="ai-selection-reference-preview"
@@ -1517,7 +1522,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                       {selectionPreview}
                     </div>
                   </div>
-                  <Tooltip content="Dismiss selection reference">
+                  <Tooltip content={t('ai.panel.dismissSelection')}>
                     <button
                       type="button"
                       data-testid="ai-selection-reference-close"
@@ -1536,7 +1541,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask the AI to help with your writing..."
+              placeholder={t('ai.panel.inputPlaceholder')}
               className="w-full min-h-[60px] max-h-[160px] px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
             />
 
@@ -1552,7 +1557,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                     setSkillsOpen(false);
                   }}
                 >
-                  {getModeName(selectedMode)}
+                  {getModeName(selectedMode, t)}
                 </ToolButton>
 
                 {/* Model button */}
@@ -1565,7 +1570,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                   }}
                 >
                   {modelsStatus === "loading"
-                    ? "Loading"
+                    ? t('ai.panel.loading')
                     : getModelName(selectedModel, availableModels)}
                 </ToolButton>
 
@@ -1579,7 +1584,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
                     setModelOpen(false);
                   }}
                 >
-                  {skillsStatus === "loading" ? "Loading" : "SKILL"}
+                  {skillsStatus === "loading" ? t('ai.panel.loading') : t('ai.panel.skill')}
                 </ToolButton>
               </div>
 

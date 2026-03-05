@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Toggle } from "../../components/primitives/Toggle";
 import { Text } from "../../components/primitives";
 
@@ -89,6 +90,7 @@ export function SettingsExport({
   settings,
   onSettingsChange,
 }: SettingsExportProps): JSX.Element {
+  const { t } = useTranslation();
   const updateSetting = <K extends keyof ExportSettings>(
     key: K,
     value: ExportSettings[K],
@@ -97,25 +99,25 @@ export function SettingsExport({
   };
 
   const formats: { value: ExportFormat; label: string; sublabel: string }[] = [
-    { value: "pdf", label: "PDF", sublabel: "Portable Document" },
-    { value: "markdown", label: "Markdown", sublabel: ".md" },
-    { value: "word", label: "Word", sublabel: ".docx" },
-    { value: "txt", label: "Plain Text", sublabel: ".txt" },
+    { value: "pdf", label: t('settingsDialog.export.formatPdf'), sublabel: t('settingsDialog.export.formatPdfSub') },
+    { value: "markdown", label: t('settingsDialog.export.formatMarkdown'), sublabel: ".md" },
+    { value: "word", label: t('settingsDialog.export.formatWord'), sublabel: ".docx" },
+    { value: "txt", label: t('settingsDialog.export.formatTxt'), sublabel: ".txt" },
   ];
 
   return (
     <div className="max-w-[560px]">
       {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">
-        Export & Share
+        {t('settingsDialog.export.title')}
       </h1>
       <p className="text-[var(--color-fg-subtle)] text-sm mb-12 font-light">
-        Configure default export format and sharing options.
+        {t('settingsDialog.export.subtitle')}
       </p>
 
       {/* Default Export Format */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>Default Export Format</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.export.defaultFormat')}</h4>
 
         <div className="grid grid-cols-2 gap-4">
           {formats.map(({ value, label, sublabel }) => {
@@ -154,12 +156,12 @@ export function SettingsExport({
 
       {/* Export Options */}
       <div className="mb-6">
-        <h4 className={sectionLabelStyles}>Export Options</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.export.options')}</h4>
 
         <div className="flex flex-col gap-8">
           <Toggle
-            label="Include Metadata"
-            description="Include document title, author, creation date, and word count in exported files."
+            label={t('settingsDialog.export.includeMetadata')}
+            description={t('settingsDialog.export.includeMetadataDescription')}
             checked={settings.includeMetadata}
             onCheckedChange={(checked) =>
               updateSetting("includeMetadata", checked)
@@ -167,8 +169,8 @@ export function SettingsExport({
           />
 
           <Toggle
-            label="Auto-generate Filename"
-            description="Automatically create filenames based on document title and export date."
+            label={t('settingsDialog.export.autoGenerateFilename')}
+            description={t('settingsDialog.export.autoGenerateFilenameDescription')}
             checked={settings.autoGenerateFilename}
             onCheckedChange={(checked) =>
               updateSetting("autoGenerateFilename", checked)

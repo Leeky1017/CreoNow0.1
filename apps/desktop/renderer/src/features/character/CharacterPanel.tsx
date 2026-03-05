@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { CharacterCard } from "./CharacterCard";
 import { CharacterDetailDialog } from "./CharacterDetailDialog";
 import type { Character, CharacterGroup } from "./types";
@@ -45,11 +46,13 @@ function groupCharacters(
 /**
  * Group configuration for display
  */
-const GROUP_CONFIG: Record<CharacterGroup, { label: string }> = {
-  main: { label: "Main Characters" },
-  supporting: { label: "Supporting" },
-  others: { label: "Others" },
-};
+function getGroupConfig(t: (key: string) => string): Record<CharacterGroup, { label: string }> {
+  return {
+    main: { label: t('character.panel.groupMain') },
+    supporting: { label: t('character.panel.groupSupporting') },
+    others: { label: t('character.panel.groupOthers') },
+  };
+}
 
 /**
  * Plus icon for add button
@@ -62,6 +65,8 @@ function PlusIcon() {
  * Empty state for a group with no characters
  */
 function EmptyGroupState({ onClick }: { onClick?: () => void }) {
+  const { t } = useTranslation();
+
   return (
     <button
       type="button"
@@ -88,7 +93,7 @@ function EmptyGroupState({ onClick }: { onClick?: () => void }) {
         "transition-colors",
       ].join(" ")}
     >
-      <span className="text-[11px]">No characters</span>
+      <span className="text-[11px]">{t('character.panel.noCharacters')}</span>
     </button>
   );
 }
@@ -113,7 +118,8 @@ function CharacterGroupSection({
   onDelete?: (characterId: string) => void;
   onCreate?: () => void;
 }) {
-  const config = GROUP_CONFIG[group];
+  const { t } = useTranslation();
+  const config = getGroupConfig(t)[group];
 
   return (
     <div>
@@ -201,6 +207,7 @@ export function CharacterPanelContent({
   onDelete,
   onNavigateToChapter,
 }: CharacterPanelContentProps): JSX.Element {
+  const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [editingCharacter, setEditingCharacter] = React.useState<Character | null>(null);
 
@@ -236,7 +243,7 @@ export function CharacterPanelContent({
         {/* Header */}
         <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--color-border-default)] shrink-0">
           <span className="font-medium text-sm tracking-wide text-[var(--color-fg-default)]">
-            CHARACTERS
+            {t('character.panel.title')}
           </span>
           <button
             type="button"
@@ -256,7 +263,7 @@ export function CharacterPanelContent({
               "border-transparent",
               "hover:border-[var(--color-border-hover)]",
             ].join(" ")}
-            aria-label="Add new character"
+            aria-label={t('character.panel.addCharacter')}
           >
             <PlusIcon />
           </button>

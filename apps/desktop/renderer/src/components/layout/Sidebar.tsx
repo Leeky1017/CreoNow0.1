@@ -2,6 +2,7 @@ import { FileTreePanel } from "../../features/files/FileTreePanel";
 import { OutlinePanelContainer } from "../../features/outline/OutlinePanelContainer";
 import { ProjectSwitcher } from "../../features/projects/ProjectSwitcher";
 import { ScrollArea } from "../primitives";
+import { useTranslation } from "react-i18next";
 import { LAYOUT_DEFAULTS, type LeftPanelType } from "../../stores/layoutStore";
 import type { ProjectListItem } from "../../stores/projectStore";
 
@@ -25,8 +26,8 @@ function LeftPanelHeader(props: { title: string }): JSX.Element {
  * Panel titles mapping.
  */
 const PANEL_TITLES: Record<LeftPanelType, string> = {
-  files: "Explorer",
-  outline: "Outline",
+  files: "workbench.sidebar.panelTitle.explorer",
+  outline: "workbench.sidebar.panelTitle.outline",
 };
 
 /**
@@ -50,6 +51,7 @@ export function Sidebar(props: {
   onCreateProject?: () => void;
   onOpenVersionHistoryDocument?: (documentId: string) => void;
 }): JSX.Element {
+  const { t } = useTranslation();
 
   if (props.collapsed) {
     return (
@@ -75,7 +77,7 @@ export function Sidebar(props: {
           />
         ) : (
           <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-            No project open
+            {t("workbench.sidebar.noProjectOpen")}
           </div>
         );
 
@@ -84,7 +86,7 @@ export function Sidebar(props: {
           <OutlinePanelContainer />
         ) : (
           <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-            Open a document to view outline
+            {t("workbench.sidebar.openDocumentForOutline")}
           </div>
         );
 
@@ -117,7 +119,7 @@ export function Sidebar(props: {
           onCreateProject={props.onCreateProject}
         />
       </div>
-      <LeftPanelHeader title={PANEL_TITLES[props.activePanel]} />
+      <LeftPanelHeader title={t(PANEL_TITLES[props.activePanel])} />
       <ScrollArea
         data-testid="sidebar-scroll"
         viewportTestId="sidebar-scroll-viewport"

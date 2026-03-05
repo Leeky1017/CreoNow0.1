@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 import type { AiErrorCardProps, AiErrorType } from "./types";
 
@@ -531,6 +532,8 @@ export function AiErrorCard({
 
   className = "",
 }: AiErrorCardProps): JSX.Element | null {
+  const { t } = useTranslation();
+
   // Initialize countdown from props - use a ref to track the initial value
 
   const initialCountdown =
@@ -641,20 +644,20 @@ export function AiErrorCard({
         <>
           <Spinner />
 
-          <span>Retrying...</span>
+          <span>{t('ai.error.retrying')}</span>
         </>
       );
     }
 
     if (retryState === "success") {
-      return <span className="text-[var(--color-success)]">Success!</span>;
+      return <span className="text-[var(--color-success)]">{t('ai.error.success')}</span>;
     }
 
     if (retryState === "error") {
-      return <span className="text-[var(--color-error)]">Failed</span>;
+      return <span className="text-[var(--color-error)]">{t('ai.error.failed')}</span>;
     }
 
-    return <span>{error.type === "timeout" ? "Try Again" : "Retry"}</span>;
+    return <span>{error.type === "timeout" ? t('ai.error.tryAgain') : t('ai.error.retry')}</span>;
   };
 
   return (
@@ -668,7 +671,7 @@ export function AiErrorCard({
           type="button"
           className={dismissButtonStyles}
           onClick={handleDismiss}
-          title="Dismiss"
+          title={t('ai.error.dismiss')}
         >
           <CloseIcon />
         </button>
@@ -701,7 +704,7 @@ export function AiErrorCard({
           {/* Countdown for rate limit */}
 
           {error.type === "rate_limit" && countdown > 0 && (
-            <div className={countdownStyles}>Try again in {countdown}s</div>
+            <div className={countdownStyles}>{t('ai.error.countdownRetry', { seconds: countdown })}</div>
           )}
 
           {/* Ready to retry message when countdown completes */}
@@ -709,7 +712,7 @@ export function AiErrorCard({
           {error.type === "rate_limit" &&
             countdownComplete &&
             countdown === 0 && (
-              <div className={readyToRetryStyles}>Ready to retry</div>
+              <div className={readyToRetryStyles}>{t('ai.error.readyToRetry')}</div>
             )}
 
           {/* Actions */}
@@ -725,7 +728,7 @@ export function AiErrorCard({
                     className={upgradeButtonStyles}
                     onClick={onUpgradePlan}
                   >
-                    Upgrade Plan
+                    {t('ai.error.upgradePlan')}
                   </button>
                 )}
 
@@ -735,7 +738,7 @@ export function AiErrorCard({
                     className={linkButtonStyles}
                     onClick={onViewUsage}
                   >
-                    View Usage
+                    {t('ai.error.viewUsage')}
                   </button>
                 )}
               </>
@@ -762,7 +765,7 @@ export function AiErrorCard({
                     className={linkButtonStyles}
                     onClick={onCheckStatus}
                   >
-                    Check Status
+                    {t('ai.error.checkStatus')}
                     <ExternalLinkIcon />
                   </button>
                 )}

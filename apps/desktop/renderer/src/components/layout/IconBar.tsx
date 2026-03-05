@@ -9,6 +9,7 @@ import {
   Settings,
   type LucideIcon,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import {
   useLayoutStore,
@@ -64,14 +65,14 @@ const MAIN_ICONS: IconItem[] = [
     behavior: "docked",
     dockedPanel: "files",
     Icon: FolderOpen,
-    label: "Files",
+    label: "workbench.iconBar.files",
     testId: "icon-bar-files",
   },
   {
     id: "search",
     behavior: "spotlight",
     Icon: Search,
-    label: "Search",
+    label: "workbench.iconBar.search",
     testId: "icon-bar-search",
   },
   {
@@ -79,7 +80,7 @@ const MAIN_ICONS: IconItem[] = [
     behavior: "docked",
     dockedPanel: "outline",
     Icon: List,
-    label: "Outline",
+    label: "workbench.iconBar.outline",
     testId: "icon-bar-outline",
   },
   {
@@ -87,7 +88,7 @@ const MAIN_ICONS: IconItem[] = [
     behavior: "dialog",
     dialogType: "versionHistory",
     Icon: History,
-    label: "Version History",
+    label: "workbench.iconBar.versionHistory",
     testId: "icon-bar-version-history",
   },
   {
@@ -95,7 +96,7 @@ const MAIN_ICONS: IconItem[] = [
     behavior: "dialog",
     dialogType: "memory",
     Icon: Brain,
-    label: "Memory",
+    label: "workbench.iconBar.memory",
     testId: "icon-bar-memory",
   },
   {
@@ -103,7 +104,7 @@ const MAIN_ICONS: IconItem[] = [
     behavior: "dialog",
     dialogType: "characters",
     Icon: User,
-    label: "Characters",
+    label: "workbench.iconBar.characters",
     testId: "icon-bar-characters",
   },
   {
@@ -111,7 +112,7 @@ const MAIN_ICONS: IconItem[] = [
     behavior: "dialog",
     dialogType: "knowledgeGraph",
     Icon: Network,
-    label: "Knowledge Graph",
+    label: "workbench.iconBar.knowledgeGraph",
     testId: "icon-bar-knowledge-graph",
   },
 ];
@@ -137,6 +138,7 @@ export function IconBar({
   onOpenSettings,
   settingsOpen = false,
 }: IconBarProps): JSX.Element {
+  const { t } = useTranslation();
   const sidebarCollapsed = useLayoutStore((s) => s.sidebarCollapsed);
   const setSidebarCollapsed = useLayoutStore((s) => s.setSidebarCollapsed);
   const activeLeftPanel = useLayoutStore((s) => s.activeLeftPanel);
@@ -192,6 +194,7 @@ export function IconBar({
    */
   const renderIconButton = (item: IconItem) => {
     const { id, Icon, label, testId } = item;
+    const resolvedLabel = t(label);
     const isActive =
       (item.behavior === "docked" &&
         item.dockedPanel === activeLeftPanel &&
@@ -206,10 +209,10 @@ export function IconBar({
         type="button"
         onClick={() => handleIconClick(item)}
         className={`${iconButtonBase} ${isActive ? iconButtonActive : iconButtonInactive}`}
-        aria-label={label}
+        aria-label={resolvedLabel}
         aria-pressed={isActive}
         data-testid={testId}
-        title={label}
+        title={resolvedLabel}
       >
         <Icon size={24} strokeWidth={1.5} />
       </button>
@@ -238,10 +241,10 @@ export function IconBar({
           type="button"
           onClick={onOpenSettings}
           className={`${iconButtonBase} ${settingsIsActive ? iconButtonActive : iconButtonInactive}`}
-          aria-label="Settings"
+          aria-label={t("workbench.iconBar.settings")}
           aria-pressed={settingsIsActive}
           data-testid="icon-bar-settings"
-          title="Settings"
+          title={t("workbench.iconBar.settings")}
         >
           <Settings size={24} strokeWidth={1.5} />
         </button>

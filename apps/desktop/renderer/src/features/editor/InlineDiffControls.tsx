@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button, Text } from "../../components/primitives";
 import {
@@ -23,6 +24,7 @@ export function InlineDiffControls(
   props: InlineDiffControlsProps,
 ): JSX.Element {
   const { originalText, suggestedText, onApplyAcceptedText } = props;
+  const { t } = useTranslation();
 
   const decorations = React.useMemo(
     () =>
@@ -88,7 +90,7 @@ export function InlineDiffControls(
     >
       {decorations.length === 0 ? (
         <Text size="small" color="muted">
-          No inline diff changes
+          {t('editor.inlineDiff.noChanges')}
         </Text>
       ) : null}
 
@@ -131,7 +133,7 @@ export function InlineDiffControls(
                   size="sm"
                   onClick={() => onAcceptHunk(item.hunkIndex)}
                 >
-                  Accept
+                  {t('editor.inlineDiff.accept')}
                 </Button>
                 <Button
                   data-testid={`inline-diff-reject-${item.hunkIndex}`}
@@ -139,7 +141,7 @@ export function InlineDiffControls(
                   size="sm"
                   onClick={() => onRejectHunk(item.hunkIndex)}
                 >
-                  Reject
+                  {t('editor.inlineDiff.reject')}
                 </Button>
               </div>
             ) : null}

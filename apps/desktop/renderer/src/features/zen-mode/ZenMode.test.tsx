@@ -128,7 +128,7 @@ describe("ZenMode", () => {
       />,
     );
     expect(screen.getByTestId("zen-word-count")).toHaveTextContent(
-      "12,345 words",
+      "12345 words",
     );
   });
 

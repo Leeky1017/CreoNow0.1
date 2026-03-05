@@ -4619,7 +4619,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
       disabled=""
       type="button"
     >
-      续写
+      Continue Writing
     </button>
   </div>
 </div>
@@ -4648,7 +4648,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
       disabled=""
       type="button"
     >
-      续写中...
+      Writing...
     </button>
   </div>
 </div>
@@ -4676,7 +4676,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
       data-testid="write-button-trigger"
       type="button"
     >
-      续写
+      Continue Writing
     </button>
   </div>
 </div>

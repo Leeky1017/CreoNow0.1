@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import type { AiDiffModalProps, DiffChange, DiffChangeState } from "./types";
 
@@ -559,6 +560,7 @@ export function AiDiffModal({
   simulateDelay = 1000,
   initialChangeStates = {},
 }: AiDiffModalProps): JSX.Element {
+  const { t } = useTranslation();
   const [modalState, setModalState] = useState<ModalState>("reviewing");
   const [changeStates, setChangeStates] = useState<
     Record<string, DiffChangeState>
@@ -658,7 +660,7 @@ export function AiDiffModal({
       return (
         <div className={acceptedIndicatorStyles}>
           <CheckIcon />
-          <span>Accepted</span>
+          <span>{t('ai.diff.accepted')}</span>
         </div>
       );
     }
@@ -666,13 +668,13 @@ export function AiDiffModal({
       return (
         <div className={rejectedIndicatorStyles}>
           <XIcon />
-          <span>Rejected</span>
+          <span>{t('ai.diff.rejected')}</span>
         </div>
       );
     }
     return (
       <div className={pendingIndicatorStyles}>
-        <span>Pending</span>
+        <span>{t('ai.diff.pending')}</span>
       </div>
     );
   };
@@ -686,11 +688,10 @@ export function AiDiffModal({
           <div className={headerStyles}>
             <div className="flex items-center gap-4">
               <DialogPrimitive.Title className="font-medium text-sm text-[var(--color-fg-default)]">
-                Review Changes
+                {t('ai.diff.reviewChanges')}
               </DialogPrimitive.Title>
               <span className="text-xs text-[var(--color-fg-muted)]">
-                This will modify {totalChanges} paragraph
-                {totalChanges !== 1 ? "s" : ""}
+                {t('ai.diff.modifyCount', { count: totalChanges })}
               </span>
             </div>
 
@@ -707,7 +708,7 @@ export function AiDiffModal({
                     <ChevronLeftIcon />
                   </button>
                   <span className={navTextStyles}>
-                    Change {currentIndex + 1} of {totalChanges}
+                    {t('ai.diff.changeNav', { current: currentIndex + 1, total: totalChanges })}
                   </span>
                   <button
                     type="button"
@@ -727,7 +728,7 @@ export function AiDiffModal({
                     type="button"
                     className={acceptChangeButtonStyles}
                     onClick={() => handleAcceptChange(currentChange.id)}
-                    title="Accept this change"
+                    title={t('ai.diff.acceptThisChange')}
                   >
                     <CheckIcon />
                   </button>
@@ -735,7 +736,7 @@ export function AiDiffModal({
                     type="button"
                     className={rejectChangeButtonStyles}
                     onClick={() => handleRejectChange(currentChange.id)}
-                    title="Reject this change"
+                    title={t('ai.diff.rejectThisChange')}
                   >
                     <XIcon />
                   </button>
@@ -755,7 +756,7 @@ export function AiDiffModal({
           <div className={diffContainerStyles}>
             {/* Before panel */}
             <div className={`${beforePanelStyles} relative`}>
-              <div className={beforeLabelStyles}>Before</div>
+              <div className={beforeLabelStyles}>{t('ai.diff.before')}</div>
               <p className={beforeTextStyles}>
                 {beforeParts.map((part, idx) => (
                   <span
@@ -773,7 +774,7 @@ export function AiDiffModal({
             {/* After panel */}
             <div className={`${afterPanelStyles} relative`}>
               {renderStateIndicator()}
-              <div className={afterLabelStyles}>After</div>
+              <div className={afterLabelStyles}>{t('ai.diff.after')}</div>
               <p className={afterTextStyles}>
                 {afterParts.map((part, idx) => (
                   <span
@@ -793,36 +794,38 @@ export function AiDiffModal({
               <div className="flex gap-2">
                 <button
                   type="button"
+                  data-testid="ai-reject-all"
                   className={rejectAllStyles}
                   onClick={handleRejectAll}
                   disabled={isApplying}
                 >
-                  Reject All
+                  {t('ai.diff.rejectAll')}
                 </button>
                 <button
                   type="button"
+                  data-testid="ai-accept-all"
                   className={acceptAllStyles}
                   onClick={handleAcceptAll}
                   disabled={isApplying}
                 >
-                  Accept All
+                  {t('ai.diff.acceptAll')}
                 </button>
               </div>
 
               {/* Statistics */}
               <div className={statsStyles}>
-                <span className={addedStatsStyles}>+{stats.added} added</span>
+                <span className={addedStatsStyles}>{t('ai.diff.statsAdded', { count: stats.added })}</span>
                 <span className={removedStatsStyles}>
-                  -{stats.removed} removed
+                  {t('ai.diff.statsRemoved', { count: stats.removed })}
                 </span>
                 {(acceptedCount > 0 || rejectedCount > 0) && (
                   <>
                     <span className="text-[var(--color-separator)]">|</span>
                     <span className="text-[var(--color-success)]">
-                      {acceptedCount} accepted
+                      {t('ai.diff.statsAccepted', { count: acceptedCount })}
                     </span>
                     <span className="text-[var(--color-error)]">
-                      {rejectedCount} rejected
+                      {t('ai.diff.statsRejected', { count: rejectedCount })}
                     </span>
                   </>
                 )}
@@ -837,7 +840,7 @@ export function AiDiffModal({
                   onClick={onEditManually}
                   disabled={isApplying}
                 >
-                  Edit Manually
+                  {t('ai.diff.editManually')}
                 </button>
               )}
               <button
@@ -848,10 +851,10 @@ export function AiDiffModal({
               >
                 {isApplying && <Spinner />}
                 {isApplied
-                  ? "Applied!"
+                  ? t('ai.diff.applied')
                   : isApplying
-                    ? "Applying..."
-                    : "Apply Changes"}
+                    ? t('ai.diff.applying')
+                    : t('ai.diff.applyChanges')}
               </button>
             </div>
           </div>

@@ -7,6 +7,8 @@
       "currentDocument": "当前文档"
     },
     "commandPalette": {
+      "ariaLabel": "命令面板",
+      "searchAriaLabel": "搜索命令",
       "searchPlaceholder": "搜索命令或文件...",
       "emptyResult": "未找到匹配结果",
       "footer": {
@@ -36,6 +38,66 @@
     },
     "infoPanel": {
       "openVersionHistory": "查看版本历史"
+    },
+    "appShell": {
+      "savingStatus": "保存中...",
+      "savedStatus": "已保存",
+      "saveFailedStatus": "保存失败",
+      "dialogTitle": {
+        "memory": "记忆",
+        "characters": "角色",
+        "knowledgeGraph": "知识图谱",
+        "versionHistory": "版本历史"
+      },
+      "command": {
+        "openSettings": "打开设置",
+        "export": "导出…",
+        "toggleSidebar": "切换侧边栏",
+        "toggleRightPanel": "切换右侧面板",
+        "toggleZenMode": "切换禅模式",
+        "createNewDocument": "新建文档",
+        "openVersionHistory": "打开版本历史",
+        "createNewProject": "新建项目",
+        "openFolder": "打开文件夹"
+      },
+      "aiPanelLabel": "AI 面板 (Ctrl+L)"
+    },
+    "leftPanel": {
+      "close": "关闭",
+      "dialogPanelDescription": "{{title}} 的对话面板"
+    },
+    "rightPanel": {
+      "tabAi": "AI",
+      "tabInfo": "信息",
+      "tabQuality": "质量",
+      "historyTitle": "历史",
+      "newChatTitle": "新对话",
+      "collapsePanel": "收起面板"
+    },
+    "sidebar": {
+      "panelTitle": {
+        "explorer": "资源管理器",
+        "outline": "大纲"
+      },
+      "noProjectOpen": "未打开项目",
+      "openDocumentForOutline": "打开文档以查看大纲"
+    },
+    "iconBar": {
+      "files": "文件",
+      "search": "搜索",
+      "outline": "大纲",
+      "versionHistory": "版本历史",
+      "memory": "记忆",
+      "characters": "角色",
+      "knowledgeGraph": "知识图谱",
+      "settings": "设置"
+    },
+    "infoBar": {
+      "dismiss": "关闭"
+    },
+    "titleBar": {
+      "minimize": "最小化",
+      "close": "关闭"
     }
   },
   "editor": {
@@ -52,6 +114,7 @@
       "aiRewrite": "改写"
     },
     "bubbleMenu": {
+      "link": "链接",
       "polish": "润色",
       "rewrite": "改写",
       "describe": "描写",
@@ -71,6 +134,25 @@
       "restoreTooltip": "将在 version-control-p2 中接入完整恢复流程",
       "restoreVersion": "恢复到此版本",
       "backToCurrent": "返回当前版本"
+    },
+    "toolbar": {
+      "horizontalRule": "分隔线",
+      "more": "更多"
+    },
+    "entityCompletion": {
+      "ariaLabel": "实体补全候选",
+      "loading": "加载实体中...",
+      "noMatching": "无匹配实体。",
+      "unavailable": "实体补全不可用。"
+    },
+    "inlineDiff": {
+      "noChanges": "无内联差异更改",
+      "accept": "接受",
+      "reject": "拒绝"
+    },
+    "slashCommand": {
+      "searchPlaceholder": "搜索斜杠命令...",
+      "noCommandsFound": "未找到命令。"
     }
   },
   "dashboard": {
@@ -122,6 +204,15 @@
       "minutesAgo": "{{count}} 分钟前",
       "hoursAgo": "{{count}} 小时前",
       "daysAgo": "{{count}} 天前"
+    },
+    "rename": {
+      "nameRequired": "项目名称不能为空。",
+      "title": "重命名项目",
+      "description": "更新在 Dashboard 中显示的项目名称。",
+      "cancel": "取消",
+      "renaming": "重命名中...",
+      "rename": "重命名",
+      "projectName": "项目名称"
     }
   },
   "search": {
@@ -167,7 +258,8 @@
       "toNavigate": "导航",
       "toOpen": "打开",
       "toClose": "关闭"
-    }
+    },
+    "inputPlaceholder": "搜索…"
   },
   "ai": {
     "contextSummary": "AI 面板上下文摘要",
@@ -187,6 +279,7 @@
       "goToSettings": "前往设置"
     },
     "skillPicker": {
+      "ariaLabel": "技能",
       "builtin": "内置",
       "global": "全局",
       "project": "项目",
@@ -239,6 +332,108 @@
       "loading": "加载中...",
       "noCustomSkills": "暂无自定义技能",
       "edit": "编辑"
+    },
+    "diff": {
+      "accepted": "已接受",
+      "rejected": "已拒绝",
+      "pending": "待处理",
+      "reviewChanges": "审阅更改",
+      "modifyCount": "将修改 {{count}} 个段落",
+      "changeNav": "更改 {{current}}/{{total}}",
+      "acceptThisChange": "接受此更改",
+      "rejectThisChange": "拒绝此更改",
+      "before": "修改前",
+      "after": "修改后",
+      "rejectAll": "全部拒绝",
+      "acceptAll": "全部接受",
+      "statsAdded": "+{{count}} 新增",
+      "statsRemoved": "-{{count}} 删除",
+      "statsAccepted": "{{count}} 已接受",
+      "statsRejected": "{{count}} 已拒绝",
+      "editManually": "手动编辑",
+      "applied": "已应用！",
+      "applying": "应用中...",
+      "applyChanges": "应用更改"
+    },
+    "error": {
+      "retrying": "重试中...",
+      "success": "成功！",
+      "failed": "失败",
+      "tryAgain": "重试",
+      "retry": "重试",
+      "dismiss": "关闭",
+      "countdownRetry": "{{seconds}}秒后重试",
+      "readyToRetry": "可以重试",
+      "upgradePlan": "升级套餐",
+      "viewUsage": "查看用量",
+      "checkStatus": "检查状态"
+    },
+    "inlineConfirm": {
+      "accept": "接受",
+      "applying": "应用中...",
+      "reject": "拒绝",
+      "viewDiff": "查看差异"
+    },
+    "panel": {
+      "stopGenerating": "停止生成",
+      "sendMessage": "发送消息",
+      "copied": "已复制",
+      "copy": "复制",
+      "applyCode": "应用",
+      "generating": "生成中...",
+      "thinking": "思考中...",
+      "queueStatus": "排队 #{{position}}（{{count}} 个等待中）",
+      "dbErrorTitle": "原生绑定需要修复",
+      "dbErrorFallback": "AI 运行时依赖在此环境中尚未就绪。",
+      "dbStep1": "在此工作区中重新构建原生模块。",
+      "dbStep2": "构建完成后重启应用。",
+      "providerTitle": "AI 服务未配置",
+      "providerDescription": "请在设置 → AI 中选择服务商后使用 AI 功能。",
+      "providerStep1": "打开设置并切换到 AI 标签。",
+      "providerStep2": "选择服务商模式并填写 Base URL / API Key。",
+      "providerStep3": "保存并测试连接，然后重试。",
+      "openSettingsAi": "打开设置 → AI",
+      "skillsUnavailable": "技能不可用",
+      "modelsUnavailable": "模型不可用",
+      "timeout": "超时",
+      "rateLimited": "频率限制",
+      "aiError": "AI 错误",
+      "usagePrompt": "提示词：",
+      "selectionFromEditor": "编辑器中的选中文本",
+      "dismissSelection": "取消选中引用",
+      "inputPlaceholder": "向 AI 寻求写作帮助...",
+      "loading": "加载中",
+      "skill": "技能",
+      "applyArmed": "应用（已就绪）",
+      "apply": "应用",
+      "confirmApply": "确认应用",
+      "backToDiff": "返回差异",
+      "reject": "拒绝"
+    },
+    "chatHistory": {
+      "ariaLabel": "聊天历史",
+      "searchPlaceholder": "搜索...",
+      "emptyTitle": "暂无对话记录。",
+      "emptyDescription": "聊天持久化功能上线后，历史记录将显示在此处。"
+    },
+    "modePicker": {
+      "modeAgent": "智能体",
+      "modeAgentDesc": "自主任务执行",
+      "modePlan": "规划",
+      "modePlanDesc": "先制定详细计划",
+      "modeAsk": "问答",
+      "modeAskDesc": "简单问答交互",
+      "selectMode": "选择模式",
+      "sectionTitle": "模式"
+    },
+    "modelPicker": {
+      "selectModel": "选择模型",
+      "searchPlaceholder": "搜索所有模型",
+      "groupBy": "分组方式",
+      "noGroup": "不分组",
+      "modelsTitle": "模型",
+      "recentlyUsed": "最近使用",
+      "noModelsFound": "未找到模型。"
     }
   },
   "onboarding": {
@@ -250,8 +445,14 @@
     "back": "返回",
     "skip": "跳过",
     "langOptions": {
-      "zhCN": { "label": "中文 (简体)", "description": "简体中文界面" },
-      "en": { "label": "English", "description": "English interface" }
+      "zhCN": {
+        "label": "中文 (简体)",
+        "description": "简体中文界面"
+      },
+      "en": {
+        "label": "English",
+        "description": "English interface"
+      }
     },
     "step2": {
       "title": "AI 写作助手",
@@ -287,6 +488,80 @@
       "deleteDescription": "删除角色 \"{{name}}\" 将移除其关联关系，此操作不可撤销。",
       "delete": "删除",
       "cancel": "取消"
+    },
+    "addRelation": {
+      "triggerLabel": "添加关系",
+      "title": "添加关系",
+      "selectCharacter": "选择角色",
+      "noCharacters": "无可用角色",
+      "relationshipType": "关系类型",
+      "cancel": "取消",
+      "add": "添加"
+    },
+    "detail": {
+      "removeTrait": "移除特征 {{trait}}",
+      "removeRelationship": "移除与 {{name}} 的关系",
+      "namePlaceholder": "角色名称",
+      "close": "关闭",
+      "profile": "基本资料",
+      "collapseProfile": "收起资料",
+      "expandProfile": "展开资料",
+      "collapse": "收起",
+      "expand": "展开",
+      "age": "年龄",
+      "birthDate": "出生日期",
+      "zodiac": "星座",
+      "archetype": "原型",
+      "features": "特征",
+      "selectZodiacPlaceholder": "选择星座...",
+      "selectArchetypePlaceholder": "选择原型...",
+      "addFeaturePlaceholder": "+ 添加特征",
+      "personality": "性格",
+      "addTraitPlaceholder": "+ 添加特质",
+      "birth": "出生",
+      "traits": "特质",
+      "appearanceDescription": "外貌与描述",
+      "descriptionPlaceholder": "描述该角色...",
+      "relationships": "关系",
+      "noOtherCharacters": "无其他角色",
+      "noRelationships": "尚未添加关系",
+      "appearances": "出场",
+      "chapters": "章节",
+      "noAppearances": "该角色尚未出现在任何章节中",
+      "delete": "删除",
+      "cancel": "取消",
+      "saveChanges": "保存更改",
+      "editCharacterTitle": "编辑角色: {{name}}",
+      "editCharacterDescription": "编辑角色详情，包括名称、描述、特质和关系。"
+    },
+    "panel": {
+      "groupMain": "主要角色",
+      "groupSupporting": "配角",
+      "groupOthers": "其他",
+      "noCharacters": "暂无角色",
+      "title": "角色",
+      "addCharacter": "添加新角色"
+    },
+    "panelContainer": {
+      "newCharacter": "新角色",
+      "thisCharacter": "该角色",
+      "deleteTitle": "删除角色？",
+      "deleteDescription": "\"{{name}}\" 及其所有关系将被永久删除。",
+      "deleteLabel": "删除",
+      "cancelLabel": "取消",
+      "loadError": "加载角色失败",
+      "emptyTitle": "暂无角色",
+      "emptyDescription": "创建你的第一个角色，开始构建你的故事阵容",
+      "createCharacter": "创建角色"
+    },
+    "groupSelector": {
+      "selectGroup": "选择分组"
+    },
+    "roleSelector": {
+      "selectRole": "选择角色定位"
+    },
+    "deleteConfirm": {
+      "title": "删除角色"
     }
   },
   "memory": {
@@ -356,6 +631,10 @@
   },
   "projects": {
     "create": {
+      "dialogTitle": "创建新项目",
+      "dialogDescription": "使用模板开始一个新的创作项目。",
+      "descriptionPlaceholder": "简要描述你的项目...",
+      "imagePlaceholder": "点击或拖拽图片上传",
       "createFailed": "项目创建失败，请重试",
       "enterIntentFirst": "请先输入创作意图",
       "aiUnavailable": "AI 辅助创建暂时不可用，请手动创建或稍后重试",
@@ -381,6 +660,26 @@
       "searchPlaceholder": "搜索项目",
       "noProjects": "暂无项目",
       "createNew": "创建新项目"
+    },
+    "template": {
+      "removeItem": "移除 {{value}}",
+      "add": "添加",
+      "nameRequired": "模板名称不能为空",
+      "createFailed": "创建模板失败",
+      "title": "创建模板",
+      "description": "创建可复用的项目模板。",
+      "cancel": "取消",
+      "creating": "创建中...",
+      "createTemplate": "创建模板",
+      "templateName": "模板名称",
+      "namePlaceholder": "例如：科幻小说",
+      "templateDescription": "描述",
+      "optional": "可选",
+      "descriptionPlaceholder": "简要描述此模板...",
+      "initialFolders": "初始文件夹",
+      "folderPlaceholder": "例如：chapters",
+      "initialFiles": "初始文件",
+      "filePlaceholder": "例如：outline.md"
     }
   },
   "files": {
@@ -426,6 +725,7 @@
       "history": "历史"
     },
     "panel": {
+      "closeAriaLabel": "关闭版本历史",
       "aiModify": "AI 修改",
       "autosave": "自动保存",
       "manualSave": "手动保存",
@@ -433,6 +733,18 @@
       "reason": "原因:",
       "affectedParagraphs": "{{count}} 段落受影响",
       "changePreview": "变更预览"
+    },
+    "preview": {
+      "actorUser": "用户",
+      "actorAi": "AI",
+      "actorAutoSave": "自动保存",
+      "close": "关闭",
+      "title": "版本预览",
+      "description": "只读历史快照。",
+      "loading": "加载版本内容...",
+      "actorLabel": "操作者：",
+      "timestampLabel": "时间戳：",
+      "reasonLabel": "原因："
     }
   },
   "settings": {
@@ -443,6 +755,44 @@
       "title": "AI 配置",
       "save": "保存",
       "testConnection": "测试连接"
+    },
+    "aiSection": {
+      "provider": "服务商",
+      "providerOpenAiProxy": "OpenAI 兼容（代理）",
+      "providerOpenAiByok": "OpenAI（自带 Key）",
+      "providerAnthropicByok": "Anthropic（自带 Key）",
+      "baseUrl": "Base URL",
+      "apiKey": "API Key"
+    },
+    "appearance": {
+      "title": "外观",
+      "theme": "主题",
+      "system": "跟随系统",
+      "dark": "深色",
+      "light": "浅色"
+    },
+    "judge": {
+      "title": "评判模型",
+      "status": "状态：",
+      "loading": "加载中",
+      "ensure": "确认"
+    },
+    "general": {
+      "displayLanguage": "显示语言",
+      "displayLanguageHelp": "更改立即生效。",
+      "focusMode": "专注模式",
+      "focusModeDescription": "开始输入时，除编辑器外的所有界面元素会变暗，以减少干扰。",
+      "typewriterScroll": "打字机滚动",
+      "typewriterScrollDescription": "在你书写时，保持当前行在屏幕垂直居中。",
+      "smartPunctuation": "智能标点",
+      "smartPunctuationDescription": "自动将直引号转换为弯引号，双连字符转换为破折号。",
+      "localAutoSave": "本地自动保存",
+      "localAutoSaveDescription": "自动将更改保存到浏览器的本地存储。",
+      "backupInterval": "备份间隔",
+      "backupIntervalHelp": "上次备份：2 分钟前",
+      "differentiateAiEdits": "区分 AI 编辑",
+      "defaultTypography": "默认排版",
+      "interfaceScale": "界面缩放"
     }
   },
   "settingsDialog": {
@@ -452,6 +802,50 @@
     "general": {
       "zhCN": "中文 (简体)",
       "aiModifyMarker": "AI 修改"
+    },
+    "appearance": {
+      "colorWhite": "白色",
+      "colorBlue": "蓝色",
+      "colorGreen": "绿色",
+      "colorOrange": "橙色",
+      "colorPurple": "紫色",
+      "colorPink": "粉色",
+      "themeLight": "浅色",
+      "themeDark": "深色",
+      "themeSystem": "跟随系统",
+      "title": "外观",
+      "subtitle": "个性化你的工作区外观和风格。",
+      "theme": "主题",
+      "accentColor": "强调色",
+      "selectAccentColor": "选择 {{color}} 强调色",
+      "fontSize": "字号",
+      "editorFontSize": "编辑器字号"
+    },
+    "dialog": {
+      "navGeneral": "通用",
+      "navAppearance": "外观",
+      "navAi": "AI",
+      "navJudge": "评判",
+      "navAnalytics": "数据分析",
+      "navAccount": "账户",
+      "title": "设置",
+      "close": "关闭",
+      "description": "配置应用设置，包括外观、AI、评判和数据分析。"
+    },
+    "export": {
+      "formatPdf": "PDF",
+      "formatPdfSub": "便携式文档",
+      "formatMarkdown": "Markdown",
+      "formatWord": "Word",
+      "formatTxt": "纯文本",
+      "title": "导出与分享",
+      "subtitle": "配置默认导出格式和分享选项。",
+      "defaultFormat": "默认导出格式",
+      "options": "导出选项",
+      "includeMetadata": "包含元数据",
+      "includeMetadataDescription": "在导出文件中包含文档标题、作者、创建日期和字数。",
+      "autoGenerateFilename": "自动生成文件名",
+      "autoGenerateFilenameDescription": "根据文档标题和导出日期自动创建文件名。"
     }
   },
   "kg": {
@@ -462,10 +856,19 @@
     "graph": {
       "emptyTitle": "暂无实体，点击添加你的第一个角色或地点",
       "emptyHint": "你可以在关系图中拖拽节点并建立关系",
-      "addNode": "添加节点"
+      "addNode": "添加节点",
+      "dragging": "拖动中"
     },
     "nodeDetail": {
-      "deleteNode": "删除节点"
+      "deleteNode": "删除节点",
+      "character": "角色",
+      "location": "地点",
+      "event": "事件",
+      "item": "物品",
+      "faction": "阵营",
+      "close": "关闭",
+      "editNode": "编辑节点",
+      "viewDetails": "查看详情"
     },
     "nodeEdit": {
       "typeCharacter": "角色 (Character)",
@@ -493,6 +896,59 @@
       "propertyNamePlaceholder": "属性名",
       "propertyValuePlaceholder": "属性值",
       "deleteProperty": "删除属性"
+    },
+    "panel": {
+      "viewGraph": "关系图",
+      "viewTimeline": "时间线",
+      "viewList": "列表",
+      "title": "知识图谱",
+      "dismiss": "关闭",
+      "entities": "实体",
+      "namePlaceholder": "名称",
+      "typePlaceholder": "类型（可选）",
+      "descriptionPlaceholder": "描述（可选）",
+      "aliasesPlaceholder": "别名（逗号分隔）",
+      "lastSeenStatePlaceholder": "最后状态（可选）",
+      "createEntity": "创建实体",
+      "noEntities": "暂无实体。",
+      "save": "保存",
+      "cancel": "取消",
+      "edit": "编辑",
+      "delete": "删除",
+      "relations": "关系",
+      "selectEntityPlaceholder": "选择实体...",
+      "relationTypePlaceholder": "关系类型（如：认识）",
+      "createRelation": "创建关系",
+      "noRelations": "暂无关系。",
+      "deleteEntityTitle": "删除实体？",
+      "deleteEntityDescription": "该实体及其所有关系将被永久删除。",
+      "deleteRelationTitle": "删除关系？",
+      "deleteRelationDescription": "该关系将被永久删除。",
+      "newEntity": "新实体"
+    },
+    "legend": {
+      "title": "图例",
+      "character": "角色",
+      "location": "地点",
+      "event": "事件",
+      "item": "物品",
+      "faction": "阵营"
+    },
+    "toolbar": {
+      "all": "全部",
+      "roles": "角色",
+      "locations": "地点",
+      "events": "事件",
+      "items": "物品",
+      "factions": "阵营",
+      "goBack": "返回",
+      "title": "知识图谱",
+      "zoomOut": "缩小",
+      "zoomIn": "放大",
+      "addNode": "添加节点"
+    },
+    "timelineView": {
+      "title": "时间线"
     }
   },
   "patterns": {
@@ -516,6 +972,288 @@
     "errorState": {
       "close": "关闭",
       "defaultTitle": "出错了"
+    },
+    "error": {
+      "title": "应用崩溃",
+      "description": "发生渲染错误。你可以重新加载应用或复制错误详情进行诊断。",
+      "reloadApp": "重新加载应用",
+      "copyDetails": "复制错误详情",
+      "copied": "错误详情已复制。",
+      "copyFailed": "复制错误详情失败。"
+    },
+    "regionFallback": {
+      "sidebar": "侧边栏",
+      "editor": "编辑器",
+      "panel": "面板",
+      "errorMessage": "{{label}} 遇到错误",
+      "reloadLabel": "重新加载 {{label}}"
+    }
+  },
+  "export": {
+    "progress": {
+      "preparing": "准备中...",
+      "exporting": "导出中...",
+      "finalizing": "完成中...",
+      "title": "正在导出文档",
+      "converting": "正在将 “{{title}}” 转换为 {{format}}...",
+      "description": "正在导出，请稍候。"
+    },
+    "format": {
+      "pdfDescription": "便携文档",
+      "plainText": "纯文本",
+      "unsupported": "不支持"
+    },
+    "pageSize": {
+      "letter": "Letter",
+      "legal": "Legal"
+    },
+    "config": {
+      "formatLabel": "格式",
+      "settingsLabel": "设置",
+      "pageSizeLabel": "页面大小",
+      "previewLabel": "预览",
+      "includeMetadata": "包含元数据",
+      "versionHistory": "版本历史",
+      "embedImages": "嵌入图片"
+    },
+    "action": {
+      "cancel": "取消",
+      "export": "导出",
+      "dismiss": "关闭",
+      "done": "完成"
+    },
+    "success": {
+      "title": "导出完成",
+      "description": "文件已写入到应用配置的导出文件夹中。",
+      "resultLabel": "结果",
+      "srDescription": "导出已成功完成。"
+    },
+    "dialog": {
+      "title": "导出文档",
+      "close": "关闭"
+    },
+    "defaultDocumentTitle": "未命名文档",
+    "error": {
+      "noProject": "NO_PROJECT: 请先打开一个项目",
+      "unknown": "由于未知错误导出失败"
+    }
+  },
+  "systemDialog": {
+    "delete": {
+      "title": "删除文档？",
+      "description": "此操作不可撤销。文档及其版本历史将被永久删除。",
+      "primaryLabel": "删除",
+      "secondaryLabel": "取消"
+    },
+    "unsavedChanges": {
+      "title": "未保存的更改",
+      "description": "你有未保存的更改。是否在离开前保存？",
+      "primaryLabel": "保存",
+      "secondaryLabel": "取消",
+      "tertiaryLabel": "丢弃"
+    },
+    "exportComplete": {
+      "title": "导出完成",
+      "description": "文档已成功导出。文件已保存至本地下载文件夹。",
+      "primaryLabel": "打开文件",
+      "secondaryLabel": "完成"
+    },
+    "processing": "处理中...",
+    "done": "完成！",
+    "keyboard": {
+      "toConfirm": "确认",
+      "toCancel": "取消"
+    }
+  },
+  "analytics": {
+    "title": "数据分析",
+    "statistics": "统计",
+    "refresh": "刷新",
+    "todayWords": "今日字数",
+    "todayTime": "今日时长",
+    "todaySkills": "今日技能",
+    "todayDocs": "今日文档",
+    "rangeLast7d": "范围（最近7天）",
+    "words": "字数",
+    "skills": "技能"
+  },
+  "diff": {
+    "footer": {
+      "addedLines": "+{{count}} 行",
+      "removedLines": "-{{count}} 行",
+      "changeCount_one": "{{count}} 个更改",
+      "changeCount_other": "{{count}} 个更改",
+      "hunkLabel": "区块 {{current}}/{{total}}",
+      "decision": {
+        "accepted": "已接受",
+        "rejected": "已拒绝"
+      },
+      "rejectHunk": "拒绝区块",
+      "acceptHunk": "接受区块",
+      "rejectAll": "全部拒绝",
+      "acceptAll": "全部接受",
+      "restoring": "恢复中...",
+      "restore": "恢复"
+    },
+    "header": {
+      "selectVersion": "选择版本",
+      "history": "历史",
+      "autoSaved": "自动保存",
+      "manualSave": "手动保存",
+      "currentVersion": "当前版本",
+      "split": "分栏",
+      "unified": "统一",
+      "previousChange": "上一个更改",
+      "changeLabel": "更改",
+      "of": "/",
+      "nextChange": "下一个更改"
+    },
+    "view": {
+      "noChanges": "无更改可显示"
+    },
+    "panel": {
+      "version2hAgo": "2小时前的版本",
+      "versionYesterday": "昨天 16:20",
+      "versionCurrent": "当前版本"
+    },
+    "multiVersion": {
+      "comparingVersions": "对比 {{count}} 个版本",
+      "syncScroll": "同步滚动"
+    },
+    "split": {
+      "noChanges": "无更改可显示",
+      "before": "修改前",
+      "after": "修改后"
+    }
+  },
+  "outline": {
+    "expand": "展开",
+    "collapse": "收起",
+    "editShortcut": "编辑 (F2)",
+    "deleteShortcut": "删除 (Del)",
+    "edit": "编辑",
+    "delete": "删除",
+    "emptyTitle": "暂无大纲。",
+    "emptyDescription": "标题会自动出现在此处。",
+    "noResults": "未找到「{{query}}」的结果",
+    "dragging": "拖动中",
+    "title": "大纲",
+    "expandAll": "全部展开",
+    "collapseAll": "全部收起",
+    "expandAllAria": "展开所有大纲项",
+    "collapseAllAria": "收起所有大纲项",
+    "ariaLabel": "文档大纲",
+    "filterPlaceholder": "筛选大纲...",
+    "selectedCount": "{{count}} 已选择",
+    "clearSelection": "清除",
+    "syncWithEditor": "与编辑器同步"
+  },
+  "qualityGates": {
+    "statusAllPassed": "全部通过",
+    "statusIssuesFound_one": "发现 {{count}} 个问题",
+    "statusIssuesFound_other": "发现 {{count}} 个问题",
+    "statusErrors_one": "{{count}} 个错误",
+    "statusErrors_other": "{{count}} 个错误",
+    "statusRunning": "检查中...",
+    "ignored": "已忽略",
+    "fixIssue": "修复问题",
+    "ignore": "忽略",
+    "viewInEditor": "在编辑器中查看",
+    "ignoredCount": "{{count}} 已忽略",
+    "checksCount": "{{passed}}/{{total}} 项检查",
+    "frequencyOnDemand": "按需",
+    "frequencyAfterEdit": "每次编辑后",
+    "frequencyEvery5Min": "每5分钟",
+    "settings": "设置",
+    "runOnSave": "保存时运行检查",
+    "blockOnErrors": "发现错误时阻止保存",
+    "checkFrequency": "检查频率",
+    "title": "质量门",
+    "closeAriaLabel": "关闭质量门面板",
+    "runAllChecks": "运行所有检查",
+    "allPassedMessage": "你的内容已通过所有质量标准。"
+  },
+  "rightPanel": {
+    "info": {
+      "noDocumentSelected": "未选择文档",
+      "currentDocument": "当前文档",
+      "title": "标题",
+      "untitled": "未命名",
+      "updated": "更新于",
+      "todaysProgress": "今日进度",
+      "loading": "加载中...",
+      "noStatsAvailable": "暂无统计数据",
+      "wordsWritten": "字数",
+      "writingTime": "写作时间",
+      "skillsUsed": "已用技能",
+      "documentsCreated": "已创建文档",
+      "panelTitle": "信息"
+    },
+    "quality": {
+      "ready": "就绪",
+      "downloading": "下载中...",
+      "notReady": "未就绪",
+      "errorWithCode": "错误 ({{code}})",
+      "loadingJudgeStatus": "加载评判状态...",
+      "judgeStatusUnavailable": "评判状态不可用",
+      "judgeModelLabel": "评判模型：",
+      "initialize": "初始化",
+      "retry": "重试",
+      "loadingConstraints": "加载约束条件...",
+      "constraintsLabel": "约束条件：",
+      "rulesCount_one": "{{count}} 条规则",
+      "rulesCount_other": "{{count}} 条规则",
+      "moreCount": "+{{count}} 条",
+      "systemGroup": "系统",
+      "judgeModelCheck": "评判模型",
+      "judgeModelDescription": "用于质量评估的本地 AI 模型",
+      "available": "可用",
+      "writingConstraints": "写作约束",
+      "activeConstraints": "活跃约束",
+      "activeConstraintsDescription": "本项目的自定义写作规则",
+      "rulesDefinedCount_one": "已定义 {{count}} 条规则",
+      "rulesDefinedCount_other": "已定义 {{count}} 条规则",
+      "panelTitle": "质量",
+      "noProjectSelected": "未选择项目",
+      "judgeModelHeading": "评判模型",
+      "projectConstraints": "项目约束"
+    }
+  },
+  "shortcuts": {
+    "title": "键盘快捷键"
+  },
+  "zenMode": {
+    "pressEscToExit": "按 Esc 退出",
+    "exitAriaLabel": "退出禅模式",
+    "pressEscOrF11ToExit": "按 Esc 或 F11 退出",
+    "status": {
+      "wordCount": "{{count}} 字",
+      "readTime": "{{minutes}} 分钟阅读"
+    }
+  },
+  "primitives": {
+    "dialog": {
+      "close": "关闭"
+    },
+    "imageUpload": {
+      "placeholder": "点击或拖拽图片上传",
+      "hint": "PNG、JPG，最大 5MB",
+      "previewAlt": "预览",
+      "remove": "移除",
+      "errorNotImage": "请选择图片文件",
+      "errorTooLarge": "文件大小不能超过 {{maxMB}}MB"
+    },
+    "select": {
+      "placeholder": "选择..."
+    },
+    "toast": {
+      "close": "关闭"
+    },
+    "skeleton": {
+      "loading": "加载中…"
+    },
+    "spinner": {
+      "loading": "加载中"
     }
   }
 }

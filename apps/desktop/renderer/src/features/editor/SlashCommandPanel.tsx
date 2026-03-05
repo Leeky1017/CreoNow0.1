@@ -3,6 +3,7 @@ import {
   type SlashCommandDefinition,
   type SlashCommandId,
 } from "./slashCommands";
+import { useTranslation } from "react-i18next";
 
 interface SlashCommandPanelProps {
   open: boolean;
@@ -16,6 +17,8 @@ interface SlashCommandPanelProps {
 export function SlashCommandPanel(
   props: SlashCommandPanelProps,
 ): JSX.Element | null {
+  const { t } = useTranslation();
+
   if (!props.open) {
     return null;
   }
@@ -31,7 +34,7 @@ export function SlashCommandPanel(
         data-testid="slash-command-search-input"
         type="text"
         value={props.query}
-        placeholder="Search slash commands..."
+        placeholder={t('editor.slashCommand.searchPlaceholder')}
         onChange={(event) => props.onQueryChange(event.target.value)}
         onKeyDown={(event) => {
           if (event.key !== "Escape") {
@@ -48,7 +51,7 @@ export function SlashCommandPanel(
           data-testid="slash-command-empty-state"
           className="rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)] px-2 py-2 text-sm text-[var(--color-fg-muted)]"
         >
-          No commands found.
+          {t('editor.slashCommand.noCommandsFound')}
         </div>
       ) : (
         <ul className="space-y-1">

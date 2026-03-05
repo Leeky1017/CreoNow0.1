@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Text } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 import { Slider } from "../../components/primitives/Slider";
@@ -65,17 +66,21 @@ const themeButtonBaseStyles = [
   "duration-[var(--duration-fast)]",
 ].join(" ");
 
+type TFunction = (key: string, options?: Record<string, unknown>) => string;
+
 /**
  * Accent color options
  */
-const accentColors = [
-  { value: "#ffffff", label: "White" },
-  { value: "#3b82f6", label: "Blue" },
-  { value: "#22c55e", label: "Green" },
-  { value: "#f97316", label: "Orange" },
-  { value: "#8b5cf6", label: "Purple" },
-  { value: "#ec4899", label: "Pink" },
-];
+function getAccentColors(t: TFunction) {
+  return [
+    { value: "#ffffff", label: t('settingsDialog.appearance.colorWhite') },
+    { value: "#3b82f6", label: t('settingsDialog.appearance.colorBlue') },
+    { value: "#22c55e", label: t('settingsDialog.appearance.colorGreen') },
+    { value: "#f97316", label: t('settingsDialog.appearance.colorOrange') },
+    { value: "#8b5cf6", label: t('settingsDialog.appearance.colorPurple') },
+    { value: "#ec4899", label: t('settingsDialog.appearance.colorPink') },
+  ];
+}
 
 /**
  * Theme preview component
@@ -119,6 +124,7 @@ export function SettingsAppearancePage({
   settings,
   onSettingsChange,
 }: SettingsAppearancePageProps): JSX.Element {
+  const { t } = useTranslation();
   const updateSetting = <K extends keyof AppearanceSettings>(
     key: K,
     value: AppearanceSettings[K],
@@ -127,24 +133,26 @@ export function SettingsAppearancePage({
   };
 
   const themes: { mode: ThemeMode; label: string }[] = [
-    { mode: "light", label: "Light" },
-    { mode: "dark", label: "Dark" },
-    { mode: "system", label: "System" },
+    { mode: "light", label: t('settingsDialog.appearance.themeLight') },
+    { mode: "dark", label: t('settingsDialog.appearance.themeDark') },
+    { mode: "system", label: t('settingsDialog.appearance.themeSystem') },
   ];
+
+  const accentColors = getAccentColors(t);
 
   return (
     <div className="max-w-[560px]">
       {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">
-        Appearance
+        {t('settingsDialog.appearance.title')}
       </h1>
       <p className="text-[var(--color-fg-subtle)] text-sm mb-12 font-light">
-        Personalize the look and feel of your workspace.
+        {t('settingsDialog.appearance.subtitle')}
       </p>
 
       {/* Theme Selection */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>Theme</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.appearance.theme')}</h4>
 
         <div className="flex gap-4">
           {themes.map(({ mode, label }) => {
@@ -178,7 +186,7 @@ export function SettingsAppearancePage({
 
       {/* Accent Color */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>Accent Color</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.appearance.accentColor')}</h4>
 
         <div className="flex gap-3">
           {accentColors.map(({ value, label }) => {
@@ -194,7 +202,7 @@ export function SettingsAppearancePage({
                       : "hover:scale-110"
                   }`}
                   style={{ backgroundColor: value }}
-                  aria-label={`Select ${label} accent color`}
+                  aria-label={t('settingsDialog.appearance.selectAccentColor', { color: label })}
                 />
               </Tooltip>
             );
@@ -206,12 +214,12 @@ export function SettingsAppearancePage({
 
       {/* Font Size */}
       <div className="mb-6">
-        <h4 className={sectionLabelStyles}>Font Size</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.appearance.fontSize')}</h4>
 
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <Text size="small" color="muted">
-              Editor font size
+              {t('settingsDialog.appearance.editorFontSize')}
             </Text>
             <Text size="small" color="default" weight="medium">
               {settings.fontSize}px

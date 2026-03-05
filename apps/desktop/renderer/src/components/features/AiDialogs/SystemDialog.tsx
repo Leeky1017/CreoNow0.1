@@ -1,5 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import type { SystemDialogProps, SystemDialogType } from "./types";
 
 /**
@@ -77,7 +79,9 @@ const Spinner = ({ className = "" }: { className?: string }) => (
 /**
  * Default content for each dialog type
  */
-const defaultContent: Record<
+function getDefaultContent(
+  t: TFunction,
+): Record<
   SystemDialogType,
   {
     title: string;
@@ -86,30 +90,29 @@ const defaultContent: Record<
     secondaryLabel: string;
     tertiaryLabel?: string;
   }
-> = {
-  delete: {
-    title: "Delete Document?",
-    description:
-      "This action cannot be undone. The document and its version history will be permanently deleted.",
-    primaryLabel: "Delete",
-    secondaryLabel: "Cancel",
-  },
-  unsaved_changes: {
-    title: "Unsaved Changes",
-    description:
-      "You have unsaved changes. Do you want to save your progress before leaving?",
-    primaryLabel: "Save",
-    secondaryLabel: "Cancel",
-    tertiaryLabel: "Discard",
-  },
-  export_complete: {
-    title: "Export Complete",
-    description:
-      "Your document has been exported successfully. It has been saved to your local downloads folder.",
-    primaryLabel: "Open File",
-    secondaryLabel: "Done",
-  },
-};
+> {
+  return {
+    delete: {
+      title: t('systemDialog.delete.title'),
+      description: t('systemDialog.delete.description'),
+      primaryLabel: t('systemDialog.delete.primaryLabel'),
+      secondaryLabel: t('systemDialog.delete.secondaryLabel'),
+    },
+    unsaved_changes: {
+      title: t('systemDialog.unsavedChanges.title'),
+      description: t('systemDialog.unsavedChanges.description'),
+      primaryLabel: t('systemDialog.unsavedChanges.primaryLabel'),
+      secondaryLabel: t('systemDialog.unsavedChanges.secondaryLabel'),
+      tertiaryLabel: t('systemDialog.unsavedChanges.tertiaryLabel'),
+    },
+    export_complete: {
+      title: t('systemDialog.exportComplete.title'),
+      description: t('systemDialog.exportComplete.description'),
+      primaryLabel: t('systemDialog.exportComplete.primaryLabel'),
+      secondaryLabel: t('systemDialog.exportComplete.secondaryLabel'),
+    },
+  };
+}
 
 /**
  * Get icon by dialog type
@@ -408,10 +411,11 @@ export function SystemDialog({
   simulateDelay = 0,
   showKeyboardHints = true,
 }: SystemDialogProps): JSX.Element {
+  const { t } = useTranslation();
   const [actionState, setActionState] = useState<ActionState>("idle");
   const primaryButtonRef = useRef<HTMLButtonElement>(null);
 
-  const defaultContentForType = defaultContent[type];
+  const defaultContentForType = getDefaultContent(t)[type];
   const displayTitle = title || defaultContentForType.title;
   const displayDescription = description || defaultContentForType.description;
   const displayPrimaryLabel =
@@ -488,12 +492,12 @@ export function SystemDialog({
       return (
         <>
           <Spinner />
-          <span>Processing...</span>
+          <span>{t('systemDialog.processing')}</span>
         </>
       );
     }
     if (actionState === "success") {
-      return <span>Done!</span>;
+      return <span>{t('systemDialog.done')}</span>;
     }
     return <span>{displayPrimaryLabel}</span>;
   };
@@ -611,10 +615,10 @@ export function SystemDialog({
           {showKeyboardHints && (
             <div className={keyboardHintStyles}>
               <span>
-                <kbd className={kbdStyles}>Enter</kbd> to confirm
+                <kbd className={kbdStyles}>Enter</kbd> {t('systemDialog.keyboard.toConfirm')}
               </span>
               <span>
-                <kbd className={kbdStyles}>Esc</kbd> to cancel
+                <kbd className={kbdStyles}>Esc</kbd> {t('systemDialog.keyboard.toCancel')}
               </span>
             </div>
           )}

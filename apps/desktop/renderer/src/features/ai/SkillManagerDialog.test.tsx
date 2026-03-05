@@ -165,11 +165,11 @@ describe("SkillManagerDialog", () => {
     await user.type(screen.getByTestId("skill-form-name"), "文言文转白话");
     await user.type(
       screen.getByTestId("skill-form-description"),
-      "把古文改写成现代白话文",
+      "把古文Rewrite成现代白话文",
     );
     await user.type(
       screen.getByTestId("skill-form-prompt-template"),
-      "请将文本改写为白话文：{{input}}",
+      "请将文本Rewrite为白话文：{{input}}",
     );
 
     await user.click(screen.getByTestId("skill-manager-save"));
@@ -190,7 +190,7 @@ describe("SkillManagerDialog", () => {
       />,
     );
 
-    await user.type(screen.getByTestId("skill-form-name"), "空模板技能");
+    await user.type(screen.getByTestId("skill-form-name"), "空模板skills");
     await user.type(screen.getByTestId("skill-form-description"), "desc");
 
     await user.click(screen.getByTestId("skill-manager-save"));
@@ -215,7 +215,7 @@ describe("SkillManagerDialog", () => {
 
     await user.type(
       screen.getByTestId("skill-manager-ai-description"),
-      "创建一个技能，把选中文本改写成鲁迅风格",
+      "Create一个skills，把Selected TextRewrite成鲁迅风格",
     );
     await user.click(screen.getByTestId("skill-manager-ai-generate"));
 
@@ -260,11 +260,11 @@ describe("SkillManagerDialog", () => {
     await user.click(screen.getByTestId("skill-item-delete-skill-1"));
 
     await waitFor(() => {
-      expect(screen.getByText("此操作不可撤销")).toBeInTheDocument();
+      expect(screen.getByText("This action cannot be undone")).toBeInTheDocument();
     });
 
     const dialog = screen.getByRole("dialog");
-    await user.click(within(dialog).getByRole("button", { name: "删除" }));
+    await user.click(within(dialog).getByRole("button", { name: "Delete" }));
 
     await waitFor(() => {
       expect(screen.queryByText("文言文转白话")).not.toBeInTheDocument();

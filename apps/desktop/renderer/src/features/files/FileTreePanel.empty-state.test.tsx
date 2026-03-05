@@ -78,13 +78,13 @@ describe("FileTreePanel empty state", () => {
     await renderFileTreePanel("proj-empty");
 
     expect(
-      screen.getByText("暂无文件"),
+      screen.getByText("No Files"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("开始创建你的第一个文件"),
+      screen.getByText("Start by creating your first file"),
     ).toBeInTheDocument();
 
-    const createButton = screen.getByRole("button", { name: "新建文件" });
+    const createButton = screen.getByRole("button", { name: "New File" });
     fireEvent.click(createButton);
     await flushFileTreeAsyncUpdates();
 

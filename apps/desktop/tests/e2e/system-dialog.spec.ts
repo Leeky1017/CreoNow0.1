@@ -152,9 +152,9 @@ test("system dialog: cancel/confirm across file tree + knowledge graph", async (
   );
   await expect(knowledgeGraphDialog).toBeVisible();
   await expect(
-    knowledgeGraphDialog.getByRole("button", { name: "Graph" }),
+    knowledgeGraphDialog.getByTestId("kg-view-graph"),
   ).toBeVisible();
-  await knowledgeGraphDialog.getByRole("button", { name: "List" }).click();
+  await knowledgeGraphDialog.getByTestId("kg-view-list").click();
   await expect(page.getByTestId("kg-entity-create")).toBeEnabled();
 
   await page.getByTestId("kg-entity-name").fill("Test Entity");
@@ -195,17 +195,16 @@ test("system dialog: cancel/confirm across file tree + knowledge graph", async (
 
   await expect(page.getByTestId(`kg-entity-row-${entityId}`)).toBeVisible();
 
-  const entityDialog = page.getByRole("dialog", { name: "Delete Entity?" });
+  const entityDialog = page.getByTestId("system-dialog-delete");
   await page.getByTestId(`kg-entity-delete-${entityId}`).click();
   await expect(entityDialog).toBeVisible();
-  await expect(entityDialog.getByText("Delete Entity?")).toBeVisible();
-  await entityDialog.getByRole("button", { name: "Cancel" }).click();
+  await entityDialog.getByTestId("system-dialog-secondary").click();
   await expect(entityDialog).not.toBeVisible();
   await expect(page.getByTestId(`kg-entity-row-${entityId}`)).toBeVisible();
 
   await page.getByTestId(`kg-entity-delete-${entityId}`).click();
   await expect(entityDialog).toBeVisible();
-  await entityDialog.getByRole("button", { name: "Delete" }).click();
+  await entityDialog.getByTestId("system-dialog-primary").click();
   await expect(entityDialog).not.toBeVisible();
   await expect(page.getByTestId(`kg-entity-row-${entityId}`)).toHaveCount(0);
 

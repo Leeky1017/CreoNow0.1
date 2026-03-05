@@ -150,7 +150,6 @@ test.describe("OutlinePanel", () => {
 
     // Verify empty state is shown
     await expect(page.getByTestId("outline-empty-state")).toBeVisible();
-    await expect(page.getByText("No outline yet")).toBeVisible();
 
     await electronApp.close();
   });

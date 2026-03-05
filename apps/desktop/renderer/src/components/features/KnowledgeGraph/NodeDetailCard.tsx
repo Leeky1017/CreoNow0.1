@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Button } from "../../primitives/Button";
 import { Avatar } from "../../primitives/Avatar";
 import { Badge } from "../../primitives/Badge";
@@ -26,13 +27,15 @@ const typeColorVars: Record<NodeType, string> = {
   faction: "var(--color-node-other)",
 };
 
-const typeLabels: Record<NodeType, string> = {
-  character: "Character",
-  location: "Location",
-  event: "Event",
-  item: "Item",
-  faction: "Faction",
-};
+function getTypeLabels(t: TFunction): Record<NodeType, string> {
+  return {
+    character: t('kg.nodeDetail.character'),
+    location: t('kg.nodeDetail.location'),
+    event: t('kg.nodeDetail.event'),
+    item: t('kg.nodeDetail.item'),
+    faction: t('kg.nodeDetail.faction'),
+  };
+}
 
 /**
  * Card base styles
@@ -66,6 +69,7 @@ export function NodeDetailCard({
   onClose,
 }: NodeDetailCardProps): JSX.Element {
   const { t } = useTranslation();
+  const typeLabels = getTypeLabels(t);
   const { label, type, avatar, metadata } = node;
   const { role, attributes, description } = metadata || {};
   const typeColor = typeColorVars[type];
@@ -112,7 +116,7 @@ export function NodeDetailCard({
             <button
               onClick={onDelete}
               className="p-1 text-[var(--color-fg-subtle)] hover:text-[var(--color-error)] transition-colors"
-              aria-label="Delete node"
+              aria-label={t('kg.nodeDetail.deleteNode')}
               title={t('kg.nodeDetail.deleteNode')}
             >
               <svg
@@ -134,7 +138,7 @@ export function NodeDetailCard({
           <button
             onClick={onClose}
             className="p-1 text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
-            aria-label="Close"
+            aria-label={t('kg.nodeDetail.close')}
           >
             <svg
               width="16"
@@ -183,7 +187,7 @@ export function NodeDetailCard({
           onClick={onEdit}
           className="flex-1"
         >
-          Edit Node
+          {t('kg.nodeDetail.editNode')}
         </Button>
         <Button
           variant="secondary"
@@ -191,7 +195,7 @@ export function NodeDetailCard({
           onClick={onViewDetails}
           className="flex-1"
         >
-          View Details
+          {t('kg.nodeDetail.viewDetails')}
         </Button>
       </div>
     </div>

@@ -5,6 +5,8 @@
  * Shows a warning message and requires explicit confirmation.
  * Refactored to use ConfirmDialog composite.
  */
+import { useTranslation } from "react-i18next";
+
 import { ConfirmDialog } from "../../components/composites/ConfirmDialog";
 
 export interface DeleteConfirmDialogProps {
@@ -40,6 +42,8 @@ export function DeleteConfirmDialog({
   characterName,
   onConfirm,
 }: DeleteConfirmDialogProps): JSX.Element {
+  const { t } = useTranslation();
+
   const handleConfirm = () => {
     onConfirm();
     onOpenChange(false);
@@ -48,7 +52,7 @@ export function DeleteConfirmDialog({
   return (
     <ConfirmDialog
       open={open}
-      title="Delete Character"
+      title={t('character.deleteConfirm.title')}
       description={`Are you sure you want to delete "${characterName}"? This action cannot be undone. All their data, including relationships and chapter appearances, will be removed.`}
       confirmLabel="Delete"
       cancelLabel="Cancel"

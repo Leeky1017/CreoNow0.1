@@ -218,7 +218,7 @@ test("export: markdown writes deterministic file under userData exports", async 
   expect(exported).toContain("Export me");
 
   // Close dialog and app
-  await page.getByRole("button", { name: "Done" }).click();
+  await page.getByTestId("export-done").click();
   await expect(page.getByTestId("export-dialog")).not.toBeVisible();
 
   await electronApp.close();

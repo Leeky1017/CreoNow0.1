@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 import { Text } from "../../components/primitives";
@@ -42,17 +43,21 @@ export interface SettingsDialogProps {
   defaultTab?: SettingsTab;
 }
 
+type TFunction = (key: string, options?: Record<string, unknown>) => string;
+
 /**
  * Nav item configuration.
  */
-const navItems: Array<{ value: SettingsTab; label: string }> = [
-  { value: "general", label: "General" },
-  { value: "appearance", label: "Appearance" },
-  { value: "ai", label: "AI" },
-  { value: "judge", label: "Judge" },
-  { value: "analytics", label: "Analytics" },
-  { value: "account", label: "Account" },
-];
+function getNavItems(t: TFunction): Array<{ value: SettingsTab; label: string }> {
+  return [
+    { value: "general", label: t('settingsDialog.dialog.navGeneral') },
+    { value: "appearance", label: t('settingsDialog.dialog.navAppearance') },
+    { value: "ai", label: t('settingsDialog.dialog.navAi') },
+    { value: "judge", label: t('settingsDialog.dialog.navJudge') },
+    { value: "analytics", label: t('settingsDialog.dialog.navAnalytics') },
+    { value: "account", label: t('settingsDialog.dialog.navAccount') },
+  ];
+}
 
 /**
  * Overlay styles.
@@ -156,6 +161,8 @@ export function SettingsDialog({
   onOpenChange,
   defaultTab = "general",
 }: SettingsDialogProps): JSX.Element {
+  const { t } = useTranslation();
+  const navItems = getNavItems(t);
   const [activeTab, setActiveTab] = React.useState<SettingsTab>(defaultTab);
   const [generalSettings, setGeneralSettings] = React.useState<GeneralSettings>(
     defaultGeneralSettings,
@@ -227,7 +234,7 @@ export function SettingsDialog({
                 weight="semibold"
                 className="tracking-[0.15em]"
               >
-                Settings
+                {t('settingsDialog.dialog.title')}
               </Text>
             </div>
 
@@ -258,7 +265,7 @@ export function SettingsDialog({
             {/* Close button */}
             <DialogPrimitive.Close className={closeButtonStyles}>
               <X size={20} strokeWidth={1.5} />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">{t('settingsDialog.dialog.close')}</span>
             </DialogPrimitive.Close>
 
             {/* Scrollable content */}
@@ -268,11 +275,10 @@ export function SettingsDialog({
 
             {/* Hidden title for accessibility */}
             <DialogPrimitive.Title className="sr-only">
-              Settings
+              {t('settingsDialog.dialog.title')}
             </DialogPrimitive.Title>
             <DialogPrimitive.Description className="sr-only">
-              Configure application settings including appearance, AI, judge,
-              and analytics.
+              {t('settingsDialog.dialog.description')}
             </DialogPrimitive.Description>
           </div>
         </DialogPrimitive.Content>

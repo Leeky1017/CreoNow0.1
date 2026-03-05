@@ -177,7 +177,7 @@ describe("DashboardPage", () => {
         expect(screen.getByTestId("dashboard-empty")).toBeInTheDocument();
       });
 
-      expect(screen.getByText("开始创建你的第一个创作项目")).toBeInTheDocument();
+      expect(screen.getByText("Create your first writing project")).toBeInTheDocument();
       expect(screen.getByTestId("dashboard-create-first")).toBeInTheDocument();
     });
 
@@ -270,7 +270,7 @@ describe("DashboardPage", () => {
       await user.type(searchInput, "nonexistent");
 
       await waitFor(() => {
-        expect(screen.getByText("未找到匹配结果")).toBeInTheDocument();
+        expect(screen.getByText("No matching results")).toBeInTheDocument();
       });
     });
   });
@@ -380,7 +380,7 @@ describe("DashboardPage", () => {
         expect(screen.getByTestId("dashboard-page")).toBeInTheDocument();
       });
 
-      expect(screen.getByText("已归档 (1)")).toBeInTheDocument();
+      expect(screen.getByText("Archived (1)")).toBeInTheDocument();
       expect(screen.queryByText("Archived Draft")).not.toBeInTheDocument();
 
       await userEvent.click(screen.getByTestId("dashboard-archived-toggle"));

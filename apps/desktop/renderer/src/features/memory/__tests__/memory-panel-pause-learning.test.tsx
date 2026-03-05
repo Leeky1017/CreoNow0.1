@@ -93,7 +93,7 @@ describe("MemoryPanel pause learning", () => {
 
     render(<MemoryPanel />);
 
-    const pauseButton = await screen.findByRole("button", { name: "暂停学习" });
+    const pauseButton = await screen.findByRole("button", { name: "Pause Learning" });
     await user.click(pauseButton);
 
     await waitFor(() => {
@@ -105,7 +105,7 @@ describe("MemoryPanel pause learning", () => {
     });
 
     const resumeButton = await screen.findByRole("button", {
-      name: "恢复学习",
+      name: "Resume Learning",
     });
     await user.click(resumeButton);
 

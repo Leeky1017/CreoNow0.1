@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollArea } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 import { SearchInput } from "../../components/composites/SearchInput";
@@ -230,6 +231,7 @@ function CollapseToggle({
   isCollapsed: boolean;
   onToggle: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <button
       type="button"
@@ -238,7 +240,7 @@ function CollapseToggle({
         onToggle();
       }}
       className="w-4 h-4 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors shrink-0 mr-0.5"
-      aria-label={isCollapsed ? "Expand" : "Collapse"}
+      aria-label={isCollapsed ? t('outline.expand') : t('outline.collapse')}
     >
       {isCollapsed ? <ChevronRightIcon /> : <ChevronDownIcon />}
     </button>
@@ -255,9 +257,10 @@ function HoverActions({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="ml-auto flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-fast)] shrink-0">
-      <Tooltip content="Edit (F2)">
+      <Tooltip content={t('outline.editShortcut')}>
         <button
           type="button"
           onClick={(e) => {
@@ -265,12 +268,12 @@ function HoverActions({
             onEdit();
           }}
           className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-          aria-label="Edit"
+          aria-label={t('outline.edit')}
         >
           <EditIcon />
         </button>
       </Tooltip>
-      <Tooltip content="Delete (Del)">
+      <Tooltip content={t('outline.deleteShortcut')}>
         <button
           type="button"
           onClick={(e) => {
@@ -278,7 +281,7 @@ function HoverActions({
             onDelete();
           }}
           className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-          aria-label="Delete"
+          aria-label={t('outline.delete')}
         >
           <DeleteIcon />
         </button>
@@ -352,6 +355,7 @@ function OutlineItemRow({
   onDrop: (e: React.DragEvent) => void;
   draggable: boolean;
 }) {
+  const { t } = useTranslation();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const rowRef = React.useRef<HTMLDivElement>(null);
   const style = levelStyles[item.level];
@@ -454,7 +458,7 @@ function OutlineItemRow({
 
         {isDragging && (
           <div className="ml-auto mr-2 text-xs text-[var(--color-info)] font-mono tracking-tighter shrink-0">
-            DRAGGING
+            {t('outline.dragging')}
           </div>
         )}
 
@@ -470,6 +474,7 @@ function OutlineItemRow({
  * Empty state component
  */
 function EmptyState() {
+  const { t } = useTranslation();
   return (
     <div
       className="flex flex-col items-center justify-center py-6 text-center border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] mx-3 my-3"
@@ -477,9 +482,9 @@ function EmptyState() {
     >
       <EmptyDocumentIcon />
       <p className="text-[11px] text-[var(--color-fg-subtle)] leading-tight px-2">
-        No outline yet.
+        {t('outline.emptyTitle')}
         <br />
-        Headings appear here automatically.
+        {t('outline.emptyDescription')}
       </p>
     </div>
   );
@@ -489,10 +494,11 @@ function EmptyState() {
  * No results state for search
  */
 function NoResultsState({ query }: { query: string }) {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center justify-center py-6 text-center mx-3">
       <p className="text-[11px] text-[var(--color-fg-subtle)] leading-tight">
-        No results for &ldquo;{query}&rdquo;
+        {t('outline.noResults', { query })}
       </p>
     </div>
   );
@@ -530,6 +536,7 @@ export function OutlinePanel({
   draggable = true,
 }: OutlinePanelProps): JSX.Element {
   void onScrollSync;
+  const { t } = useTranslation();
   // Flatten items for rendering
   const flatItems = React.useMemo(() => flattenOutline(items), [items]);
 
@@ -840,32 +847,32 @@ export function OutlinePanel({
       className="flex flex-col h-full bg-[var(--color-bg-surface)]"
       data-testid="outline-panel"
       role="tree"
-      aria-label="Document outline"
+      aria-label={t('outline.ariaLabel')}
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
       {/* Header */}
       <div className="h-12 border-b border-[var(--color-separator)] flex items-center justify-between px-4 shrink-0">
         <span className="text-[10px] font-medium tracking-wider text-[var(--color-fg-muted)] uppercase">
-          Outline
+          {t('outline.title')}
         </span>
         <div className="flex gap-2">
-          <Tooltip content="Expand All">
+          <Tooltip content={t('outline.expandAll')}>
             <button
               type="button"
               onClick={expandAll}
               className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
-              aria-label="Expand all outline items"
+              aria-label={t('outline.expandAllAria')}
             >
               <ExpandAllIcon />
             </button>
           </Tooltip>
-          <Tooltip content="Collapse All">
+          <Tooltip content={t('outline.collapseAll')}>
             <button
               type="button"
               onClick={collapseAll}
               className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
-              aria-label="Collapse all outline items"
+              aria-label={t('outline.collapseAllAria')}
             >
               <CollapseAllIcon />
             </button>
@@ -879,7 +886,7 @@ export function OutlinePanel({
           value={searchQuery}
           onChange={setSearchQuery}
           onClear={() => setSearchQuery("")}
-          placeholder="Filter outline..."
+          placeholder={t('outline.filterPlaceholder')}
           data-testid="outline-search-input"
         />
       </div>
@@ -888,7 +895,7 @@ export function OutlinePanel({
       {selectedIds.size > 0 && (
         <div className="px-3 py-1.5 bg-[var(--color-bg-selected)] border-b border-[var(--color-separator)] flex items-center justify-between">
           <span className="text-[10px] text-[var(--color-fg-muted)]">
-            {selectedIds.size} selected
+            {t('outline.selectedCount', { count: selectedIds.size })}
           </span>
           <div className="flex gap-2">
             <button
@@ -896,14 +903,14 @@ export function OutlinePanel({
               onClick={() => onDelete?.([...selectedIds])}
               className="text-[10px] text-[var(--color-error)] hover:underline"
             >
-              Delete
+              {t('outline.delete')}
             </button>
             <button
               type="button"
               onClick={clearSelection}
               className="text-[10px] text-[var(--color-fg-muted)] hover:underline"
             >
-              Clear
+              {t('outline.clearSelection')}
             </button>
           </div>
         </div>
@@ -963,7 +970,7 @@ export function OutlinePanel({
         <div className="px-3 py-1.5 border-t border-[var(--color-separator)] flex items-center gap-2">
           <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)]" />
           <span className="text-[10px] text-[var(--color-fg-muted)]">
-            Sync with editor
+            {t('outline.syncWithEditor')}
           </span>
         </div>
       )}

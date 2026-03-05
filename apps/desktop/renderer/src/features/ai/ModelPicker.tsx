@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button, Input, Text } from "../../components/primitives";
 
@@ -31,6 +32,7 @@ type ModelPickerProps = {
  * ModelPicker renders a searchable, grouped model dropdown.
  */
 export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = React.useState("");
   const [groupBy, setGroupBy] = React.useState<"provider" | "none">("provider");
 
@@ -122,7 +124,7 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
       />
       <div
         role="dialog"
-        aria-label="Select Model"
+        aria-label={t('ai.modelPicker.selectModel')}
         onClick={(e) => e.stopPropagation()}
         className="absolute bottom-full left-0 right-0 mb-1 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
@@ -132,7 +134,7 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
               data-testid="ai-model-search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.currentTarget.value)}
-              placeholder="Search all models"
+              placeholder={t('ai.modelPicker.searchPlaceholder')}
               className="h-8"
               fullWidth
             />
@@ -144,12 +146,12 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
                 setGroupBy(e.currentTarget.value as "provider" | "none")
               }
             >
-              <option value="provider">Group by</option>
-              <option value="none">No group</option>
+              <option value="provider">{t('ai.modelPicker.groupBy')}</option>
+              <option value="none">{t('ai.modelPicker.noGroup')}</option>
             </select>
           </div>
           <Text size="tiny" color="muted" className="uppercase tracking-wide">
-            Models
+            {t('ai.modelPicker.modelsTitle')}
           </Text>
         </div>
 
@@ -157,7 +159,7 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
           {recentModels.length > 0 ? (
             <div className="px-1.5 pb-1">
               <Text size="tiny" color="muted" className="px-1 py-1 uppercase">
-                Recently Used
+                {t('ai.modelPicker.recentlyUsed')}
               </Text>
               {recentModels.map(renderItem)}
             </div>
@@ -185,7 +187,7 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
           {filteredModels.length === 0 ? (
             <div className="px-3 py-2">
               <Text size="small" color="muted">
-                No models found.
+                {t('ai.modelPicker.noModelsFound')}
               </Text>
             </div>
           ) : null}

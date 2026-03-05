@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface ImageUploadProps {
   /** Current value (File object or URL string) */
@@ -52,9 +53,12 @@ export function ImageUpload({
   onError,
   disabled = false,
   className = "",
-  placeholder = "Click or drag image to upload",
-  hint = "PNG, JPG up to 5MB",
+  placeholder,
+  hint,
 }: ImageUploadProps): JSX.Element {
+  const { t } = useTranslation();
+  const resolvedPlaceholder = placeholder ?? t("primitives.imageUpload.placeholder");
+  const resolvedHint = hint ?? t("primitives.imageUpload.hint");
   const [isDragging, setIsDragging] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -97,20 +101,20 @@ export function ImageUpload({
     (file: File): boolean => {
       // Check file type
       if (!file.type.startsWith("image/")) {
-        onError?.("Please select an image file");
+        onError?.(t("primitives.imageUpload.errorNotImage"));
         return false;
       }
 
       // Check file size
       if (file.size > maxSize) {
         const maxMB = Math.round(maxSize / (1024 * 1024));
-        onError?.(`File size must be less than ${maxMB}MB`);
+        onError?.(t("primitives.imageUpload.errorTooLarge", { maxMB }));
         return false;
       }
 
       return true;
     },
-    [maxSize, onError],
+    [maxSize, onError, t],
   );
 
   const handleFile = useCallback(
@@ -281,7 +285,7 @@ export function ImageUpload({
         <div className="absolute inset-0 w-full h-full rounded-[var(--radius-sm)] overflow-hidden">
           <img
             src={previewUrl}
-            alt="Preview"
+            alt={t("primitives.imageUpload.previewAlt")}
             className="w-full h-full object-cover opacity-80 group-hover:opacity-40 transition-opacity"
           />
           {/* Remove button overlay */}
@@ -293,7 +297,7 @@ export function ImageUpload({
               className="bg-[var(--color-error)]/20 hover:bg-[var(--color-error)]/40 text-[var(--color-error)] px-3 py-1.5 rounded-[var(--radius-sm)] text-xs font-medium border border-[var(--color-error)]/30 transition-colors backdrop-blur-sm"
               data-testid="image-upload-remove"
             >
-              Remove
+              {t("primitives.imageUpload.remove")}
             </button>
           </div>
         </div>
@@ -318,9 +322,9 @@ export function ImageUpload({
           </div>
           {/* Text */}
           <div className="text-center">
-            <p className="text-xs font-medium">{placeholder}</p>
+            <p className="text-xs font-medium">{resolvedPlaceholder}</p>
             <p className="text-[10px] text-[var(--color-fg-subtle)] mt-1">
-              {hint}
+              {resolvedHint}
             </p>
           </div>
         </div>

@@ -381,7 +381,7 @@ describe("VersionHistoryPanel", () => {
     );
 
     // For non-selected cards, affectedParagraphs shows in a simplified format
-    expect(screen.getByText("3 段落受影响")).toBeInTheDocument();
+    expect(screen.getByText("3 paragraphs affected")).toBeInTheDocument();
   });
 
   it("renders version metadata in selected card", () => {
@@ -398,7 +398,7 @@ describe("VersionHistoryPanel", () => {
             wordChange: { type: "added", count: 100 },
             reason: "ai-apply:run-123",
             affectedParagraphs: 2,
-            diffSummary: "添加了新的安全协议章节...",
+            diffSummary: "Add了新的安全协议Chapters...",
           },
         ],
       },
@@ -413,13 +413,13 @@ describe("VersionHistoryPanel", () => {
     );
 
     // Selected card shows full metadata
-    expect(screen.getByText("AI 修改")).toBeInTheDocument();
-    expect(screen.getByText("2 段落受影响")).toBeInTheDocument();
-    expect(screen.getByText("变更预览")).toBeInTheDocument();
-    expect(screen.getByText("添加了新的安全协议章节...")).toBeInTheDocument();
+    expect(screen.getByText("AI Modification")).toBeInTheDocument();
+    expect(screen.getByText("2 paragraphs affected")).toBeInTheDocument();
+    expect(screen.getByText("Change Preview")).toBeInTheDocument();
+    expect(screen.getByText("Add了新的安全协议Chapters...")).toBeInTheDocument();
   });
 
-  it("renders ai-accept reason as AI 修改 label", () => {
+  it("renders ai-accept reason as AI Modification label", () => {
     const groupsWithAiAccept: TimeGroup[] = [
       {
         label: "Today",
@@ -445,7 +445,7 @@ describe("VersionHistoryPanel", () => {
       />,
     );
 
-    expect(screen.getByText("AI 修改")).toBeInTheDocument();
+    expect(screen.getByText("AI Modification")).toBeInTheDocument();
   });
 
   it("should render AI mark tag when showAiMarks is enabled", () => {

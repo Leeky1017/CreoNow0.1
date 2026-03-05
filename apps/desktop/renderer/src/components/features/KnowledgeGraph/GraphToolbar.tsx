@@ -1,37 +1,41 @@
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Button } from "../../primitives/Button";
 import type { GraphToolbarProps, NodeFilter } from "./types";
 
 /**
  * Filter button configuration
  */
-const filterButtons: Array<{
+function getFilterButtons(t: TFunction): Array<{
   filter: NodeFilter;
   label: string;
   colorClass: string;
-}> = [
-  { filter: "all", label: "All", colorClass: "bg-[var(--color-fg-muted)]" },
-  {
-    filter: "character",
-    label: "Roles",
-    colorClass: "bg-[var(--color-node-character)]",
-  },
-  {
-    filter: "location",
-    label: "Locations",
-    colorClass: "bg-[var(--color-node-location)]",
-  },
-  {
-    filter: "event",
-    label: "Events",
-    colorClass: "bg-[var(--color-node-event)]",
-  },
-  { filter: "item", label: "Items", colorClass: "bg-[var(--color-node-item)]" },
-  {
-    filter: "faction",
-    label: "Factions",
-    colorClass: "bg-[var(--color-node-other)]",
-  },
-];
+}> {
+  return [
+    { filter: "all", label: t('kg.toolbar.all'), colorClass: "bg-[var(--color-fg-muted)]" },
+    {
+      filter: "character",
+      label: t('kg.toolbar.roles'),
+      colorClass: "bg-[var(--color-node-character)]",
+    },
+    {
+      filter: "location",
+      label: t('kg.toolbar.locations'),
+      colorClass: "bg-[var(--color-node-location)]",
+    },
+    {
+      filter: "event",
+      label: t('kg.toolbar.events'),
+      colorClass: "bg-[var(--color-node-event)]",
+    },
+    { filter: "item", label: t('kg.toolbar.items'), colorClass: "bg-[var(--color-node-item)]" },
+    {
+      filter: "faction",
+      label: t('kg.toolbar.factions'),
+      colorClass: "bg-[var(--color-node-other)]",
+    },
+  ];
+}
 
 /**
  * Filter button styles
@@ -99,6 +103,9 @@ export function GraphToolbar({
   onAddNode,
   onBack,
 }: GraphToolbarProps): JSX.Element {
+  const { t } = useTranslation();
+  const filterButtons = getFilterButtons(t);
+
   return (
     <header className={toolbarStyles}>
       {/* Left section: Back button + Title */}
@@ -108,7 +115,7 @@ export function GraphToolbar({
             <button
               onClick={onBack}
               className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-              aria-label="Go back"
+              aria-label={t('kg.toolbar.goBack')}
             >
               <svg
                 width="20"
@@ -125,7 +132,7 @@ export function GraphToolbar({
           </>
         )}
         <h1 className="text-sm font-medium tracking-wide text-[var(--color-fg-default)]">
-          Knowledge Graph
+          {t('kg.toolbar.title')}
         </h1>
       </div>
 
@@ -156,7 +163,7 @@ export function GraphToolbar({
           <button
             onClick={onZoomOut}
             className="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
-            aria-label="Zoom out"
+            aria-label={t('kg.toolbar.zoomOut')}
           >
             <svg
               width="14"
@@ -175,7 +182,7 @@ export function GraphToolbar({
           <button
             onClick={onZoomIn}
             className="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
-            aria-label="Zoom in"
+            aria-label={t('kg.toolbar.zoomIn')}
           >
             <svg
               width="14"
@@ -209,7 +216,7 @@ export function GraphToolbar({
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          Add Node
+          {t('kg.toolbar.addNode')}
         </Button>
       </div>
     </header>

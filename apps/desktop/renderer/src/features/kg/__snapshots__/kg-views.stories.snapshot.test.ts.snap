@@ -141,12 +141,12 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       <h3
         class="text-sm font-semibold text-[color:var(--color-fg-default)]"
       >
-        暂无角色
+        No Characters
       </h3>
       <p
         class="text-xs text-[color:var(--color-fg-muted)] max-w-[240px] leading-relaxed"
       >
-        开始创建你的第一个角色
+        Create your first character
       </p>
       <div
         class="mt-1"
@@ -155,7 +155,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           class="focus-ring px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
           type="button"
         >
-          创建角色
+          Create Character
         </button>
       </div>
     </div>
@@ -436,12 +436,12 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
             <p
               class="text-sm text-[var(--color-fg-muted)]"
             >
-              暂无实体，点击添加你的第一个角色或地点
+              No entities yet. Click to add your first character or location
             </p>
             <p
               class="text-xs text-[var(--color-fg-subtle)] mt-1"
             >
-              你可以在关系图中拖拽节点并建立关系
+              You can drag nodes and create relationships in the graph
             </p>
           </div>
           <button
@@ -468,7 +468,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
                 y2="12"
               />
             </svg>
-            添加节点
+            Add Node
           </button>
         </div>
       </div>
@@ -790,7 +790,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         class="absolute bottom-6 left-6 z-30"
       >
         <button
-          aria-label="Add node"
+          aria-label="Add Node"
           class="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-lg flex items-center justify-center transition-transform hover:scale-105"
         >
           <svg
@@ -1285,7 +1285,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         class="absolute bottom-6 left-6 z-30"
       >
         <button
-          aria-label="Add node"
+          aria-label="Add Node"
           class="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-lg flex items-center justify-center transition-transform hover:scale-105"
         >
           <svg

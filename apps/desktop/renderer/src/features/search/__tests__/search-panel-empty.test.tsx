@@ -33,9 +33,9 @@ describe("search panel empty state (SR1-R1-S3)", () => {
   it("should render empty hint when no fts match exists", () => {
     render(<SearchPanel projectId="proj_1" open={true} />);
 
-    expect(screen.getByText("未找到匹配结果")).toBeInTheDocument();
+    expect(screen.getByText("No matching results")).toBeInTheDocument();
     expect(
-      screen.getByText("建议检查拼写或使用不同关键词"),
+      screen.getByText("Try checking your spelling or using different keywords"),
     ).toBeInTheDocument();
   });
 });

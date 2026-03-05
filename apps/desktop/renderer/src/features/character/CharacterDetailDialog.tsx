@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {
   Avatar,
@@ -249,6 +250,8 @@ function TraitTag({
   trait: string;
   onRemove?: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <div
       className={[
@@ -286,7 +289,7 @@ function TraitTag({
             "scale-75",
             "group-hover:scale-100",
           ].join(" ")}
-          aria-label={`Remove ${trait} trait`}
+          aria-label={t('character.detail.removeTrait', { trait })}
         >
           <CloseIcon />
         </button>
@@ -305,6 +308,7 @@ function RelationshipItem({
   relationship: CharacterRelationship;
   onRemove?: () => void;
 }) {
+  const { t } = useTranslation();
   const typeConfig = RELATIONSHIP_TYPE_DISPLAY[relationship.type];
 
   return (
@@ -341,7 +345,7 @@ function RelationshipItem({
             type="button"
             onClick={onRemove}
             className="focus-ring opacity-0 group-hover:opacity-100 text-[var(--color-fg-placeholder)] hover:text-[var(--color-error)] transition-[opacity,color]"
-            aria-label={`Remove relationship with ${relationship.characterName}`}
+            aria-label={t('character.detail.removeRelationship', { name: relationship.characterName })}
           >
             <CloseIcon />
           </button>
@@ -434,6 +438,8 @@ export function CharacterDetailDialog({
   availableCharacters,
   container,
 }: CharacterDetailDialogProps): JSX.Element | null {
+  const { t } = useTranslation();
+
   // Form state
   const [editedCharacter, setEditedCharacter] = React.useState<Character | null>(null);
   const [newTrait, setNewTrait] = React.useState("");
@@ -605,11 +611,11 @@ export function CharacterDetailDialog({
                   value={editedCharacter.name}
                   onChange={(e) => handleFieldChange("name", e.target.value)}
                   className="bg-transparent text-xl font-semibold text-[var(--color-fg-default)] focus:outline-none border-b border-transparent focus:border-[var(--color-info)]/30 pb-0.5 w-full mr-4 placeholder-[var(--color-fg-placeholder)]"
-                  placeholder="Character Name"
+                  placeholder={t('character.detail.namePlaceholder')}
                 />
                 <DialogPrimitive.Close
                   className="p-2 text-[var(--color-fg-placeholder)] hover:text-[var(--color-fg-default)] transition-colors rounded hover:bg-[var(--color-bg-hover)]"
-                  aria-label="Close"
+                  aria-label={t('character.detail.close')}
                 >
                   <CloseIcon />
                 </DialogPrimitive.Close>
@@ -635,17 +641,17 @@ export function CharacterDetailDialog({
             {/* Profile */}
             <div className="space-y-3">
               <div className={sectionHeaderStyles}>
-                <label className={labelStyles}>Profile</label>
+                <label className={labelStyles}>{t('character.detail.profile')}</label>
                 <button
                   type="button"
                   onClick={() => setIsProfileExpanded((v) => !v)}
                   aria-expanded={isProfileExpanded}
                   aria-controls={profileContentId}
-                  aria-label={isProfileExpanded ? "Collapse profile" : "Expand profile"}
+                  aria-label={isProfileExpanded ? t('character.detail.collapseProfile') : t('character.detail.expandProfile')}
                   className="focus-ring text-[10px] text-[var(--color-fg-placeholder)] hover:text-[var(--color-fg-muted)] inline-flex items-center gap-1 font-medium transition-colors"
                 >
                   <span aria-hidden="true">
-                    {isProfileExpanded ? "Collapse" : "Expand"}
+                    {isProfileExpanded ? t('character.detail.collapse') : t('character.detail.expand')}
                   </span>
                   <ChevronDownIcon
                     className={[
@@ -659,7 +665,7 @@ export function CharacterDetailDialog({
               <div id={profileContentId}>
                 {isProfileExpanded ? (
                   <div className="rounded-lg overflow-hidden border border-[var(--color-border-default)] divide-y divide-[var(--color-border-default)] bg-[var(--color-bg-base)]">
-                    <ProfileTableRow label="Age">
+                    <ProfileTableRow label={t('character.detail.age')}>
                       <Input
                         type="text"
                         value={editedCharacter.age?.toString() ?? ""}
@@ -674,7 +680,7 @@ export function CharacterDetailDialog({
                       />
                     </ProfileTableRow>
 
-                    <ProfileTableRow label="Birth Date">
+                    <ProfileTableRow label={t('character.detail.birthDate')}>
                       <Input
                         type="date"
                         value={editedCharacter.birthDate ?? ""}
@@ -690,7 +696,7 @@ export function CharacterDetailDialog({
                       />
                     </ProfileTableRow>
 
-                    <ProfileTableRow label="Zodiac">
+                    <ProfileTableRow label={t('character.detail.zodiac')}>
                       <Select
                         value={editedCharacter.zodiac ?? ""}
                         onValueChange={(val) =>
@@ -703,13 +709,13 @@ export function CharacterDetailDialog({
                           value: z.value,
                           label: z.label,
                         }))}
-                        placeholder="Select zodiac..."
+                        placeholder={t('character.detail.selectZodiacPlaceholder')}
                         fullWidth
                         layer="modal"
                       />
                     </ProfileTableRow>
 
-                    <ProfileTableRow label="Archetype">
+                    <ProfileTableRow label={t('character.detail.archetype')}>
                       <Select
                         value={editedCharacter.archetype ?? ""}
                         onValueChange={(val) => handleFieldChange("archetype", val)}
@@ -717,13 +723,13 @@ export function CharacterDetailDialog({
                           value: a.value,
                           label: a.label,
                         }))}
-                        placeholder="Select archetype..."
+                        placeholder={t('character.detail.selectArchetypePlaceholder')}
                         fullWidth
                         layer="modal"
                       />
                     </ProfileTableRow>
 
-                    <ProfileTableRow label="Features">
+                    <ProfileTableRow label={t('character.detail.features')}>
                       <div className="flex flex-wrap gap-2">
                         {(editedCharacter.features ?? []).map((feature) => (
                           <TraitTag
@@ -734,7 +740,7 @@ export function CharacterDetailDialog({
                         ))}
                         <input
                           type="text"
-                          placeholder="+ Add feature"
+                          placeholder={t('character.detail.addFeaturePlaceholder')}
                           value={newFeature}
                           onChange={(e) => setNewFeature(e.target.value)}
                           onKeyDown={handleFeatureKeyDown}
@@ -744,7 +750,7 @@ export function CharacterDetailDialog({
                       </div>
                     </ProfileTableRow>
 
-                    <ProfileTableRow label="Personality">
+                    <ProfileTableRow label={t('character.detail.personality')}>
                       <div className="flex flex-wrap gap-2">
                         {editedCharacter.traits.map((trait) => (
                           <TraitTag
@@ -755,7 +761,7 @@ export function CharacterDetailDialog({
                         ))}
                         <input
                           type="text"
-                          placeholder="+ Add trait"
+                          placeholder={t('character.detail.addTraitPlaceholder')}
                           value={newTrait}
                           onChange={(e) => setNewTrait(e.target.value)}
                           onKeyDown={handleTraitKeyDown}
@@ -769,7 +775,7 @@ export function CharacterDetailDialog({
                   <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-3">
                     <div className="flex flex-wrap gap-2">
                       <ProfileSummaryItem
-                        label="Age"
+                        label={t('character.detail.age')}
                         value={
                           editedCharacter.age !== undefined
                             ? String(editedCharacter.age)
@@ -777,20 +783,20 @@ export function CharacterDetailDialog({
                         }
                       />
                       <ProfileSummaryItem
-                        label="Birth"
+                        label={t('character.detail.birth')}
                         value={editedCharacter.birthDate ?? "—"}
                       />
-                      <ProfileSummaryItem label="Zodiac" value={zodiacLabel ?? "—"} />
+                      <ProfileSummaryItem label={t('character.detail.zodiac')} value={zodiacLabel ?? "—"} />
                       <ProfileSummaryItem
-                        label="Archetype"
+                        label={t('character.detail.archetype')}
                         value={archetypeLabel ?? "—"}
                       />
                       <ProfileSummaryItem
-                        label="Features"
+                        label={t('character.detail.features')}
                         value={String((editedCharacter.features ?? []).length)}
                       />
                       <ProfileSummaryItem
-                        label="Traits"
+                        label={t('character.detail.traits')}
                         value={String(editedCharacter.traits.length)}
                       />
                     </div>
@@ -802,12 +808,12 @@ export function CharacterDetailDialog({
             {/* Appearance & Description */}
             <div className="space-y-3">
               <div className={sectionHeaderStyles}>
-                <label className={labelStyles}>Appearance &amp; Description</label>
+                <label className={labelStyles}>{t('character.detail.appearanceDescription')}</label>
               </div>
               <Textarea
                 value={editedCharacter.description ?? ""}
                 onChange={(e) => handleFieldChange("description", e.target.value)}
-                placeholder="Describe the character..."
+                placeholder={t('character.detail.descriptionPlaceholder')}
                 fullWidth
                 className="min-h-[80px] focus:min-h-[100px] transition-[min-height] resize-none"
               />
@@ -816,7 +822,7 @@ export function CharacterDetailDialog({
             {/* Relationships */}
             <div className="space-y-3">
               <div className={sectionHeaderStyles}>
-                <label className={labelStyles}>Relationships</label>
+                <label className={labelStyles}>{t('character.detail.relationships')}</label>
                 {(() => {
                   const candidates = (availableCharacters ?? []).filter(
                     (c) => c.id !== editedCharacter.id,
@@ -835,7 +841,7 @@ export function CharacterDetailDialog({
                     />
                   ) : (
                     <span className="text-[10px] text-[var(--color-fg-placeholder)]">
-                      No other characters
+                      {t('character.detail.noOtherCharacters')}
                     </span>
                   );
                 })()}
@@ -852,7 +858,7 @@ export function CharacterDetailDialog({
                 </div>
               ) : (
                 <div className="text-xs text-[var(--color-fg-placeholder)] py-4 text-center border border-dashed border-[var(--color-border-default)] rounded-lg">
-                  No relationships added yet
+                  {t('character.detail.noRelationships')}
                 </div>
               )}
             </div>
@@ -860,9 +866,9 @@ export function CharacterDetailDialog({
             {/* Chapter Appearances */}
             <div className="space-y-3 pb-2">
               <div className={sectionHeaderStyles}>
-                <label className={labelStyles}>Appearances</label>
+                <label className={labelStyles}>{t('character.detail.appearances')}</label>
                 <span className="text-[10px] text-[var(--color-fg-placeholder)]">
-                  {editedCharacter.appearances.length} Chapters
+                  {editedCharacter.appearances.length} {t('character.detail.chapters')}
                 </span>
               </div>
               {editedCharacter.appearances.length > 0 ? (
@@ -877,7 +883,7 @@ export function CharacterDetailDialog({
                 </div>
               ) : (
                 <div className="text-xs text-[var(--color-fg-placeholder)] py-4 text-center border border-dashed border-[var(--color-border-default)] rounded-lg">
-                  Character hasn&apos;t appeared in any chapters yet
+                  {t('character.detail.noAppearances')}
                 </div>
               )}
             </div>
@@ -894,26 +900,26 @@ export function CharacterDetailDialog({
             >
               <span className="inline-flex items-center gap-1.5">
                 <TrashIcon />
-                Delete
+                {t('character.detail.delete')}
               </span>
             </Button>
             <div className="flex items-center gap-3">
               <Button variant="ghost" size="sm" onClick={handleCancel}>
-                Cancel
+                {t('character.detail.cancel')}
               </Button>
               {/* Save Changes: 无图标，secondary 样式 */}
               <Button variant="secondary" size="sm" onClick={handleSave}>
-                Save Changes
+                {t('character.detail.saveChanges')}
               </Button>
             </div>
           </div>
 
           {/* Hidden title for accessibility */}
           <DialogPrimitive.Title className="sr-only">
-            Edit Character: {editedCharacter.name}
+            {t('character.detail.editCharacterTitle', { name: editedCharacter.name })}
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="sr-only">
-            Edit character details including name, description, traits, and relationships.
+            {t('character.detail.editCharacterDescription')}
           </DialogPrimitive.Description>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

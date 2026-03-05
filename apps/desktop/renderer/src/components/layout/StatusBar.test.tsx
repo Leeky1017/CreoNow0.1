@@ -95,7 +95,7 @@ describe("StatusBar", () => {
       "第三章",
     );
     expect(screen.getByTestId("status-word-count")).toHaveTextContent(
-      "3,250 字",
+      "3,250 chars",
     );
     expect(screen.getByTestId("editor-autosave-status")).toHaveTextContent("");
     expect(screen.getByTestId("status-current-time").textContent ?? "").toMatch(
@@ -111,14 +111,14 @@ describe("StatusBar", () => {
       editorStore.setState({ autosaveStatus: "saving" });
     });
     expect(screen.getByTestId("editor-autosave-status")).toHaveTextContent(
-      "保存中...",
+      "Saving...",
     );
 
     act(() => {
       editorStore.setState({ autosaveStatus: "saved" });
     });
     expect(screen.getByTestId("editor-autosave-status")).toHaveTextContent(
-      "已保存",
+      "Saved",
     );
 
     act(() => {
@@ -139,7 +139,7 @@ describe("StatusBar", () => {
     });
 
     const indicator = screen.getByTestId("editor-autosave-status");
-    expect(indicator).toHaveTextContent("保存失败");
+    expect(indicator).toHaveTextContent("Save failed");
     fireEvent.click(indicator);
 
     expect(retryLastAutosave).toHaveBeenCalledTimes(1);

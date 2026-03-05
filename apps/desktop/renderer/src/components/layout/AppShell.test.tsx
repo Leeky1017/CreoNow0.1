@@ -237,10 +237,10 @@ describe("AppShell", () => {
   });
 
   // ===========================================================================
-  // 布局结构测试
+  // Layout结构测试
   // ===========================================================================
-  describe("布局结构", () => {
-    it("应该有 flex 布局", async () => {
+  describe("Layout结构", () => {
+    it("应该有 flex Layout", async () => {
       await renderWithWrapper();
 
       const appShell = screen.getByTestId("app-shell");
@@ -271,10 +271,10 @@ describe("AppShell", () => {
   });
 
   // ===========================================================================
-  // 键盘快捷键测试
+  // Keyboard Shortcuts测试
   // ===========================================================================
-  describe("键盘快捷键", () => {
-    it("Ctrl + \\ 应该切换侧边栏", async () => {
+  describe("Keyboard Shortcuts", () => {
+    it("Ctrl + \\ 应该Toggle Sidebar", async () => {
       await renderWithWrapper();
 
       const sidebar = screen.getByTestId("layout-sidebar");
@@ -285,11 +285,11 @@ describe("AppShell", () => {
         fireEvent.keyDown(document, { key: "\\", ctrlKey: true });
       });
 
-      // 侧边栏应该隐藏
+      // Sidebar应该隐藏
       expect(sidebar).toHaveClass("hidden");
     });
 
-    it("Ctrl + L 应该切换右侧面板", async () => {
+    it("Ctrl + L 应该Toggle Right Panel", async () => {
       await renderWithWrapper();
 
       const panel = screen.getByTestId("layout-panel");
@@ -300,11 +300,11 @@ describe("AppShell", () => {
         fireEvent.keyDown(document, { key: "l", ctrlKey: true });
       });
 
-      // 面板应该隐藏
+      // Panel应该隐藏
       expect(panel).toHaveClass("hidden");
     });
 
-    it("Ctrl + L 从折叠打开时应该强制切换到 AI tab", async () => {
+    it("Ctrl + L 从折叠to open时应该强制切换到 AI tab", async () => {
       const layoutStore = createLayoutStore(mockPreferences);
       layoutStore.setState({
         panelCollapsed: true,
@@ -330,7 +330,7 @@ describe("AppShell", () => {
       );
     });
 
-    it("F11 应该切换 Zen 模式", async () => {
+    it("F11 应该切换 Zen Mode", async () => {
       await renderWithWrapper();
 
       // 触发 F11
@@ -338,17 +338,17 @@ describe("AppShell", () => {
         fireEvent.keyDown(document, { key: "F11" });
       });
 
-      // Zen 模式下侧边栏和面板都应该隐藏
+      // Zen Mode下Sidebar和Panel都应该隐藏
       const sidebar = screen.getByTestId("layout-sidebar");
       const panel = screen.getByTestId("layout-panel");
       expect(sidebar).toHaveClass("hidden");
       expect(panel).toHaveClass("hidden");
     });
 
-    it("Zen 模式下 Escape 应该退出 Zen 模式", async () => {
+    it("Zen Mode下 Escape 应该退出 Zen Mode", async () => {
       await renderWithWrapper();
 
-      // 进入 Zen 模式
+      // 进入 Zen Mode
       await act(async () => {
         fireEvent.keyDown(document, { key: "F11" });
       });
@@ -358,12 +358,12 @@ describe("AppShell", () => {
         fireEvent.keyDown(document, { key: "Escape" });
       });
 
-      // 侧边栏应该恢复显示
+      // Sidebar应该Restore显示
       const sidebar = screen.getByTestId("layout-sidebar");
       expect(sidebar).not.toHaveClass("hidden");
     });
 
-    it("Zen 模式下 Ctrl + P 不应打开命令面板", async () => {
+    it("Zen Mode下 Ctrl + P 不应to openCommandPanel", async () => {
       await renderWithWrapper();
 
       await act(async () => {
@@ -377,7 +377,7 @@ describe("AppShell", () => {
       expect(screen.queryByTestId("command-palette")).not.toBeInTheDocument();
     });
 
-    it("Zen 模式下 Ctrl + L 不应展开右侧面板（AI 禁用）", async () => {
+    it("Zen Mode下 Ctrl + L 不应Expand右侧Panel（AI 禁用）", async () => {
       await renderWithWrapper();
 
       await act(async () => {
@@ -394,7 +394,7 @@ describe("AppShell", () => {
       expect(panel).toHaveClass("hidden");
     });
 
-    it("Ctrl + P 应该打开命令面板", async () => {
+    it("Ctrl + P 应该to openCommandPanel", async () => {
       await renderWithWrapper();
 
       // 触发 Ctrl + P
@@ -402,15 +402,15 @@ describe("AppShell", () => {
         fireEvent.keyDown(document, { key: "p", ctrlKey: true });
       });
 
-      // 命令面板应该打开
+      // CommandPanel应该to open
       await waitFor(() => {
         expect(screen.getByTestId("command-palette")).toBeInTheDocument();
       });
     });
   });
 
-  describe("命令面板文件集成", () => {
-    it("Ctrl+P 后搜索文件并 Enter，应触发 setcurrent + read 打开文档链路", async () => {
+  describe("CommandPanelFiles集成", () => {
+    it("Ctrl+P 后SearchFiles并 Enter，应触发 setcurrent + read to openDocuments链路", async () => {
       const invokeSpy = vi.fn().mockImplementation(async (channel: string) => {
         await Promise.resolve();
 
@@ -496,7 +496,7 @@ describe("AppShell", () => {
         fireEvent.keyDown(document, { key: "p", ctrlKey: true });
       });
 
-      const input = await screen.findByPlaceholderText("搜索命令或文件...");
+      const input = await screen.findByPlaceholderText("Search commands or files...");
       await act(async () => {
         fireEvent.change(input, { target: { value: "第三章" } });
       });
@@ -519,16 +519,16 @@ describe("AppShell", () => {
   });
 
   // ===========================================================================
-  // 侧边栏交互测试
+  // Sidebar交互测试
   // ===========================================================================
-  describe("侧边栏交互", () => {
-    it("点击 IconBar Files 按钮应该切换侧边栏", async () => {
+  describe("Sidebar交互", () => {
+    it("点击 IconBar Files 按钮应该Toggle Sidebar", async () => {
       await renderWithWrapper();
 
       const filesButton = screen.getByTestId("icon-bar-files");
       const sidebar = screen.getByTestId("layout-sidebar");
 
-      // 初始状态：sidebar 展开（files 是默认 activeLeftPanel）
+      // 初始Status:sidebar Expand（files 是默认 activeLeftPanel）
       expect(sidebar).not.toHaveClass("hidden");
 
       // 点击同一按钮会切换折叠
@@ -544,10 +544,10 @@ describe("AppShell", () => {
   // 欢迎页面测试
   // ===========================================================================
   describe("欢迎页面", () => {
-    it("无项目时应该显示欢迎页面", async () => {
+    it("无Project时应该显示欢迎页面", async () => {
       await renderWithWrapper();
 
-      // 等待 bootstrap 完成后，无项目时显示 WelcomeScreen
+      // 等待 bootstrap Done后，无Project时显示 WelcomeScreen
       await waitFor(() => {
         const main = screen.getByRole("main");
         expect(main).toBeInTheDocument();

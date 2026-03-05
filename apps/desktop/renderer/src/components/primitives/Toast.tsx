@@ -1,5 +1,6 @@
 import React from "react";
 import * as ToastPrimitive from "@radix-ui/react-toast";
+import { useTranslation } from "react-i18next";
 
 /**
  * Toast variants
@@ -135,6 +136,7 @@ export function Toast({
   duration = 5000,
   action,
 }: ToastProps): JSX.Element {
+  const { t } = useTranslation();
   const variantStyle = variantStyles[variant];
 
   return (
@@ -166,7 +168,7 @@ export function Toast({
       </div>
       <ToastPrimitive.Close
         className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-[var(--radius-sm)] text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)] transition-colors cursor-pointer"
-        aria-label="Close"
+        aria-label={t("primitives.toast.close")}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

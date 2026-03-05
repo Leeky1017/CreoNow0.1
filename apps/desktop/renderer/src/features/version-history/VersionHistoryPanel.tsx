@@ -705,6 +705,7 @@ export function VersionHistoryPanelContent({
   showAiMarks = false,
   showCloseButton = true,
 }: VersionHistoryPanelContentProps): JSX.Element {
+  const { t } = useTranslation();
   return (
     <div
       className={panelContentStyles}
@@ -725,7 +726,7 @@ export function VersionHistoryPanelContent({
             type="button"
             onClick={onClose}
             className={`focus-ring ${closeButtonStyles}`}
-            aria-label="Close version history"
+            aria-label={t('versionHistory.panel.closeAriaLabel')}
           >
             <CloseIcon />
           </button>

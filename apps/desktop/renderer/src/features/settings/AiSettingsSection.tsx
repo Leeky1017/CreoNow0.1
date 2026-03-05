@@ -144,7 +144,7 @@ export function AiSettingsSection(): JSX.Element {
 
       <div className="flex flex-col gap-1.5">
         <Text size="small" color="muted">
-          Provider
+          {t('settings.aiSection.provider')}
         </Text>
         <select
           data-testid="ai-provider-mode"
@@ -159,15 +159,15 @@ export function AiSettingsSection(): JSX.Element {
           }
           className="h-10 w-full px-3 bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] text-[13px] text-[var(--color-fg-default)]"
         >
-          <option value="openai-compatible">OpenAI-compatible (Proxy)</option>
-          <option value="openai-byok">OpenAI (BYOK)</option>
-          <option value="anthropic-byok">Anthropic (BYOK)</option>
+          <option value="openai-compatible">{t('settings.aiSection.providerOpenAiProxy')}</option>
+          <option value="openai-byok">{t('settings.aiSection.providerOpenAiByok')}</option>
+          <option value="anthropic-byok">{t('settings.aiSection.providerAnthropicByok')}</option>
         </select>
       </div>
 
       <div className="flex flex-col gap-1.5">
         <Text size="small" color="muted">
-          Base URL
+          {t('settings.aiSection.baseUrl')}
         </Text>
         <Input
           data-testid="ai-base-url"
@@ -180,7 +180,7 @@ export function AiSettingsSection(): JSX.Element {
 
       <div className="flex flex-col gap-1.5">
         <Text size="small" color="muted">
-          API Key
+          {t('settings.aiSection.apiKey')}
         </Text>
         <Input
           data-testid="ai-api-key"

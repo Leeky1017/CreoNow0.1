@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 // =============================================================================
 // Types
@@ -124,6 +125,8 @@ export function InfoBar({
   className = "",
   "data-testid": testId,
 }: InfoBarProps): JSX.Element {
+  const { t } = useTranslation();
+
   return (
     <div
       data-testid={testId}
@@ -135,7 +138,7 @@ export function InfoBar({
       {dismissible && (
         <button
           type="button"
-          aria-label="Dismiss"
+          aria-label={t('workbench.infoBar.dismiss')}
           className={dismissButtonStyles}
           onClick={onDismiss}
         >

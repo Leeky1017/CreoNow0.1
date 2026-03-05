@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Dialog } from "../../components/primitives/Dialog";
 import { Button } from "../../components/primitives/Button";
 import { Textarea } from "../../components/primitives/Textarea";
@@ -19,13 +20,15 @@ type VersionPreviewDialogProps = {
   onOpenChange: (open: boolean) => void;
 };
 
+type TFunction = (key: string, options?: Record<string, unknown>) => string;
+
 /**
  * Convert actor value into dialog display text.
  */
-function formatActor(actor: "user" | "auto" | "ai"): string {
-  if (actor === "user") return "User";
-  if (actor === "ai") return "AI";
-  return "Auto-save";
+function formatActor(actor: "user" | "auto" | "ai", t: TFunction): string {
+  if (actor === "user") return t('versionHistory.preview.actorUser');
+  if (actor === "ai") return t('versionHistory.preview.actorAi');
+  return t('versionHistory.preview.actorAutoSave');
 }
 
 /**
@@ -36,6 +39,7 @@ function formatActor(actor: "user" | "auto" | "ai"): string {
 export function VersionPreviewDialog(
   props: VersionPreviewDialogProps,
 ): JSX.Element {
+  const { t } = useTranslation();
   const footer = (
     <Button
       type="button"
@@ -43,7 +47,7 @@ export function VersionPreviewDialog(
       size="sm"
       onClick={() => props.onOpenChange(false)}
     >
-      Close
+      {t('versionHistory.preview.close')}
     </Button>
   );
 
@@ -51,8 +55,8 @@ export function VersionPreviewDialog(
     <Dialog
       open={props.open}
       onOpenChange={props.onOpenChange}
-      title="Version Preview"
-      description="Read-only historical snapshot."
+      title={t('versionHistory.preview.title')}
+      description={t('versionHistory.preview.description')}
       footer={footer}
     >
       <div data-testid="version-preview-dialog" className="space-y-3">
@@ -62,7 +66,7 @@ export function VersionPreviewDialog(
             size="small"
             color="muted"
           >
-            Loading version content...
+            {t('versionHistory.preview.loading')}
           </Text>
         ) : null}
 
@@ -82,19 +86,19 @@ export function VersionPreviewDialog(
             <div className="grid grid-cols-2 gap-2 text-xs text-[var(--color-fg-muted)]">
               <div>
                 <span className="font-medium text-[var(--color-fg-default)]">
-                  Actor:
+                  {t('versionHistory.preview.actorLabel')}
                 </span>{" "}
-                {formatActor(props.data.actor)}
+                {formatActor(props.data.actor, t)}
               </div>
               <div>
                 <span className="font-medium text-[var(--color-fg-default)]">
-                  Timestamp:
+                  {t('versionHistory.preview.timestampLabel')}
                 </span>{" "}
                 {new Date(props.data.createdAt).toLocaleString()}
               </div>
               <div className="col-span-2">
                 <span className="font-medium text-[var(--color-fg-default)]">
-                  Reason:
+                  {t('versionHistory.preview.reasonLabel')}
                 </span>{" "}
                 {props.data.reason}
               </div>

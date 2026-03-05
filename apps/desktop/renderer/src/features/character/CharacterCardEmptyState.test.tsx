@@ -14,13 +14,13 @@ describe("CharacterCardList.empty-state", () => {
     );
 
     expect(
-      screen.getByText("暂无角色"),
+      screen.getByText("No Characters"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("开始创建你的第一个角色"),
+      screen.getByText("Create your first character"),
     ).toBeInTheDocument();
 
-    const cta = screen.getByRole("button", { name: "创建角色" });
+    const cta = screen.getByRole("button", { name: "Create Character" });
     expect(cta).toBeInTheDocument();
 
     await user.click(cta);

@@ -84,6 +84,7 @@ function FormContent({
   onSubmit,
   onOpenCreateTemplate,
 }: FormContentProps): JSX.Element {
+  const { t } = useTranslation();
   const [name, setName] = useState(initialName ?? "");
   const [templateId, setTemplateId] = useState(defaultTemplateId);
   const [description, setDescription] = useState(initialDescription ?? "");
@@ -271,7 +272,7 @@ function FormContent({
           data-testid="create-project-description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Brief description of your project..."
+          placeholder={t('projects.create.descriptionPlaceholder')}
           fullWidth
           rows={2}
         />
@@ -288,7 +289,7 @@ function FormContent({
           value={coverImage}
           onChange={setCoverImage}
           onError={setImageError}
-          placeholder="Click or drag image to upload"
+          placeholder={t('projects.create.imagePlaceholder')}
           hint="PNG, JPG up to 5MB"
         />
         {coverImage && (
@@ -541,8 +542,8 @@ export function CreateProjectDialog({
       <Dialog
         open={open}
         onOpenChange={onOpenChange}
-        title="Create New Project"
-        description="Start a new writing project with a template."
+        title={t('projects.create.dialogTitle')}
+        description={t('projects.create.dialogDescription')}
         footer={
           <>
             <Button

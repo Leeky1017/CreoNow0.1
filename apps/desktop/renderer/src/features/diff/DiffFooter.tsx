@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "../../components/primitives";
 import type { DiffStats } from "./DiffView";
 import type { DiffHunkDecision } from "../../lib/diff/unifiedDiff";
@@ -25,6 +26,7 @@ type DiffFooterProps = {
  * DiffFooter displays statistics and action buttons.
  */
 export function DiffFooter(props: DiffFooterProps): JSX.Element {
+  const { t } = useTranslation();
   const hasAiActions = !!props.onAcceptAll || !!props.onRejectAll;
   const hasCurrentHunk =
     (props.totalChanges ?? 0) > 0 &&
@@ -42,7 +44,7 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
         {/* Added */}
         <div className="flex items-center gap-1.5">
           <span className="text-[var(--color-success)]">
-            +{props.stats.addedLines} lines
+            {t('diff.footer.addedLines', { count: props.stats.addedLines })}
           </span>
         </div>
 
@@ -52,7 +54,7 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
         {/* Removed */}
         <div className="flex items-center gap-1.5">
           <span className="text-[var(--color-error)]">
-            -{props.stats.removedLines} lines
+            {t('diff.footer.removedLines', { count: props.stats.removedLines })}
           </span>
         </div>
 
@@ -61,8 +63,7 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
 
         {/* Hunks */}
         <div className="text-[var(--color-fg-muted)]">
-          {props.stats.changedHunks}{" "}
-          {props.stats.changedHunks === 1 ? "change" : "changes"}
+          {t('diff.footer.changeCount', { count: props.stats.changedHunks })}
         </div>
       </div>
 
@@ -71,10 +72,10 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
         <div className="flex items-center gap-2">
           {hasCurrentHunk ? (
             <span className="text-[11px] text-[var(--color-fg-muted)]">
-              Hunk {currentHunkLabel}/{props.totalChanges}{" "}
+              {t('diff.footer.hunkLabel', { current: currentHunkLabel, total: props.totalChanges })}{" "}
               {props.currentHunkDecision &&
               props.currentHunkDecision !== "pending"
-                ? `(${props.currentHunkDecision})`
+                ? `(${t(`diff.footer.decision.${props.currentHunkDecision}`)})`
                 : ""}
             </span>
           ) : null}
@@ -86,7 +87,7 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
               onClick={props.onRejectHunk}
               disabled={!hasCurrentHunk}
             >
-              Reject Hunk
+              {t('diff.footer.rejectHunk')}
             </Button>
           ) : null}
 
@@ -97,19 +98,19 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
               onClick={props.onAcceptHunk}
               disabled={!hasCurrentHunk}
             >
-              Accept Hunk
+              {t('diff.footer.acceptHunk')}
             </Button>
           ) : null}
 
           {props.onRejectAll ? (
-            <Button variant="ghost" size="sm" onClick={props.onRejectAll}>
-              Reject All
+            <Button data-testid="ai-reject-all" variant="ghost" size="sm" onClick={props.onRejectAll}>
+              {t('diff.footer.rejectAll')}
             </Button>
           ) : null}
 
           {props.onAcceptAll ? (
-            <Button variant="secondary" size="sm" onClick={props.onAcceptAll}>
-              Accept All
+            <Button data-testid="ai-accept-all" variant="secondary" size="sm" onClick={props.onAcceptAll}>
+              {t('diff.footer.acceptAll')}
             </Button>
           ) : null}
         </div>
@@ -120,7 +121,7 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
           onClick={props.onRestore}
           disabled={props.restoreInProgress}
         >
-          {props.restoreInProgress ? "Restoring..." : "Restore"}
+          {props.restoreInProgress ? t('diff.footer.restoring') : t('diff.footer.restore')}
         </Button>
       )}
     </footer>

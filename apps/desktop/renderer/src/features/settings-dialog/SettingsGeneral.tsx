@@ -127,7 +127,7 @@ export function SettingsGeneral({
       {/* Language Section */}
       <div className="mb-14">
         <h4 className={sectionLabelStyles}>Language</h4>
-        <FormField label="Display Language" htmlFor="display-language" help="Changes take effect immediately.">
+        <FormField label={t('settings.general.displayLanguage')} htmlFor="display-language" help={t('settings.general.displayLanguageHelp')}>
           <Select
             options={languageOptions}
             value={currentLanguage}
@@ -145,15 +145,15 @@ export function SettingsGeneral({
 
         <div className="flex flex-col gap-8">
           <Toggle
-            label="Focus Mode"
-            description="Dims all interface elements except the editor when you start typing to reduce distractions."
+            label={t('settings.general.focusMode')}
+            description={t('settings.general.focusModeDescription')}
             checked={settings.focusMode}
             onCheckedChange={(checked) => updateSetting("focusMode", checked)}
           />
 
           <Toggle
-            label="Typewriter Scroll"
-            description="Keeps your active line of text vertically centered on the screen as you write."
+            label={t('settings.general.typewriterScroll')}
+            description={t('settings.general.typewriterScrollDescription')}
             checked={settings.typewriterScroll}
             onCheckedChange={(checked) =>
               updateSetting("typewriterScroll", checked)
@@ -161,8 +161,8 @@ export function SettingsGeneral({
           />
 
           <Toggle
-            label="Smart Punctuation"
-            description="Automatically convert straight quotes to curly quotes and double hyphens to em-dashes."
+            label={t('settings.general.smartPunctuation')}
+            description={t('settings.general.smartPunctuationDescription')}
             checked={settings.smartPunctuation}
             onCheckedChange={(checked) =>
               updateSetting("smartPunctuation", checked)
@@ -179,15 +179,15 @@ export function SettingsGeneral({
 
         <div className="flex flex-col gap-6">
           <Toggle
-            label="Local Auto-Save"
-            description="Automatically save changes to your browser's local storage."
+            label={t('settings.general.localAutoSave')}
+            description={t('settings.general.localAutoSaveDescription')}
             checked={settings.localAutoSave}
             onCheckedChange={(checked) =>
               updateSetting("localAutoSave", checked)
             }
           />
 
-          <FormField label="Backup Interval" htmlFor="backup-interval" help="Last backup: 2 minutes ago" className="mt-2">
+          <FormField label={t('settings.general.backupInterval')} htmlFor="backup-interval" help={t('settings.general.backupIntervalHelp')} className="mt-2">
             <Select
               options={backupIntervalOptions}
               value={settings.backupInterval}
@@ -206,7 +206,7 @@ export function SettingsGeneral({
 
         <div className="flex flex-col gap-8 mb-8">
           <Toggle
-            label="Differentiate AI edits"
+            label={t('settings.general.differentiateAiEdits')}
             description={`When enabled, AI-generated entries in Version History show an extra \u201c${t('settingsDialog.general.aiModifyMarker')}\u201d marker.`}
             checked={showAiMarks}
             onCheckedChange={onShowAiMarksChange}
@@ -214,7 +214,7 @@ export function SettingsGeneral({
         </div>
 
         <div className="grid grid-cols-2 gap-8">
-          <FormField label="Default Typography" htmlFor="default-typography">
+          <FormField label={t('settings.general.defaultTypography')} htmlFor="default-typography">
             <Select
               options={typographyOptions}
               value={settings.defaultTypography}
@@ -225,7 +225,7 @@ export function SettingsGeneral({
             />
           </FormField>
 
-          <FormField label="Interface Scale" htmlFor="interface-scale">
+          <FormField label={t('settings.general.interfaceScale')} htmlFor="interface-scale">
             <Slider
               min={80}
               max={120}

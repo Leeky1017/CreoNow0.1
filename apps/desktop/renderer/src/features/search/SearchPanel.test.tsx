@@ -47,22 +47,22 @@ describe("SearchPanel", () => {
       expect(panel).toBeInTheDocument();
     });
 
-    it("应该显示搜索输入框带有 placeholder", () => {
+    it("应该显示Search输入框带有 placeholder", () => {
       render(<SearchPanel projectId="test-project" open={true} />);
 
       const input = screen.getByTestId("search-input");
       expect(input).toBeInTheDocument();
       expect(input).toHaveAttribute(
         "placeholder",
-        "搜索文档、记忆、知识...",
+        "Search documents, memories, knowledge...",
       );
     });
 
-    it("应该显示分类过滤按钮", () => {
+    it("应该显示Category过滤按钮", () => {
       render(<SearchPanel projectId="test-project" open={true} />);
 
-      // 组件使用分类过滤器（全部, 文档, 记忆, 知识, 素材）
-      expect(screen.getByText("全部")).toBeInTheDocument();
+      // 组件使用Category过滤器（All, Documents, Memories, Knowledge, Assets）
+      expect(screen.getByText("All")).toBeInTheDocument();
     });
 
     it("应该有模态背景遮罩", () => {
@@ -87,10 +87,10 @@ describe("SearchPanel", () => {
       expect(input).toHaveAttribute("type", "text");
     });
 
-    it("点击分类按钮应切换分类", () => {
+    it("点击Category按钮应切换Category", () => {
       render(<SearchPanel projectId="test-project" open={true} />);
 
-      const allButtonText = screen.getByText("全部");
+      const allButtonText = screen.getByText("All");
       expect(allButtonText).toBeInTheDocument();
 
       // All 按钮默认选中 — Button primitive wraps children in <span>,
@@ -101,17 +101,17 @@ describe("SearchPanel", () => {
   });
 
   // ===========================================================================
-  // 搜索结果展示测试（使用组件内置的 mock 数据）
+  // SearchResult展示测试（使用组件Built-in的 mock 数据）
   // ===========================================================================
-  describe("搜索结果展示", () => {
-    it("输入搜索词后应显示相关结果", () => {
+  describe("SearchResult展示", () => {
+    it("输入Search词后应显示相关Result", () => {
       render(<SearchPanel projectId="test-project" open={true} />);
 
       const input = screen.getByTestId("search-input");
       fireEvent.change(input, { target: { value: "design" } });
 
-      // 组件通过 searchStore 获取真实搜索结果
-      // 输入后应该显示匹配的结果
+      // 组件通过 searchStore 获取真实SearchResult
+      // 输入后应该显示匹配的Result
     });
   });
 
@@ -140,7 +140,7 @@ describe("SearchPanel", () => {
 
       render(<SearchPanel projectId="test-project" open={true} />);
 
-      // 组件可能显示 Spinner 或其他加载指示器
+      // 组件可能显示 Spinner 或Others加载指示器
       // 基于当前实现，loading 状态由 store 管理
     });
   });
@@ -166,7 +166,7 @@ describe("SearchPanel", () => {
       expect(panel).toHaveClass("flex");
     });
 
-    it("应该居中显示搜索面板", () => {
+    it("应该居中显示SearchPanel", () => {
       render(<SearchPanel projectId="test-project" open={true} />);
 
       const panel = screen.getByTestId("search-panel");
@@ -176,10 +176,10 @@ describe("SearchPanel", () => {
   });
 
   // ===========================================================================
-  // 关闭功能测试
+  // Close功能测试
   // ===========================================================================
-  describe("关闭功能", () => {
-    it("点击背景遮罩应触发关闭", () => {
+  describe("Close功能", () => {
+    it("点击背景遮罩应触发Close", () => {
       const onClose = vi.fn();
       render(<SearchPanel projectId="test-project" open={true} onClose={onClose} />);
 

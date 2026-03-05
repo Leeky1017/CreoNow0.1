@@ -72,9 +72,9 @@ async function switchKgToListMode(page: Page): Promise<void> {
   );
   await expect(knowledgeGraphDialog).toBeVisible();
   await expect(
-    knowledgeGraphDialog.getByRole("button", { name: "Graph" }),
+    knowledgeGraphDialog.getByTestId("kg-view-graph"),
   ).toBeVisible();
-  await knowledgeGraphDialog.getByRole("button", { name: "List" }).click();
+  await knowledgeGraphDialog.getByTestId("kg-view-list").click();
   await expect(page.getByTestId("kg-entity-create")).toBeEnabled();
 }
 
@@ -128,9 +128,9 @@ test("knowledge graph: sidebar CRUD + context viewer injection (skill gated)", a
 
   await page.getByTestId(`kg-entity-delete-${entityId}`).click();
 
-  const dialog = page.getByRole("dialog", { name: "Delete Entity?" });
+  const dialog = page.getByTestId("system-dialog-delete");
   await expect(dialog).toBeVisible();
-  await dialog.getByRole("button", { name: "Delete" }).click();
+  await dialog.getByTestId("system-dialog-primary").click();
   await expect(dialog).not.toBeVisible();
 
   await expect(page.getByTestId(`kg-entity-row-${entityId}`)).toHaveCount(0);
@@ -138,7 +138,7 @@ test("knowledge graph: sidebar CRUD + context viewer injection (skill gated)", a
   const knowledgeGraphDialog = page.getByTestId(
     "leftpanel-dialog-knowledgeGraph",
   );
-  await knowledgeGraphDialog.getByRole("button", { name: "Close" }).click();
+  await knowledgeGraphDialog.getByTestId("leftpanel-dialog-close").click();
   await expect(knowledgeGraphDialog).toHaveCount(0);
 
   const tooManyAttributes: Record<string, string> = {};

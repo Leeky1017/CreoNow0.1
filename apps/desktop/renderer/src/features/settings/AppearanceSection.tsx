@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useThemeStore } from "../../stores/themeStore";
 import { Button } from "../../components/primitives";
 import { Heading, Text } from "../../components/primitives";
@@ -9,6 +10,7 @@ import { Heading, Text } from "../../components/primitives";
  * hardcoding colors outside design tokens.
  */
 export function AppearanceSection(): JSX.Element {
+  const { t } = useTranslation();
   const mode = useThemeStore((s) => s.mode);
   const setMode = useThemeStore((s) => s.setMode);
 
@@ -18,12 +20,12 @@ export function AppearanceSection(): JSX.Element {
       className="flex flex-col gap-2.5 p-3 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)]"
     >
       <Heading level="h4" className="font-bold">
-        Appearance
+        {t('settings.appearance.title')}
       </Heading>
 
       <div className="flex items-center gap-2">
         <Text size="small" color="muted">
-          Theme
+          {t('settings.appearance.theme')}
         </Text>
 
         <div className="ml-auto flex gap-2">
@@ -38,7 +40,7 @@ export function AppearanceSection(): JSX.Element {
                 : ""
             }
           >
-            System
+            {t('settings.appearance.system')}
           </Button>
           <Button
             data-testid="theme-mode-dark"
@@ -51,7 +53,7 @@ export function AppearanceSection(): JSX.Element {
                 : ""
             }
           >
-            Dark
+            {t('settings.appearance.dark')}
           </Button>
           <Button
             data-testid="theme-mode-light"
@@ -64,7 +66,7 @@ export function AppearanceSection(): JSX.Element {
                 : ""
             }
           >
-            Light
+            {t('settings.appearance.light')}
           </Button>
         </div>
       </div>

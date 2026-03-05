@@ -53,7 +53,7 @@ function setupInvokeMock(): void {
             projectId: "proj-1",
             scope: "project",
             version: 1,
-            rule: "所有角色对白不使用感叹号",
+            rule: "所有RolesDialogue不使用感叹号",
             category: "style",
             confidence: 1,
             supportingEpisodes: [],
@@ -83,27 +83,27 @@ describe("MemoryPanel manual add on empty state", () => {
     render(<MemoryPanel />);
 
     const emptyStateHint = await screen.findByText(
-      "AI 正在学习你的写作偏好，使用越多越精准",
+      "AI is learning your writing preferences — the more you use it, the more accurate it becomes",
     );
     const emptyState = emptyStateHint.closest("div");
     expect(emptyState).not.toBeNull();
 
     await user.click(
       within(emptyState as HTMLDivElement).getByRole("button", {
-        name: "手动添加规则",
+        name: "Add Rule Manually",
       }),
     );
 
-    const editor = await screen.findByLabelText("新增规则");
-    await user.type(editor, "所有角色对白不使用感叹号");
-    await user.click(screen.getByRole("button", { name: "保存规则" }));
+    const editor = await screen.findByLabelText("New Rule");
+    await user.type(editor, "所有RolesDialogue不使用感叹号");
+    await user.click(screen.getByRole("button", { name: "Save Rule" }));
 
     await waitFor(() => {
       expect(invokeMock).toHaveBeenCalledWith(
         "memory:semantic:add",
         expect.objectContaining({
           projectId: "proj-1",
-          rule: "所有角色对白不使用感叹号",
+          rule: "所有RolesDialogue不使用感叹号",
           confidence: 1,
           userConfirmed: true,
         }),

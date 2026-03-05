@@ -115,9 +115,8 @@ test.describe("RightPanel Info/Quality wiring", () => {
     const judgeStatus = page.getByTestId("quality-panel-judge-status");
     await expect(judgeStatus).toBeVisible();
 
-    // Status should be one of: Ready, Not ready, Downloading..., Error (...)
-    const statusText = await judgeStatus.textContent();
-    expect(statusText).toMatch(/Ready|Not ready|Downloading|Error/);
+    // Status should be one of: ready, not_ready, downloading, error
+    await expect(judgeStatus).toHaveAttribute("data-status", /ready|not_ready|downloading|error/);
 
     await electronApp.close();
   });
@@ -152,7 +151,7 @@ test.describe("RightPanel Info/Quality wiring", () => {
     await expect(page.getByTestId("quality-panel")).toBeVisible();
 
     // Find and click "Run All Checks" button
-    const runAllButton = page.getByRole("button", { name: /Run All Checks/i });
+    const runAllButton = page.getByTestId("quality-run-all-checks");
     await expect(runAllButton).toBeVisible();
 
     // Click the button - it should trigger a refresh
@@ -200,9 +199,9 @@ test.describe("RightPanel Info/Quality wiring", () => {
     );
     await expect(constraintsCount).toBeVisible();
 
-    // Should show "X rules" format
+    // Should show count (language-independent: just verify a number is present)
     const countText = await constraintsCount.textContent();
-    expect(countText).toMatch(/\d+\s+rules?/);
+    expect(countText).toMatch(/\d+/);
 
     await electronApp.close();
   });

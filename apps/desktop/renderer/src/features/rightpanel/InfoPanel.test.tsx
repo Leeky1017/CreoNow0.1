@@ -55,7 +55,7 @@ describe("InfoPanel", () => {
     });
 
     expect(
-      screen.getByRole("button", { name: "查看版本历史" }),
+      screen.getByRole("button", { name: "View Version History" }),
     ).toBeInTheDocument();
   });
 });

@@ -21,7 +21,7 @@ describe("SettingsAccount", () => {
     invokeMock.mockReset();
   });
 
-  it("Scenario: 账户入口以禁用态展示并带“即将推出”提示", () => {
+  it("Scenario: Account入口以禁用态展示并带“Coming Soon”提示", () => {
     render(<SettingsAccount account={freePlanAccount} />);
 
     expect(
@@ -30,7 +30,7 @@ describe("SettingsAccount", () => {
     expect(
       screen.getByRole("button", { name: "Delete Account" }),
     ).toBeDisabled();
-    expect(screen.getAllByText("即将推出")).toHaveLength(2);
+    expect(screen.getAllByText("Coming Soon")).toHaveLength(2);
   });
 
   it("Scenario: 禁用态入口点击不触发业务回调且不发起 IPC", async () => {

@@ -1,5 +1,6 @@
 import React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { useTranslation } from "react-i18next";
 
 /**
  * Dialog component props as defined in design spec §11.5
@@ -160,6 +161,7 @@ export function Dialog({
   closeOnEscape = true,
   closeOnOverlayClick = true,
 }: DialogProps): JSX.Element {
+  const { t } = useTranslation();
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
@@ -210,7 +212,7 @@ export function Dialog({
             >
               <path d="M4 4L12 12M12 4L4 12" />
             </svg>
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{t("primitives.dialog.close")}</span>
           </DialogPrimitive.Close>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

@@ -93,9 +93,9 @@ describe("KnowledgeGraph", () => {
     render(<KnowledgeGraph data={emptyData} />);
 
     expect(
-      screen.getByText("暂无实体，点击添加你的第一个角色或地点"),
+      screen.getByText("No entities yet. Click to add your first character or location"),
     ).toBeInTheDocument();
-    expect(screen.getByText("添加节点")).toBeInTheDocument();
+    expect(screen.getAllByText("Add Node").length).toBeGreaterThanOrEqual(1);
   });
 
   it("calls onNodeSelect when node is clicked", async () => {
@@ -547,7 +547,7 @@ describe("NodeEditDialog", () => {
       />,
     );
 
-    expect(screen.getByText(/编辑节点/)).toBeInTheDocument();
+    expect(screen.getByText(/Edit Node/)).toBeInTheDocument();
   });
 
   it("does not render dialog when closed", () => {
@@ -561,7 +561,7 @@ describe("NodeEditDialog", () => {
       />,
     );
 
-    expect(screen.queryByText(/编辑节点/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Edit Node/)).not.toBeInTheDocument();
   });
 
   it("shows create title in create mode", () => {
@@ -575,7 +575,7 @@ describe("NodeEditDialog", () => {
       />,
     );
 
-    expect(screen.getByText(/创建新节点/)).toBeInTheDocument();
+    expect(screen.getByText(/Create New Node/)).toBeInTheDocument();
   });
 
   it("populates form with node data in edit mode", () => {
@@ -614,7 +614,7 @@ describe("NodeEditDialog", () => {
     await user.type(nameInput, "Updated Node");
 
     // Click save button
-    const saveButton = screen.getByText("保存");
+    const saveButton = screen.getByText("Save");
     await user.click(saveButton);
 
     expect(onSave).toHaveBeenCalledWith(
@@ -640,7 +640,7 @@ describe("NodeEditDialog", () => {
       />,
     );
 
-    const cancelButton = screen.getByText("取消");
+    const cancelButton = screen.getByText("Cancel");
     await user.click(cancelButton);
 
     expect(onOpenChange).toHaveBeenCalledWith(false);
@@ -659,7 +659,7 @@ describe("NodeEditDialog", () => {
 
     // In create mode with no node, name should be empty
     // Find the button by role and check its disabled state
-    const saveButton = screen.getByRole("button", { name: "创建" });
+    const saveButton = screen.getByRole("button", { name: "Create" });
     expect(saveButton).toBeDisabled();
   });
 
@@ -674,7 +674,7 @@ describe("NodeEditDialog", () => {
       />,
     );
 
-    expect(screen.getByText("角色定位")).toBeInTheDocument();
+    expect(screen.getByText("Role")).toBeInTheDocument();
   });
 
   it("shows all node type options in select", () => {
@@ -693,7 +693,7 @@ describe("NodeEditDialog", () => {
     const select = screen.getByRole("combobox");
     expect(select).toBeInTheDocument();
     // The selected value should be displayed
-    expect(screen.getAllByText("角色 (Character)").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Character").length).toBeGreaterThan(0);
   });
 });
 
@@ -718,14 +718,14 @@ describe("NodeDetailCard delete functionality", () => {
       <NodeDetailCard node={mockNode} onDelete={() => {}} onClose={() => {}} />,
     );
 
-    const deleteButton = screen.getByLabelText("Delete node");
+    const deleteButton = screen.getByLabelText("Delete Node");
     expect(deleteButton).toBeInTheDocument();
   });
 
   it("does not render delete button when onDelete is not provided", () => {
     render(<NodeDetailCard node={mockNode} onClose={() => {}} />);
 
-    const deleteButton = screen.queryByLabelText("Delete node");
+    const deleteButton = screen.queryByLabelText("Delete Node");
     expect(deleteButton).not.toBeInTheDocument();
   });
 
@@ -737,7 +737,7 @@ describe("NodeDetailCard delete functionality", () => {
       <NodeDetailCard node={mockNode} onDelete={onDelete} onClose={() => {}} />,
     );
 
-    const deleteButton = screen.getByLabelText("Delete node");
+    const deleteButton = screen.getByLabelText("Delete Node");
     await user.click(deleteButton);
 
     expect(onDelete).toHaveBeenCalled();

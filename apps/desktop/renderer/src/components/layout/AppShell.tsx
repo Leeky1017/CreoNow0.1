@@ -89,6 +89,7 @@ function ZenModeOverlay(props: {
   open: boolean;
   onExit: () => void;
 }): JSX.Element | null {
+  const { t } = useTranslation();
   const editor = useEditorStore((s) => s.editor);
   const autosaveStatus = useEditorStore((s) => s.autosaveStatus);
   const documentContentJson = useEditorStore((s) => s.documentContentJson);
@@ -126,15 +127,15 @@ function ZenModeOverlay(props: {
   const saveStatus = React.useMemo(() => {
     switch (autosaveStatus) {
       case "saving":
-        return "Saving...";
+        return t("workbench.appShell.savingStatus");
       case "saved":
-        return "Saved";
+        return t("workbench.appShell.savedStatus");
       case "error":
-        return "Save failed";
+        return t("workbench.appShell.saveFailedStatus");
       default:
-        return "Saved";
+        return t("workbench.appShell.savedStatus");
     }
-  }, [autosaveStatus]);
+  }, [autosaveStatus, t]);
 
   // Calculate read time (average 200 words per minute)
   const readTimeMinutes = Math.max(1, Math.ceil(content.wordCount / 200));
@@ -481,7 +482,7 @@ export function AppShell(): JSX.Element {
     const commandEntries: CommandItem[] = [
       {
         id: "open-settings",
-        label: "Open Settings",
+        label: t("workbench.appShell.command.openSettings"),
         shortcut: `${modKey},`,
         group: "command",
         category: "command",
@@ -492,7 +493,7 @@ export function AppShell(): JSX.Element {
       },
       {
         id: "export",
-        label: "Export…",
+        label: t("workbench.appShell.command.export"),
         group: "command",
         category: "command",
         onSelect: () => {
@@ -502,7 +503,7 @@ export function AppShell(): JSX.Element {
       },
       {
         id: "toggle-sidebar",
-        label: "Toggle Sidebar",
+        label: t("workbench.appShell.command.toggleSidebar"),
         shortcut: `${modKey}\\`,
         group: "command",
         category: "command",
@@ -513,7 +514,7 @@ export function AppShell(): JSX.Element {
       },
       {
         id: "toggle-right-panel",
-        label: "Toggle Right Panel",
+        label: t("workbench.appShell.command.toggleRightPanel"),
         shortcut: `${modKey}L`,
         group: "command",
         category: "command",
@@ -524,7 +525,7 @@ export function AppShell(): JSX.Element {
       },
       {
         id: "toggle-zen-mode",
-        label: "Toggle Zen Mode",
+        label: t("workbench.appShell.command.toggleZenMode"),
         shortcut: "F11",
         group: "command",
         category: "command",
@@ -535,7 +536,7 @@ export function AppShell(): JSX.Element {
       },
       {
         id: "create-new-document",
-        label: "Create New Document",
+        label: t("workbench.appShell.command.createNewDocument"),
         shortcut: `${modKey}N`,
         group: "command",
         category: "command",
@@ -549,7 +550,7 @@ export function AppShell(): JSX.Element {
       },
       {
         id: "open-version-history",
-        label: "Open Version History",
+        label: t("workbench.appShell.command.openVersionHistory"),
         group: "command",
         category: "command",
         onSelect: () => {
@@ -559,7 +560,7 @@ export function AppShell(): JSX.Element {
       },
       {
         id: "create-new-project",
-        label: "Create New Project",
+        label: t("workbench.appShell.command.createNewProject"),
         shortcut: `${modKey}Shift+N`,
         group: "command",
         category: "command",
@@ -570,7 +571,7 @@ export function AppShell(): JSX.Element {
       },
       {
         id: "open-folder",
-        label: "Open Folder",
+        label: t("workbench.appShell.command.openFolder"),
         group: "command",
         category: "command",
         onSelect: async () => {
@@ -647,6 +648,7 @@ export function AppShell(): JSX.Element {
     recentCommandIds,
     setCurrentDocument,
     setZenMode,
+    t,
     toggleAiPanel,
     toggleSidebarVisibility,
     withRecentTracking,
@@ -781,13 +783,13 @@ export function AppShell(): JSX.Element {
   function resolveDialogTitle(activeDialogType: DialogType): string {
     switch (activeDialogType) {
       case "memory":
-        return "Memory";
+        return t("workbench.appShell.dialogTitle.memory");
       case "characters":
-        return "Characters";
+        return t("workbench.appShell.dialogTitle.characters");
       case "knowledgeGraph":
-        return "Knowledge Graph";
+        return t("workbench.appShell.dialogTitle.knowledgeGraph");
       case "versionHistory":
-        return "Version History";
+        return t("workbench.appShell.dialogTitle.versionHistory");
       default:
         return assertNeverDialogType(activeDialogType);
     }
@@ -855,8 +857,8 @@ export function AppShell(): JSX.Element {
                 </RegionErrorBoundary>
                 <button
                   type="button"
-                  aria-label="AI Panel (Ctrl+L)"
-                  title="AI Panel (Ctrl+L)"
+                  aria-label={t("workbench.appShell.aiPanelLabel")}
+                  title={t("workbench.appShell.aiPanelLabel")}
                   onClick={toggleAiPanel}
                   className={`absolute top-2 right-2 min-w-6 min-h-6 flex items-center justify-center rounded-[var(--radius-sm)] transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] z-10 ${
                     !layout.panelCollapsed && activeRightPanel === "ai"

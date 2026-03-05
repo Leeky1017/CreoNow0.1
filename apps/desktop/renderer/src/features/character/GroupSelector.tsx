@@ -5,6 +5,7 @@
  * Displays all available groups (Main Cast, Supporting, Others).
  */
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Popover } from "../../components/primitives";
 import type { CharacterGroup } from "./types";
 import { GROUP_OPTIONS } from "./types";
@@ -42,6 +43,7 @@ export function GroupSelector({
   portalContainer,
   layer = "popover",
 }: GroupSelectorProps): JSX.Element {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const currentGroup = GROUP_OPTIONS.find((g) => g.value === value);
 
@@ -82,7 +84,7 @@ export function GroupSelector({
     >
       <div className="min-w-[140px] py-1 -mx-2 -my-2">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
-          Select Group
+          {t('character.groupSelector.selectGroup')}
         </div>
         {GROUP_OPTIONS.map((group) => {
           const isSelected = group.value === value;

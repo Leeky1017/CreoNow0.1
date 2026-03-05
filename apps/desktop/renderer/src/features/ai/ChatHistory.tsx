@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Text } from "../../components/primitives";
 
 type ChatHistoryProps = {
@@ -14,6 +15,8 @@ type ChatHistoryProps = {
  * this component will render grouped history items via ChatHistoryItemRow.
  */
 export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
+  const { t } = useTranslation();
+
   if (!props.open) {
     return null;
   }
@@ -30,7 +33,7 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
       {/* Dropdown panel */}
       <div
         role="dialog"
-        aria-label="Chat History"
+        aria-label={t('ai.chatHistory.ariaLabel')}
         onClick={(e) => e.stopPropagation()}
         className="absolute top-full right-0 mt-1 w-64 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
@@ -39,7 +42,7 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
           <div className="flex items-center gap-2">
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={t('ai.chatHistory.searchPlaceholder')}
               disabled
               className="flex-1 bg-transparent border-none text-[12px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-muted)] focus:outline-none opacity-50 cursor-not-allowed"
             />
@@ -49,10 +52,10 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
         {/* Empty state — chat persistence not yet available */}
         <div className="px-4 py-8 text-center">
           <Text size="tiny" color="muted">
-            No conversation history yet.
+            {t('ai.chatHistory.emptyTitle')}
           </Text>
           <Text size="tiny" color="muted" className="mt-1 block">
-            Chat history will appear here once chat persistence is available.
+            {t('ai.chatHistory.emptyDescription')}
           </Text>
         </div>
       </div>

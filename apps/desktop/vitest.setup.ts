@@ -15,7 +15,7 @@ import "@testing-library/jest-dom/vitest";
  * 而非返回裸 key。使用 "en" 作为测试默认语言，与原有英文断言
  * 保持一致。如需测试 zh-CN，测试文件可自行 changeLanguage。
  */
-import { initializeI18n } from "./renderer/src/i18n";
+import { i18n, initializeI18n } from "./renderer/src/i18n";
 
 /**
  * 清理 DOM
@@ -36,8 +36,11 @@ import { hotkeyManager } from "./renderer/src/lib/hotkeys/HotkeyManager";
  */
 beforeAll(async () => {
   // Ensure i18n is fully initialized before any component renders.
-  // Default language is zh-CN (from getLanguagePreference() fallback).
   await initializeI18n();
+  // Switch to English so test assertions match English UI strings.
+  // The app default is zh-CN, but tests use English for consistency
+  // with the primary locale and because most test assertions use English text.
+  await i18n.changeLanguage("en");
 
   // Pointer Capture API
   if (!Element.prototype.hasPointerCapture) {

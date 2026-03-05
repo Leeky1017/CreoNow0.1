@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Text } from "../../components/primitives";
 import { ScrollArea } from "../../components/primitives";
 
@@ -166,6 +167,7 @@ export function UnifiedDiffView(props: {
   testId?: string;
   lineUnderlineStyle?: LineUnderlineStyle;
 }): JSX.Element {
+  const { t } = useTranslation();
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const testId = props.testId ?? "ai-diff";
 
@@ -194,7 +196,7 @@ export function UnifiedDiffView(props: {
         className="border border-[var(--color-separator)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] p-2.5"
       >
         <Text size="small" color="muted" className="text-center py-4">
-          No changes to display
+          {t('diff.view.noChanges')}
         </Text>
       </div>
     );
