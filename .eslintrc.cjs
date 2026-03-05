@@ -41,9 +41,9 @@ module.exports = {
       "error",
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
     ],
-    complexity: ["warn", 25],
+    complexity: ["error", 25],
     "max-lines-per-function": [
-      "warn",
+      "error",
       { max: 300, skipBlankLines: true, skipComments: true },
     ],
     "react/react-in-jsx-scope": "off",
@@ -60,7 +60,7 @@ module.exports = {
       ],
       rules: {
         "i18next/no-literal-string": [
-          "warn",
+          "error",
           {
             ignore: [
               "^[A-Z_]+$",
@@ -126,7 +126,7 @@ module.exports = {
             ],
           },
         ],
-        "creonow/no-raw-tailwind-tokens": "warn",
+        "creonow/no-raw-tailwind-tokens": "error",
         "no-restricted-syntax": [
           "error",
           {
