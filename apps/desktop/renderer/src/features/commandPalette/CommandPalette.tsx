@@ -608,6 +608,7 @@ export function CommandPalette({
           <input
             ref={inputRef}
             type="text"
+            data-testid="command-palette-search-input"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}

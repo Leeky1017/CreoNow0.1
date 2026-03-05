@@ -46,9 +46,7 @@ async function openCommandPalette(args: {
 }) {
   await args.page.keyboard.press(`${args.modKey}+p`);
   await expect(args.page.getByTestId("command-palette")).toBeVisible();
-  const searchInput = args.page.getByRole("textbox", {
-    name: "Search commands",
-  });
+  const searchInput = args.page.getByTestId("command-palette-search-input");
   await expect(searchInput).toBeVisible();
   return searchInput;
 }

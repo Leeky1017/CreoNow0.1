@@ -103,13 +103,13 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
           ) : null}
 
           {props.onRejectAll ? (
-            <Button variant="ghost" size="sm" onClick={props.onRejectAll}>
+            <Button data-testid="ai-reject-all" variant="ghost" size="sm" onClick={props.onRejectAll}>
               {t('diff.footer.rejectAll')}
             </Button>
           ) : null}
 
           {props.onAcceptAll ? (
-            <Button variant="secondary" size="sm" onClick={props.onAcceptAll}>
+            <Button data-testid="ai-accept-all" variant="secondary" size="sm" onClick={props.onAcceptAll}>
               {t('diff.footer.acceptAll')}
             </Button>
           ) : null}
