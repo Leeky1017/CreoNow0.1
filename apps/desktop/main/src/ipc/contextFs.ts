@@ -40,27 +40,18 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
-export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
-  function handleWithProjectAccess<TPayload, TResponse>(
-    channel: string,
-    listener: (
-      event: unknown,
-      payload: TPayload,
-    ) => Promise<IpcResponse<TResponse>>,
-  ): void {
-    deps.ipcMain.handle(channel, async (event, payload) => {
-      const guarded = guardAndNormalizeProjectAccess({
-        event,
-        payload,
-        projectSessionBinding: deps.projectSessionBinding,
-      });
-      if (!guarded.ok) {
-        return guarded.response as IpcResponse<TResponse>;
-      }
-      return listener(event, payload as TPayload);
-    });
-  }
+type HandleWithProjectAccess = <TPayload, TResponse>(
+  channel: string,
+  listener: (
+    event: unknown,
+    payload: TPayload,
+  ) => Promise<IpcResponse<TResponse>>,
+) => void;
 
+function registerContextFsStructureHandlers(
+  deps: ContextFsRegistrarDeps,
+  handleWithProjectAccess: HandleWithProjectAccess,
+): void {
   handleWithProjectAccess(
     "context:creonow:ensure",
     async (
@@ -288,7 +279,12 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
       }
     },
   );
+}
 
+function registerContextFsFileHandlers(
+  deps: ContextFsRegistrarDeps,
+  handleWithProjectAccess: HandleWithProjectAccess,
+): void {
   handleWithProjectAccess(
     "context:rules:list",
     async (
@@ -412,7 +408,12 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
       }
     },
   );
+}
 
+function registerContextFsReadHandlers(
+  deps: ContextFsRegistrarDeps,
+  handleWithProjectAccess: HandleWithProjectAccess,
+): void {
   handleWithProjectAccess(
     "context:rules:read",
     async (
@@ -610,4 +611,24 @@ export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
       }
     },
   );
+}
+
+export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
+  const handleWithProjectAccess: HandleWithProjectAccess = (channel, listener) => {
+    deps.ipcMain.handle(channel, async (event, payload) => {
+      const guarded = guardAndNormalizeProjectAccess({
+        event,
+        payload,
+        projectSessionBinding: deps.projectSessionBinding,
+      });
+      if (!guarded.ok) {
+        return guarded.response;
+      }
+      return listener(event, payload);
+    });
+  };
+
+  registerContextFsStructureHandlers(deps, handleWithProjectAccess);
+  registerContextFsFileHandlers(deps, handleWithProjectAccess);
+  registerContextFsReadHandlers(deps, handleWithProjectAccess);
 }

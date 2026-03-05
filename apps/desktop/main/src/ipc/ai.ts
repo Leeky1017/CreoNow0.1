@@ -348,13 +348,7 @@ function safeEmitToRenderer(args: {
   }
 }
 
-/**
- * Register `ai:skill:*` IPC handlers.
- *
- * Why: AI runtime lives in the main process (secrets + network + observability),
- * while the renderer only consumes typed results and stream events.
- */
-export function registerAiIpcHandlers(deps: {
+type AiIpcDeps = {
   ipcMain: IpcMain;
   db: Database.Database | null;
   userDataDir: string;
@@ -363,41 +357,128 @@ export function registerAiIpcHandlers(deps: {
   env: NodeJS.ProcessEnv;
   secretStorage?: SecretStorageAdapter;
   projectSessionBinding?: ProjectSessionBindingRegistry;
-}): void {
+};
+
+type AiIpcContext = {
+  deps: AiIpcDeps;
+  runtimeGovernance: ReturnType<typeof resolveRuntimeGovernanceFromEnv>;
+  aiService: ReturnType<typeof createAiService>;
+  skillExecutor: ReturnType<typeof createSkillExecutor>;
+  runRegistry: Map<
+    string,
+    { startedAt: number; context?: SkillRunPayload["context"] }
+  >;
+  chatHistoryByProject: Map<string, ChatHistoryMessage[]>;
+  sessionTokenTotalsByContext: Map<string, number>;
+  modelPricingByModel: Map<string, ModelPricing>;
+  pushBackpressureByRenderer: Map<
+    number,
+    ReturnType<typeof createIpcPushBackpressureGate>
+  >;
+};
+
+function getOrCreatePushBackpressureGate(
+  ctx: AiIpcContext,
+  sender: Electron.WebContents,
+): ReturnType<typeof createIpcPushBackpressureGate> {
+  const existing = ctx.pushBackpressureByRenderer.get(sender.id);
+  if (existing) {
+    return existing;
+  }
+  const created = createIpcPushBackpressureGate({
+    limitPerSecond: ctx.runtimeGovernance.ai.streamRateLimitPerSecond,
+    onDrop: (event) => {
+      ctx.deps.logger.info("ipc_push_backpressure_triggered", {
+        rendererId: sender.id,
+        channel: SKILL_STREAM_CHUNK_CHANNEL,
+        timestamp: event.timestamp,
+        droppedInWindow: event.droppedInWindow,
+        limitPerSecond: event.limitPerSecond,
+      });
+    },
+  });
+  ctx.pushBackpressureByRenderer.set(sender.id, created);
+  return created;
+}
+
+function rememberRunInRegistry(
+  ctx: AiIpcContext,
+  args: { runId: string; context?: SkillRunPayload["context"] },
+): void {
+  ctx.runRegistry.set(args.runId, {
+    startedAt: nowTs(),
+    context: args.context,
+  });
+  const cutoff = nowTs() - 24 * 60 * 60 * 1000;
+  for (const [runId, entry] of ctx.runRegistry) {
+    if (entry.startedAt < cutoff) {
+      ctx.runRegistry.delete(runId);
+    }
+  }
+}
+
+function resolveUsageContextKey(
+  context?: SkillRunPayload["context"],
+): string {
+  const projectId = context?.projectId?.trim() ?? "";
+  if (projectId.length > 0) {
+    return `project:${projectId}`;
+  }
+  const documentId = context?.documentId?.trim() ?? "";
+  if (documentId.length > 0) {
+    return `document:${documentId}`;
+  }
+  return "global";
+}
+
+function buildSkillRunUsage(
+  ctx: AiIpcContext,
+  args: {
+    model: string;
+    context?: SkillRunPayload["context"];
+    promptTokens: number;
+    completionTokens: number;
+  },
+): SkillRunUsage {
+  const key = resolveUsageContextKey(args.context);
+  const delta =
+    Math.max(0, args.promptTokens) + Math.max(0, args.completionTokens);
+  const nextTotal = (ctx.sessionTokenTotalsByContext.get(key) ?? 0) + delta;
+  ctx.sessionTokenTotalsByContext.set(key, nextTotal);
+
+  const pricing = ctx.modelPricingByModel.get(args.model.trim());
+  const estimatedCostUsd =
+    pricing === undefined
+      ? undefined
+      : Number(
+          (
+            (Math.max(0, args.promptTokens) / 1000) *
+              pricing.promptPer1kTokens +
+            (Math.max(0, args.completionTokens) / 1000) *
+              pricing.completionPer1kTokens
+          ).toFixed(6),
+        );
+
+  return {
+    promptTokens: Math.max(0, args.promptTokens),
+    completionTokens: Math.max(0, args.completionTokens),
+    sessionTotalTokens: nextTotal,
+    ...(typeof estimatedCostUsd === "number" ? { estimatedCostUsd } : {}),
+  };
+}
+
+/**
+ * Register `ai:skill:*` IPC handlers.
+ *
+ * Why: AI runtime lives in the main process (secrets + network + observability),
+ * while the renderer only consumes typed results and stream events.
+ */
+export function registerAiIpcHandlers(deps: AiIpcDeps): void {
   const runtimeGovernance = resolveRuntimeGovernanceFromEnv(deps.env);
   const pushBackpressureByRenderer = new Map<
     number,
     ReturnType<typeof createIpcPushBackpressureGate>
   >();
-
-  /**
-   * Resolve per-renderer push backpressure gate.
-   *
-   * Why: rate limit must be isolated by renderer process, avoiding cross-window coupling.
-   */
-  function getPushBackpressureGate(
-    sender: Electron.WebContents,
-  ): ReturnType<typeof createIpcPushBackpressureGate> {
-    const existing = pushBackpressureByRenderer.get(sender.id);
-    if (existing) {
-      return existing;
-    }
-
-    const created = createIpcPushBackpressureGate({
-      limitPerSecond: runtimeGovernance.ai.streamRateLimitPerSecond,
-      onDrop: (event) => {
-        deps.logger.info("ipc_push_backpressure_triggered", {
-          rendererId: sender.id,
-          channel: SKILL_STREAM_CHUNK_CHANNEL,
-          timestamp: event.timestamp,
-          droppedInWindow: event.droppedInWindow,
-          limitPerSecond: event.limitPerSecond,
-        });
-      },
-    });
-    pushBackpressureByRenderer.set(sender.id, created);
-    return created;
-  }
 
   const aiService = createAiService({
     logger: deps.logger,
@@ -545,79 +626,17 @@ export function registerAiIpcHandlers(deps: {
     },
   });
 
-  /**
-   * Remember a runId for feedback validation.
-   *
-   * Why: feedback can arrive after the underlying in-flight run entry is cleaned up.
-   */
-  function rememberRunId(args: {
-    runId: string;
-    context?: SkillRunPayload["context"];
-  }): void {
-    runRegistry.set(args.runId, { startedAt: nowTs(), context: args.context });
-
-    const cutoff = nowTs() - 24 * 60 * 60 * 1000;
-    for (const [runId, entry] of runRegistry) {
-      if (entry.startedAt < cutoff) {
-        runRegistry.delete(runId);
-      }
-    }
-  }
-
-  /**
-   * Resolve a deterministic usage aggregation key.
-   *
-   * Why: session token totals must stay isolated by project scope.
-   */
-  function resolveUsageContextKey(
-    context?: SkillRunPayload["context"],
-  ): string {
-    const projectId = context?.projectId?.trim() ?? "";
-    if (projectId.length > 0) {
-      return `project:${projectId}`;
-    }
-    const documentId = context?.documentId?.trim() ?? "";
-    if (documentId.length > 0) {
-      return `document:${documentId}`;
-    }
-    return "global";
-  }
-
-  /**
-   * Aggregate usage stats and optionally estimate cost when pricing exists.
-   */
-  function buildUsage(args: {
-    model: string;
-    context?: SkillRunPayload["context"];
-    promptTokens: number;
-    completionTokens: number;
-  }): SkillRunUsage {
-    const key = resolveUsageContextKey(args.context);
-    const delta =
-      Math.max(0, args.promptTokens) + Math.max(0, args.completionTokens);
-    const nextTotal = (sessionTokenTotalsByContext.get(key) ?? 0) + delta;
-    sessionTokenTotalsByContext.set(key, nextTotal);
-
-    const pricing = modelPricingByModel.get(args.model.trim());
-    const estimatedCostUsd =
-      pricing === undefined
-        ? undefined
-        : Number(
-            (
-              (Math.max(0, args.promptTokens) / 1000) *
-                pricing.promptPer1kTokens +
-              (Math.max(0, args.completionTokens) / 1000) *
-                pricing.completionPer1kTokens
-            ).toFixed(6),
-          );
-
-    return {
-      promptTokens: Math.max(0, args.promptTokens),
-      completionTokens: Math.max(0, args.completionTokens),
-      sessionTotalTokens: nextTotal,
-      ...(typeof estimatedCostUsd === "number" ? { estimatedCostUsd } : {}),
-    };
-  }
+  const ctx: AiIpcContext = {
+    deps,
+    runtimeGovernance,
+    aiService,
+    skillExecutor,
+    runRegistry,
+    chatHistoryByProject,
+    sessionTokenTotalsByContext,
+    modelPricingByModel,
+    pushBackpressureByRenderer,
+  };
 
   deps.ipcMain.handle(
     "ai:models:list",
@@ -638,7 +657,13 @@ export function registerAiIpcHandlers(deps: {
       }
     },
   );
-  deps.ipcMain.handle(
+  registerAiSkillRunHandler(ctx);
+  registerAiSkillLifecycleHandlers(ctx);
+  registerAiChatHandlers(ctx);
+}
+
+function registerAiSkillRunHandler(ctx: AiIpcContext): void {
+  ctx.deps.ipcMain.handle(
     "ai:skill:run",
     async (
       e,
@@ -656,7 +681,7 @@ export function registerAiIpcHandlers(deps: {
           error: { code: "INVALID_ARGUMENT", message: "model is required" },
         };
       }
-      if (!deps.db) {
+      if (!ctx.deps.db) {
         return {
           ok: false,
           error: createDbNotReadyError(),
@@ -676,7 +701,7 @@ export function registerAiIpcHandlers(deps: {
         promptInputForUsage(payload),
       );
 
-      const pushBackpressure = getPushBackpressureGate(e.sender);
+      const pushBackpressure = getOrCreatePushBackpressureGate(ctx, e.sender);
 
       const emitEvent = (event: AiStreamEvent): void => {
         const eventToSend: AiStreamEvent =
@@ -702,19 +727,19 @@ export function registerAiIpcHandlers(deps: {
         }
 
         safeEmitToRenderer({
-          logger: deps.logger,
+          logger: ctx.deps.logger,
           sender: e.sender,
           event: eventToSend,
         });
       };
 
-      const stats = createStatsService({ db: deps.db, logger: deps.logger });
+      const stats = createStatsService({ db: ctx.deps.db, logger: ctx.deps.logger });
       const inc = stats.increment({
         ts: nowTs(),
         delta: { skillsUsed: 1 },
       });
       if (!inc.ok) {
-        deps.logger.error("stats_increment_skills_used_failed", {
+        ctx.deps.logger.error("stats_increment_skills_used_failed", {
           code: inc.error.code,
           message: inc.error.message,
         });
@@ -722,7 +747,7 @@ export function registerAiIpcHandlers(deps: {
 
       try {
         if (candidateCount === 1) {
-          const res = await skillExecutor.execute({
+          const res = await ctx.skillExecutor.execute({
             skillId: payload.skillId,
             input: payload.input,
             mode: payload.mode,
@@ -736,7 +761,7 @@ export function registerAiIpcHandlers(deps: {
             return { ok: false, error: res.error };
           }
 
-          rememberRunId({ runId: res.data.runId, context: payload.context });
+          rememberRunInRegistry(ctx, { runId: res.data.runId, context: payload.context });
 
           const outputText = res.data.outputText;
           if (typeof outputText === "string") {
@@ -744,7 +769,7 @@ export function registerAiIpcHandlers(deps: {
               promptInputForUsage(payload),
             );
             const completionTokens = estimateTokenCount(outputText);
-            const usage = buildUsage({
+            const usage = buildSkillRunUsage(ctx, {
               model: payload.model,
               context: payload.context,
               promptTokens,
@@ -785,7 +810,7 @@ export function registerAiIpcHandlers(deps: {
           outputText: string;
         }> = [];
         for (let index = 0; index < candidateCount; index += 1) {
-          const res = await skillExecutor.execute({
+          const res = await ctx.skillExecutor.execute({
             skillId: payload.skillId,
             input: payload.input,
             mode: payload.mode,
@@ -798,7 +823,7 @@ export function registerAiIpcHandlers(deps: {
           if (!res.ok) {
             return { ok: false, error: res.error };
           }
-          rememberRunId({ runId: res.data.runId, context: payload.context });
+          rememberRunInRegistry(ctx, { runId: res.data.runId, context: payload.context });
           runs.push({
             executionId: res.data.executionId,
             runId: res.data.runId,
@@ -818,7 +843,7 @@ export function registerAiIpcHandlers(deps: {
         );
         const promptTokens =
           estimateTokenCount(promptInputForUsage(payload)) * candidateCount;
-        const usage = buildUsage({
+        const usage = buildSkillRunUsage(ctx, {
           model: payload.model,
           context: payload.context,
           promptTokens,
@@ -843,7 +868,7 @@ export function registerAiIpcHandlers(deps: {
           }),
         };
       } catch (error) {
-        deps.logger.error("ai_run_ipc_failed", {
+        ctx.deps.logger.error("ai_run_ipc_failed", {
           message: error instanceof Error ? error.message : String(error),
         });
         return {
@@ -853,8 +878,10 @@ export function registerAiIpcHandlers(deps: {
       }
     },
   );
+}
 
-  deps.ipcMain.handle(
+function registerAiSkillLifecycleHandlers(ctx: AiIpcContext): void {
+  ctx.deps.ipcMain.handle(
     "ai:skill:cancel",
     async (
       _e,
@@ -867,7 +894,7 @@ export function registerAiIpcHandlers(deps: {
       const runIdValue =
         typeof payload.runId === "string" ? payload.runId.trim() : "";
       if (executionIdValue.length === 0 && runIdValue.length > 0) {
-        deps.logger.info("deprecated_field", {
+        ctx.deps.logger.info("deprecated_field", {
           channel: "ai:skill:cancel",
           field: "runId",
         });
@@ -885,7 +912,7 @@ export function registerAiIpcHandlers(deps: {
       }
 
       try {
-        const res = aiService.cancel({
+        const res = ctx.aiService.cancel({
           executionId,
           runId: runIdValue.length > 0 ? runIdValue : undefined,
           ts: nowTs(),
@@ -894,7 +921,7 @@ export function registerAiIpcHandlers(deps: {
           ? { ok: true, data: res.data }
           : { ok: false, error: res.error };
       } catch (error) {
-        deps.logger.error("ai_cancel_ipc_failed", {
+        ctx.deps.logger.error("ai_cancel_ipc_failed", {
           message: error instanceof Error ? error.message : String(error),
         });
         return {
@@ -905,7 +932,7 @@ export function registerAiIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  ctx.deps.ipcMain.handle(
     "ai:skill:feedback",
     async (
       _e,
@@ -918,14 +945,14 @@ export function registerAiIpcHandlers(deps: {
         };
       }
 
-      if (!runRegistry.has(payload.runId)) {
+      if (!ctx.runRegistry.has(payload.runId)) {
         return {
           ok: false,
           error: { code: "NOT_FOUND", message: "runId not found" },
         };
       }
 
-      if (!deps.db) {
+      if (!ctx.deps.db) {
         return {
           ok: false,
           error: createDbNotReadyError(),
@@ -934,8 +961,8 @@ export function registerAiIpcHandlers(deps: {
 
       try {
         const memSvc = createMemoryService({
-          db: deps.db,
-          logger: deps.logger,
+          db: ctx.deps.db,
+          logger: ctx.deps.logger,
         });
         const settings = memSvc.getSettings();
         if (!settings.ok) {
@@ -943,8 +970,8 @@ export function registerAiIpcHandlers(deps: {
         }
 
         const learning = recordSkillFeedbackAndLearn({
-          db: deps.db,
-          logger: deps.logger,
+          db: ctx.deps.db,
+          logger: ctx.deps.logger,
           settings: settings.data,
           runId: payload.runId,
           action: payload.action,
@@ -954,7 +981,7 @@ export function registerAiIpcHandlers(deps: {
           return { ok: false, error: learning.error };
         }
 
-        const res = aiService.feedback({
+        const res = ctx.aiService.feedback({
           runId: payload.runId,
           action: payload.action,
           evidenceRef: payload.evidenceRef,
@@ -977,7 +1004,7 @@ export function registerAiIpcHandlers(deps: {
             }
           : { ok: false, error: res.error };
       } catch (error) {
-        deps.logger.error("ai_feedback_ipc_failed", {
+        ctx.deps.logger.error("ai_feedback_ipc_failed", {
           message: error instanceof Error ? error.message : String(error),
         });
         return {
@@ -987,8 +1014,10 @@ export function registerAiIpcHandlers(deps: {
       }
     },
   );
+}
 
-  deps.ipcMain.handle(
+function registerAiChatHandlers(ctx: AiIpcContext): void {
+  ctx.deps.ipcMain.handle(
     "ai:chat:send",
     async (
       event,
@@ -1004,7 +1033,7 @@ export function registerAiIpcHandlers(deps: {
 
       const projectId = resolveChatProjectId({
         projectId: payload.projectId,
-        boundProjectId: deps.projectSessionBinding?.resolveProjectId({
+        boundProjectId: ctx.deps.projectSessionBinding?.resolveProjectId({
           webContentsId: event.sender.id,
         }),
       });
@@ -1016,8 +1045,8 @@ export function registerAiIpcHandlers(deps: {
       }
 
       const timestamp = nowTs();
-      const projectMessages = chatHistoryByProject.get(projectId.data) ?? [];
-      if (projectMessages.length >= runtimeGovernance.ai.chatMessageCapacity) {
+      const projectMessages = ctx.chatHistoryByProject.get(projectId.data) ?? [];
+      if (projectMessages.length >= ctx.runtimeGovernance.ai.chatMessageCapacity) {
         return {
           ok: false,
           error: {
@@ -1036,7 +1065,7 @@ export function registerAiIpcHandlers(deps: {
         traceId: `trace-${messageId}`,
       };
       const nextMessages = [...projectMessages, nextMessage];
-      chatHistoryByProject.set(projectId.data, nextMessages);
+      ctx.chatHistoryByProject.set(projectId.data, nextMessages);
 
       return {
         ok: true,
@@ -1049,7 +1078,7 @@ export function registerAiIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  ctx.deps.ipcMain.handle(
     "ai:chat:list",
     async (
       event,
@@ -1057,7 +1086,7 @@ export function registerAiIpcHandlers(deps: {
     ): Promise<IpcResponse<ChatListResponse>> => {
       const projectId = resolveChatProjectId({
         projectId: payload.projectId,
-        boundProjectId: deps.projectSessionBinding?.resolveProjectId({
+        boundProjectId: ctx.deps.projectSessionBinding?.resolveProjectId({
           webContentsId: event.sender.id,
         }),
       });
@@ -1068,7 +1097,7 @@ export function registerAiIpcHandlers(deps: {
         };
       }
 
-      const messages = chatHistoryByProject.get(projectId.data) ?? [];
+      const messages = ctx.chatHistoryByProject.get(projectId.data) ?? [];
       return {
         ok: true,
         data: { items: [...messages] },
@@ -1076,7 +1105,7 @@ export function registerAiIpcHandlers(deps: {
     },
   );
 
-  deps.ipcMain.handle(
+  ctx.deps.ipcMain.handle(
     "ai:chat:clear",
     async (
       event,
@@ -1084,7 +1113,7 @@ export function registerAiIpcHandlers(deps: {
     ): Promise<IpcResponse<ChatClearResponse>> => {
       const projectId = resolveChatProjectId({
         projectId: payload.projectId,
-        boundProjectId: deps.projectSessionBinding?.resolveProjectId({
+        boundProjectId: ctx.deps.projectSessionBinding?.resolveProjectId({
           webContentsId: event.sender.id,
         }),
       });
@@ -1095,8 +1124,8 @@ export function registerAiIpcHandlers(deps: {
         };
       }
 
-      const removed = chatHistoryByProject.get(projectId.data)?.length ?? 0;
-      chatHistoryByProject.delete(projectId.data);
+      const removed = ctx.chatHistoryByProject.get(projectId.data)?.length ?? 0;
+      ctx.chatHistoryByProject.delete(projectId.data);
 
       return {
         ok: true,

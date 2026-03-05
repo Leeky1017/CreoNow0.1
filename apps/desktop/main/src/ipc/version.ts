@@ -161,6 +161,704 @@ class VersionOperationCoordinator {
   }
 }
 
+type VersionHandlerContext = {
+  ipcMain: IpcMain;
+  db: Database.Database | null;
+  logger: Logger;
+  coordinator: VersionOperationCoordinator;
+  createService: () => DocumentService;
+  rollbackConflict: (documentId: string) => IpcResponse<never>;
+  withIoRetry: <T>(args: {
+    operation: string;
+    documentId: string;
+    run: () => Promise<IpcResponse<T>>;
+  }) => Promise<IpcResponse<T>>;
+  simulateLatencyMs?: {
+    snapshot?: number;
+    rollback?: number;
+    merge?: number;
+  };
+  mergeTimeoutMs?: number;
+  projectSessionBinding?: ProjectSessionBindingRegistry;
+};
+
+function registerVersionSnapshotHandlers(ctx: VersionHandlerContext): void {
+  const {
+    ipcMain, db, coordinator, createService,
+    withIoRetry, simulateLatencyMs, projectSessionBinding,
+  } = ctx;
+
+  ipcMain.handle(
+    "version:snapshot:create",
+    async (event, payload: unknown): Promise<
+      IpcResponse<{
+        versionId: string;
+        contentHash: string;
+        wordCount: number;
+        createdAt: number;
+        compaction?: SnapshotCompactionEvent;
+      }>
+    > => {
+      const guarded = guardAndNormalizeProjectAccess({
+        event,
+        payload,
+        projectSessionBinding,
+      });
+      if (!guarded.ok) {
+        return guarded.response;
+      }
+
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+
+      const projectId = readNonEmptyStringField(payload, "projectId");
+      const documentId = readNonEmptyStringField(payload, "documentId");
+      if (!projectId || !documentId) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "projectId/documentId is required",
+          },
+        };
+      }
+
+      const contentJson =
+        payload && typeof payload === "object"
+          ? (payload as { contentJson?: unknown }).contentJson
+          : undefined;
+      if (typeof contentJson !== "string") {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "contentJson must be valid JSON",
+          },
+        };
+      }
+
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(contentJson);
+      } catch {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "contentJson must be valid JSON",
+          },
+        };
+      }
+
+      const actor =
+        payload && typeof payload === "object"
+          ? (payload as { actor?: VersionSnapshotActor }).actor
+          : undefined;
+      const reason =
+        payload && typeof payload === "object"
+          ? (payload as { reason?: VersionSnapshotReason }).reason
+          : undefined;
+
+      return coordinator.withSerializedDocument(
+        documentId,
+        async () => {
+          await sleep(simulateLatencyMs?.snapshot);
+          return withIoRetry({
+            operation: "version:snapshot:create",
+            documentId,
+            run: async (): Promise<
+              IpcResponse<{
+                versionId: string;
+                contentHash: string;
+                wordCount: number;
+                createdAt: number;
+                compaction?: SnapshotCompactionEvent;
+              }>
+            > => {
+              const svc = createService();
+              const saved = svc.save({
+                projectId,
+                documentId,
+                contentJson: parsed,
+                actor: actor as VersionSnapshotActor,
+                reason: reason as VersionSnapshotReason,
+              });
+              if (!saved.ok) {
+                return { ok: false, error: saved.error };
+              }
+
+              const listed = svc.listVersions({
+                documentId,
+              });
+              if (!listed.ok) {
+                return { ok: false, error: listed.error };
+              }
+              const latest = listed.data.items[0];
+              if (!latest) {
+                return {
+                  ok: false,
+                  error: {
+                    code: "DB_ERROR",
+                    message: "Snapshot create succeeded but no snapshot found",
+                  },
+                };
+              }
+
+              return {
+                ok: true,
+                data: {
+                  versionId: latest.versionId,
+                  contentHash: latest.contentHash,
+                  wordCount: latest.wordCount,
+                  createdAt: latest.createdAt,
+                  compaction: saved.data.compaction,
+                },
+              };
+            },
+          });
+        },
+      );
+    },
+  );
+
+  ipcMain.handle(
+    "version:snapshot:list",
+    async (
+      _e,
+      payload: { documentId: string },
+    ): Promise<
+      IpcResponse<{
+        items: Array<{
+          versionId: string;
+          actor: "user" | "auto" | "ai";
+          reason: string;
+          contentHash: string;
+          wordCount: number;
+          createdAt: number;
+        }>;
+      }>
+    > => {
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      if (payload.documentId.trim().length === 0) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId is required",
+          },
+        };
+      }
+
+      const svc = createService();
+      const res = svc.listVersions({ documentId: payload.documentId });
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  ipcMain.handle(
+    "version:snapshot:read",
+    async (
+      _e,
+      payload: { documentId: string; versionId: string },
+    ): Promise<
+      IpcResponse<{
+        documentId: string;
+        projectId: string;
+        versionId: string;
+        actor: "user" | "auto" | "ai";
+        reason: string;
+        contentJson: string;
+        contentText: string;
+        contentMd: string;
+        contentHash: string;
+        wordCount: number;
+        createdAt: number;
+      }>
+    > => {
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      if (
+        payload.documentId.trim().length === 0 ||
+        payload.versionId.trim().length === 0
+      ) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId/versionId is required",
+          },
+        };
+      }
+
+      const svc = createService();
+      const res = svc.readVersion({
+        documentId: payload.documentId,
+        versionId: payload.versionId,
+      });
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  ipcMain.handle(
+    "version:snapshot:diff",
+    async (
+      _e,
+      payload: {
+        documentId: string;
+        baseVersionId: string;
+        targetVersionId?: string;
+      },
+    ): Promise<IpcResponse<VersionDiffPayload>> => {
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      if (
+        payload.documentId.trim().length === 0 ||
+        payload.baseVersionId.trim().length === 0
+      ) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId/baseVersionId is required",
+          },
+        };
+      }
+      if (
+        payload.targetVersionId !== undefined &&
+        payload.targetVersionId.trim().length === 0
+      ) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "targetVersionId must be a non-empty string when provided",
+          },
+        };
+      }
+
+      const svc = createService();
+      const res = svc.diffVersions({
+        documentId: payload.documentId,
+        baseVersionId: payload.baseVersionId,
+        targetVersionId: payload.targetVersionId,
+      });
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+}
+
+function registerVersionSnapshotLifecycleHandlers(ctx: VersionHandlerContext): void {
+  const {
+    ipcMain, db, coordinator, createService,
+    rollbackConflict, withIoRetry, simulateLatencyMs,
+  } = ctx;
+
+  ipcMain.handle(
+    "version:snapshot:rollback",
+    async (
+      _e,
+      payload: { documentId: string; versionId: string },
+    ): Promise<
+      IpcResponse<{
+        restored: true;
+        preRollbackVersionId: string;
+        rollbackVersionId: string;
+      }>
+    > => {
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      if (
+        payload.documentId.trim().length === 0 ||
+        payload.versionId.trim().length === 0
+      ) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId/versionId is required",
+          },
+        };
+      }
+
+      if (coordinator.isBusy(payload.documentId)) {
+        return rollbackConflict(payload.documentId);
+      }
+
+      return coordinator.withSerializedDocument(
+        payload.documentId,
+        async () => {
+          await sleep(simulateLatencyMs?.rollback);
+          return withIoRetry({
+            operation: "version:snapshot:rollback",
+            documentId: payload.documentId,
+            run: async () => {
+              const svc = createService();
+              const res = svc.rollbackVersion({
+                documentId: payload.documentId,
+                versionId: payload.versionId,
+              });
+              return res.ok
+                ? { ok: true, data: res.data }
+                : { ok: false, error: res.error };
+            },
+          });
+        },
+      );
+    },
+  );
+
+  ipcMain.handle(
+    "version:snapshot:restore",
+    async (
+      _e,
+      payload: { documentId: string; versionId: string },
+    ): Promise<IpcResponse<{ restored: true }>> => {
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      if (
+        payload.documentId.trim().length === 0 ||
+        payload.versionId.trim().length === 0
+      ) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId/versionId is required",
+          },
+        };
+      }
+
+      if (coordinator.isBusy(payload.documentId)) {
+        return rollbackConflict(payload.documentId);
+      }
+
+      return coordinator.withSerializedDocument(
+        payload.documentId,
+        async () => {
+          await sleep(simulateLatencyMs?.rollback);
+          return withIoRetry({
+            operation: "version:snapshot:restore",
+            documentId: payload.documentId,
+            run: async () => {
+              const svc = createService();
+              const res = svc.restoreVersion({
+                documentId: payload.documentId,
+                versionId: payload.versionId,
+              });
+              return res.ok
+                ? { ok: true, data: res.data }
+                : { ok: false, error: res.error };
+            },
+          });
+        },
+      );
+    },
+  );
+}
+
+function registerVersionBranchHandlers(ctx: VersionHandlerContext): void {
+  const {
+    ipcMain, db, logger, coordinator,
+    createService, withIoRetry, simulateLatencyMs, mergeTimeoutMs,
+  } = ctx;
+
+  ipcMain.handle(
+    "version:branch:create",
+    async (
+      _e,
+      payload: { documentId: string; name: string; createdBy: string },
+    ): Promise<
+      IpcResponse<{
+        branch: {
+          id: string;
+          documentId: string;
+          name: string;
+          baseSnapshotId: string;
+          headSnapshotId: string;
+          createdBy: string;
+          createdAt: number;
+          isCurrent: boolean;
+        };
+      }>
+    > => {
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      if (
+        payload.documentId.trim().length === 0 ||
+        payload.name.trim().length === 0 ||
+        payload.createdBy.trim().length === 0
+      ) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId/name/createdBy is required",
+          },
+        };
+      }
+
+      const svc = createService();
+      const res = svc.createBranch({
+        documentId: payload.documentId,
+        name: payload.name,
+        createdBy: payload.createdBy,
+      });
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  ipcMain.handle(
+    "version:branch:list",
+    async (
+      _e,
+      payload: { documentId: string },
+    ): Promise<
+      IpcResponse<{
+        branches: Array<{
+          id: string;
+          documentId: string;
+          name: string;
+          baseSnapshotId: string;
+          headSnapshotId: string;
+          createdBy: string;
+          createdAt: number;
+          isCurrent: boolean;
+        }>;
+      }>
+    > => {
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      if (payload.documentId.trim().length === 0) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId is required",
+          },
+        };
+      }
+
+      const svc = createService();
+      const res = svc.listBranches({ documentId: payload.documentId });
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  ipcMain.handle(
+    "version:branch:switch",
+    async (
+      _e,
+      payload: { documentId: string; name: string },
+    ): Promise<
+      IpcResponse<{
+        currentBranch: string;
+        headSnapshotId: string;
+      }>
+    > => {
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      if (
+        payload.documentId.trim().length === 0 ||
+        payload.name.trim().length === 0
+      ) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId/name is required",
+          },
+        };
+      }
+
+      const svc = createService();
+      const res = svc.switchBranch({
+        documentId: payload.documentId,
+        name: payload.name,
+      });
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  ipcMain.handle(
+    "version:branch:merge",
+    async (
+      _e,
+      payload: {
+        documentId: string;
+        sourceBranchName: string;
+        targetBranchName: string;
+      },
+    ): Promise<IpcResponse<{ status: "merged"; mergeSnapshotId: string }>> => {
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      if (
+        payload.documentId.trim().length === 0 ||
+        payload.sourceBranchName.trim().length === 0 ||
+        payload.targetBranchName.trim().length === 0
+      ) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId/sourceBranchName/targetBranchName is required",
+          },
+        };
+      }
+
+      return coordinator.withSerializedDocument(
+        payload.documentId,
+        async () => {
+          await sleep(simulateLatencyMs?.merge);
+          return withIoRetry({
+            operation: "version:branch:merge",
+            documentId: payload.documentId,
+            run: async () => {
+              const svc = createService();
+              const res = svc.mergeBranch({
+                documentId: payload.documentId,
+                sourceBranchName: payload.sourceBranchName,
+                targetBranchName: payload.targetBranchName,
+                timeoutMs: mergeTimeoutMs,
+              });
+              return res.ok
+                ? { ok: true, data: res.data }
+                : { ok: false, error: res.error };
+            },
+          });
+        },
+      );
+    },
+  );
+
+  ipcMain.handle(
+    "version:conflict:resolve",
+    async (
+      _e,
+      payload: {
+        documentId: string;
+        mergeSessionId: string;
+        resolutions: Array<{
+          conflictId: string;
+          resolution: "ours" | "theirs" | "manual";
+          manualText?: string;
+        }>;
+        resolvedBy: string;
+      },
+    ): Promise<IpcResponse<{ status: "merged"; mergeSnapshotId: string }>> => {
+      if (!db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      if (
+        payload.documentId.trim().length === 0 ||
+        payload.mergeSessionId.trim().length === 0 ||
+        payload.resolvedBy.trim().length === 0
+      ) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId/mergeSessionId/resolvedBy is required",
+          },
+        };
+      }
+
+      const svc = createService();
+      const res = svc.resolveMergeConflict({
+        documentId: payload.documentId,
+        mergeSessionId: payload.mergeSessionId,
+        resolutions: payload.resolutions,
+        resolvedBy: payload.resolvedBy,
+      });
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  ipcMain.handle(
+    "version:aiapply:logconflict",
+    async (
+      _e,
+      payload: { documentId: string; runId: string },
+    ): Promise<IpcResponse<{ logged: true }>> => {
+      if (
+        payload.documentId.trim().length === 0 ||
+        payload.runId.trim().length === 0
+      ) {
+        return {
+          ok: false,
+          error: {
+            code: "INVALID_ARGUMENT",
+            message: "documentId/runId is required",
+          },
+        };
+      }
+
+      logger.info("ai_apply_conflict", {
+        runId: payload.runId,
+        document_id: payload.documentId,
+      });
+      return { ok: true, data: { logged: true } };
+    },
+  );
+}
+
 /**
  * Register `version:*` IPC handlers (minimal subset for P0).
  *
@@ -277,659 +975,20 @@ export function registerVersionIpcHandlers(deps: {
     );
   };
 
-  deps.ipcMain.handle(
-    "version:snapshot:create",
-    async (event, payload: unknown): Promise<
-      IpcResponse<{
-        versionId: string;
-        contentHash: string;
-        wordCount: number;
-        createdAt: number;
-        compaction?: SnapshotCompactionEvent;
-      }>
-    > => {
-      const guarded = guardAndNormalizeProjectAccess({
-        event,
-        payload,
-        projectSessionBinding,
-      });
-      if (!guarded.ok) {
-        return guarded.response;
-      }
+  const ctx: VersionHandlerContext = {
+    ipcMain: deps.ipcMain,
+    db: deps.db,
+    logger: deps.logger,
+    coordinator,
+    createService,
+    rollbackConflict,
+    withIoRetry,
+    simulateLatencyMs: deps.simulateLatencyMs,
+    mergeTimeoutMs: deps.mergeTimeoutMs,
+    projectSessionBinding,
+  };
 
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-
-      const projectId = readNonEmptyStringField(payload, "projectId");
-      const documentId = readNonEmptyStringField(payload, "documentId");
-      if (!projectId || !documentId) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "projectId/documentId is required",
-          },
-        };
-      }
-
-      const contentJson =
-        payload && typeof payload === "object"
-          ? (payload as { contentJson?: unknown }).contentJson
-          : undefined;
-      if (typeof contentJson !== "string") {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "contentJson must be valid JSON",
-          },
-        };
-      }
-
-      let parsed: unknown;
-      try {
-        parsed = JSON.parse(contentJson);
-      } catch {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "contentJson must be valid JSON",
-          },
-        };
-      }
-
-      const actor =
-        payload && typeof payload === "object"
-          ? (payload as { actor?: VersionSnapshotActor }).actor
-          : undefined;
-      const reason =
-        payload && typeof payload === "object"
-          ? (payload as { reason?: VersionSnapshotReason }).reason
-          : undefined;
-
-      return coordinator.withSerializedDocument(
-        documentId,
-        async () => {
-          await sleep(deps.simulateLatencyMs?.snapshot);
-          return withIoRetry({
-            operation: "version:snapshot:create",
-            documentId,
-            run: async (): Promise<
-              IpcResponse<{
-                versionId: string;
-                contentHash: string;
-                wordCount: number;
-                createdAt: number;
-                compaction?: SnapshotCompactionEvent;
-              }>
-            > => {
-              const svc = createService();
-              const saved = svc.save({
-                projectId,
-                documentId,
-                contentJson: parsed,
-                actor: actor as VersionSnapshotActor,
-                reason: reason as VersionSnapshotReason,
-              });
-              if (!saved.ok) {
-                return { ok: false, error: saved.error };
-              }
-
-              const listed = svc.listVersions({
-                documentId,
-              });
-              if (!listed.ok) {
-                return { ok: false, error: listed.error };
-              }
-              const latest = listed.data.items[0];
-              if (!latest) {
-                return {
-                  ok: false,
-                  error: {
-                    code: "DB_ERROR",
-                    message: "Snapshot create succeeded but no snapshot found",
-                  },
-                };
-              }
-
-              return {
-                ok: true,
-                data: {
-                  versionId: latest.versionId,
-                  contentHash: latest.contentHash,
-                  wordCount: latest.wordCount,
-                  createdAt: latest.createdAt,
-                  compaction: saved.data.compaction,
-                },
-              };
-            },
-          });
-        },
-      );
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:snapshot:list",
-    async (
-      _e,
-      payload: { documentId: string },
-    ): Promise<
-      IpcResponse<{
-        items: Array<{
-          versionId: string;
-          actor: "user" | "auto" | "ai";
-          reason: string;
-          contentHash: string;
-          wordCount: number;
-          createdAt: number;
-        }>;
-      }>
-    > => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-      if (payload.documentId.trim().length === 0) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId is required",
-          },
-        };
-      }
-
-      const svc = createService();
-      const res = svc.listVersions({ documentId: payload.documentId });
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:snapshot:read",
-    async (
-      _e,
-      payload: { documentId: string; versionId: string },
-    ): Promise<
-      IpcResponse<{
-        documentId: string;
-        projectId: string;
-        versionId: string;
-        actor: "user" | "auto" | "ai";
-        reason: string;
-        contentJson: string;
-        contentText: string;
-        contentMd: string;
-        contentHash: string;
-        wordCount: number;
-        createdAt: number;
-      }>
-    > => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-      if (
-        payload.documentId.trim().length === 0 ||
-        payload.versionId.trim().length === 0
-      ) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId/versionId is required",
-          },
-        };
-      }
-
-      const svc = createService();
-      const res = svc.readVersion({
-        documentId: payload.documentId,
-        versionId: payload.versionId,
-      });
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:snapshot:diff",
-    async (
-      _e,
-      payload: {
-        documentId: string;
-        baseVersionId: string;
-        targetVersionId?: string;
-      },
-    ): Promise<IpcResponse<VersionDiffPayload>> => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-      if (
-        payload.documentId.trim().length === 0 ||
-        payload.baseVersionId.trim().length === 0
-      ) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId/baseVersionId is required",
-          },
-        };
-      }
-      if (
-        payload.targetVersionId !== undefined &&
-        payload.targetVersionId.trim().length === 0
-      ) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "targetVersionId must be a non-empty string when provided",
-          },
-        };
-      }
-
-      const svc = createService();
-      const res = svc.diffVersions({
-        documentId: payload.documentId,
-        baseVersionId: payload.baseVersionId,
-        targetVersionId: payload.targetVersionId,
-      });
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:snapshot:rollback",
-    async (
-      _e,
-      payload: { documentId: string; versionId: string },
-    ): Promise<
-      IpcResponse<{
-        restored: true;
-        preRollbackVersionId: string;
-        rollbackVersionId: string;
-      }>
-    > => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-      if (
-        payload.documentId.trim().length === 0 ||
-        payload.versionId.trim().length === 0
-      ) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId/versionId is required",
-          },
-        };
-      }
-
-      if (coordinator.isBusy(payload.documentId)) {
-        return rollbackConflict(payload.documentId);
-      }
-
-      return coordinator.withSerializedDocument(
-        payload.documentId,
-        async () => {
-          await sleep(deps.simulateLatencyMs?.rollback);
-          return withIoRetry({
-            operation: "version:snapshot:rollback",
-            documentId: payload.documentId,
-            run: async () => {
-              const svc = createService();
-              const res = svc.rollbackVersion({
-                documentId: payload.documentId,
-                versionId: payload.versionId,
-              });
-              return res.ok
-                ? { ok: true, data: res.data }
-                : { ok: false, error: res.error };
-            },
-          });
-        },
-      );
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:snapshot:restore",
-    async (
-      _e,
-      payload: { documentId: string; versionId: string },
-    ): Promise<IpcResponse<{ restored: true }>> => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-      if (
-        payload.documentId.trim().length === 0 ||
-        payload.versionId.trim().length === 0
-      ) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId/versionId is required",
-          },
-        };
-      }
-
-      if (coordinator.isBusy(payload.documentId)) {
-        return rollbackConflict(payload.documentId);
-      }
-
-      return coordinator.withSerializedDocument(
-        payload.documentId,
-        async () => {
-          await sleep(deps.simulateLatencyMs?.rollback);
-          return withIoRetry({
-            operation: "version:snapshot:restore",
-            documentId: payload.documentId,
-            run: async () => {
-              const svc = createService();
-              const res = svc.restoreVersion({
-                documentId: payload.documentId,
-                versionId: payload.versionId,
-              });
-              return res.ok
-                ? { ok: true, data: res.data }
-                : { ok: false, error: res.error };
-            },
-          });
-        },
-      );
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:branch:create",
-    async (
-      _e,
-      payload: { documentId: string; name: string; createdBy: string },
-    ): Promise<
-      IpcResponse<{
-        branch: {
-          id: string;
-          documentId: string;
-          name: string;
-          baseSnapshotId: string;
-          headSnapshotId: string;
-          createdBy: string;
-          createdAt: number;
-          isCurrent: boolean;
-        };
-      }>
-    > => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-      if (
-        payload.documentId.trim().length === 0 ||
-        payload.name.trim().length === 0 ||
-        payload.createdBy.trim().length === 0
-      ) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId/name/createdBy is required",
-          },
-        };
-      }
-
-      const svc = createService();
-      const res = svc.createBranch({
-        documentId: payload.documentId,
-        name: payload.name,
-        createdBy: payload.createdBy,
-      });
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:branch:list",
-    async (
-      _e,
-      payload: { documentId: string },
-    ): Promise<
-      IpcResponse<{
-        branches: Array<{
-          id: string;
-          documentId: string;
-          name: string;
-          baseSnapshotId: string;
-          headSnapshotId: string;
-          createdBy: string;
-          createdAt: number;
-          isCurrent: boolean;
-        }>;
-      }>
-    > => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-      if (payload.documentId.trim().length === 0) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId is required",
-          },
-        };
-      }
-
-      const svc = createService();
-      const res = svc.listBranches({ documentId: payload.documentId });
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:branch:switch",
-    async (
-      _e,
-      payload: { documentId: string; name: string },
-    ): Promise<
-      IpcResponse<{
-        currentBranch: string;
-        headSnapshotId: string;
-      }>
-    > => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-      if (
-        payload.documentId.trim().length === 0 ||
-        payload.name.trim().length === 0
-      ) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId/name is required",
-          },
-        };
-      }
-
-      const svc = createService();
-      const res = svc.switchBranch({
-        documentId: payload.documentId,
-        name: payload.name,
-      });
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:branch:merge",
-    async (
-      _e,
-      payload: {
-        documentId: string;
-        sourceBranchName: string;
-        targetBranchName: string;
-      },
-    ): Promise<IpcResponse<{ status: "merged"; mergeSnapshotId: string }>> => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-      if (
-        payload.documentId.trim().length === 0 ||
-        payload.sourceBranchName.trim().length === 0 ||
-        payload.targetBranchName.trim().length === 0
-      ) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId/sourceBranchName/targetBranchName is required",
-          },
-        };
-      }
-
-      return coordinator.withSerializedDocument(
-        payload.documentId,
-        async () => {
-          await sleep(deps.simulateLatencyMs?.merge);
-          return withIoRetry({
-            operation: "version:branch:merge",
-            documentId: payload.documentId,
-            run: async () => {
-              const svc = createService();
-              const res = svc.mergeBranch({
-                documentId: payload.documentId,
-                sourceBranchName: payload.sourceBranchName,
-                targetBranchName: payload.targetBranchName,
-                timeoutMs: deps.mergeTimeoutMs,
-              });
-              return res.ok
-                ? { ok: true, data: res.data }
-                : { ok: false, error: res.error };
-            },
-          });
-        },
-      );
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:conflict:resolve",
-    async (
-      _e,
-      payload: {
-        documentId: string;
-        mergeSessionId: string;
-        resolutions: Array<{
-          conflictId: string;
-          resolution: "ours" | "theirs" | "manual";
-          manualText?: string;
-        }>;
-        resolvedBy: string;
-      },
-    ): Promise<IpcResponse<{ status: "merged"; mergeSnapshotId: string }>> => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
-      if (
-        payload.documentId.trim().length === 0 ||
-        payload.mergeSessionId.trim().length === 0 ||
-        payload.resolvedBy.trim().length === 0
-      ) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId/mergeSessionId/resolvedBy is required",
-          },
-        };
-      }
-
-      const svc = createService();
-      const res = svc.resolveMergeConflict({
-        documentId: payload.documentId,
-        mergeSessionId: payload.mergeSessionId,
-        resolutions: payload.resolutions,
-        resolvedBy: payload.resolvedBy,
-      });
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  deps.ipcMain.handle(
-    "version:aiapply:logconflict",
-    async (
-      _e,
-      payload: { documentId: string; runId: string },
-    ): Promise<IpcResponse<{ logged: true }>> => {
-      if (
-        payload.documentId.trim().length === 0 ||
-        payload.runId.trim().length === 0
-      ) {
-        return {
-          ok: false,
-          error: {
-            code: "INVALID_ARGUMENT",
-            message: "documentId/runId is required",
-          },
-        };
-      }
-
-      deps.logger.info("ai_apply_conflict", {
-        runId: payload.runId,
-        document_id: payload.documentId,
-      });
-      return { ok: true, data: { logged: true } };
-    },
-  );
+  registerVersionSnapshotHandlers(ctx);
+  registerVersionSnapshotLifecycleHandlers(ctx);
+  registerVersionBranchHandlers(ctx);
 }

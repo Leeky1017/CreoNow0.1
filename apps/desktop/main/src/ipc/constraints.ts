@@ -693,17 +693,13 @@ function toLegacyError(error: IpcError): IpcError {
   return error;
 }
 
-/**
- * Register `constraints:*` IPC handlers.
- *
- * Why: constraints are project-scoped rules with SSOT at
- * `.creonow/rules/constraints.json`.
- */
-export function registerConstraintsIpcHandlers(deps: {
+type ConstraintsHandlerDeps = {
   ipcMain: IpcMain;
   db: Database.Database | null;
   logger: Logger;
-}): void {
+};
+
+function registerConstraintsCrudHandlers(deps: ConstraintsHandlerDeps): void {
   deps.ipcMain.handle(
     "constraints:policy:list",
     async (
@@ -993,7 +989,9 @@ export function registerConstraintsIpcHandlers(deps: {
       }
     },
   );
+}
 
+function registerConstraintsDeleteAndLegacyHandlers(deps: ConstraintsHandlerDeps): void {
   deps.ipcMain.handle(
     "constraints:policy:delete",
     async (
@@ -1241,4 +1239,15 @@ export function registerConstraintsIpcHandlers(deps: {
       }
     },
   );
+}
+
+/**
+ * Register `constraints:*` IPC handlers.
+ *
+ * Why: constraints are project-scoped rules with SSOT at
+ * `.creonow/rules/constraints.json`.
+ */
+export function registerConstraintsIpcHandlers(deps: ConstraintsHandlerDeps): void {
+  registerConstraintsCrudHandlers(deps);
+  registerConstraintsDeleteAndLegacyHandlers(deps);
 }

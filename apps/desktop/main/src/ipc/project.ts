@@ -7,19 +7,16 @@ import { createProjectService } from "../services/projects/projectService";
 import type { ProjectLifecycle } from "../services/projects/projectLifecycle";
 import type { ProjectSessionBindingRegistry } from "./projectSessionBinding";
 
-/**
- * Register `project:*` IPC handlers.
- *
- * Why: project lifecycle is the stable V1 entry point for documents/context.
- */
-export function registerProjectIpcHandlers(deps: {
+type ProjectHandlerDeps = {
   ipcMain: IpcMain;
   db: Database.Database | null;
   userDataDir: string;
   logger: Logger;
   projectSessionBinding?: ProjectSessionBindingRegistry;
   projectLifecycle?: ProjectLifecycle;
-}): void {
+};
+
+function registerProjectCrudHandlers(deps: ProjectHandlerDeps): void {
   deps.ipcMain.handle(
     "project:project:create",
     async (
@@ -280,7 +277,9 @@ export function registerProjectIpcHandlers(deps: {
         : { ok: false, error: res.error };
     },
   );
+}
 
+function registerProjectSessionAndLifecycleHandlers(deps: ProjectHandlerDeps): void {
   deps.ipcMain.handle(
     "project:project:getcurrent",
     async (
@@ -557,4 +556,14 @@ export function registerProjectIpcHandlers(deps: {
         : { ok: false, error: res.error };
     },
   );
+}
+
+/**
+ * Register `project:*` IPC handlers.
+ *
+ * Why: project lifecycle is the stable V1 entry point for documents/context.
+ */
+export function registerProjectIpcHandlers(deps: ProjectHandlerDeps): void {
+  registerProjectCrudHandlers(deps);
+  registerProjectSessionAndLifecycleHandlers(deps);
 }

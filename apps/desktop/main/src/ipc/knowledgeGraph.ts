@@ -198,6 +198,21 @@ type RulesInjectPayload = {
   entityIds?: string[];
 };
 
+function notReady<T>(): IpcResponse<T> {
+  return {
+    ok: false,
+    error: { code: "DB_ERROR", message: "Database not ready" },
+  };
+}
+
+type KgHandlerRegistrar = <TPayload, TResponse, TEvent = unknown>(
+  channel: string,
+  listener: (
+    event: TEvent,
+    payload: TPayload,
+  ) => Promise<IpcResponse<TResponse>>,
+) => void;
+
 /**
  * Register `knowledge:*` IPC handlers (Knowledge Graph).
  *
@@ -211,13 +226,6 @@ export function registerKnowledgeGraphIpcHandlers(deps: {
   recognitionRuntime?: KgRecognitionRuntime | null;
   projectSessionBinding?: ProjectSessionBindingRegistry;
 }): void {
-  function notReady<T>(): IpcResponse<T> {
-    return {
-      ok: false,
-      error: { code: "DB_ERROR", message: "Database not ready" },
-    };
-  }
-
   const recognitionRuntime: KgRecognitionRuntime | null = deps.db
     ? (deps.recognitionRuntime ??
       createKgRecognitionRuntime({
@@ -257,196 +265,8 @@ export function registerKnowledgeGraphIpcHandlers(deps: {
     });
   }
 
-  handleWithProjectAccess(
-    "knowledge:entity:create",
-    async (
-      _event,
-      payload: EntityCreatePayload,
-    ): Promise<IpcResponse<KnowledgeEntity>> => {
-      if (!deps.db) {
-        return notReady<KnowledgeEntity>();
-      }
-
-      const service = createService();
-      if (!service) {
-        return notReady<KnowledgeEntity>();
-      }
-      const res = service.entityCreate(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  handleWithProjectAccess(
-    "knowledge:entity:read",
-    async (
-      _event,
-      payload: EntityReadPayload,
-    ): Promise<IpcResponse<KnowledgeEntity>> => {
-      if (!deps.db) {
-        return notReady<KnowledgeEntity>();
-      }
-
-      const service = createService();
-      if (!service) {
-        return notReady<KnowledgeEntity>();
-      }
-      const res = service.entityRead(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  handleWithProjectAccess(
-    "knowledge:entity:list",
-    async (
-      _event,
-      payload: EntityListPayload,
-    ): Promise<IpcResponse<{ items: KnowledgeEntity[] }>> => {
-      if (!deps.db) {
-        return notReady<{ items: KnowledgeEntity[] }>();
-      }
-
-      const service = createService();
-      if (!service) {
-        return notReady<{ items: KnowledgeEntity[] }>();
-      }
-      const res = service.entityList(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  handleWithProjectAccess(
-    "knowledge:entity:update",
-    async (
-      _event,
-      payload: EntityUpdatePayload,
-    ): Promise<IpcResponse<KnowledgeEntity>> => {
-      if (!deps.db) {
-        return notReady<KnowledgeEntity>();
-      }
-
-      const service = createService();
-      if (!service) {
-        return notReady<KnowledgeEntity>();
-      }
-      const res = service.entityUpdate(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  handleWithProjectAccess(
-    "knowledge:entity:delete",
-    async (
-      _event,
-      payload: EntityDeletePayload,
-    ): Promise<
-      IpcResponse<{ deleted: true; deletedRelationCount: number }>
-    > => {
-      if (!deps.db) {
-        return notReady<{ deleted: true; deletedRelationCount: number }>();
-      }
-
-      const service = createService();
-      if (!service) {
-        return notReady<{ deleted: true; deletedRelationCount: number }>();
-      }
-      const res = service.entityDelete(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  handleWithProjectAccess(
-    "knowledge:relation:create",
-    async (
-      _event,
-      payload: RelationCreatePayload,
-    ): Promise<IpcResponse<KnowledgeRelation>> => {
-      if (!deps.db) {
-        return notReady<KnowledgeRelation>();
-      }
-
-      const service = createService();
-      if (!service) {
-        return notReady<KnowledgeRelation>();
-      }
-      const res = service.relationCreate(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  handleWithProjectAccess(
-    "knowledge:relation:list",
-    async (
-      _event,
-      payload: RelationListPayload,
-    ): Promise<IpcResponse<{ items: KnowledgeRelation[] }>> => {
-      if (!deps.db) {
-        return notReady<{ items: KnowledgeRelation[] }>();
-      }
-
-      const service = createService();
-      if (!service) {
-        return notReady<{ items: KnowledgeRelation[] }>();
-      }
-      const res = service.relationList(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  handleWithProjectAccess(
-    "knowledge:relation:update",
-    async (
-      _event,
-      payload: RelationUpdatePayload,
-    ): Promise<IpcResponse<KnowledgeRelation>> => {
-      if (!deps.db) {
-        return notReady<KnowledgeRelation>();
-      }
-
-      const service = createService();
-      if (!service) {
-        return notReady<KnowledgeRelation>();
-      }
-      const res = service.relationUpdate(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
-
-  handleWithProjectAccess(
-    "knowledge:relation:delete",
-    async (
-      _event,
-      payload: RelationDeletePayload,
-    ): Promise<IpcResponse<{ deleted: true }>> => {
-      if (!deps.db) {
-        return notReady<{ deleted: true }>();
-      }
-
-      const service = createService();
-      if (!service) {
-        return notReady<{ deleted: true }>();
-      }
-      const res = service.relationDelete(payload);
-      return res.ok
-        ? { ok: true, data: res.data }
-        : { ok: false, error: res.error };
-    },
-  );
+  registerKgEntityHandlers(deps, handleWithProjectAccess, createService);
+  registerKgRelationHandlers(deps, handleWithProjectAccess, createService);
 
   handleWithProjectAccess(
     "knowledge:query:subgraph",
@@ -666,6 +486,209 @@ export function registerKnowledgeGraphIpcHandlers(deps: {
           traceId: payload.traceId,
         },
       };
+    },
+  );
+}
+
+function registerKgEntityHandlers(
+  deps: { db: Database.Database | null },
+  handleWithProjectAccess: KgHandlerRegistrar,
+  createService: () => ReturnType<typeof createKnowledgeGraphService> | null,
+): void {
+  handleWithProjectAccess(
+    "knowledge:entity:create",
+    async (
+      _event,
+      payload: EntityCreatePayload,
+    ): Promise<IpcResponse<KnowledgeEntity>> => {
+      if (!deps.db) {
+        return notReady<KnowledgeEntity>();
+      }
+
+      const service = createService();
+      if (!service) {
+        return notReady<KnowledgeEntity>();
+      }
+      const res = service.entityCreate(payload);
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  handleWithProjectAccess(
+    "knowledge:entity:read",
+    async (
+      _event,
+      payload: EntityReadPayload,
+    ): Promise<IpcResponse<KnowledgeEntity>> => {
+      if (!deps.db) {
+        return notReady<KnowledgeEntity>();
+      }
+
+      const service = createService();
+      if (!service) {
+        return notReady<KnowledgeEntity>();
+      }
+      const res = service.entityRead(payload);
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  handleWithProjectAccess(
+    "knowledge:entity:list",
+    async (
+      _event,
+      payload: EntityListPayload,
+    ): Promise<IpcResponse<{ items: KnowledgeEntity[] }>> => {
+      if (!deps.db) {
+        return notReady<{ items: KnowledgeEntity[] }>();
+      }
+
+      const service = createService();
+      if (!service) {
+        return notReady<{ items: KnowledgeEntity[] }>();
+      }
+      const res = service.entityList(payload);
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  handleWithProjectAccess(
+    "knowledge:entity:update",
+    async (
+      _event,
+      payload: EntityUpdatePayload,
+    ): Promise<IpcResponse<KnowledgeEntity>> => {
+      if (!deps.db) {
+        return notReady<KnowledgeEntity>();
+      }
+
+      const service = createService();
+      if (!service) {
+        return notReady<KnowledgeEntity>();
+      }
+      const res = service.entityUpdate(payload);
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  handleWithProjectAccess(
+    "knowledge:entity:delete",
+    async (
+      _event,
+      payload: EntityDeletePayload,
+    ): Promise<
+      IpcResponse<{ deleted: true; deletedRelationCount: number }>
+    > => {
+      if (!deps.db) {
+        return notReady<{ deleted: true; deletedRelationCount: number }>();
+      }
+
+      const service = createService();
+      if (!service) {
+        return notReady<{ deleted: true; deletedRelationCount: number }>();
+      }
+      const res = service.entityDelete(payload);
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+}
+
+function registerKgRelationHandlers(
+  deps: { db: Database.Database | null },
+  handleWithProjectAccess: KgHandlerRegistrar,
+  createService: () => ReturnType<typeof createKnowledgeGraphService> | null,
+): void {
+  handleWithProjectAccess(
+    "knowledge:relation:create",
+    async (
+      _event,
+      payload: RelationCreatePayload,
+    ): Promise<IpcResponse<KnowledgeRelation>> => {
+      if (!deps.db) {
+        return notReady<KnowledgeRelation>();
+      }
+
+      const service = createService();
+      if (!service) {
+        return notReady<KnowledgeRelation>();
+      }
+      const res = service.relationCreate(payload);
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  handleWithProjectAccess(
+    "knowledge:relation:list",
+    async (
+      _event,
+      payload: RelationListPayload,
+    ): Promise<IpcResponse<{ items: KnowledgeRelation[] }>> => {
+      if (!deps.db) {
+        return notReady<{ items: KnowledgeRelation[] }>();
+      }
+
+      const service = createService();
+      if (!service) {
+        return notReady<{ items: KnowledgeRelation[] }>();
+      }
+      const res = service.relationList(payload);
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  handleWithProjectAccess(
+    "knowledge:relation:update",
+    async (
+      _event,
+      payload: RelationUpdatePayload,
+    ): Promise<IpcResponse<KnowledgeRelation>> => {
+      if (!deps.db) {
+        return notReady<KnowledgeRelation>();
+      }
+
+      const service = createService();
+      if (!service) {
+        return notReady<KnowledgeRelation>();
+      }
+      const res = service.relationUpdate(payload);
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
+    },
+  );
+
+  handleWithProjectAccess(
+    "knowledge:relation:delete",
+    async (
+      _event,
+      payload: RelationDeletePayload,
+    ): Promise<IpcResponse<{ deleted: true }>> => {
+      if (!deps.db) {
+        return notReady<{ deleted: true }>();
+      }
+
+      const service = createService();
+      if (!service) {
+        return notReady<{ deleted: true }>();
+      }
+      const res = service.relationDelete(payload);
+      return res.ok
+        ? { ok: true, data: res.data }
+        : { ok: false, error: res.error };
     },
   );
 }

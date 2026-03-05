@@ -24,20 +24,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-/**
- * Register `skill:*` IPC handlers.
- *
- * Why: skills are loaded/validated in the main process (filesystem + DB + logs),
- * while the renderer only consumes typed, deterministic results.
- */
-export function registerSkillIpcHandlers(deps: {
+type SkillHandlerDeps = {
   ipcMain: IpcMain;
   db: Database.Database | null;
   userDataDir: string;
   builtinSkillsDir: string;
   logger: Logger;
   dataProcess?: Parameters<typeof createSkillService>[0]["dataProcess"];
-}): void {
+};
+
+function registerSkillRegistryHandlers(deps: SkillHandlerDeps): void {
   deps.ipcMain.handle(
     "skill:registry:list",
     async (
@@ -201,7 +197,9 @@ export function registerSkillIpcHandlers(deps: {
         : { ok: false, error: res.error };
     },
   );
+}
 
+function registerSkillCustomHandlers(deps: SkillHandlerDeps): void {
   deps.ipcMain.handle(
     "skill:custom:update",
     async (
@@ -365,4 +363,15 @@ export function registerSkillIpcHandlers(deps: {
         : { ok: false, error: res.error };
     },
   );
+}
+
+/**
+ * Register `skill:*` IPC handlers.
+ *
+ * Why: skills are loaded/validated in the main process (filesystem + DB + logs),
+ * while the renderer only consumes typed, deterministic results.
+ */
+export function registerSkillIpcHandlers(deps: SkillHandlerDeps): void {
+  registerSkillRegistryHandlers(deps);
+  registerSkillCustomHandlers(deps);
 }

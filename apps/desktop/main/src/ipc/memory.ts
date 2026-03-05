@@ -120,87 +120,20 @@ function tryGetSender(event: unknown): WebContents | null {
   return maybeSender as WebContents;
 }
 
-/**
- * Register `memory:*` IPC handlers.
- */
-export function registerMemoryIpcHandlers(deps: {
-  ipcMain: IpcMain;
+type HandleWithProjectAccessFn = <TPayload, TResponse>(
+  channel: string,
+  listener: (
+    event: unknown,
+    payload: TPayload,
+  ) => Promise<IpcResponse<TResponse>>,
+) => void;
+
+function registerMemoryEntryHandlers(ctx: {
   db: Database.Database | null;
   logger: Logger;
-  episodicService?: EpisodicMemoryService;
-  distillLlm?: (args: {
-    projectId: string;
-    trigger: DistillTrigger;
-    snapshotEpisodes: EpisodeRecord[];
-    clusters: Array<{
-      sceneType: string;
-      skillUsed: string;
-      episodes: EpisodeRecord[];
-    }>;
-  }) => DistillGeneratedRule[];
-  distillScheduler?: (job: () => void) => void;
-  traceService?: MemoryTraceService;
-  projectSessionBinding?: ProjectSessionBindingRegistry;
+  handleWithProjectAccess: HandleWithProjectAccessFn;
 }): void {
-  const distillSubscribers = new Map<number, WebContents>();
-
-  function rememberSender(event: unknown): void {
-    const sender = tryGetSender(event);
-    if (!sender) {
-      return;
-    }
-    distillSubscribers.set(sender.id, sender);
-  }
-
-  function broadcastDistillProgress(event: DistillProgressEvent): void {
-    for (const [senderId, sender] of distillSubscribers) {
-      try {
-        sender.send("memory:distill:progress", event);
-      } catch (error) {
-        distillSubscribers.delete(senderId);
-        deps.logger.error("memory_distill_progress_send_failed", {
-          senderId,
-          message: error instanceof Error ? error.message : String(error),
-        });
-      }
-    }
-  }
-
-  const episodicService =
-    deps.episodicService ??
-    (deps.db
-      ? createEpisodicMemoryService({
-          repository: createSqliteEpisodeRepository({
-            db: deps.db,
-            logger: deps.logger,
-          }),
-          logger: deps.logger,
-          distillLlm: deps.distillLlm,
-          distillScheduler: deps.distillScheduler,
-          onDistillProgress: broadcastDistillProgress,
-        })
-      : null);
-  const traceService = deps.traceService ?? createInMemoryMemoryTraceService();
-
-  function handleWithProjectAccess<TPayload, TResponse>(
-    channel: string,
-    listener: (
-      event: unknown,
-      payload: TPayload,
-    ) => Promise<IpcResponse<TResponse>>,
-  ): void {
-    deps.ipcMain.handle(channel, async (event, payload) => {
-      const guarded = guardAndNormalizeProjectAccess({
-        event,
-        payload,
-        projectSessionBinding: deps.projectSessionBinding,
-      });
-      if (!guarded.ok) {
-        return guarded.response as IpcResponse<TResponse>;
-      }
-      return listener(event, payload as TPayload);
-    });
-  }
+  const { db, logger, handleWithProjectAccess } = ctx;
 
   handleWithProjectAccess(
     "memory:entry:create",
@@ -208,13 +141,13 @@ export function registerMemoryIpcHandlers(deps: {
       _e,
       payload: MemoryCreatePayload,
     ): Promise<IpcResponse<UserMemoryItem>> => {
-      if (!deps.db) {
+      if (!db) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      const svc = createMemoryService({ db: deps.db, logger: deps.logger });
+      const svc = createMemoryService({ db, logger });
       const res = svc.create(payload);
       return res.ok
         ? { ok: true, data: res.data }
@@ -228,13 +161,13 @@ export function registerMemoryIpcHandlers(deps: {
       _e,
       payload: MemoryListPayload,
     ): Promise<IpcResponse<{ items: UserMemoryItem[] }>> => {
-      if (!deps.db) {
+      if (!db) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      const svc = createMemoryService({ db: deps.db, logger: deps.logger });
+      const svc = createMemoryService({ db, logger });
       const res = svc.list(payload);
       return res.ok
         ? { ok: true, data: res.data }
@@ -248,13 +181,13 @@ export function registerMemoryIpcHandlers(deps: {
       _e,
       payload: MemoryUpdatePayload,
     ): Promise<IpcResponse<UserMemoryItem>> => {
-      if (!deps.db) {
+      if (!db) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      const svc = createMemoryService({ db: deps.db, logger: deps.logger });
+      const svc = createMemoryService({ db, logger });
       const res = svc.update({
         memoryId: payload.memoryId,
         patch: payload.patch,
@@ -271,13 +204,13 @@ export function registerMemoryIpcHandlers(deps: {
       _e,
       payload: MemoryDeletePayload,
     ): Promise<IpcResponse<{ deleted: true }>> => {
-      if (!deps.db) {
+      if (!db) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      const svc = createMemoryService({ db: deps.db, logger: deps.logger });
+      const svc = createMemoryService({ db, logger });
       const res = svc.delete({ memoryId: payload.memoryId });
       return res.ok
         ? { ok: true, data: res.data }
@@ -288,13 +221,13 @@ export function registerMemoryIpcHandlers(deps: {
   handleWithProjectAccess(
     "memory:settings:get",
     async (): Promise<IpcResponse<MemorySettings>> => {
-      if (!deps.db) {
+      if (!db) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      const svc = createMemoryService({ db: deps.db, logger: deps.logger });
+      const svc = createMemoryService({ db, logger });
       const res = svc.getSettings();
       return res.ok
         ? { ok: true, data: res.data }
@@ -308,13 +241,13 @@ export function registerMemoryIpcHandlers(deps: {
       _e,
       payload: { patch: Partial<MemorySettings> },
     ): Promise<IpcResponse<MemorySettings>> => {
-      if (!deps.db) {
+      if (!db) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      const svc = createMemoryService({ db: deps.db, logger: deps.logger });
+      const svc = createMemoryService({ db, logger });
       const res = svc.updateSettings(payload);
       return res.ok
         ? { ok: true, data: res.data }
@@ -328,19 +261,28 @@ export function registerMemoryIpcHandlers(deps: {
       _e,
       payload: { projectId?: string; documentId?: string; queryText?: string },
     ): Promise<IpcResponse<MemoryInjectionPreview>> => {
-      if (!deps.db) {
+      if (!db) {
         return {
           ok: false,
           error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
-      const svc = createMemoryService({ db: deps.db, logger: deps.logger });
+      const svc = createMemoryService({ db, logger });
       const res = svc.previewInjection(payload);
       return res.ok
         ? { ok: true, data: res.data }
         : { ok: false, error: res.error };
     },
   );
+}
+
+function registerMemoryEpisodicAndTraceHandlers(ctx: {
+  episodicService: EpisodicMemoryService | null;
+  traceService: MemoryTraceService;
+  rememberSender: (event: unknown) => void;
+  handleWithProjectAccess: HandleWithProjectAccessFn;
+}): void {
+  const { episodicService, traceService, rememberSender, handleWithProjectAccess } = ctx;
 
   handleWithProjectAccess(
     "memory:episode:record",
@@ -612,4 +554,100 @@ export function registerMemoryIpcHandlers(deps: {
         : { ok: false, error: res.error };
     },
   );
+}
+
+/**
+ * Register `memory:*` IPC handlers.
+ */
+export function registerMemoryIpcHandlers(deps: {
+  ipcMain: IpcMain;
+  db: Database.Database | null;
+  logger: Logger;
+  episodicService?: EpisodicMemoryService;
+  distillLlm?: (args: {
+    projectId: string;
+    trigger: DistillTrigger;
+    snapshotEpisodes: EpisodeRecord[];
+    clusters: Array<{
+      sceneType: string;
+      skillUsed: string;
+      episodes: EpisodeRecord[];
+    }>;
+  }) => DistillGeneratedRule[];
+  distillScheduler?: (job: () => void) => void;
+  traceService?: MemoryTraceService;
+  projectSessionBinding?: ProjectSessionBindingRegistry;
+}): void {
+  const distillSubscribers = new Map<number, WebContents>();
+
+  function rememberSender(event: unknown): void {
+    const sender = tryGetSender(event);
+    if (!sender) {
+      return;
+    }
+    distillSubscribers.set(sender.id, sender);
+  }
+
+  function broadcastDistillProgress(event: DistillProgressEvent): void {
+    for (const [senderId, sender] of distillSubscribers) {
+      try {
+        sender.send("memory:distill:progress", event);
+      } catch (error) {
+        distillSubscribers.delete(senderId);
+        deps.logger.error("memory_distill_progress_send_failed", {
+          senderId,
+          message: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+  }
+
+  const episodicService =
+    deps.episodicService ??
+    (deps.db
+      ? createEpisodicMemoryService({
+          repository: createSqliteEpisodeRepository({
+            db: deps.db,
+            logger: deps.logger,
+          }),
+          logger: deps.logger,
+          distillLlm: deps.distillLlm,
+          distillScheduler: deps.distillScheduler,
+          onDistillProgress: broadcastDistillProgress,
+        })
+      : null);
+  const traceService = deps.traceService ?? createInMemoryMemoryTraceService();
+
+  function handleWithProjectAccess<TPayload, TResponse>(
+    channel: string,
+    listener: (
+      event: unknown,
+      payload: TPayload,
+    ) => Promise<IpcResponse<TResponse>>,
+  ): void {
+    deps.ipcMain.handle(channel, async (event, payload) => {
+      const guarded = guardAndNormalizeProjectAccess({
+        event,
+        payload,
+        projectSessionBinding: deps.projectSessionBinding,
+      });
+      if (!guarded.ok) {
+        return guarded.response as IpcResponse<TResponse>;
+      }
+      return listener(event, payload as TPayload);
+    });
+  }
+
+  registerMemoryEntryHandlers({
+    db: deps.db,
+    logger: deps.logger,
+    handleWithProjectAccess,
+  });
+
+  registerMemoryEpisodicAndTraceHandlers({
+    episodicService,
+    traceService,
+    rememberSender,
+    handleWithProjectAccess,
+  });
 }

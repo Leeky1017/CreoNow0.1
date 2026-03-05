@@ -169,13 +169,7 @@ function estimateWritingSeconds(wordsAdded: number): number {
   return words === 0 ? 0 : Math.max(1, Math.ceil(words / WORDS_PER_SECOND));
 }
 
-/**
- * Register `file:document:*` IPC handlers.
- *
- * Why: documents are DB SSOT in V1; renderer must persist TipTap JSON and read it
- * back across restarts without leaking DB details across IPC.
- */
-export function registerFileIpcHandlers(deps: {
+type FileHandlerDeps = {
   ipcMain: IpcMain;
   db: Database.Database | null;
   logger: Logger;
@@ -183,14 +177,9 @@ export function registerFileIpcHandlers(deps: {
   stateExtractor?: StateExtractor | null;
   semanticIndex?: SemanticChunkIndexService;
   computeRunner?: EmbeddingComputeRunner | null;
-}): void {
-  const semanticAutosaveEmbeddingRuntime =
-    createSemanticAutosaveEmbeddingRuntime({
-      logger: deps.logger,
-      semanticIndex: deps.semanticIndex,
-      computeRunner: deps.computeRunner,
-    });
+};
 
+function registerFileDocumentCrudHandlers(deps: FileHandlerDeps): void {
   deps.ipcMain.handle(
     "file:document:create",
     async (
@@ -376,7 +365,12 @@ export function registerFileIpcHandlers(deps: {
         : { ok: false, error: mapDocumentErrorToIpcError(res.error) };
     },
   );
+}
 
+function registerFileDocumentContentHandlers(
+  deps: FileHandlerDeps,
+  semanticAutosaveEmbeddingRuntime: SemanticAutosaveEmbeddingRuntime | null,
+): void {
   deps.ipcMain.handle(
     "file:document:save",
     async (
@@ -529,7 +523,9 @@ export function registerFileIpcHandlers(deps: {
         : { ok: false, error: mapDocumentErrorToIpcError(res.error) };
     },
   );
+}
 
+function registerFileDocumentOperationHandlers(deps: FileHandlerDeps): void {
   deps.ipcMain.handle(
     "file:document:getcurrent",
     async (
@@ -714,4 +710,23 @@ export function registerFileIpcHandlers(deps: {
         : { ok: false, error: mapDocumentErrorToIpcError(res.error) };
     },
   );
+}
+
+/**
+ * Register `file:document:*` IPC handlers.
+ *
+ * Why: documents are DB SSOT in V1; renderer must persist TipTap JSON and read it
+ * back across restarts without leaking DB details across IPC.
+ */
+export function registerFileIpcHandlers(deps: FileHandlerDeps): void {
+  const semanticAutosaveEmbeddingRuntime =
+    createSemanticAutosaveEmbeddingRuntime({
+      logger: deps.logger,
+      semanticIndex: deps.semanticIndex,
+      computeRunner: deps.computeRunner,
+    });
+
+  registerFileDocumentCrudHandlers(deps);
+  registerFileDocumentContentHandlers(deps, semanticAutosaveEmbeddingRuntime);
+  registerFileDocumentOperationHandlers(deps);
 }
