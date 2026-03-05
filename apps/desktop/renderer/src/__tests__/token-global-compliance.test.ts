@@ -28,10 +28,7 @@ import { describe, expect, it } from "vitest";
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const RENDERER_SRC = resolve(CURRENT_DIR, "..");
 
-const SCAN_DIRS = [
-  join(RENDERER_SRC, "features"),
-  join(RENDERER_SRC, "components"),
-];
+const SCAN_DIRS = [RENDERER_SRC];
 
 const SKIP_FILE_PATTERNS = [
   /\.test\./,
@@ -40,11 +37,22 @@ const SKIP_FILE_PATTERNS = [
   /test-utils\.tsx$/,
 ];
 
+const SKIP_DIR_NAMES = new Set([
+  "__tests__",
+  "test-utils",
+  "styles",
+  "i18n",
+  "contexts",
+  "hooks",
+  "types",
+]);
+
 /**
- * Files where hardcoded colors are intentional and allowlisted.
- * Each entry maps a filename pattern to line-level comment requirements.
+ * Files where hardcoded hex/rgba are intentional (theme preview swatches).
+ * Only exempts hardcoded-hex and hardcoded-rgba checks;
+ * shadow and Tailwind raw color rules still apply.
  */
-const ALLOWLISTED_FILES = [
+const HEX_RGBA_ALLOWLISTED_FILES = [
   /SettingsAppearancePage\.tsx$/,
 ];
 
@@ -110,6 +118,7 @@ function collectTsxFiles(dir: string): string[] {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const fullPath = join(dir, entry.name);
       if (entry.isDirectory()) {
+        if (SKIP_DIR_NAMES.has(entry.name)) continue;
         results.push(...collectTsxFiles(fullPath));
       } else if (
         entry.name.endsWith(".tsx") &&
@@ -133,8 +142,8 @@ function isCodeLine(line: string): boolean {
   return true;
 }
 
-function isAllowlisted(filePath: string): boolean {
-  return ALLOWLISTED_FILES.some((p) => p.test(filePath));
+function isHexRgbaAllowlisted(filePath: string): boolean {
+  return HEX_RGBA_ALLOWLISTED_FILES.some((p) => p.test(filePath));
 }
 
 type ViolationType = "bare-shadow" | "raw-tailwind-color" | "bare-white-black" | "hardcoded-hex" | "hardcoded-rgba";
@@ -214,8 +223,12 @@ describe("Token global compliance: no style bypass in production files", () => {
   const allViolations: FileViolations[] = [];
 
   for (const filePath of allFiles) {
-    if (isAllowlisted(filePath)) continue;
-    const violations = scanFile(filePath);
+    const violations = scanFile(filePath).filter((v) => {
+      if (isHexRgbaAllowlisted(filePath)) {
+        return v.type !== "hardcoded-hex" && v.type !== "hardcoded-rgba";
+      }
+      return true;
+    });
     if (violations.length > 0) {
       allViolations.push({
         file: relative(RENDERER_SRC, filePath),
