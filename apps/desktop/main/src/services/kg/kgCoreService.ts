@@ -814,11 +814,125 @@ function queryPathWithinAdjacency(args: {
 /**
  * Create a KnowledgeGraphService backed by SQLite (SSOT).
  */
-export function createKnowledgeGraphCoreService(args: {
+type KgCoreCtx = {
   db: Database.Database;
   logger: Logger;
-}): KnowledgeGraphService {
-  const limits = resolveLimits();
+  limits: ServiceLimits;
+};
+
+type ValidatedEntityPatchFields = {
+  normalizedPatchLastSeenState: string | null | undefined;
+  normalizedPatchAiContextLevel: AiContextLevel | undefined;
+  normalizedAttributes: Record<string, string> | null;
+  normalizedAliases: string[] | null;
+};
+
+function validateEntityPatchFields(
+  patch: {
+    name?: string;
+    description?: string;
+    lastSeenState?: string;
+    type?: string;
+    aiContextLevel?: string;
+    attributes?: Record<string, string>;
+    aliases?: string[];
+  },
+  limits: ServiceLimits,
+): ServiceResult<ValidatedEntityPatchFields> {
+  if (typeof patch.name === "string") {
+    const invalidName = validateEntityName(patch.name);
+    if (invalidName) {
+      return invalidName;
+    }
+  }
+
+  if (typeof patch.description === "string") {
+    const invalidDescription = validateDescription(
+      patch.description.trim(),
+    );
+    if (invalidDescription) {
+      return invalidDescription;
+    }
+  }
+
+  let normalizedPatchLastSeenState: string | null | undefined;
+  if (typeof patch.lastSeenState === "string") {
+    const invalidLastSeenState = validateLastSeenState(patch.lastSeenState);
+    if (invalidLastSeenState) {
+      return invalidLastSeenState;
+    }
+    normalizedPatchLastSeenState = normalizeLastSeenState(
+      patch.lastSeenState,
+    );
+  }
+
+  if (typeof patch.type === "string") {
+    const normalizedType = normalizeEntityType(patch.type);
+    if (!normalizedType) {
+      return ipcError("INVALID_ARGUMENT", "patch.type is invalid");
+    }
+  }
+
+  let normalizedPatchAiContextLevel: AiContextLevel | undefined;
+  if (patch.aiContextLevel !== undefined) {
+    const parsedAiContextLevel = normalizeAiContextLevel(
+      patch.aiContextLevel,
+    );
+    if (!parsedAiContextLevel) {
+      return ipcError(
+        "VALIDATION_ERROR",
+        "patch.aiContextLevel must be one of always|when_detected|manual_only|never",
+        {
+          field: "patch.aiContextLevel",
+          allowedValues: AI_CONTEXT_LEVELS,
+        },
+      );
+    }
+    normalizedPatchAiContextLevel = parsedAiContextLevel;
+  }
+
+  let normalizedAttributes: ServiceResult<Record<string, string>> | null =
+    null;
+  if (patch.attributes) {
+    normalizedAttributes = validateAndNormalizeAttributes({
+      attributes: patch.attributes,
+      limit: limits.attributeKeysLimit,
+    });
+    if (!normalizedAttributes.ok) {
+      return normalizedAttributes;
+    }
+  }
+
+  let normalizedAliases: ServiceResult<string[]> | null = null;
+  if (patch.aliases !== undefined) {
+    normalizedAliases = validateAndNormalizeAliases({
+      aliases: patch.aliases,
+      field: "patch.aliases",
+    });
+    if (!normalizedAliases.ok) {
+      return normalizedAliases;
+    }
+  }
+
+  return {
+    ok: true,
+    data: {
+      normalizedPatchLastSeenState,
+      normalizedPatchAiContextLevel,
+      normalizedAttributes: normalizedAttributes?.ok ? normalizedAttributes.data : null,
+      normalizedAliases: normalizedAliases?.ok ? normalizedAliases.data : null,
+    },
+  };
+}
+
+function createEntityOps(
+  ctx: KgCoreCtx,
+): Pick<
+  KnowledgeGraphService,
+  "entityCreate" | "entityRead" | "entityList" | "entityDelete"
+> {
+  const args = ctx;
+  const limits = ctx.limits;
 
   return {
     entityCreate: ({
@@ -1042,6 +1156,65 @@ export function createKnowledgeGraphCoreService(args: {
       }
     },
 
+    entityDelete: ({ projectId, id }) => {
+      const invalidProjectId = validateProjectId(projectId);
+      if (invalidProjectId) {
+        return invalidProjectId;
+      }
+      if (id.trim().length === 0) {
+        return ipcError("INVALID_ARGUMENT", "id is required");
+      }
+
+      const normalizedProjectId = projectId.trim();
+      const normalizedId = id.trim();
+
+      try {
+        const projectExists = ensureProjectExists(args.db, normalizedProjectId);
+        if (projectExists) {
+          return projectExists;
+        }
+
+        const existing = selectEntityById(args.db, normalizedId);
+        if (!existing || existing.projectId !== normalizedProjectId) {
+          return ipcError("NOT_FOUND", "Entity not found");
+        }
+
+        let deletedRelationCount = 0;
+        args.db.transaction(() => {
+          const deletedRelations = args.db
+            .prepare(
+              "DELETE FROM kg_relations WHERE project_id = ? AND (source_entity_id = ? OR target_entity_id = ?)",
+            )
+            .run(normalizedProjectId, normalizedId, normalizedId);
+          deletedRelationCount = deletedRelations.changes;
+
+          args.db
+            .prepare("DELETE FROM kg_entities WHERE project_id = ? AND id = ?")
+            .run(normalizedProjectId, normalizedId);
+        })();
+
+        return { ok: true, data: { deleted: true, deletedRelationCount } };
+      } catch (error) {
+        args.logger.error("kg_entity_delete_failed", {
+          code: "DB_ERROR",
+          message: error instanceof Error ? error.message : String(error),
+        });
+        return ipcError("DB_ERROR", "Failed to delete entity");
+      }
+    },
+  };
+}
+
+function createEntityUpdateOps(
+  ctx: KgCoreCtx,
+): Pick<
+  KnowledgeGraphService,
+  "entityUpdate"
+> {
+  const args = ctx;
+  const limits = ctx.limits;
+
+  return {
     entityUpdate: ({ projectId, id, expectedVersion, patch }) => {
       const invalidProjectId = validateProjectId(projectId);
       if (invalidProjectId) {
@@ -1062,80 +1235,16 @@ export function createKnowledgeGraphCoreService(args: {
         return ipcError("INVALID_ARGUMENT", "patch is required");
       }
 
-      if (typeof patch.name === "string") {
-        const invalidName = validateEntityName(patch.name);
-        if (invalidName) {
-          return invalidName;
-        }
+      const validatedPatch = validateEntityPatchFields(patch, limits);
+      if (!validatedPatch.ok) {
+        return validatedPatch;
       }
-
-      if (typeof patch.description === "string") {
-        const invalidDescription = validateDescription(
-          patch.description.trim(),
-        );
-        if (invalidDescription) {
-          return invalidDescription;
-        }
-      }
-
-      let normalizedPatchLastSeenState: string | null | undefined;
-      if (typeof patch.lastSeenState === "string") {
-        const invalidLastSeenState = validateLastSeenState(patch.lastSeenState);
-        if (invalidLastSeenState) {
-          return invalidLastSeenState;
-        }
-        normalizedPatchLastSeenState = normalizeLastSeenState(
-          patch.lastSeenState,
-        );
-      }
-
-      if (typeof patch.type === "string") {
-        const normalizedType = normalizeEntityType(patch.type);
-        if (!normalizedType) {
-          return ipcError("INVALID_ARGUMENT", "patch.type is invalid");
-        }
-      }
-
-      let normalizedPatchAiContextLevel: AiContextLevel | undefined;
-      if (patch.aiContextLevel !== undefined) {
-        const parsedAiContextLevel = normalizeAiContextLevel(
-          patch.aiContextLevel,
-        );
-        if (!parsedAiContextLevel) {
-          return ipcError(
-            "VALIDATION_ERROR",
-            "patch.aiContextLevel must be one of always|when_detected|manual_only|never",
-            {
-              field: "patch.aiContextLevel",
-              allowedValues: AI_CONTEXT_LEVELS,
-            },
-          );
-        }
-        normalizedPatchAiContextLevel = parsedAiContextLevel;
-      }
-
-      let normalizedAttributes: ServiceResult<Record<string, string>> | null =
-        null;
-      if (patch.attributes) {
-        normalizedAttributes = validateAndNormalizeAttributes({
-          attributes: patch.attributes,
-          limit: limits.attributeKeysLimit,
-        });
-        if (!normalizedAttributes.ok) {
-          return normalizedAttributes;
-        }
-      }
-
-      let normalizedAliases: ServiceResult<string[]> | null = null;
-      if (patch.aliases !== undefined) {
-        normalizedAliases = validateAndNormalizeAliases({
-          aliases: patch.aliases,
-          field: "patch.aliases",
-        });
-        if (!normalizedAliases.ok) {
-          return normalizedAliases;
-        }
-      }
+      const {
+        normalizedPatchLastSeenState,
+        normalizedPatchAiContextLevel,
+        normalizedAttributes,
+        normalizedAliases,
+      } = validatedPatch.data;
 
       const normalizedProjectId = projectId.trim();
       const normalizedId = id.trim();
@@ -1172,10 +1281,10 @@ export function createKnowledgeGraphCoreService(args: {
             ? normalizeText(patch.description)
             : existing.description;
         const nextAttributesJson = normalizedAttributes
-          ? JSON.stringify(normalizedAttributes.data)
+          ? JSON.stringify(normalizedAttributes)
           : existing.attributesJson;
         const nextAliasesJson = normalizedAliases
-          ? JSON.stringify(normalizedAliases.data)
+          ? JSON.stringify(normalizedAliases)
           : existing.aliasesJson;
         const nextLastSeenState =
           normalizedPatchLastSeenState === undefined
@@ -1232,54 +1341,19 @@ export function createKnowledgeGraphCoreService(args: {
         return ipcError("DB_ERROR", "Failed to update entity");
       }
     },
+  };
+}
 
-    entityDelete: ({ projectId, id }) => {
-      const invalidProjectId = validateProjectId(projectId);
-      if (invalidProjectId) {
-        return invalidProjectId;
-      }
-      if (id.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "id is required");
-      }
+function createRelationOps(
+  ctx: KgCoreCtx,
+): Pick<
+  KnowledgeGraphService,
+  "relationCreate" | "relationList" | "relationUpdate" | "relationDelete"
+> {
+  const args = ctx;
+  const limits = ctx.limits;
 
-      const normalizedProjectId = projectId.trim();
-      const normalizedId = id.trim();
-
-      try {
-        const projectExists = ensureProjectExists(args.db, normalizedProjectId);
-        if (projectExists) {
-          return projectExists;
-        }
-
-        const existing = selectEntityById(args.db, normalizedId);
-        if (!existing || existing.projectId !== normalizedProjectId) {
-          return ipcError("NOT_FOUND", "Entity not found");
-        }
-
-        let deletedRelationCount = 0;
-        args.db.transaction(() => {
-          const deletedRelations = args.db
-            .prepare(
-              "DELETE FROM kg_relations WHERE project_id = ? AND (source_entity_id = ? OR target_entity_id = ?)",
-            )
-            .run(normalizedProjectId, normalizedId, normalizedId);
-          deletedRelationCount = deletedRelations.changes;
-
-          args.db
-            .prepare("DELETE FROM kg_entities WHERE project_id = ? AND id = ?")
-            .run(normalizedProjectId, normalizedId);
-        })();
-
-        return { ok: true, data: { deleted: true, deletedRelationCount } };
-      } catch (error) {
-        args.logger.error("kg_entity_delete_failed", {
-          code: "DB_ERROR",
-          message: error instanceof Error ? error.message : String(error),
-        });
-        return ipcError("DB_ERROR", "Failed to delete entity");
-      }
-    },
-
+  return {
     relationCreate: ({
       projectId,
       sourceEntityId,
@@ -1590,7 +1664,19 @@ export function createKnowledgeGraphCoreService(args: {
         return ipcError("DB_ERROR", "Failed to delete relation");
       }
     },
+  };
+}
 
+function createQueryGraphOps(
+  ctx: KgCoreCtx,
+): Pick<
+  KnowledgeGraphService,
+  "querySubgraph" | "queryPath" | "queryByIds"
+> {
+  const args = ctx;
+  const limits = ctx.limits;
+
+  return {
     querySubgraph: ({ projectId, centerEntityId, k }) => {
       const startedAt = Date.now();
       const invalidProjectId = validateProjectId(projectId);
@@ -1784,6 +1870,74 @@ export function createKnowledgeGraphCoreService(args: {
       }
     },
 
+    queryByIds: ({ projectId, entityIds }) => {
+      const invalidProjectId = validateProjectId(projectId);
+      if (invalidProjectId) {
+        return invalidProjectId;
+      }
+
+      const normalizedProjectId = projectId.trim();
+      const normalizedEntityIds = dedupeIds(entityIds);
+      if (normalizedEntityIds.length === 0) {
+        return { ok: true, data: { items: [] } };
+      }
+
+      try {
+        const projectExists = ensureProjectExists(args.db, normalizedProjectId);
+        if (projectExists) {
+          return projectExists;
+        }
+
+        const rows = listEntitiesByIds(args.db, normalizedEntityIds);
+        const crossProjectIds = rows
+          .filter((row) => row.projectId !== normalizedProjectId)
+          .map((row) => row.id);
+        if (crossProjectIds.length > 0) {
+          args.logger.error("kg_scope_violation", {
+            project_id: normalizedProjectId,
+            foreign_entity_ids: crossProjectIds,
+            reason: "query_by_ids",
+          });
+          return ipcError(
+            "KG_SCOPE_VIOLATION",
+            "cross-project entity access denied",
+            {
+              projectId: normalizedProjectId,
+              foreignEntityIds: crossProjectIds,
+            },
+          );
+        }
+
+        const rowById = new Map(rows.map((row) => [row.id, row.row]));
+        const orderedItems = normalizedEntityIds
+          .map((id) => {
+            const row = rowById.get(id);
+            return row ? rowToEntity(row) : null;
+          })
+          .filter((entity): entity is KnowledgeEntity => entity !== null);
+
+        return { ok: true, data: { items: orderedItems } };
+      } catch (error) {
+        args.logger.error("kg_query_by_ids_failed", {
+          code: "DB_ERROR",
+          message: error instanceof Error ? error.message : String(error),
+        });
+        return ipcError("DB_ERROR", "Failed to query entities by ids");
+      }
+    },
+  };
+}
+
+function createQueryValidateOps(
+  ctx: KgCoreCtx,
+): Pick<
+  KnowledgeGraphService,
+  "queryValidate"
+> {
+  const args = ctx;
+  const limits = ctx.limits;
+
+  return {
     queryValidate: ({ projectId, maxDepth, maxVisited }) => {
       const startedAt = Date.now();
       const invalidProjectId = validateProjectId(projectId);
@@ -1929,7 +2083,18 @@ export function createKnowledgeGraphCoreService(args: {
         return ipcError("DB_ERROR", "Failed to validate graph");
       }
     },
+  };
+}
 
+function createQueryTextOps(
+  ctx: KgCoreCtx,
+): Pick<
+  KnowledgeGraphService,
+  "queryRelevant" | "buildRulesInjection"
+> {
+  const args = ctx;
+
+  return {
     queryRelevant: ({ projectId, excerpt, maxEntities, entityIds }) => {
       const startedAt = Date.now();
       const invalidProjectId = validateProjectId(projectId);
@@ -2060,62 +2225,6 @@ export function createKnowledgeGraphCoreService(args: {
           message: error instanceof Error ? error.message : String(error),
         });
         return ipcError("DB_ERROR", "Failed to query relevant entities");
-      }
-    },
-
-    queryByIds: ({ projectId, entityIds }) => {
-      const invalidProjectId = validateProjectId(projectId);
-      if (invalidProjectId) {
-        return invalidProjectId;
-      }
-
-      const normalizedProjectId = projectId.trim();
-      const normalizedEntityIds = dedupeIds(entityIds);
-      if (normalizedEntityIds.length === 0) {
-        return { ok: true, data: { items: [] } };
-      }
-
-      try {
-        const projectExists = ensureProjectExists(args.db, normalizedProjectId);
-        if (projectExists) {
-          return projectExists;
-        }
-
-        const rows = listEntitiesByIds(args.db, normalizedEntityIds);
-        const crossProjectIds = rows
-          .filter((row) => row.projectId !== normalizedProjectId)
-          .map((row) => row.id);
-        if (crossProjectIds.length > 0) {
-          args.logger.error("kg_scope_violation", {
-            project_id: normalizedProjectId,
-            foreign_entity_ids: crossProjectIds,
-            reason: "query_by_ids",
-          });
-          return ipcError(
-            "KG_SCOPE_VIOLATION",
-            "cross-project entity access denied",
-            {
-              projectId: normalizedProjectId,
-              foreignEntityIds: crossProjectIds,
-            },
-          );
-        }
-
-        const rowById = new Map(rows.map((row) => [row.id, row.row]));
-        const orderedItems = normalizedEntityIds
-          .map((id) => {
-            const row = rowById.get(id);
-            return row ? rowToEntity(row) : null;
-          })
-          .filter((entity): entity is KnowledgeEntity => entity !== null);
-
-        return { ok: true, data: { items: orderedItems } };
-      } catch (error) {
-        args.logger.error("kg_query_by_ids_failed", {
-          code: "DB_ERROR",
-          message: error instanceof Error ? error.message : String(error),
-        });
-        return ipcError("DB_ERROR", "Failed to query entities by ids");
       }
     },
 
@@ -2254,4 +2363,23 @@ export function createKnowledgeGraphCoreService(args: {
       }
     },
   };
+}
+
+export function createKnowledgeGraphCoreService(args: {
+  db: Database.Database;
+  logger: Logger;
+}): KnowledgeGraphService {
+  const limits = resolveLimits();
+
+  const ctx: KgCoreCtx = { db: args.db, logger: args.logger, limits };
+
+  return {
+    ...createEntityOps(ctx),
+    ...createEntityUpdateOps(ctx),
+    ...createRelationOps(ctx),
+    ...createQueryGraphOps(ctx),
+    ...createQueryValidateOps(ctx),
+    ...createQueryTextOps(ctx),
+  };
+
 }

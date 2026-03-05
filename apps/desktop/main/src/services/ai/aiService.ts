@@ -250,7 +250,8 @@ async function* readSse(args: {
  *
  * Why: keep secrets + network + error mapping in the main process for stable IPC.
  */
-export function createAiService(deps: {
+
+type AiServiceDeps = {
   logger: Logger;
   env: NodeJS.ProcessEnv;
   getProxySettings?: () => ProxySettings | null;
@@ -260,46 +261,35 @@ export function createAiService(deps: {
   rateLimitPerMinute?: number;
   retryBackoffMs?: readonly number[];
   sessionTokenBudget?: number;
-}): AiService {
-  const runtimeGovernance = resolveRuntimeGovernanceFromEnv(deps.env);
-  const runs = new Map<string, RunEntry>();
-  const requestTimestamps: number[] = [];
-  const sessionTokenTotalsByKey = new Map<string, number>();
-  const sessionChatMessagesByKey = new Map<string, ChatMessageManager>();
-  const skillScheduler = createSkillScheduler({
-    globalConcurrencyLimit: 8,
-    sessionQueueLimit: 20,
-  });
-  const now = deps.now ?? (() => Date.now());
-  const providerResolver = createProviderResolver({
-    logger: deps.logger,
-    now,
-  });
-  const sleep =
-    deps.sleep ??
-    ((ms: number) =>
-      new Promise<void>((resolve) => {
-        setTimeout(resolve, ms);
-      }));
-  const rateLimitPerMinute =
-    deps.rateLimitPerMinute ?? DEFAULT_LLM_RATE_LIMIT_PER_MINUTE;
-  const retryBackoffMs =
-    deps.retryBackoffMs ?? runtimeGovernance.ai.retryBackoffMs;
-  const sessionTokenBudget =
-    deps.sessionTokenBudget ?? runtimeGovernance.ai.sessionTokenBudget;
-  const maxSkillOutputChars = parseMaxSkillOutputChars(deps.env);
-  const chatHistoryTokenBudget = parseChatHistoryTokenBudget(deps.env);
-  let fakeServerPromise: Promise<FakeAiServer> | null = null;
+};
 
-  const getFakeServer = async (): Promise<FakeAiServer> => {
-    if (!fakeServerPromise) {
-      fakeServerPromise = startFakeAiServer({
-        logger: deps.logger,
-        env: deps.env,
-      });
-    }
-    return await fakeServerPromise;
-  };
+type AiInternalState = {
+  runs: Map<string, RunEntry>;
+  requestTimestamps: number[];
+  now: () => number;
+  runtimeGovernance: ReturnType<typeof resolveRuntimeGovernanceFromEnv>;
+  sleep: (ms: number) => Promise<void>;
+  rateLimitPerMinute: number;
+  retryBackoffMs: readonly number[];
+  sessionTokenBudget: number;
+  maxSkillOutputChars: number;
+  chatHistoryTokenBudget: number;
+  sessionTokenTotalsByKey: Map<string, number>;
+  sessionChatMessagesByKey: Map<string, ChatMessageManager>;
+  skillScheduler: ReturnType<typeof createSkillScheduler>;
+  providerResolver: ReturnType<typeof createProviderResolver>;
+  getFakeServer: () => Promise<FakeAiServer>;
+};
+
+type AiHelpers = ReturnType<typeof createAiSessionHelpers>
+  & ReturnType<typeof createAiEmitHelpers>
+  & ReturnType<typeof createAiNonStreamHelpers>
+  & ReturnType<typeof createAiStreamHelpers>;
+
+function createAiSessionHelpers(
+  state: AiInternalState,
+) {
+  const { requestTimestamps, now, rateLimitPerMinute, chatHistoryTokenBudget, sessionChatMessagesByKey } = state;
 
   /**
    * Build a stable session key used for queueing and token-budget accounting.
@@ -408,41 +398,14 @@ export function createAiService(deps: {
     return null;
   }
 
-  /**
-   * Fetch with P0 network retry and rate-limit baseline.
-   *
-   * Why: transient transport errors should retry with bounded backoff.
-   */
-  async function fetchWithPolicy(args: {
-    url: string;
-    init: RequestInit;
-  }): Promise<ServiceResult<Response>> {
-    const rateLimited = consumeRateLimitToken();
-    if (rateLimited) {
-      return rateLimited;
-    }
+  return { resolveSessionKey, getChatMessageManager, buildRuntimeMessages, isProviderAvailabilityError, buildProviderUnavailableError, consumeRateLimitToken };
+}
 
-    for (let attempt = 0; ; attempt += 1) {
-      try {
-        const res = await fetch(args.url, args.init);
-        return { ok: true, data: res };
-      } catch (error) {
-        const signal = args.init.signal as AbortSignal | undefined;
-        if (signal?.aborted) {
-          return ipcError("TIMEOUT", "AI request timed out");
-        }
-
-        if (attempt >= retryBackoffMs.length) {
-          return ipcError(
-            "LLM_API_ERROR",
-            error instanceof Error ? error.message : "AI request failed",
-          );
-        }
-
-        await sleep(retryBackoffMs[attempt]);
-      }
-    }
-  }
+function createAiEmitHelpers(
+  deps: AiServiceDeps,
+  state: AiInternalState,
+) {
+  const { runs, maxSkillOutputChars } = state;
 
   /**
    * Emit an AI stream event only while the run is still active.
@@ -715,6 +678,53 @@ export function createAiService(deps: {
     );
   }
 
+  return { emitIfActive, clearChunkFlushTimer, clearChunkBuffer, flushChunkBuffer, emitChunk, emitDone, resolveSchedulerTerminal, setTerminal, cleanupRun, normalizeSkillError, buildSkillOutputTooLargeError, resetForFullPromptReplay, isReplayableStreamDisconnect };
+}
+
+function createAiNonStreamHelpers(
+  deps: AiServiceDeps,
+  state: AiInternalState,
+  sessionHelpers: ReturnType<typeof createAiSessionHelpers>,
+) {
+  const { now, sleep, retryBackoffMs, providerResolver } = state;
+  const { buildProviderUnavailableError, consumeRateLimitToken, isProviderAvailabilityError } = sessionHelpers;
+
+  /**
+   * Fetch with P0 network retry and rate-limit baseline.
+   *
+   * Why: transient transport errors should retry with bounded backoff.
+   */
+  async function fetchWithPolicy(args: {
+    url: string;
+    init: RequestInit;
+  }): Promise<ServiceResult<Response>> {
+    const rateLimited = consumeRateLimitToken();
+    if (rateLimited) {
+      return rateLimited;
+    }
+
+    for (let attempt = 0; ; attempt += 1) {
+      try {
+        const res = await fetch(args.url, args.init);
+        return { ok: true, data: res };
+      } catch (error) {
+        const signal = args.init.signal as AbortSignal | undefined;
+        if (signal?.aborted) {
+          return ipcError("TIMEOUT", "AI request timed out");
+        }
+
+        if (attempt >= retryBackoffMs.length) {
+          return ipcError(
+            "LLM_API_ERROR",
+            error instanceof Error ? error.message : "AI request failed",
+          );
+        }
+
+        await sleep(retryBackoffMs[attempt]);
+      }
+    }
+  }
+
   /**
    * Execute a non-stream OpenAI-compatible request.
    */
@@ -835,6 +845,142 @@ export function createAiService(deps: {
     }
     return { ok: true, data: text };
   }
+
+  async function runNonStreamWithProvider(args: {
+    entry: RunEntry;
+    cfg: ProviderConfig;
+    runtimeMessages: RuntimeMessages;
+    model: string;
+  }): Promise<ServiceResult<string>> {
+    if (args.cfg.provider === "anthropic") {
+      return await runAnthropicNonStream(args);
+    }
+    return await runOpenAiNonStream(args);
+  }
+
+  async function runNonStreamWithFailover(args: {
+    entry: RunEntry;
+    primary: ProviderConfig;
+    backup: ProviderConfig | null;
+    runtimeMessages: RuntimeMessages;
+    model: string;
+  }): Promise<ServiceResult<string>> {
+    const primaryState = providerResolver.getProviderHealthState(args.primary);
+    const canHalfOpenProbe =
+      primaryState.status === "degraded" &&
+      primaryState.degradedAtMs !== null &&
+      now() - primaryState.degradedAtMs >= PROVIDER_HALF_OPEN_AFTER_MS;
+
+    if (
+      primaryState.status === "degraded" &&
+      !canHalfOpenProbe &&
+      args.backup !== null
+    ) {
+      deps.logger.info("ai_provider_failover", {
+        traceId: args.entry.traceId,
+        from: args.primary.provider,
+        to: args.backup.provider,
+        reason: "primary_degraded",
+      });
+      const backupRes = await runNonStreamWithProvider({
+        ...args,
+        cfg: args.backup,
+      });
+      if (backupRes.ok) {
+        return backupRes;
+      }
+      if (isProviderAvailabilityError(backupRes.error)) {
+        return buildProviderUnavailableError({
+          traceId: args.entry.traceId,
+          primary: args.primary,
+          backup: args.backup,
+        });
+      }
+      return backupRes;
+    }
+
+    if (canHalfOpenProbe) {
+      deps.logger.info("ai_provider_half_open_probe", {
+        traceId: args.entry.traceId,
+        provider: args.primary.provider,
+      });
+    }
+
+    const primaryRes = await runNonStreamWithProvider({
+      ...args,
+      cfg: args.primary,
+    });
+    if (primaryRes.ok) {
+      providerResolver.markProviderSuccess({
+        cfg: args.primary,
+        traceId: args.entry.traceId,
+        fromHalfOpen: canHalfOpenProbe,
+      });
+      return primaryRes;
+    }
+
+    if (!isProviderAvailabilityError(primaryRes.error)) {
+      return primaryRes;
+    }
+
+    const state = providerResolver.markProviderFailure({
+      cfg: args.primary,
+      traceId: args.entry.traceId,
+      reason: primaryRes.error.code,
+    });
+
+    if (state.status !== "degraded") {
+      if (args.backup !== null) {
+        return buildProviderUnavailableError({
+          traceId: args.entry.traceId,
+          primary: args.primary,
+          backup: args.backup,
+        });
+      }
+      return primaryRes;
+    }
+
+    if (args.backup === null) {
+      return primaryRes;
+    }
+
+    deps.logger.info("ai_provider_failover", {
+      traceId: args.entry.traceId,
+      from: args.primary.provider,
+      to: args.backup.provider,
+      reason: canHalfOpenProbe
+        ? "half_open_probe_failed"
+        : "primary_unavailable",
+    });
+
+    const backupRes = await runNonStreamWithProvider({
+      ...args,
+      cfg: args.backup,
+    });
+    if (backupRes.ok) {
+      return backupRes;
+    }
+    if (isProviderAvailabilityError(backupRes.error)) {
+      return buildProviderUnavailableError({
+        traceId: args.entry.traceId,
+        primary: args.primary,
+        backup: args.backup,
+      });
+    }
+
+    return backupRes;
+  }
+
+  return { fetchWithPolicy, runOpenAiNonStream, runAnthropicNonStream, runNonStreamWithProvider, runNonStreamWithFailover };
+}
+
+function createAiStreamHelpers(
+  deps: AiServiceDeps,
+  emitHelpers: ReturnType<typeof createAiEmitHelpers>,
+  nonStreamHelpers: ReturnType<typeof createAiNonStreamHelpers>,
+) {
+  const { emitChunk } = emitHelpers;
+  const { fetchWithPolicy } = nonStreamHelpers;
 
   /**
    * Execute a streaming OpenAI-compatible request and emit delta events.
@@ -1066,130 +1212,334 @@ export function createAiService(deps: {
     return { ok: true, data: true };
   }
 
-  async function runNonStreamWithProvider(args: {
+  return { runOpenAiStream, runAnthropicStream };
+}
+
+function createAiRunPipelineHelpers(
+  deps: AiServiceDeps,
+  state: AiInternalState,
+  helpers: AiHelpers,
+) {
+  const { sessionTokenTotalsByKey, maxSkillOutputChars, retryBackoffMs, sleep } = state;
+  const {
+    setTerminal, normalizeSkillError, buildSkillOutputTooLargeError,
+    runNonStreamWithFailover, cleanupRun, runAnthropicStream, runOpenAiStream,
+    isReplayableStreamDisconnect, resetForFullPromptReplay,
+    clearChunkFlushTimer, flushChunkBuffer,
+  } = helpers;
+
+  async function executeNonStreamImpl(runCtx: {
     entry: RunEntry;
-    cfg: ProviderConfig;
+    primaryCfg: ProviderConfig;
+    backupCfg: ProviderConfig | null;
     runtimeMessages: RuntimeMessages;
     model: string;
-  }): Promise<ServiceResult<string>> {
-    if (args.cfg.provider === "anthropic") {
-      return await runAnthropicNonStream(args);
+    sessionKey: string;
+    executionId: string;
+    runId: string;
+    traceId: string;
+    promptTokens: number;
+    controller: AbortController;
+    consumeSessionTokenBudget: () => Err | null;
+    persistSuccessfulTurn: (output: string) => void;
+    persistTraceAndGetDegradation: (output: string) => TracePersistenceDegradation | undefined;
+  }): Promise<
+    ServiceResult<{
+      executionId: string;
+      runId: string;
+      traceId: string;
+      outputText?: string;
+      degradation?: TracePersistenceDegradation;
+    }>
+  > {
+    const {
+      entry, primaryCfg, backupCfg, runtimeMessages, model, sessionKey,
+      executionId, runId, traceId, promptTokens, controller,
+      consumeSessionTokenBudget, persistSuccessfulTurn, persistTraceAndGetDegradation,
+    } = runCtx;
+    try {
+      const budgetExceeded = consumeSessionTokenBudget();
+      if (budgetExceeded) {
+        setTerminal({
+          entry,
+          terminal: "error",
+          error: budgetExceeded.error,
+          logEvent: "ai_run_failed",
+          errorCode: budgetExceeded.error.code,
+        });
+        return budgetExceeded;
+      }
+
+      const currentTotal = sessionTokenTotalsByKey.get(sessionKey) ?? 0;
+      const res = await runNonStreamWithFailover({
+        entry,
+        primary: primaryCfg,
+        backup: backupCfg,
+        runtimeMessages,
+        model,
+      });
+
+      if (!res.ok) {
+        const normalizedError = normalizeSkillError(res.error);
+        setTerminal({
+          entry,
+          terminal: "error",
+          error: normalizedError,
+          logEvent: "ai_run_failed",
+          errorCode: normalizedError.code,
+        });
+        return { ok: false, error: normalizedError };
+      }
+
+      if (res.data.length > maxSkillOutputChars) {
+        const oversizedError = buildSkillOutputTooLargeError(res.data.length);
+        setTerminal({
+          entry,
+          terminal: "error",
+          error: oversizedError,
+          logEvent: "ai_run_failed",
+          errorCode: oversizedError.code,
+        });
+        return { ok: false, error: oversizedError };
+      }
+
+      entry.outputText = res.data;
+      const completionTokens = estimateTokenCount(res.data);
+      sessionTokenTotalsByKey.set(
+        sessionKey,
+        currentTotal + promptTokens + completionTokens,
+      );
+      persistSuccessfulTurn(res.data);
+      const degradation = persistTraceAndGetDegradation(res.data);
+
+      setTerminal({
+        entry,
+        terminal: "completed",
+        logEvent: "ai_run_completed",
+      });
+      return {
+        ok: true,
+        data: {
+          executionId,
+          runId,
+          traceId,
+          outputText: res.data,
+          ...(degradation ? { degradation } : {}),
+        },
+      };
+    } catch (error) {
+      const aborted = controller.signal.aborted;
+      if (aborted) {
+        if (entry.terminal === "error") {
+          return ipcError("SKILL_TIMEOUT", "Skill execution timed out");
+        }
+        setTerminal({
+          entry,
+          terminal: "cancelled",
+          logEvent: "ai_run_canceled",
+          errorCode: "CANCELED",
+        });
+        return ipcError("CANCELED", "AI request canceled");
+      }
+
+      setTerminal({
+        entry,
+        terminal: "error",
+        error: {
+          code: "INTERNAL",
+          message: "AI request failed",
+          details: {
+            message: error instanceof Error ? error.message : String(error),
+          },
+        },
+        logEvent: "ai_run_failed",
+        errorCode: "INTERNAL",
+      });
+      return ipcError("INTERNAL", "AI request failed");
+    } finally {
+      cleanupRun(runId);
     }
-    return await runOpenAiNonStream(args);
   }
 
-  async function runNonStreamWithFailover(args: {
+  async function executeStreamImpl(runCtx: {
     entry: RunEntry;
-    primary: ProviderConfig;
-    backup: ProviderConfig | null;
+    primaryCfg: ProviderConfig;
     runtimeMessages: RuntimeMessages;
     model: string;
-  }): Promise<ServiceResult<string>> {
-    const primaryState = providerResolver.getProviderHealthState(args.primary);
-    const canHalfOpenProbe =
-      primaryState.status === "degraded" &&
-      primaryState.degradedAtMs !== null &&
-      now() - primaryState.degradedAtMs >= PROVIDER_HALF_OPEN_AFTER_MS;
+    runId: string;
+    executionId: string;
+    traceId: string;
+    sessionKey: string;
+    promptTokens: number;
+    controller: AbortController;
+    persistSuccessfulTurn: (output: string) => void;
+    persistTraceAndGetDegradation: (output: string) => TracePersistenceDegradation | undefined;
+  }): Promise<void> {
+    const {
+      entry, primaryCfg, runtimeMessages, model, runId, executionId,
+      traceId, sessionKey, promptTokens, controller,
+      persistSuccessfulTurn, persistTraceAndGetDegradation,
+    } = runCtx;
+    try {
+      let replayAttempts = 0;
+      for (;;) {
+        const res =
+          primaryCfg.provider === "anthropic"
+            ? await runAnthropicStream({
+                entry,
+                cfg: primaryCfg,
+                runtimeMessages,
+                model,
+              })
+            : await runOpenAiStream({
+                entry,
+                cfg: primaryCfg,
+                runtimeMessages,
+                model,
+              });
 
-    if (
-      primaryState.status === "degraded" &&
-      !canHalfOpenProbe &&
-      args.backup !== null
-    ) {
-      deps.logger.info("ai_provider_failover", {
-        traceId: args.entry.traceId,
-        from: args.primary.provider,
-        to: args.backup.provider,
-        reason: "primary_degraded",
-      });
-      const backupRes = await runNonStreamWithProvider({
-        ...args,
-        cfg: args.backup,
-      });
-      if (backupRes.ok) {
-        return backupRes;
-      }
-      if (isProviderAvailabilityError(backupRes.error)) {
-        return buildProviderUnavailableError({
-          traceId: args.entry.traceId,
-          primary: args.primary,
-          backup: args.backup,
+        if (res.ok) {
+          break;
+        }
+
+        if (entry.terminal !== null) {
+          return;
+        }
+
+        const normalizedError = normalizeSkillError(res.error);
+        if (
+          !isReplayableStreamDisconnect(normalizedError) ||
+          replayAttempts >= 1
+        ) {
+          setTerminal({
+            entry,
+            terminal:
+              normalizedError.code === "CANCELED"
+                ? "cancelled"
+                : "error",
+            error: normalizedError,
+            logEvent:
+              normalizedError.code === "SKILL_TIMEOUT"
+                ? "ai_run_timeout"
+                : normalizedError.code === "CANCELED"
+                  ? "ai_run_canceled"
+                  : "ai_run_failed",
+            errorCode: normalizedError.code,
+          });
+          return;
+        }
+
+        replayAttempts += 1;
+        resetForFullPromptReplay(entry);
+        deps.logger.info("ai_stream_replay_retry", {
+          runId,
+          executionId,
+          traceId,
+          attempt: replayAttempts,
         });
+
+        const waitMs =
+          retryBackoffMs[
+            Math.min(replayAttempts - 1, retryBackoffMs.length - 1)
+          ] ?? 0;
+        if (waitMs > 0) {
+          await sleep(waitMs);
+        }
       }
-      return backupRes;
-    }
 
-    if (canHalfOpenProbe) {
-      deps.logger.info("ai_provider_half_open_probe", {
-        traceId: args.entry.traceId,
-        provider: args.primary.provider,
-      });
-    }
+      if (entry.terminal !== null) {
+        return;
+      }
 
-    const primaryRes = await runNonStreamWithProvider({
-      ...args,
-      cfg: args.primary,
-    });
-    if (primaryRes.ok) {
-      providerResolver.markProviderSuccess({
-        cfg: args.primary,
-        traceId: args.entry.traceId,
-        fromHalfOpen: canHalfOpenProbe,
-      });
-      return primaryRes;
-    }
+      if (entry.completionTimer !== null) {
+        return;
+      }
 
-    if (!isProviderAvailabilityError(primaryRes.error)) {
-      return primaryRes;
-    }
+      clearChunkFlushTimer(entry);
+      // Completion is deferred briefly so a near-simultaneous cancel can win.
+      entry.completionTimer = setTimeout(() => {
+        entry.completionTimer = null;
+        if (entry.terminal !== null) {
+          return;
+        }
+        entry.completionTimer = setTimeout(() => {
+          entry.completionTimer = null;
+          if (entry.terminal !== null) {
+            return;
+          }
+          flushChunkBuffer(entry);
+          if (entry.terminal !== null) {
+            return;
+          }
 
-    const state = providerResolver.markProviderFailure({
-      cfg: args.primary,
-      traceId: args.entry.traceId,
-      reason: primaryRes.error.code,
-    });
+          const currentTotal =
+            sessionTokenTotalsByKey.get(sessionKey) ?? 0;
+          const completionTokens = estimateTokenCount(entry.outputText);
+          sessionTokenTotalsByKey.set(
+            sessionKey,
+            currentTotal + promptTokens + completionTokens,
+          );
+          persistSuccessfulTurn(entry.outputText);
+          persistTraceAndGetDegradation(entry.outputText);
 
-    if (state.status !== "degraded") {
-      if (args.backup !== null) {
-        return buildProviderUnavailableError({
-          traceId: args.entry.traceId,
-          primary: args.primary,
-          backup: args.backup,
+          setTerminal({
+            entry,
+            terminal: "completed",
+            logEvent: "ai_run_completed",
+          });
+        }, 0);
+      }, STREAM_COMPLETION_SETTLE_MS);
+    } catch (error) {
+      if (entry.terminal !== null) {
+        return;
+      }
+
+      const aborted = controller.signal.aborted;
+      if (aborted) {
+        setTerminal({
+          entry,
+          terminal: "cancelled",
+          logEvent: "ai_run_canceled",
+          errorCode: "CANCELED",
         });
+        return;
       }
-      return primaryRes;
-    }
 
-    if (args.backup === null) {
-      return primaryRes;
-    }
-
-    deps.logger.info("ai_provider_failover", {
-      traceId: args.entry.traceId,
-      from: args.primary.provider,
-      to: args.backup.provider,
-      reason: canHalfOpenProbe
-        ? "half_open_probe_failed"
-        : "primary_unavailable",
-    });
-
-    const backupRes = await runNonStreamWithProvider({
-      ...args,
-      cfg: args.backup,
-    });
-    if (backupRes.ok) {
-      return backupRes;
-    }
-    if (isProviderAvailabilityError(backupRes.error)) {
-      return buildProviderUnavailableError({
-        traceId: args.entry.traceId,
-        primary: args.primary,
-        backup: args.backup,
+      setTerminal({
+        entry,
+        terminal: "error",
+        error: {
+          code: "INTERNAL",
+          message: "AI request failed",
+          details: {
+            message:
+              error instanceof Error ? error.message : String(error),
+          },
+        },
+        logEvent: "ai_run_failed",
+        errorCode: "INTERNAL",
       });
     }
-
-    return backupRes;
   }
+
+  return { executeNonStreamImpl, executeStreamImpl };
+}
+
+function createAiRunSkillOp(
+  deps: AiServiceDeps,
+  state: AiInternalState,
+  helpers: AiHelpers,
+  pipeline: ReturnType<typeof createAiRunPipelineHelpers>,
+): Pick<AiService, "runSkill"> {
+  const {
+    providerResolver, runtimeGovernance, getFakeServer, runs, now,
+    sessionTokenBudget, sessionTokenTotalsByKey, skillScheduler,
+  } = state;
+  const {
+    resolveSessionKey, getChatMessageManager, buildRuntimeMessages,
+    setTerminal, resolveSchedulerTerminal, cleanupRun,
+  } = helpers;
+  const { executeNonStreamImpl, executeStreamImpl } = pipeline;
 
   const runSkill: AiService["runSkill"] = async (args) => {
     const cfgRes = await providerResolver.resolveProviderConfig({
@@ -1411,118 +1761,6 @@ export function createAiService(deps: {
       }, skillTimeoutMs);
     }
 
-    const executeNonStream = async (): Promise<
-      ServiceResult<{
-        executionId: string;
-        runId: string;
-        traceId: string;
-        outputText?: string;
-        degradation?: TracePersistenceDegradation;
-      }>
-    > => {
-      try {
-        const budgetExceeded = consumeSessionTokenBudget();
-        if (budgetExceeded) {
-          setTerminal({
-            entry,
-            terminal: "error",
-            error: budgetExceeded.error,
-            logEvent: "ai_run_failed",
-            errorCode: budgetExceeded.error.code,
-          });
-          return budgetExceeded;
-        }
-
-        const currentTotal = sessionTokenTotalsByKey.get(sessionKey) ?? 0;
-        const res = await runNonStreamWithFailover({
-          entry,
-          primary: primaryCfg,
-          backup: backupCfg,
-          runtimeMessages,
-          model: args.model,
-        });
-
-        if (!res.ok) {
-          const normalizedError = normalizeSkillError(res.error);
-          setTerminal({
-            entry,
-            terminal: "error",
-            error: normalizedError,
-            logEvent: "ai_run_failed",
-            errorCode: normalizedError.code,
-          });
-          return { ok: false, error: normalizedError };
-        }
-
-        if (res.data.length > maxSkillOutputChars) {
-          const oversizedError = buildSkillOutputTooLargeError(res.data.length);
-          setTerminal({
-            entry,
-            terminal: "error",
-            error: oversizedError,
-            logEvent: "ai_run_failed",
-            errorCode: oversizedError.code,
-          });
-          return { ok: false, error: oversizedError };
-        }
-
-        entry.outputText = res.data;
-        const completionTokens = estimateTokenCount(res.data);
-        sessionTokenTotalsByKey.set(
-          sessionKey,
-          currentTotal + promptTokens + completionTokens,
-        );
-        persistSuccessfulTurn(res.data);
-        const degradation = persistTraceAndGetDegradation(res.data);
-
-        setTerminal({
-          entry,
-          terminal: "completed",
-          logEvent: "ai_run_completed",
-        });
-        return {
-          ok: true,
-          data: {
-            executionId,
-            runId,
-            traceId,
-            outputText: res.data,
-            ...(degradation ? { degradation } : {}),
-          },
-        };
-      } catch (error) {
-        const aborted = controller.signal.aborted;
-        if (aborted) {
-          if (entry.terminal === "error") {
-            return ipcError("SKILL_TIMEOUT", "Skill execution timed out");
-          }
-          setTerminal({
-            entry,
-            terminal: "cancelled",
-            logEvent: "ai_run_canceled",
-            errorCode: "CANCELED",
-          });
-          return ipcError("CANCELED", "AI request canceled");
-        }
-
-        setTerminal({
-          entry,
-          terminal: "error",
-          error: {
-            code: "INTERNAL",
-            message: "AI request failed",
-            details: {
-              message: error instanceof Error ? error.message : String(error),
-            },
-          },
-          logEvent: "ai_run_failed",
-          errorCode: "INTERNAL",
-        });
-        return ipcError("INTERNAL", "AI request failed");
-      } finally {
-        cleanupRun(runId);
-      }
-    };
 
     const scheduled = await skillScheduler.schedule({
       sessionKey,
@@ -1568,148 +1806,12 @@ export function createAiService(deps: {
             };
           }
 
-          void (async () => {
-            try {
-              let replayAttempts = 0;
-              for (;;) {
-                const res =
-                  primaryCfg.provider === "anthropic"
-                    ? await runAnthropicStream({
-                        entry,
-                        cfg: primaryCfg,
-                        runtimeMessages,
-                        model: args.model,
-                      })
-                    : await runOpenAiStream({
-                        entry,
-                        cfg: primaryCfg,
-                        runtimeMessages,
-                        model: args.model,
-                      });
+          void executeStreamImpl({
+            entry, primaryCfg, runtimeMessages, model: args.model,
+            runId, executionId, traceId, sessionKey, promptTokens,
+            controller, persistSuccessfulTurn, persistTraceAndGetDegradation,
+          });
 
-                if (res.ok) {
-                  break;
-                }
-
-                if (entry.terminal !== null) {
-                  return;
-                }
-
-                const normalizedError = normalizeSkillError(res.error);
-                if (
-                  !isReplayableStreamDisconnect(normalizedError) ||
-                  replayAttempts >= 1
-                ) {
-                  setTerminal({
-                    entry,
-                    terminal:
-                      normalizedError.code === "CANCELED"
-                        ? "cancelled"
-                        : "error",
-                    error: normalizedError,
-                    logEvent:
-                      normalizedError.code === "SKILL_TIMEOUT"
-                        ? "ai_run_timeout"
-                        : normalizedError.code === "CANCELED"
-                          ? "ai_run_canceled"
-                          : "ai_run_failed",
-                    errorCode: normalizedError.code,
-                  });
-                  return;
-                }
-
-                replayAttempts += 1;
-                resetForFullPromptReplay(entry);
-                deps.logger.info("ai_stream_replay_retry", {
-                  runId,
-                  executionId,
-                  traceId,
-                  attempt: replayAttempts,
-                });
-
-                const waitMs =
-                  retryBackoffMs[
-                    Math.min(replayAttempts - 1, retryBackoffMs.length - 1)
-                  ] ?? 0;
-                if (waitMs > 0) {
-                  await sleep(waitMs);
-                }
-              }
-
-              if (entry.terminal !== null) {
-                return;
-              }
-
-              if (entry.completionTimer !== null) {
-                return;
-              }
-
-              clearChunkFlushTimer(entry);
-              // Completion is deferred briefly so a near-simultaneous cancel can win.
-              entry.completionTimer = setTimeout(() => {
-                entry.completionTimer = null;
-                if (entry.terminal !== null) {
-                  return;
-                }
-                entry.completionTimer = setTimeout(() => {
-                  entry.completionTimer = null;
-                  if (entry.terminal !== null) {
-                    return;
-                  }
-                  flushChunkBuffer(entry);
-                  if (entry.terminal !== null) {
-                    return;
-                  }
-
-                  const currentTotal =
-                    sessionTokenTotalsByKey.get(sessionKey) ?? 0;
-                  const completionTokens = estimateTokenCount(entry.outputText);
-                  sessionTokenTotalsByKey.set(
-                    sessionKey,
-                    currentTotal + promptTokens + completionTokens,
-                  );
-                  persistSuccessfulTurn(entry.outputText);
-                  persistTraceAndGetDegradation(entry.outputText);
-
-                  setTerminal({
-                    entry,
-                    terminal: "completed",
-                    logEvent: "ai_run_completed",
-                  });
-                }, 0);
-              }, STREAM_COMPLETION_SETTLE_MS);
-            } catch (error) {
-              if (entry.terminal !== null) {
-                return;
-              }
-
-              const aborted = controller.signal.aborted;
-              if (aborted) {
-                setTerminal({
-                  entry,
-                  terminal: "cancelled",
-                  logEvent: "ai_run_canceled",
-                  errorCode: "CANCELED",
-                });
-                return;
-              }
-
-              setTerminal({
-                entry,
-                terminal: "error",
-                error: {
-                  code: "INTERNAL",
-                  message: "AI request failed",
-                  details: {
-                    message:
-                      error instanceof Error ? error.message : String(error),
-                  },
-                },
-                logEvent: "ai_run_failed",
-                errorCode: "INTERNAL",
-              });
-            }
-          })();
 
           return {
             response: Promise.resolve({
@@ -1721,7 +1823,11 @@ export function createAiService(deps: {
         }
 
         return {
-          response: executeNonStream(),
+          response: executeNonStreamImpl({
+            entry, primaryCfg, backupCfg, runtimeMessages, model: args.model,
+            sessionKey, executionId, runId, traceId, promptTokens, controller,
+            consumeSessionTokenBudget, persistSuccessfulTurn, persistTraceAndGetDegradation,
+          }),
           completion: completionPromise,
         };
       },
@@ -1735,6 +1841,17 @@ export function createAiService(deps: {
 
     return scheduled;
   };
+
+  return { runSkill };
+}
+
+function createAiMethodOps(
+  deps: AiServiceDeps,
+  state: AiInternalState,
+  helpers: AiHelpers,
+): Pick<AiService, "listModels" | "cancel" | "feedback"> {
+  const { runtimeGovernance, providerResolver, getFakeServer, runs } = state;
+  const { setTerminal, fetchWithPolicy } = helpers;
 
   const listModels: AiService["listModels"] = async () => {
     const cfgRes = await providerResolver.resolveProviderConfig({
@@ -1806,6 +1923,7 @@ export function createAiService(deps: {
       },
     };
   };
+
   const cancel: AiService["cancel"] = (args) => {
     const executionId = (args.executionId ?? args.runId ?? "").trim();
     if (executionId.length === 0) {
@@ -1859,6 +1977,68 @@ export function createAiService(deps: {
     });
     return { ok: true, data: { recorded: true } };
   };
+
+  return { listModels, cancel, feedback };
+}
+
+export function createAiService(deps: AiServiceDeps): AiService {
+  const runtimeGovernance = resolveRuntimeGovernanceFromEnv(deps.env);
+  const runs = new Map<string, RunEntry>();
+  const requestTimestamps: number[] = [];
+  const sessionTokenTotalsByKey = new Map<string, number>();
+  const sessionChatMessagesByKey = new Map<string, ChatMessageManager>();
+  const skillScheduler = createSkillScheduler({
+    globalConcurrencyLimit: 8,
+    sessionQueueLimit: 20,
+  });
+  const now = deps.now ?? (() => Date.now());
+  const providerResolver = createProviderResolver({
+    logger: deps.logger,
+    now,
+  });
+  const sleep =
+    deps.sleep ??
+    ((ms: number) =>
+      new Promise<void>((resolve) => {
+        setTimeout(resolve, ms);
+      }));
+  const rateLimitPerMinute =
+    deps.rateLimitPerMinute ?? DEFAULT_LLM_RATE_LIMIT_PER_MINUTE;
+  const retryBackoffMs =
+    deps.retryBackoffMs ?? runtimeGovernance.ai.retryBackoffMs;
+  const sessionTokenBudget =
+    deps.sessionTokenBudget ?? runtimeGovernance.ai.sessionTokenBudget;
+  const maxSkillOutputChars = parseMaxSkillOutputChars(deps.env);
+  const chatHistoryTokenBudget = parseChatHistoryTokenBudget(deps.env);
+  let fakeServerPromise: Promise<FakeAiServer> | null = null;
+
+  const getFakeServer = async (): Promise<FakeAiServer> => {
+    if (!fakeServerPromise) {
+      fakeServerPromise = startFakeAiServer({
+        logger: deps.logger,
+        env: deps.env,
+      });
+    }
+    return await fakeServerPromise;
+  };
+
+  const state: AiInternalState = {
+    runs, requestTimestamps, now, runtimeGovernance, sleep,
+    rateLimitPerMinute, retryBackoffMs, sessionTokenBudget,
+    maxSkillOutputChars, chatHistoryTokenBudget,
+    sessionTokenTotalsByKey, sessionChatMessagesByKey,
+    skillScheduler, providerResolver, getFakeServer,
+  };
+
+  const sessionHelpers = createAiSessionHelpers(state);
+  const emitHelpers = createAiEmitHelpers(deps, state);
+  const nonStreamHelpers = createAiNonStreamHelpers(deps, state, sessionHelpers);
+  const streamHelpers = createAiStreamHelpers(deps, emitHelpers, nonStreamHelpers);
+  const helpers: AiHelpers = { ...sessionHelpers, ...emitHelpers, ...nonStreamHelpers, ...streamHelpers };
+  const pipeline = createAiRunPipelineHelpers(deps, state, helpers);
+
+  const { runSkill } = createAiRunSkillOp(deps, state, helpers, pipeline);
+  const { listModels, cancel, feedback } = createAiMethodOps(deps, state, helpers);
 
   return { runSkill, listModels, cancel, feedback };
 }

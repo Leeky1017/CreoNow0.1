@@ -249,6 +249,142 @@ function createMockRecognizer(): Recognizer {
   };
 }
 
+function createSuggestionOps(ctx: {
+  sessions: Map<string, RecognitionSessionState>;
+  kgService: ReturnType<typeof createKnowledgeGraphService>;
+}): Pick<
+  KgRecognitionRuntime,
+  "acceptSuggestion" | "dismissSuggestion"
+> {
+  function getSession(sessionId: string): RecognitionSessionState {
+    const existing = ctx.sessions.get(sessionId);
+    if (existing) {
+      return existing;
+    }
+    const created: RecognitionSessionState = {
+      dismissedKeys: new Set<string>(),
+      suggestions: new Map<string, StoredSuggestion>(),
+    };
+    ctx.sessions.set(sessionId, created);
+    return created;
+  }
+
+  return {
+    acceptSuggestion: ({ projectId, sessionId, suggestionId }) => {
+      const normalizedProjectId = projectId.trim();
+      const normalizedSessionId = sessionId.trim();
+      const normalizedSuggestionId = suggestionId.trim();
+      if (
+        normalizedProjectId.length === 0 ||
+        normalizedSessionId.length === 0 ||
+        normalizedSuggestionId.length === 0
+      ) {
+        return toErr(
+          "INVALID_ARGUMENT",
+          "projectId/sessionId/suggestionId is required",
+        );
+      }
+
+      const sessionState = getSession(normalizedSessionId);
+      const suggestion = sessionState.suggestions.get(normalizedSuggestionId);
+      if (
+        !suggestion ||
+        suggestion.projectId !== normalizedProjectId ||
+        suggestion.sessionId !== normalizedSessionId
+      ) {
+        return toErr("NOT_FOUND", "suggestion not found");
+      }
+
+      const createRes = ctx.kgService.entityCreate({
+        projectId: normalizedProjectId,
+        type: suggestion.type,
+        name: suggestion.name,
+      });
+
+      if (!createRes.ok && createRes.error.code !== "KG_ENTITY_DUPLICATE") {
+        return createRes;
+      }
+
+      if (createRes.ok) {
+        sessionState.suggestions.delete(normalizedSuggestionId);
+        return createRes;
+      }
+
+      const existingRes = ctx.kgService.entityList({
+        projectId: normalizedProjectId,
+      });
+      if (!existingRes.ok) {
+        return existingRes;
+      }
+
+      const existingEntity = existingRes.data.items.find(
+        (entity) =>
+          entity.type === suggestion.type &&
+          entity.name.trim().toLowerCase() ===
+            suggestion.name.trim().toLowerCase(),
+      );
+      if (!existingEntity) {
+        return toErr("DB_ERROR", "failed to resolve duplicated entity");
+      }
+
+      sessionState.suggestions.delete(normalizedSuggestionId);
+      return { ok: true, data: existingEntity };
+    },
+
+    dismissSuggestion: ({ projectId, sessionId, suggestionId }) => {
+      const normalizedProjectId = projectId.trim();
+      const normalizedSessionId = sessionId.trim();
+      const normalizedSuggestionId = suggestionId.trim();
+      if (
+        normalizedProjectId.length === 0 ||
+        normalizedSessionId.length === 0 ||
+        normalizedSuggestionId.length === 0
+      ) {
+        return toErr(
+          "INVALID_ARGUMENT",
+          "projectId/sessionId/suggestionId is required",
+        );
+      }
+
+      const sessionState = getSession(normalizedSessionId);
+      const suggestion = sessionState.suggestions.get(normalizedSuggestionId);
+      if (
+        !suggestion ||
+        suggestion.projectId !== normalizedProjectId ||
+        suggestion.sessionId !== normalizedSessionId
+      ) {
+        return toErr("NOT_FOUND", "suggestion not found");
+      }
+
+      sessionState.dismissedKeys.add(suggestion.dedupeKey);
+      sessionState.suggestions.delete(normalizedSuggestionId);
+      return { ok: true, data: { dismissed: true } };
+    },
+  };
+}
+
+function buildRuntimeStats(
+  running: Map<string, unknown>,
+  queue: unknown[],
+  maxConcurrency: number,
+  metrics: {
+    peakRunning: number;
+    completed: number;
+    completionOrder: string[];
+    canceledTaskIds: string[];
+  },
+) {
+  return {
+    running: running.size,
+    queued: queue.length,
+    maxConcurrency,
+    peakRunning: metrics.peakRunning,
+    completed: metrics.completed,
+    completionOrder: [...metrics.completionOrder],
+    canceledTaskIds: [...metrics.canceledTaskIds],
+  };
+}
+
 /**
  * Create queue-backed KG recognition runtime.
  *
@@ -456,6 +592,8 @@ export function createKgRecognitionRuntime(args: {
     }
   }
 
+  const suggestionOps = createSuggestionOps({ sessions, kgService });
+
   return {
     enqueue: ({
       projectId,
@@ -541,10 +679,10 @@ export function createKgRecognitionRuntime(args: {
       }
 
       const queueIndex = queue.findIndex(
-        (task) =>
-          task.taskId === normalizedTaskId &&
-          task.projectId === normalizedProjectId &&
-          task.sessionId === normalizedSessionId,
+        (t) =>
+          t.taskId === normalizedTaskId &&
+          t.projectId === normalizedProjectId &&
+          t.sessionId === normalizedSessionId,
       );
       if (queueIndex >= 0) {
         queue.splice(queueIndex, 1);
@@ -567,113 +705,15 @@ export function createKgRecognitionRuntime(args: {
       });
     },
 
-    acceptSuggestion: ({ projectId, sessionId, suggestionId }) => {
-      const normalizedProjectId = projectId.trim();
-      const normalizedSessionId = sessionId.trim();
-      const normalizedSuggestionId = suggestionId.trim();
-      if (
-        normalizedProjectId.length === 0 ||
-        normalizedSessionId.length === 0 ||
-        normalizedSuggestionId.length === 0
-      ) {
-        return toErr(
-          "INVALID_ARGUMENT",
-          "projectId/sessionId/suggestionId is required",
-        );
-      }
-
-      const sessionState = getSessionState(normalizedSessionId);
-      const suggestion = sessionState.suggestions.get(normalizedSuggestionId);
-      if (
-        !suggestion ||
-        suggestion.projectId !== normalizedProjectId ||
-        suggestion.sessionId !== normalizedSessionId
-      ) {
-        return toErr("NOT_FOUND", "suggestion not found");
-      }
-
-      const createRes = kgService.entityCreate({
-        projectId: normalizedProjectId,
-        type: suggestion.type,
-        name: suggestion.name,
-      });
-
-      if (!createRes.ok && createRes.error.code !== "KG_ENTITY_DUPLICATE") {
-        return createRes;
-      }
-
-      if (createRes.ok) {
-        sessionState.suggestions.delete(normalizedSuggestionId);
-        return createRes;
-      }
-
-      const existingRes = kgService.entityList({
-        projectId: normalizedProjectId,
-      });
-      if (!existingRes.ok) {
-        return existingRes;
-      }
-
-      const existingEntity = existingRes.data.items.find(
-        (entity) =>
-          entity.type === suggestion.type &&
-          entity.name.trim().toLowerCase() ===
-            suggestion.name.trim().toLowerCase(),
-      );
-      if (!existingEntity) {
-        return toErr("DB_ERROR", "failed to resolve duplicated entity");
-      }
-
-      sessionState.suggestions.delete(normalizedSuggestionId);
-      return { ok: true, data: existingEntity };
-    },
-
-    dismissSuggestion: ({ projectId, sessionId, suggestionId }) => {
-      const normalizedProjectId = projectId.trim();
-      const normalizedSessionId = sessionId.trim();
-      const normalizedSuggestionId = suggestionId.trim();
-      if (
-        normalizedProjectId.length === 0 ||
-        normalizedSessionId.length === 0 ||
-        normalizedSuggestionId.length === 0
-      ) {
-        return toErr(
-          "INVALID_ARGUMENT",
-          "projectId/sessionId/suggestionId is required",
-        );
-      }
-
-      const sessionState = getSessionState(normalizedSessionId);
-      const suggestion = sessionState.suggestions.get(normalizedSuggestionId);
-      if (
-        !suggestion ||
-        suggestion.projectId !== normalizedProjectId ||
-        suggestion.sessionId !== normalizedSessionId
-      ) {
-        return toErr("NOT_FOUND", "suggestion not found");
-      }
-
-      sessionState.dismissedKeys.add(suggestion.dedupeKey);
-      sessionState.suggestions.delete(normalizedSuggestionId);
-      return { ok: true, data: { dismissed: true } };
-    },
+    ...suggestionOps,
 
     stats: ({ projectId, sessionId }) => {
       if (projectId.trim().length === 0 || sessionId.trim().length === 0) {
         return toErr("INVALID_ARGUMENT", "projectId/sessionId is required");
       }
-
       return {
         ok: true,
-        data: {
-          running: running.size,
-          queued: queue.length,
-          maxConcurrency,
-          peakRunning: metrics.peakRunning,
-          completed: metrics.completed,
-          completionOrder: [...metrics.completionOrder],
-          canceledTaskIds: [...metrics.canceledTaskIds],
-        },
+        data: buildRuntimeStats(running, queue, maxConcurrency, metrics),
       };
     },
   };

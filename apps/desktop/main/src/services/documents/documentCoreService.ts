@@ -500,26 +500,8 @@ function toBranchListItem(
 /**
  * Create a document service backed by SQLite (SSOT).
  */
-export function createDocumentCoreService(args: {
-  db: Database.Database;
-  logger: Logger;
-  maxSnapshotsPerDocument?: number;
-  autosaveCompactionAgeMs?: number;
-  maxDiffPayloadBytes?: number;
-}): DocumentService {
-  const maxSnapshotsPerDocument = Math.max(
-    1,
-    args.maxSnapshotsPerDocument ?? DEFAULT_MAX_SNAPSHOTS_PER_DOCUMENT,
-  );
-  const autosaveCompactionAgeMs = Math.max(
-    0,
-    args.autosaveCompactionAgeMs ?? AUTOSAVE_COMPACT_AGE_MS,
-  );
-  const maxDiffPayloadBytes = Math.max(
-    1,
-    args.maxDiffPayloadBytes ?? DEFAULT_MAX_DIFF_PAYLOAD_BYTES,
-  );
 
+function createDocUtilityHelpers(args: { db: Database.Database; logger: Logger }) {
   const rollbackToVersion = (params: {
     documentId: string;
     versionId: string;
@@ -644,11 +626,6 @@ export function createDocumentCoreService(args: {
     }
   };
 
-  /**
-   * Load one branch row by document/name.
-   *
-   * Why: branch operations need a single canonical row lookup.
-   */
   const readBranch = (params: {
     documentId: string;
     name: string;
@@ -673,11 +650,26 @@ export function createDocumentCoreService(args: {
     }
   };
 
-  /**
-   * Ensure `main` branch exists for one document.
-   *
-   * Why: all branch workflows assume a stable default branch anchor.
-   */
+  const resolveCurrentBranchName = (
+    documentId: string,
+  ): ServiceResult<string> => {
+    const current = readCurrentBranchName(args.db, documentId);
+    if (current.ok) {
+      return current;
+    }
+    if (current.error.code === "NOT_FOUND") {
+      return { ok: true, data: "main" };
+    }
+    return current;
+  };
+
+  return { rollbackToVersion, readBranch, resolveCurrentBranchName };
+}
+
+function createDocBranchHelpers(
+  args: { db: Database.Database; logger: Logger },
+  readBranch: ReturnType<typeof createDocUtilityHelpers>['readBranch'],
+) {
   const ensureMainBranch = (params: {
     documentId: string;
     createdBy: string;
@@ -793,29 +785,6 @@ export function createDocumentCoreService(args: {
     return { ok: true, data: created };
   };
 
-  /**
-   * Resolve current branch name for one document.
-   *
-   * Why: branch list/switch UI needs deterministic current pointer.
-   */
-  const resolveCurrentBranchName = (
-    documentId: string,
-  ): ServiceResult<string> => {
-    const current = readCurrentBranchName(args.db, documentId);
-    if (current.ok) {
-      return current;
-    }
-    if (current.error.code === "NOT_FOUND") {
-      return { ok: true, data: "main" };
-    }
-    return current;
-  };
-
-  /**
-   * Write merged content as `branch-merge` snapshot and update target head.
-   *
-   * Why: merge and conflict-resolve must share one persistence path.
-   */
   const persistBranchMerge = (params: {
     documentId: string;
     targetBranchName: string;
@@ -935,6 +904,27 @@ export function createDocumentCoreService(args: {
     return { ok: true, data: { status: "merged", mergeSnapshotId } };
   };
 
+  return { ensureMainBranch, persistBranchMerge };
+}
+
+type DocHelpers = ReturnType<typeof createDocUtilityHelpers> &
+  ReturnType<typeof createDocBranchHelpers>;
+
+type DocCoreCtx = {
+  db: Database.Database;
+  logger: Logger;
+  maxSnapshotsPerDocument: number;
+  autosaveCompactionAgeMs: number;
+  maxDiffPayloadBytes: number;
+} & DocHelpers;
+
+function createDocCrudOps(
+  ctx: DocCoreCtx,
+): Pick<
+  DocumentService,
+  "create" | "list" | "read" | "update"
+> {
+  const args = ctx;
   return {
     create: ({ projectId, title, type }) => {
       const normalizedType = normalizeDocumentType(type);
@@ -1162,6 +1152,18 @@ export function createDocumentCoreService(args: {
       }
     },
 
+  };
+}
+
+function createDocSaveOps(
+  ctx: DocCoreCtx,
+): Pick<
+  DocumentService,
+  "save"
+> {
+  const args = ctx;
+  const { maxSnapshotsPerDocument, autosaveCompactionAgeMs } = ctx;
+  return {
     save: ({ projectId, documentId, contentJson, actor, reason }) => {
       if (!isReasonValidForActor(actor, reason)) {
         return documentError("INVALID_ARGUMENT", "actor/reason mismatch");
@@ -1362,6 +1364,17 @@ export function createDocumentCoreService(args: {
       return { ok: true, data: { updatedAt: ts, contentHash, compaction } };
     },
 
+  };
+}
+
+function createDocLifecycleOps(
+  ctx: DocCoreCtx,
+): Pick<
+  DocumentService,
+  "delete" | "reorder" | "updateStatus"
+> {
+  const args = ctx;
+  return {
     delete: ({ projectId, documentId }) => {
       if (projectId.trim().length === 0 || documentId.trim().length === 0) {
         return documentError(
@@ -1609,6 +1622,17 @@ export function createDocumentCoreService(args: {
       }
     },
 
+  };
+}
+
+function createDocNavigationOps(
+  ctx: DocCoreCtx,
+): Pick<
+  DocumentService,
+  "getCurrent" | "setCurrent"
+> {
+  const args = ctx;
+  return {
     getCurrent: ({ projectId }) => {
       if (projectId.trim().length === 0) {
         return documentError("INVALID_ARGUMENT", "projectId is required");
@@ -1679,6 +1703,18 @@ export function createDocumentCoreService(args: {
       return { ok: true, data: { documentId } };
     },
 
+  };
+}
+
+function createVersionOps(
+  ctx: DocCoreCtx,
+): Pick<
+  DocumentService,
+  "listVersions" | "readVersion" | "diffVersions" | "rollbackVersion" | "restoreVersion"
+> {
+  const args = ctx;
+  const { maxDiffPayloadBytes, rollbackToVersion } = ctx;
+  return {
     listVersions: ({ documentId }) => {
       try {
         const rows = args.db
@@ -1806,6 +1842,28 @@ export function createDocumentCoreService(args: {
       }
     },
 
+    rollbackVersion: ({ documentId, versionId }) =>
+      rollbackToVersion({ documentId, versionId }),
+
+    restoreVersion: ({ documentId, versionId }) => {
+      const rollback = rollbackToVersion({ documentId, versionId });
+      if (!rollback.ok) {
+        return rollback;
+      }
+      return { ok: true, data: { restored: true } };
+    },
+  };
+}
+
+function createBranchCrudOps(
+  ctx: DocCoreCtx,
+): Pick<
+  DocumentService,
+  "createBranch" | "listBranches" | "switchBranch"
+> {
+  const args = ctx;
+  const { readBranch, ensureMainBranch, resolveCurrentBranchName } = ctx;
+  return {
     createBranch: ({ documentId, name, createdBy }) => {
       if (documentId.trim().length === 0 || createdBy.trim().length === 0) {
         return documentError(
@@ -2005,6 +2063,18 @@ export function createDocumentCoreService(args: {
       };
     },
 
+  };
+}
+
+function createBranchMergeOps(
+  ctx: DocCoreCtx,
+): Pick<
+  DocumentService,
+  "mergeBranch" | "resolveMergeConflict"
+> {
+  const args = ctx;
+  const { readBranch, ensureMainBranch, persistBranchMerge } = ctx;
+  return {
     mergeBranch: ({
       documentId,
       sourceBranchName,
@@ -2260,15 +2330,53 @@ export function createDocumentCoreService(args: {
       return merged;
     },
 
-    rollbackVersion: ({ documentId, versionId }) =>
-      rollbackToVersion({ documentId, versionId }),
+  };
+}
 
-    restoreVersion: ({ documentId, versionId }) => {
-      const rollback = rollbackToVersion({ documentId, versionId });
-      if (!rollback.ok) {
-        return rollback;
-      }
-      return { ok: true, data: { restored: true } };
-    },
+export function createDocumentCoreService(args: {
+  db: Database.Database;
+  logger: Logger;
+  maxSnapshotsPerDocument?: number;
+  autosaveCompactionAgeMs?: number;
+  maxDiffPayloadBytes?: number;
+}): DocumentService {
+  const maxSnapshotsPerDocument = Math.max(
+    1,
+    args.maxSnapshotsPerDocument ?? DEFAULT_MAX_SNAPSHOTS_PER_DOCUMENT,
+  );
+  const autosaveCompactionAgeMs = Math.max(
+    0,
+    args.autosaveCompactionAgeMs ?? AUTOSAVE_COMPACT_AGE_MS,
+  );
+  const maxDiffPayloadBytes = Math.max(
+    1,
+    args.maxDiffPayloadBytes ?? DEFAULT_MAX_DIFF_PAYLOAD_BYTES,
+  );
+
+
+  const { rollbackToVersion, readBranch, resolveCurrentBranchName } = createDocUtilityHelpers(args);
+  const { ensureMainBranch, persistBranchMerge } = createDocBranchHelpers(args, readBranch);
+
+  const ctx: DocCoreCtx = {
+    db: args.db,
+    logger: args.logger,
+    maxSnapshotsPerDocument,
+    autosaveCompactionAgeMs,
+    maxDiffPayloadBytes,
+    rollbackToVersion,
+    readBranch,
+    ensureMainBranch,
+    resolveCurrentBranchName,
+    persistBranchMerge,
+  };
+
+  return {
+    ...createDocCrudOps(ctx),
+    ...createDocSaveOps(ctx),
+    ...createDocLifecycleOps(ctx),
+    ...createDocNavigationOps(ctx),
+    ...createVersionOps(ctx),
+    ...createBranchCrudOps(ctx),
+    ...createBranchMergeOps(ctx),
   };
 }

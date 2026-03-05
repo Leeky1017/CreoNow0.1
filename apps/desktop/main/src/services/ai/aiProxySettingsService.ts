@@ -372,6 +372,137 @@ function toPublic(raw: AiProxySettingsRaw): AiProxySettings {
   };
 }
 
+type ProxyTestResult = ServiceResult<{
+  ok: boolean;
+  latencyMs: number;
+  error?: { code: IpcErrorCode; message: string };
+}>;
+
+async function executeProxyTest(
+  getRaw: () => ServiceResult<AiProxySettingsRaw>,
+): Promise<ProxyTestResult> {
+  const raw = getRaw();
+  if (!raw.ok) {
+    return raw;
+  }
+  if (!raw.data.enabled) {
+    if (raw.data.providerMode === "openai-compatible") {
+      return {
+        ok: true,
+        data: {
+          ok: false,
+          latencyMs: 0,
+          error: { code: "INVALID_ARGUMENT", message: "proxy is disabled" },
+        },
+      };
+    }
+  }
+
+  const mode = raw.data.providerMode;
+  const targetBaseUrl =
+    mode === "anthropic-byok"
+      ? raw.data.anthropicByok.baseUrl
+      : mode === "openai-byok"
+        ? raw.data.openAiByok.baseUrl
+        : raw.data.openAiCompatible.baseUrl;
+  const targetApiKey =
+    mode === "anthropic-byok"
+      ? raw.data.anthropicByok.apiKey
+      : mode === "openai-byok"
+        ? raw.data.openAiByok.apiKey
+        : raw.data.openAiCompatible.apiKey;
+
+  if (!targetBaseUrl) {
+    return {
+      ok: true,
+      data: {
+        ok: false,
+        latencyMs: 0,
+        error: {
+          code: "AI_NOT_CONFIGURED",
+          message: "请先在设置中配置 AI 服务",
+        },
+      },
+    };
+  }
+
+  const start = nowTs();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 2_000);
+  try {
+    const url = joinApiPath({
+      baseUrl: targetBaseUrl,
+      endpointPath: "/v1/models",
+    });
+    const res = await fetch(url, {
+      method: "GET",
+      headers:
+        mode === "anthropic-byok"
+          ? {
+              ...(targetApiKey ? { "x-api-key": targetApiKey } : {}),
+              "anthropic-version": "2023-06-01",
+            }
+          : targetApiKey
+            ? { Authorization: `Bearer ${targetApiKey}` }
+            : {},
+      signal: controller.signal,
+    });
+
+    const latencyMs = nowTs() - start;
+    if (res.ok) {
+      return { ok: true, data: { ok: true, latencyMs } };
+    }
+
+    if (res.status === 401) {
+      return {
+        ok: true,
+        data: {
+          ok: false,
+          latencyMs,
+          error: { code: "AI_AUTH_FAILED", message: "Proxy unauthorized" },
+        },
+      };
+    }
+    if (res.status === 429) {
+      return {
+        ok: true,
+        data: {
+          ok: false,
+          latencyMs,
+          error: { code: "AI_RATE_LIMITED", message: "Proxy rate limited" },
+        },
+      };
+    }
+    return {
+      ok: true,
+      data: {
+        ok: false,
+        latencyMs,
+        error: { code: "LLM_API_ERROR", message: "Proxy request failed" },
+      },
+    };
+  } catch (error) {
+    const latencyMs = nowTs() - start;
+    return {
+      ok: true,
+      data: {
+        ok: false,
+        latencyMs,
+        error: {
+          code: controller.signal.aborted ? "TIMEOUT" : "LLM_API_ERROR",
+          message: controller.signal.aborted
+            ? "Proxy request timed out"
+            : error instanceof Error
+              ? error.message
+              : String(error),
+        },
+      },
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 /**
  * Create an AI proxy settings service backed by the main SQLite DB.
  */
@@ -590,134 +721,5 @@ export function createAiProxySettingsService(deps: {
     }
   }
 
-  async function testProxy(): Promise<
-    ServiceResult<{
-      ok: boolean;
-      latencyMs: number;
-      error?: { code: IpcErrorCode; message: string };
-    }>
-  > {
-    const raw = getRaw();
-    if (!raw.ok) {
-      return raw;
-    }
-    if (!raw.data.enabled) {
-      if (raw.data.providerMode === "openai-compatible") {
-        return {
-          ok: true,
-          data: {
-            ok: false,
-            latencyMs: 0,
-            error: { code: "INVALID_ARGUMENT", message: "proxy is disabled" },
-          },
-        };
-      }
-    }
-
-    const mode = raw.data.providerMode;
-    const targetBaseUrl =
-      mode === "anthropic-byok"
-        ? raw.data.anthropicByok.baseUrl
-        : mode === "openai-byok"
-          ? raw.data.openAiByok.baseUrl
-          : raw.data.openAiCompatible.baseUrl;
-    const targetApiKey =
-      mode === "anthropic-byok"
-        ? raw.data.anthropicByok.apiKey
-        : mode === "openai-byok"
-          ? raw.data.openAiByok.apiKey
-          : raw.data.openAiCompatible.apiKey;
-
-    if (!targetBaseUrl) {
-      return {
-        ok: true,
-        data: {
-          ok: false,
-          latencyMs: 0,
-          error: {
-            code: "AI_NOT_CONFIGURED",
-            message: "请先在设置中配置 AI 服务",
-          },
-        },
-      };
-    }
-
-    const start = nowTs();
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 2_000);
-    try {
-      const url = joinApiPath({
-        baseUrl: targetBaseUrl,
-        endpointPath: "/v1/models",
-      });
-      const res = await fetch(url, {
-        method: "GET",
-        headers:
-          mode === "anthropic-byok"
-            ? {
-                ...(targetApiKey ? { "x-api-key": targetApiKey } : {}),
-                "anthropic-version": "2023-06-01",
-              }
-            : targetApiKey
-              ? { Authorization: `Bearer ${targetApiKey}` }
-              : {},
-        signal: controller.signal,
-      });
-
-      const latencyMs = nowTs() - start;
-      if (res.ok) {
-        return { ok: true, data: { ok: true, latencyMs } };
-      }
-
-      if (res.status === 401) {
-        return {
-          ok: true,
-          data: {
-            ok: false,
-            latencyMs,
-            error: { code: "AI_AUTH_FAILED", message: "Proxy unauthorized" },
-          },
-        };
-      }
-      if (res.status === 429) {
-        return {
-          ok: true,
-          data: {
-            ok: false,
-            latencyMs,
-            error: { code: "AI_RATE_LIMITED", message: "Proxy rate limited" },
-          },
-        };
-      }
-      return {
-        ok: true,
-        data: {
-          ok: false,
-          latencyMs,
-          error: { code: "LLM_API_ERROR", message: "Proxy request failed" },
-        },
-      };
-    } catch (error) {
-      const latencyMs = nowTs() - start;
-      return {
-        ok: true,
-        data: {
-          ok: false,
-          latencyMs,
-          error: {
-            code: controller.signal.aborted ? "TIMEOUT" : "LLM_API_ERROR",
-            message: controller.signal.aborted
-              ? "Proxy request timed out"
-              : error instanceof Error
-                ? error.message
-                : String(error),
-          },
-        },
-      };
-    } finally {
-      clearTimeout(timeout);
-    }
-  }
-
-  return { get, getRaw, update, test: testProxy };
+  return { get, getRaw, update, test: () => executeProxyTest(getRaw) };
 }

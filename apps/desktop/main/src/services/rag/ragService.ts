@@ -159,6 +159,155 @@ function cosineSimilarity(a: readonly number[], b: readonly number[]): number {
   return dot / denom;
 }
 
+type RerankResult = {
+  ordered: Array<{ candidate: Candidate; score: number }>;
+  diagnostics: RagRetrieveDiagnostics["rerank"];
+};
+
+function rerankCandidates(
+  candidates: Candidate[],
+  queryText: string,
+  embedding: EmbeddingService,
+  embeddingCache: LruCache<string, number[]>,
+  rerankConfig: { enabled: boolean; model?: string },
+): RerankResult {
+  const rerankModel = rerankConfig.model;
+  const diagnostics: RagRetrieveDiagnostics["rerank"] = {
+    enabled: false,
+    model: rerankModel,
+  };
+
+  if (!rerankConfig.enabled) {
+    diagnostics.reason = "DISABLED";
+    return {
+      ordered: candidates.map((c) => ({ candidate: c, score: c.ftsScore })),
+      diagnostics,
+    };
+  }
+
+  if (candidates.length === 0) {
+    diagnostics.reason = "NO_CANDIDATES";
+    return { ordered: [], diagnostics };
+  }
+
+  const model = typeof rerankModel === "string" ? rerankModel : undefined;
+  const texts = [queryText, ...candidates.map((c) => c.rawSnippet)];
+
+  const cachedVectors: number[][] = [];
+  const missing: Array<{ index: number; text: string }> = [];
+
+  for (let i = 0; i < texts.length; i += 1) {
+    const text = texts[i] ?? "";
+    if (i === 0) {
+      missing.push({ index: i, text });
+      continue;
+    }
+
+    const cacheKey = `${model ?? "default"}:${text}`;
+    const cached = embeddingCache.get(cacheKey);
+    if (cached) {
+      cachedVectors[i] = cached;
+    } else {
+      missing.push({ index: i, text });
+    }
+  }
+
+  const encodeRes = embedding.encode({
+    texts: missing.map((m) => m.text),
+    model,
+  });
+
+  if (!encodeRes.ok) {
+    diagnostics.reason = encodeRes.error.code;
+    return {
+      ordered: candidates.map((c) => ({ candidate: c, score: c.ftsScore })),
+      diagnostics,
+    };
+  }
+
+  const vectors = [...cachedVectors];
+  for (let i = 0; i < missing.length; i += 1) {
+    const idx = missing[i]?.index ?? -1;
+    const vec = encodeRes.data.vectors[i] ?? [];
+    vectors[idx] = vec;
+    if (idx > 0) {
+      const cacheKey = `${model ?? "default"}:${texts[idx] ?? ""}`;
+      embeddingCache.set(cacheKey, vec);
+    }
+  }
+
+  const queryVec = vectors[0] ?? [];
+  diagnostics.enabled = true;
+
+  return {
+    ordered: candidates
+      .map((c, idx) => ({
+        idx,
+        candidate: c,
+        score: cosineSimilarity(queryVec, vectors[idx + 1] ?? []),
+      }))
+      .sort((a, b) => {
+        if (b.score !== a.score) {
+          return b.score - a.score;
+        }
+        return a.idx - b.idx;
+      })
+      .map((x) => ({ candidate: x.candidate, score: x.score })),
+    diagnostics,
+  };
+}
+
+function buildBudgetedItems(
+  ordered: Array<{ candidate: Candidate; score: number }>,
+  limit: number,
+  budget: number,
+): {
+  items: RagRetrieveItem[];
+  usedTokens: number;
+  droppedCount: number;
+  trimmedCount: number;
+} {
+  let remainingTokens = budget;
+  let usedTokens = 0;
+  let droppedCount = 0;
+  let trimmedCount = 0;
+  const items: RagRetrieveItem[] = [];
+
+  for (const entry of ordered) {
+    if (items.length >= limit) {
+      break;
+    }
+    if (remainingTokens <= 0) {
+      droppedCount += 1;
+      continue;
+    }
+
+    const trimmed = trimToTokenBudget({
+      text: entry.candidate.rawSnippet,
+      tokenBudget: remainingTokens,
+    });
+    if (trimmed.text.trim().length === 0) {
+      droppedCount += 1;
+      continue;
+    }
+
+    if (trimmed.trimmed) {
+      trimmedCount += 1;
+    }
+
+    items.push({
+      sourceRef: entry.candidate.sourceRef,
+      snippet: trimmed.text,
+      score: entry.score,
+    });
+
+    usedTokens += trimmed.usedTokens;
+    remainingTokens = Math.max(0, budget - usedTokens);
+  }
+
+  return { items, usedTokens, droppedCount, trimmedCount };
+}
+
 /**
  * Create a minimal RAG retrieval service (FTS fallback).
  *
@@ -259,121 +408,20 @@ export function createRagService(deps: {
         candidates.push(c);
       }
 
-      let remainingTokens = budgetRes.data;
-      let usedTokens = 0;
-      let droppedCount = 0;
-      let trimmedCount = 0;
+      const { ordered, diagnostics: rerankDiagnostics } = rerankCandidates(
+        candidates,
+        args.queryText,
+        deps.embedding,
+        deps.embeddingCache,
+        deps.rerank,
+      );
 
-      const rerankModel = deps.rerank.model;
-      let ordered: Array<{
-        candidate: Candidate;
-        score: number;
-      }> = candidates.map((c) => ({ candidate: c, score: c.ftsScore }));
-
-      const rerankDiagnostics: RagRetrieveDiagnostics["rerank"] = {
-        enabled: false,
-        model: rerankModel,
-      };
-
-      if (deps.rerank.enabled && candidates.length > 0) {
-        const model = typeof rerankModel === "string" ? rerankModel : undefined;
-        const texts = [args.queryText, ...candidates.map((c) => c.rawSnippet)];
-
-        const cachedVectors: number[][] = [];
-        const missing: Array<{ index: number; text: string }> = [];
-
-        for (let i = 0; i < texts.length; i += 1) {
-          const text = texts[i] ?? "";
-          if (i === 0) {
-            // Never cache query vectors (high-churn, low value).
-            missing.push({ index: i, text });
-            continue;
-          }
-
-          const cacheKey = `${model ?? "default"}:${text}`;
-          const cached = deps.embeddingCache.get(cacheKey);
-          if (cached) {
-            cachedVectors[i] = cached;
-          } else {
-            missing.push({ index: i, text });
-          }
-        }
-
-        const encodeRes = deps.embedding.encode({
-          texts: missing.map((m) => m.text),
-          model,
-        });
-
-        if (encodeRes.ok) {
-          const vectors = [...cachedVectors];
-          for (let i = 0; i < missing.length; i += 1) {
-            const idx = missing[i]?.index ?? -1;
-            const vec = encodeRes.data.vectors[i] ?? [];
-            vectors[idx] = vec;
-            if (idx > 0) {
-              const cacheKey = `${model ?? "default"}:${texts[idx] ?? ""}`;
-              deps.embeddingCache.set(cacheKey, vec);
-            }
-          }
-
-          const queryVec = vectors[0] ?? [];
-          ordered = candidates
-            .map((c, idx) => ({
-              idx,
-              candidate: c,
-              score: cosineSimilarity(queryVec, vectors[idx + 1] ?? []),
-            }))
-            .sort((a, b) => {
-              if (b.score !== a.score) {
-                return b.score - a.score;
-              }
-              return a.idx - b.idx;
-            })
-            .map((x) => ({ candidate: x.candidate, score: x.score }));
-
-          rerankDiagnostics.enabled = true;
-        } else {
-          rerankDiagnostics.enabled = false;
-          rerankDiagnostics.reason = encodeRes.error.code;
-        }
-      } else if (deps.rerank.enabled) {
-        rerankDiagnostics.reason = "NO_CANDIDATES";
-      } else {
-        rerankDiagnostics.reason = "DISABLED";
-      }
-
-      const items: RagRetrieveItem[] = [];
-      for (const entry of ordered) {
-        if (items.length >= limitRes.data) {
-          break;
-        }
-        if (remainingTokens <= 0) {
-          droppedCount += 1;
-          continue;
-        }
-
-        const trimmed = trimToTokenBudget({
-          text: entry.candidate.rawSnippet,
-          tokenBudget: remainingTokens,
-        });
-        if (trimmed.text.trim().length === 0) {
-          droppedCount += 1;
-          continue;
-        }
-
-        if (trimmed.trimmed) {
-          trimmedCount += 1;
-        }
-
-        items.push({
-          sourceRef: entry.candidate.sourceRef,
-          snippet: trimmed.text,
-          score: entry.score,
-        });
-
-        usedTokens += trimmed.usedTokens;
-        remainingTokens = Math.max(0, budgetRes.data - usedTokens);
-      }
+      const {
+        items,
+        usedTokens,
+        droppedCount,
+        trimmedCount,
+      } = buildBudgetedItems(ordered, limitRes.data, budgetRes.data);
 
       const mode: RagRetrieveDiagnostics["mode"] = rerankDiagnostics.enabled
         ? "fulltext_reranked"

@@ -1021,7 +1021,8 @@ export function createSqliteEpisodeRepository(args: {
  *
  * Why: P0 logic must be independently testable while keeping SQLite as production SSOT.
  */
-export function createEpisodicMemoryService(args: {
+
+type EpisodicServiceArgs = {
   repository: EpisodeRepository;
   logger: Logger;
   now?: () => number;
@@ -1044,20 +1045,34 @@ export function createEpisodicMemoryService(args: {
   }) => DistillGeneratedRule[];
   distillScheduler?: (job: () => void) => void;
   onDistillProgress?: (event: DistillProgressEvent) => void;
-}): EpisodicMemoryService {
-  const now = args.now ?? (() => Date.now());
-  const distillScheduler =
-    args.distillScheduler ?? ((job: () => void) => queueMicrotask(job));
-  const retryQueue: EpisodeRecordInput[] = [];
-  const knownProjectIds = new Set<string>();
-  const pendingEpisodeCountByProject = new Map<string, number>();
-  const retryPendingByProject = new Map<string, boolean>();
-  const distillingProjects = new Set<string>();
-  const scheduledBatchDistillProjects = new Set<string>();
-  const projectMutex = createKeyedMutex();
-  const semanticRulesByProject = new Map<string, SemanticMemoryRule[]>();
-  const conflictQueueByProject = new Map<string, SemanticConflictQueueItem[]>();
-  const distillIoDegradedProjects = new Set<string>();
+};
+
+type EpisodicState = {
+  retryQueue: EpisodeRecordInput[];
+  knownProjectIds: Set<string>;
+  pendingEpisodeCountByProject: Map<string, number>;
+  retryPendingByProject: Map<string, boolean>;
+  distillingProjects: Set<string>;
+  scheduledBatchDistillProjects: Set<string>;
+  projectMutex: ReturnType<typeof createKeyedMutex>;
+  semanticRulesByProject: Map<string, SemanticMemoryRule[]>;
+  conflictQueueByProject: Map<string, SemanticConflictQueueItem[]>;
+  distillIoDegradedProjects: Set<string>;
+};
+
+type EpisodicSmallHelpers = ReturnType<typeof createEpisodicSmallHelpers>;
+type EpisodicExecHelpers = ReturnType<typeof createEpisodicExecHelpers>;
+
+type EpisodicCtx = Pick<EpisodicServiceArgs, 'repository' | 'logger' | 'semanticRecall'> & {
+  now: () => number;
+} & EpisodicState & EpisodicSmallHelpers & EpisodicExecHelpers;
+
+function createEpisodicSmallHelpers(
+  args: EpisodicServiceArgs,
+  state: EpisodicState,
+  now: () => number,
+) {
+  const { semanticRulesByProject, conflictQueueByProject } = state;
 
   function cloneSemanticRule(rule: SemanticMemoryRule): SemanticMemoryRule {
     return {
@@ -1263,7 +1278,6 @@ export function createEpisodicMemoryService(args: {
     return outputs;
   }
 
-  const distillLlm = args.distillLlm ?? defaultDistillLlm;
 
   function fallbackRules(): string[] {
     return [
@@ -1314,66 +1328,23 @@ export function createEpisodicMemoryService(args: {
     );
   }
 
-  function ensureCapacity(projectId: string): ServiceResult<void> {
-    const eviction = service.realtimeEvictionTrigger({ projectId });
-    if (!eviction.ok) {
-      return eviction;
-    }
 
-    const activeCount = args.repository.countEpisodes({
-      projectId,
-      compressed: false,
-    });
+  return { cloneSemanticRule, cloneConflict, toPlaceholder, normalizeRuleText, isConfidenceInRange, clampConfidence, isDirectContradiction, emitDistillProgress, logDegradeEvent, invalidateSemanticCache, resolveScopePriority, getSemanticRules, getConflictQueue, upsertSemanticRule, enqueueConflict, defaultDistillLlm, fallbackRules, validateRecordInput, scoreEpisode };
+}
 
-    if (activeCount >= EPISODIC_ACTIVE_BUDGET) {
-      const overflow = activeCount - EPISODIC_ACTIVE_BUDGET + 1;
-      const deleted = args.repository.deleteLruEpisodes({
-        projectId,
-        compressed: false,
-        overflow,
-      });
-      const afterDelete = activeCount - deleted;
-      if (afterDelete >= EPISODIC_ACTIVE_BUDGET) {
-        return ipcError(
-          "MEMORY_CAPACITY_EXCEEDED",
-          "Active episodic memory budget exceeded",
-          {
-            projectId,
-            activeCount: afterDelete,
-            budget: EPISODIC_ACTIVE_BUDGET,
-          },
-        );
-      }
-    }
-
-    const compressedCount = args.repository.countEpisodes({
-      projectId,
-      compressed: true,
-    });
-    if (compressedCount > EPISODIC_COMPRESSED_BUDGET) {
-      const purge = service.monthlyPurgeTrigger({ projectId });
-      if (!purge.ok) {
-        return purge;
-      }
-      const afterPurge = args.repository.countEpisodes({
-        projectId,
-        compressed: true,
-      });
-      if (afterPurge > EPISODIC_COMPRESSED_BUDGET) {
-        return ipcError(
-          "MEMORY_CAPACITY_EXCEEDED",
-          "Compressed episodic memory budget exceeded",
-          {
-            projectId,
-            compressedCount: afterPurge,
-            budget: EPISODIC_COMPRESSED_BUDGET,
-          },
-        );
-      }
-    }
-
-    return { ok: true, data: undefined };
-  }
+function createEpisodicExecHelpers(
+  args: EpisodicServiceArgs,
+  state: EpisodicState,
+  derived: { now: () => number; distillScheduler: (job: () => void) => void; distillLlm: EpisodicServiceArgs['distillLlm'] extends infer T ? NonNullable<T> : never },
+  helpers: ReturnType<typeof createEpisodicSmallHelpers>,
+) {
+  const { knownProjectIds, distillingProjects, distillIoDegradedProjects,
+    retryPendingByProject, pendingEpisodeCountByProject,
+    scheduledBatchDistillProjects, projectMutex } = state;
+  const { now, distillScheduler, distillLlm } = derived;
+  const { emitDistillProgress, logDegradeEvent, isConfidenceInRange,
+    getSemanticRules, normalizeRuleText, clampConfidence,
+    upsertSemanticRule, isDirectContradiction, enqueueConflict } = helpers;
 
   function buildClusters(projectId: string): Array<{
     sceneType: string;
@@ -1669,122 +1640,18 @@ export function createEpisodicMemoryService(args: {
     }
   }
 
-  const service: EpisodicMemoryService = {
-    recordEpisode: async (input) => {
-      const invalid = validateRecordInput(input);
-      if (invalid) {
-        return invalid;
-      }
+  return { buildClusters, executeDistillation, scheduleBatchDistillation, maybeTriggerBatchDistillation };
+}
 
-      return await projectMutex.runExclusive(input.projectId, async () => {
-        const implicit = resolveImplicitFeedback({
-          selectedIndex: input.selectedIndex,
-          candidateCount: input.candidates.length,
-          editDistance: input.editDistance,
-          acceptedWithoutEdit: input.acceptedWithoutEdit,
-          undoAfterAccept: input.undoAfterAccept,
-          repeatedSceneSkillCount: input.repeatedSceneSkillCount,
-        });
-
-        const ts = now();
-        knownProjectIds.add(input.projectId);
-
-        if (input.undoAfterAccept && input.targetEpisodeId) {
-          const updated = args.repository.updateEpisodeSignal({
-            episodeId: input.targetEpisodeId,
-            signal: implicit.signal,
-            weight: implicit.weight,
-            updatedAt: ts,
-          });
-          if (!updated) {
-            return ipcError("NOT_FOUND", "Episode not found", {
-              episodeId: input.targetEpisodeId,
-            });
-          }
-          return {
-            ok: true,
-            data: {
-              accepted: true,
-              episodeId: input.targetEpisodeId,
-              retryCount: 0,
-              implicitSignal: implicit.signal,
-              implicitWeight: implicit.weight,
-            },
-          };
-        }
-
-        const capacity = ensureCapacity(input.projectId);
-        if (!capacity.ok) {
-          return capacity;
-        }
-
-        const episode: EpisodeRecord = {
-          id: randomUUID(),
-          projectId: input.projectId,
-          scope: "project",
-          version: 1,
-          chapterId: input.chapterId,
-          sceneType: input.sceneType,
-          skillUsed: input.skillUsed,
-          inputContext: input.inputContext,
-          candidates: [...input.candidates],
-          selectedIndex: input.selectedIndex,
-          finalText: input.finalText,
-          explicit: input.explicit,
-          editDistance: input.editDistance,
-          implicitSignal: implicit.signal,
-          implicitWeight: implicit.weight,
-          importance: Math.max(0, Math.min(1, input.importance ?? 0.5)),
-          recallCount: 0,
-          compressed: false,
-          userConfirmed: input.userConfirmed ?? false,
-          createdAt: ts,
-          updatedAt: ts,
-        };
-
-        let lastError: unknown = null;
-        for (let attempt = 1; attempt <= MAX_WRITE_ATTEMPTS; attempt += 1) {
-          try {
-            await args.repository.insertEpisode(episode);
-            const pending =
-              (pendingEpisodeCountByProject.get(input.projectId) ?? 0) + 1;
-            pendingEpisodeCountByProject.set(input.projectId, pending);
-            maybeTriggerBatchDistillation(input.projectId);
-            return {
-              ok: true,
-              data: {
-                accepted: true,
-                episodeId: episode.id,
-                retryCount: attempt - 1,
-                implicitSignal: implicit.signal,
-                implicitWeight: implicit.weight,
-              },
-            };
-          } catch (error) {
-            lastError = error;
-            args.logger.error("memory_episode_write_retry", {
-              attempt,
-              message: error instanceof Error ? error.message : String(error),
-              project_id: input.projectId,
-            });
-          }
-        }
-
-        retryQueue.push(input);
-        return ipcError(
-          "MEMORY_EPISODE_WRITE_FAILED",
-          "Failed to record episode after retries",
-          {
-            attempts: MAX_WRITE_ATTEMPTS,
-            message:
-              lastError instanceof Error
-                ? lastError.message
-                : String(lastError),
-          },
-        );
-      });
-    },
-
+function createEpisodicQueryOps(
+  ctx: EpisodicCtx,
+): Pick<
+  EpisodicMemoryService,
+  "queryEpisodes"
+> {
+  const args = ctx;
+  const { now, scoreEpisode, logDegradeEvent, resolveScopePriority, getSemanticRules, toPlaceholder, distillIoDegradedProjects, fallbackRules } = ctx;
+  return {
     queryEpisodes: (input) => {
       if (input.projectId.trim().length === 0) {
         return ipcError("INVALID_ARGUMENT", "projectId is required");
@@ -1904,6 +1771,18 @@ export function createEpisodicMemoryService(args: {
       }
     },
 
+  };
+}
+
+function createEpisodicTriggerOps(
+  ctx: EpisodicCtx,
+): Pick<
+  EpisodicMemoryService,
+  "realtimeEvictionTrigger" | "dailyDecayRecomputeTrigger" | "weeklyCompressTrigger" | "monthlyPurgeTrigger"
+> {
+  const args = ctx;
+  const { now, knownProjectIds, semanticRulesByProject, getSemanticRules, clampConfidence, upsertSemanticRule } = ctx;
+  return {
     realtimeEvictionTrigger: ({ projectId }) => {
       if (projectId.trim().length === 0) {
         return ipcError("INVALID_ARGUMENT", "projectId is required");
@@ -2046,8 +1925,18 @@ export function createEpisodicMemoryService(args: {
       }
     },
 
-    getRetryQueueSize: () => retryQueue.length,
+  };
+}
 
+function createEpisodicSemanticOps(
+  ctx: EpisodicCtx,
+): Pick<
+  EpisodicMemoryService,
+  "listSemanticMemory" | "addSemanticMemory" | "updateSemanticMemory" | "deleteSemanticMemory" | "promoteSemanticMemory"
+> {
+  const args = ctx;
+  const { knownProjectIds, getSemanticRules, cloneSemanticRule, getConflictQueue, cloneConflict, normalizeRuleText, isConfidenceInRange, upsertSemanticRule, now, semanticRulesByProject, invalidateSemanticCache } = ctx;
+  return {
     listSemanticMemory: ({ projectId }) => {
       if (projectId.trim().length === 0) {
         return ipcError("INVALID_ARGUMENT", "projectId is required");
@@ -2189,6 +2078,20 @@ export function createEpisodicMemoryService(args: {
       return { ok: true, data: { item } };
     },
 
+  };
+}
+
+function createEpisodicManagementOps(
+  ctx: EpisodicCtx,
+): Pick<
+  EpisodicMemoryService,
+  "getRetryQueueSize" | "clearProjectMemory" | "clearAllMemory" | "distillSemanticMemory" | "listConflictQueue"
+> {
+  const args = ctx;
+  const { retryQueue, semanticRulesByProject, conflictQueueByProject, knownProjectIds, pendingEpisodeCountByProject, retryPendingByProject, scheduledBatchDistillProjects, distillIoDegradedProjects, distillingProjects, projectMutex, executeDistillation, getConflictQueue, cloneConflict } = ctx;
+  return {
+    getRetryQueueSize: () => retryQueue.length,
+
     clearProjectMemory: ({ projectId, confirmed }) => {
       if (projectId.trim().length === 0) {
         return ipcError("INVALID_ARGUMENT", "projectId is required");
@@ -2305,6 +2208,237 @@ export function createEpisodicMemoryService(args: {
         },
       };
     },
+  };
+}
+
+export function createEpisodicMemoryService(args: EpisodicServiceArgs): EpisodicMemoryService {
+  const now = args.now ?? (() => Date.now());
+  const distillScheduler =
+    args.distillScheduler ?? ((job: () => void) => queueMicrotask(job));
+  const retryQueue: EpisodeRecordInput[] = [];
+  const knownProjectIds = new Set<string>();
+  const pendingEpisodeCountByProject = new Map<string, number>();
+  const retryPendingByProject = new Map<string, boolean>();
+  const distillingProjects = new Set<string>();
+  const scheduledBatchDistillProjects = new Set<string>();
+  const projectMutex = createKeyedMutex();
+  const semanticRulesByProject = new Map<string, SemanticMemoryRule[]>();
+  const conflictQueueByProject = new Map<string, SemanticConflictQueueItem[]>();
+  const distillIoDegradedProjects = new Set<string>();
+
+
+  const state: EpisodicState = {
+    retryQueue,
+    knownProjectIds,
+    pendingEpisodeCountByProject,
+    retryPendingByProject,
+    distillingProjects,
+    scheduledBatchDistillProjects,
+    projectMutex,
+    semanticRulesByProject,
+    conflictQueueByProject,
+    distillIoDegradedProjects,
+  };
+
+  const smallHelpers = createEpisodicSmallHelpers(args, state, now);
+  const distillLlm = args.distillLlm ?? smallHelpers.defaultDistillLlm;
+  const derived = { now, distillScheduler, distillLlm };
+  const execHelpers = createEpisodicExecHelpers(args, state, derived, smallHelpers);
+
+  const { validateRecordInput, maybeTriggerBatchDistillation } = { ...smallHelpers, ...execHelpers };
+
+  function ensureCapacity(projectId: string): ServiceResult<void> {
+    const eviction = service.realtimeEvictionTrigger({ projectId });
+    if (!eviction.ok) {
+      return eviction;
+    }
+
+    const activeCount = args.repository.countEpisodes({
+      projectId,
+      compressed: false,
+    });
+
+    if (activeCount >= EPISODIC_ACTIVE_BUDGET) {
+      const overflow = activeCount - EPISODIC_ACTIVE_BUDGET + 1;
+      const deleted = args.repository.deleteLruEpisodes({
+        projectId,
+        compressed: false,
+        overflow,
+      });
+      const afterDelete = activeCount - deleted;
+      if (afterDelete >= EPISODIC_ACTIVE_BUDGET) {
+        return ipcError(
+          "MEMORY_CAPACITY_EXCEEDED",
+          "Active episodic memory budget exceeded",
+          {
+            projectId,
+            activeCount: afterDelete,
+            budget: EPISODIC_ACTIVE_BUDGET,
+          },
+        );
+      }
+    }
+
+    const compressedCount = args.repository.countEpisodes({
+      projectId,
+      compressed: true,
+    });
+    if (compressedCount > EPISODIC_COMPRESSED_BUDGET) {
+      const purge = service.monthlyPurgeTrigger({ projectId });
+      if (!purge.ok) {
+        return purge;
+      }
+      const afterPurge = args.repository.countEpisodes({
+        projectId,
+        compressed: true,
+      });
+      if (afterPurge > EPISODIC_COMPRESSED_BUDGET) {
+        return ipcError(
+          "MEMORY_CAPACITY_EXCEEDED",
+          "Compressed episodic memory budget exceeded",
+          {
+            projectId,
+            compressedCount: afterPurge,
+            budget: EPISODIC_COMPRESSED_BUDGET,
+          },
+        );
+      }
+    }
+
+    return { ok: true, data: undefined };
+  }
+
+  const ctx: EpisodicCtx = {
+    repository: args.repository,
+    logger: args.logger,
+    semanticRecall: args.semanticRecall,
+    now,
+    ...state,
+    ...smallHelpers,
+    ...execHelpers,
+  };
+
+  const service: EpisodicMemoryService = {
+    recordEpisode: async (input) => {
+      const invalid = validateRecordInput(input);
+      if (invalid) {
+        return invalid;
+      }
+
+      return await projectMutex.runExclusive(input.projectId, async () => {
+        const implicit = resolveImplicitFeedback({
+          selectedIndex: input.selectedIndex,
+          candidateCount: input.candidates.length,
+          editDistance: input.editDistance,
+          acceptedWithoutEdit: input.acceptedWithoutEdit,
+          undoAfterAccept: input.undoAfterAccept,
+          repeatedSceneSkillCount: input.repeatedSceneSkillCount,
+        });
+
+        const ts = now();
+        knownProjectIds.add(input.projectId);
+
+        if (input.undoAfterAccept && input.targetEpisodeId) {
+          const updated = args.repository.updateEpisodeSignal({
+            episodeId: input.targetEpisodeId,
+            signal: implicit.signal,
+            weight: implicit.weight,
+            updatedAt: ts,
+          });
+          if (!updated) {
+            return ipcError("NOT_FOUND", "Episode not found", {
+              episodeId: input.targetEpisodeId,
+            });
+          }
+          return {
+            ok: true,
+            data: {
+              accepted: true,
+              episodeId: input.targetEpisodeId,
+              retryCount: 0,
+              implicitSignal: implicit.signal,
+              implicitWeight: implicit.weight,
+            },
+          };
+        }
+
+        const capacity = ensureCapacity(input.projectId);
+        if (!capacity.ok) {
+          return capacity;
+        }
+
+        const episode: EpisodeRecord = {
+          id: randomUUID(),
+          projectId: input.projectId,
+          scope: "project",
+          version: 1,
+          chapterId: input.chapterId,
+          sceneType: input.sceneType,
+          skillUsed: input.skillUsed,
+          inputContext: input.inputContext,
+          candidates: [...input.candidates],
+          selectedIndex: input.selectedIndex,
+          finalText: input.finalText,
+          explicit: input.explicit,
+          editDistance: input.editDistance,
+          implicitSignal: implicit.signal,
+          implicitWeight: implicit.weight,
+          importance: Math.max(0, Math.min(1, input.importance ?? 0.5)),
+          recallCount: 0,
+          compressed: false,
+          userConfirmed: input.userConfirmed ?? false,
+          createdAt: ts,
+          updatedAt: ts,
+        };
+
+        let lastError: unknown = null;
+        for (let attempt = 1; attempt <= MAX_WRITE_ATTEMPTS; attempt += 1) {
+          try {
+            await args.repository.insertEpisode(episode);
+            const pending =
+              (pendingEpisodeCountByProject.get(input.projectId) ?? 0) + 1;
+            pendingEpisodeCountByProject.set(input.projectId, pending);
+            maybeTriggerBatchDistillation(input.projectId);
+            return {
+              ok: true,
+              data: {
+                accepted: true,
+                episodeId: episode.id,
+                retryCount: attempt - 1,
+                implicitSignal: implicit.signal,
+                implicitWeight: implicit.weight,
+              },
+            };
+          } catch (error) {
+            lastError = error;
+            args.logger.error("memory_episode_write_retry", {
+              attempt,
+              message: error instanceof Error ? error.message : String(error),
+              project_id: input.projectId,
+            });
+          }
+        }
+
+        retryQueue.push(input);
+        return ipcError(
+          "MEMORY_EPISODE_WRITE_FAILED",
+          "Failed to record episode after retries",
+          {
+            attempts: MAX_WRITE_ATTEMPTS,
+            message:
+              lastError instanceof Error
+                ? lastError.message
+                : String(lastError),
+          },
+        );
+      });
+    },
+
+
+    ...createEpisodicQueryOps(ctx),
+    ...createEpisodicTriggerOps(ctx),
+    ...createEpisodicSemanticOps(ctx),
+    ...createEpisodicManagementOps(ctx),
   };
 
   return service;

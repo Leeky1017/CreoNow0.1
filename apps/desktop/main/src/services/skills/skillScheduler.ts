@@ -195,6 +195,165 @@ function toQueueStatus(args: {
   };
 }
 
+function driveTaskSettlement(ctx: {
+  task: SkillTask<unknown>;
+  started: SkillTaskStartResult<unknown>;
+  logger: SchedulerLogger;
+  slotRecoveryTimeoutMs: number;
+  onFinalize: (terminal: SkillSchedulerTerminal) => void;
+}): void {
+  let resolved = false;
+  let finalized = false;
+  let slotRecoveryTimer: ReturnType<typeof setTimeout> | null = null;
+  let responseState: ResponseSettleState = { kind: "pending" };
+  let completionState: CompletionSettleState = { kind: "pending" };
+  const resolveResultOnce = (result: ServiceResult<unknown>): void => {
+    if (resolved) {
+      return;
+    }
+    resolved = true;
+    ctx.task.resolveResult(result);
+  };
+  const finalizeOnce = (terminal: SkillSchedulerTerminal): void => {
+    if (finalized) {
+      return;
+    }
+    finalized = true;
+    if (slotRecoveryTimer) {
+      clearTimeout(slotRecoveryTimer);
+      slotRecoveryTimer = null;
+    }
+    ctx.onFinalize(terminal);
+  };
+  const completionTerminalResultError = (): Err | null => {
+    if (completionState.kind !== "settled") {
+      return null;
+    }
+    return buildTerminalResultError({
+      task: ctx.task,
+      terminal: completionState.terminal,
+    });
+  };
+  const resolveWithResponsePriority = (
+    result: ServiceResult<unknown>,
+  ): void => {
+    if (result.ok) {
+      const terminalError = completionTerminalResultError();
+      if (terminalError) {
+        resolveResultOnce(terminalError);
+        return;
+      }
+    }
+    if (
+      result.ok &&
+      completionState.kind === "errored" &&
+      responseState.kind === "settled"
+    ) {
+      resolveResultOnce(completionState.failure);
+      return;
+    }
+    resolveResultOnce(result);
+  };
+  const settleTerminalIfPossible = (): void => {
+    if (responseState.kind === "errored") {
+      finalizeOnce("failed");
+      return;
+    }
+    if (responseState.kind === "settled" && !responseState.result.ok) {
+      finalizeOnce("failed");
+      return;
+    }
+    if (completionState.kind === "errored") {
+      finalizeOnce("failed");
+      return;
+    }
+    if (
+      completionState.kind === "settled" &&
+      completionState.terminal !== "completed" &&
+      responseState.kind === "pending"
+    ) {
+      if (
+        completionState.terminal === "cancelled" ||
+        completionState.terminal === "timeout"
+      ) {
+        const terminalError = completionTerminalResultError();
+        if (terminalError) {
+          resolveResultOnce(terminalError);
+        }
+        finalizeOnce(completionState.terminal);
+      }
+      return;
+    }
+    if (
+      responseState.kind === "settled" &&
+      completionState.kind === "settled"
+    ) {
+      finalizeOnce(completionState.terminal);
+    }
+  };
+
+  slotRecoveryTimer = setTimeout(() => {
+    if (finalized) {
+      return;
+    }
+    const timeoutError = buildTerminalResultError({
+      task: ctx.task,
+      terminal: "timeout",
+    });
+    if (timeoutError) {
+      resolveResultOnce(timeoutError);
+    }
+    finalizeOnce("timeout");
+  }, ctx.slotRecoveryTimeoutMs);
+
+  void ctx.started.response
+    .then((result) => {
+      responseState = { kind: "settled", result };
+      if (result.ok && completionState.kind === "pending") {
+        queueMicrotask(() => {
+          resolveWithResponsePriority(result);
+          settleTerminalIfPossible();
+        });
+        return;
+      }
+      resolveWithResponsePriority(result);
+      settleTerminalIfPossible();
+    })
+    .catch((error) => {
+      responseState = {
+        kind: "errored",
+        failure: buildTaskPathError({
+          logger: ctx.logger,
+          task: ctx.task,
+          errorSource: "response",
+          error,
+        }),
+      };
+      const terminalError = completionTerminalResultError();
+      resolveResultOnce(terminalError ?? responseState.failure);
+      settleTerminalIfPossible();
+    });
+
+  void ctx.started.completion
+    .then((terminal) => {
+      completionState = { kind: "settled", terminal };
+      settleTerminalIfPossible();
+    })
+    .catch((error) => {
+      completionState = {
+        kind: "errored",
+        failure: buildTaskPathError({
+          logger: ctx.logger,
+          task: ctx.task,
+          errorSource: "completion",
+          error,
+        }),
+      };
+      resolveResultOnce(completionState.failure);
+      settleTerminalIfPossible();
+    });
+}
+
 /**
  * Create a queue-backed scheduler for skill execution.
  *
@@ -357,101 +516,11 @@ export function createSkillScheduler(args?: {
     globalRunning += 1;
     emitQueueStatus(task, "started", 0, state.pending.length);
 
-    let resolved = false;
-    let finalized = false;
-    let slotRecoveryTimer: ReturnType<typeof setTimeout> | null = null;
-    let responseState: ResponseSettleState = { kind: "pending" };
-    let completionState: CompletionSettleState = { kind: "pending" };
-    const resolveResultOnce = (result: ServiceResult<unknown>): void => {
-      if (resolved) {
-        return;
-      }
-      resolved = true;
-      task.resolveResult(result);
-    };
-    const finalizeOnce = (terminal: SkillSchedulerTerminal): void => {
-      if (finalized) {
-        return;
-      }
-      finalized = true;
-      if (slotRecoveryTimer) {
-        clearTimeout(slotRecoveryTimer);
-        slotRecoveryTimer = null;
-      }
-      finalizeTask(sessionKey, task, terminal);
-    };
-    const completionTerminalResultError = (): Err | null => {
-      if (completionState.kind !== "settled") {
-        return null;
-      }
-      return buildTerminalResultError({
-        task,
-        terminal: completionState.terminal,
-      });
-    };
-    const resolveWithResponsePriority = (
-      result: ServiceResult<unknown>,
-    ): void => {
-      if (result.ok) {
-        const terminalError = completionTerminalResultError();
-        if (terminalError) {
-          resolveResultOnce(terminalError);
-          return;
-        }
-      }
-      if (
-        result.ok &&
-        completionState.kind === "errored" &&
-        responseState.kind === "settled"
-      ) {
-        resolveResultOnce(completionState.failure);
-        return;
-      }
-      resolveResultOnce(result);
-    };
-    const settleTerminalIfPossible = (): void => {
-      if (responseState.kind === "errored") {
-        finalizeOnce("failed");
-        return;
-      }
-      if (responseState.kind === "settled" && !responseState.result.ok) {
-        finalizeOnce("failed");
-        return;
-      }
-      if (completionState.kind === "errored") {
-        finalizeOnce("failed");
-        return;
-      }
-      if (
-        completionState.kind === "settled" &&
-        completionState.terminal !== "completed" &&
-        responseState.kind === "pending"
-      ) {
-        if (
-          completionState.terminal === "cancelled" ||
-          completionState.terminal === "timeout"
-        ) {
-          const terminalError = completionTerminalResultError();
-          if (terminalError) {
-            resolveResultOnce(terminalError);
-          }
-          finalizeOnce(completionState.terminal);
-        }
-        return;
-      }
-      if (
-        responseState.kind === "settled" &&
-        completionState.kind === "settled"
-      ) {
-        finalizeOnce(completionState.terminal);
-      }
-    };
-
     let started: SkillTaskStartResult<unknown>;
     try {
       started = task.start();
     } catch (error) {
-      resolveResultOnce(
+      task.resolveResult(
         ipcError("INTERNAL", "Skill scheduler failed to start task", {
           sessionKey: task.sessionKey,
           taskId: task.runId,
@@ -461,72 +530,17 @@ export function createSkillScheduler(args?: {
             : {}),
         }),
       );
-      finalizeOnce("failed");
+      finalizeTask(sessionKey, task, "failed");
       return;
     }
 
-    if (!slotRecoveryTimer) {
-      slotRecoveryTimer = setTimeout(() => {
-        if (finalized) {
-          return;
-        }
-        const timeoutError = buildTerminalResultError({
-          task,
-          terminal: "timeout",
-        });
-        if (timeoutError) {
-          resolveResultOnce(timeoutError);
-        }
-        finalizeOnce("timeout");
-      }, slotRecoveryTimeoutMs);
-    }
-
-    void started.response
-      .then((result) => {
-        responseState = { kind: "settled", result };
-        if (result.ok && completionState.kind === "pending") {
-          queueMicrotask(() => {
-            resolveWithResponsePriority(result);
-            settleTerminalIfPossible();
-          });
-          return;
-        }
-        resolveWithResponsePriority(result);
-        settleTerminalIfPossible();
-      })
-      .catch((error) => {
-        responseState = {
-          kind: "errored",
-          failure: buildTaskPathError({
-            logger,
-            task,
-            errorSource: "response",
-            error,
-          }),
-        };
-        const terminalError = completionTerminalResultError();
-        resolveResultOnce(terminalError ?? responseState.failure);
-        settleTerminalIfPossible();
-      });
-
-    void started.completion
-      .then((terminal) => {
-        completionState = { kind: "settled", terminal };
-        settleTerminalIfPossible();
-      })
-      .catch((error) => {
-        completionState = {
-          kind: "errored",
-          failure: buildTaskPathError({
-            logger,
-            task,
-            errorSource: "completion",
-            error,
-          }),
-        };
-        resolveResultOnce(completionState.failure);
-        settleTerminalIfPossible();
-      });
+    driveTaskSettlement({
+      task,
+      started,
+      logger,
+      slotRecoveryTimeoutMs,
+      onFinalize: (terminal) => finalizeTask(sessionKey, task, terminal),
+    });
   }
 
   function pump(): void {

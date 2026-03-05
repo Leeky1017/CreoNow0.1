@@ -109,18 +109,19 @@ function endStream(stream: NodeJS.WritableStream): Promise<void> {
   });
 }
 
-/**
- * Create an export service that writes files under the app's userData directory.
- */
-export function createExportService(deps: {
+type ExportDeps = {
   db: Database.Database;
   logger: Logger;
   userDataDir: string;
-}): ExportService {
-  async function resolveDocumentId(args: {
-    projectId: string;
-    documentId?: string;
-  }): Promise<ServiceResult<{ documentId: string }>> {
+};
+
+type ResolveDocFn = (args: {
+  projectId: string;
+  documentId?: string;
+}) => Promise<ServiceResult<{ documentId: string }>>;
+
+function resolveDocumentId(deps: ExportDeps): ResolveDocFn {
+  return async (args) => {
     const trimmed = args.documentId?.trim();
     if (typeof trimmed === "string" && trimmed.length > 0) {
       return { ok: true, data: { documentId: trimmed } };
@@ -135,7 +136,13 @@ export function createExportService(deps: {
       return current;
     }
     return { ok: true, data: { documentId: current.data.documentId } };
-  }
+  };
+}
+
+function createTextExportOps(
+  deps: ExportDeps,
+  resolve: ResolveDocFn,
+): Pick<ExportService, "exportMarkdown" | "exportTxt"> {
 
   async function exportMarkdown(args: {
     projectId: string;
@@ -146,7 +153,7 @@ export function createExportService(deps: {
       return ipcError("INVALID_ARGUMENT", "projectId is required");
     }
 
-    const docIdRes = await resolveDocumentId({
+    const docIdRes = await resolve({
       projectId,
       documentId: args.documentId,
     });
@@ -219,7 +226,7 @@ export function createExportService(deps: {
       return ipcError("INVALID_ARGUMENT", "projectId is required");
     }
 
-    const docIdRes = await resolveDocumentId({
+    const docIdRes = await resolve({
       projectId,
       documentId: args.documentId,
     });
@@ -282,6 +289,219 @@ export function createExportService(deps: {
       return ipcError("IO_ERROR", "Failed to write export file");
     }
   }
+
+  return { exportMarkdown, exportTxt };
+}
+
+function createBinaryExportOps(
+  deps: ExportDeps,
+  resolve: ResolveDocFn,
+): Pick<ExportService, "exportPdf" | "exportDocx"> {
+  async function exportPdf(args: {
+    projectId: string;
+    documentId?: string;
+  }): Promise<ServiceResult<ExportResult>> {
+    const projectId = args.projectId.trim();
+    if (projectId.length === 0) {
+      return ipcError("INVALID_ARGUMENT", "projectId is required");
+    }
+
+    const docIdRes = await resolve({
+      projectId,
+      documentId: args.documentId,
+    });
+    if (!docIdRes.ok) {
+      return docIdRes;
+    }
+
+    const documentId = docIdRes.data.documentId.trim();
+    if (!isSafePathSegment(projectId) || !isSafePathSegment(documentId)) {
+      return ipcError("INVALID_ARGUMENT", "Unsafe export path segments");
+    }
+
+    const relativeParts = ["exports", projectId, `${documentId}.pdf`];
+    const relativePath = relativeParts.join("/");
+    const absPath = path.join(deps.userDataDir, ...relativeParts);
+
+    deps.logger.info("export_started", {
+      format: "pdf",
+      documentId,
+      relativePath,
+    });
+
+    try {
+      const docSvc = createDocumentService({
+        db: deps.db,
+        logger: deps.logger,
+      });
+      const doc = docSvc.read({ projectId, documentId });
+      if (!doc.ok) {
+        return doc;
+      }
+
+      let bytesWritten = 0;
+      await atomicWrite({
+        targetPath: absPath,
+        writeTemp: async (tempPath) => {
+          bytesWritten = await new Promise<number>((resolve2, reject) => {
+            const pdfDoc = new PDFDocument({
+              size: "A4",
+              margins: { top: 72, bottom: 72, left: 72, right: 72 },
+            });
+
+            const stream = createWriteStream(tempPath);
+            let size = 0;
+
+            stream.on("error", reject);
+            stream.on("finish", () => resolve2(size));
+
+            pdfDoc.on("data", (chunk: Buffer) => {
+              size += chunk.length;
+            });
+            pdfDoc.on("error", reject);
+
+            pdfDoc.pipe(stream);
+
+            pdfDoc
+              .font("Helvetica-Bold")
+              .fontSize(24)
+              .text(doc.data.title, { align: "left" });
+            pdfDoc.moveDown(2);
+
+            pdfDoc.font("Helvetica").fontSize(12).text(doc.data.contentText, {
+              align: "left",
+              lineGap: 4,
+            });
+
+            pdfDoc.end();
+          });
+        },
+      });
+
+      deps.logger.info("export_succeeded", {
+        format: "pdf",
+        documentId,
+        relativePath,
+        bytesWritten,
+      });
+
+      return { ok: true, data: { relativePath, bytesWritten } };
+    } catch (error) {
+      deps.logger.error("export_failed", {
+        code: "IO_ERROR",
+        message: error instanceof Error ? error.message : String(error),
+        format: "pdf",
+        documentId,
+      });
+      return ipcError("IO_ERROR", "Failed to write PDF export file");
+    }
+  }
+
+  async function exportDocx(args: {
+    projectId: string;
+    documentId?: string;
+  }): Promise<ServiceResult<ExportResult>> {
+    const projectId = args.projectId.trim();
+    if (projectId.length === 0) {
+      return ipcError("INVALID_ARGUMENT", "projectId is required");
+    }
+
+    const docIdRes = await resolve({
+      projectId,
+      documentId: args.documentId,
+    });
+    if (!docIdRes.ok) {
+      return docIdRes;
+    }
+
+    const documentId = docIdRes.data.documentId.trim();
+    if (!isSafePathSegment(projectId) || !isSafePathSegment(documentId)) {
+      return ipcError("INVALID_ARGUMENT", "Unsafe export path segments");
+    }
+
+    const relativeParts = ["exports", projectId, `${documentId}.docx`];
+    const relativePath = relativeParts.join("/");
+    const absPath = path.join(deps.userDataDir, ...relativeParts);
+
+    deps.logger.info("export_started", {
+      format: "docx",
+      documentId,
+      relativePath,
+    });
+
+    try {
+      const docSvc = createDocumentService({
+        db: deps.db,
+        logger: deps.logger,
+      });
+      const docData = docSvc.read({ projectId, documentId });
+      if (!docData.ok) {
+        return docData;
+      }
+
+      const paragraphs: Paragraph[] = [];
+
+      paragraphs.push(
+        new Paragraph({
+          text: docData.data.title,
+          heading: HeadingLevel.TITLE,
+        }),
+      );
+
+      const lines = docData.data.contentText.split(/\n+/);
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.length === 0) {
+          paragraphs.push(new Paragraph({ children: [] }));
+        } else {
+          paragraphs.push(
+            new Paragraph({
+              children: [new TextRun(trimmed)],
+            }),
+          );
+        }
+      }
+
+      const docx = new Document({
+        sections: [{ children: paragraphs }],
+      });
+
+      const buffer = await Packer.toBuffer(docx);
+      await atomicWrite({
+        targetPath: absPath,
+        writeTemp: async (tempPath) => {
+          await fs.writeFile(tempPath, buffer);
+        },
+      });
+
+      const bytesWritten = buffer.length;
+      deps.logger.info("export_succeeded", {
+        format: "docx",
+        documentId,
+        relativePath,
+        bytesWritten,
+      });
+
+      return { ok: true, data: { relativePath, bytesWritten } };
+    } catch (error) {
+      deps.logger.error("export_failed", {
+        code: "IO_ERROR",
+        message: error instanceof Error ? error.message : String(error),
+        format: "docx",
+        documentId,
+      });
+      return ipcError("IO_ERROR", "Failed to write DOCX export file");
+    }
+  }
+
+  return { exportPdf, exportDocx };
+}
+
+/**
+ * Create an export service that writes files under the app's userData directory.
+ */
+export function createExportService(deps: ExportDeps): ExportService {
+  const resolve = resolveDocumentId(deps);
 
   async function exportProjectBundle(args: {
     projectId: string;
@@ -385,211 +605,9 @@ export function createExportService(deps: {
     }
   }
 
-  async function exportPdf(args: {
-    projectId: string;
-    documentId?: string;
-  }): Promise<ServiceResult<ExportResult>> {
-    const projectId = args.projectId.trim();
-    if (projectId.length === 0) {
-      return ipcError("INVALID_ARGUMENT", "projectId is required");
-    }
-
-    const docIdRes = await resolveDocumentId({
-      projectId,
-      documentId: args.documentId,
-    });
-    if (!docIdRes.ok) {
-      return docIdRes;
-    }
-
-    const documentId = docIdRes.data.documentId.trim();
-    if (!isSafePathSegment(projectId) || !isSafePathSegment(documentId)) {
-      return ipcError("INVALID_ARGUMENT", "Unsafe export path segments");
-    }
-
-    const relativeParts = ["exports", projectId, `${documentId}.pdf`];
-    const relativePath = relativeParts.join("/");
-    const absPath = path.join(deps.userDataDir, ...relativeParts);
-
-    deps.logger.info("export_started", {
-      format: "pdf",
-      documentId,
-      relativePath,
-    });
-
-    try {
-      const docSvc = createDocumentService({
-        db: deps.db,
-        logger: deps.logger,
-      });
-      const doc = docSvc.read({ projectId, documentId });
-      if (!doc.ok) {
-        return doc;
-      }
-
-      let bytesWritten = 0;
-      await atomicWrite({
-        targetPath: absPath,
-        writeTemp: async (tempPath) => {
-          bytesWritten = await new Promise<number>((resolve, reject) => {
-            const pdfDoc = new PDFDocument({
-              size: "A4",
-              margins: { top: 72, bottom: 72, left: 72, right: 72 },
-            });
-
-            const stream = createWriteStream(tempPath);
-            let size = 0;
-
-            stream.on("error", reject);
-            stream.on("finish", () => resolve(size));
-
-            pdfDoc.on("data", (chunk: Buffer) => {
-              size += chunk.length;
-            });
-            pdfDoc.on("error", reject);
-
-            pdfDoc.pipe(stream);
-
-            pdfDoc
-              .font("Helvetica-Bold")
-              .fontSize(24)
-              .text(doc.data.title, { align: "left" });
-            pdfDoc.moveDown(2);
-
-            pdfDoc.font("Helvetica").fontSize(12).text(doc.data.contentText, {
-              align: "left",
-              lineGap: 4,
-            });
-
-            pdfDoc.end();
-          });
-        },
-      });
-
-      deps.logger.info("export_succeeded", {
-        format: "pdf",
-        documentId,
-        relativePath,
-        bytesWritten,
-      });
-
-      return { ok: true, data: { relativePath, bytesWritten } };
-    } catch (error) {
-      deps.logger.error("export_failed", {
-        code: "IO_ERROR",
-        message: error instanceof Error ? error.message : String(error),
-        format: "pdf",
-        documentId,
-      });
-      return ipcError("IO_ERROR", "Failed to write PDF export file");
-    }
-  }
-
-  async function exportDocx(args: {
-    projectId: string;
-    documentId?: string;
-  }): Promise<ServiceResult<ExportResult>> {
-    const projectId = args.projectId.trim();
-    if (projectId.length === 0) {
-      return ipcError("INVALID_ARGUMENT", "projectId is required");
-    }
-
-    const docIdRes = await resolveDocumentId({
-      projectId,
-      documentId: args.documentId,
-    });
-    if (!docIdRes.ok) {
-      return docIdRes;
-    }
-
-    const documentId = docIdRes.data.documentId.trim();
-    if (!isSafePathSegment(projectId) || !isSafePathSegment(documentId)) {
-      return ipcError("INVALID_ARGUMENT", "Unsafe export path segments");
-    }
-
-    const relativeParts = ["exports", projectId, `${documentId}.docx`];
-    const relativePath = relativeParts.join("/");
-    const absPath = path.join(deps.userDataDir, ...relativeParts);
-
-    deps.logger.info("export_started", {
-      format: "docx",
-      documentId,
-      relativePath,
-    });
-
-    try {
-      const docSvc = createDocumentService({
-        db: deps.db,
-        logger: deps.logger,
-      });
-      const docData = docSvc.read({ projectId, documentId });
-      if (!docData.ok) {
-        return docData;
-      }
-
-      // Parse content and create DOCX paragraphs
-      const paragraphs: Paragraph[] = [];
-
-      // Add title
-      paragraphs.push(
-        new Paragraph({
-          text: docData.data.title,
-          heading: HeadingLevel.TITLE,
-        }),
-      );
-
-      // Add content (split by newlines)
-      const lines = docData.data.contentText.split(/\n+/);
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.length === 0) {
-          paragraphs.push(new Paragraph({ children: [] }));
-        } else {
-          paragraphs.push(
-            new Paragraph({
-              children: [new TextRun(trimmed)],
-            }),
-          );
-        }
-      }
-
-      const docx = new Document({
-        sections: [{ children: paragraphs }],
-      });
-
-      const buffer = await Packer.toBuffer(docx);
-      await atomicWrite({
-        targetPath: absPath,
-        writeTemp: async (tempPath) => {
-          await fs.writeFile(tempPath, buffer);
-        },
-      });
-
-      const bytesWritten = buffer.length;
-      deps.logger.info("export_succeeded", {
-        format: "docx",
-        documentId,
-        relativePath,
-        bytesWritten,
-      });
-
-      return { ok: true, data: { relativePath, bytesWritten } };
-    } catch (error) {
-      deps.logger.error("export_failed", {
-        code: "IO_ERROR",
-        message: error instanceof Error ? error.message : String(error),
-        format: "docx",
-        documentId,
-      });
-      return ipcError("IO_ERROR", "Failed to write DOCX export file");
-    }
-  }
-
   return {
-    exportMarkdown,
+    ...createTextExportOps(deps, resolve),
+    ...createBinaryExportOps(deps, resolve),
     exportProjectBundle,
-    exportTxt,
-    exportPdf,
-    exportDocx,
   };
 }

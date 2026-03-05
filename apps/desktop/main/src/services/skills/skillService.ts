@@ -810,6 +810,629 @@ function removeSkillContent(filePath: string): ServiceResult<true> {
   }
 }
 
+type LoadedResult = {
+  skills: LoadedSkill[];
+  enabledMap: Map<string, boolean>;
+  currentProjectId: string | null;
+  roots: {
+    builtinSkillsDir: string;
+    globalSkillsDir: string;
+    projectSkillsDir: string | null;
+  };
+};
+
+type SkillServiceCtx = {
+  db: Database.Database;
+  logger: Logger;
+  skillFileIo: SkillFileIo;
+  resolveLoaded: () => ServiceResult<LoadedResult>;
+  invalidateCache: () => void;
+};
+
+async function executeSkillWrite(
+  ctx: SkillServiceCtx,
+  { id, content }: { id: string; content: string },
+): Promise<ServiceResult<SkillWriteResult>> {
+  if (id.trim().length === 0) {
+    return ipcError("INVALID_ARGUMENT", "id is required", {
+      fieldName: "id",
+    });
+  }
+  if (content.length === 0) {
+    return ipcError("INVALID_ARGUMENT", "content is required", {
+      fieldName: "content",
+    });
+  }
+
+  const loaded = ctx.resolveLoaded();
+  if (!loaded.ok) {
+    return loaded;
+  }
+
+  const skill = loaded.data.skills.find((s) => s.id === id) ?? null;
+  if (!skill) {
+    return ipcError("NOT_FOUND", "Skill not found", { id });
+  }
+
+  const projectAvailable = loaded.data.roots.projectSkillsDir !== null;
+  const targetScope: SkillScope =
+    skill.scope === "project" || skill.scope === "global"
+      ? skill.scope
+      : projectAvailable
+        ? "project"
+        : "global";
+
+  const targetRoot =
+    targetScope === "project"
+      ? loaded.data.roots.projectSkillsDir
+      : loaded.data.roots.globalSkillsDir;
+  if (targetRoot === null) {
+    return ipcError(
+      "NOT_FOUND",
+      "No current project for project skill write",
+    );
+  }
+
+  const srcRoot =
+    skill.scope === "project"
+      ? loaded.data.roots.projectSkillsDir
+      : skill.scope === "global"
+        ? loaded.data.roots.globalSkillsDir
+        : loaded.data.roots.builtinSkillsDir;
+  if (srcRoot === null) {
+    return ipcError("INTERNAL", "Missing source root for skill");
+  }
+
+  const ref = toScopeFileRef({
+    skill,
+    scope: targetScope,
+    srcRoot,
+    destRoot: targetRoot,
+  });
+  if (!ref.ok) {
+    return ref;
+  }
+
+  const written = await ctx.skillFileIo.write({
+    filePath: ref.data.filePath,
+    content,
+  });
+  if (!written.ok) {
+    return written;
+  }
+
+  const reloaded = loadSkillFile({ ref: ref.data });
+  const enabledMapRes = readEnabledMap(ctx.db);
+  if (!enabledMapRes.ok) {
+    return enabledMapRes;
+  }
+  const upserted = upsertSkillRows({
+    db: ctx.db,
+    skills: [reloaded],
+    enabledMap: enabledMapRes.data,
+  });
+  if (!upserted.ok) {
+    return upserted;
+  }
+
+  ctx.invalidateCache();
+
+  return { ok: true, data: { id, scope: targetScope, written: true } };
+}
+
+function executeSkillToggle(
+  ctx: SkillServiceCtx,
+  { id, enabled }: { id: string; enabled: boolean },
+): ServiceResult<SkillToggleResult> {
+  if (id.trim().length === 0) {
+    return ipcError("INVALID_ARGUMENT", "id is required", {
+      fieldName: "id",
+    });
+  }
+
+  const normalizedCustomId = normalizeCustomSkillId(id);
+
+  const loaded = ctx.resolveLoaded();
+  if (!loaded.ok) {
+    return loaded;
+  }
+
+  const custom = readCustomSkillById({
+    db: ctx.db,
+    currentProjectId: loaded.data.currentProjectId,
+    id: normalizedCustomId,
+  });
+  if (!custom.ok) {
+    return custom;
+  }
+  if (custom.data) {
+    try {
+      ctx.db
+        .prepare(
+          "UPDATE custom_skills SET enabled = ?, updated_at = ? WHERE id = ?",
+        )
+        .run(enabled ? 1 : 0, nowTs(), custom.data.id);
+      return {
+        ok: true,
+        data: {
+          id: encodeCustomListId(custom.data.id),
+          enabled,
+        },
+      };
+    } catch (error) {
+      return ipcError(
+        "DB_ERROR",
+        "Failed to toggle custom skill",
+        error instanceof Error ? { message: error.message } : { error },
+      );
+    }
+  }
+
+  const skill = loaded.data.skills.find((s) => s.id === id) ?? null;
+  if (!skill) {
+    return ipcError("NOT_FOUND", "Skill not found", { id });
+  }
+
+  try {
+    const ts = nowTs();
+    ctx.db
+      .prepare(
+        "INSERT INTO skills (skill_id, enabled, valid, error_code, error_message, updated_at) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(skill_id) DO UPDATE SET enabled = excluded.enabled, updated_at = excluded.updated_at",
+      )
+      .run(
+        id,
+        enabled ? 1 : 0,
+        skill.valid ? 1 : 0,
+        skill.valid ? null : (skill.error_code ?? "INVALID_ARGUMENT"),
+        skill.valid ? null : (skill.error_message ?? "Invalid skill"),
+        ts,
+      );
+
+    ctx.logger.info("skill_toggled", { id, enabled });
+    return { ok: true, data: { id, enabled } };
+  } catch (error) {
+    ctx.logger.error("skill_toggle_failed", {
+      code: "DB_ERROR",
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return ipcError("DB_ERROR", "Failed to toggle skill");
+  }
+}
+
+function applyExistingCustomUpdate(
+  db: Database.Database,
+  current: CustomSkillRecord,
+  currentProjectId: string | null,
+  patch: {
+    scope?: "global" | "project";
+    name?: string;
+    description?: string;
+    promptTemplate?: string;
+    inputType?: CustomSkillInputType;
+    contextRules?: Record<string, unknown>;
+    enabled?: boolean;
+  },
+): ServiceResult<SkillCustomUpdateResult> {
+  const nextScope = patch.scope ?? current.scope;
+  const validScope = requireCustomScope(nextScope);
+  if (!validScope.ok) {
+    return validScope;
+  }
+
+  const nextName = patch.name ?? current.name;
+  const validName = requireTextField("name", nextName, "name 不能为空");
+  if (!validName.ok) {
+    return validName;
+  }
+
+  const nextDescription = patch.description ?? current.description;
+  const validDescription = requireTextField(
+    "description",
+    nextDescription,
+    "description 不能为空",
+  );
+  if (!validDescription.ok) {
+    return validDescription;
+  }
+
+  const nextTemplate = patch.promptTemplate ?? current.promptTemplate;
+  const validTemplate = requireTextField(
+    "promptTemplate",
+    nextTemplate,
+    "promptTemplate 不能为空",
+  );
+  if (!validTemplate.ok) {
+    return validTemplate;
+  }
+
+  const nextInputType = patch.inputType ?? current.inputType;
+  const validInputType = requireInputType(nextInputType);
+  if (!validInputType.ok) {
+    return validInputType;
+  }
+
+  const parsedContextRules =
+    patch.contextRules === undefined
+      ? { ok: true as const, data: current.contextRules }
+      : parseContextRules(patch.contextRules);
+  if (!parsedContextRules.ok) {
+    return parsedContextRules;
+  }
+
+  const nextEnabled = patch.enabled ?? current.enabled;
+  const projectId =
+    validScope.data === "project" ? currentProjectId : null;
+  if (validScope.data === "project" && !projectId) {
+    return ipcError("NOT_FOUND", "Project scope is unavailable");
+  }
+
+  const capacityGuard = ensureCustomSkillCapacity({
+    db,
+    scope: validScope.data,
+    projectId,
+    excludeSkillId: current.id,
+  });
+  if (!capacityGuard.ok) {
+    return capacityGuard;
+  }
+
+  const updated = updateCustomSkillRow({
+    db,
+    id: current.id,
+    name: validName.data,
+    description: validDescription.data,
+    promptTemplate: validTemplate.data,
+    inputType: validInputType.data,
+    contextRules: parsedContextRules.data,
+    scope: validScope.data,
+    projectId,
+    enabled: nextEnabled,
+  });
+  if (!updated.ok) {
+    return updated;
+  }
+
+  return {
+    ok: true,
+    data: {
+      id: current.id,
+      scope: updated.data.scope,
+    },
+  };
+}
+
+async function executeUpdateCustom(
+  ctx: SkillServiceCtx,
+  {
+    id,
+    scope,
+    name,
+    description,
+    promptTemplate,
+    inputType,
+    contextRules,
+    enabled,
+  }: {
+    id: string;
+    scope?: "global" | "project";
+    name?: string;
+    description?: string;
+    promptTemplate?: string;
+    inputType?: CustomSkillInputType;
+    contextRules?: Record<string, unknown>;
+    enabled?: boolean;
+  },
+): Promise<ServiceResult<SkillCustomUpdateResult>> {
+  if (id.trim().length === 0) {
+    return ipcError("INVALID_ARGUMENT", "id is required", {
+      fieldName: "id",
+    });
+  }
+
+  const loaded = ctx.resolveLoaded();
+  if (!loaded.ok) {
+    return loaded;
+  }
+
+  const customId = normalizeCustomSkillId(id);
+  const custom = readCustomSkillById({
+    db: ctx.db,
+    currentProjectId: loaded.data.currentProjectId,
+    id: customId,
+  });
+  if (!custom.ok) {
+    return custom;
+  }
+  if (custom.data) {
+    return applyExistingCustomUpdate(
+      ctx.db,
+      custom.data,
+      loaded.data.currentProjectId,
+      { scope, name, description, promptTemplate, inputType, contextRules, enabled },
+    );
+  }
+
+  if (!scope) {
+    return validationError("scope", "scope 不能为空");
+  }
+  const validScope = requireCustomScope(scope);
+  if (!validScope.ok) {
+    return validScope;
+  }
+
+  const skill = loaded.data.skills.find((s) => s.id === id) ?? null;
+  if (!skill) {
+    return ipcError("NOT_FOUND", "Skill not found", { id });
+  }
+
+  if (skill.scope === "builtin") {
+    return ipcError("UNSUPPORTED", "Builtin skills cannot change scope", {
+      id,
+    });
+  }
+
+  if (skill.scope === validScope.data) {
+    return { ok: true, data: { id, scope: validScope.data } };
+  }
+
+  const srcRoot = scopeRoot({
+    scope: skill.scope,
+    roots: loaded.data.roots,
+  });
+  const destRoot = scopeRoot({
+    scope: validScope.data,
+    roots: loaded.data.roots,
+  });
+  if (!srcRoot || !destRoot) {
+    return ipcError("NOT_FOUND", "Project scope is unavailable", {
+      scope: validScope.data,
+    });
+  }
+
+  const targetRef = toScopeFileRef({
+    skill,
+    scope: validScope.data,
+    srcRoot,
+    destRoot,
+  });
+  if (!targetRef.ok) {
+    return targetRef;
+  }
+
+  const content = await ctx.skillFileIo.read({ filePath: skill.filePath });
+  if (!content.ok) {
+    return content;
+  }
+
+  const rewrittenContent = rewriteFrontmatterScope({
+    content: content.data,
+    scope,
+  });
+
+  const written = await ctx.skillFileIo.write({
+    filePath: targetRef.data.filePath,
+    content: rewrittenContent,
+  });
+  if (!written.ok) {
+    return written;
+  }
+
+  if (targetRef.data.filePath !== skill.filePath) {
+    const removed = removeSkillContent(skill.filePath);
+    if (!removed.ok) {
+      return removed;
+    }
+  }
+
+  const reloaded = loadSkillFile({ ref: targetRef.data });
+  const enabledMapRes = readEnabledMap(ctx.db);
+  if (!enabledMapRes.ok) {
+    return enabledMapRes;
+  }
+  const upserted = upsertSkillRows({
+    db: ctx.db,
+    skills: [reloaded],
+    enabledMap: enabledMapRes.data,
+  });
+  if (!upserted.ok) {
+    return upserted;
+  }
+
+  ctx.invalidateCache();
+
+  ctx.logger.info("skill_scope_updated", {
+    id,
+    from: skill.scope,
+    to: validScope.data,
+  });
+  return { ok: true, data: { id, scope: validScope.data } };
+}
+
+function executeCreateCustom(
+  ctx: SkillServiceCtx,
+  {
+    name,
+    description,
+    promptTemplate,
+    inputType,
+    contextRules,
+    scope,
+    enabled = true,
+  }: {
+    name: string;
+    description: string;
+    promptTemplate: string;
+    inputType: CustomSkillInputType;
+    contextRules: Record<string, unknown>;
+    scope: CustomSkillScope;
+    enabled?: boolean;
+  },
+): ServiceResult<{ skill: CustomSkillRecord }> {
+  const validName = requireTextField("name", name, "name 不能为空");
+  if (!validName.ok) {
+    return validName;
+  }
+  const validDescription = requireTextField(
+    "description",
+    description,
+    "description 不能为空",
+  );
+  if (!validDescription.ok) {
+    return validDescription;
+  }
+  const validTemplate = requireTextField(
+    "promptTemplate",
+    promptTemplate,
+    "promptTemplate 不能为空",
+  );
+  if (!validTemplate.ok) {
+    return validTemplate;
+  }
+  const validInputType = requireInputType(inputType);
+  if (!validInputType.ok) {
+    return validInputType;
+  }
+  const validScope = requireCustomScope(scope);
+  if (!validScope.ok) {
+    return validScope;
+  }
+  const parsedContextRules = parseContextRules(contextRules);
+  if (!parsedContextRules.ok) {
+    return parsedContextRules;
+  }
+
+  const loaded = ctx.resolveLoaded();
+  if (!loaded.ok) {
+    return loaded;
+  }
+  const projectId =
+    validScope.data === "project" ? loaded.data.currentProjectId : null;
+  if (validScope.data === "project" && !projectId) {
+    return ipcError("NOT_FOUND", "Project scope is unavailable");
+  }
+
+  const capacityGuard = ensureCustomSkillCapacity({
+    db: ctx.db,
+    scope: validScope.data,
+    projectId,
+  });
+  if (!capacityGuard.ok) {
+    return capacityGuard;
+  }
+
+  const inserted = insertCustomSkill({
+    db: ctx.db,
+    id: randomUUID(),
+    name: validName.data,
+    description: validDescription.data,
+    promptTemplate: validTemplate.data,
+    inputType: validInputType.data,
+    contextRules: parsedContextRules.data,
+    scope: validScope.data,
+    projectId,
+    enabled,
+  });
+  if (!inserted.ok) {
+    return inserted;
+  }
+  return { ok: true, data: { skill: inserted.data } };
+}
+
+function executeResolveForRun(
+  ctx: SkillServiceCtx,
+  { id }: { id: string },
+): ServiceResult<{
+  skill: LoadedSkill;
+  enabled: boolean;
+  inputType?: CustomSkillInputType;
+}> {
+  if (id.trim().length === 0) {
+    return ipcError("INVALID_ARGUMENT", "id is required", {
+      fieldName: "id",
+    });
+  }
+
+  const loaded = ctx.resolveLoaded();
+  if (!loaded.ok) {
+    return loaded;
+  }
+
+  const customId = normalizeCustomSkillId(id);
+  const custom = readCustomSkillById({
+    db: ctx.db,
+    currentProjectId: loaded.data.currentProjectId,
+    id: customId,
+  });
+  if (!custom.ok) {
+    return custom;
+  }
+  if (custom.data) {
+    const prompt = {
+      system: customPromptSystem({
+        name: custom.data.name,
+        description: custom.data.description,
+        contextRules: custom.data.contextRules,
+      }),
+      user: custom.data.promptTemplate,
+    };
+
+    return {
+      ok: true,
+      data: {
+        skill: {
+          id: encodeCustomListId(custom.data.id),
+          name: custom.data.name,
+          scope: custom.data.scope,
+          packageId: "pkg.creonow.custom",
+          version: "1.0.0",
+          filePath: "",
+          valid: true,
+          prompt,
+          bodyMd: "",
+        },
+        enabled: custom.data.enabled,
+        inputType: custom.data.inputType,
+      },
+    };
+  }
+
+  const ownership = readCustomSkillOwnershipById({
+    db: ctx.db,
+    id: customId,
+  });
+  if (!ownership.ok) {
+    return ownership;
+  }
+  if (
+    ownership.data &&
+    ownership.data.scope === "project" &&
+    ownership.data.projectId !== loaded.data.currentProjectId
+  ) {
+    ctx.logger.info("skill_scope_violation", {
+      skillId: customId,
+      requestedProjectId: loaded.data.currentProjectId,
+      ownerProjectId: ownership.data.projectId,
+    });
+    return ipcError(
+      "SKILL_SCOPE_VIOLATION",
+      "Custom skill is outside current project scope",
+      {
+        skillId: customId,
+        requestedProjectId: loaded.data.currentProjectId,
+        ownerProjectId: ownership.data.projectId,
+      },
+    );
+  }
+
+  const skill = loaded.data.skills.find((s) => s.id === id) ?? null;
+  if (!skill) {
+    return ipcError("NOT_FOUND", "Skill not found", { id });
+  }
+
+  const enabled = loaded.data.enabledMap.get(id) ?? true;
+  return { ok: true, data: { skill, enabled } };
+}
+
 /**
  * Create the skills service.
  */
@@ -865,16 +1488,7 @@ export function createSkillService(deps: {
     }
   };
 
-  const resolveLoaded = (): ServiceResult<{
-    skills: LoadedSkill[];
-    enabledMap: Map<string, boolean>;
-    currentProjectId: string | null;
-    roots: {
-      builtinSkillsDir: string;
-      globalSkillsDir: string;
-      projectSkillsDir: string | null;
-    };
-  }> => {
+  const resolveLoaded = (): ServiceResult<LoadedResult> => {
     const currentProject = getCurrentProjectInfo({
       db: deps.db,
       userDataDir: deps.userDataDir,
@@ -950,6 +1564,14 @@ export function createSkillService(deps: {
     };
   };
 
+  const ctx: SkillServiceCtx = {
+    db: deps.db,
+    logger: deps.logger,
+    skillFileIo,
+    resolveLoaded,
+    invalidateCache: invalidateSkillRegistryCache,
+  };
+
   return {
     list: ({ includeDisabled }) => {
       const loaded = resolveLoaded();
@@ -1023,463 +1645,13 @@ export function createSkillService(deps: {
       return { ok: true, data: { id, content: content.data } };
     },
 
-    write: async ({ id, content }) => {
-      if (id.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "id is required", {
-          fieldName: "id",
-        });
-      }
-      if (content.length === 0) {
-        return ipcError("INVALID_ARGUMENT", "content is required", {
-          fieldName: "content",
-        });
-      }
+    write: (a) => executeSkillWrite(ctx, a),
 
-      const loaded = resolveLoaded();
-      if (!loaded.ok) {
-        return loaded;
-      }
+    toggle: (a) => executeSkillToggle(ctx, a),
 
-      const skill = loaded.data.skills.find((s) => s.id === id) ?? null;
-      if (!skill) {
-        return ipcError("NOT_FOUND", "Skill not found", { id });
-      }
+    updateCustom: (a) => executeUpdateCustom(ctx, a),
 
-      const projectAvailable = loaded.data.roots.projectSkillsDir !== null;
-      const targetScope: SkillScope =
-        skill.scope === "project" || skill.scope === "global"
-          ? skill.scope
-          : projectAvailable
-            ? "project"
-            : "global";
-
-      const targetRoot =
-        targetScope === "project"
-          ? loaded.data.roots.projectSkillsDir
-          : loaded.data.roots.globalSkillsDir;
-      if (targetRoot === null) {
-        return ipcError(
-          "NOT_FOUND",
-          "No current project for project skill write",
-        );
-      }
-
-      const srcRoot =
-        skill.scope === "project"
-          ? loaded.data.roots.projectSkillsDir
-          : skill.scope === "global"
-            ? loaded.data.roots.globalSkillsDir
-            : loaded.data.roots.builtinSkillsDir;
-      if (srcRoot === null) {
-        return ipcError("INTERNAL", "Missing source root for skill");
-      }
-
-      const ref = toScopeFileRef({
-        skill,
-        scope: targetScope,
-        srcRoot,
-        destRoot: targetRoot,
-      });
-      if (!ref.ok) {
-        return ref;
-      }
-
-      const written = await skillFileIo.write({
-        filePath: ref.data.filePath,
-        content,
-      });
-      if (!written.ok) {
-        return written;
-      }
-
-      const reloaded = loadSkillFile({ ref: ref.data });
-      const enabledMapRes = readEnabledMap(deps.db);
-      if (!enabledMapRes.ok) {
-        return enabledMapRes;
-      }
-      const upserted = upsertSkillRows({
-        db: deps.db,
-        skills: [reloaded],
-        enabledMap: enabledMapRes.data,
-      });
-      if (!upserted.ok) {
-        return upserted;
-      }
-
-      invalidateSkillRegistryCache();
-
-      return { ok: true, data: { id, scope: targetScope, written: true } };
-    },
-
-    toggle: ({ id, enabled }) => {
-      if (id.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "id is required", {
-          fieldName: "id",
-        });
-      }
-
-      const normalizedCustomId = normalizeCustomSkillId(id);
-
-      const loaded = resolveLoaded();
-      if (!loaded.ok) {
-        return loaded;
-      }
-
-      const custom = readCustomSkillById({
-        db: deps.db,
-        currentProjectId: loaded.data.currentProjectId,
-        id: normalizedCustomId,
-      });
-      if (!custom.ok) {
-        return custom;
-      }
-      if (custom.data) {
-        try {
-          deps.db
-            .prepare(
-              "UPDATE custom_skills SET enabled = ?, updated_at = ? WHERE id = ?",
-            )
-            .run(enabled ? 1 : 0, nowTs(), custom.data.id);
-          return {
-            ok: true,
-            data: {
-              id: encodeCustomListId(custom.data.id),
-              enabled,
-            },
-          };
-        } catch (error) {
-          return ipcError(
-            "DB_ERROR",
-            "Failed to toggle custom skill",
-            error instanceof Error ? { message: error.message } : { error },
-          );
-        }
-      }
-
-      const skill = loaded.data.skills.find((s) => s.id === id) ?? null;
-      if (!skill) {
-        return ipcError("NOT_FOUND", "Skill not found", { id });
-      }
-
-      try {
-        const ts = nowTs();
-        deps.db
-          .prepare(
-            "INSERT INTO skills (skill_id, enabled, valid, error_code, error_message, updated_at) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(skill_id) DO UPDATE SET enabled = excluded.enabled, updated_at = excluded.updated_at",
-          )
-          .run(
-            id,
-            enabled ? 1 : 0,
-            skill.valid ? 1 : 0,
-            skill.valid ? null : (skill.error_code ?? "INVALID_ARGUMENT"),
-            skill.valid ? null : (skill.error_message ?? "Invalid skill"),
-            ts,
-          );
-
-        deps.logger.info("skill_toggled", { id, enabled });
-        return { ok: true, data: { id, enabled } };
-      } catch (error) {
-        deps.logger.error("skill_toggle_failed", {
-          code: "DB_ERROR",
-          message: error instanceof Error ? error.message : String(error),
-        });
-        return ipcError("DB_ERROR", "Failed to toggle skill");
-      }
-    },
-
-    updateCustom: async ({
-      id,
-      scope,
-      name,
-      description,
-      promptTemplate,
-      inputType,
-      contextRules,
-      enabled,
-    }) => {
-      if (id.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "id is required", {
-          fieldName: "id",
-        });
-      }
-
-      const loaded = resolveLoaded();
-      if (!loaded.ok) {
-        return loaded;
-      }
-
-      const customId = normalizeCustomSkillId(id);
-      const custom = readCustomSkillById({
-        db: deps.db,
-        currentProjectId: loaded.data.currentProjectId,
-        id: customId,
-      });
-      if (!custom.ok) {
-        return custom;
-      }
-      if (custom.data) {
-        const nextScope = scope ?? custom.data.scope;
-        const validScope = requireCustomScope(nextScope);
-        if (!validScope.ok) {
-          return validScope;
-        }
-
-        const nextName = name ?? custom.data.name;
-        const validName = requireTextField("name", nextName, "name 不能为空");
-        if (!validName.ok) {
-          return validName;
-        }
-
-        const nextDescription = description ?? custom.data.description;
-        const validDescription = requireTextField(
-          "description",
-          nextDescription,
-          "description 不能为空",
-        );
-        if (!validDescription.ok) {
-          return validDescription;
-        }
-
-        const nextTemplate = promptTemplate ?? custom.data.promptTemplate;
-        const validTemplate = requireTextField(
-          "promptTemplate",
-          nextTemplate,
-          "promptTemplate 不能为空",
-        );
-        if (!validTemplate.ok) {
-          return validTemplate;
-        }
-
-        const nextInputType = inputType ?? custom.data.inputType;
-        const validInputType = requireInputType(nextInputType);
-        if (!validInputType.ok) {
-          return validInputType;
-        }
-
-        const parsedContextRules =
-          contextRules === undefined
-            ? { ok: true as const, data: custom.data.contextRules }
-            : parseContextRules(contextRules);
-        if (!parsedContextRules.ok) {
-          return parsedContextRules;
-        }
-
-        const nextEnabled = enabled ?? custom.data.enabled;
-        const projectId =
-          validScope.data === "project" ? loaded.data.currentProjectId : null;
-        if (validScope.data === "project" && !projectId) {
-          return ipcError("NOT_FOUND", "Project scope is unavailable");
-        }
-
-        const capacityGuard = ensureCustomSkillCapacity({
-          db: deps.db,
-          scope: validScope.data,
-          projectId,
-          excludeSkillId: custom.data.id,
-        });
-        if (!capacityGuard.ok) {
-          return capacityGuard;
-        }
-
-        const updated = updateCustomSkillRow({
-          db: deps.db,
-          id: custom.data.id,
-          name: validName.data,
-          description: validDescription.data,
-          promptTemplate: validTemplate.data,
-          inputType: validInputType.data,
-          contextRules: parsedContextRules.data,
-          scope: validScope.data,
-          projectId,
-          enabled: nextEnabled,
-        });
-        if (!updated.ok) {
-          return updated;
-        }
-
-        return {
-          ok: true,
-          data: {
-            id: custom.data.id,
-            scope: updated.data.scope,
-          },
-        };
-      }
-
-      if (!scope) {
-        return validationError("scope", "scope 不能为空");
-      }
-      const validScope = requireCustomScope(scope);
-      if (!validScope.ok) {
-        return validScope;
-      }
-
-      const skill = loaded.data.skills.find((s) => s.id === id) ?? null;
-      if (!skill) {
-        return ipcError("NOT_FOUND", "Skill not found", { id });
-      }
-
-      if (skill.scope === "builtin") {
-        return ipcError("UNSUPPORTED", "Builtin skills cannot change scope", {
-          id,
-        });
-      }
-
-      if (skill.scope === validScope.data) {
-        return { ok: true, data: { id, scope: validScope.data } };
-      }
-
-      const srcRoot = scopeRoot({
-        scope: skill.scope,
-        roots: loaded.data.roots,
-      });
-      const destRoot = scopeRoot({
-        scope: validScope.data,
-        roots: loaded.data.roots,
-      });
-      if (!srcRoot || !destRoot) {
-        return ipcError("NOT_FOUND", "Project scope is unavailable", {
-          scope: validScope.data,
-        });
-      }
-
-      const targetRef = toScopeFileRef({
-        skill,
-        scope: validScope.data,
-        srcRoot,
-        destRoot,
-      });
-      if (!targetRef.ok) {
-        return targetRef;
-      }
-
-      const content = await skillFileIo.read({ filePath: skill.filePath });
-      if (!content.ok) {
-        return content;
-      }
-
-      const rewrittenContent = rewriteFrontmatterScope({
-        content: content.data,
-        scope,
-      });
-
-      const written = await skillFileIo.write({
-        filePath: targetRef.data.filePath,
-        content: rewrittenContent,
-      });
-      if (!written.ok) {
-        return written;
-      }
-
-      if (targetRef.data.filePath !== skill.filePath) {
-        const removed = removeSkillContent(skill.filePath);
-        if (!removed.ok) {
-          return removed;
-        }
-      }
-
-      const reloaded = loadSkillFile({ ref: targetRef.data });
-      const enabledMapRes = readEnabledMap(deps.db);
-      if (!enabledMapRes.ok) {
-        return enabledMapRes;
-      }
-      const upserted = upsertSkillRows({
-        db: deps.db,
-        skills: [reloaded],
-        enabledMap: enabledMapRes.data,
-      });
-      if (!upserted.ok) {
-        return upserted;
-      }
-
-      invalidateSkillRegistryCache();
-
-      deps.logger.info("skill_scope_updated", {
-        id,
-        from: skill.scope,
-        to: validScope.data,
-      });
-      return { ok: true, data: { id, scope: validScope.data } };
-    },
-
-    createCustom: ({
-      name,
-      description,
-      promptTemplate,
-      inputType,
-      contextRules,
-      scope,
-      enabled = true,
-    }) => {
-      const validName = requireTextField("name", name, "name 不能为空");
-      if (!validName.ok) {
-        return validName;
-      }
-      const validDescription = requireTextField(
-        "description",
-        description,
-        "description 不能为空",
-      );
-      if (!validDescription.ok) {
-        return validDescription;
-      }
-      const validTemplate = requireTextField(
-        "promptTemplate",
-        promptTemplate,
-        "promptTemplate 不能为空",
-      );
-      if (!validTemplate.ok) {
-        return validTemplate;
-      }
-      const validInputType = requireInputType(inputType);
-      if (!validInputType.ok) {
-        return validInputType;
-      }
-      const validScope = requireCustomScope(scope);
-      if (!validScope.ok) {
-        return validScope;
-      }
-      const parsedContextRules = parseContextRules(contextRules);
-      if (!parsedContextRules.ok) {
-        return parsedContextRules;
-      }
-
-      const loaded = resolveLoaded();
-      if (!loaded.ok) {
-        return loaded;
-      }
-      const projectId =
-        validScope.data === "project" ? loaded.data.currentProjectId : null;
-      if (validScope.data === "project" && !projectId) {
-        return ipcError("NOT_FOUND", "Project scope is unavailable");
-      }
-
-      const capacityGuard = ensureCustomSkillCapacity({
-        db: deps.db,
-        scope: validScope.data,
-        projectId,
-      });
-      if (!capacityGuard.ok) {
-        return capacityGuard;
-      }
-
-      const inserted = insertCustomSkill({
-        db: deps.db,
-        id: randomUUID(),
-        name: validName.data,
-        description: validDescription.data,
-        promptTemplate: validTemplate.data,
-        inputType: validInputType.data,
-        contextRules: parsedContextRules.data,
-        scope: validScope.data,
-        projectId,
-        enabled,
-      });
-      if (!inserted.ok) {
-        return inserted;
-      }
-      return { ok: true, data: { skill: inserted.data } };
-    },
+    createCustom: (a) => executeCreateCustom(ctx, a),
 
     deleteCustom: ({ id }) => {
       if (id.trim().length === 0) {
@@ -1534,93 +1706,7 @@ export function createSkillService(deps: {
       return { ok: true, data: { items: listed.data } };
     },
 
-    resolveForRun: ({ id }) => {
-      if (id.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "id is required", {
-          fieldName: "id",
-        });
-      }
-
-      const loaded = resolveLoaded();
-      if (!loaded.ok) {
-        return loaded;
-      }
-
-      const customId = normalizeCustomSkillId(id);
-      const custom = readCustomSkillById({
-        db: deps.db,
-        currentProjectId: loaded.data.currentProjectId,
-        id: customId,
-      });
-      if (!custom.ok) {
-        return custom;
-      }
-      if (custom.data) {
-        const prompt = {
-          system: customPromptSystem({
-            name: custom.data.name,
-            description: custom.data.description,
-            contextRules: custom.data.contextRules,
-          }),
-          user: custom.data.promptTemplate,
-        };
-
-        return {
-          ok: true,
-          data: {
-            skill: {
-              id: encodeCustomListId(custom.data.id),
-              name: custom.data.name,
-              scope: custom.data.scope,
-              packageId: "pkg.creonow.custom",
-              version: "1.0.0",
-              filePath: "",
-              valid: true,
-              prompt,
-              bodyMd: "",
-            },
-            enabled: custom.data.enabled,
-            inputType: custom.data.inputType,
-          },
-        };
-      }
-
-      const ownership = readCustomSkillOwnershipById({
-        db: deps.db,
-        id: customId,
-      });
-      if (!ownership.ok) {
-        return ownership;
-      }
-      if (
-        ownership.data &&
-        ownership.data.scope === "project" &&
-        ownership.data.projectId !== loaded.data.currentProjectId
-      ) {
-        deps.logger.info("skill_scope_violation", {
-          skillId: customId,
-          requestedProjectId: loaded.data.currentProjectId,
-          ownerProjectId: ownership.data.projectId,
-        });
-        return ipcError(
-          "SKILL_SCOPE_VIOLATION",
-          "Custom skill is outside current project scope",
-          {
-            skillId: customId,
-            requestedProjectId: loaded.data.currentProjectId,
-            ownerProjectId: ownership.data.projectId,
-          },
-        );
-      }
-
-      const skill = loaded.data.skills.find((s) => s.id === id) ?? null;
-      if (!skill) {
-        return ipcError("NOT_FOUND", "Skill not found", { id });
-      }
-
-      const enabled = loaded.data.enabledMap.get(id) ?? true;
-      return { ok: true, data: { skill, enabled } };
-    },
+    resolveForRun: (a) => executeResolveForRun(ctx, a),
 
     isDependencyAvailable: ({ dependencyId }) => {
       const trimmed = dependencyId.trim();

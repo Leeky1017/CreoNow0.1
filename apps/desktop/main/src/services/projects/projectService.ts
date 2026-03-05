@@ -511,33 +511,31 @@ function copyCreonowDirBestEffort(args: {
   }
 }
 
-/**
- * Create a project service backed by SQLite (SSOT).
- */
-export function createProjectService(args: {
+type ProjectServiceCtx = {
   db: Database.Database;
   userDataDir: string;
   logger: Logger;
-  now?: () => number;
-  switchKnowledgeGraphContext?: (args: {
+  now: () => number;
+  switchKnowledgeGraphContext: (a: {
     fromProjectId: string;
     toProjectId: string;
     traceId: string;
   }) => void;
-  switchMemoryContext?: (args: {
+  switchMemoryContext: (a: {
     fromProjectId: string;
     toProjectId: string;
     traceId: string;
   }) => void;
-  removeProjectRoot?: (rootPath: string) => void;
-}): ProjectService {
-  const now = args.now ?? nowTs;
-  const switchKnowledgeGraphContext =
-    args.switchKnowledgeGraphContext ?? (() => {});
-  const switchMemoryContext = args.switchMemoryContext ?? (() => {});
-  const removeProjectRoot = args.removeProjectRoot ?? defaultRemoveProjectRoot;
+  removeProjectRoot: (rootPath: string) => void;
+};
 
-  const service: ProjectService = {
+function createProjectCrudOps(
+  ctx: ProjectServiceCtx,
+): Pick<ProjectService, "create" | "createAiAssistDraft" | "update" | "rename"> {
+  const args = ctx;
+  const now = ctx.now;
+
+  return {
     create: ({ name, type, description, template }) => {
       const projectId = randomUUID();
       const rootPath = getProjectRootPath(args.userDataDir, projectId);
@@ -703,34 +701,6 @@ export function createProjectService(args: {
       };
     },
 
-    list: ({ includeArchived = false } = {}) => {
-      try {
-        const whereClause = includeArchived ? "" : "WHERE archived_at IS NULL";
-        const rows = args.db
-          .prepare<
-            [],
-            ProjectRow
-          >(`SELECT project_id as projectId, name, root_path as rootPath, type, description, stage, target_word_count as targetWordCount, target_chapter_count as targetChapterCount, narrative_person as narrativePerson, language_style as languageStyle, target_audience as targetAudience, default_skill_set_id as defaultSkillSetId, knowledge_graph_id as knowledgeGraphId, updated_at as updatedAt, archived_at as archivedAt FROM projects ${whereClause} ORDER BY updated_at DESC, project_id ASC`)
-          .all();
-        const items: ProjectListItem[] = rows.map((row) => ({
-          projectId: row.projectId,
-          name: row.name,
-          rootPath: row.rootPath,
-          type: row.type,
-          stage: row.stage,
-          updatedAt: row.updatedAt,
-          ...(row.archivedAt == null ? {} : { archivedAt: row.archivedAt }),
-        }));
-        return { ok: true, data: { items } };
-      } catch (error) {
-        args.logger.error("project_list_failed", {
-          code: "DB_ERROR",
-          message: error instanceof Error ? error.message : String(error),
-        });
-        return ipcError("DB_ERROR", "Failed to list projects");
-      }
-    },
-
     update: ({ projectId, patch }) => {
       if (projectId.trim().length === 0) {
         return ipcError("INVALID_ARGUMENT", "projectId is required");
@@ -835,32 +805,54 @@ export function createProjectService(args: {
       }
     },
 
-    stats: () => {
-      try {
-        const row = args.db
-          .prepare<
-            [],
-            { total: number; active: number; archived: number }
-          >("SELECT COUNT(*) as total, SUM(CASE WHEN archived_at IS NULL THEN 1 ELSE 0 END) as active, SUM(CASE WHEN archived_at IS NOT NULL THEN 1 ELSE 0 END) as archived FROM projects")
-          .get();
+    rename: ({ projectId, name }) => {
+      if (projectId.trim().length === 0) {
+        return ipcError("INVALID_ARGUMENT", "projectId is required");
+      }
 
+      const normalized = normalizeProjectName(name, "");
+      if (!normalized.ok) {
+        return normalized;
+      }
+
+      const ts = now();
+      try {
+        const res = args.db
+          .prepare<
+            [string, number, string]
+          >("UPDATE projects SET name = ?, updated_at = ? WHERE project_id = ?")
+          .run(normalized.data, ts, projectId);
+        if (res.changes === 0) {
+          return ipcError("NOT_FOUND", "Project not found", { projectId });
+        }
+
+        args.logger.info("project_renamed", {
+          project_id: projectId,
+        });
         return {
           ok: true,
-          data: {
-            total: row?.total ?? 0,
-            active: row?.active ?? 0,
-            archived: row?.archived ?? 0,
-          },
+          data: { projectId, name: normalized.data, updatedAt: ts },
         };
       } catch (error) {
-        args.logger.error("project_stats_failed", {
+        args.logger.error("project_rename_failed", {
           code: "DB_ERROR",
           message: error instanceof Error ? error.message : String(error),
         });
-        return ipcError("DB_ERROR", "Failed to load project stats");
+        return ipcError("DB_ERROR", "Failed to rename project");
       }
     },
+  };
+}
 
+function createProjectNavOps(
+  ctx: ProjectServiceCtx,
+): Pick<ProjectService, "getCurrent" | "setCurrent" | "switchProject"> {
+  const args = ctx;
+  const now = ctx.now;
+  const switchKnowledgeGraphContext = ctx.switchKnowledgeGraphContext;
+  const switchMemoryContext = ctx.switchMemoryContext;
+
+  return {
     getCurrent: () => {
       const currentId = readCurrentProjectId(args.db);
       if (!currentId.ok) {
@@ -1016,31 +1008,20 @@ export function createProjectService(args: {
         },
       };
     },
+  };
+}
 
-    lifecycleGet: ({ projectId, traceId }) => {
-      if (projectId.trim().length === 0) {
-        return ipcError(
-          "INVALID_ARGUMENT",
-          "projectId is required",
-          undefined,
-          { traceId },
-        );
-      }
+function createProjectLifecycleOps(
+  ctx: ProjectServiceCtx,
+): Pick<
+  ProjectService,
+  "lifecycleArchive" | "lifecycleRestore" | "lifecyclePurge"
+> {
+  const args = ctx;
+  const now = ctx.now;
+  const removeProjectRoot = ctx.removeProjectRoot;
 
-      const project = getProjectById(args.db, projectId);
-      if (!project.ok) {
-        return project;
-      }
-
-      return {
-        ok: true,
-        data: {
-          projectId,
-          state: deriveLifecycleState(project.data),
-        },
-      };
-    },
-
+  return {
     lifecycleArchive: ({ projectId, traceId }) => {
       if (projectId.trim().length === 0) {
         return ipcError(
@@ -1333,9 +1314,293 @@ export function createProjectService(args: {
         },
       };
     },
+  };
+}
+
+function executeProjectDuplicate(
+  ctx: ProjectServiceCtx,
+  { projectId }: { projectId: string },
+): ServiceResult<{ projectId: string; rootPath: string; name: string }> {
+  const args = ctx;
+  const now = ctx.now;
+
+  if (projectId.trim().length === 0) {
+    return ipcError("INVALID_ARGUMENT", "projectId is required");
+  }
+
+  const sourceProject = getProjectById(args.db, projectId);
+  if (!sourceProject.ok) {
+    return sourceProject;
+  }
+
+  const duplicatedProjectId = randomUUID();
+  const duplicatedRootPath = getProjectRootPath(
+    args.userDataDir,
+    duplicatedProjectId,
+  );
+
+  const duplicatedNameBase = sourceProject.data.name.trim().length
+    ? sourceProject.data.name
+    : "Untitled";
+  const duplicatedNameRes = normalizeProjectName(
+    `${duplicatedNameBase} (Copy)`,
+    "Untitled (Copy)",
+  );
+  if (!duplicatedNameRes.ok) {
+    return duplicatedNameRes;
+  }
+
+  const ensured = ensureCreonowDirStructure(duplicatedRootPath);
+  if (!ensured.ok) {
+    return ensured;
+  }
+
+  const ts = now();
+  let copiedDocuments = 0;
+
+  try {
+    args.db.transaction(() => {
+      args.db
+        .prepare(
+          "INSERT INTO projects (project_id, name, root_path, type, description, stage, target_word_count, target_chapter_count, narrative_person, language_style, target_audience, default_skill_set_id, knowledge_graph_id, created_at, updated_at, archived_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)",
+        )
+        .run(
+          duplicatedProjectId,
+          duplicatedNameRes.data,
+          duplicatedRootPath,
+          sourceProject.data.type,
+          sourceProject.data.description,
+          sourceProject.data.stage,
+          sourceProject.data.targetWordCount,
+          sourceProject.data.targetChapterCount,
+          sourceProject.data.narrativePerson,
+          sourceProject.data.languageStyle,
+          sourceProject.data.targetAudience,
+          sourceProject.data.defaultSkillSetId,
+          sourceProject.data.knowledgeGraphId,
+          ts,
+          ts,
+        );
+
+      const sourceDocuments = args.db
+        .prepare<
+          [string],
+          DuplicateDocumentRow
+        >("SELECT document_id as documentId, title, content_json as contentJson, content_text as contentText, content_md as contentMd, content_hash as contentHash FROM documents WHERE project_id = ? ORDER BY updated_at DESC, document_id ASC")
+        .all(projectId);
+
+      const documentIdMap = new Map<string, string>();
+
+      for (const sourceDocument of sourceDocuments) {
+        const duplicatedDocumentId = randomUUID();
+        documentIdMap.set(sourceDocument.documentId, duplicatedDocumentId);
+
+        args.db
+          .prepare(
+            "INSERT INTO documents (document_id, project_id, title, content_json, content_text, content_md, content_hash, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          )
+          .run(
+            duplicatedDocumentId,
+            duplicatedProjectId,
+            sourceDocument.title,
+            sourceDocument.contentJson,
+            sourceDocument.contentText,
+            sourceDocument.contentMd,
+            sourceDocument.contentHash,
+            ts,
+            ts,
+          );
+      }
+
+      copiedDocuments = sourceDocuments.length;
+
+      const sourceCurrentDocument = args.db
+        .prepare<
+          [string, string],
+          SettingsRow
+        >("SELECT value_json as valueJson FROM settings WHERE scope = ? AND key = ?")
+        .get(getProjectSettingsScope(projectId), CURRENT_DOCUMENT_ID_KEY);
+
+      if (sourceCurrentDocument) {
+        const parsedCurrent: unknown = JSON.parse(
+          sourceCurrentDocument.valueJson,
+        );
+        const sourceCurrentDocumentId =
+          typeof parsedCurrent === "string" ? parsedCurrent : null;
+        if (sourceCurrentDocumentId) {
+          const duplicatedCurrentDocumentId = documentIdMap.get(
+            sourceCurrentDocumentId,
+          );
+          if (duplicatedCurrentDocumentId) {
+            args.db
+              .prepare(
+                "INSERT INTO settings (scope, key, value_json, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(scope, key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at",
+              )
+              .run(
+                getProjectSettingsScope(duplicatedProjectId),
+                CURRENT_DOCUMENT_ID_KEY,
+                JSON.stringify(duplicatedCurrentDocumentId),
+                ts,
+              );
+          }
+        }
+      }
+    })();
+  } catch (error) {
+    args.logger.error("project_duplicate_failed", {
+      code: "DB_ERROR",
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return ipcError("DB_ERROR", "Failed to duplicate project");
+  }
+
+  copyCreonowDirBestEffort({
+    sourceRootPath: sourceProject.data.rootPath,
+    targetRootPath: duplicatedRootPath,
+    logger: args.logger,
+  });
+
+  args.logger.info("project_duplicated", {
+    project_id: projectId,
+    new_project_id: duplicatedProjectId,
+    copied_documents: copiedDocuments,
+  });
+
+  return {
+    ok: true,
+    data: {
+      projectId: duplicatedProjectId,
+      rootPath: duplicatedRootPath,
+      name: duplicatedNameRes.data,
+    },
+  };
+}
+
+/**
+ * Create a project service backed by SQLite (SSOT).
+ */
+export function createProjectService(args: {
+  db: Database.Database;
+  userDataDir: string;
+  logger: Logger;
+  now?: () => number;
+  switchKnowledgeGraphContext?: (args: {
+    fromProjectId: string;
+    toProjectId: string;
+    traceId: string;
+  }) => void;
+  switchMemoryContext?: (args: {
+    fromProjectId: string;
+    toProjectId: string;
+    traceId: string;
+  }) => void;
+  removeProjectRoot?: (rootPath: string) => void;
+}): ProjectService {
+  const now = args.now ?? nowTs;
+  const switchKnowledgeGraphContext =
+    args.switchKnowledgeGraphContext ?? (() => {});
+  const switchMemoryContext = args.switchMemoryContext ?? (() => {});
+  const removeProjectRoot = args.removeProjectRoot ?? defaultRemoveProjectRoot;
+
+  const ctx: ProjectServiceCtx = {
+    db: args.db,
+    userDataDir: args.userDataDir,
+    logger: args.logger,
+    now,
+    switchKnowledgeGraphContext,
+    switchMemoryContext,
+    removeProjectRoot,
+  };
+
+  const crudOps = createProjectCrudOps(ctx);
+  const navOps = createProjectNavOps(ctx);
+  const lifecycleOps = createProjectLifecycleOps(ctx);
+
+  const service: ProjectService = {
+    ...crudOps,
+    ...navOps,
+    ...lifecycleOps,
+
+    lifecycleGet: ({ projectId, traceId }) => {
+      if (projectId.trim().length === 0) {
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "projectId is required",
+          undefined,
+          { traceId },
+        );
+      }
+
+      const project = getProjectById(args.db, projectId);
+      if (!project.ok) {
+        return project;
+      }
+
+      return {
+        ok: true,
+        data: {
+          projectId,
+          state: deriveLifecycleState(project.data),
+        },
+      };
+    },
+
+    list: ({ includeArchived = false } = {}) => {
+      try {
+        const whereClause = includeArchived ? "" : "WHERE archived_at IS NULL";
+        const rows = args.db
+          .prepare<
+            [],
+            ProjectRow
+          >(`SELECT project_id as projectId, name, root_path as rootPath, type, description, stage, target_word_count as targetWordCount, target_chapter_count as targetChapterCount, narrative_person as narrativePerson, language_style as languageStyle, target_audience as targetAudience, default_skill_set_id as defaultSkillSetId, knowledge_graph_id as knowledgeGraphId, updated_at as updatedAt, archived_at as archivedAt FROM projects ${whereClause} ORDER BY updated_at DESC, project_id ASC`)
+          .all();
+        const items: ProjectListItem[] = rows.map((row) => ({
+          projectId: row.projectId,
+          name: row.name,
+          rootPath: row.rootPath,
+          type: row.type,
+          stage: row.stage,
+          updatedAt: row.updatedAt,
+          ...(row.archivedAt == null ? {} : { archivedAt: row.archivedAt }),
+        }));
+        return { ok: true, data: { items } };
+      } catch (error) {
+        args.logger.error("project_list_failed", {
+          code: "DB_ERROR",
+          message: error instanceof Error ? error.message : String(error),
+        });
+        return ipcError("DB_ERROR", "Failed to list projects");
+      }
+    },
+
+    stats: () => {
+      try {
+        const row = args.db
+          .prepare<
+            [],
+            { total: number; active: number; archived: number }
+          >("SELECT COUNT(*) as total, SUM(CASE WHEN archived_at IS NULL THEN 1 ELSE 0 END) as active, SUM(CASE WHEN archived_at IS NOT NULL THEN 1 ELSE 0 END) as archived FROM projects")
+          .get();
+
+        return {
+          ok: true,
+          data: {
+            total: row?.total ?? 0,
+            active: row?.active ?? 0,
+            archived: row?.archived ?? 0,
+          },
+        };
+      } catch (error) {
+        args.logger.error("project_stats_failed", {
+          code: "DB_ERROR",
+          message: error instanceof Error ? error.message : String(error),
+        });
+        return ipcError("DB_ERROR", "Failed to load project stats");
+      }
+    },
 
     delete: ({ projectId }) => {
-      const purgeRes = service.lifecyclePurge({
+      const purgeRes = lifecycleOps.lifecyclePurge({
         projectId,
         traceId: randomUUID(),
       });
@@ -1345,199 +1610,11 @@ export function createProjectService(args: {
       return { ok: true, data: { deleted: true } };
     },
 
-    rename: ({ projectId, name }) => {
-      if (projectId.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "projectId is required");
-      }
-
-      const normalized = normalizeProjectName(name, "");
-      if (!normalized.ok) {
-        return normalized;
-      }
-
-      const ts = now();
-      try {
-        const res = args.db
-          .prepare<
-            [string, number, string]
-          >("UPDATE projects SET name = ?, updated_at = ? WHERE project_id = ?")
-          .run(normalized.data, ts, projectId);
-        if (res.changes === 0) {
-          return ipcError("NOT_FOUND", "Project not found", { projectId });
-        }
-
-        args.logger.info("project_renamed", {
-          project_id: projectId,
-        });
-        return {
-          ok: true,
-          data: { projectId, name: normalized.data, updatedAt: ts },
-        };
-      } catch (error) {
-        args.logger.error("project_rename_failed", {
-          code: "DB_ERROR",
-          message: error instanceof Error ? error.message : String(error),
-        });
-        return ipcError("DB_ERROR", "Failed to rename project");
-      }
-    },
-
-    duplicate: ({ projectId }) => {
-      if (projectId.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "projectId is required");
-      }
-
-      const sourceProject = getProjectById(args.db, projectId);
-      if (!sourceProject.ok) {
-        return sourceProject;
-      }
-
-      const duplicatedProjectId = randomUUID();
-      const duplicatedRootPath = getProjectRootPath(
-        args.userDataDir,
-        duplicatedProjectId,
-      );
-
-      const duplicatedNameBase = sourceProject.data.name.trim().length
-        ? sourceProject.data.name
-        : "Untitled";
-      const duplicatedNameRes = normalizeProjectName(
-        `${duplicatedNameBase} (Copy)`,
-        "Untitled (Copy)",
-      );
-      if (!duplicatedNameRes.ok) {
-        return duplicatedNameRes;
-      }
-
-      const ensured = ensureCreonowDirStructure(duplicatedRootPath);
-      if (!ensured.ok) {
-        return ensured;
-      }
-
-      const ts = now();
-      let copiedDocuments = 0;
-
-      try {
-        args.db.transaction(() => {
-          args.db
-            .prepare(
-              "INSERT INTO projects (project_id, name, root_path, type, description, stage, target_word_count, target_chapter_count, narrative_person, language_style, target_audience, default_skill_set_id, knowledge_graph_id, created_at, updated_at, archived_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)",
-            )
-            .run(
-              duplicatedProjectId,
-              duplicatedNameRes.data,
-              duplicatedRootPath,
-              sourceProject.data.type,
-              sourceProject.data.description,
-              sourceProject.data.stage,
-              sourceProject.data.targetWordCount,
-              sourceProject.data.targetChapterCount,
-              sourceProject.data.narrativePerson,
-              sourceProject.data.languageStyle,
-              sourceProject.data.targetAudience,
-              sourceProject.data.defaultSkillSetId,
-              sourceProject.data.knowledgeGraphId,
-              ts,
-              ts,
-            );
-
-          const sourceDocuments = args.db
-            .prepare<
-              [string],
-              DuplicateDocumentRow
-            >("SELECT document_id as documentId, title, content_json as contentJson, content_text as contentText, content_md as contentMd, content_hash as contentHash FROM documents WHERE project_id = ? ORDER BY updated_at DESC, document_id ASC")
-            .all(projectId);
-
-          const documentIdMap = new Map<string, string>();
-
-          for (const sourceDocument of sourceDocuments) {
-            const duplicatedDocumentId = randomUUID();
-            documentIdMap.set(sourceDocument.documentId, duplicatedDocumentId);
-
-            args.db
-              .prepare(
-                "INSERT INTO documents (document_id, project_id, title, content_json, content_text, content_md, content_hash, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-              )
-              .run(
-                duplicatedDocumentId,
-                duplicatedProjectId,
-                sourceDocument.title,
-                sourceDocument.contentJson,
-                sourceDocument.contentText,
-                sourceDocument.contentMd,
-                sourceDocument.contentHash,
-                ts,
-                ts,
-              );
-          }
-
-          copiedDocuments = sourceDocuments.length;
-
-          const sourceCurrentDocument = args.db
-            .prepare<
-              [string, string],
-              SettingsRow
-            >("SELECT value_json as valueJson FROM settings WHERE scope = ? AND key = ?")
-            .get(getProjectSettingsScope(projectId), CURRENT_DOCUMENT_ID_KEY);
-
-          if (sourceCurrentDocument) {
-            const parsedCurrent: unknown = JSON.parse(
-              sourceCurrentDocument.valueJson,
-            );
-            const sourceCurrentDocumentId =
-              typeof parsedCurrent === "string" ? parsedCurrent : null;
-            if (sourceCurrentDocumentId) {
-              const duplicatedCurrentDocumentId = documentIdMap.get(
-                sourceCurrentDocumentId,
-              );
-              if (duplicatedCurrentDocumentId) {
-                args.db
-                  .prepare(
-                    "INSERT INTO settings (scope, key, value_json, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT(scope, key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at",
-                  )
-                  .run(
-                    getProjectSettingsScope(duplicatedProjectId),
-                    CURRENT_DOCUMENT_ID_KEY,
-                    JSON.stringify(duplicatedCurrentDocumentId),
-                    ts,
-                  );
-              }
-            }
-          }
-        })();
-      } catch (error) {
-        args.logger.error("project_duplicate_failed", {
-          code: "DB_ERROR",
-          message: error instanceof Error ? error.message : String(error),
-        });
-        return ipcError("DB_ERROR", "Failed to duplicate project");
-      }
-
-      copyCreonowDirBestEffort({
-        sourceRootPath: sourceProject.data.rootPath,
-        targetRootPath: duplicatedRootPath,
-        logger: args.logger,
-      });
-
-      args.logger.info("project_duplicated", {
-        project_id: projectId,
-        new_project_id: duplicatedProjectId,
-        copied_documents: copiedDocuments,
-      });
-
-      return {
-        ok: true,
-        data: {
-          projectId: duplicatedProjectId,
-          rootPath: duplicatedRootPath,
-          name: duplicatedNameRes.data,
-        },
-      };
-    },
+    duplicate: (a) => executeProjectDuplicate(ctx, a),
 
     archive: ({ projectId, archived }) => {
       if (archived) {
-        const res = service.lifecycleArchive({
+        const res = lifecycleOps.lifecycleArchive({
           projectId,
           traceId: randomUUID(),
         });
@@ -1554,7 +1631,7 @@ export function createProjectService(args: {
         };
       }
 
-      const restored = service.lifecycleRestore({
+      const restored = lifecycleOps.lifecycleRestore({
         projectId,
         traceId: randomUUID(),
       });

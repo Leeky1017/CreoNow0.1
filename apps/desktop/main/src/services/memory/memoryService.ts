@@ -358,6 +358,503 @@ function selectMemoryById(
     .get(memoryId);
 }
 
+function validateScopeFields(
+  scope: MemoryScope,
+  projectId: string | null,
+  documentId: string | null,
+): ServiceResult<never> | null {
+  if (scope === "global") {
+    if (projectId) {
+      return ipcError(
+        "INVALID_ARGUMENT",
+        "projectId is not allowed for global scope",
+      );
+    }
+    if (documentId) {
+      return ipcError(
+        "INVALID_ARGUMENT",
+        "documentId is not allowed for global scope",
+      );
+    }
+  }
+  if (scope === "project") {
+    if (!projectId) {
+      return ipcError(
+        "INVALID_ARGUMENT",
+        "projectId is required for project scope",
+      );
+    }
+    if (documentId) {
+      return ipcError(
+        "INVALID_ARGUMENT",
+        "documentId is not allowed for project scope",
+      );
+    }
+  }
+  if (scope === "document") {
+    if (!projectId) {
+      return ipcError(
+        "INVALID_ARGUMENT",
+        "projectId is required for document scope",
+      );
+    }
+    if (!documentId) {
+      return ipcError(
+        "INVALID_ARGUMENT",
+        "documentId is required for document scope",
+      );
+    }
+  }
+  return null;
+}
+
+type ResolvedUpdateFields = {
+  type: MemoryType;
+  scope: MemoryScope;
+  content: string;
+  projectId: string | null;
+  documentId: string | null;
+};
+
+function resolveUpdateFields(
+  current: UserMemoryItem,
+  patch: {
+    type?: MemoryType;
+    scope?: MemoryScope;
+    projectId?: string;
+    documentId?: string;
+    content?: string;
+  },
+): ServiceResult<ResolvedUpdateFields> {
+  const nextType = patch.type ?? current.type;
+  const nextScope = patch.scope ?? current.scope;
+  const nextContent = patch.content ?? current.content;
+  if (typeof patch.documentId === "string" && nextScope !== "document") {
+    return ipcError(
+      "INVALID_ARGUMENT",
+      "documentId is only allowed for document scope",
+    );
+  }
+  if (typeof patch.projectId === "string" && nextScope === "global") {
+    return ipcError(
+      "INVALID_ARGUMENT",
+      "projectId is not allowed for global scope",
+    );
+  }
+
+  const nextProjectId =
+    nextScope === "project" || nextScope === "document"
+      ? normalizeOptionalId(patch.projectId ?? current.projectId)
+      : null;
+  const nextDocumentId =
+    nextScope === "document"
+      ? normalizeOptionalId(patch.documentId ?? current.documentId)
+      : null;
+
+  if (!isMemoryType(nextType)) {
+    return ipcError("INVALID_ARGUMENT", "type is invalid");
+  }
+  if (!isMemoryScope(nextScope)) {
+    return ipcError("INVALID_ARGUMENT", "scope is invalid");
+  }
+  if (nextContent.trim().length === 0) {
+    return ipcError("INVALID_ARGUMENT", "content is required");
+  }
+  const scopeErr = validateScopeFields(
+    nextScope,
+    nextProjectId,
+    nextDocumentId,
+  );
+  if (scopeErr) {
+    return scopeErr;
+  }
+  return {
+    ok: true,
+    data: {
+      type: nextType,
+      scope: nextScope,
+      content: nextContent,
+      projectId: nextProjectId,
+      documentId: nextDocumentId,
+    },
+  };
+}
+
+function executeCreate(
+  db: Database.Database,
+  logger: Logger,
+  {
+    type,
+    scope,
+    projectId,
+    documentId,
+    content,
+  }: {
+    type: MemoryType;
+    scope: MemoryScope;
+    projectId?: string;
+    documentId?: string;
+    content: string;
+  },
+): ServiceResult<UserMemoryItem> {
+  if (!isMemoryType(type)) {
+    return ipcError("INVALID_ARGUMENT", "type is invalid");
+  }
+  if (!isMemoryScope(scope)) {
+    return ipcError("INVALID_ARGUMENT", "scope is invalid");
+  }
+  if (content.trim().length === 0) {
+    return ipcError("INVALID_ARGUMENT", "content is required");
+  }
+  const normalizedProjectId = normalizeOptionalId(projectId);
+  const normalizedDocumentId = normalizeOptionalId(documentId);
+
+  const scopeErr = validateScopeFields(
+    scope,
+    normalizedProjectId,
+    normalizedDocumentId,
+  );
+  if (scopeErr) {
+    return scopeErr;
+  }
+
+  const memoryId = randomUUID();
+  const ts = nowTs();
+  const scopedProjectId =
+    scope === "project" || scope === "document"
+      ? normalizedProjectId!
+      : null;
+  const scopedDocumentId =
+    scope === "document" ? normalizedDocumentId! : null;
+
+  try {
+    if (
+      scope === "document" &&
+      !documentExistsInProject(db, scopedProjectId!, scopedDocumentId!)
+    ) {
+      return ipcError("NOT_FOUND", "Document not found", {
+        projectId: scopedProjectId,
+        documentId: scopedDocumentId,
+      });
+    }
+
+    db.prepare(
+      "INSERT INTO user_memory (memory_id, type, scope, project_id, document_id, origin, source_ref, content, created_at, updated_at, deleted_at) VALUES (?, ?, ?, ?, ?, 'manual', NULL, ?, ?, ?, NULL)",
+    ).run(
+      memoryId,
+      type,
+      scope,
+      scopedProjectId,
+      scopedDocumentId,
+      content.trim(),
+      ts,
+      ts,
+    );
+
+    logger.info("memory_create", {
+      memory_id: memoryId,
+      type,
+      scope,
+      project_id: scopedProjectId,
+      document_id: scopedDocumentId,
+      origin: "manual",
+      content_len: content.trim().length,
+    });
+  } catch (error) {
+    logger.error("memory_create_failed", {
+      code: "DB_ERROR",
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return ipcError("DB_ERROR", "Failed to create memory");
+  }
+
+  const row = selectMemoryById(db, memoryId);
+  if (!row) {
+    return ipcError("DB_ERROR", "Failed to load created memory");
+  }
+  return rowToMemory(row);
+}
+
+function executeMemoryUpdate(
+  db: Database.Database,
+  logger: Logger,
+  {
+    memoryId,
+    patch,
+  }: {
+    memoryId: string;
+    patch: {
+      type?: MemoryType;
+      scope?: MemoryScope;
+      projectId?: string;
+      documentId?: string;
+      content?: string;
+    };
+  },
+): ServiceResult<UserMemoryItem> {
+  if (memoryId.trim().length === 0) {
+    return ipcError("INVALID_ARGUMENT", "memoryId is required");
+  }
+  if (Object.keys(patch).length === 0) {
+    return ipcError("INVALID_ARGUMENT", "patch is required");
+  }
+
+  const existing = selectMemoryById(db, memoryId);
+  if (!existing) {
+    return ipcError("NOT_FOUND", "Memory not found", { memoryId });
+  }
+  const parsed = rowToMemory(existing);
+  if (!parsed.ok) {
+    return parsed;
+  }
+
+  const resolved = resolveUpdateFields(parsed.data, patch);
+  if (!resolved.ok) {
+    return resolved;
+  }
+
+  const { type, scope, content, projectId: nextProjectId, documentId: nextDocumentId } = resolved.data;
+  const ts = nowTs();
+  try {
+    if (
+      scope === "document" &&
+      !documentExistsInProject(db, nextProjectId!, nextDocumentId!)
+    ) {
+      return ipcError("NOT_FOUND", "Document not found", {
+        projectId: nextProjectId,
+        documentId: nextDocumentId,
+      });
+    }
+
+    db.prepare(
+      "UPDATE user_memory SET type = ?, scope = ?, project_id = ?, document_id = ?, content = ?, updated_at = ? WHERE memory_id = ?",
+    ).run(
+      type,
+      scope,
+      scope === "project" || scope === "document" ? nextProjectId : null,
+      scope === "document" ? nextDocumentId : null,
+      content.trim(),
+      ts,
+      memoryId,
+    );
+
+    logger.info("memory_update", {
+      memory_id: memoryId,
+      type,
+      scope,
+      project_id:
+        scope === "project" || scope === "document" ? nextProjectId : null,
+      document_id: scope === "document" ? nextDocumentId : null,
+      origin: parsed.data.origin,
+      content_len: content.trim().length,
+    });
+  } catch (error) {
+    logger.error("memory_update_failed", {
+      code: "DB_ERROR",
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return ipcError("DB_ERROR", "Failed to update memory");
+  }
+
+  const updated = selectMemoryById(db, memoryId);
+  if (!updated) {
+    return ipcError("DB_ERROR", "Failed to load updated memory");
+  }
+  return rowToMemory(updated);
+}
+
+type PreviewInjectionCtx = {
+  db: Database.Database;
+  logger: Logger;
+  getSettings: () => ServiceResult<MemorySettings>;
+  resetDegradation: () => void;
+  reportDegradation: (args2: {
+    projectId: string | null;
+    reason: string;
+  }) => void;
+};
+
+function executePreviewInjection(
+  ctx: PreviewInjectionCtx,
+  {
+    projectId,
+    documentId,
+    queryText,
+  }: {
+    projectId?: string;
+    documentId?: string;
+    queryText?: string;
+  },
+): ServiceResult<MemoryInjectionPreview> {
+  const settings = ctx.getSettings();
+  if (!settings.ok) {
+    return settings;
+  }
+
+  if (!settings.data.injectionEnabled) {
+    ctx.resetDegradation();
+    ctx.logger.info("memory_injection_preview", {
+      mode: "deterministic",
+      count: 0,
+      disabled: true,
+    });
+    return { ok: true, data: { items: [], mode: "deterministic" } };
+  }
+
+  const scopedProjectId = normalizeOptionalId(projectId);
+  const scopedDocumentId = normalizeOptionalId(documentId);
+  if (scopedDocumentId && !scopedProjectId) {
+    return ipcError(
+      "INVALID_ARGUMENT",
+      "projectId is required when documentId is provided",
+    );
+  }
+  const whereScope = scopedProjectId
+    ? scopedDocumentId
+      ? "AND (scope = 'global' OR (scope = 'project' AND project_id = ?) OR (scope = 'document' AND project_id = ? AND document_id = ?))"
+      : "AND (scope = 'global' OR (scope = 'project' AND project_id = ?))"
+    : "AND scope = 'global'";
+
+  try {
+    const stmt = ctx.db.prepare<unknown[], MemoryRow>(
+      `SELECT memory_id as memoryId, type, scope, project_id as projectId, document_id as documentId, origin, source_ref as sourceRef, content, created_at as createdAt, updated_at as updatedAt, deleted_at as deletedAt
+       FROM user_memory
+       WHERE deleted_at IS NULL ${whereScope}`,
+    );
+    const rows = scopedProjectId
+      ? scopedDocumentId
+        ? stmt.all(scopedProjectId, scopedProjectId, scopedDocumentId)
+        : stmt.all(scopedProjectId)
+      : stmt.all();
+
+    const parsed: UserMemoryItem[] = [];
+    for (const row of rows) {
+      const mapped = rowToMemory(row);
+      if (!mapped.ok) {
+        return mapped;
+      }
+      parsed.push(mapped.data);
+    }
+
+    const sorted = deterministicMemorySort(parsed);
+
+    const trimmedQueryText =
+      typeof queryText === "string" ? queryText.trim() : "";
+    const wantsSemantic = trimmedQueryText.length > 0;
+
+    if (!wantsSemantic) {
+      ctx.resetDegradation();
+      const items: MemoryInjectionItem[] = sorted.map((item) => ({
+        id: item.memoryId,
+        type: item.type,
+        scope: item.scope,
+        origin: item.origin,
+        content: item.content,
+        reason: { kind: "deterministic" },
+      }));
+
+      ctx.logger.info("memory_injection_preview", {
+        mode: "deterministic",
+        count: items.length,
+      });
+      return { ok: true, data: { items, mode: "deterministic" } };
+    }
+
+    const vec = createUserMemoryVecService({
+      db: ctx.db,
+      logger: ctx.logger,
+    });
+    const vecRes = vec.topK({
+      sources: sorted.map((m) => ({
+        memoryId: m.memoryId,
+        content: m.content,
+      })),
+      queryText: trimmedQueryText,
+      k: 8,
+      ts: nowTs(),
+    });
+
+    if (!vecRes.ok) {
+      ctx.reportDegradation({
+        projectId: scopedProjectId,
+        reason: `${vecRes.error.code}:${vecRes.error.message}`,
+      });
+      ctx.logger.info("memory_semantic_recall", {
+        mode: "deterministic",
+        reason: `${vecRes.error.code}:${vecRes.error.message}`,
+      });
+
+      const items: MemoryInjectionItem[] = sorted.map((item) => ({
+        id: item.memoryId,
+        type: item.type,
+        scope: item.scope,
+        origin: item.origin,
+        content: item.content,
+        reason: { kind: "deterministic" },
+      }));
+
+      ctx.logger.info("memory_injection_preview", {
+        mode: "deterministic",
+        count: items.length,
+      });
+      return {
+        ok: true,
+        data: {
+          items,
+          mode: "deterministic",
+          diagnostics: {
+            degradedFrom: "semantic",
+            reason: vecRes.error.message,
+          },
+        },
+      };
+    }
+
+    ctx.resetDegradation();
+    const scores = new Map<string, number>();
+    for (const m of vecRes.data.matches) {
+      scores.set(m.memoryId, m.score);
+    }
+
+    const withScores = sorted.map((m) => ({
+      memory: m,
+      score: scores.get(m.memoryId) ?? 0,
+    }));
+    withScores.sort((a, b) => {
+      if (a.score !== b.score) {
+        return b.score - a.score;
+      }
+      return compareDeterministic(a.memory, b.memory);
+    });
+
+    const items: MemoryInjectionItem[] = withScores.map(
+      ({ memory, score }) => ({
+        id: memory.memoryId,
+        type: memory.type,
+        scope: memory.scope,
+        origin: memory.origin,
+        content: memory.content,
+        reason:
+          score > 0
+            ? { kind: "semantic", score }
+            : { kind: "deterministic" },
+      }),
+    );
+
+    ctx.logger.info("memory_injection_preview", {
+      mode: "semantic",
+      count: items.length,
+    });
+    return { ok: true, data: { items, mode: "semantic" } };
+  } catch (error) {
+    ctx.logger.error("memory_injection_preview_failed", {
+      code: "DB_ERROR",
+      message: error instanceof Error ? error.message : String(error),
+    });
+    return ipcError("DB_ERROR", "Failed to preview memory injection");
+  }
+}
+
 /**
  * Create a MemoryService backed by SQLite (SSOT).
  */
@@ -490,120 +987,7 @@ export function createMemoryService(args: {
     getSettings,
     updateSettings,
 
-    create: ({ type, scope, projectId, documentId, content }) => {
-      if (!isMemoryType(type)) {
-        return ipcError("INVALID_ARGUMENT", "type is invalid");
-      }
-      if (!isMemoryScope(scope)) {
-        return ipcError("INVALID_ARGUMENT", "scope is invalid");
-      }
-      if (content.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "content is required");
-      }
-      const normalizedProjectId = normalizeOptionalId(projectId);
-      const normalizedDocumentId = normalizeOptionalId(documentId);
-
-      if (scope === "global") {
-        if (normalizedProjectId) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "projectId is not allowed for global scope",
-          );
-        }
-        if (normalizedDocumentId) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "documentId is not allowed for global scope",
-          );
-        }
-      }
-      if (scope === "project") {
-        if (!normalizedProjectId) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "projectId is required for project scope",
-          );
-        }
-        if (normalizedDocumentId) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "documentId is not allowed for project scope",
-          );
-        }
-      }
-      if (scope === "document") {
-        if (!normalizedProjectId) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "projectId is required for document scope",
-          );
-        }
-        if (!normalizedDocumentId) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "documentId is required for document scope",
-          );
-        }
-      }
-
-      const memoryId = randomUUID();
-      const ts = nowTs();
-      const scopedProjectId =
-        scope === "project" || scope === "document"
-          ? normalizedProjectId!
-          : null;
-      const scopedDocumentId =
-        scope === "document" ? normalizedDocumentId! : null;
-
-      try {
-        if (
-          scope === "document" &&
-          !documentExistsInProject(args.db, scopedProjectId!, scopedDocumentId!)
-        ) {
-          return ipcError("NOT_FOUND", "Document not found", {
-            projectId: scopedProjectId,
-            documentId: scopedDocumentId,
-          });
-        }
-
-        args.db
-          .prepare(
-            "INSERT INTO user_memory (memory_id, type, scope, project_id, document_id, origin, source_ref, content, created_at, updated_at, deleted_at) VALUES (?, ?, ?, ?, ?, 'manual', NULL, ?, ?, ?, NULL)",
-          )
-          .run(
-            memoryId,
-            type,
-            scope,
-            scopedProjectId,
-            scopedDocumentId,
-            content.trim(),
-            ts,
-            ts,
-          );
-
-        args.logger.info("memory_create", {
-          memory_id: memoryId,
-          type,
-          scope,
-          project_id: scopedProjectId,
-          document_id: scopedDocumentId,
-          origin: "manual",
-          content_len: content.trim().length,
-        });
-      } catch (error) {
-        args.logger.error("memory_create_failed", {
-          code: "DB_ERROR",
-          message: error instanceof Error ? error.message : String(error),
-        });
-        return ipcError("DB_ERROR", "Failed to create memory");
-      }
-
-      const row = selectMemoryById(args.db, memoryId);
-      if (!row) {
-        return ipcError("DB_ERROR", "Failed to load created memory");
-      }
-      return rowToMemory(row);
-    },
+    create: (a) => executeCreate(args.db, args.logger, a),
 
     list: ({ projectId, documentId, includeDeleted }) => {
       const scopedProjectId = normalizeOptionalId(projectId);
@@ -651,149 +1035,7 @@ export function createMemoryService(args: {
       }
     },
 
-    update: ({ memoryId, patch }) => {
-      if (memoryId.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "memoryId is required");
-      }
-      if (Object.keys(patch).length === 0) {
-        return ipcError("INVALID_ARGUMENT", "patch is required");
-      }
-
-      const existing = selectMemoryById(args.db, memoryId);
-      if (!existing) {
-        return ipcError("NOT_FOUND", "Memory not found", { memoryId });
-      }
-      const parsed = rowToMemory(existing);
-      if (!parsed.ok) {
-        return parsed;
-      }
-
-      const current = parsed.data;
-      const nextType = patch.type ?? current.type;
-      const nextScope = patch.scope ?? current.scope;
-      const nextContent = patch.content ?? current.content;
-      if (typeof patch.documentId === "string" && nextScope !== "document") {
-        return ipcError(
-          "INVALID_ARGUMENT",
-          "documentId is only allowed for document scope",
-        );
-      }
-      if (typeof patch.projectId === "string" && nextScope === "global") {
-        return ipcError(
-          "INVALID_ARGUMENT",
-          "projectId is not allowed for global scope",
-        );
-      }
-
-      const nextProjectId =
-        nextScope === "project" || nextScope === "document"
-          ? normalizeOptionalId(patch.projectId ?? current.projectId)
-          : null;
-      const nextDocumentId =
-        nextScope === "document"
-          ? normalizeOptionalId(patch.documentId ?? current.documentId)
-          : null;
-
-      if (!isMemoryType(nextType)) {
-        return ipcError("INVALID_ARGUMENT", "type is invalid");
-      }
-      if (!isMemoryScope(nextScope)) {
-        return ipcError("INVALID_ARGUMENT", "scope is invalid");
-      }
-      if (nextContent.trim().length === 0) {
-        return ipcError("INVALID_ARGUMENT", "content is required");
-      }
-      if (nextScope === "global") {
-        if (nextProjectId !== null || nextDocumentId !== null) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "global scope cannot have projectId/documentId",
-          );
-        }
-      }
-      if (nextScope === "project") {
-        if (!nextProjectId) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "projectId is required for project scope",
-          );
-        }
-        if (nextDocumentId !== null) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "documentId is not allowed for project scope",
-          );
-        }
-      }
-      if (nextScope === "document") {
-        if (!nextProjectId) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "projectId is required for document scope",
-          );
-        }
-        if (!nextDocumentId) {
-          return ipcError(
-            "INVALID_ARGUMENT",
-            "documentId is required for document scope",
-          );
-        }
-      }
-
-      const ts = nowTs();
-      try {
-        if (
-          nextScope === "document" &&
-          !documentExistsInProject(args.db, nextProjectId!, nextDocumentId!)
-        ) {
-          return ipcError("NOT_FOUND", "Document not found", {
-            projectId: nextProjectId,
-            documentId: nextDocumentId,
-          });
-        }
-
-        args.db
-          .prepare(
-            "UPDATE user_memory SET type = ?, scope = ?, project_id = ?, document_id = ?, content = ?, updated_at = ? WHERE memory_id = ?",
-          )
-          .run(
-            nextType,
-            nextScope,
-            nextScope === "project" || nextScope === "document"
-              ? nextProjectId
-              : null,
-            nextScope === "document" ? nextDocumentId : null,
-            nextContent.trim(),
-            ts,
-            memoryId,
-          );
-
-        args.logger.info("memory_update", {
-          memory_id: memoryId,
-          type: nextType,
-          scope: nextScope,
-          project_id:
-            nextScope === "project" || nextScope === "document"
-              ? nextProjectId
-              : null,
-          document_id: nextScope === "document" ? nextDocumentId : null,
-          origin: current.origin,
-          content_len: nextContent.trim().length,
-        });
-      } catch (error) {
-        args.logger.error("memory_update_failed", {
-          code: "DB_ERROR",
-          message: error instanceof Error ? error.message : String(error),
-        });
-        return ipcError("DB_ERROR", "Failed to update memory");
-      }
-
-      const updated = selectMemoryById(args.db, memoryId);
-      if (!updated) {
-        return ipcError("DB_ERROR", "Failed to load updated memory");
-      }
-      return rowToMemory(updated);
-    },
+    update: (a) => executeMemoryUpdate(args.db, args.logger, a),
 
     delete: ({ memoryId }) => {
       if (memoryId.trim().length === 0) {
@@ -831,175 +1073,17 @@ export function createMemoryService(args: {
       }
     },
 
-    previewInjection: ({ projectId, documentId, queryText }) => {
-      const settings = getSettings();
-      if (!settings.ok) {
-        return settings;
-      }
-
-      if (!settings.data.injectionEnabled) {
-        resetSemanticDegradation();
-        args.logger.info("memory_injection_preview", {
-          mode: "deterministic",
-          count: 0,
-          disabled: true,
-        });
-        return { ok: true, data: { items: [], mode: "deterministic" } };
-      }
-
-      const scopedProjectId = normalizeOptionalId(projectId);
-      const scopedDocumentId = normalizeOptionalId(documentId);
-      if (scopedDocumentId && !scopedProjectId) {
-        return ipcError(
-          "INVALID_ARGUMENT",
-          "projectId is required when documentId is provided",
-        );
-      }
-      const whereScope = scopedProjectId
-        ? scopedDocumentId
-          ? "AND (scope = 'global' OR (scope = 'project' AND project_id = ?) OR (scope = 'document' AND project_id = ? AND document_id = ?))"
-          : "AND (scope = 'global' OR (scope = 'project' AND project_id = ?))"
-        : "AND scope = 'global'";
-
-      try {
-        const stmt = args.db.prepare<unknown[], MemoryRow>(
-          `SELECT memory_id as memoryId, type, scope, project_id as projectId, document_id as documentId, origin, source_ref as sourceRef, content, created_at as createdAt, updated_at as updatedAt, deleted_at as deletedAt
-           FROM user_memory
-           WHERE deleted_at IS NULL ${whereScope}`,
-        );
-        const rows = scopedProjectId
-          ? scopedDocumentId
-            ? stmt.all(scopedProjectId, scopedProjectId, scopedDocumentId)
-            : stmt.all(scopedProjectId)
-          : stmt.all();
-
-        const parsed: UserMemoryItem[] = [];
-        for (const row of rows) {
-          const mapped = rowToMemory(row);
-          if (!mapped.ok) {
-            return mapped;
-          }
-          parsed.push(mapped.data);
-        }
-
-        const sorted = deterministicMemorySort(parsed);
-
-        const trimmedQueryText =
-          typeof queryText === "string" ? queryText.trim() : "";
-        const wantsSemantic = trimmedQueryText.length > 0;
-
-        if (!wantsSemantic) {
-          resetSemanticDegradation();
-          const items: MemoryInjectionItem[] = sorted.map((item) => ({
-            id: item.memoryId,
-            type: item.type,
-            scope: item.scope,
-            origin: item.origin,
-            content: item.content,
-            reason: { kind: "deterministic" },
-          }));
-
-          args.logger.info("memory_injection_preview", {
-            mode: "deterministic",
-            count: items.length,
-          });
-          return { ok: true, data: { items, mode: "deterministic" } };
-        }
-
-        const vec = createUserMemoryVecService({
+    previewInjection: (a) =>
+      executePreviewInjection(
+        {
           db: args.db,
           logger: args.logger,
-        });
-        const vecRes = vec.topK({
-          sources: sorted.map((m) => ({
-            memoryId: m.memoryId,
-            content: m.content,
-          })),
-          queryText: trimmedQueryText,
-          k: 8,
-          ts: nowTs(),
-        });
-
-        if (!vecRes.ok) {
-          reportSemanticDegradation({
-            projectId: scopedProjectId,
-            reason: `${vecRes.error.code}:${vecRes.error.message}`,
-          });
-          args.logger.info("memory_semantic_recall", {
-            mode: "deterministic",
-            reason: `${vecRes.error.code}:${vecRes.error.message}`,
-          });
-
-          const items: MemoryInjectionItem[] = sorted.map((item) => ({
-            id: item.memoryId,
-            type: item.type,
-            scope: item.scope,
-            origin: item.origin,
-            content: item.content,
-            reason: { kind: "deterministic" },
-          }));
-
-          args.logger.info("memory_injection_preview", {
-            mode: "deterministic",
-            count: items.length,
-          });
-          return {
-            ok: true,
-            data: {
-              items,
-              mode: "deterministic",
-              diagnostics: {
-                degradedFrom: "semantic",
-                reason: vecRes.error.message,
-              },
-            },
-          };
-        }
-
-        resetSemanticDegradation();
-        const scores = new Map<string, number>();
-        for (const m of vecRes.data.matches) {
-          scores.set(m.memoryId, m.score);
-        }
-
-        const withScores = sorted.map((m) => ({
-          memory: m,
-          score: scores.get(m.memoryId) ?? 0,
-        }));
-        withScores.sort((a, b) => {
-          if (a.score !== b.score) {
-            return b.score - a.score;
-          }
-          return compareDeterministic(a.memory, b.memory);
-        });
-
-        const items: MemoryInjectionItem[] = withScores.map(
-          ({ memory, score }) => ({
-            id: memory.memoryId,
-            type: memory.type,
-            scope: memory.scope,
-            origin: memory.origin,
-            content: memory.content,
-            reason:
-              score > 0
-                ? { kind: "semantic", score }
-                : { kind: "deterministic" },
-          }),
-        );
-
-        args.logger.info("memory_injection_preview", {
-          mode: "semantic",
-          count: items.length,
-        });
-        return { ok: true, data: { items, mode: "semantic" } };
-      } catch (error) {
-        args.logger.error("memory_injection_preview_failed", {
-          code: "DB_ERROR",
-          message: error instanceof Error ? error.message : String(error),
-        });
-        return ipcError("DB_ERROR", "Failed to preview memory injection");
-      }
-    },
+          getSettings,
+          resetDegradation: resetSemanticDegradation,
+          reportDegradation: reportSemanticDegradation,
+        },
+        a,
+      ),
   };
 }
 
