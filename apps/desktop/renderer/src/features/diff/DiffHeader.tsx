@@ -159,7 +159,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               px-3 py-1 text-xs font-medium rounded transition-colors
               ${
                 props.viewMode === "split"
-                  ? "bg-[var(--color-bg-raised)] shadow-sm text-[var(--color-fg-default)] border border-[var(--color-border-default)]"
+                  ? "bg-[var(--color-bg-raised)] shadow-[var(--shadow-sm)] text-[var(--color-fg-default)] border border-[var(--color-border-default)]"
                   : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
               }
             `}
@@ -173,7 +173,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               px-3 py-1 text-xs font-medium rounded transition-colors
               ${
                 props.viewMode === "unified"
-                  ? "bg-[var(--color-bg-raised)] shadow-sm text-[var(--color-fg-default)] border border-[var(--color-border-default)]"
+                  ? "bg-[var(--color-bg-raised)] shadow-[var(--shadow-sm)] text-[var(--color-fg-default)] border border-[var(--color-border-default)]"
                   : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
               }
             `}

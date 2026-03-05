@@ -42,7 +42,9 @@ const rule = {
 
     // Matches: shadow-lg, shadow-xl, shadow-2xl (but not shadow-[custom] or shadow-surface etc.)
     // Also with modifier prefixes: hover:shadow-lg, data-[state=active]:shadow-sm
-    const RAW_SHADOW_RE = /\b(?:[\w[\]=-]*:)?shadow-(?:sm|md|lg|xl|2xl)\b/g;
+    // Negative lookbehind (?<!-) prevents matching inside CSS var names (--shadow-md)
+    // and Tailwind drop-shadow utilities (drop-shadow-md).
+    const RAW_SHADOW_RE = /(?<!-)\b(?:[\w[\]=-]*:)?shadow-(?:sm|md|lg|xl|2xl)\b/g;
 
     /**
      * Check a string value for raw Tailwind tokens.

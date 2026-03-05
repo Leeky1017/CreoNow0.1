@@ -129,11 +129,11 @@ export const ROLE_DISPLAY: Record<
   CharacterRole,
   { label: string; color: string }
 > = {
-  protagonist: { label: "Protagonist", color: "text-blue-400" },
-  antagonist: { label: "Antagonist", color: "text-red-400" },
-  deuteragonist: { label: "Deuteragonist", color: "text-purple-400" },
-  mentor: { label: "Mentor", color: "text-green-400" },
-  ally: { label: "Ally", color: "text-yellow-400" },
+  protagonist: { label: "Protagonist", color: "text-[var(--color-accent-blue)]" },
+  antagonist: { label: "Antagonist", color: "text-[var(--color-error)]" },
+  deuteragonist: { label: "Deuteragonist", color: "text-[var(--color-accent-purple)]" },
+  mentor: { label: "Mentor", color: "text-[var(--color-success)]" },
+  ally: { label: "Ally", color: "text-[var(--color-warning)]" },
 };
 
 /**
@@ -143,12 +143,12 @@ export const RELATIONSHIP_TYPE_DISPLAY: Record<
   RelationshipType,
   { label: string; color: string }
 > = {
-  rival: { label: "Rival", color: "bg-red-500/50" },
-  mentor: { label: "Mentor", color: "bg-blue-500/50" },
-  ally: { label: "Ally", color: "bg-green-500/50" },
-  enemy: { label: "Enemy", color: "bg-red-600/50" },
-  friend: { label: "Friend", color: "bg-blue-400/50" },
-  family: { label: "Family", color: "bg-purple-500/50" },
+  rival: { label: "Rival", color: "bg-[var(--color-error)]/50" },
+  mentor: { label: "Mentor", color: "bg-[var(--color-accent-blue)]/50" },
+  ally: { label: "Ally", color: "bg-[var(--color-success)]/50" },
+  enemy: { label: "Enemy", color: "bg-[var(--color-error)]/50" },
+  friend: { label: "Friend", color: "bg-[var(--color-info)]/50" },
+  family: { label: "Family", color: "bg-[var(--color-accent-purple)]/50" },
 };
 
 /**
