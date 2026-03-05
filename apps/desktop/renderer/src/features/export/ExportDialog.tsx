@@ -634,7 +634,7 @@ function SuccessView(props: {
         </div>
         <div className="p-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] space-y-1">
           <div className="text-xs text-[var(--color-fg-muted)]">
-            <span className="font-mono">relativePath</span>:{" "}
+            <span className="font-mono">{t('workbench.export.fieldRelativePath')}</span>:{" "}
             <span
               data-testid="export-success-relative-path"
               className="font-mono"
@@ -643,7 +643,7 @@ function SuccessView(props: {
             </span>
           </div>
           <div className="text-xs text-[var(--color-fg-muted)]">
-            <span className="font-mono">bytesWritten</span>:{" "}
+            <span className="font-mono">{t('workbench.export.fieldBytesWritten')}</span>:{" "}
             <span
               data-testid="export-success-bytes-written"
               className="font-mono"

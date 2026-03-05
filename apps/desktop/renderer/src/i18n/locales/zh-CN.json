@@ -4,7 +4,9 @@
       "appShell": "工作台外壳"
     },
     "export": {
-      "currentDocument": "当前文档"
+      "currentDocument": "当前文档",
+      "fieldRelativePath": "relativePath",
+      "fieldBytesWritten": "bytesWritten"
     },
     "commandPalette": {
       "ariaLabel": "命令面板",
@@ -14,7 +16,8 @@
       "footer": {
         "navigation": "导航",
         "select": "选择",
-        "close": "关闭"
+        "close": "关闭",
+        "escKey": "esc"
       },
       "groups": {
         "suggestions": "建议",
@@ -60,7 +63,10 @@
         "createNewProject": "新建项目",
         "openFolder": "打开文件夹"
       },
-      "aiPanelLabel": "AI 面板 (Ctrl+L)"
+      "aiPanelLabel": "AI 面板 (Ctrl+L)",
+      "noProjectCharacters": "请先打开项目以管理角色",
+      "noProjectKg": "请先打开项目以查看知识图谱",
+      "noDocumentHistory": "请先打开文档以查看历史"
     },
     "leftPanel": {
       "close": "关闭",
@@ -72,7 +78,8 @@
       "tabQuality": "质量",
       "historyTitle": "历史",
       "newChatTitle": "新对话",
-      "collapsePanel": "收起面板"
+      "collapsePanel": "收起面板",
+      "closeSymbol": "✕"
     },
     "sidebar": {
       "panelTitle": {
@@ -133,7 +140,12 @@
       "history": "历史",
       "restoreTooltip": "将在 version-control-p2 中接入完整恢复流程",
       "restoreVersion": "恢复到此版本",
-      "backToCurrent": "返回当前版本"
+      "backToCurrent": "返回当前版本",
+      "loadingEditor": "加载编辑器…",
+      "noDocumentSelected": "未选择文档。",
+      "loadingDocument": "加载文档…",
+      "finalDocumentHint": "此文档已定稿，编辑前请确认。",
+      "editAnyway": "仍然编辑"
     },
     "toolbar": {
       "horizontalRule": "分隔线",
@@ -259,7 +271,8 @@
       "toOpen": "打开",
       "toClose": "关闭"
     },
-    "inputPlaceholder": "搜索…"
+    "inputPlaceholder": "搜索…",
+    "matchScore": "{{score}}% 匹配"
   },
   "ai": {
     "contextSummary": "AI 面板上下文摘要",
@@ -331,7 +344,8 @@
       "customSkillList": "自定义技能列表",
       "loading": "加载中...",
       "noCustomSkills": "暂无自定义技能",
-      "edit": "编辑"
+      "edit": "编辑",
+      "fieldContextRules": "contextRules (JSON)"
     },
     "diff": {
       "accepted": "已接受",
@@ -439,6 +453,7 @@
   "onboarding": {
     "welcome": "欢迎使用 CreoNow",
     "subtitle": "AI 驱动的文字创作 IDE",
+    "appName": "CreoNow",
     "selectLanguage": "选择语言 / Select Language",
     "selectLanguageHint": "请选择你的界面显示语言。",
     "next": "下一步",
@@ -613,7 +628,10 @@
       "pauseLearning": "暂停学习",
       "addRule": "新增规则",
       "category": "分类",
-      "saveRule": "保存规则"
+      "saveRule": "保存规则",
+      "title": "记忆",
+      "dismissError": "关闭",
+      "emptyIcon": "✦"
     },
     "settings": {
       "title": "记忆设置",
@@ -646,7 +664,16 @@
       "generateDraft": "生成草案",
       "draftInfo": "{{name}}（{{type}}）",
       "draftStats": "章节：{{chapters}}，角色：{{characters}}",
-      "useDraft": "使用此草案继续手动创建"
+      "useDraft": "使用此草案继续手动创建",
+      "projectNameLabel": "项目名称",
+      "nameRequired": "项目名称不能为空",
+      "templateLabel": "模板",
+      "yourTemplates": "自定义模板",
+      "createTemplateButton": "创建模板",
+      "descriptionLabel": "描述",
+      "optionalHint": "（可选）",
+      "coverImageLabel": "封面图片",
+      "cancel": "取消"
     },
     "delete": {
       "description": "删除项目\"{{name}}\"将永久删除所有文档（{{count}} 篇）、知识图谱数据和版本历史。请输入项目名称确认删除。",
@@ -711,7 +738,10 @@
       "markAsDraft": "标记为草稿",
       "markAsFinal": "标记为定稿",
       "collapse": "收起",
-      "expand": "展开"
+      "expand": "展开",
+      "ok": "确定",
+      "closeSymbol": "✕",
+      "moreActions": "⋯"
     }
   },
   "versionHistory": {
@@ -722,7 +752,26 @@
       "aiModify": "AI 修改",
       "restoreVersion": "恢复版本",
       "versionSnapshot": "版本快照",
-      "history": "历史"
+      "history": "历史",
+      "openDocumentToViewHistory": "打开文档以查看历史",
+      "failedToLoadHistory": "加载版本历史失败",
+      "noVersionsYet": "暂无版本。保存文档以创建版本。",
+      "branchMerge": "分支合并",
+      "sourceBranch": "源分支",
+      "targetBranch": "目标分支",
+      "merging": "合并中...",
+      "mergeBranches": "合并分支",
+      "branchMergeCompleted": "分支合并完成。",
+      "mergeConflictDiff": "合并冲突差异",
+      "dismiss": "关闭",
+      "conflictNumber": "冲突 #{{number}}",
+      "base": "基准",
+      "ours": "我方",
+      "theirs": "对方",
+      "useOurs": "我方",
+      "useTheirs": "对方",
+      "useManual": "手动",
+      "submitConflictResolution": "提交冲突解决"
     },
     "panel": {
       "closeAriaLabel": "关闭版本历史",
@@ -732,7 +781,18 @@
       "statusChange": "状态变更",
       "reason": "原因:",
       "affectedParagraphs": "{{count}} 段落受影响",
-      "changePreview": "变更预览"
+      "changePreview": "变更预览",
+      "noChanges": "无变更",
+      "wordsCount": "{{sign}}{{count}} 词",
+      "restore": "恢复",
+      "compare": "对比",
+      "preview": "预览",
+      "current": "当前",
+      "title": "版本历史",
+      "autoSaveOn": "自动保存已开启（上次保存于 {{time}}）",
+      "autoSaveOff": "自动保存已关闭",
+      "configureAutoSave": "配置自动保存设置",
+      "wordsChanged": "{{value}} 词已变更"
     },
     "preview": {
       "actorUser": "用户",
@@ -797,11 +857,29 @@
   },
   "settingsDialog": {
     "account": {
-      "comingSoon": "即将推出"
+      "comingSoon": "即将推出",
+      "title": "账户",
+      "subtitle": "管理你的账户设置和订阅。",
+      "profile": "个人资料",
+      "editProfile": "编辑资料",
+      "subscription": "订阅",
+      "currentPlan": "当前方案",
+      "upgradeToPro": "升级到 Pro",
+      "manageSubscription": "管理订阅",
+      "dangerZone": "危险操作",
+      "deleteAccount": "删除账户",
+      "deleteAccountDescription": "永久删除你的账户及所有关联数据。"
     },
     "general": {
       "zhCN": "中文 (简体)",
-      "aiModifyMarker": "AI 修改"
+      "aiModifyMarker": "AI 修改",
+      "title": "通用",
+      "subtitle": "自定义你的写作环境和工作流偏好。",
+      "language": "语言",
+      "writingExperience": "写作体验",
+      "dataAndStorage": "数据与存储",
+      "editorDefaults": "编辑器默认值",
+      "differentiateAiEditsDescription": "启用后，版本历史中 AI 生成的条目将显示额外的\u201c{{marker}}\u201d标记。"
     },
     "appearance": {
       "colorWhite": "白色",
@@ -819,7 +897,8 @@
       "accentColor": "强调色",
       "selectAccentColor": "选择 {{color}} 强调色",
       "fontSize": "字号",
-      "editorFontSize": "编辑器字号"
+      "editorFontSize": "编辑器字号",
+      "fontSizePx": "{{size}}px"
     },
     "dialog": {
       "navGeneral": "通用",
@@ -924,7 +1003,8 @@
       "deleteEntityDescription": "该实体及其所有关系将被永久删除。",
       "deleteRelationTitle": "删除关系？",
       "deleteRelationDescription": "该关系将被永久删除。",
-      "newEntity": "新实体"
+      "newEntity": "新实体",
+      "relationFormat": "{{source}} -({{type}})→ {{target}}"
     },
     "legend": {
       "title": "图例",
@@ -1062,7 +1142,9 @@
     "done": "完成！",
     "keyboard": {
       "toConfirm": "确认",
-      "toCancel": "取消"
+      "toCancel": "取消",
+      "enterKey": "Enter",
+      "escKey": "Esc"
     }
   },
   "analytics": {

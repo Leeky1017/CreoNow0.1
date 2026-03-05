@@ -448,7 +448,7 @@ export function VersionHistoryContainer(
   if (!documentId) {
     return (
       <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-        Open a document to view history
+        {t('versionHistory.container.openDocumentToViewHistory')}
       </div>
     );
   }
@@ -464,7 +464,7 @@ export function VersionHistoryContainer(
   if (status === "error") {
     return (
       <div className="p-3 text-xs text-[var(--color-error)]">
-        Failed to load version history
+        {t('versionHistory.container.failedToLoadHistory')}
       </div>
     );
   }
@@ -472,7 +472,7 @@ export function VersionHistoryContainer(
   if (items.length === 0) {
     return (
       <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-        No versions yet. Save your document to create versions.
+        {t('versionHistory.container.noVersionsYet')}
       </div>
     );
   }
@@ -491,11 +491,11 @@ export function VersionHistoryContainer(
       />
       <div className="mx-3 mt-3 space-y-2 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-3">
         <div className="text-xs font-semibold text-[var(--color-fg-default)]">
-          Branch Merge
+          {t('versionHistory.container.branchMerge')}
         </div>
         <div className="grid grid-cols-1 gap-2">
           <label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
-            Source Branch
+            {t('versionHistory.container.sourceBranch')}
             <input
               data-testid="branch-merge-source-input"
               className="rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2 py-1 text-xs text-[var(--color-fg-default)]"
@@ -504,7 +504,7 @@ export function VersionHistoryContainer(
             />
           </label>
           <label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
-            Target Branch
+            {t('versionHistory.container.targetBranch')}
             <input
               data-testid="branch-merge-target-input"
               className="rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2 py-1 text-xs text-[var(--color-fg-default)]"
@@ -524,11 +524,11 @@ export function VersionHistoryContainer(
             targetBranchName.trim().length === 0
           }
         >
-          {branchMergeStatus === "loading" ? "Merging..." : "Merge Branches"}
+          {branchMergeStatus === "loading" ? t('versionHistory.container.merging') : t('versionHistory.container.mergeBranches')}
         </button>
         {branchMergeStatus === "ready" ? (
           <div className="text-[11px] text-[var(--color-success)]">
-            Branch merge completed.
+            {t('versionHistory.container.branchMergeCompleted')}
           </div>
         ) : null}
         {branchMergeStatus === "error" && branchMergeError ? (
@@ -544,14 +544,14 @@ export function VersionHistoryContainer(
         >
           <div className="flex items-center justify-between gap-2">
             <div className="text-xs font-semibold text-[var(--color-fg-default)]">
-              Merge Conflict Diff
+              {t('versionHistory.container.mergeConflictDiff')}
             </div>
             <button
               type="button"
               className="focus-ring rounded border border-[var(--color-border-default)] px-2 py-1 text-[11px] text-[var(--color-fg-muted)]"
               onClick={clearBranchMergeState}
             >
-              Dismiss
+              {t('versionHistory.container.dismiss')}
             </button>
           </div>
 
@@ -567,12 +567,12 @@ export function VersionHistoryContainer(
                 className="space-y-2 rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2"
               >
                 <div className="text-[11px] text-[var(--color-fg-muted)]">
-                  Conflict #{conflict.index + 1}
+                  {t('versionHistory.container.conflictNumber', { number: conflict.index + 1 })}
                 </div>
                 <div className="grid grid-cols-1 gap-2 text-xs text-[var(--color-fg-default)]">
                   <div>
                     <div className="text-[11px] text-[var(--color-fg-muted)]">
-                      Base
+                      {t('versionHistory.container.base')}
                     </div>
                     <pre className="whitespace-pre-wrap font-mono text-xs">
                       {conflict.baseText}
@@ -580,7 +580,7 @@ export function VersionHistoryContainer(
                   </div>
                   <div>
                     <div className="text-[11px] text-[var(--color-fg-muted)]">
-                      Ours
+                      {t('versionHistory.container.ours')}
                     </div>
                     <pre className="whitespace-pre-wrap font-mono text-xs">
                       {conflict.oursText}
@@ -588,7 +588,7 @@ export function VersionHistoryContainer(
                   </div>
                   <div>
                     <div className="text-[11px] text-[var(--color-fg-muted)]">
-                      Theirs
+                      {t('versionHistory.container.theirs')}
                     </div>
                     <pre className="whitespace-pre-wrap font-mono text-xs">
                       {conflict.theirsText}
@@ -606,7 +606,7 @@ export function VersionHistoryContainer(
                         handleResolutionChange(conflict.conflictId, "ours")
                       }
                     />
-                    ours
+                    {t('versionHistory.container.useOurs')}
                   </label>
                   <label className="inline-flex items-center gap-1">
                     <input
@@ -617,7 +617,7 @@ export function VersionHistoryContainer(
                         handleResolutionChange(conflict.conflictId, "theirs")
                       }
                     />
-                    theirs
+                    {t('versionHistory.container.useTheirs')}
                   </label>
                   <label className="inline-flex items-center gap-1">
                     <input
@@ -629,7 +629,7 @@ export function VersionHistoryContainer(
                         handleResolutionChange(conflict.conflictId, "manual")
                       }
                     />
-                    manual
+                    {t('versionHistory.container.useManual')}
                   </label>
                 </div>
                 {selected.resolution === "manual" ? (
@@ -656,7 +656,7 @@ export function VersionHistoryContainer(
             onClick={() => void handleResolveConflicts()}
             disabled={hasInvalidManualResolution}
           >
-            Submit Conflict Resolution
+            {t('versionHistory.container.submitConflictResolution')}
           </button>
         </div>
       ) : null}

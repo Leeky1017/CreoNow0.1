@@ -424,7 +424,7 @@ export function SkillManagerDialog(props: {
             </div>
 
             <label className="block text-xs text-[var(--color-fg-muted)]">
-              contextRules (JSON)
+              {t("ai.skillManager.fieldContextRules")}
               <textarea
                 value={form.contextRulesText}
                 onChange={(e) =>

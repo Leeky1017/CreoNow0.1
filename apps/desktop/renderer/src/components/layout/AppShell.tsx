@@ -752,7 +752,7 @@ export function AppShell(): JSX.Element {
         if (!currentProjectId) {
           return (
             <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-              Open a project to manage characters
+              {t('workbench.appShell.noProjectCharacters')}
             </div>
           );
         }
@@ -761,7 +761,7 @@ export function AppShell(): JSX.Element {
         if (!currentProjectId) {
           return (
             <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-              Open a project to view knowledge graph
+              {t('workbench.appShell.noProjectKg')}
             </div>
           );
         }
@@ -770,7 +770,7 @@ export function AppShell(): JSX.Element {
         if (!currentProjectId) {
           return (
             <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-              Open a document to view history
+              {t('workbench.appShell.noDocumentHistory')}
             </div>
           );
         }

@@ -118,15 +118,15 @@ export function SettingsGeneral({
     <div className="max-w-[560px]">
       {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">
-        General
+        {t('settingsDialog.general.title')}
       </h1>
       <p className="text-[var(--color-fg-subtle)] text-sm mb-12 font-light">
-        Customize your writing environment and workflow preferences.
+        {t('settingsDialog.general.subtitle')}
       </p>
 
       {/* Language Section */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>Language</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.general.language')}</h4>
         <FormField label={t('settings.general.displayLanguage')} htmlFor="display-language" help={t('settings.general.displayLanguageHelp')}>
           <Select
             options={languageOptions}
@@ -141,7 +141,7 @@ export function SettingsGeneral({
 
       {/* Writing Experience Section */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>Writing Experience</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.general.writingExperience')}</h4>
 
         <div className="flex flex-col gap-8">
           <Toggle
@@ -175,7 +175,7 @@ export function SettingsGeneral({
 
       {/* Data & Storage Section */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>Data & Storage</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.general.dataAndStorage')}</h4>
 
         <div className="flex flex-col gap-6">
           <Toggle
@@ -202,12 +202,12 @@ export function SettingsGeneral({
 
       {/* Editor Defaults Section */}
       <div className="mb-6">
-        <h4 className={sectionLabelStyles}>Editor Defaults</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.general.editorDefaults')}</h4>
 
         <div className="flex flex-col gap-8 mb-8">
           <Toggle
             label={t('settings.general.differentiateAiEdits')}
-            description={`When enabled, AI-generated entries in Version History show an extra \u201c${t('settingsDialog.general.aiModifyMarker')}\u201d marker.`}
+            description={t('settingsDialog.general.differentiateAiEditsDescription', { marker: t('settingsDialog.general.aiModifyMarker') })}
             checked={showAiMarks}
             onCheckedChange={onShowAiMarksChange}
           />

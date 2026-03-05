@@ -293,7 +293,7 @@ export function OnboardingPage({
               C
             </div>
             <span className="text-xl font-medium tracking-tight text-[var(--color-fg-default)]">
-              CreoNow
+              {t("onboarding.appName")}
             </span>
           </div>
           <Heading

@@ -927,7 +927,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                             void onCommitRename();
                           }}
                         >
-                          OK
+                          {t('files.tree.ok')}
                         </Button>
                         <Button
                           variant="ghost"
@@ -937,7 +937,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                             setEditing({ mode: "idle" });
                           }}
                         >
-                          ✕
+                          {t('files.tree.closeSymbol')}
                         </Button>
                       </div>
                     </div>
@@ -1047,7 +1047,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                             onClick={(e) => e.stopPropagation()}
                             className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity shrink-0 w-6 h-6 p-0"
                           >
-                            ⋯
+                            {t('files.tree.moreActions')}
                           </Button>
                         }
                         side="bottom"

@@ -224,7 +224,7 @@ export function SettingsAppearancePage({
               {t('settingsDialog.appearance.editorFontSize')}
             </Text>
             <Text size="small" color="default" weight="medium">
-              {settings.fontSize}px
+              {t('settingsDialog.appearance.fontSizePx', { size: settings.fontSize })}
             </Text>
           </div>
           <Slider

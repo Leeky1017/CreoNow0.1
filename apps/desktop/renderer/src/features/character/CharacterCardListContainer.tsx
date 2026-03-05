@@ -153,7 +153,7 @@ export function CharacterCardListContainer({
     return (
       <div className="h-full flex flex-col items-center justify-center gap-2 p-4">
         <span className="text-sm text-[var(--color-error-default)]">
-          Failed to load characters
+          {t('character.panelContainer.loadError')}
         </span>
         <span className="text-xs text-[var(--color-fg-muted)]">
           {lastError.code}: {lastError.message}

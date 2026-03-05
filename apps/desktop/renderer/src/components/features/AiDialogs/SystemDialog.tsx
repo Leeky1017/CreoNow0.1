@@ -613,10 +613,10 @@ export function SystemDialog({
           {showKeyboardHints && (
             <div className={keyboardHintStyles}>
               <span>
-                <kbd className={kbdStyles}>Enter</kbd> {t('systemDialog.keyboard.toConfirm')}
+                <kbd className={kbdStyles}>{t('systemDialog.keyboard.enterKey')}</kbd> {t('systemDialog.keyboard.toConfirm')}
               </span>
               <span>
-                <kbd className={kbdStyles}>Esc</kbd> {t('systemDialog.keyboard.toCancel')}
+                <kbd className={kbdStyles}>{t('systemDialog.keyboard.escKey')}</kbd> {t('systemDialog.keyboard.toCancel')}
               </span>
             </div>
           )}

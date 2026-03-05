@@ -965,7 +965,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
   if (bootstrapStatus !== "ready") {
     return (
       <Text as="div" size="body" color="muted" className="p-4">
-        Loading editor…
+        {t('editor.pane.loadingEditor')}
       </Text>
     );
   }
@@ -973,7 +973,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
   if (!documentId) {
     return (
       <Text as="div" size="body" color="muted" className="p-4">
-        No document selected.
+        {t('editor.pane.noDocumentSelected')}
       </Text>
     );
   }
@@ -981,7 +981,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
   if (!contentReady) {
     return (
       <Text as="div" size="body" color="muted" className="p-4">
-        Loading document…
+        {t('editor.pane.loadingDocument')}
       </Text>
     );
   }
@@ -1045,7 +1045,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
           className="flex items-center justify-between gap-3 border-b border-[var(--color-separator)] bg-[var(--color-bg-surface)] px-4 py-2"
         >
           <Text size="small" color="muted">
-            This document is final. Confirm before editing.
+            {t('editor.pane.finalDocumentHint')}
           </Text>
           <Button
             data-testid="final-document-edit-trigger"
@@ -1053,7 +1053,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
             size="sm"
             onClick={() => void requestEditFromFinal()}
           >
-            Edit Anyway
+            {t('editor.pane.editAnyway')}
           </Button>
         </div>
       ) : null}

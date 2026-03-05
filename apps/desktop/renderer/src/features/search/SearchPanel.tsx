@@ -140,6 +140,7 @@ function DocumentResultItem(props: {
   onClick: () => void;
 }): JSX.Element {
   const { item, query, isActive, isFlashing, onClick } = props;
+  const { t } = useTranslation();
 
   return (
     <ListItem
@@ -180,7 +181,7 @@ function DocumentResultItem(props: {
           </h4>
           {item.matchScore && (
             <span className="text-[10px] font-mono text-[var(--color-info)] bg-[var(--color-info-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-info-subtle)] shrink-0">
-              {item.matchScore}% match
+              {t('search.matchScore', { score: item.matchScore })}
             </span>
           )}
         </div>

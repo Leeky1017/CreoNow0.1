@@ -213,7 +213,7 @@ export function RightPanel(props: {
               className="text-xs px-1.5 py-1 rounded-[var(--radius-sm)] text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] cursor-pointer transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)]"
               aria-label={t("workbench.rightPanel.collapsePanel")}
             >
-              ✕
+              {t("workbench.rightPanel.closeSymbol")}
             </button>
           ) : null}
         </div>

@@ -312,10 +312,11 @@ function DiffSummaryPreview({ summary }: { summary?: string }) {
  * Word change badge component
  */
 function WordChangeBadge({ change }: { change: WordChange }) {
+  const { t } = useTranslation();
   if (change.type === "none") {
     return (
       <span className="text-[10px] text-[var(--color-fg-muted)] font-mono bg-[var(--color-zen-hover)] px-1 rounded">
-        No changes
+        {t("versionHistory.panel.noChanges")}
       </span>
     );
   }
@@ -328,8 +329,7 @@ function WordChangeBadge({ change }: { change: WordChange }) {
 
   return (
     <span className={`text-[10px] font-mono px-1 rounded ${colorClasses}`}>
-      {sign}
-      {change.count} words
+      {t("versionHistory.panel.wordsCount", { sign, count: change.count })}
     </span>
   );
 }
@@ -471,7 +471,7 @@ function VersionCard({
             onClick={() => onRestore?.(version.id)}
             className="!h-7 !text-[10px] !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
           >
-            Restore
+            {t("versionHistory.panel.restore")}
           </Button>
           <Button
             variant="secondary"
@@ -479,7 +479,7 @@ function VersionCard({
             onClick={() => onCompare?.(version.id)}
             className="!h-7 !text-[10px] !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
           >
-            Compare
+            {t("versionHistory.panel.compare")}
           </Button>
           <Button
             variant="secondary"
@@ -487,7 +487,7 @@ function VersionCard({
             onClick={() => onPreview?.(version.id)}
             className="!h-7 !text-[10px] !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
           >
-            Preview
+            {t("versionHistory.panel.preview")}
           </Button>
         </div>
       </div>
@@ -504,7 +504,7 @@ function VersionCard({
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent)] bg-[var(--color-accent-subtle)] px-1.5 py-0.5 rounded">
-              Current
+              {t("versionHistory.panel.current")}
             </span>
             <span className="text-xs text-[var(--color-fg-placeholder)]">
               {version.timestamp}
@@ -526,8 +526,8 @@ function VersionCard({
         <div className="flex items-center justify-between text-[11px]">
           <span className="text-[var(--color-fg-placeholder)] font-medium">
             {version.wordChange.count === 0
-              ? "0 words changed"
-              : `${version.wordChange.type === "added" ? "+" : "-"}${version.wordChange.count} words changed`}
+              ? t("versionHistory.panel.wordsChanged", { value: "0" })
+              : t("versionHistory.panel.wordsChanged", { value: `${version.wordChange.type === "added" ? "+" : "-"}${version.wordChange.count}` })}
           </span>
         </div>
       </div>
@@ -715,7 +715,7 @@ export function VersionHistoryPanelContent({
       <div className={headerStyles}>
         <div>
           <h2 className="text-[15px] font-semibold text-[var(--color-fg-default)] tracking-tight">
-            Version History
+            {t("versionHistory.panel.title")}
           </h2>
           <p className="text-xs text-[var(--color-fg-muted)] mt-1 font-medium truncate max-w-[200px]">
             {documentTitle}
@@ -758,8 +758,8 @@ export function VersionHistoryPanelContent({
           />
           <span className="text-xs text-[var(--color-fg-muted)]">
             {autoSaveEnabled
-              ? `Auto-save on (last saved ${lastSavedText})`
-              : "Auto-save off"}
+              ? t("versionHistory.panel.autoSaveOn", { time: lastSavedText })
+              : t("versionHistory.panel.autoSaveOff")}
           </span>
         </div>
         <button
@@ -767,7 +767,7 @@ export function VersionHistoryPanelContent({
           onClick={onConfigureAutoSave}
           className="focus-ring text-[11px] text-[var(--color-accent-muted)] hover:text-[var(--color-accent)] transition-colors hover:underline"
         >
-          Configure auto-save settings
+          {t("versionHistory.panel.configureAutoSave")}
         </button>
       </div>
     </div>

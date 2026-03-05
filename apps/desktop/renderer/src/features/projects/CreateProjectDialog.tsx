@@ -175,7 +175,7 @@ function FormContent({
       <div>
         <label className="block mb-2">
           <Text size="small" color="muted">
-            Project Name <span className="text-[var(--color-error)]">*</span>
+            {t('projects.create.projectNameLabel')} <span className="text-[var(--color-error)]">{'*'}</span>
           </Text>
         </label>
         <Input
@@ -198,7 +198,7 @@ function FormContent({
             as="div"
             className="mt-1 text-[var(--color-error)]"
           >
-            Project name is required
+            {t('projects.create.nameRequired')}
           </Text>
         )}
       </div>
@@ -207,7 +207,7 @@ function FormContent({
       <div>
         <label className="block mb-2">
           <Text size="small" color="muted">
-            Template
+            {t('projects.create.templateLabel')}
           </Text>
         </label>
 
@@ -230,7 +230,7 @@ function FormContent({
         {hasCustomTemplates && (
           <div className="mt-4">
             <Text size="small" color="muted" as="div" className="mb-2">
-              Your Templates
+              {t('projects.create.yourTemplates')}
             </Text>
             <RadioGroupRoot
               value={templateId}
@@ -256,7 +256,7 @@ function FormContent({
             className="h-10 px-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[var(--color-border-default)] rounded-[var(--radius-sm)] text-sm text-[var(--color-fg-muted)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-fg-default)] transition-colors"
           >
             <Plus size={16} strokeWidth={1.5} />
-            Create Template
+            {t('projects.create.createTemplateButton')}
           </button>
         </div>
       </div>
@@ -265,7 +265,7 @@ function FormContent({
       <div>
         <label className="block mb-2">
           <Text size="small" color="muted">
-            Description <span className="opacity-50 text-xs">(Optional)</span>
+            {t('projects.create.descriptionLabel')} <span className="opacity-50 text-xs">{t('projects.create.optionalHint')}</span>
           </Text>
         </label>
         <Textarea
@@ -282,7 +282,7 @@ function FormContent({
       <div>
         <label className="block mb-2">
           <Text size="small" color="muted">
-            Cover Image <span className="opacity-50 text-xs">(Optional)</span>
+            {t('projects.create.coverImageLabel')} <span className="opacity-50 text-xs">{t('projects.create.optionalHint')}</span>
           </Text>
         </label>
         <ImageUpload
@@ -552,7 +552,7 @@ export function CreateProjectDialog({
               onClick={() => onOpenChange(false)}
               disabled={submitting}
             >
-              Cancel
+              {t('projects.create.cancel')}
             </Button>
             <Button
               data-testid="create-project-submit"

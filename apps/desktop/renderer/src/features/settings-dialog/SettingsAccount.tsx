@@ -109,15 +109,15 @@ export function SettingsAccount({
     <div className="max-w-[560px]">
       {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">
-        Account
+        {t('settingsDialog.account.title')}
       </h1>
       <p className="text-[var(--color-fg-subtle)] text-sm mb-12 font-light">
-        Manage your account settings and subscription.
+        {t('settingsDialog.account.subtitle')}
       </p>
 
       {/* Profile Section */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>Profile</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.account.profile')}</h4>
 
         <div className={`${cardStyles} flex items-center gap-4`}>
           <Avatar src={account.avatarUrl} fallback={account.name} size="lg" />
@@ -130,7 +130,7 @@ export function SettingsAccount({
             </Text>
           </div>
           <Button variant="secondary" size="sm" className="ml-auto">
-            Edit Profile
+            {t('settingsDialog.account.editProfile')}
           </Button>
         </div>
       </div>
@@ -139,13 +139,13 @@ export function SettingsAccount({
 
       {/* Subscription Section */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>Subscription</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.account.subscription')}</h4>
 
         <div className={cardStyles}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <Text size="body" weight="medium" color="default">
-                Current Plan
+                {t('settingsDialog.account.currentPlan')}
               </Text>
               <PlanBadge plan={account.plan} />
             </div>
@@ -162,12 +162,12 @@ export function SettingsAccount({
           <div className="flex gap-3">
             {account.plan === "free" && (
               <Button variant="primary" size="sm" onClick={onUpgrade} disabled>
-                Upgrade to Pro
+                {t('settingsDialog.account.upgradeToPro')}
               </Button>
             )}
             {account.plan !== "free" && (
               <Button variant="secondary" size="sm" disabled>
-                Manage Subscription
+                {t('settingsDialog.account.manageSubscription')}
               </Button>
             )}
           </div>
@@ -181,16 +181,16 @@ export function SettingsAccount({
 
       {/* Danger Zone */}
       <div className="mb-6">
-        <h4 className={sectionLabelStyles}>Danger Zone</h4>
+        <h4 className={sectionLabelStyles}>{t('settingsDialog.account.dangerZone')}</h4>
 
         <div className={cardStyles}>
           <div className="flex items-center justify-between">
             <div>
               <Text size="body" weight="medium" color="default">
-                Delete Account
+                {t('settingsDialog.account.deleteAccount')}
               </Text>
               <Text size="small" color="muted" as="p" className="mt-1">
-                Permanently delete your account and all associated data.
+                {t('settingsDialog.account.deleteAccountDescription')}
               </Text>
             </div>
             <Button
@@ -199,7 +199,7 @@ export function SettingsAccount({
               onClick={onDeleteAccount}
               disabled
             >
-              Delete Account
+              {t('settingsDialog.account.deleteAccount')}
             </Button>
           </div>
           <Text size="small" color="muted" as="p" className="mt-3">

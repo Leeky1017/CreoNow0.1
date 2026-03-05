@@ -4,7 +4,9 @@
       "appShell": "Workbench Shell"
     },
     "export": {
-      "currentDocument": "Current Document"
+      "currentDocument": "Current Document",
+      "fieldRelativePath": "relativePath",
+      "fieldBytesWritten": "bytesWritten"
     },
     "commandPalette": {
       "ariaLabel": "Command Palette",
@@ -14,7 +16,8 @@
       "footer": {
         "navigation": "Navigate",
         "select": "Select",
-        "close": "Close"
+        "close": "Close",
+        "escKey": "esc"
       },
       "groups": {
         "suggestions": "Suggestions",
@@ -60,7 +63,10 @@
         "createNewProject": "Create New Project",
         "openFolder": "Open Folder"
       },
-      "aiPanelLabel": "AI Panel (Ctrl+L)"
+      "aiPanelLabel": "AI Panel (Ctrl+L)",
+      "noProjectCharacters": "Open a project to manage characters",
+      "noProjectKg": "Open a project to view knowledge graph",
+      "noDocumentHistory": "Open a document to view history"
     },
     "leftPanel": {
       "close": "Close",
@@ -72,7 +78,8 @@
       "tabQuality": "Quality",
       "historyTitle": "History",
       "newChatTitle": "New Chat",
-      "collapsePanel": "Collapse panel"
+      "collapsePanel": "Collapse panel",
+      "closeSymbol": "✕"
     },
     "sidebar": {
       "panelTitle": {
@@ -133,7 +140,12 @@
       "history": "history",
       "restoreTooltip": "Full restore flow will be available in version-control-p2",
       "restoreVersion": "Restore to this version",
-      "backToCurrent": "Back to current version"
+      "backToCurrent": "Back to current version",
+      "loadingEditor": "Loading editor…",
+      "noDocumentSelected": "No document selected.",
+      "loadingDocument": "Loading document…",
+      "finalDocumentHint": "This document is final. Confirm before editing.",
+      "editAnyway": "Edit Anyway"
     },
     "toolbar": {
       "horizontalRule": "Horizontal Rule",
@@ -259,7 +271,8 @@
       "toOpen": "to open",
       "toClose": "to close"
     },
-    "inputPlaceholder": "Search..."
+    "inputPlaceholder": "Search...",
+    "matchScore": "{{score}}% match"
   },
   "ai": {
     "contextSummary": "AI panel context summary",
@@ -331,7 +344,8 @@
       "customSkillList": "Custom Skill List",
       "loading": "Loading...",
       "noCustomSkills": "No custom skills yet",
-      "edit": "Edit"
+      "edit": "Edit",
+      "fieldContextRules": "contextRules (JSON)"
     },
     "diff": {
       "accepted": "Accepted",
@@ -439,6 +453,7 @@
   "onboarding": {
     "welcome": "Welcome to CreoNow",
     "subtitle": "AI-powered Writing IDE",
+    "appName": "CreoNow",
     "selectLanguage": "Select Language / 选择语言",
     "selectLanguageHint": "Choose your preferred display language.",
     "next": "Next",
@@ -613,7 +628,10 @@
       "pauseLearning": "Pause Learning",
       "addRule": "New Rule",
       "category": "Category",
-      "saveRule": "Save Rule"
+      "saveRule": "Save Rule",
+      "title": "Memory",
+      "dismissError": "Dismiss",
+      "emptyIcon": "✦"
     },
     "settings": {
       "title": "Memory Settings",
@@ -646,7 +664,16 @@
       "generateDraft": "Generate Draft",
       "draftInfo": "{{name}} ({{type}})",
       "draftStats": "Chapters: {{chapters}}, Characters: {{characters}}",
-      "useDraft": "Use this draft to continue manually"
+      "useDraft": "Use this draft to continue manually",
+      "projectNameLabel": "Project Name",
+      "nameRequired": "Project name is required",
+      "templateLabel": "Template",
+      "yourTemplates": "Your Templates",
+      "createTemplateButton": "Create Template",
+      "descriptionLabel": "Description",
+      "optionalHint": "(Optional)",
+      "coverImageLabel": "Cover Image",
+      "cancel": "Cancel"
     },
     "delete": {
       "description": "Deleting project \"{{name}}\" will permanently remove all documents ({{count}} total), knowledge graph data, and version history. Please enter the project name to confirm.",
@@ -711,7 +738,10 @@
       "markAsDraft": "Mark as Draft",
       "markAsFinal": "Mark as Final",
       "collapse": "Collapse",
-      "expand": "Expand"
+      "expand": "Expand",
+      "ok": "OK",
+      "closeSymbol": "✕",
+      "moreActions": "⋯"
     }
   },
   "versionHistory": {
@@ -722,7 +752,26 @@
       "aiModify": "AI Modification",
       "restoreVersion": "Restore Version",
       "versionSnapshot": "Version Snapshot",
-      "history": "History"
+      "history": "History",
+      "openDocumentToViewHistory": "Open a document to view history",
+      "failedToLoadHistory": "Failed to load version history",
+      "noVersionsYet": "No versions yet. Save your document to create versions.",
+      "branchMerge": "Branch Merge",
+      "sourceBranch": "Source Branch",
+      "targetBranch": "Target Branch",
+      "merging": "Merging...",
+      "mergeBranches": "Merge Branches",
+      "branchMergeCompleted": "Branch merge completed.",
+      "mergeConflictDiff": "Merge Conflict Diff",
+      "dismiss": "Dismiss",
+      "conflictNumber": "Conflict #{{number}}",
+      "base": "Base",
+      "ours": "Ours",
+      "theirs": "Theirs",
+      "useOurs": "ours",
+      "useTheirs": "theirs",
+      "useManual": "manual",
+      "submitConflictResolution": "Submit Conflict Resolution"
     },
     "panel": {
       "closeAriaLabel": "Close version history",
@@ -732,7 +781,18 @@
       "statusChange": "Status Change",
       "reason": "Reason:",
       "affectedParagraphs": "{{count}} paragraphs affected",
-      "changePreview": "Change Preview"
+      "changePreview": "Change Preview",
+      "noChanges": "No changes",
+      "wordsCount": "{{sign}}{{count}} words",
+      "restore": "Restore",
+      "compare": "Compare",
+      "preview": "Preview",
+      "current": "Current",
+      "title": "Version History",
+      "autoSaveOn": "Auto-save on (last saved {{time}})",
+      "autoSaveOff": "Auto-save off",
+      "configureAutoSave": "Configure auto-save settings",
+      "wordsChanged": "{{value}} words changed"
     },
     "preview": {
       "actorUser": "User",
@@ -797,11 +857,29 @@
   },
   "settingsDialog": {
     "account": {
-      "comingSoon": "Coming Soon"
+      "comingSoon": "Coming Soon",
+      "title": "Account",
+      "subtitle": "Manage your account settings and subscription.",
+      "profile": "Profile",
+      "editProfile": "Edit Profile",
+      "subscription": "Subscription",
+      "currentPlan": "Current Plan",
+      "upgradeToPro": "Upgrade to Pro",
+      "manageSubscription": "Manage Subscription",
+      "dangerZone": "Danger Zone",
+      "deleteAccount": "Delete Account",
+      "deleteAccountDescription": "Permanently delete your account and all associated data."
     },
     "general": {
       "zhCN": "Chinese (Simplified)",
-      "aiModifyMarker": "AI Modification"
+      "aiModifyMarker": "AI Modification",
+      "title": "General",
+      "subtitle": "Customize your writing environment and workflow preferences.",
+      "language": "Language",
+      "writingExperience": "Writing Experience",
+      "dataAndStorage": "Data & Storage",
+      "editorDefaults": "Editor Defaults",
+      "differentiateAiEditsDescription": "When enabled, AI-generated entries in Version History show an extra \u201c{{marker}}\u201d marker."
     },
     "appearance": {
       "colorWhite": "White",
@@ -819,7 +897,8 @@
       "accentColor": "Accent Color",
       "selectAccentColor": "Select {{color}} accent color",
       "fontSize": "Font Size",
-      "editorFontSize": "Editor font size"
+      "editorFontSize": "Editor font size",
+      "fontSizePx": "{{size}}px"
     },
     "dialog": {
       "navGeneral": "General",
@@ -924,7 +1003,8 @@
       "deleteEntityDescription": "This entity and all its relations will be permanently deleted.",
       "deleteRelationTitle": "Delete Relation?",
       "deleteRelationDescription": "This relation will be permanently deleted.",
-      "newEntity": "New Entity"
+      "newEntity": "New Entity",
+      "relationFormat": "{{source}} -({{type}})→ {{target}}"
     },
     "legend": {
       "title": "Graph Legend",
@@ -1062,7 +1142,9 @@
     "done": "Done!",
     "keyboard": {
       "toConfirm": "to confirm",
-      "toCancel": "to cancel"
+      "toCancel": "to cancel",
+      "enterKey": "Enter",
+      "escKey": "Esc"
     }
   },
   "analytics": {

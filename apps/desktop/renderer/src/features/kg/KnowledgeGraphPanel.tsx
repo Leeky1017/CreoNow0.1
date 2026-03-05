@@ -1028,8 +1028,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                         />
                       ) : (
                         <Text size="small">
-                          {getEntityName(r.sourceEntityId)} -({r.relationType})→{" "}
-                          {getEntityName(r.targetEntityId)}
+                          {t('kg.panel.relationFormat', { source: getEntityName(r.sourceEntityId), type: r.relationType, target: getEntityName(r.targetEntityId) })}
                         </Text>
                       )}
 

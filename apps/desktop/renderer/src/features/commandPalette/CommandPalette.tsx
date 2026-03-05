@@ -721,7 +721,7 @@ export function CommandPalette({
           </div>
           <div className="flex items-center gap-1.5">
             <span className="px-1 min-w-4 h-4 flex items-center justify-center text-[11px] text-[var(--color-fg-muted)] bg-[var(--color-zen-hover)] rounded">
-              esc
+              {t("workbench.commandPalette.footer.escKey")}
             </span>
             <Text size="tiny" color="placeholder">
               {t("workbench.commandPalette.footer.close")}

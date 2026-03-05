@@ -329,7 +329,7 @@ export function MemoryPanel(): JSX.Element {
     >
       <header className="shrink-0 flex items-center gap-2">
         <Text size="small" color="muted">
-          Memory
+          {t('memory.panel.title')}
         </Text>
         <Text size="tiny" color="muted" className="ml-auto">
           {status}
@@ -400,7 +400,7 @@ export function MemoryPanel(): JSX.Element {
               className="ml-auto"
               onClick={() => setError(null)}
             >
-              Dismiss
+              {t('memory.panel.dismissError')}
             </Button>
           </div>
           <Text size="small" color="muted" className="mt-1.5 block">
@@ -422,7 +422,7 @@ export function MemoryPanel(): JSX.Element {
         ) : filteredRules.length === 0 ? (
           <div className="h-full min-h-[180px] flex flex-col items-center justify-center gap-3 text-center">
             <div className="w-9 h-9 rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] flex items-center justify-center text-[var(--color-fg-muted)]">
-              ✦
+              {t('memory.panel.emptyIcon')}
             </div>
             <Text size="small" color="muted">
               {t('memory.panel.aiLearningHint')}
