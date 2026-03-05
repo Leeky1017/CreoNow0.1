@@ -9,10 +9,11 @@ import {
 } from "../../contexts/OpenSettingsContext";
 
 function HookProbe(props: { onResolve: (openSettings: () => void) => void }) {
+  const { onResolve } = props;
   const openSettings = useOpenSettingsFromRightPanel();
   React.useEffect(() => {
-    props.onResolve(openSettings);
-  }, [props.onResolve, openSettings]);
+    onResolve(openSettings);
+  }, [onResolve, openSettings]);
   return null;
 }
 

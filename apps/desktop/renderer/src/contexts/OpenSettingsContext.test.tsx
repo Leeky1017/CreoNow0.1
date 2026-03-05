@@ -5,10 +5,11 @@ import { describe, expect, it, vi } from "vitest";
 import { OpenSettingsContext, useOpenSettings } from "./OpenSettingsContext";
 
 function HookProbe(props: { onResolve: (openSettings: () => void) => void }) {
+  const { onResolve } = props;
   const openSettings = useOpenSettings();
   React.useEffect(() => {
-    props.onResolve(openSettings);
-  }, [props.onResolve, openSettings]);
+    onResolve(openSettings);
+  }, [onResolve, openSettings]);
   return null;
 }
 
