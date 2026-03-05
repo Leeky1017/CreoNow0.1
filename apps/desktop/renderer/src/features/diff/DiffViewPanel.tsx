@@ -145,7 +145,7 @@ export function DiffViewPanel(props: DiffViewPanelProps): JSX.Element {
 
   return (
     <div
-      className="flex flex-col bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-xl shadow-2xl overflow-hidden"
+      className="flex flex-col bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-xl shadow-[var(--shadow-xl)] overflow-hidden"
       style={{
         width: props.width ?? "100%",
         height: props.height ?? "100%",

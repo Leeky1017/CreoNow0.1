@@ -89,7 +89,7 @@ function getContentStyles(hasContainer: boolean): string {
     "border",
     "border-[var(--color-border-default)]",
     "rounded-[var(--radius-xl)]",
-    "shadow-2xl",
+    "shadow-[var(--shadow-xl)]",
     "flex",
     "flex-col",
     "overflow-hidden",
@@ -209,7 +209,7 @@ function ChevronDownIcon({ className }: { className?: string }): JSX.Element {
  * Camera icon for avatar upload
  */
 function CameraIcon() {
-  return <Camera className="text-white w-5 h-5 drop-shadow-md" size={20} strokeWidth={1.5} />;
+  return <Camera className="text-[var(--color-fg-on-accent)] w-5 h-5 drop-shadow-md" size={20} strokeWidth={1.5} />;
 }
 
 /**

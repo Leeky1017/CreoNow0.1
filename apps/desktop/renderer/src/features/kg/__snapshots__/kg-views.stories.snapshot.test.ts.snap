@@ -791,7 +791,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       >
         <button
           aria-label="Add Node"
-          class="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-lg flex items-center justify-center transition-transform hover:scale-105"
+          class="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-[var(--shadow-lg)] flex items-center justify-center transition-transform hover:scale-105"
         >
           <svg
             fill="none"
@@ -1286,7 +1286,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       >
         <button
           aria-label="Add Node"
-          class="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-lg flex items-center justify-center transition-transform hover:scale-105"
+          class="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-[var(--shadow-lg)] flex items-center justify-center transition-transform hover:scale-105"
         >
           <svg
             fill="none"

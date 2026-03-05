@@ -139,7 +139,7 @@ const panelStyles = [
   "flex",
   "flex-col",
   "h-full",
-  "shadow-2xl",
+  "shadow-[var(--shadow-xl)]",
   "shrink-0",
 ].join(" ");
 

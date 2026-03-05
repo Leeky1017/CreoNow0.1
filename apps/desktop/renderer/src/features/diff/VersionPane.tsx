@@ -68,7 +68,7 @@ export function VersionPane(props: VersionPaneProps): JSX.Element {
         <div className="flex items-center gap-2">
           {/* Version type indicator */}
           {props.version.type === "current" && (
-            <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] shadow-[0_0_6px_rgba(34,197,94,0.4)]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] shadow-[0_0_6px_var(--color-success-subtle)]" />
           )}
           <span className="text-xs font-medium text-[var(--color-fg-default)]">
             {props.version.label}

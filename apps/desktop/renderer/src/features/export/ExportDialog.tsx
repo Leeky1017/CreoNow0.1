@@ -204,7 +204,7 @@ const contentStyles = [
   "border",
   "border-[var(--color-border-default)]",
   "rounded-[var(--radius-lg)]",
-  "shadow-2xl",
+  "shadow-[var(--shadow-xl)]",
   "flex",
   "flex-col",
   "max-h-[90vh]",
@@ -269,7 +269,7 @@ const formatCardStyles = (args: { isSelected: boolean; disabled: boolean }) =>
 
 const radioIndicatorStyles = (isSelected: boolean) =>
   isSelected
-    ? "w-4 h-4 rounded-full bg-white"
+    ? "w-4 h-4 rounded-full bg-[var(--color-fg-on-accent)]"
     : "w-4 h-4 rounded-full border border-[var(--color-border-default)] opacity-0";
 
 // ============================================================================
@@ -378,7 +378,7 @@ function PreviewThumbnail({
           <div className="h-2 w-5/6 bg-[var(--color-fg-placeholder)]/20 rounded mb-3" />
           <div className="h-2 w-full bg-[var(--color-fg-placeholder)]/20 rounded mb-1.5" />
           <div className="h-2 w-4/5 bg-[var(--color-fg-placeholder)]/20 rounded mb-1.5" />
-          <div className="w-full h-16 bg-[var(--color-fg-placeholder)]/10 rounded mt-4 border border-white/5" />
+          <div className="w-full h-16 bg-[var(--color-fg-placeholder)]/10 rounded mt-4 border border-[var(--color-separator)]" />
         </div>
         <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[var(--color-bg-base)] to-transparent" />
       </div>
@@ -658,7 +658,7 @@ function SuccessView(props: {
         data-testid="export-done"
         variant="primary"
         onClick={props.onDone}
-        className="!bg-white !text-black hover:!bg-gray-200"
+        className="!bg-[var(--color-bg-base)] !text-[var(--color-fg-default)] hover:!bg-[var(--color-bg-hover)]"
       >
         {t('export.action.done')}
       </Button>

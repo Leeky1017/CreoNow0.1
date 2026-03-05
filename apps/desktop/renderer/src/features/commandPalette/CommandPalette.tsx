@@ -594,7 +594,7 @@ export function CommandPalette({
         aria-modal="true"
         aria-label={t('workbench.commandPalette.ariaLabel')}
         onClick={(e) => e.stopPropagation()}
-        className="w-[600px] max-w-[90vw] flex flex-col bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-xl overflow-hidden"
+        className="w-[600px] max-w-[90vw] flex flex-col bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
         {/* Header: 搜索框 */}
         <div className="h-14 flex items-center px-4 border-b border-[var(--color-border-default)]">

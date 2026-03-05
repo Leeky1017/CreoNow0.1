@@ -226,7 +226,7 @@ export function GraphNode({
       {/* Dragging indicator */}
       {dragging && (
         <span
-          className="absolute -right-2 -top-2 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-white rounded"
+          className="absolute -right-2 -top-2 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-[var(--color-fg-on-accent)] rounded"
           style={{ backgroundColor: color }}
         >
           {t('kg.graph.dragging')}

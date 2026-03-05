@@ -408,7 +408,7 @@ export function KnowledgeGraph({
             <div className="absolute bottom-6 left-6 z-30">
               <button
                 onClick={handleAddNode}
-                className="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-lg flex items-center justify-center transition-transform hover:scale-105"
+                className="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-[var(--shadow-lg)] flex items-center justify-center transition-transform hover:scale-105"
                 aria-label={t('kg.graph.addNode')}
               >
                 <svg

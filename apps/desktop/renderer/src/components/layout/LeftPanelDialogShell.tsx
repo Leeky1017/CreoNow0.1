@@ -36,7 +36,7 @@ const contentStyles = [
   "border",
   "border-[var(--color-border-default)]",
   "rounded-[var(--radius-lg)]",
-  "shadow-2xl",
+  "shadow-[var(--shadow-xl)]",
   "flex",
   "flex-col",
   "overflow-hidden",

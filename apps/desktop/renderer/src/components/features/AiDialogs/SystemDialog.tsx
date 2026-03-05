@@ -319,11 +319,10 @@ const cancelButtonStyles = [
 const deleteButtonStyles = [
   buttonBaseStyles,
   "flex-1",
-  "bg-[var(--color-error)]",
-  "hover:bg-red-600",
-  "text-white",
-  "shadow-lg",
-  "shadow-red-500/20",
+  "bg-[var(--color-btn-danger-bg)]",
+  "hover:bg-[var(--color-btn-danger-hover)]",
+  "text-[var(--color-fg-on-accent)]",
+  "shadow-[var(--shadow-lg)]",
 ].join(" ");
 
 /**
@@ -345,7 +344,7 @@ const saveButtonStyles = [
   buttonBaseStyles,
   "px-4",
   "bg-[var(--color-fg-default)]",
-  "hover:bg-gray-200",
+  "hover:bg-[var(--color-bg-hover)]",
   "text-[var(--color-fg-inverse)]",
 ].join(" ");
 
@@ -368,11 +367,10 @@ const doneButtonStyles = [
 const openFileButtonStyles = [
   buttonBaseStyles,
   "flex-1",
-  "bg-[var(--color-success)]",
-  "hover:bg-green-500",
-  "text-[var(--color-fg-inverse)]",
-  "shadow-lg",
-  "shadow-green-500/20",
+  "bg-[var(--color-btn-success-bg)]",
+  "hover:bg-[var(--color-btn-success-hover)]",
+  "text-[var(--color-fg-on-accent)]",
+  "shadow-[var(--shadow-lg)]",
 ].join(" ");
 
 /**

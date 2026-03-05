@@ -70,6 +70,7 @@ type TFunction = (key: string, options?: Record<string, unknown>) => string;
 
 /**
  * Accent color options
+ * intentional: theme preview swatches — hex values are the actual color choices
  */
 function getAccentColors(t: TFunction) {
   return [
@@ -87,6 +88,7 @@ function getAccentColors(t: TFunction) {
  */
 function ThemePreview({ mode }: { mode: ThemeMode }): JSX.Element {
   const isDark = mode === "dark" || mode === "system";
+  // intentional: theme preview swatch — hex values represent actual theme appearance
   const bgColor = isDark ? "#0f0f0f" : "#ffffff";
   const fgColor = isDark ? "#ffffff" : "#1a1a1a";
   const mutedColor = isDark ? "#666666" : "#888888";

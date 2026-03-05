@@ -388,7 +388,7 @@ const upgradeButtonStyles = [
 
   "bg-[var(--color-warning)]",
 
-  "hover:bg-yellow-400",
+  "hover:bg-[var(--color-warning)]/80",
 
   "px-3",
 

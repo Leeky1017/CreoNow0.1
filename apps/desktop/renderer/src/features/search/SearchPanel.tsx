@@ -120,8 +120,8 @@ function CategoryButton(props: {
       onClick={props.onClick}
       className={`!px-3 !py-1 !h-auto !text-xs !font-medium !rounded-full whitespace-nowrap ${
         props.active
-          ? "!bg-[var(--color-info)] !text-white shadow-lg shadow-[var(--color-info-subtle)]"
-          : "!bg-[var(--color-separator)] !text-[var(--color-fg-muted)] !border !border-transparent hover:!border-white/10 hover:!text-white hover:!bg-white/10"
+          ? "!bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] shadow-[var(--shadow-lg)] shadow-[var(--color-info-subtle)]"
+          : "!bg-[var(--color-separator)] !text-[var(--color-fg-muted)] !border !border-transparent hover:!border-[var(--color-bg-overlay)] hover:!text-[var(--color-fg-default)] hover:!bg-[var(--color-bg-overlay)]"
       }`}
     >
       {props.label}
@@ -161,8 +161,8 @@ function DocumentResultItem(props: {
       <div
         className={`mt-1 w-8 h-8 rounded flex items-center justify-center border border-[var(--color-separator)] shrink-0 transition-colors ${
           isActive
-            ? "bg-[var(--color-separator)] text-white"
-            : "bg-[var(--color-separator)] text-[var(--color-fg-muted)] group-hover:text-white"
+            ? "bg-[var(--color-separator)] text-[var(--color-fg-default)]"
+            : "bg-[var(--color-separator)] text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)]"
         }`}
       >
         <FileText className="w-4 h-4" size={16} strokeWidth={1.5} />
@@ -173,7 +173,7 @@ function DocumentResultItem(props: {
         <div className="flex items-center justify-between gap-2 mb-0.5">
           <h4
             className={`text-sm font-medium truncate transition-colors ${
-              isActive ? "text-white" : "text-[var(--color-fg-muted)] group-hover:text-white"
+              isActive ? "text-[var(--color-fg-default)]" : "text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)]"
             }`}
           >
             <HighlightText text={item.title} query={query} />
@@ -235,14 +235,14 @@ function MemoryResultItem(props: {
       className="group w-full text-left mx-2 mt-1 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3"
     >
       {/* Icon */}
-      <div className="mt-1 w-8 h-8 rounded flex items-center justify-center text-[var(--color-fg-muted)] group-hover:text-white border border-[var(--color-separator)] shrink-0 transition-colors">
+      <div className="mt-1 w-8 h-8 rounded flex items-center justify-center text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] border border-[var(--color-separator)] shrink-0 transition-colors">
         <Lightbulb className="w-4 h-4" size={16} strokeWidth={1.5} />
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-2 mb-0.5">
-          <h4 className="text-sm font-medium text-[var(--color-fg-muted)] group-hover:text-white transition-colors truncate">
+          <h4 className="text-sm font-medium text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] transition-colors truncate">
             <HighlightText text={item.title} query={query} />
           </h4>
           <span className="text-[10px] font-mono text-[var(--color-success)] bg-[var(--color-success-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-success-subtle)] opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
@@ -281,13 +281,13 @@ function KnowledgeResultItem(props: {
       className="group w-full text-left mx-2 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3"
     >
       {/* Icon */}
-      <div className="mt-1 w-8 h-8 rounded bg-[var(--color-separator)] flex items-center justify-center text-[var(--color-fg-muted)] group-hover:text-white border border-[var(--color-separator)] shrink-0 transition-colors">
+      <div className="mt-1 w-8 h-8 rounded bg-[var(--color-separator)] flex items-center justify-center text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] border border-[var(--color-separator)] shrink-0 transition-colors">
         <Share2 className="w-4 h-4" size={16} strokeWidth={1.5} />
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <h4 className="text-sm font-medium text-[var(--color-fg-muted)] group-hover:text-white transition-colors truncate mb-1">
+        <h4 className="text-sm font-medium text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] transition-colors truncate mb-1">
           <HighlightText text={item.title} query={query} />
         </h4>
         {item.meta && (
@@ -340,7 +340,7 @@ function KeyHint(props: {
 }): JSX.Element {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="flex items-center justify-center min-w-[20px] h-5 px-1 rounded bg-white/10 border border-[var(--color-separator)] text-[10px] text-[var(--color-fg-muted)] font-mono">
+      <span className="flex items-center justify-center min-w-[20px] h-5 px-1 rounded bg-[var(--color-bg-overlay)] border border-[var(--color-separator)] text-[10px] text-[var(--color-fg-muted)] font-mono">
         {props.icon || props.text}
       </span>
       <span className="text-[10px] text-[var(--color-fg-placeholder)] ml-1">{props.label}</span>
@@ -518,7 +518,7 @@ export function SearchPanel(props: {
       {/* Backdrop with blur */}
       <div
         data-testid="search-backdrop"
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-[var(--color-scrim)] backdrop-blur-sm"
         onClick={onClose}
       />
 
@@ -541,7 +541,7 @@ export function SearchPanel(props: {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleInputKeyDown}
               placeholder={t("search.placeholder")}
-              className="flex-1 !bg-transparent !border-none !outline-none !text-lg !text-white !placeholder-[var(--color-fg-placeholder)] !font-[var(--font-family-ui)] !font-light !h-8 !px-0 !rounded-none"
+              className="flex-1 !bg-transparent !border-none !outline-none !text-lg !text-[var(--color-fg-default)] !placeholder-[var(--color-fg-placeholder)] !font-[var(--font-family-ui)] !font-light !h-8 !px-0 !rounded-none"
             />
             {effectiveStatus === "loading" && <Spinner size="sm" />}
             {onClose && (
@@ -549,7 +549,7 @@ export function SearchPanel(props: {
                 variant="ghost"
                 size="sm"
                 onClick={onClose}
-                className="!p-1 !h-auto !rounded-md !text-[var(--color-fg-placeholder)] hover:!text-white hover:!bg-[var(--color-separator)]"
+                className="!p-1 !h-auto !rounded-md !text-[var(--color-fg-placeholder)] hover:!text-[var(--color-fg-default)] hover:!bg-[var(--color-separator)]"
               >
                 <X className="w-5 h-5" size={20} strokeWidth={1.5} />
               </Button>
@@ -611,7 +611,7 @@ export function SearchPanel(props: {
               <Button
                 variant="ghost"
                 size="sm"
-                className="!flex !items-center !gap-1.5 !px-2 !py-1 !h-auto !rounded !bg-[var(--color-separator)] !border !border-[var(--color-separator)] !text-xs !text-[var(--color-fg-muted)] hover:!text-white hover:!border-white/10"
+                className="!flex !items-center !gap-1.5 !px-2 !py-1 !h-auto !rounded !bg-[var(--color-separator)] !border !border-[var(--color-separator)] !text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-fg-default)] hover:!border-[var(--color-bg-overlay)]"
               >
                 <span>{t("search.filters.currentProject")}</span>
                 <ChevronDown className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
@@ -637,7 +637,7 @@ export function SearchPanel(props: {
             /* Reindex rebuilding state */
             <div className="flex flex-col items-center justify-center py-16 px-8">
               <RefreshCw className="w-16 h-16 text-[var(--color-info)] mb-4 motion-safe:animate-pulse" size={24} strokeWidth={1.5} />
-              <p className="text-sm font-medium text-white text-center mb-2">
+              <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
                 {t("search.rebuildingIndex")}
               </p>
               <p className="text-xs text-[var(--color-fg-muted)] text-center">
@@ -648,7 +648,7 @@ export function SearchPanel(props: {
             /* Search error state */
             <div className="flex flex-col items-center justify-center py-16 px-8">
               <TriangleAlert className="w-16 h-16 text-[var(--color-error)] mb-4" size={24} strokeWidth={1.5} />
-              <p className="text-sm font-medium text-white text-center mb-2">
+              <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
                 {t("search.errorTitle")}
               </p>
               <p className="text-xs text-[var(--color-fg-muted)] text-center">
@@ -657,7 +657,7 @@ export function SearchPanel(props: {
               <Button
                 variant="primary"
                 onClick={handleRetrySearch}
-                className="mt-6 !px-4 !py-2 !h-auto !bg-[var(--color-info)] !text-white !text-sm !font-medium !rounded-lg hover:!bg-[var(--color-info)] hover:!brightness-110"
+                className="mt-6 !px-4 !py-2 !h-auto !bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] !text-sm !font-medium !rounded-lg hover:!bg-[var(--color-info)] hover:!brightness-110"
               >
                 {t("search.retrySearch")}
               </Button>
@@ -666,7 +666,7 @@ export function SearchPanel(props: {
             /* No results state */
             <div className="flex flex-col items-center justify-center py-16 px-8">
               <Frown className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4" size={24} strokeWidth={1.5} />
-              <p className="text-sm font-medium text-white text-center mb-2">
+              <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
                 {t("search.noResults")}
               </p>
               <p className="text-xs text-[var(--color-fg-muted)] text-center">
@@ -682,7 +682,7 @@ export function SearchPanel(props: {
               </div>
               <Button
                 variant="primary"
-                className="mt-6 !px-4 !py-2 !h-auto !bg-[var(--color-info)] !text-white !text-sm !font-medium !rounded-lg hover:!bg-[var(--color-info)] hover:!brightness-110"
+                className="mt-6 !px-4 !py-2 !h-auto !bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] !text-sm !font-medium !rounded-lg hover:!bg-[var(--color-info)] hover:!brightness-110"
               >
                 <Globe className="w-4 h-4" size={16} strokeWidth={1.5} />
                 {t("search.searchAllProjects")}
@@ -690,7 +690,7 @@ export function SearchPanel(props: {
               <Button
                 variant="ghost"
                 onClick={() => setQuery("")}
-                className="mt-3 !h-auto !text-xs !text-[var(--color-fg-muted)] hover:!text-white"
+                className="mt-3 !h-auto !text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-fg-default)]"
               >
                 {t("search.clearSearch")}
               </Button>
@@ -784,7 +784,7 @@ export function SearchPanel(props: {
                 <span className="text-xs text-[var(--color-fg-muted)] font-medium">
                   {t("search.results.result", { count: totalResults })}
                 </span>
-                <div className="h-3 w-px bg-white/10" />
+                <div className="h-3 w-px bg-[var(--color-bg-overlay)]" />
                 <span className="text-[10px] text-[var(--color-fg-placeholder)]">
                   {t("search.results.searchTime", { time: "0.04s" })}
                 </span>
