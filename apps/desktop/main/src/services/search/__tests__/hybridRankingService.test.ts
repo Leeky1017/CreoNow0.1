@@ -8,7 +8,6 @@ import {
   type SemanticRetriever,
   type SemanticRetrieveItem,
   type HybridRankingService,
-  type ServiceResult,
 } from "../hybridRankingService";
 
 // ── helpers ─────────────────────────────────────────────────────────────
