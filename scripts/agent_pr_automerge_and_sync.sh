@@ -8,7 +8,6 @@ Usage:
 
 Behavior:
   - Expects current branch name: task/<N>-<slug>
-  - Requires file exists in HEAD: openspec/_ops/task_runs/ISSUE-N.md
   - Runs preflight: scripts/agent_pr_preflight.sh (unless --skip-preflight)
     - If preflight fails: creates/keeps PR as draft and waits by default
   - Ensures a PR exists (creates one unless --no-create)
@@ -38,7 +37,6 @@ WAIT_TIMEOUT_SECONDS="0"
 MERGE_INTERVAL_SECONDS="10"
 MERGE_TIMEOUT_SECONDS="1800"
 MERGE_COMMENT="true"
-RUNLOG_BACKFILLED="false"
 GH_RETRY_BASE_SECONDS="2"
 GH_RETRY_MAX_SECONDS="30"
 GH_RETRY_MAX_ATTEMPTS="5"
@@ -158,34 +156,6 @@ rebase_onto_origin_main() {
   git push --force-with-lease
 }
 
-backfill_runlog_pr_link() {
-  local pr_number="$1"
-  local pr_url=""
-  pr_url="$(run_gh_with_retry gh pr view "$pr_number" --json url --jq '.url')"
-
-  python3 - "$RUN_LOG" "$pr_url" <<'PY'
-import pathlib
-import re
-import sys
-
-run_log = pathlib.Path(sys.argv[1])
-pr_url = sys.argv[2]
-text = run_log.read_text(encoding="utf-8")
-new_text, count = re.subn(r"(?m)^- PR:\s*.*$", f"- PR: {pr_url}", text, count=1)
-if count == 0:
-    raise SystemExit(f"ERROR: missing '- PR:' line in {run_log}")
-if new_text != text:
-    run_log.write_text(new_text, encoding="utf-8")
-PY
-
-  if ! git diff --quiet -- "$RUN_LOG"; then
-    git add "$RUN_LOG"
-    git commit -m "docs: backfill run log PR link (#${ISSUE_NUMBER})"
-    git push
-    RUNLOG_BACKFILLED="true"
-  fi
-}
-
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --pr)
@@ -252,12 +222,6 @@ fi
 
 ISSUE_NUMBER="${BASH_REMATCH[1]}"
 SLUG="${BASH_REMATCH[2]}"
-RUN_LOG="openspec/_ops/task_runs/ISSUE-${ISSUE_NUMBER}.md"
-
-if ! git cat-file -e "HEAD:${RUN_LOG}" 2>/dev/null; then
-  echo "ERROR: run log missing in HEAD: ${RUN_LOG}" >&2
-  exit 1
-fi
 
 PREFLIGHT_RC=0
 if [[ "$SKIP_PREFLIGHT" != "true" ]]; then
@@ -286,11 +250,9 @@ Closes #${ISSUE_NUMBER}
 - (fill)
 
 ## Test plan
-- \`ruff check .\`
-- \`pytest -q\`
-
-## Evidence
-- \`${RUN_LOG}\`
+- \`pnpm typecheck\`
+- \`pnpm lint\`
+- \`pnpm test:unit\`
 EOF
   )
 
@@ -304,14 +266,6 @@ EOF
 fi
 
 if [[ "$SKIP_PREFLIGHT" != "true" ]]; then
-  set +e
-  scripts/agent_pr_preflight.sh
-  PREFLIGHT_RC=$?
-  set -e
-fi
-
-backfill_runlog_pr_link "$PR_NUMBER"
-if [[ "$RUNLOG_BACKFILLED" == "true" && "$SKIP_PREFLIGHT" != "true" ]]; then
   set +e
   scripts/agent_pr_preflight.sh
   PREFLIGHT_RC=$?

@@ -14,7 +14,6 @@ CreoNow/
 ├── packages/shared/    # 共享代码
 ├── design/Variant/     # 设计资产
 ├── openspec/           # 项目规范
-├── rulebook/           # Rulebook 任务
 └── scripts/            # 自动化脚本
 ```
 

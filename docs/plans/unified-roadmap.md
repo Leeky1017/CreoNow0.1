@@ -1,5 +1,7 @@
 # CN 统一路线图：代码治理 + 功能建设
 
+更新时间：2026-03-05 12:00
+
 > 整合 `CN-Code-Audit-2026-02-14`（代码质量审计）与 `docs/plans/archive/audit-roadmap.md`（AI Native 功能路线图）。
 > 创建时间：2026-02-14
 > 前置完成：audit-roadmap Phase 1（7 changes，已合并）
@@ -170,12 +172,12 @@ find apps/desktop/ -name "*.ts" -o -name "*.tsx" | xargs wc -l | sort -rn | head
 
 **硬性规则**：
 1. **开始任何 change 前必须先读 `AGENTS.md`** — 确认已知约定和禁令
-2. **每修一个 bug，立即在对应 change 的 RUN_LOG 中记录根因和修复方式**
+2. **每修一个 bug，立即在 PR 评论中记录根因和修复方式**
 3. **修复后必须跑全量测试** — 不能只跑改动文件的测试
-4. **每个 change 完成后更新 `openspec/_ops/task_runs/ISSUE-<N>.md`** — 落盘防失忆
+4. **交付证据通过 PR 评论 + CI 日志记录** — 落盘防失忆
 5. **本路线图的 "踩坑提醒" 段落是跨会话记忆的核心载体** — 执行者必须阅读
 
-**自动化门禁**：CI 的 `openspec-log-guard` check 确保 RUN_LOG 存在且非空。
+**自动化门禁**：CI 的 `ci` + `merge-serial` 门禁确保质量基线。
 
 ---
 

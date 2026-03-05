@@ -264,7 +264,7 @@ export function evaluateIpcAcceptanceGate(
 }
 
 /**
- * Format gate output for CI logs and RUN_LOG evidence.
+ * Format gate output for CI logs.
  */
 export function formatIpcAcceptanceGateSummary(
   gate: IpcAcceptanceGateResult,

@@ -1,6 +1,6 @@
 # OpenSpec + GitHub 交付规则
 
-更新时间：2026-03-04 12:00
+更新时间：2026-03-05 12:00
 
 本文件是 CreoNow 的交付规则主源（Source of Truth）。
 本文件只定义约束条件和验收标准，不定义具体命令和脚本参数。
@@ -106,55 +106,129 @@ openspec/             .github/workflows/
 
 ## 八、独立审计协议（Reviewer SOP）
 
-适用对象：被指派为 reviewer 的独立审计 Agent。
+适用对象：被指派为 reviewer 或执行独立审计的 Agent。
 
-### 审计步骤
+### 8.1 "不能做"清单（违反任一项 → 审计结论必须 REJECT）
+
+审计 Agent 必须按"先禁令，后建议"的顺序输出。以下违规任一触发，结论必须 `REJECT`：
+
+1. **不能**提交 CRLF/LF 噪音型大 diff（无语义改动却整文件替换）
+2. **不能**删除/跳过测试来换取 CI 通过
+3. **不能**保留过时治理术语并声称"已收口"
+4. **不能**只给建议不给结论（必须给 `ACCEPT/REJECT`）
+5. **不能**无证据下结论（每条结论必须附命令或 diff 证据）
+6. **不能**把审计结果只写本地文件不发 PR 评论
+7. **不能**在 required checks 未通过时给出可合并结论
+8. **不能**用"后续再看"替代当前阻断问题
+
+### 8.2 根因排查格式（每条问题必须包含）
+
+1. **现象（Symptom）**
+2. **根因（Root Cause）**
+3. **影响面（Impact）**
+4. **复现/检测命令（Reproduce）**
+5. **阻断级别（Blocking / Non-blocking）**
+6. **处理结论（Reject / Accept with risk）**
+
+### 8.3 审计步骤
 
 1. **读 PR diff**：`gh pr diff <PR_NUMBER>` 或在 GitHub UI 查看全部变更文件
 2. **读关联 spec**：`openspec/specs/<module>/spec.md` + `openspec/changes/<change>/` 下的 delta spec
 3. **跑验证命令**：至少执行 typecheck (`pnpm typecheck`) + 相关测试 (`pnpm -C apps/desktop test:run <path>`)，命令输出必须完整记录作为证据
-4. **识别问题并分级**：逐文件审查，每个问题必须引用具体文件路径和行号，附上问题代码片段与修复建议
+4. **跑审计必跑命令**（见 8.6）
+5. **识别问题并分级**：逐文件审查，每个问题必须引用具体文件路径和行号，附上问题代码片段与修复建议
    - BLOCKER：违反核心原则、安全漏洞、数据丢失风险 → 必须修复后才能合并
    - SIGNIFICANT：超出 spec 范围、类型重复、死路径、测试缺失 → 应修复，可协商
    - MINOR：措辞、格式、可读性 → 不阻塞合并，记录即可
-5. **在 PR 下发评论**：将审计结论（判定 + 问题清单 + checklist）作为 PR comment 发布，格式见下
-6. **等待修复**：如果 Decision=HOLD/FAIL，等作者修复后进行二轮复审，复审结论同样以 PR comment 发布
-7. **发布审计结论**：Decision=PASS 后，在 PR comment 中发布最终审计结论（含判定、问题清单、验证结果）
+6. **在 PR 下发 PRE-AUDIT 评论**
+7. **等待修复并发 RE-AUDIT 评论**
+8. **发 FINAL-VERDICT 评论**
 
-### PR 评论格式
+### 8.4 PR 评论强制要求（缺一不可）
+
+审计 Agent 在同一 PR 必须发布 3 条评论：
+
+#### PRE-AUDIT 评论
 
 ```
-## 独立审计报告：Issue #<N>
+## PRE-AUDIT：Issue #<N>
 
 **审计人：** <独立审计 Agent 名称>
 **审计 HEAD：** `<commit SHA 前 8 位>`
 
-### 判定：PASS / HOLD — 需修复后方可合并 / FAIL
+### 不能做清单命中项
+- [ ] CRLF/LF 噪音检查
+- [ ] 测试完整性检查
+- [ ] 过时术语检查
+...
+
+### 初始阻断结论：ACCEPT / REJECT
 
 ## 🔴 必须修复（Blocking）
 ...
 ## 🟠 应当修复（Significant）
 ...
-## 🟡 文档缺陷
-...
 ## ⚪ 微瑕（Minor，不阻塞）
-...
-
-## 放行前必须完成的 Checklist
-| # | 项目 | 状态 |
 ...
 ```
 
-### Decision 判定标准
+#### RE-AUDIT 评论
 
-- **PASS**：无 BLOCKER；SIGNIFICANT 全部已解决或已记录跟进 Issue
-- **HOLD**：存在 BLOCKER 或未解决的 SIGNIFICANT → 等修复后复审
-- **FAIL**：结构性问题无法通过局部修复解决 → 需要重新设计
+```
+## RE-AUDIT：Issue #<N>
 
-### 不可省略
+**审计 HEAD：** `<commit SHA 前 8 位>`
+
+### PRE-AUDIT 阻断问题关闭状态
+| # | 问题 | 状态 |
+|---|------|------|
+| 1 | ... | ✅ 已关闭 / ❌ 未关闭 |
+...
+
+### 复审结论：ACCEPT / REJECT
+```
+
+#### FINAL-VERDICT 评论
+
+```
+## FINAL-VERDICT：Issue #<N>
+
+### 最终判定：ACCEPT / REJECT
+
+### 证据命令与结果摘要
+（附完整证据命令输出）
+
+### 剩余风险（若 ACCEPT）
+...
+```
+
+### 8.5 Decision 判定标准
+
+- **ACCEPT**：无 BLOCKER；SIGNIFICANT 全部已解决或已记录跟进 Issue
+- **REJECT**：存在 BLOCKER 或未解决的 SIGNIFICANT → 等修复后复审
+
+### 8.6 审计必跑命令（结果需进 PR 评论）
+
+```bash
+git diff --numstat
+git diff --check
+git diff --ignore-cr-at-eol --name-status
+bash -n scripts/agent_pr_automerge_and_sync.sh
+python3 -m py_compile scripts/check_doc_timestamps.py
+pytest -q scripts/tests
+rg -n "delivery_log|RUN_LOG|legacy-governance-guard|openspec/_ops/task_runs" .github docs scripts README.md openspec
+test -x scripts/agent_pr_automerge_and_sync.sh && echo EXEC_OK
+```
+
+### 8.7 不可省略
 
 - 审计必须覆盖 PR 的全部变更文件，不得跳过
 - 至少一条验证命令（typecheck / test）必须实际执行并记录结果
-- PR 评论不可省略——即使 PASS 也要发 comment 记录审计结论
+- PR 评论不可省略——即使 ACCEPT 也要发 comment 记录审计结论
 - 每个问题必须附带证据：具体文件路径、行号、相关代码片段
 - 验证命令的完整输出（通过或失败）必须包含在 PR 评论中
+
+### 8.8 审计交付口径
+
+> "能发现问题、能定位根因、能明确阻断"优先于"写一堆建议"。
+> 审计的第一职责是划红线，不是润色方案。

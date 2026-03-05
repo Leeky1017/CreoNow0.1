@@ -1,6 +1,8 @@
 # CreoNow OpenSpec
 
-本目录存放项目行为规范（Source of Truth）、变更提案和执行证据。
+更新时间：2026-03-05 12:00
+
+本目录存放项目行为规范（Source of Truth）和变更提案。
 
 ## 目录结构
 
@@ -20,10 +22,8 @@ openspec/
 │   ├── project-management/
 │   ├── ipc/
 │   └── version-control/
-├── changes/                ← 进行中的变更（Delta Specs）
-│   └── EXECUTION_ORDER.md  ← 多活跃 change 时的执行顺序（串行/并行、依赖、更新时间）
-└── _ops/
-    └── task_runs/          ← RUN_LOGs（执行证据）
+└── changes/                ← 进行中的变更（Delta Specs）
+    └── EXECUTION_ORDER.md  ← 多活跃 change 时的执行顺序（串行/并行、依赖、更新时间）
 ```
 
 ## 入口
@@ -31,3 +31,7 @@ openspec/
 - Agent 宪法：`/AGENTS.md`
 - 项目概述：`project.md`
 - 交付规则：`/docs/delivery-skill.md`
+
+## 证据体系
+
+交付证据统一为 **PR 评论 + CI 日志**，不再要求独立 RUN_LOG 文件。

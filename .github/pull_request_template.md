@@ -1,7 +1,7 @@
 > 非 `task/*` 分支：请先填写 `Skip-Reason:`（必须保留该前缀）
 > 示例：`Skip-Reason: automated quality iteration by 天野 (non-task branch)`
 >
-> `task/*` 分支：填写 `Skip-Reason: N/A (task branch)`，并补齐对应 RUN_LOG。
+> `task/*` 分支：填写 `Skip-Reason: N/A (task branch)`。
 
 Skip-Reason: <必填，按上方示例替换>
 

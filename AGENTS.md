@@ -115,10 +115,67 @@ PR 必须通过所有 required checks 且使用 auto-merge。
 2. 禁止在组件中使用 Tailwind 原始色值——必须通过语义化 Design Token（详见 `docs/references/design-ui-architecture.md`）
 3. 禁止在 JSX 中使用裸字符串字面量——所有用户可见文本必须走 `t()` / i18n
 4. 禁止使用 Tailwind 内置阴影类（`shadow-lg`、`shadow-xl`、`shadow-2xl`）——必须走 `--shadow-*` Design Token
+5. 禁止提交 CRLF/LF 噪音型大 diff——无语义改动却整文件替换视为格式风暴，必须阻断
+6. 禁止删除/跳过测试来换取 CI 通过
+7. 禁止保留过时治理术语（如 `delivery_log`、`RUN_LOG` 必填语义、`openspec-log-guard`）并声称"已收口"
 
 ---
 
-## 六、参考文档
+## 六、独立审计 Agent 强制协议
+
+适用对象：被指派为 reviewer 或执行独立审计的 Agent。
+
+### 6.1 不能做清单（违反任一项 → 审计结论必须 REJECT）
+
+1. **不能**提交 CRLF/LF 噪音型大 diff（无语义改动却整文件替换）
+2. **不能**删除/跳过测试来换取 CI 通过
+3. **不能**保留过时治理术语并声称"已收口"
+4. **不能**只给建议不给结论（必须给 `ACCEPT/REJECT`）
+5. **不能**无证据下结论（每条结论必须附命令或 diff 证据）
+6. **不能**把审计结果只写本地文件不发 PR 评论
+7. **不能**在 required checks 未通过时给出可合并结论
+8. **不能**用"后续再看"替代当前阻断问题
+
+### 6.2 根因排查格式（每条问题必须包含）
+
+1. **现象（Symptom）**
+2. **根因（Root Cause）**
+3. **影响面（Impact）**
+4. **复现/检测命令（Reproduce）**
+5. **阻断级别（Blocking / Non-blocking）**
+6. **处理结论（Reject / Accept with risk）**
+
+### 6.3 PR 评论强制要求（缺一不可）
+
+审计 Agent 在同一 PR 必须发布 3 条评论：
+
+1. **`PRE-AUDIT` 评论**：不能做清单命中项 + 初始阻断结论。先列"禁止项"，再列建议项。
+2. **`RE-AUDIT` 评论**：开发修复后的复审结果。逐条对应 PRE-AUDIT 的阻断问题是否关闭。
+3. **`FINAL-VERDICT` 评论**：最终 `ACCEPT` 或 `REJECT`。附完整证据命令和结果摘要；若 `ACCEPT` 必须说明剩余风险。
+
+### 6.4 审计必跑命令（结果需进 PR 评论）
+
+```bash
+git diff --numstat
+git diff --check
+git diff --ignore-cr-at-eol --name-status
+bash -n scripts/agent_pr_automerge_and_sync.sh
+python3 -m py_compile scripts/check_doc_timestamps.py
+pytest -q scripts/tests
+rg -n "delivery_log|RUN_LOG|legacy-governance-guard|openspec/_ops/task_runs" .github docs scripts README.md openspec
+test -x scripts/agent_pr_automerge_and_sync.sh && echo EXEC_OK
+```
+
+### 6.5 审计交付口径
+
+> "能发现问题、能定位根因、能明确阻断"优先于"写一堆建议"。
+> 审计的第一职责是划红线，不是润色方案。
+
+详细审计步骤见 `docs/delivery-skill.md` 第八节。
+
+---
+
+## 七、参考文档
 
 | 文档 | 路径 | 查阅时机 |
 |------|------|----------|

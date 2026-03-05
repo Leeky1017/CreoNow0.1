@@ -55,11 +55,7 @@ def is_governed_md(path: str) -> bool:
 
     if path.startswith("docs/Notion/"):
         return False
-    if path.startswith("openspec/_ops/task_runs/"):
-        return False
     if path.startswith("openspec/changes/archive/"):
-        return False
-    if path.startswith("rulebook/tasks/archive/"):
         return False
 
     if re.match(r"^README[^/]*\.md$", path):
@@ -67,8 +63,6 @@ def is_governed_md(path: str) -> bool:
     if path.startswith("docs/"):
         return True
     if path.startswith("openspec/"):
-        return True
-    if path.startswith("rulebook/tasks/"):
         return True
 
     return False
