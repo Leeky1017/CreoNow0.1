@@ -1,6 +1,6 @@
 # Amp 路线图专题索引
 
-更新时间：2026-03-06 22:00
+更新时间：2026-03-06 22:55
 
 > "善弈者谋势，不善弈者谋子。"——这组文档不是零散建议的堆砌，而是把 Amp 两个长 thread 的判断、证据、路线图与后续行动，收束成一套可以持续执行的北极星文件。
 
@@ -15,7 +15,8 @@
 | 三 | 阅读顺序 | 建议阅读路径 |
 | 四 | 文档清单 | 各文件分工 |
 | 五 | 总体判断 | 本轮综合整理后的核心结论 |
-| 六 | 维护约定 | 后续如何持续更新本专题 |
+| 六 | GitHub 执行入口 | 4 条母 Issue 与 Amp 路线图的映射关系 |
+| 七 | 维护约定 | 后续如何持续更新本专题 |
 
 ---
 
@@ -103,7 +104,34 @@
 
 ---
 
-## 六、维护约定
+## 六、GitHub 执行入口（2026-03-06 重构）
+
+为避免 OpenClaw / Asuka / Checa 历史 issue 在 GitHub 中碎片化悬挂，本专题已把相关后端治理问题收束为 4 条 **母 Issue**。
+
+它们的作用不是替代 Amp 文档，而是把 Amp 已识别的工程风险，转译成 GitHub 上可以持续推进、持续验收、持续归档的执行容器。
+
+| 母 Issue | 主题 | 吸收的历史问题簇 | 对应 Amp 文档 / 任务锚点 |
+|---|---|---|---|
+| [#1007](https://github.com/Leeky1017/CreoNow/issues/1007) | `project/session boundary hardening` | `file/search/context/embedding/rag/constraints` 的跨项目越权、`inspect` 可信角色、`about:blank` ACL | `01-master-roadmap.md` 的首发可信度问题；`03-engineering-and-architecture-roadmap.md` 的 IPC / 安全边界；`05-implementation-backlog.md` 的跨阶段后端治理容器 |
+| [#1008](https://github.com/Leeky1017/CreoNow/issues/1008) | `preload ipcGateway + runtime validation hardening` | structured-clone 语义、`toJSON` / getter 副作用、payload 估算、timeout / abort、运行时枚举校验 | `03-engineering-and-architecture-roadmap.md` 的 payload / 契约风险；`05-implementation-backlog.md` 的 `A2-05`、`A2-06S`、`A2-20` |
+| [#1009](https://github.com/Leeky1017/CreoNow/issues/1009) | `shared redaction hardening` | GitHub token、AWS key/secret、Unix/WSL/temp path、路径边界误匹配 | `01-master-roadmap.md` 的发布可信度；`03-engineering-and-architecture-roadmap.md` 的信息脱敏；与 `A1-18/A1-20` 相邻但不等同 |
+| [#1010](https://github.com/Leeky1017/CreoNow/issues/1010) | `CI / discovery / toolchain hardening` | `tsx` 受限环境、`scripts/tests/*.py` / shared tests discovery、readonly contract check、benchmark 标签真实性 | `03-engineering-and-architecture-roadmap.md` 的 `test-discovery-consistency` / schema-first gate；`05-implementation-backlog.md` 的工程门禁线 |
+
+### 为什么要这样映射
+
+- **Amp 文档**回答的是：为什么这条线重要、它在 v0.1 / v0.2 的全局路线里处于什么位置。
+- **GitHub 母 Issue**回答的是：这条线在执行面如何排队、如何验收、如何把旧审计证据单点归档。
+
+因此：
+
+- 旧 tagged issue 关闭，不代表风险消失；
+- 它只意味着“碎片化入口被撤销，主脉被保留”。
+
+截至本次重构后，GitHub 上与本专题对应的 open 执行入口，应以这 4 条母 Issue 为准。
+
+---
+
+## 七、维护约定
 
 - 本专题是后续 CN 开发的重点指引之一；凡是采纳其中路线、验收标准、里程碑，必须同步更新时间戳。
 - 若未来新增第三轮或第四轮 Amp 诊断，建议先更新 `01-master-roadmap.md` 的总判断，再按需要增补专题文件，而不是直接散写新长文。
