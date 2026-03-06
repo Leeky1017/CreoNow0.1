@@ -44,8 +44,9 @@
 
 ### P3. Gates（门禁全绿）
 
-PR 必须通过所有 required checks 且使用 auto-merge。
+PR 必须通过所有 required checks；auto-merge 默认关闭，仅可在指定审计 Agent 已发布 `FINAL-VERDICT` 且结论为 `ACCEPT` 后显式开启。
 - Required checks：`ci`、`merge-serial`
+- GitHub 远程动作前先运行 `python3 scripts/agent_github_delivery.py capabilities`
 - CI 不绿不合并，不得「先合并再修」
 - 交付完成 = 代码已合并到 `main`
 
@@ -103,7 +104,7 @@ PR 必须通过所有 required checks 且使用 auto-merge。
 |------|----------|
 | **准备** | Issue 已创建；spec 已阅读（如需变更则已更新）；分支已创建 |
 | **实现** | 按 TDD 循环实现；所有测试通过；前端任务有视觉验收 |
-| **交付** | PR 已创建（含 `Closes #N`）；auto-merge 已开启；CI 全绿；已合并到 main |
+| **交付** | PR 已创建（含 `Closes #N`）；auto-merge 默认关闭；仅在指定审计 Agent 已发布 `FINAL-VERDICT` + `ACCEPT` 评论后显式开启；CI 全绿；已合并到 main |
 
 规则冲突时，以 `docs/delivery-skill.md` 为主源。
 

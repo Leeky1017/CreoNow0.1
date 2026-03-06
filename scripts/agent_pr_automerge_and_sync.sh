@@ -11,11 +11,13 @@ Behavior:
   - Runs preflight: scripts/agent_pr_preflight.sh (unless --skip-preflight)
     - If preflight fails: creates/keeps PR as draft and waits by default
   - Ensures a PR exists (creates one unless --no-create)
-  - Enables auto-merge (squash), waits checks, waits merge
+  - Keeps auto-merge disabled by default; only enables it when --enable-auto-merge is passed
+  - --enable-auto-merge requires a designated audit comment with FINAL-VERDICT + ACCEPT
   - Syncs local controlplane main to origin/main (unless --no-sync)
 
 Options:
   --skip-preflight           Skip preflight entirely
+  --enable-auto-merge        Explicitly enable auto-merge after audit-pass comment is present
   --force                   Proceed even if preflight fails
   --no-wait-preflight        Fail fast if preflight fails (still creates draft PR)
   --wait-interval <seconds>  Preflight polling interval (default: 60)
@@ -30,6 +32,7 @@ PR_NUMBER=""
 NO_CREATE="false"
 NO_SYNC="false"
 SKIP_PREFLIGHT="false"
+ENABLE_AUTO_MERGE="false"
 FORCE="false"
 WAIT_PREFLIGHT="true"
 WAIT_INTERVAL_SECONDS="60"
@@ -41,6 +44,100 @@ GH_RETRY_BASE_SECONDS="2"
 GH_RETRY_MAX_SECONDS="30"
 GH_RETRY_MAX_ATTEMPTS="5"
 GH_LAST_TRANSIENT="false"
+
+json_get() {
+  local field="$1"
+  local payload
+  payload="$(cat)"
+  JSON_PAYLOAD="$payload" python3 - "$field" <<'PY2'
+import json
+import os
+import sys
+
+payload = json.loads(os.environ["JSON_PAYLOAD"])
+value = payload[sys.argv[1]]
+if value is None:
+    raise SystemExit(0)
+if isinstance(value, bool):
+    print(str(value).lower(), end="")
+else:
+    print(value, end="")
+PY2
+}
+
+require_gh_channel() {
+  local capabilities_json selected_channel blocker reason
+  capabilities_json="$(python3 scripts/agent_github_delivery.py capabilities --channel "${CODEX_GITHUB_CHANNEL:-auto}")"
+  selected_channel="$(json_get selected_channel <<<"$capabilities_json")"
+  blocker="$(json_get blocker <<<"$capabilities_json" || true)"
+  reason="$(json_get reason <<<"$capabilities_json")"
+
+  if [[ "$selected_channel" == "gh" ]]; then
+    return 0
+  fi
+
+  echo "ERROR: selected GitHub delivery channel is ${selected_channel:-none}; this shell entrypoint only supports gh." >&2
+  if [[ -n "$blocker" ]]; then
+    echo "INFO: blocker=${blocker}" >&2
+  fi
+  echo "INFO: ${reason}" >&2
+  echo "HINT: if GitHub MCP is available, use scripts/agent_github_delivery.py pr-payload / comment-payload with GitHub MCP tools for PR and comment operations." >&2
+  exit 1
+}
+
+build_pr_payload() {
+  local issue_number="$1"
+  local raw_title="$2"
+  local summary="${AGENT_PR_SUMMARY:-${raw_title}}"
+  local user_impact="${AGENT_PR_USER_IMPACT:-See linked issue #${issue_number} and verification evidence for concrete impact.}"
+  local worst_case="${AGENT_PR_WORST_CASE:-The task remains blocked on manual GitHub handoff in mixed agent environments.}"
+  local rollback_ref="${AGENT_PR_ROLLBACK_REF:-git revert <merge-commit>}"
+
+  python3 scripts/agent_github_delivery.py pr-payload     --issue-number "$issue_number"     --title "$raw_title"     --summary "$summary"     --user-impact "$user_impact"     --worst-case "$worst_case"     --rollback-ref "$rollback_ref"
+}
+
+comment_pr_with_kind() {
+  local pr_number="$1"
+  local kind="$2"
+  local pr_url="$3"
+  local merge_state="${4:-}"
+  local review_decision="${5:-}"
+  local timeout_seconds="${6:-}"
+  local -a command=(python3 scripts/agent_github_delivery.py comment-payload --kind "$kind" --pr-url "$pr_url")
+  local payload body
+
+  if [[ -n "$merge_state" ]]; then
+    command+=(--merge-state "$merge_state")
+  fi
+  if [[ -n "$review_decision" ]]; then
+    command+=(--review-decision "$review_decision")
+  fi
+  if [[ -n "$timeout_seconds" ]]; then
+    command+=(--timeout-seconds "$timeout_seconds")
+  fi
+
+  payload="$("${command[@]}")"
+  body="$(json_get body <<<"$payload")"
+  comment_pr "$pr_number" "$body"
+}
+
+require_audit_pass_comment() {
+  local pr_number="$1"
+  local pr_url="$2"
+  local comments_json audit_payload audit_pass
+
+  comments_json="$(run_gh_with_retry gh pr view "$pr_number" --json comments --jq '.comments | map(.body // "")')"
+  audit_payload="$(python3 scripts/agent_github_delivery.py audit-pass --comments-json "$comments_json")"
+  audit_pass="$(json_get audit_pass <<<"$audit_payload")"
+
+  if [[ "$audit_pass" == "true" ]]; then
+    return 0
+  fi
+
+  echo "ERROR: PR #${pr_number} has no audit-pass comment (`FINAL-VERDICT` + `ACCEPT`); designated audit must finish before auto-merge." >&2
+  comment_pr_with_kind "$pr_number" "audit-required" "$pr_url"
+  exit 1
+}
 
 is_transient_gh_error() {
   local output="$1"
@@ -174,6 +271,10 @@ while [[ $# -gt 0 ]]; do
       SKIP_PREFLIGHT="true"
       shift 1
       ;;
+    --enable-auto-merge)
+      ENABLE_AUTO_MERGE="true"
+      shift 1
+      ;;
     --force)
       FORCE="true"
       shift 1
@@ -223,6 +324,8 @@ fi
 ISSUE_NUMBER="${BASH_REMATCH[1]}"
 SLUG="${BASH_REMATCH[2]}"
 
+require_gh_channel
+
 PREFLIGHT_RC=0
 if [[ "$SKIP_PREFLIGHT" != "true" ]]; then
   set +e
@@ -242,19 +345,9 @@ if [[ -z "$PR_NUMBER" ]]; then
   fi
 
   TITLE="$(git log -1 --pretty=%s)"
-  BODY=$(
-    cat <<EOF
-Closes #${ISSUE_NUMBER}
-
-## Summary
-- (fill)
-
-## Test plan
-- \`pnpm typecheck\`
-- \`pnpm lint\`
-- \`pnpm test:unit\`
-EOF
-  )
+  PR_PAYLOAD="$(build_pr_payload "$ISSUE_NUMBER" "$TITLE")"
+  TITLE="$(json_get title <<<"$PR_PAYLOAD")"
+  BODY="$(json_get body <<<"$PR_PAYLOAD")"
 
   DRAFT_FLAG=""
   if [[ $PREFLIGHT_RC -ne 0 && "$FORCE" != "true" ]]; then
@@ -305,6 +398,15 @@ if [[ $PREFLIGHT_RC -ne 0 && "$FORCE" != "true" ]]; then
   done
 fi
 
+PR_URL="$(run_gh_with_retry gh pr view "$PR_NUMBER" --json url --jq '.url')"
+
+if [[ "$ENABLE_AUTO_MERGE" != "true" ]]; then
+  echo "INFO: PR #${PR_NUMBER} is ready. Auto-merge is disabled by default; rerun with --enable-auto-merge after the designated audit comment (`FINAL-VERDICT` + `ACCEPT`) is present." >&2
+  exit 0
+fi
+
+require_audit_pass_comment "$PR_NUMBER" "$PR_URL"
+
 IS_DRAFT="$(run_gh_with_retry gh pr view "$PR_NUMBER" --json isDraft --jq '.isDraft')"
 if [[ "$IS_DRAFT" == "true" ]]; then
   run_gh_with_retry gh pr ready "$PR_NUMBER" >/dev/null
@@ -344,13 +446,13 @@ while true; do
 
   if [[ "$REVIEW_DECISION" == "REVIEW_REQUIRED" ]]; then
     echo "ERROR: PR #${PR_NUMBER} is blocked by review requirement; independent review must be completed before merge." >&2
-    comment_pr "$PR_NUMBER" "PR is blocked by \`reviewDecision=REVIEW_REQUIRED\`. Complete independent review before merge. PR: ${PR_URL}"
+    comment_pr_with_kind "$PR_NUMBER" "review-required" "$PR_URL"
     exit 1
   fi
 
   if [[ "$REVIEW_DECISION" == "CHANGES_REQUESTED" ]]; then
     echo "ERROR: PR #${PR_NUMBER} has changes requested; resolve the review feedback before merging." >&2
-    comment_pr "$PR_NUMBER" "PR is blocked by \`reviewDecision=CHANGES_REQUESTED\`; cannot auto-merge. PR: ${PR_URL}"
+    comment_pr_with_kind "$PR_NUMBER" "changes-requested" "$PR_URL"
     exit 1
   fi
 
@@ -364,7 +466,7 @@ while true; do
 
   if [[ "$MERGE_STATE" == "DIRTY" ]]; then
     echo "ERROR: PR #${PR_NUMBER} has merge conflicts; resolve conflicts then rerun checks." >&2
-    comment_pr "$PR_NUMBER" "PR is blocked by merge conflicts (\`mergeStateStatus=DIRTY\`). Manual conflict resolution is required. PR: ${PR_URL}"
+    comment_pr_with_kind "$PR_NUMBER" "merge-conflicts" "$PR_URL" "$MERGE_STATE"
     exit 1
   fi
 
@@ -372,7 +474,7 @@ while true; do
     NOW_TS="$(date +%s)"
     if (( NOW_TS - START_MERGE_TS >= MERGE_TIMEOUT_SECONDS )); then
       echo "ERROR: PR still not merged after ${MERGE_TIMEOUT_SECONDS}s: #${PR_NUMBER}" >&2
-      comment_pr "$PR_NUMBER" "Auto-merge is enabled and checks are green, but the PR has not merged after ${MERGE_TIMEOUT_SECONDS}s. Current status: ${STATUS_LINE}. PR: ${PR_URL}"
+      comment_pr_with_kind "$PR_NUMBER" "merge-timeout" "$PR_URL" "$MERGE_STATE" "$REVIEW_DECISION" "$MERGE_TIMEOUT_SECONDS"
       exit 1
     fi
   fi

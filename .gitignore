@@ -12,7 +12,8 @@ apps/desktop/dist/
 apps/desktop/dist-electron/
 
 # IDE
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .idea/
 *.swp
 *.swo
