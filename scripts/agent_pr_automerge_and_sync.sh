@@ -11,11 +11,13 @@ Behavior:
   - Runs preflight: scripts/agent_pr_preflight.sh (unless --skip-preflight)
     - If preflight fails: creates/keeps PR as draft and waits by default
   - Ensures a PR exists (creates one unless --no-create)
-  - Enables auto-merge (squash), waits checks, waits merge
+  - Keeps auto-merge disabled by default; only enables it when --enable-auto-merge is passed
+  - --enable-auto-merge requires a designated audit comment with FINAL-VERDICT + ACCEPT
   - Syncs local controlplane main to origin/main (unless --no-sync)
 
 Options:
   --skip-preflight           Skip preflight entirely
+  --enable-auto-merge        Explicitly enable auto-merge after audit-pass comment is present
   --force                   Proceed even if preflight fails
   --no-wait-preflight        Fail fast if preflight fails (still creates draft PR)
   --wait-interval <seconds>  Preflight polling interval (default: 60)
@@ -30,6 +32,7 @@ PR_NUMBER=""
 NO_CREATE="false"
 NO_SYNC="false"
 SKIP_PREFLIGHT="false"
+ENABLE_AUTO_MERGE="false"
 FORCE="false"
 WAIT_PREFLIGHT="true"
 WAIT_INTERVAL_SECONDS="60"
@@ -55,7 +58,10 @@ payload = json.loads(os.environ["JSON_PAYLOAD"])
 value = payload[sys.argv[1]]
 if value is None:
     raise SystemExit(0)
-print(value, end="")
+if isinstance(value, bool):
+    print(str(value).lower(), end="")
+else:
+    print(value, end="")
 PY2
 }
 
@@ -113,6 +119,24 @@ comment_pr_with_kind() {
   payload="$("${command[@]}")"
   body="$(json_get body <<<"$payload")"
   comment_pr "$pr_number" "$body"
+}
+
+require_audit_pass_comment() {
+  local pr_number="$1"
+  local pr_url="$2"
+  local comments_json audit_payload audit_pass
+
+  comments_json="$(run_gh_with_retry gh pr view "$pr_number" --json comments --jq '.comments | map(.body // "")')"
+  audit_payload="$(python3 scripts/agent_github_delivery.py audit-pass --comments-json "$comments_json")"
+  audit_pass="$(json_get audit_pass <<<"$audit_payload")"
+
+  if [[ "$audit_pass" == "true" ]]; then
+    return 0
+  fi
+
+  echo "ERROR: PR #${pr_number} has no audit-pass comment (`FINAL-VERDICT` + `ACCEPT`); designated audit must finish before auto-merge." >&2
+  comment_pr_with_kind "$pr_number" "audit-required" "$pr_url"
+  exit 1
 }
 
 is_transient_gh_error() {
@@ -247,6 +271,10 @@ while [[ $# -gt 0 ]]; do
       SKIP_PREFLIGHT="true"
       shift 1
       ;;
+    --enable-auto-merge)
+      ENABLE_AUTO_MERGE="true"
+      shift 1
+      ;;
     --force)
       FORCE="true"
       shift 1
@@ -369,6 +397,15 @@ if [[ $PREFLIGHT_RC -ne 0 && "$FORCE" != "true" ]]; then
     sleep "$WAIT_INTERVAL_SECONDS"
   done
 fi
+
+PR_URL="$(run_gh_with_retry gh pr view "$PR_NUMBER" --json url --jq '.url')"
+
+if [[ "$ENABLE_AUTO_MERGE" != "true" ]]; then
+  echo "INFO: PR #${PR_NUMBER} is ready. Auto-merge is disabled by default; rerun with --enable-auto-merge after the designated audit comment (`FINAL-VERDICT` + `ACCEPT`) is present." >&2
+  exit 0
+fi
+
+require_audit_pass_comment "$PR_NUMBER" "$PR_URL"
 
 IS_DRAFT="$(run_gh_with_retry gh pr view "$PR_NUMBER" --json isDraft --jq '.isDraft')"
 if [[ "$IS_DRAFT" == "true" ]]; then

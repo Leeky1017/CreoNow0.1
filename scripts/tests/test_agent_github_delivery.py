@@ -77,5 +77,33 @@ class CommentTemplateTests(unittest.TestCase):
         self.assertIn("https://github.com/Leeky1017/CreoNow/pull/1006", body)
 
 
+class AuditGateTests(unittest.TestCase):
+    def test_has_audit_pass_comment_should_require_final_verdict_accept(self) -> None:
+        self.assertTrue(
+            agent_github_delivery.has_audit_pass_comment(
+                [
+                    "## FINAL-VERDICT：Issue #1005\n\n### 最终判定：ACCEPT",
+                ]
+            )
+        )
+        self.assertFalse(
+            agent_github_delivery.has_audit_pass_comment(
+                [
+                    "## PRE-AUDIT：Issue #1005\n\n### 初始阻断结论：REJECT",
+                    "## FINAL-VERDICT：Issue #1005\n\n### 最终判定：REJECT",
+                ]
+            )
+        )
+
+    def test_build_blocker_comment_should_explain_audit_requirement(self) -> None:
+        body = agent_github_delivery.build_blocker_comment(
+            kind="audit-required",
+            pr_url="https://github.com/Leeky1017/CreoNow/pull/1006",
+        )
+        self.assertIn("FINAL-VERDICT", body)
+        self.assertIn("ACCEPT", body)
+        self.assertIn("https://github.com/Leeky1017/CreoNow/pull/1006", body)
+
+
 if __name__ == "__main__":
     unittest.main()

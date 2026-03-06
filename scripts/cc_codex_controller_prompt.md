@@ -11,7 +11,7 @@ Delegate all implementation to Codex via `scripts/cc_codex_worker.py`.
 python3 scripts/agent_github_delivery.py capabilities
 ```
 
-- If `selected_channel=gh`, continue using the local `gh`-based delivery scripts.
+- If `selected_channel=gh`, continue using the local `gh`-based delivery scripts, but keep auto-merge off by default; only pass `--enable-auto-merge` after the designated audit agent has posted a `FINAL-VERDICT` comment with `ACCEPT`.
 - If `selected_channel=mcp`, use GitHub MCP tools for remote Issue / PR / comment operations, and reuse `scripts/agent_github_delivery.py pr-payload` / `comment-payload` so the content matches the repository contract.
 - If `selected_channel=none`, stop and report the missing capability (`missing_tool` / `missing_auth` / `missing_permission`) instead of asking the human to infer it.
 

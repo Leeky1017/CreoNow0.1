@@ -32,7 +32,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 3. **依赖同步检查**：若 change 依赖其他 change，进入实现前必须确认上游状态，发现漂移先更新文档再继续。
 4. **证据落盘**：CI 失败和修复过程必须记录在 PR comment 中，禁止 silent failure。
 5. **门禁一致**：文档契约与 GitHub required checks 必须一致；不一致时必须阻断并升级。
-6. **门禁全绿 + 串行合并**：PR 必须通过 `ci`、`merge-serial`，并启用 auto-merge。
+6. **门禁全绿 + 串行合并**：PR 必须通过 `ci`、`merge-serial`；auto-merge 仅可在指定审计 Agent 已发布 `FINAL-VERDICT` + `ACCEPT` 评论后显式开启。
 7. **控制面收口**：所有变更提交后必须合并回控制面 `main`，仅停留在 `task/*` 分支不算交付完成。
 8. **Issue 新鲜度强制**：新任务必须使用当前 OPEN Issue；禁止复用已关闭或历史 Issue。
 9. **环境基线强制**：创建 `task/*` 分支和 worktree 前，必须先同步控制面到最新 `origin/main`。
@@ -43,7 +43,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 ### GitHub 控制面选择
 
 - `auto`：优先 `gh`；若 `gh` 不可用或未认证，则在 GitHub MCP 可写时回退到 GitHub MCP。
-- `gh`：仅当 `gh auth status` 正常时允许继续。
+- `gh`：仅当 `gh auth status` 正常时允许继续；默认只创建/更新 PR，不自动开启 auto-merge。
 - `mcp`：仅当当前会话具备 GitHub MCP 写权限时允许继续；当前主要覆盖远程 Issue / PR / comment 动作。
 - 若两条通道都不可写，必须立即阻断，并在交付记录中写清缺失的是 tool / auth / permission 哪一项。
 
@@ -55,7 +55,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 | 2. 规格制定   | OpenSpec spec 已编写或更新；若有上游依赖则已确认上游状态                                                     |
 | 3. 环境隔离   | 控制面 `origin/main` 已同步，Worktree 已创建，工作目录已切换                                                       |
 | 4. 实现与测试 | 按 TDD 循环实现；所有测试通过                                            |
-| 5. 提交与合并 | PR 已创建；所选 GitHub 通道已确认；gh 通道时 auto-merge 已开启；CI 全绿；PR 已确认合并                     |
+| 5. 提交与合并 | PR 已创建；所选 GitHub 通道已确认；指定审计 Agent 的 `FINAL-VERDICT` + `ACCEPT` 评论已存在后，gh 通道方可显式开启 auto-merge；CI 全绿；PR 已确认合并                     |
 | 6. 收口与归档 | 控制面 `main` 已包含任务提交；worktree 已清理                                                                       |
 
 ---
@@ -67,6 +67,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 | `gh` 命令超时                        | 最多重试 3 次（间隔 10s），仍失败则在 GitHub MCP 可写时切到 MCP；否则必须记录并升级                              |
 | `gh` 缺失 / 未认证                    | 立即运行 `agent_github_delivery.py capabilities` 复核；若 MCP 可写则切换通道，否则阻断并升级                              |
 | PR 需要 review                       | 记录 blocker，通知 reviewer，等待处理，禁止 silent abandonment                              |
+| 审计通过评论缺失                      | 禁止开启 auto-merge；等待指定审计 Agent 发布 `FINAL-VERDICT` + `ACCEPT` 评论                              |
 | checks 失败                          | 修复后重新 push，重跑并记录失败原因和修复证据                                               |
 | Spec 不存在或不完整                  | 必须先补 spec 并确认，禁止猜测实现                                                          |
 | 上游依赖与当前 change 假设不一致 | 先更新 proposal/spec/tasks 再进入实现                                                         |

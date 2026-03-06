@@ -46,7 +46,7 @@
 | `agent_worktree_setup.sh`        | 创建 `.worktrees/issue-<N>-<slug>`         |
 | `agent_worktree_cleanup.sh`      | 清理 worktree                              |
 | `agent_pr_preflight.py`          | PR 提交前校验（Branch、Issue）         |
-| `agent_pr_automerge_and_sync.sh` | 创建 PR + 开启 auto-merge（仅 gh 通道） |
+| `agent_pr_automerge_and_sync.sh` | 创建 PR；默认不开 auto-merge，显式开启时需审计通过（仅 gh 通道） |
 | `agent_github_delivery.py`        | GitHub 能力探测、PR/评论模板、gh/MCP 通道选择 |
 | `ipc-acceptance-gate.ts`         | IPC 契约验收门禁                           |
 | `contract-generate.ts`           | IPC 契约代码生成                           |
@@ -55,7 +55,7 @@
 
 - GitHub 交付前必须先运行 `python3 scripts/agent_github_delivery.py capabilities`，显式确认当前使用 `gh` 还是 GitHub MCP 通道。
 - `auto` 模式默认优先 `gh`；若 `gh` 缺失或未认证，但 GitHub MCP 具备写权限，则回退到 GitHub MCP。
-- Shell 脚本 `agent_pr_automerge_and_sync.sh` 仅负责 `gh` 通道；GitHub MCP 通道应复用 `agent_github_delivery.py` 生成的 payload，并通过会话内 GitHub 工具执行远程 PR/评论操作。
+- Shell 脚本 `agent_pr_automerge_and_sync.sh` 仅负责 `gh` 通道；默认只创建/更新 PR。若要开启 auto-merge，必须显式传入 `--enable-auto-merge`，且 PR 上已存在指定审计 Agent 的 `FINAL-VERDICT` + `ACCEPT` 评论。GitHub MCP 通道应复用 `agent_github_delivery.py` 生成的 payload，并通过会话内 GitHub 工具执行远程 PR/评论操作。
 
 - 所有脚本使用 `set -euo pipefail`
 - 退出码：`0` 成功，`1` 可恢复失败，`2` 不可恢复失败

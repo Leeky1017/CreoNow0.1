@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 from dataclasses import asdict, dataclass
@@ -35,6 +36,9 @@ DEFAULT_VERIFICATION_COMMANDS = (
     "pnpm lint",
     "pnpm test:unit",
 )
+
+
+AUDIT_PASS_COMMENT_PATTERN = re.compile(r"FINAL-VERDICT[\s\S]*?\bACCEPT\b", re.IGNORECASE)
 
 
 def run(cmd: Sequence[str], *, cwd: str | None = None) -> CmdResult:
@@ -253,6 +257,10 @@ def build_pr_body(
 """.strip() + "\n"
 
 
+def has_audit_pass_comment(comment_bodies: Sequence[str]) -> bool:
+    return any(AUDIT_PASS_COMMENT_PATTERN.search(body) for body in comment_bodies)
+
+
 def build_blocker_comment(
     *,
     kind: str,
@@ -286,6 +294,12 @@ def build_blocker_comment(
         return (
             "Auto-merge is enabled and checks are green, but the PR has not merged "
             f"after {timeout_value}s. Current status: {status_line}. PR: {pr_url}"
+        )
+    if normalized_kind == "audit-required":
+        return (
+            "Auto-merge remains disabled until the designated audit agent posts a "
+            "`FINAL-VERDICT` comment with `ACCEPT`. "
+            f"PR: {pr_url}"
         )
     raise ValueError(f"Unsupported blocker comment kind: {kind}")
 
@@ -349,11 +363,14 @@ def build_parser() -> argparse.ArgumentParser:
         default="无",
     )
 
+    audit_parser = subparsers.add_parser("audit-pass", help="Check whether audit-pass comment exists.")
+    audit_parser.add_argument("--comments-json", required=True, help="JSON array of PR comment bodies.")
+
     comment_parser = subparsers.add_parser("comment-payload", help="Build blocker comment.")
     comment_parser.add_argument(
         "--kind",
         required=True,
-        choices=["review-required", "changes-requested", "merge-conflicts", "merge-timeout"],
+        choices=["review-required", "changes-requested", "merge-conflicts", "merge-timeout", "audit-required"],
     )
     comment_parser.add_argument("--pr-url", required=True)
     comment_parser.add_argument("--merge-state", default=None)
@@ -387,6 +404,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             ),
         }
         print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
+
+    if args.command == "audit-pass":
+        comments = json.loads(args.comments_json)
+        if not isinstance(comments, list) or not all(isinstance(item, str) for item in comments):
+            raise SystemExit("comments-json must be a JSON array of strings")
+        print(json.dumps({"audit_pass": has_audit_pass_comment(comments)}, ensure_ascii=False, indent=2))
         return 0
 
     if args.command == "comment-payload":

@@ -9,7 +9,7 @@
 | `agent_controlplane_sync.sh`       | 同步控制面的 main 到最新                        | 阶段 3 前 + 阶段 6 |
 | `agent_worktree_setup.sh`          | 创建 worktree 隔离环境                          | 阶段 3：环境隔离   |
 | `agent_pr_preflight.sh`            | 提交前 / PR 前的预检查                          | 阶段 5：提交前     |
-| `agent_pr_automerge_and_sync.sh`   | 创建 PR + auto-merge + 等待（仅 gh 通道）       | 阶段 5：提交与合并 |
+| `agent_pr_automerge_and_sync.sh`   | 创建 PR；默认不开 auto-merge，显式开启时需审计通过（仅 gh 通道） | 阶段 5：提交与合并 |
 | `agent_github_delivery.py`        | GitHub 能力探测、PR/评论模板、gh/MCP 通道选择   | 阶段 5：提交与合并 |
 | `agent_worktree_cleanup.sh`        | 清理 worktree                                   | 阶段 6：收口       |
 | `ipc-acceptance-gate.ts`           | IPC acceptance SLO 门禁                         | 阶段 4：实现与测试 |
@@ -32,7 +32,7 @@
 - 一键提交前预检命令（可直接复制）：
   - `scripts/agent_pr_preflight.sh`
 - `agent_worktree_setup.sh` 默认会在新 worktree 内执行 `pnpm install --frozen-lockfile`（可用 `--no-bootstrap` 关闭）。
-- `agent_pr_automerge_and_sync.sh` 在 preflight 通过后执行 auto-merge；遇到 `REVIEW_REQUIRED` 会阻断并提示先完成评审。
+- `agent_pr_automerge_and_sync.sh` 默认只创建/更新 PR，不自动开启 auto-merge；必须在指定审计 Agent 留下 `FINAL-VERDICT` + `ACCEPT` 评论后，显式传入 `--enable-auto-merge` 才会继续。
 - `agent_pr_automerge_and_sync.sh` 在 GitHub TLS 抖动时会标记 `transient` 并自动重试，必要时回退到 `gh run list` 快照通道。
 - `agent_github_delivery.py capabilities` 会输出结构化能力探测结果：`gh` 是否安装/认证、GitHub MCP 是否可用/可写、以及当前应选通道。
 - `agent_pr_automerge_and_sync.sh` 进入 GitHub 远程操作前会先校验所选通道；若结果不是 `gh`，会明确阻断并提示改用 GitHub MCP + `agent_github_delivery.py` 生成的 payload。

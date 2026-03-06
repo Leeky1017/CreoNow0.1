@@ -26,3 +26,7 @@ Skip-Reason: <必填，按上方示例替换>
 ## 回滚点
 - 回滚 commit/分支：
 - 回滚后需要恢复的数据或配置：
+
+## 审计门禁
+- [ ] 指定审计 Agent 已发布 `FINAL-VERDICT` 评论
+- [ ] `FINAL-VERDICT` 的最终判定为 `ACCEPT`
