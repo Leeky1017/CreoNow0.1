@@ -1,6 +1,6 @@
 # 工具链
 
-更新时间：2026-03-06 22:35
+更新时间：2026-03-06 23:20
 
 ## 包管理与构建
 
@@ -37,6 +37,16 @@
 | `ci`                 | `.github/workflows/ci.yml`                 | lint + typecheck + test + build |
 | `merge-serial`       | `.github/workflows/merge-serial.yml`       | 串行合并队列                    |
 | 合并策略             | auto-merge                                 | 禁止手动合并                    |
+
+## VS Code / Copilot Agent 定制
+
+| 入口 | 路径 | 用途 |
+| ---- | ---- | ---- |
+| Repo-wide instructions | `.github/copilot-instructions.md` | 对整个 workspace 生效的常驻规则 |
+| File-based instructions | `.github/instructions/*.instructions.md` | 针对脚本 / `.github` / 文档的条件指令 |
+| Prompt files | `.github/prompts/*.prompt.md` | 作为 slash command 运行的交付流程模板 |
+| Custom agents | `.github/agents/*.agent.md` | 在 VS Code Agent picker 中提供专项角色 |
+| Workspace settings | `.vscode/settings.json` | 显式开启 AGENTS / instructions / prompt files 加载 |
 
 ## 自动化脚本
 
