@@ -1,12 +1,10 @@
 """Tests for agent_pr_preflight.py (simplified delivery contract).
 
 Historical note:
-  Previous tests covered abolished functionality (RUN_LOG validation,
-  main session audit, task resolution). Those functions were removed
-  from agent_pr_preflight.py as part of governance reform (delivery
-  evidence now via PR comments + CI logs). This file provides equivalent
-  + CI logs). This file provides equivalent coverage for the current
-  contract: branch naming, issue state, PR body format.
+    Previous tests covered legacy delivery checks that have since been
+    removed from agent_pr_preflight.py. This file keeps equivalent
+    coverage for the current contract: branch naming, issue state,
+    and PR body format.
 """
 import os
 import sys

@@ -20,9 +20,6 @@ apps/desktop/dist-electron/
 # Cursor (local plans)
 .cursor/plans/
 
-# Rulebook (local config)
-.rulebook
-
 # OS
 .DS_Store
 Thumbs.db

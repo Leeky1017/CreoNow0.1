@@ -117,7 +117,7 @@ PR 必须通过所有 required checks 且使用 auto-merge。
 4. 禁止使用 Tailwind 内置阴影类（`shadow-lg`、`shadow-xl`、`shadow-2xl`）——必须走 `--shadow-*` Design Token
 5. 禁止提交 CRLF/LF 噪音型大 diff——无语义改动却整文件替换视为格式风暴，必须阻断
 6. 禁止删除/跳过测试来换取 CI 通过
-7. 禁止保留过时治理术语（如 `delivery_log`、`RUN_LOG` 必填语义、`openspec-log-guard`）并声称"已收口"
+7. 禁止在活跃内容中保留已废止治理体系的引用，并声称"已收口"
 
 ---
 
@@ -162,7 +162,6 @@ git diff --ignore-cr-at-eol --name-status
 bash -n scripts/agent_pr_automerge_and_sync.sh
 python3 -m py_compile scripts/check_doc_timestamps.py
 pytest -q scripts/tests
-rg -n "delivery_log|RUN_LOG|legacy-governance-guard|openspec/_ops/task_runs" .github docs scripts README.md openspec
 test -x scripts/agent_pr_automerge_and_sync.sh && echo EXEC_OK
 ```
 

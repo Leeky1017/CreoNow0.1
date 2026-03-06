@@ -216,7 +216,6 @@ git diff --ignore-cr-at-eol --name-status
 bash -n scripts/agent_pr_automerge_and_sync.sh
 python3 -m py_compile scripts/check_doc_timestamps.py
 pytest -q scripts/tests
-rg -n "delivery_log|RUN_LOG|legacy-governance-guard|openspec/_ops/task_runs" .github docs scripts README.md openspec
 test -x scripts/agent_pr_automerge_and_sync.sh && echo EXEC_OK
 ```
 
