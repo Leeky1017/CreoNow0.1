@@ -80,6 +80,15 @@ class IssueStateTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, r"\[ISSUE\].*CLOSED.*expected OPEN"):
                 agent_pr_preflight.validate_issue_is_open("/tmp/repo", "42")
 
+    def test_validate_issue_is_open_should_fail_with_fallback_hint_when_gh_missing(self) -> None:
+        with mock.patch.object(
+            agent_pr_preflight,
+            "run",
+            side_effect=FileNotFoundError("gh"),
+        ):
+            with self.assertRaisesRegex(RuntimeError, r"GitHub CLI `gh` is unavailable.*GitHub MCP"):
+                agent_pr_preflight.validate_issue_is_open("/tmp/repo", "99")
+
     def test_validate_issue_is_open_should_fail_when_gh_errors(self) -> None:
         with mock.patch.object(
             agent_pr_preflight,

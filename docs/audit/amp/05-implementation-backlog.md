@@ -1,6 +1,6 @@
 # CreoNow 实施任务总表
 
-更新时间：2026-03-06 22:00
+更新时间：2026-03-06 22:55
 
 > "凡事预则立，不预则废。"——路线图解决的是方向感，实施总表解决的是执行时不走神、不失序、不把重要事情做成碎片。
 
@@ -37,6 +37,24 @@
 1. 每次只允许一个主阶段处于 `in progress`，避免主题漂移。
 2. 若出现新机会，先判断它属于哪个阶段，再决定是否插入，不允许直接打断阶段主线。
 3. 若某任务只是让文档更漂亮、而不提升用户体验或降低发布风险，优先级自动下降一级。
+
+### 1.3 GitHub 执行入口（母 Issue）
+
+为避免历史 tagged issue 在 GitHub 中碎片化并列，本实施总表约定以下 4 条母 Issue 作为后端治理的执行容器：
+
+| 母 Issue | 作用 | 对应 backlog 锚点 | 说明 |
+|---|---|---|---|
+| [#1007](https://github.com/Leeky1017/CreoNow/issues/1007) | project/session/source ACL 边界治理 | 横跨 A0 可信度收口与 A2 工程安全硬化 | 不压成单个 A0 任务，因为同时覆盖 `file/search/context/rag/embedding/constraints` |
+| [#1008](https://github.com/Leeky1017/CreoNow/issues/1008) | preload `ipcGateway`、payload 估算、runtime validation、timeout/abort | `A2-05`、`A2-06S`、`A2-20` | 是这些任务在 GitHub 上的汇聚执行入口 |
+| [#1009](https://github.com/Leeky1017/CreoNow/issues/1009) | shared redaction 规则库补真 | 与 `A1-18/A1-20` 相邻，但独立存在 | 处理的是 shared rule hardening，不是 UI 展示脱敏 |
+| [#1010](https://github.com/Leeky1017/CreoNow/issues/1010) | CI / discovery / toolchain 可信度 | `test-discovery-consistency`、schema-first / contract gate、受限环境脚本入口 | 门禁若不可信，其余任务的“已验证”都不可信 |
+
+### 1.4 使用约定
+
+- 若某个旧审计问题已被母 Issue 吸收，则旧 issue 关闭仅表示**入口归并**，不表示问题天然解决。
+- 在执行时，优先引用母 Issue，再回溯其来源 issue 里的证据。
+- 若未来新增同主题后端审计问题，应优先判断是并入 #1007 ~ #1010，还是新开第五条母线；原则上不要再恢复碎片化 tagged queue。
+
 
 ---
 

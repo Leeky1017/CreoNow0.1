@@ -64,7 +64,13 @@ def current_branch(repo_root: str) -> str:
 
 
 def run_gh_json(repo: str, cmd: list[str], *, error_hint: str) -> object:
-    result = run(cmd, cwd=repo)
+    try:
+        result = run(cmd, cwd=repo)
+    except FileNotFoundError as exc:
+        missing_bin = cmd[0] if cmd else "command"
+        raise RuntimeError(
+            f"{error_hint}; GitHub CLI `{missing_bin}` is unavailable. If GitHub MCP is available in this session, switch to the MCP fallback for remote Issue/PR checks."
+        ) from exc
     print_command_and_output(cmd, result)
     if result.code != 0:
         raise RuntimeError(error_hint)
