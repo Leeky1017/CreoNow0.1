@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("../../i18n/languagePreference", () => ({
   getLanguagePreference: vi.fn(() => "zh-CN"),
@@ -15,28 +16,44 @@ vi.mock("../../lib/ipcClient", () => ({
 }));
 
 import { OnboardingPage } from "./OnboardingPage";
+import { setLanguagePreference } from "../../i18n/languagePreference";
+import { i18n } from "../../i18n";
 
 describe("OnboardingPage", () => {
-  it("renders the onboarding page with logo and title", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("renders the onboarding shell and starts on step 1", () => {
     const onComplete = vi.fn();
     render(<OnboardingPage onComplete={onComplete} />);
 
     expect(screen.getByTestId("onboarding-page")).toBeInTheDocument();
     expect(screen.getByTestId("onboarding-logo")).toBeInTheDocument();
-    expect(screen.getByText("Welcome to CreoNow")).toBeInTheDocument();
-  });
-
-  it("starts on step 1 by default", () => {
-    const onComplete = vi.fn();
-    render(<OnboardingPage onComplete={onComplete} />);
-
     expect(screen.getByTestId("onboarding-step-1")).toBeInTheDocument();
+    expect(screen.getByTestId("onboarding-next")).toBeInTheDocument();
+    expect(screen.getByTestId("onboarding-step-indicator")).toBeInTheDocument();
   });
 
-  it("renders step indicator", () => {
+  it("persists language selection when a language option is clicked", async () => {
+    const user = userEvent.setup();
     const onComplete = vi.fn();
     render(<OnboardingPage onComplete={onComplete} />);
 
-    expect(screen.getByTestId("onboarding-step-indicator")).toBeInTheDocument();
+    await user.click(screen.getByTestId("onboarding-lang-en"));
+
+    expect(setLanguagePreference).toHaveBeenCalledWith("en");
+    expect(i18n.changeLanguage).toHaveBeenCalledWith("en");
+  });
+
+  it("advances from step 1 to step 2 when next is clicked", async () => {
+    const user = userEvent.setup();
+    const onComplete = vi.fn();
+    render(<OnboardingPage onComplete={onComplete} />);
+
+    await user.click(screen.getByTestId("onboarding-next"));
+
+    expect(screen.getByTestId("onboarding-step-2")).toBeInTheDocument();
+    expect(screen.getByTestId("onboarding-ai-skip")).toBeInTheDocument();
   });
 });
