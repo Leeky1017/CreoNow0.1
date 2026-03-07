@@ -62,6 +62,44 @@ class VsCodeAgentGuidanceTests(unittest.TestCase):
                 with self.subTest(path=relative_path, phrase=phrase):
                     self.assertIn(phrase, text)
 
+    def test_audit_prompt_and_agent_should_exist(self) -> None:
+        prompt_path = REPO_ROOT / ".github" / "prompts" / "creonow-audit.prompt.md"
+        agent_path = REPO_ROOT / ".github" / "agents" / "creonow-audit.agent.md"
+        self.assertTrue(prompt_path.exists(), ".github/prompts/creonow-audit.prompt.md must exist")
+        self.assertTrue(agent_path.exists(), ".github/agents/creonow-audit.agent.md must exist")
+
+        prompt_text = prompt_path.read_text(encoding="utf-8")
+        self.assertIn("PRE-AUDIT", prompt_text)
+        self.assertIn("RE-AUDIT", prompt_text)
+        self.assertIn("FINAL-VERDICT", prompt_text)
+        self.assertIn("git diff --numstat", prompt_text)
+
+        agent_text = agent_path.read_text(encoding="utf-8")
+        self.assertIn("FINAL-VERDICT", agent_text)
+        self.assertIn("ACCEPT", agent_text)
+
+    def test_fix_ci_prompt_and_agent_should_exist(self) -> None:
+        prompt_path = REPO_ROOT / ".github" / "prompts" / "creonow-fix-ci.prompt.md"
+        agent_path = REPO_ROOT / ".github" / "agents" / "creonow-fix-ci.agent.md"
+        self.assertTrue(prompt_path.exists(), ".github/prompts/creonow-fix-ci.prompt.md must exist")
+        self.assertTrue(agent_path.exists(), ".github/agents/creonow-fix-ci.agent.md must exist")
+
+        prompt_text = prompt_path.read_text(encoding="utf-8")
+        self.assertIn("scripts/agent_pr_preflight.sh", prompt_text)
+        self.assertIn("python3 scripts/agent_github_delivery.py capabilities", prompt_text)
+        self.assertIn("evidence", prompt_text.lower())
+        self.assertIn("ci", prompt_text.lower())
+
+        agent_text = agent_path.read_text(encoding="utf-8")
+        self.assertIn("ci", agent_text.lower())
+        self.assertIn("Issue", agent_text)
+
+    def test_repo_wide_instructions_should_point_to_all_specialized_entrypoints(self) -> None:
+        text = (REPO_ROOT / ".github" / "copilot-instructions.md").read_text(encoding="utf-8")
+        self.assertIn("creonow-delivery", text)
+        self.assertIn("creonow-audit", text)
+        self.assertIn("creonow-fix-ci", text)
+
 
 if __name__ == "__main__":
     unittest.main()

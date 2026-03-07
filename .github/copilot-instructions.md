@@ -22,3 +22,10 @@
 - 修改 GitHub 交付脚本或文档时，要同步维护 `AGENTS.md`、`CLAUDE.md`、`docs/delivery-skill.md`、`docs/references/toolchain.md`、`scripts/README.md` 的一致性。
 
 可在 VS Code Chat Diagnostics 中确认这些 instructions / prompt files / agents 是否已加载。
+
+
+## Recommended specialized entrypoints
+
+- Use `creonow-delivery` for end-to-end Issue / PR handoff.
+- Use `creonow-audit` when the task is review-only and you must publish `PRE-AUDIT`, `RE-AUDIT`, and `FINAL-VERDICT`.
+- Use `creonow-fix-ci` when the task is to repair failing CI on an existing Issue / PR chain without breaking audit continuity.
