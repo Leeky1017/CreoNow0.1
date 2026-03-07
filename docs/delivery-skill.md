@@ -1,11 +1,12 @@
 # OpenSpec + GitHub 交付规则
 
-更新时间：2026-03-06 22:35
+更新时间：2026-03-07 11:40
 
 本文件是 CreoNow 的交付规则主源（Source of Truth）。
 本文件只定义约束条件和验收标准，不定义具体命令和脚本参数。
 
 命令与脚本用法参见 `scripts/README.md`。
+测试编写规范与测试类型选择参见 `docs/references/testing/README.md`。
 
 ---
 
@@ -54,7 +55,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 | 1. 任务准入   | 当前 OPEN Issue 已创建或认领，`N` 和 `SLUG` 已确定                                                                 |
 | 2. 规格制定   | OpenSpec spec 已编写或更新；若有上游依赖则已确认上游状态                                                     |
 | 3. 环境隔离   | 控制面 `origin/main` 已同步，Worktree 已创建，工作目录已切换                                                       |
-| 4. 实现与测试 | 按 TDD 循环实现；所有测试通过                                            |
+| 4. 实现与测试 | 按 TDD 循环实现；所有测试通过；测试写法与类型选择遵循 `docs/references/testing/README.md` |
 | 5. 提交与合并 | PR 已创建；所选 GitHub 通道已确认；指定审计 Agent 的 `FINAL-VERDICT` + `ACCEPT` 评论已存在后，gh 通道方可显式开启 auto-merge；CI 全绿；PR 已确认合并                     |
 | 6. 收口与归档 | 控制面 `main` 已包含任务提交；worktree 已清理                                                                       |
 
@@ -144,7 +145,7 @@ openspec/             .github/workflows/
 
 1. **读 PR diff**：`gh pr diff <PR_NUMBER>` 或在 GitHub UI 查看全部变更文件
 2. **读关联 spec**：`openspec/specs/<module>/spec.md` + `openspec/changes/<change>/` 下的 delta spec
-3. **跑验证命令**：至少执行 typecheck (`pnpm typecheck`) + 相关测试 (`pnpm -C apps/desktop test:run <path>`)，命令输出必须完整记录作为证据
+3. **跑验证命令**：至少执行 typecheck (`pnpm typecheck`) + 相关测试 (`pnpm -C apps/desktop test:run <path>`)；命令选择、测试层级和写法约束遵循 `docs/references/testing/README.md`
 4. **跑审计必跑命令**（见 8.6）
 5. **识别问题并分级**：逐文件审查，每个问题必须引用具体文件路径和行号，附上问题代码片段与修复建议
    - BLOCKER：违反核心原则、安全漏洞、数据丢失风险 → 必须修复后才能合并

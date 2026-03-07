@@ -1,6 +1,6 @@
 # 文件组织
 
-更新时间：2026-03-04 16:00
+更新时间：2026-03-07 11:40
 
 ## 仓库顶层
 
@@ -50,6 +50,7 @@ apps/desktop/
 
 ```
 apps/desktop/**/*.test.ts       # 单元测试（与源文件并置）
+apps/desktop/**/*.test.tsx      # 前端组件 / Store / Hook 测试（与源文件并置）
 apps/desktop/tests/
 ├── unit/                         # 单元回归补集
 ├── integration/                  # 集成测试
@@ -59,6 +60,12 @@ apps/desktop/tests/
 │   └── golden-tests/             #   Golden Test Set
 └── helpers/                      # 测试辅助
 ```
+
+补充说明：
+
+- `apps/desktop/renderer/src/**/*.test.{ts,tsx}` 主要由 `pnpm -C apps/desktop test:run` 执行。
+- root 侧 `pnpm test:unit` / `pnpm test:integration` 通过 `scripts/run-discovered-tests.ts` 组织执行计划。
+- 具体测试分层与写法规则以 `docs/references/testing/README.md` 为主源。
 
 ## OpenSpec
 

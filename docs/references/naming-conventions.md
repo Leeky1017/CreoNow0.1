@@ -1,6 +1,6 @@
 # 命名约定
 
-更新时间：2026-03-04 16:00
+更新时间：2026-03-07 11:40
 
 ## Git 实体
 
@@ -33,6 +33,7 @@ Commit type 可选值：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` 
 - 测试套件：`describe('<ModuleName>')`
 - 测试用例：`it('should <期望行为> when <前置条件>')`
 - 测试结构：严格 AAA（Arrange-Act-Assert），段间空行分隔
+- 完整测试写法、层级选择与反模式约束以 `docs/references/testing/README.md` 为主源
 
 ## OpenSpec 命名
 

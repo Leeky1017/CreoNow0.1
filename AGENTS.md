@@ -179,7 +179,7 @@ test -x scripts/agent_pr_automerge_and_sync.sh && echo EXEC_OK
 
 | 文档 | 路径 | 查阅时机 |
 |------|------|----------|
-| 测试指南 | `docs/references/testing-guide.md` | 写测试前 |
+| 测试规范主源 | `docs/references/testing/README.md` | 写测试前 |
 | 设计与 UI 架构 | `docs/references/design-ui-architecture.md` | 写前端组件前 |
 | 代码标准 | `docs/references/coding-standards.md` | 写代码前 |
 | 异常处理 | `docs/references/exception-handling.md` | 遇到阻塞/异常时 |

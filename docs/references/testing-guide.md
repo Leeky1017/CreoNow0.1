@@ -1,37 +1,24 @@
-# 测试要求
+# 测试要求（跳转页）
 
-## 测试分层
+更新时间：2026-03-07 11:40
 
-| 层级     | 运行时机    | 速度要求       | 外部依赖                      |
-| -------- | ----------- | -------------- | ----------------------------- |
-| 单元测试 | 每次保存    | 全套 30 秒内   | 全部 mock                     |
-| 集成测试 | 每次提交    | 全套 2 分钟内  | SQLite 内存 OK，LLM 必须 mock |
-| E2E 测试 | 每次合并    | 全套 10 分钟内 | LLM 用 mock server            |
-| AI Eval  | Prompt 变更 | 取决于 API     | 真实 LLM，手动触发            |
+测试规范主源已迁移到 `docs/references/testing/`。
 
-## 覆盖率要求
+## 从这里开始
 
-| 模块类别                                   | 最低覆盖率 |
-| ------------------------------------------ | ---------- |
-| 核心业务逻辑（Context Engine、KG、Memory） | 90%        |
-| 一般业务模块（DAO、Skill、Version）        | 80%        |
-| UI 组件和胶水代码                          | 60%        |
+- 索引与阅读顺序：`docs/references/testing/README.md`
+- 理念与反模式：`docs/references/testing/01-philosophy-and-anti-patterns.md`
+- 测试类型决策：`docs/references/testing/02-test-type-decision-guide.md`
+- 前端模式：`docs/references/testing/03-frontend-testing-patterns.md`
+- 后端 / IPC / DB / AI：`docs/references/testing/04-backend-testing-patterns.md`
+- E2E：`docs/references/testing/05-e2e-testing-patterns.md`
+- Guard / Lint 边界：`docs/references/testing/06-guard-and-lint-policy.md`
+- 命令与 CI：`docs/references/testing/07-test-command-and-ci-map.md`
+- 迁移与 review：`docs/references/testing/08-migration-and-review-playbook.md`
 
-## 测试编写规范
+## 保留在本页的最小摘要
 
-- 命名：`it('should <期望行为> when <前置条件>')`
-- 结构：严格 AAA（Arrange-Act-Assert），段间空行分隔
-- 独立性：每个测试独立运行，不依赖执行顺序，不共享可变状态
-- 确定性：同一测试在同一代码上运行 N 次，结果完全相同
-- 断言：每个测试至少一个有意义的断言，优先使用具体断言（`toEqual` > `toBeTruthy`）
-- 三路径：每个被测行为必须覆盖 happy / edge / error 三条路径
-
-## 各层测试要点
-
-| 层         | 重点                                    | Mock 策略                         |
-| ---------- | --------------------------------------- | --------------------------------- |
-| 后端服务   | 业务逻辑正确性、状态转换、错误处理      | DAO mock、LLM mock                |
-| IPC 契约   | 请求/响应格式一致、运行时校验、错误结构 | handler 单独测试，不依赖 Electron |
-| 前端 Store | 状态变更、派生数据、边界条件            | IPC API mock                      |
-| 前端组件   | 用户交互行为（RTL）、可访问性           | Store mock、props 注入            |
-| E2E        | 关键用户路径端到端验证                  | LLM mock server                   |
+- 测试先行：Red -> Green -> Refactor
+- 测行为，不测实现
+- 每个核心行为至少覆盖 happy / edge / error
+- 单元 / 集成 / E2E / Guard 的选择以 `02-test-type-decision-guide.md` 为准

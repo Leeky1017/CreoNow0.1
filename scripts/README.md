@@ -1,6 +1,8 @@
 # Scripts
 
-自动化脚本，供 Agent 在交付流程中调用。交付规则见 `docs/delivery-skill.md`。
+更新时间：2026-03-07 11:44
+
+自动化脚本，供 Agent 在交付流程中调用。交付规则见 `docs/delivery-skill.md`，测试规范主源见 `docs/references/testing/README.md`。
 
 ## 脚本清单
 
@@ -13,6 +15,8 @@
 | `agent_github_delivery.py`        | GitHub 能力探测、PR/评论模板、gh/MCP 通道选择   | 阶段 5：提交与合并 |
 | `agent_worktree_cleanup.sh`        | 清理 worktree                                   | 阶段 6：收口       |
 | `ipc-acceptance-gate.ts`           | IPC acceptance SLO 门禁                         | 阶段 4：实现与测试 |
+| `test-discovery-consistency-gate.ts` | 测试发现与执行计划一致性校验                    | 阶段 4：实现与测试 |
+| `check_doc_timestamps.py`            | 受管 Markdown 时间戳校验                        | 文档治理 / 手动      |
 | `contract-generate.ts`             | 生成 IPC 契约类型定义                           | CI / 手动          |
 | `cross-module-contract-gate.ts`    | cross-module 契约对齐门禁                       | CI / preflight     |
 | `cross-module-contract-autofix.ts` | cross-module 失败分类与安全自动修复（开发分支） | 开发分支手动触发   |
@@ -27,6 +31,8 @@
   - 分支命名必须符合 `task/<N>-<slug>`
   - `task/<N>-<slug>` 对应 GitHub Issue `#N` 必须为 `OPEN`（阻断复用已关闭/历史 Issue）
   - 当前分支的开放 PR body 必须包含 `Closes #N`
+- 受管 Markdown 变更若需校验时间戳，请单独执行：
+  - `python3 scripts/check_doc_timestamps.py`
 - `agent_pr_preflight.sh` 为轻量预检入口，直接执行：
   - `scripts/agent_pr_preflight.sh`
 - 一键提交前预检命令（可直接复制）：

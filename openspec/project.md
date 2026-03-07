@@ -1,6 +1,6 @@
 # CreoNow
 
-更新时间：2026-03-04 16:00
+更新时间：2026-03-07 11:40
 
 AI 驱动的文字创作 IDE，Electron + React 18 + TypeScript + TipTap 2，Windows-first。
 
@@ -74,6 +74,7 @@ CreoNow/
 | Database         | SQLite（better-sqlite3）                                       |
 | Test framework   | Vitest                                                         |
 | E2E              | Playwright                                                     |
+| Testing SSOT     | `docs/references/testing/README.md`                              |
 | CI               | GitHub Actions（`ci` + `merge-serial`）                            |
 | Commit format    | `<type>: <summary> (#N)`                                       |
 
@@ -85,6 +86,7 @@ CreoNow/
 - 禁止 silent failure（异常必须有错误码、错误信息和日志）
 - 禁止「先合并再修」（CI 不绿就不合并）
 - 禁止手动合并 PR（必须用 auto-merge）
+- 禁止脱离 `docs/references/testing/README.md` 自创测试约定
 - 禁止 `any` 类型
 - 禁止消耗真实 LLM API 额度（集成测试和 E2E 必须 mock）
 - 禁止 `pnpm install` 不带 `--frozen-lockfile`
