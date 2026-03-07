@@ -1,9 +1,10 @@
-import assert from "node:assert/strict";
+import { describe, expect, it } from "vitest";
 
 import { ipcContract } from "../../main/src/ipc/contract/ipc-contract";
 
 type IpcChannelMap = Record<string, unknown>;
 type ObjectSchema = { kind: "object"; fields: Record<string, unknown> };
+type ContractChannel = { request: unknown; response: unknown };
 
 function asObjectSchema(value: unknown): ObjectSchema {
   if (
@@ -16,309 +17,156 @@ function asObjectSchema(value: unknown): ObjectSchema {
   return value as ObjectSchema;
 }
 
-/**
- * S1: CRUD IPC channels match P0 baseline naming and remove legacy aliases.
- */
-{
-  const channels = Object.keys(ipcContract.channels as IpcChannelMap);
-  const required = [
-    "file:document:create",
-    "file:document:read",
-    "file:document:update",
-    "file:document:save",
-    "file:document:delete",
-    "file:document:list",
-    "file:document:getcurrent",
-    "file:document:reorder",
-    "file:document:updatestatus",
-    "version:snapshot:create",
-    "version:snapshot:list",
-    "version:snapshot:read",
-    "version:snapshot:diff",
-    "version:snapshot:rollback",
-    "version:branch:create",
-    "version:branch:list",
-    "version:branch:switch",
-    "version:branch:merge",
-    "version:conflict:resolve",
-  ] as const;
-  const legacy = ["file:document:rename", "file:document:write"] as const;
+const channels = ipcContract.channels as unknown as Record<
+  string,
+  ContractChannel
+>;
+const errorCodes = ipcContract.errorCodes as readonly string[];
 
-  for (const channel of required) {
-    assert.equal(
-      channels.includes(channel),
-      true,
-      `missing required channel: ${channel}`,
+function hasField(schema: ObjectSchema, field: string): boolean {
+  return Object.prototype.hasOwnProperty.call(schema.fields, field);
+}
+
+describe("document IPC contract", () => {
+  it("should keep required CRUD and version channels while removing legacy aliases", () => {
+    const channelNames = Object.keys(ipcContract.channels as IpcChannelMap);
+    const required = [
+      "file:document:create",
+      "file:document:read",
+      "file:document:update",
+      "file:document:save",
+      "file:document:delete",
+      "file:document:list",
+      "file:document:getcurrent",
+      "file:document:reorder",
+      "file:document:updatestatus",
+      "version:snapshot:create",
+      "version:snapshot:list",
+      "version:snapshot:read",
+      "version:snapshot:diff",
+      "version:snapshot:rollback",
+      "version:branch:create",
+      "version:branch:list",
+      "version:branch:switch",
+      "version:branch:merge",
+      "version:conflict:resolve",
+    ] as const;
+    const legacy = ["file:document:rename", "file:document:write"] as const;
+
+    for (const channel of required) {
+      expect(channelNames.includes(channel)).toBe(true);
+    }
+
+    for (const channel of legacy) {
+      expect(channelNames.includes(channel)).toBe(false);
+    }
+  });
+
+  it("should expose hardening error codes", () => {
+    const required = [
+      "VERSION_SNAPSHOT_COMPACTED",
+      "VERSION_DIFF_PAYLOAD_TOO_LARGE",
+      "VERSION_ROLLBACK_CONFLICT",
+    ] as const;
+
+    for (const code of required) {
+      expect(errorCodes.includes(code)).toBe(true);
+    }
+  });
+
+  it("should expose branch merge and conflict request core fields", () => {
+    const createReq = asObjectSchema(
+      channels["version:branch:create"]?.request,
     );
-  }
+    expect(hasField(createReq, "documentId")).toBe(true);
+    expect(hasField(createReq, "name")).toBe(true);
 
-  for (const channel of legacy) {
-    assert.equal(
-      channels.includes(channel),
-      false,
-      `legacy channel should be removed: ${channel}`,
+    const listReq = asObjectSchema(channels["version:branch:list"]?.request);
+    expect(hasField(listReq, "documentId")).toBe(true);
+
+    const switchReq = asObjectSchema(
+      channels["version:branch:switch"]?.request,
     );
-  }
-}
+    expect(hasField(switchReq, "documentId")).toBe(true);
+    expect(hasField(switchReq, "name")).toBe(true);
 
-/**
- * P4 contract: hardening error codes must be present.
- */
-{
-  const errorCodes = ipcContract.errorCodes as readonly string[];
-  const required = [
-    "VERSION_SNAPSHOT_COMPACTED",
-    "VERSION_DIFF_PAYLOAD_TOO_LARGE",
-    "VERSION_ROLLBACK_CONFLICT",
-  ] as const;
-  for (const code of required) {
-    assert.equal(
-      errorCodes.includes(code),
-      true,
-      `missing hardening error code: ${code}`,
+    const mergeReq = asObjectSchema(channels["version:branch:merge"]?.request);
+    expect(hasField(mergeReq, "documentId")).toBe(true);
+    expect(hasField(mergeReq, "sourceBranchName")).toBe(true);
+    expect(hasField(mergeReq, "targetBranchName")).toBe(true);
+
+    const resolveReq = asObjectSchema(
+      channels["version:conflict:resolve"]?.request,
     );
-  }
-}
+    expect(hasField(resolveReq, "documentId")).toBe(true);
+    expect(hasField(resolveReq, "mergeSessionId")).toBe(true);
+    expect(hasField(resolveReq, "resolutions")).toBe(true);
+  });
 
-/**
- * P3 contract: branch merge/conflict channels must exist with core fields.
- */
-{
-  const channels = ipcContract.channels as unknown as Record<
-    string,
-    { request: unknown; response: unknown }
-  >;
+  it("should expose snapshot diff and rollback schemas", () => {
+    const diffReq = asObjectSchema(channels["version:snapshot:diff"]?.request);
+    expect(hasField(diffReq, "documentId")).toBe(true);
+    expect(hasField(diffReq, "baseVersionId")).toBe(true);
 
-  const createReq = asObjectSchema(channels["version:branch:create"]?.request);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(createReq.fields, "documentId"),
-    true,
-    "version:branch:create request should include documentId",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(createReq.fields, "name"),
-    true,
-    "version:branch:create request should include name",
-  );
+    const diffRes = asObjectSchema(channels["version:snapshot:diff"]?.response);
+    expect(hasField(diffRes, "diffText")).toBe(true);
+    expect(hasField(diffRes, "hasDifferences")).toBe(true);
+    expect(hasField(diffRes, "stats")).toBe(true);
 
-  const listReq = asObjectSchema(channels["version:branch:list"]?.request);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(listReq.fields, "documentId"),
-    true,
-    "version:branch:list request should include documentId",
-  );
+    const rollbackReq = asObjectSchema(
+      channels["version:snapshot:rollback"]?.request,
+    );
+    expect(hasField(rollbackReq, "documentId")).toBe(true);
+    expect(hasField(rollbackReq, "versionId")).toBe(true);
 
-  const switchReq = asObjectSchema(channels["version:branch:switch"]?.request);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(switchReq.fields, "documentId"),
-    true,
-    "version:branch:switch request should include documentId",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(switchReq.fields, "name"),
-    true,
-    "version:branch:switch request should include name",
-  );
+    const rollbackRes = asObjectSchema(
+      channels["version:snapshot:rollback"]?.response,
+    );
+    expect(hasField(rollbackRes, "restored")).toBe(true);
+  });
 
-  const mergeReq = asObjectSchema(channels["version:branch:merge"]?.request);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(mergeReq.fields, "documentId"),
-    true,
-    "version:branch:merge request should include documentId",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(mergeReq.fields, "sourceBranchName"),
-    true,
-    "version:branch:merge request should include sourceBranchName",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(mergeReq.fields, "targetBranchName"),
-    true,
-    "version:branch:merge request should include targetBranchName",
-  );
+  it("should expose snapshot create and wordCount fields in snapshot payloads", () => {
+    const createReq = asObjectSchema(
+      channels["version:snapshot:create"]?.request,
+    );
+    expect(hasField(createReq, "documentId")).toBe(true);
+    expect(hasField(createReq, "contentJson")).toBe(true);
+    expect(hasField(createReq, "actor")).toBe(true);
+    expect(hasField(createReq, "reason")).toBe(true);
 
-  const resolveReq = asObjectSchema(
-    channels["version:conflict:resolve"]?.request,
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(resolveReq.fields, "documentId"),
-    true,
-    "version:conflict:resolve request should include documentId",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(resolveReq.fields, "mergeSessionId"),
-    true,
-    "version:conflict:resolve request should include mergeSessionId",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(resolveReq.fields, "resolutions"),
-    true,
-    "version:conflict:resolve request should include resolutions",
-  );
-}
+    const createRes = asObjectSchema(
+      channels["version:snapshot:create"]?.response,
+    );
+    expect(hasField(createRes, "compaction")).toBe(true);
 
-/**
- * P2 contract: version:snapshot:diff and version:snapshot:rollback schemas must exist.
- */
-{
-  const channels = ipcContract.channels as unknown as Record<
-    string,
-    { request: unknown; response: unknown }
-  >;
+    const saveRes = asObjectSchema(channels["file:document:save"]?.response);
+    expect(hasField(saveRes, "compaction")).toBe(true);
 
-  const diffReq = asObjectSchema(channels["version:snapshot:diff"]?.request);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(diffReq.fields, "documentId"),
-    true,
-    "version:snapshot:diff request should include documentId",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(diffReq.fields, "baseVersionId"),
-    true,
-    "version:snapshot:diff request should include baseVersionId",
-  );
+    const listRes = asObjectSchema(channels["version:snapshot:list"]?.response);
+    const listItems = listRes.fields.items as {
+      kind: "array";
+      element: unknown;
+    };
+    expect(listItems.kind).toBe("array");
+    const listItem = asObjectSchema(listItems.element);
+    expect(hasField(listItem, "wordCount")).toBe(true);
 
-  const diffRes = asObjectSchema(channels["version:snapshot:diff"]?.response);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(diffRes.fields, "diffText"),
-    true,
-    "version:snapshot:diff response should include diffText",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(diffRes.fields, "hasDifferences"),
-    true,
-    "version:snapshot:diff response should include hasDifferences",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(diffRes.fields, "stats"),
-    true,
-    "version:snapshot:diff response should include stats",
-  );
+    const readRes = asObjectSchema(channels["version:snapshot:read"]?.response);
+    expect(hasField(readRes, "wordCount")).toBe(true);
+  });
 
-  const rollbackReq = asObjectSchema(
-    channels["version:snapshot:rollback"]?.request,
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(rollbackReq.fields, "documentId"),
-    true,
-    "version:snapshot:rollback request should include documentId",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(rollbackReq.fields, "versionId"),
-    true,
-    "version:snapshot:rollback request should include versionId",
-  );
+  it("should include document type and status fields in create and list contracts", () => {
+    const createReq = asObjectSchema(channels["file:document:create"]?.request);
+    expect(hasField(createReq, "type")).toBe(true);
 
-  const rollbackRes = asObjectSchema(
-    channels["version:snapshot:rollback"]?.response,
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(rollbackRes.fields, "restored"),
-    true,
-    "version:snapshot:rollback response should include restored",
-  );
-}
-
-/**
- * Snapshot contract: must expose create channel + wordCount in list/read payloads.
- */
-{
-  const channels = ipcContract.channels as unknown as Record<
-    string,
-    { request: unknown; response: unknown }
-  >;
-
-  const createReq = asObjectSchema(
-    channels["version:snapshot:create"]?.request,
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(createReq.fields, "documentId"),
-    true,
-    "version:snapshot:create request should include documentId",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(createReq.fields, "contentJson"),
-    true,
-    "version:snapshot:create request should include contentJson",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(createReq.fields, "actor"),
-    true,
-    "version:snapshot:create request should include actor",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(createReq.fields, "reason"),
-    true,
-    "version:snapshot:create request should include reason",
-  );
-
-  const createRes = asObjectSchema(
-    channels["version:snapshot:create"]?.response,
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(createRes.fields, "compaction"),
-    true,
-    "version:snapshot:create response should include optional compaction event",
-  );
-
-  const saveRes = asObjectSchema(channels["file:document:save"]?.response);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(saveRes.fields, "compaction"),
-    true,
-    "file:document:save response should include optional compaction event",
-  );
-
-  const listRes = asObjectSchema(channels["version:snapshot:list"]?.response);
-  const listItems = listRes.fields.items as { kind: "array"; element: unknown };
-  assert.equal(listItems.kind, "array");
-  const listItem = asObjectSchema(listItems.element);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(listItem.fields, "wordCount"),
-    true,
-    "version list item should include wordCount",
-  );
-
-  const readRes = asObjectSchema(channels["version:snapshot:read"]?.response);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(readRes.fields, "wordCount"),
-    true,
-    "version read response should include wordCount",
-  );
-}
-
-/**
- * S1/S3: create/list/read contract includes document type + status fields.
- */
-{
-  const channels = ipcContract.channels as unknown as Record<
-    string,
-    { request: unknown; response: unknown }
-  >;
-
-  const createReq = asObjectSchema(channels["file:document:create"]?.request);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(createReq.fields, "type"),
-    true,
-    "create request should accept optional type",
-  );
-
-  const listRes = asObjectSchema(channels["file:document:list"]?.response);
-  const itemsSchema = listRes.fields.items as {
-    kind: "array";
-    element: unknown;
-  };
-  assert.equal(itemsSchema.kind, "array");
-  const itemObject = asObjectSchema(itemsSchema.element);
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(itemObject.fields, "type"),
-    true,
-    "list item should include type",
-  );
-  assert.equal(
-    Object.prototype.hasOwnProperty.call(itemObject.fields, "status"),
-    true,
-    "list item should include status",
-  );
-}
-
-console.log("document-ipc-contract.test.ts: all assertions passed");
+    const listRes = asObjectSchema(channels["file:document:list"]?.response);
+    const itemsSchema = listRes.fields.items as {
+      kind: "array";
+      element: unknown;
+    };
+    expect(itemsSchema.kind).toBe("array");
+    const itemObject = asObjectSchema(itemsSchema.element);
+    expect(hasField(itemObject, "type")).toBe(true);
+    expect(hasField(itemObject, "status")).toBe(true);
+  });
+});
