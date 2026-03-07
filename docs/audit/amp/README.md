@@ -1,6 +1,6 @@
 # Amp 路线图专题索引
 
-更新时间：2026-03-07 10:54
+更新时间：2026-03-07 11:08
 
 > "善弈者谋势，不善弈者谋子。"——这组文档不是零散建议的堆砌，而是把 Amp 两个长 thread 的判断、证据、路线图与后续行动，收束成一套可以持续执行的北极星文件。
 
@@ -47,7 +47,8 @@
 5. 接着读 `07-ui-ux-design-audit.md`，掌握用户肉眼可见的每一处视觉/交互断点。
 6. 再读 `08-backend-module-health-audit.md`，逐模块掌握后端功能性健全程度与边缘场景缺口。
 7. 再读 `09-error-ux-audit.md`，了解错误消息对用户体验的全面伤害及修复方案。
-8. 最后以 `05-implementation-backlog.md` 作为执行面板，把路线图压成阶段、任务、依赖与验收。
+8. 再读 `05-implementation-backlog.md`，掌握阶段、任务、依赖与验收。
+9. 最后读 `10-phase-0-issue-execution-plan.md`，按统一模板创建 issue、派发 Agent 与组织审计闭环。
 
 ---
 
@@ -60,6 +61,7 @@
 | `docs/audit/amp/03-engineering-and-architecture-roadmap.md` | 隐性风险、架构债、性能、IPC 契约体系、数据安全、测试策略（含 SSOT 引用） | 前后端、审计 Agent |
 | `docs/audit/amp/04-moats-and-v-next.md` | 护城河显化、差异化能力、V Next 增长方向 | 产品、Founder |
 | `docs/audit/amp/05-implementation-backlog.md` | v0.1 完全体 backlog：分阶段任务表（含 i18n/搜索/数据安全/Inline AI 新建）、依赖、验收 | 执行 Agent、项目管理 |
+| `docs/audit/amp/10-phase-0-issue-execution-plan.md` | Phase 0 issue 创建与执行总方案：载体分类、Issue 模板、subagent 派工、审计闭环 | 主会话 Agent、执行 Agent、审计 Agent |
 | `docs/audit/amp/07-ui-ux-design-audit.md` | 前端视觉/交互设计完整度审查：假 UI 清单、i18n 遗漏、交互断线、组件级体感判断 | 前端、设计、产品 |
 | `docs/audit/amp/08-backend-module-health-audit.md` | 后端 20+ 模块逐一健康度审查：功能现状、边缘缺口、代码证据、时序分级 | 后端、审计 Agent |
 | `docs/audit/amp/09-error-ux-audit.md` | 错误体验审查：15+ 处错误码暴露、基础设施分析、全量错误码人话映射表、修复方案 | 前端、产品、全栈 |
