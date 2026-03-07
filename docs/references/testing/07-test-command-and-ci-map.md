@@ -1,6 +1,5 @@
 # 测试命令与 CI 映射
 
-更新时间：2026-03-07 12:30
 
 ## 总览
 
@@ -78,7 +77,7 @@
 - `pnpm lint`
 - `pnpm typecheck`
 - `pnpm test:discovery:consistency`
-- `python3 -m py_compile scripts/agent_pr_preflight.py scripts/check_doc_timestamps.py`
+- `python3 -m py_compile scripts/agent_pr_preflight.py`
 - `pytest -q scripts/tests`
 
 ### 前端行为改动

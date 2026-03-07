@@ -1,6 +1,5 @@
 # OpenSpec + GitHub 交付规则
 
-更新时间：2026-03-07 11:40
 
 本文件是 CreoNow 的交付规则主源（Source of Truth）。
 本文件只定义约束条件和验收标准，不定义具体命令和脚本参数。
@@ -105,15 +104,6 @@ openspec/             .github/workflows/
 
 ---
 
-## 七、文档时间戳治理（强制对齐）
-
-为减少文档静默漂移造成的误导，受管文档必须包含时间戳。
-
-- 规则主源：`docs/references/document-timestamp-governance.md`
-- 校验脚本：`scripts/check_doc_timestamps.py`
-- 文档时间戳由 `scripts/check_doc_timestamps.py` 在本地校验（preflight），不阻塞 CI 合并。
-
----
 
 ## 八、独立审计协议（Reviewer SOP）
 
@@ -225,7 +215,6 @@ git diff --numstat
 git diff --check
 git diff --ignore-cr-at-eol --name-status
 bash -n scripts/agent_pr_automerge_and_sync.sh
-python3 -m py_compile scripts/check_doc_timestamps.py
 pytest -q scripts/tests
 test -x scripts/agent_pr_automerge_and_sync.sh && echo EXEC_OK
 ```

@@ -1,6 +1,5 @@
 # CreoNow 全量 Markdown 审计与清理判决书
 
-更新时间：2026-03-04 15:30
 
 > "大道至简，衍化至繁。"——老子。2005 个 .md 文件、147,608 行治理文档，是实际代码量的 3.8 倍。本文件对每一个 .md 区域逐一审判，给出 KEEP / DELETE / REWRITE / MERGE 四类判决。
 
@@ -153,7 +152,6 @@ DELETE + 内容迁移 (7 files)
 
 **理由**：
 - 从 Notion 历史导出的产品/技术/设计文档
-- 文档时间戳治理中已被标记为例外（`docs/Notion/**` 不纳入门禁校验）
 - 内容与当前代码实现严重漂移（如"三类创作者差异化工具链"从未实现）
 - 有价值的概念（如记忆层架构、后端审计快照）已被代码和 openspec specs 取代
 - Agent 读到这些过期文档会产生错误假设
@@ -202,12 +200,10 @@ DELETE + 内容迁移 (7 files)
 | `.github/workflows/openspec-log-guard.yml` | `openspec/_ops/task_runs/` RUN_LOG 检查 | 简化为仅检查 Skip-Reason |
 | `docs/delivery-skill.md` | Rulebook / RUN_LOG 引用 | 重写去除旧体系引用 |
 | `docs/delivery-rule-mapping.md` | 旧交付规则映射 | 重写 |
-| `docs/references/document-timestamp-governance.md` | `rulebook/tasks/**` 例外 | 删除该例外 |
 | `scripts/validate_independent_review_ci.py` | RUN_LOG 校验 | 简化或删除 |
 | `scripts/validate_main_session_audit_ci.py` | RUN_LOG 审计校验 | 简化或删除 |
 | `scripts/independent_review_record.sh` | 审计记录脚本 | 评估是否保留 |
 | `scripts/main_audit_resign.sh` | 审计签章脚本 | 评估是否保留 |
-| `scripts/check_doc_timestamps.py` | `rulebook/tasks/**` 路径 | 删除该路径 |
 | `scripts/agent_pr_preflight.py` | RUN_LOG 相关检查 | 简化 |
 | `scripts/team_delivery_status.py` | _ops 引用 | 删除或简化 |
 | `scripts/ipc-acceptance-gate.ts` | 可能引用 _ops | 检查并修改 |
@@ -246,7 +242,6 @@ DELETE + 内容迁移 (7 files)
 |------|------|------|------|
 | `coding-standards.md` | 33 | KEEP | 代码原则 |
 | `design-ui-architecture.md` | 36 | KEEP | 前端设计规范 |
-| `document-timestamp-governance.md` | 55 | REWRITE | 删除 rulebook 例外 |
 | `exception-handling.md` | 22 | KEEP | 异常处理 |
 | `file-structure.md` | 103 | REWRITE | 删除 rulebook 路径 |
 | `naming-conventions.md` | 52 | KEEP | 命名约定 |
@@ -353,12 +348,6 @@ Layer 3：设计层（design/）
 - 禁止空格（使用 `-` 分隔）
 - Spec 文件统一命名为 `spec.md`，放在模块目录下
 
-### 7.3 时间戳规范
-
-- 所有受管文档必须包含：`更新时间：YYYY-MM-DD HH:mm`
-- 位置：标题下方，文件前 5 行内
-- 受管范围：`docs/**`、`openspec/**`、`README*.md`
-- 例外：`apps/` 内的 SKILL.md（产品文件，不受文档治理管）
 
 ### 7.4 文档审计周期
 
@@ -407,7 +396,7 @@ git rm    docs/audit/audit-index.md
 - 简化 `scripts/agent_pr_preflight.py`
 - 重写 `AGENTS.md` / `CLAUDE.md`（按 agents-md-reform-proposal.md）
 - 重写 `docs/delivery-skill.md`
-- 更新 `docs/references/document-timestamp-governance.md` 和 `file-structure.md`
+- 更新 `file-structure.md`
 
 ---
 

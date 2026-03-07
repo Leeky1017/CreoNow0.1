@@ -1,6 +1,5 @@
 # CN 统一路线图：代码治理 + 功能建设
 
-更新时间：2026-03-05 12:00
 
 > 整合 `CN-Code-Audit-2026-02-14`（代码质量审计）与 `docs/plans/archive/audit-roadmap.md`（AI Native 功能路线图）。
 > 创建时间：2026-02-14

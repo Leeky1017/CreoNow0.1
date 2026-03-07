@@ -1,6 +1,5 @@
 # CreoNow OpenSpec
 
-更新时间：2026-03-05 12:00
 
 本目录存放项目行为规范（Source of Truth）和变更提案。
 

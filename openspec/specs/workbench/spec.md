@@ -1,6 +1,5 @@
 # Workbench Specification
 
-更新时间：2026-03-01 13:17
 
 ## Purpose
 

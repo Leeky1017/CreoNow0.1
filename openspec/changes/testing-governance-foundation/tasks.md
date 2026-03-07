@@ -1,6 +1,5 @@
 # Tasks: testing-governance-foundation
 
-更新时间：2026-03-07 12:59
 
 ## 1. 已交付的前置阶段（已合并）
 

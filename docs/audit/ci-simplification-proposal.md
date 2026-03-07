@@ -1,6 +1,5 @@
 # CI 简化提案
 
-更新时间：2026-03-04 16:00
 
 > "善战者，无智名，无勇功。"——好的 CI 不是门禁越多越好，而是每道门禁都守住了真正的质量底线。
 
@@ -48,7 +47,6 @@
 | **契约守护** | `ipc-acceptance` | 5min | IPC 契约一致性 |
 | **契约守护** | `contract-check` | 5min | IPC 契约生成 |
 | **契约守护** | `cross-module-check` | 5min | 跨模块依赖对齐 |
-| **治理门禁** | `doc-timestamp-gate` | 2min | 文档时间戳 |
 | **治理门禁** | `test-discovery-consistency` | 5min | 测试文件被发现 |
 | **安全审计** | `dependency-audit` | 6min | 依赖漏洞 |
 | **变更检测** | `changes` | 2min | 决定哪些 job 需要运行 |
@@ -71,7 +69,6 @@
 | 目标 | 理由 | 行动 |
 |------|------|------|
 | `openspec-log-guard` workflow | 整个 workflow 服务于已废止的治理文档体系 | **删除整个 workflow** |
-| `doc-timestamp-gate` job | 文档时间戳对代码质量零贡献 | **从 ci.yml 中删除** |
 | `test-discovery-consistency` job | 有价值但不应阻塞合并 | **改为 `continue-on-error: true`** |
 | `dependency-audit` job | 有价值但不应阻塞每个 PR | **改为 weekly cron schedule** |
 
@@ -147,7 +144,7 @@ ci.yml
 └── ci (gate)
 ```
 
-对比改前：14 jobs → 14 jobs（-2 doc-timestamp-gate/dependency-audit，+2 前端质量 i18n/token）
+对比改前：14 jobs → 14 jobs（-1 dependency-audit，+2 前端质量 i18n/token）
 实际阻塞合并的 check：从 3 个 → 2 个
 dependency-audit：移到 weekly cron，不计入 PR 流程
 
@@ -292,7 +289,6 @@ jobs:
 
 | 脚本 | 作用 | 行动 |
 |------|------|------|
-| `scripts/check_doc_timestamps.py` | doc-timestamp-gate 使用 | **可保留但不在 CI 中调用** |
 | `scripts/validate_main_session_audit_ci.py` | openspec-log-guard 使用 | **可删除** |
 | `scripts/validate_independent_review_ci.py` | openspec-log-guard 使用 | **可删除** |
 | `scripts/agent_pr_preflight.py` | PR 预检（含 RUN_LOG 检查） | **简化**：移除 RUN_LOG/Rulebook 检查 |
@@ -358,7 +354,6 @@ i18n 和 token 合规检查均建议以 ESLint 规则实现，集成到已有的
 ## 十、实施清单
 
 1. [ ] 删除 `.github/workflows/openspec-log-guard.yml`
-2. [ ] 从 ci.yml 中移除 `doc-timestamp-gate` job
 3. [ ] 从 ci.yml 中移除 `dependency-audit` job
 4. [ ] 创建 `.github/workflows/dependency-audit.yml`（weekly cron）
 5. [ ] 在 ci.yml 中将 `test-discovery-consistency` 改为 `continue-on-error: true`

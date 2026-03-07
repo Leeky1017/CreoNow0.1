@@ -1,6 +1,5 @@
 # 文件清理执行清单
 
-更新时间：2026-03-04 16:00
 
 > **⚠️ 本文档已被取代**：实际执行时采用了更彻底的策略（直接 `git rm` 删除而非 `git mv` 归档），详见 [Full MD Audit and Cleanup Verdicts](./full-md-audit-and-cleanup-verdicts.md)。以下内容保留作为历史参考，不再作为执行指南。
 
@@ -119,10 +118,9 @@ ls openspec/_ops/archive/reviews/ | wc -l    # 应为 43
 git rm .github/workflows/openspec-log-guard.yml
 ```
 
-**3b. 从 ci.yml 移除 doc-timestamp-gate 和 dependency-audit**
+**3b. 从 ci.yml 移除 dependency-audit**
 
 手动编辑 `.github/workflows/ci.yml`：
-- 删除 `doc-timestamp-gate` job（约 15 行）
 - 删除 `dependency-audit` job（约 15 行）
 - 从 ci gate 的 `needs` 列表中移除这两项
 - 新增 `i18n-completeness` 和 `token-compliance` jobs
@@ -143,8 +141,6 @@ git rm scripts/validate_independent_review_ci.py
 git rm scripts/independent_review_record.sh
 git rm scripts/main_audit_resign.sh
 
-# 可选删除（doc-timestamp-gate 不再在 CI 中运行）
-# git rm scripts/check_doc_timestamps.py  # 本地使用可保留
 
 # 需要简化（移除 RUN_LOG/Rulebook 检查逻辑）
 # scripts/agent_pr_preflight.py
@@ -185,7 +181,6 @@ ls scripts/validate_main_session_audit_ci.py  # 应返回 No such file
 - 移除 Independent Review .md 文件要求（规则 17）
 - 移除 EXECUTION_ORDER.md 要求（规则 5, 6）
 - 移除过程记录时序要求（规则 20）
-- 移除文档时间戳治理（§七）
 - 简化 Independent Review 协议（§八）— 结论写 PR comment，不生成 .md
 - 从 20 条硬约束减到 8 条（5 L1 + 3 L2）
 

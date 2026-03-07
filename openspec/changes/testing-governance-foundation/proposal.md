@@ -1,6 +1,5 @@
 # Proposal: testing-governance-foundation
 
-更新时间：2026-03-07 12:59
 
 ## Why
 
@@ -31,7 +30,7 @@
 以下事项不属于本 change 当前阶段的交付范围：
 
 - `docs/references/testing/` 主源目录与入口文档（已由 `#1017 / PR #1018` 收口）。
-- `.github/workflows/ci.yml`、`scripts/agent_pr_preflight.py`、PR 模板与时间戳治理对齐（已由 `#1019 / PR #1020` 收口）。
+- `.github/workflows/ci.yml`、`scripts/agent_pr_preflight.py` 与 PR 模板保持一致，避免治理口径漂移。
 - 其他历史弱测试迁移样板，不在本次列举的三类样板之内。
 - 立即上锁第二阶段门禁（如 backend coverage 阈值、spec-scenario-test 映射 gate、reviewer wrapper）。
 

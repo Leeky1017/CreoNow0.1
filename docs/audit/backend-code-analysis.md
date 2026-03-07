@@ -1,6 +1,5 @@
 # CreoNow 后端代码专项审计报告
 
-更新时间：2026-03-04 16:00
 
 > "好风凭借力，送我上青云。"——后端是 CreoNow 的底盘，底盘稳了，才有资格谈上层建筑。
 
@@ -164,7 +163,6 @@ skillScheduler.ts:132 — 技能调度事件（应改为 logger.error）
 | Independent Review .md | PR comment 足够 | **废止** |
 | EXECUTION_ORDER.md | 后端很少有并行 change | **废止** |
 | 6 段式 TDD 文档 | 后端 TDD 是自然的，不需要文档仪式 | **废止** |
-| doc-timestamp-gate | 对代码零贡献 | **废止** |
 | openspec-log-guard | 检查已废止的文档 | **废止** |
 
 ### 后端保留的核心纪律

@@ -1,6 +1,5 @@
 # Amp 路线图专题索引
 
-更新时间：2026-03-07 11:08
 
 > "善弈者谋势，不善弈者谋子。"——这组文档不是零散建议的堆砌，而是把 Amp 两个长 thread 的判断、证据、路线图与后续行动，收束成一套可以持续执行的北极星文件。
 
@@ -49,7 +48,8 @@
 7. 再读 `09-error-ux-audit.md`，了解错误消息对用户体验的全面伤害及修复方案。
 8. 再读 `05-implementation-backlog.md`，掌握阶段、任务、依赖与验收。
 9. 再读 `10-phase-0-issue-execution-plan.md`，按统一模板创建 issue、派发 Agent 与组织审计闭环。
-10. 最后读 `11-frontend-static-code-audit.md`，获取前端代码静态分析的全量数据、问题热力图与修复路线图——后续前端 Agent 必须使用 Impeccable Skills。
+10. 再读 `11-frontend-static-code-audit.md`，获取前端代码静态分析的全量数据、问题热力图与修复路线图——后续前端 Agent 必须使用 Impeccable Skills。
+11. 最后读 `12-agent-control-plane-and-incident-reconstruction.md`，把 Amp 诊断与当前仓库现场收束为一套 Agent 控制面、硬闸门、案发链路图与 Owner 执行口径。
 
 ---
 
@@ -68,6 +68,7 @@
 | `docs/audit/amp/09-error-ux-audit.md` | 错误体验审查：15+ 处错误码暴露、基础设施分析、全量错误码人话映射表、修复方案 | 前端、产品、全栈 |
 | `docs/audit/amp/06-windows-release-readiness.md` | Win 首发就绪度、WSL 本地运行依赖、签名/更新/备份/崩溃可观测性、数据安全与本地存储评估 | Founder、发布负责人、桌面端 Agent |
 | `docs/audit/amp/11-frontend-static-code-audit.md` | 前端静态代码全面审计：Impeccable Skills 深度版，量化问题规模、模块热力图、修复路线图 | 前端 Agent（**必须加载 Impeccable Skills**）、设计、审计 Agent |
+| `docs/audit/amp/12-agent-control-plane-and-incident-reconstruction.md` | Agent 约束系统重构清单 + 案发链路复盘：回答哪些问题已被 Amp 命中、哪些是增量现场证据，以及如何把规矩编译成 fail-closed 控制面 | Owner、主导 Agent、审计 Agent、治理维护者 |
 
 ---
 
@@ -139,7 +140,7 @@
 
 ## 七、维护约定
 
-- 本专题是后续 CN 开发的重点指引之一；凡是采纳其中路线、验收标准、里程碑，必须同步更新时间戳。
+- 本专题是后续 CN 开发的重点指引之一；凡是采纳其中路线、验收标准、里程碑，应同步更新内容本身，不再附加时间戳要求。
 - 若未来新增第三轮或第四轮 Amp 诊断，建议先更新 `01-master-roadmap.md` 的总判断，再按需要增补专题文件，而不是直接散写新长文。
 - 若某条建议被明确放弃，应在对应文件中标注“已弃用/延后”的原因，避免下一位 Agent 再次把同一问题当成未决事项。
 - 若执行过程中发现与 OpenSpec 或现有审计文档冲突，以“是否改善真实用户体验、是否降低发布风险”为第一判据，再回写治理文档。

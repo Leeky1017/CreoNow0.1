@@ -1,6 +1,5 @@
 # Skill System Specification
 
-更新时间：2026-02-24 10:15
 
 ## Purpose
 

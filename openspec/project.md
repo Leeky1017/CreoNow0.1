@@ -1,6 +1,5 @@
 # CreoNow
 
-更新时间：2026-03-07 11:40
 
 AI 驱动的文字创作 IDE，Electron + React 18 + TypeScript + TipTap 2，Windows-first。
 

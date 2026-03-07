@@ -1,6 +1,5 @@
 # Guard 与 Lint 边界
 
-更新时间：2026-03-07 11:52
 
 ## 先讲结论
 
@@ -38,7 +37,6 @@ Guard 只处理 ESLint 难以覆盖的跨文件、跨层、跨产物一致性问
 - IPC contract parity
 - 原生 binding path 校验
 - discovery consistency
-- 文档时间戳这类仓库级约束
 
 ## 当前仓库的迁移方向
 

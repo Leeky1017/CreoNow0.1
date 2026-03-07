@@ -1,6 +1,5 @@
 # Amp Phase 0 Issue 执行总方案
 
-更新时间：2026-03-07 10:54
 
 > "谋定而后动，知止而有得。"——`05-implementation-backlog.md` 解决的是“要做什么”，本文解决的是“如何把这些任务稳定地变成 GitHub Issues、OpenSpec Changes、PR 与审计闭环”，使后续 Agent 不再临阵失措。
 
@@ -29,7 +28,6 @@
 - `openspec/changes/EXECUTION_ORDER.md`
 - `docs/delivery-skill.md`
 - `openspec/project.md`
-- `docs/references/document-timestamp-governance.md`
 
 ---
 
@@ -54,7 +52,6 @@ Phase 0 不允许“想到一个点就临时开一个 issue”；必须先按本
 |---------|--------|-----------|
 | 类型检查 / 测试 | 必查 | 按主源执行，不因文档类型豁免 |
 | 文档事实准确性 | 必查 | 必查 |
-| 时间戳规范 | 必查 | 必查 |
 | 与 backlog / execution order 一致性 | 必查 | 必查 |
 | PRE-AUDIT / RE-AUDIT / FINAL-VERDICT 评论 | 必需 | 必需 |
 
@@ -62,7 +59,6 @@ Phase 0 不允许“想到一个点就临时开一个 issue”；必须先按本
 
 - 文档引用的路径是否真实存在。
 - 文档中的 issue / change / 阶段状态是否与主源一致。
-- 本次修改是否同步更新了受管文档时间戳。
 
 ### 2.4 为什么默认一项任务一个主 issue
 
@@ -117,7 +113,7 @@ Phase 0 不允许“想到一个点就临时开一个 issue”；必须先按本
 
 ### 3.3 当前 issue 盘点
 
-截至本文更新时间：
+截至本文撰写时：
 
 - GitHub 上已有 Phase 0 open issue：24 条
 - 覆盖的唯一 A0 任务：23 个
@@ -290,8 +286,6 @@ Phase 0 的 GitHub Issue 标题统一使用：
 
 若本任务修改 `docs/**` 或 `openspec/**`：
 
-- [ ] 更新文档的 `更新时间：YYYY-MM-DD HH:mm`
-- [ ] 确认时间戳位于文件前 5 行内
 
 ## 实施约束
 
@@ -340,8 +334,6 @@ Phase 0 的 GitHub Issue 标题统一使用：
 
 若本任务修改 `docs/**` 或 `openspec/**`：
 
-- [ ] 更新时间戳
-- [ ] 确认时间戳位置符合治理规则
 ```
 
 ### 5.5 决策类 issue body 模板
@@ -369,7 +361,6 @@ Phase 0 的 GitHub Issue 标题统一使用：
 
 若本任务导致 `EXECUTION_ORDER.md`、backlog 或本文发生调整：
 
-- [ ] 更新时间戳
 - [ ] 标明调整原因
 
 ## 决策门槛
@@ -409,7 +400,6 @@ Phase 0 的 GitHub Issue 标题统一使用：
 4. 若涉及 UI，可见文本必须走 i18n；不得新增裸字符串。
 5. 若涉及前端，必须提供视觉验收证据，至少包括 Storybook 构建结果、截图或交互录屏之一。
 6. 若涉及错误消息，必须走统一错误展示链路，不得直接渲染 `error.code` / `error.message`。
-7. 若修改了 `docs/**` 或 `openspec/**`，必须更新时间戳。
 8. 最终返回：改动摘要、测试结果、风险点、是否需要主会话 Agent 继续补文档或做审计准备。
 
 前置依赖遇冷时：
@@ -442,7 +432,6 @@ change：`a0-xx-<slug>`
 3. 如果实现前发现 spec 缺场景，先补 spec，再动代码。
 4. 先写 Red 测试，再写实现，再跑 Green；backlog 验收项必须逐条映射到测试。
 5. 若涉及前端，必须补视觉验收证据。
-6. 若修改了 `docs/**` 或 `openspec/**`，必须更新时间戳。
 7. 返回时必须给出：spec 变更摘要、测试证据、实现摘要、剩余风险。
 
 前置依赖遇冷时：
@@ -472,7 +461,6 @@ change：`a0-xx-<slug>`
 2. 查明承诺是否真实闭环。
 3. 给出至少两个可选方案，并说明代价、风险、对 v0.1 的影响。
 4. 明确推荐方案，并指出下游应走直接 PR 还是 OpenSpec Change。
-5. 若需要调整 backlog、execution order 或本文，必须同步更新时间戳。
 6. 返回时附证据路径，禁止空口判断。
 ```
 
@@ -565,7 +553,6 @@ Skip-Reason: N/A (task branch)
 
 - 是否引用了真实存在的文件与路径。
 - 是否把未发生的 issue 编号写成既定事实。
-- 是否遗漏时间戳或违反时间戳位置规则。
 - 是否与 `docs/delivery-skill.md`、`openspec/project.md` 冲突。
 
 ---

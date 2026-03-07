@@ -1,6 +1,5 @@
 # Memory System Specification
 
-更新时间：2026-02-27 10:35
 
 ## Purpose
 
