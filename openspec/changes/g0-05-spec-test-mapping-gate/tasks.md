@@ -49,7 +49,7 @@ W0-GATE: 门禁基础设施
 - [ ] 测试：构造无 Scenario 的 spec.md → 返回空列表
 - [ ] 测试：Scenario ID 支持 `S-XXX-NN` 格式
 
-**文件**: `scripts/__tests__/spec-test-mapping-gate.test.ts`（新建）
+**文件**: `scripts/tests/spec-test-mapping-gate.test.ts`（新建）
 
 ### Task 1.2: 测试文件映射搜索测试
 
@@ -60,7 +60,7 @@ W0-GATE: 门禁基础设施
 - [ ] 测试：测试文件不含任何 Scenario 引用 → 对应 Scenario 未映射
 - [ ] 测试：一个测试文件映射多个 Scenario → 全部成功
 
-**文件**: `scripts/__tests__/spec-test-mapping-gate.test.ts`
+**文件**: `scripts/tests/spec-test-mapping-gate.test.ts`
 
 ### Task 1.3: Baseline ratchet 测试
 
@@ -70,7 +70,7 @@ W0-GATE: 门禁基础设施
 - [ ] 测试：未映射数 > 基线 → FAIL，输出新增未映射列表
 - [ ] 测试：--update-baseline 模式更新 baseline
 
-**文件**: `scripts/__tests__/spec-test-mapping-gate.test.ts`
+**文件**: `scripts/tests/spec-test-mapping-gate.test.ts`
 
 ### Task 1.4: Tier 2 语义维度测试
 
@@ -83,7 +83,7 @@ W0-GATE: 门禁基础设施
 - [ ] 测试：无标签且无关键词的 Scenario → 归类为 general，不计入 Tier 2 维度统计
 - [ ] 测试：输出包含 Tier 2 维度汇总（各类的 mapped/total/百分比）
 
-**文件**: `scripts/__tests__/spec-test-mapping-gate.test.ts`
+**文件**: `scripts/tests/spec-test-mapping-gate.test.ts`
 
 ---
 

@@ -1,19 +1,18 @@
 {
-  "version": "2026-03-05",
-  "generatedAt": "2026-03-05T00:00:00.000Z",
+  "version": "2026-03-08",
+  "generatedAt": "2026-03-08T08:51:33.462Z",
   "source": "eslint-json",
   "governance": {
-    "issue": "#977",
-    "reason": "Warning debt cleared to zero; all 5 rules upgraded from warn to error"
+    "issue": "#1037",
+    "reason": "Wave 0 gate rules (G0-01/G0-03) added as warn-level; baseline updated to include initial debt"
   },
   "snapshot": {
-    "totalViolations": 0,
+    "totalViolations": 297,
     "byRule": {
-      "complexity": 0,
-      "creonow/no-raw-tailwind-tokens": 0,
-      "i18next/no-literal-string": 0,
-      "max-lines-per-function": 0,
-      "react-hooks/exhaustive-deps": 0
+      "creonow/no-hardcoded-dimension": 63,
+      "creonow/no-native-html-element": 222,
+      "creonow/no-raw-error-code-in-ui": 8,
+      "creonow/no-raw-tailwind-tokens": 4
     }
   }
 }

@@ -49,7 +49,7 @@ W0-GATE: 门禁基础设施
 - [ ] 测试：违规数 > 基线 → FAIL，输出新增违规列表
 - [ ] 测试：gate 输出格式为 `[IPC_VALIDATION_GATE] PASS/FAIL` + 详细列表
 
-**文件**: `scripts/__tests__/ipc-handler-validation-gate.test.ts`（新建）
+**文件**: `scripts/tests/ipc-handler-validation-gate.test.ts`（新建）
 
 ### Task 1.2: Service 桩方法检测 Gate 测试
 
@@ -65,7 +65,7 @@ W0-GATE: 门禁基础设施
 - [ ] 测试：违规数 ≤ 基线 → PASS
 - [ ] 测试：违规数 > 基线 → FAIL
 
-**文件**: `scripts/__tests__/service-stub-detector-gate.test.ts`（新建）
+**文件**: `scripts/tests/service-stub-detector-gate.test.ts`（新建）
 
 ### Task 1.3: cross-module-contract-gate 扩展测试
 
@@ -78,7 +78,7 @@ W0-GATE: 门禁基础设施
 - [ ] 测试：扩展维度违规数 ≤ 基线 → PASS
 - [ ] 测试：扩展维度违规数 > 基线 → FAIL
 
-**文件**: `scripts/__tests__/cross-module-contract-gate.test.ts`（已有文件，补充测试）
+**文件**: `scripts/tests/cross-module-contract-gate.test.ts`（已有文件，补充测试）
 
 ---
 

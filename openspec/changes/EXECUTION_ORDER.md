@@ -133,7 +133,7 @@ AMP 审计在 5 轮独立审查中识别出 28 类高频问题。以下矩阵说
 ### 测试约定
 
 - 每个 gate 的测试必须包含 **≥1 PASS fixture + ≥1 FAIL fixture**
-- 测试文件位置：`scripts/__tests__/<gate-name>.test.ts`
+- 测试文件位置：`scripts/tests/<gate-name>.test.ts`
 - ESLint 规则测试：`scripts/eslint-rules/__tests__/<rule-name>.test.cjs`
 - 详见 `docs/references/testing/06-guard-and-lint-policy.md`
 

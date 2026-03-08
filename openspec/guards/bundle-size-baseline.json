@@ -1,0 +1,18 @@
+{
+  "totalSize": 3798111,
+  "chunks": [
+    {
+      "name": "main/index.js",
+      "size": 988450
+    },
+    {
+      "name": "preload/index.cjs",
+      "size": 25511
+    },
+    {
+      "name": "renderer/assets/index-CMz0cmtj.js",
+      "size": 2784150
+    }
+  ],
+  "updatedAt": "2026-03-08T09:35:06.250Z"
+}

@@ -60,7 +60,7 @@ W0-GATE: 门禁基础设施
 - [ ] 测试：违规数 ≤ 基线 → PASS
 - [ ] 测试：违规数 > 基线 → FAIL
 
-**文件**: `scripts/__tests__/error-boundary-coverage-gate.test.ts`（新建）
+**文件**: `scripts/tests/error-boundary-coverage-gate.test.ts`（新建）
 
 ### Task 1.3: 架构健康 Gate 测试
 
@@ -75,7 +75,7 @@ W0-GATE: 门禁基础设施
 - [ ] 测试：各维度 ≤ 基线 → PASS
 - [ ] 测试：任一维度 > 基线 → FAIL
 
-**文件**: `scripts/__tests__/architecture-health-gate.test.ts`（新建）
+**文件**: `scripts/tests/architecture-health-gate.test.ts`（新建）
 
 ---
 
