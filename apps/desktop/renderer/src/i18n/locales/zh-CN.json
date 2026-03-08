@@ -229,12 +229,23 @@
   },
   "search": {
     "placeholder": "搜索文档、记忆、知识...",
+    "input": {
+      "placeholder": "搜索文档、记忆、知识...",
+      "ariaLabel": "全局搜索"
+    },
+    "noResults": {
+      "title": "未找到匹配结果",
+      "suggestion": "建议检查拼写或使用不同关键词"
+    },
+    "resultCount": "{{count}} 个结果",
+    "shortcut": {
+      "label": "全局搜索"
+    },
     "emptyStateHint": "输入搜索词查找文档",
     "rebuildingIndex": "正在重建索引，请稍后重试",
     "rebuildingQuery": "查询词：\"{{query}}\"",
     "errorTitle": "搜索失败，请重试",
     "retrySearch": "重试搜索",
-    "noResults": "未找到匹配结果",
     "noResultsQuery": "查询词：\"{{query}}\"",
     "suggestionsTitle": "建议",
     "suggestionsText": "建议检查拼写或使用不同关键词",

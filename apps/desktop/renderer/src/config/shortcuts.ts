@@ -124,6 +124,7 @@ export const LAYOUT_SHORTCUTS = {
   commandPalette: defineShortcut("commandPalette", "Command Palette", "mod+P"),
   toggleSidebar: defineShortcut("toggleSidebar", "Toggle Sidebar", "mod+\\"),
   togglePanel: defineShortcut("togglePanel", "Toggle Panel", "mod+L"),
+  globalSearch: defineShortcut("globalSearch", "Global Search", "mod+Shift+F"),
 } as const;
 
 // =============================================================================

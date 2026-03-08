@@ -147,6 +147,7 @@ function DocumentResultItem(props: {
       interactive
       onClick={onClick}
       data-testid={`search-result-item-${item.documentId ?? item.id}`}
+      aria-selected={isActive}
       className={`group w-full text-left mx-2 !p-2 !h-auto !rounded-lg !items-start !gap-3 relative ${
         isActive
           ? "!bg-[var(--color-separator)] border border-[var(--color-separator)]"
@@ -424,7 +425,7 @@ function SearchResultsArea(props: {
       <div className="flex flex-col items-center justify-center py-16 px-8">
         <Frown className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4" size={24} strokeWidth={1.5} />
         <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
-          {t("search.noResults")}
+          {t("search.noResults.title")}
         </p>
         <p className="text-xs text-[var(--color-fg-muted)] text-center">
           {t("search.noResultsQuery", { query: props.effectiveQuery })}
@@ -465,7 +466,7 @@ function SearchResultsArea(props: {
                 key={item.id}
                 item={item}
                 query={props.effectiveQuery}
-                isActive={index === 0 && props.activeIndex === 0}
+                isActive={index === props.activeIndex}
                 isFlashing={
                   props.flashKey?.startsWith(
                     `${item.documentId ?? item.id}:${item.anchor?.start ?? 0}:${item.anchor?.end ?? 0}:`,
@@ -623,10 +624,15 @@ export function SearchPanel(props: {
     "search:close",
     { key: "Escape" },
     React.useCallback(() => {
+      // AC-10: Escape clears text first; if already empty, closes panel
+      if (effectiveQuery.trim().length > 0) {
+        setQuery("");
+        return;
+      }
       if (onClose) {
         onClose();
       }
-    }, [onClose]),
+    }, [onClose, effectiveQuery, setQuery]),
     "global",
     25,
     open,
@@ -657,6 +663,19 @@ export function SearchPanel(props: {
     "global",
     25,
     open,
+  );
+
+  useHotkey(
+    "search:nav-enter",
+    { key: "Enter" },
+    React.useCallback(() => {
+      if (items.length > 0 && activeIndex >= 0 && activeIndex < items.length) {
+        handleItemClick(items[activeIndex].id);
+      }
+    }, [items, activeIndex]),
+    "global",
+    25,
+    open && items.length > 0,
   );
 
   function handleInputKeyDown(e: React.KeyboardEvent): void {
@@ -718,6 +737,8 @@ export function SearchPanel(props: {
             <Input
               ref={inputRef}
               data-testid="search-input"
+              role="searchbox"
+              aria-label={t("search.input.ariaLabel")}
               type="text"
               value={effectiveQuery}
               onChange={(e) => setQuery(e.target.value)}

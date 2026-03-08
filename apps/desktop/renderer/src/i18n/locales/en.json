@@ -229,12 +229,23 @@
   },
   "search": {
     "placeholder": "Search documents, memories, knowledge...",
+    "input": {
+      "placeholder": "Search documents, memories, knowledge...",
+      "ariaLabel": "Global search"
+    },
+    "noResults": {
+      "title": "No matching results",
+      "suggestion": "Try checking your spelling or using different keywords"
+    },
+    "resultCount": "{{count}} result(s)",
+    "shortcut": {
+      "label": "Global Search"
+    },
     "emptyStateHint": "Enter a search term to find documents",
     "rebuildingIndex": "Rebuilding index, please try again later",
     "rebuildingQuery": "Query: \"{{query}}\"",
     "errorTitle": "Search failed, please retry",
     "retrySearch": "Retry Search",
-    "noResults": "No matching results",
     "noResultsQuery": "Query: \"{{query}}\"",
     "suggestionsTitle": "Suggestions",
     "suggestionsText": "Try checking your spelling or using different keywords",
