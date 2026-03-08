@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { createPreferenceStore } from "../../lib/preferences";
+import { PreferenceProvider } from "../../lib/PreferenceContext";
 import { createThemeStore, ThemeStoreProvider } from "../../stores/themeStore";
 import { SettingsDialog } from "./SettingsDialog";
 
@@ -52,6 +53,7 @@ const meta: Meta<typeof SettingsDialog> = {
   decorators: [
     (Story) => {
       return (
+        <PreferenceProvider value={preferences}>
         <ThemeStoreProvider store={themeStore}>
           <div
             className="w-full h-screen bg-[var(--color-bg-base)]"
@@ -60,6 +62,7 @@ const meta: Meta<typeof SettingsDialog> = {
             <Story />
           </div>
         </ThemeStoreProvider>
+        </PreferenceProvider>
       );
     },
   ],

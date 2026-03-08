@@ -6,10 +6,7 @@ import { Slider } from "../../components/primitives/Slider";
 import { Select } from "../../components/primitives";
 import { FormField } from "../../components/composites/FormField";
 import { i18n } from "../../i18n";
-import {
-  getLanguagePreference,
-  setLanguagePreference,
-} from "../../i18n/languagePreference";
+import { usePreferenceStore } from "../../lib/PreferenceContext";
 
 /**
  * Settings state for General page
@@ -97,15 +94,17 @@ export function SettingsGeneral({
     { value: "en", label: "English" },
   ], [t]);
 
+  const preferenceStore = usePreferenceStore();
+
   const [currentLanguage, setCurrentLanguage] = React.useState(
-    () => getLanguagePreference(),
+    () => preferenceStore.get<string>("creonow.settings.language") ?? "zh-CN",
   );
 
   const handleLanguageChange = React.useCallback((value: string) => {
     setCurrentLanguage(value);
-    setLanguagePreference(value);
+    preferenceStore.set("creonow.settings.language", value);
     void i18n.changeLanguage(value);
-  }, []);
+  }, [preferenceStore]);
 
   const updateSetting = <K extends keyof GeneralSettings>(
     key: K,

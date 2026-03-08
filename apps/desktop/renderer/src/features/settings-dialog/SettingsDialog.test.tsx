@@ -4,6 +4,50 @@ import userEvent from "@testing-library/user-event";
 
 import { SettingsDialog } from "./SettingsDialog";
 
+vi.mock("../../lib/PreferenceContext", () => ({
+  usePreferenceStore: () => ({
+    get: () => null,
+    set: () => {},
+    remove: () => {},
+    clear: () => {},
+  }),
+}));
+
+vi.mock("./settingsGeneralPersistence", () => ({
+  loadGeneralSettings: () => ({
+    focusMode: true,
+    typewriterScroll: false,
+    smartPunctuation: true,
+    localAutoSave: true,
+    backupInterval: "5min",
+    defaultTypography: "inter",
+    interfaceScale: 100,
+  }),
+  saveGeneralSettings: () => {},
+}));
+
+vi.mock("../../lib/PreferenceContext", () => ({
+  usePreferenceStore: () => ({
+    get: () => null,
+    set: () => {},
+    remove: () => {},
+    clear: () => {},
+  }),
+}));
+
+vi.mock("./settingsGeneralPersistence", () => ({
+  loadGeneralSettings: () => ({
+    focusMode: true,
+    typewriterScroll: false,
+    smartPunctuation: true,
+    localAutoSave: true,
+    backupInterval: "5min",
+    defaultTypography: "inter",
+    interfaceScale: 100,
+  }),
+  saveGeneralSettings: () => {},
+}));
+
 vi.mock("./SettingsGeneral", () => ({
   SettingsGeneral: () => <div data-testid="mock-general-section">General</div>,
   defaultGeneralSettings: {

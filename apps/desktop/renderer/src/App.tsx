@@ -4,6 +4,7 @@ import { AppShell } from "./components/layout/AppShell";
 import { OnboardingPage } from "./features/onboarding";
 import { invoke } from "./lib/ipcClient";
 import { createPreferenceStore } from "./lib/preferences";
+import { PreferenceProvider } from "./lib/PreferenceContext";
 import { createAiStore, AiStoreProvider } from "./stores/aiStore";
 import { createEditorStore, EditorStoreProvider } from "./stores/editorStore";
 import { createFileStore, FileStoreProvider } from "./stores/fileStore";
@@ -143,6 +144,7 @@ export function App(): JSX.Element {
   }, []);
 
   return (
+    <PreferenceProvider value={preferences}>
     <ThemeStoreProvider store={themeStore}>
       <OnboardingStoreProvider store={onboardingStore}>
         <AiStoreProvider store={aiStore}>
@@ -171,5 +173,6 @@ export function App(): JSX.Element {
         </AiStoreProvider>
       </OnboardingStoreProvider>
     </ThemeStoreProvider>
+    </PreferenceProvider>
   );
 }

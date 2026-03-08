@@ -9,9 +9,10 @@ import { AiSettingsSection } from "../settings/AiSettingsSection";
 import { JudgeSection } from "../settings/JudgeSection";
 import {
   SettingsGeneral,
-  defaultGeneralSettings,
   type GeneralSettings,
 } from "./SettingsGeneral";
+import { usePreferenceStore } from "../../lib/PreferenceContext";
+import { loadGeneralSettings, saveGeneralSettings } from "./settingsGeneralPersistence";
 import {
   SettingsAccount,
   defaultAccountSettings,
@@ -164,8 +165,17 @@ export function SettingsDialog({
   const { t } = useTranslation();
   const navItems = getNavItems(t);
   const [activeTab, setActiveTab] = React.useState<SettingsTab>(defaultTab);
+  const preferenceStore = usePreferenceStore();
   const [generalSettings, setGeneralSettings] = React.useState<GeneralSettings>(
-    defaultGeneralSettings,
+    () => loadGeneralSettings(preferenceStore),
+  );
+
+  const handleGeneralSettingsChange = React.useCallback(
+    (settings: GeneralSettings) => {
+      setGeneralSettings(settings);
+      saveGeneralSettings(preferenceStore, settings);
+    },
+    [preferenceStore],
   );
   const [accountSettings] = React.useState<AccountSettings>(
     defaultAccountSettings,
@@ -187,7 +197,7 @@ export function SettingsDialog({
             settings={generalSettings}
             showAiMarks={showAiMarks}
             onShowAiMarksChange={setShowAiMarks}
-            onSettingsChange={setGeneralSettings}
+            onSettingsChange={handleGeneralSettingsChange}
           />
         );
       case "appearance":

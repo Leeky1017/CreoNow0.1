@@ -16,6 +16,15 @@ export type PreferenceKey =
   | `${typeof APP_ID}.theme.${"mode"}`
   | `${typeof APP_ID}.editor.${"showAiMarks"}`
   | `${typeof APP_ID}.onboarding.${"completed"}`
+  | `${typeof APP_ID}.settings.${
+      | "focusMode"
+      | "typewriterScroll"
+      | "smartPunctuation"
+      | "localAutoSave"
+      | "backupInterval"
+      | "defaultTypography"
+      | "interfaceScale"
+      | "language"}`
   | `${typeof APP_ID}.version`;
 
 export interface PreferenceStore {
@@ -47,7 +56,9 @@ function isCreonowKey(key: string): key is PreferenceKey {
     key.startsWith(`${APP_ID}.layout.`) ||
     key.startsWith(`${APP_ID}.theme.`) ||
     key.startsWith(`${APP_ID}.editor.`) ||
-    key.startsWith(`${APP_ID}.onboarding.`)
+    key.startsWith(`${APP_ID}.onboarding.`) ||
+    key.startsWith(`${APP_ID}.settings.`) ||
+    key.startsWith(`${APP_ID}.settings.`)
   );
 }
 

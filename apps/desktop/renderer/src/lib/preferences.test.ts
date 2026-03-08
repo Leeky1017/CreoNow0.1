@@ -62,3 +62,32 @@ describe("createPreferenceStore", () => {
     errorSpy.mockRestore();
   });
 });
+
+describe("PreferenceKey settings extension", () => {
+  it("isCreonowKey recognizes creonow.settings.focusMode", () => {
+    const store = createPreferenceStore(createMockStorage());
+    store.set("creonow.settings.focusMode", false);
+    expect(store.get("creonow.settings.focusMode")).toBe(false);
+  });
+
+  it("isCreonowKey recognizes creonow.settings.typewriterScroll", () => {
+    const store = createPreferenceStore(createMockStorage());
+    store.set("creonow.settings.typewriterScroll", true);
+    expect(store.get("creonow.settings.typewriterScroll")).toBe(true);
+  });
+
+  it("isCreonowKey recognizes creonow.settings.language", () => {
+    const store = createPreferenceStore(createMockStorage());
+    store.set("creonow.settings.language", "en");
+    expect(store.get("creonow.settings.language")).toBe("en");
+  });
+
+  it("clear() removes creonow.settings.* keys", () => {
+    const store = createPreferenceStore(createMockStorage());
+    store.set("creonow.settings.focusMode", true);
+    store.set("creonow.settings.backupInterval", "1hour");
+    store.clear();
+    expect(store.get("creonow.settings.focusMode")).toBeNull();
+    expect(store.get("creonow.settings.backupInterval")).toBeNull();
+  });
+});
