@@ -1308,6 +1308,11 @@
     "pressEscToExit": "Press Esc to exit",
     "exitAriaLabel": "Exit zen mode",
     "pressEscOrF11ToExit": "Press Esc or F11 to exit",
+    "untitledDocument": "Untitled Document",
+    "startWriting": "Start writing...",
+    "a11y": {
+      "dialogLabel": "Zen mode editor"
+    },
     "status": {
       "wordCount": "{{count}} words",
       "readTime": "{{minutes}} min read"

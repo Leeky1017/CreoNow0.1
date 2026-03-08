@@ -5,12 +5,17 @@ import {
   waitFor,
   act,
 } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type {
   IpcChannel,
   IpcInvokeResult,
   IpcRequest,
 } from "@shared/types/ipc-generated";
+
+vi.mock("../../stores/layoutStore", () => ({
+  useLayoutStore: (selector: (s: { zenMode: boolean }) => unknown) =>
+    selector({ zenMode: false }),
+}));
 
 import {
   EditorStoreProvider,

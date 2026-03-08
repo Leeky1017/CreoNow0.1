@@ -12,18 +12,17 @@ export function getModKey(): string {
 }
 
 /**
- * Extract title and paragraphs from TipTap JSON content.
+ * Extract title and word count from TipTap JSON content.
  */
 export function extractZenModeContent(
   contentJson: string | null,
   onParseError?: (error: unknown) => void,
 ): {
   title: string;
-  paragraphs: string[];
   wordCount: number;
 } {
   if (!contentJson) {
-    return { title: "Untitled", paragraphs: [], wordCount: 0 };
+    return { title: "Untitled", wordCount: 0 };
   }
 
   try {
@@ -36,7 +35,6 @@ export function extractZenModeContent(
     };
 
     let title = "Untitled";
-    const paragraphs: string[] = [];
     let wordCount = 0;
 
     if (doc.content) {
@@ -53,16 +51,15 @@ export function extractZenModeContent(
           title = text;
           wordCount += text.split(/\s+/).filter(Boolean).length;
         } else if (node.type === "paragraph" || node.type === "heading") {
-          paragraphs.push(text);
           wordCount += text.split(/\s+/).filter(Boolean).length;
         }
       }
     }
 
-    return { title, paragraphs, wordCount };
+    return { title, wordCount };
   } catch (error) {
     onParseError?.(error);
-    return { title: "Untitled", paragraphs: [], wordCount: 0 };
+    return { title: "Untitled", wordCount: 0 };
   }
 }
 

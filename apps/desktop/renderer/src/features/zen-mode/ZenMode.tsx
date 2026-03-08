@@ -1,20 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { EditorContent, type Editor } from "@tiptap/react";
 import { ZenModeStatus } from "./ZenModeStatus";
 import { useHotkey } from "../../lib/hotkeys/useHotkey";
 
 import { X } from "lucide-react";
-/**
- * ZenMode content with title and body text
- */
-export interface ZenModeContent {
-  /** Document title */
-  title: string;
-  /** Body content paragraphs */
-  paragraphs: string[];
-  /** Whether to show blinking cursor at the end */
-  showCursor?: boolean;
-}
 
 /**
  * ZenMode statistics for status bar
@@ -36,8 +26,10 @@ export interface ZenModeProps {
   open: boolean;
   /** Callback when zen mode should close */
   onExit: () => void;
-  /** Content to display */
-  content: ZenModeContent;
+  /** Shared TipTap editor instance from editorStore */
+  editor: Editor | null;
+  /** Document title (extracted from editor content) */
+  title: string;
   /** Statistics for status bar */
   stats: ZenModeStats;
   /** Current time (for display) */
@@ -45,39 +37,27 @@ export interface ZenModeProps {
 }
 
 /**
- * BlinkingCursor - Animated cursor that blinks at 1s intervals
- */
-function BlinkingCursor(): JSX.Element {
-  return (
-    <span
-      data-testid="zen-cursor"
-      className="inline-block w-[2px] h-[1.2em] align-text-bottom ml-[1px] animate-cursor-blink"
-      style={{ backgroundColor: "var(--color-info)" }}
-      aria-hidden="true"
-    />
-  );
-}
-
-/**
- * ZenMode - Fullscreen distraction-free writing mode
+ * ZenMode - Fullscreen distraction-free writing mode with real TipTap editor
  *
  * Features:
- * - Fullscreen dark overlay (#050505)
- * - Centered content area (max-width 720px)
+ * - Fullscreen dark overlay
+ * - Centered editable area (max-width 720px) using shared EditorContent
  * - Subtle radial gradient glow
  * - Exit button appears on hover at top
  * - Status bar appears on hover at bottom
  * - ESC key to exit
- * - Blinking cursor
+ * - Auto-focus on enter
  */
 export function ZenMode({
   open,
   onExit,
-  content,
+  editor,
+  title,
   stats,
   currentTime,
 }: ZenModeProps): JSX.Element | null {
   const { t } = useTranslation();
+
   // Handle ESC key to exit (via unified HotkeyManager)
   useHotkey(
     "zen:exit",
@@ -90,13 +70,28 @@ export function ZenMode({
     open,
   );
 
+  // Auto-focus editor when zen mode opens
+  React.useEffect(() => {
+    if (!open || !editor) return;
+    // Delay to ensure the DOM is mounted before focus
+    const timer = window.setTimeout(() => {
+      editor.commands.focus();
+    }, 50);
+    return () => window.clearTimeout(timer);
+  }, [open, editor]);
+
   // Don't render if not open
   if (!open) return null;
+
+  const isEmpty = !editor || editor.isEmpty;
+  const displayTitle = isEmpty ? t("zenMode.untitledDocument") : title;
 
   return (
     <div
       data-testid="zen-mode"
       className="fixed inset-0"
+      role="dialog"
+      aria-label={t("zenMode.a11y.dialogLabel")}
       style={{
         backgroundColor: "var(--color-zen-bg)",
         zIndex: "var(--z-modal)",
@@ -127,7 +122,7 @@ export function ZenMode({
             className="text-[var(--zen-label-size)] tracking-wide opacity-60"
             style={{ color: "var(--color-fg-placeholder)" }}
           >
-            {t('zenMode.pressEscToExit')}
+            {t("zenMode.pressEscToExit")}
           </span>
           <button
             data-testid="zen-exit-button"
@@ -146,7 +141,7 @@ export function ZenMode({
               e.currentTarget.style.color = "var(--color-fg-muted)";
               e.currentTarget.style.backgroundColor = "transparent";
             }}
-            aria-label={t('zenMode.exitAriaLabel')}
+            aria-label={t("zenMode.exitAriaLabel")}
           >
             <X size={20} strokeWidth={1.5} />
           </button>
@@ -162,12 +157,12 @@ export function ZenMode({
           className="text-[var(--zen-label-size)] tracking-wide opacity-40"
           style={{ color: "var(--color-fg-placeholder)" }}
         >
-          {t('zenMode.pressEscOrF11ToExit')}
+          {t("zenMode.pressEscOrF11ToExit")}
         </span>
       </div>
 
       {/* Main content area - scrollable */}
-      <main
+      <div
         data-testid="zen-content"
         className="absolute inset-0 overflow-y-auto z-[var(--z-overlay)] flex flex-col items-center"
         style={{
@@ -192,33 +187,31 @@ export function ZenMode({
               color: "var(--color-fg-default)",
             }}
           >
-            {content.title}
+            {displayTitle}
           </h1>
 
-          {/* Body paragraphs */}
+          {/* Editable content area - TipTap EditorContent */}
           <div
-            className="text-[var(--zen-body-size)] leading-[var(--zen-body-line-height)] space-y-8"
+            data-testid="zen-editor-area"
+            className="text-[var(--zen-body-size)] leading-[var(--zen-body-line-height)]"
             style={{
               fontFamily: "var(--font-family-body)",
               color: "var(--color-zen-text)",
             }}
           >
-            {content.paragraphs.map((paragraph, index) => (
-              <p key={index}>
-                {paragraph}
-                {/* Show cursor at end of last paragraph if enabled */}
-                {content.showCursor &&
-                  index === content.paragraphs.length - 1 && <BlinkingCursor />}
+            {isEmpty && (
+              <p
+                data-testid="zen-placeholder"
+                className="opacity-40 pointer-events-none select-none"
+                aria-hidden="true"
+              >
+                {t("zenMode.startWriting")}
               </p>
-            ))}
-            {content.paragraphs.length === 0 && content.showCursor ? (
-              <p>
-                <BlinkingCursor />
-              </p>
-            ) : null}
+            )}
+            {editor && <EditorContent editor={editor} />}
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Bottom status bar - appears on hover (above scrollable content) */}
       <ZenModeStatus

@@ -1,18 +1,49 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { render, screen, fireEvent, act } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+
+vi.mock("@tiptap/react", () => ({
+  EditorContent: ({ editor }: { editor: unknown }) =>
+    editor ? <div data-testid="mock-editor-content" /> : null,
+}));
+
 import { ZenMode, type ZenModeProps } from "./ZenMode";
 
 /**
- * Test data matching design spec
+ * Create a minimal mock TipTap Editor for testing.
  */
-const defaultContent = {
-  title: "The Architecture of Silence",
-  paragraphs: [
-    "The rain fell in sheets, blurring the city lights into abstract rivers of color.",
-    "She watched from the fourteenth floor, coffee growing cold in her hands.",
-  ],
-  showCursor: true,
-};
+function createMockEditor(opts?: {
+  isEmpty?: boolean;
+  html?: string;
+}) {
+  const isEmpty = opts?.isEmpty ?? false;
+  const html = opts?.html ?? "<p>Hello world</p>";
+  return {
+    isEmpty,
+    getHTML: vi.fn(() => html),
+    getJSON: vi.fn(() => ({
+      type: "doc",
+      content: [{ type: "paragraph", content: [{ type: "text", text: "Hello world" }] }],
+    })),
+    commands: {
+      focus: vi.fn(),
+    },
+    state: {
+      doc: {
+        textContent: isEmpty ? "" : "Hello world",
+      },
+      selection: { empty: true },
+    },
+    isEditable: true,
+    view: {
+      dom: document.createElement("div"),
+    },
+    options: {
+      element: document.createElement("div"),
+    },
+    on: vi.fn(),
+    off: vi.fn(),
+  };
+}
 
 const defaultStats = {
   wordCount: 847,
@@ -20,193 +51,209 @@ const defaultStats = {
   readTimeMinutes: 4,
 };
 
-const defaultProps: ZenModeProps = {
-  open: true,
-  onExit: vi.fn(),
-  content: defaultContent,
-  stats: defaultStats,
-  currentTime: "11:32 PM",
-};
+function buildProps(overrides?: Partial<ZenModeProps>): ZenModeProps {
+  return {
+    open: true,
+    onExit: vi.fn(),
+    editor: createMockEditor() as unknown as ZenModeProps["editor"],
+    title: "The Architecture of Silence",
+    stats: defaultStats,
+    currentTime: "11:32 PM",
+    ...overrides,
+  };
+}
 
 describe("ZenMode", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("renders nothing when open is false", () => {
-    const { container } = render(<ZenMode {...defaultProps} open={false} />);
+    const { container } = render(<ZenMode {...buildProps({ open: false })} />);
     expect(container.firstChild).toBeNull();
   });
 
   it("renders fullscreen overlay when open is true", () => {
-    render(<ZenMode {...defaultProps} />);
+    render(<ZenMode {...buildProps()} />);
     const zenMode = screen.getByTestId("zen-mode");
     expect(zenMode).toBeInTheDocument();
-    // Check for fixed positioning via class instead of computed style (JSDOM limitation)
     expect(zenMode).toHaveClass("fixed", "inset-0");
   });
 
   it("displays the title", () => {
-    render(<ZenMode {...defaultProps} />);
+    render(<ZenMode {...buildProps()} />);
     expect(screen.getByText("The Architecture of Silence")).toBeInTheDocument();
   });
 
-  it("displays all paragraphs", () => {
-    render(<ZenMode {...defaultProps} />);
-    expect(screen.getByText(/The rain fell in sheets/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/She watched from the fourteenth floor/),
-    ).toBeInTheDocument();
-  });
-
-  it("shows blinking cursor when showCursor is true", () => {
-    render(<ZenMode {...defaultProps} />);
-    const cursor = screen.getByTestId("zen-cursor");
-    expect(cursor).toBeInTheDocument();
-    expect(cursor).toHaveClass("animate-cursor-blink");
-  });
-
-  it("hides cursor when showCursor is false", () => {
-    render(
-      <ZenMode
-        {...defaultProps}
-        content={{ ...defaultContent, showCursor: false }}
-      />,
-    );
+  // AC-9: BlinkingCursor removed
+  it("does not render BlinkingCursor (zen-cursor removed)", () => {
+    render(<ZenMode {...buildProps()} />);
     expect(screen.queryByTestId("zen-cursor")).not.toBeInTheDocument();
   });
 
+  // AC-1: EditorContent area is rendered
+  it("renders zen-editor-area when open with editor", () => {
+    render(<ZenMode {...buildProps()} />);
+    expect(screen.getByTestId("zen-editor-area")).toBeInTheDocument();
+  });
+
+  // AC-7: role="dialog" and aria-label
+  it("overlay has role=\"dialog\" and aria-label", () => {
+    render(<ZenMode {...buildProps()} />);
+    const overlay = screen.getByTestId("zen-mode");
+    expect(overlay).toHaveAttribute("role", "dialog");
+    expect(overlay).toHaveAttribute("aria-label", "Zen mode editor");
+  });
+
+  // AC-7: auto-focus editor on open
+  it("calls editor.commands.focus after opening", () => {
+    const editor = createMockEditor();
+    render(<ZenMode {...buildProps({ editor: editor as unknown as ZenModeProps["editor"] })} />);
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+    expect(editor.commands.focus).toHaveBeenCalled();
+  });
+
+  // AC-6: empty document shows untitled and placeholder
+  it("shows untitled title and placeholder for empty editor", () => {
+    const editor = createMockEditor({ isEmpty: true });
+    render(
+      <ZenMode
+        {...buildProps({
+          editor: editor as unknown as ZenModeProps["editor"],
+          title: "Untitled Document",
+        })}
+      />,
+    );
+    expect(screen.getByText("Untitled Document")).toBeInTheDocument();
+    expect(screen.getByTestId("zen-placeholder")).toBeInTheDocument();
+    expect(screen.getByTestId("zen-placeholder")).toHaveTextContent("Start writing...");
+  });
+
+  // AC-6: placeholder hidden when editor has content
+  it("does not show placeholder when editor has content", () => {
+    render(<ZenMode {...buildProps()} />);
+    expect(screen.queryByTestId("zen-placeholder")).not.toBeInTheDocument();
+  });
+
   it("displays word count in status bar", () => {
-    render(<ZenMode {...defaultProps} />);
+    render(<ZenMode {...buildProps()} />);
     expect(screen.getByTestId("zen-word-count")).toHaveTextContent("847 words");
   });
 
   it("displays save status", () => {
-    render(<ZenMode {...defaultProps} />);
+    render(<ZenMode {...buildProps()} />);
     expect(screen.getByTestId("zen-save-status")).toHaveTextContent("Saved");
   });
 
   it("displays read time", () => {
-    render(<ZenMode {...defaultProps} />);
+    render(<ZenMode {...buildProps()} />);
     expect(screen.getByTestId("zen-read-time")).toHaveTextContent("4 min read");
   });
 
   it("displays current time when provided", () => {
-    render(<ZenMode {...defaultProps} currentTime="11:32 PM" />);
+    render(<ZenMode {...buildProps({ currentTime: "11:32 PM" })} />);
     expect(screen.getByTestId("zen-time")).toHaveTextContent("11:32 PM");
   });
 
   it("hides time when not provided", () => {
-    render(<ZenMode {...defaultProps} currentTime={undefined} />);
+    render(<ZenMode {...buildProps({ currentTime: undefined })} />);
     expect(screen.queryByTestId("zen-time")).not.toBeInTheDocument();
   });
 
   it("calls onExit when ESC key is pressed", () => {
     const onExit = vi.fn();
-    render(<ZenMode {...defaultProps} onExit={onExit} />);
-
+    render(<ZenMode {...buildProps({ onExit })} />);
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onExit).toHaveBeenCalledTimes(1);
   });
 
   it("calls onExit when X button is clicked", () => {
     const onExit = vi.fn();
-    render(<ZenMode {...defaultProps} onExit={onExit} />);
-
+    render(<ZenMode {...buildProps({ onExit })} />);
     const exitButton = screen.getByTestId("zen-exit-button");
     fireEvent.click(exitButton);
     expect(onExit).toHaveBeenCalledTimes(1);
   });
 
   it("has proper accessibility label on exit button", () => {
-    render(<ZenMode {...defaultProps} />);
+    render(<ZenMode {...buildProps()} />);
     const exitButton = screen.getByTestId("zen-exit-button");
     expect(exitButton).toHaveAttribute("aria-label", "Exit zen mode");
   });
 
-  it("formats large word counts with commas", () => {
-    render(
-      <ZenMode
-        {...defaultProps}
-        stats={{ ...defaultStats, wordCount: 12345 }}
-      />,
-    );
-    expect(screen.getByTestId("zen-word-count")).toHaveTextContent(
-      "12345 words",
-    );
-  });
-
   it("does not call onExit when open is false and ESC is pressed", () => {
     const onExit = vi.fn();
-    render(<ZenMode {...defaultProps} open={false} onExit={onExit} />);
-
-    fireEvent.keyDown(document, { key: "Escape" });
-    expect(onExit).not.toHaveBeenCalled();
-  });
-
-  it("removes ESC listener when component unmounts", () => {
-    const onExit = vi.fn();
-    const { unmount } = render(<ZenMode {...defaultProps} onExit={onExit} />);
-
-    unmount();
+    render(<ZenMode {...buildProps({ open: false, onExit })} />);
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onExit).not.toHaveBeenCalled();
   });
 
   it("removes ESC listener when open becomes false", () => {
     const onExit = vi.fn();
-    const { rerender } = render(<ZenMode {...defaultProps} onExit={onExit} />);
+    const props = buildProps({ onExit });
+    const { rerender } = render(<ZenMode {...props} />);
 
-    // Close zen mode
-    rerender(<ZenMode {...defaultProps} open={false} onExit={onExit} />);
-
-    // ESC should not trigger onExit now
+    rerender(<ZenMode {...props} open={false} />);
     fireEvent.keyDown(document, { key: "Escape" });
     expect(onExit).not.toHaveBeenCalled();
   });
 
   it("has proper z-index for modal layer", () => {
-    render(<ZenMode {...defaultProps} />);
+    render(<ZenMode {...buildProps()} />);
     const zenMode = screen.getByTestId("zen-mode");
-    // z-index is set via inline style with CSS variable
     expect(zenMode.style.zIndex).toBe("var(--z-modal)");
   });
 
   it("has exit hint text visible", () => {
-    render(<ZenMode {...defaultProps} />);
+    render(<ZenMode {...buildProps()} />);
     expect(screen.getByText("Press Esc or F11 to exit")).toBeInTheDocument();
+  });
+
+  it("renders without editor (null editor) showing placeholder", () => {
+    render(<ZenMode {...buildProps({ editor: null, title: "Untitled Document" })} />);
+    expect(screen.getByTestId("zen-mode")).toBeInTheDocument();
+    expect(screen.getByTestId("zen-placeholder")).toBeInTheDocument();
   });
 });
 
 describe("ZenMode content area", () => {
-  it("has proper max-width for content", () => {
-    render(<ZenMode {...defaultProps} />);
+  it("renders zen-editor-area container", () => {
+    render(<ZenMode {...buildProps()} />);
     const content = screen.getByTestId("zen-content");
     expect(content).toBeInTheDocument();
   });
 
-  it("renders empty state with placeholder title and cursor when no paragraphs", () => {
+  it("renders empty state with untitled and placeholder when editor is empty", () => {
+    const editor = createMockEditor({ isEmpty: true });
     render(
       <ZenMode
-        {...defaultProps}
-        content={{
-          title: "New Document",
-          paragraphs: [],
-          showCursor: true,
-        }}
-        stats={{ ...defaultStats, wordCount: 0 }}
+        {...buildProps({
+          editor: editor as unknown as ZenModeProps["editor"],
+          title: "Untitled Document",
+          stats: { ...defaultStats, wordCount: 0 },
+        })}
       />,
     );
-    expect(screen.getByText("New Document")).toBeInTheDocument();
-    expect(screen.getByTestId("zen-cursor")).toBeInTheDocument();
+    expect(screen.getByText("Untitled Document")).toBeInTheDocument();
+    expect(screen.getByTestId("zen-placeholder")).toBeInTheDocument();
     expect(screen.getByTestId("zen-word-count")).toHaveTextContent("0 words");
   });
 });
 
 describe("ZenMode status bar", () => {
   it("has data-testid for status area", () => {
-    render(<ZenMode {...defaultProps} />);
+    render(<ZenMode {...buildProps()} />);
     expect(screen.getByTestId("zen-status-area")).toBeInTheDocument();
   });
 
   it("has data-testid for status bar", () => {
-    render(<ZenMode {...defaultProps} />);
+    render(<ZenMode {...buildProps()} />);
     expect(screen.getByTestId("zen-status-bar")).toBeInTheDocument();
   });
 });

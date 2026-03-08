@@ -38,6 +38,7 @@ import {
 } from "./typography";
 import { buildAiStreamUndoCheckpoint, undoAiStream } from "./aiStreamUndo";
 import type { AiStreamCheckpoint } from "./aiStreamUndo";
+import { useLayoutStore } from "../../stores/layoutStore";
 
 const IS_VITEST_RUNTIME =
   typeof process !== "undefined" && Boolean(process.env.VITEST);
@@ -1083,6 +1084,12 @@ function useEditorPaneCore(projectId: string) {
  */
 export function EditorPane(props: { projectId: string }): JSX.Element {
   const core = useEditorPaneCore(props.projectId);
+  const zenMode = useLayoutStore((s) => s.zenMode);
+
+  // Close slash panel when zen mode activates
+  React.useEffect(() => {
+    if (zenMode) core.closeSlashPanel();
+  }, [zenMode, core.closeSlashPanel]);
 
   if (core.bootstrapStatus !== "ready") {
     return (
@@ -1180,15 +1187,17 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
         </div>
       ) : null}
       <EditorBubbleMenu editor={core.editor} />
-      <EditorToolbar editor={core.editor} disabled={core.isPreviewMode} />
-      <SlashCommandPanel
-        open={core.isSlashPanelOpen}
-        query={core.slashSearchQuery}
-        candidates={SLASH_COMMAND_REGISTRY}
-        onQueryChange={core.setSlashSearchQuery}
-        onSelectCommand={core.handleSlashCommandSelect}
-        onRequestClose={core.closeSlashPanel}
-      />
+      {!zenMode && <EditorToolbar editor={core.editor} disabled={core.isPreviewMode} />}
+      {!zenMode && (
+        <SlashCommandPanel
+          open={core.isSlashPanelOpen}
+          query={core.slashSearchQuery}
+          candidates={SLASH_COMMAND_REGISTRY}
+          onQueryChange={core.setSlashSearchQuery}
+          onSelectCommand={core.handleSlashCommandSelect}
+          onRequestClose={core.closeSlashPanel}
+        />
+      )}
       <div
         data-testid="editor-content-region"
         className="relative flex-1 min-h-0 font-[var(--font-family-body)] text-[length:var(--editor-font-size)] leading-[var(--editor-line-height)]"
@@ -1202,7 +1211,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
             viewportTestId="editor-content-scroll-viewport"
             className="h-full"
           >
-            <EditorContent editor={core.editor} className="h-full" />
+            {!zenMode && <EditorContent editor={core.editor} className="h-full" />}
           </ScrollArea>
         </EditorContextMenu>
         <EntityCompletionPanel

@@ -8,6 +8,7 @@ import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
 import { captureSelectionRef } from "../ai/applySelection";
 import { useEditorStore } from "../../stores/editorStore";
 import { useOptionalAiStore } from "../../stores/aiStore";
+import { useLayoutStore } from "../../stores/layoutStore";
 import {
   readPrefersReducedMotion,
   resolveReducedMotionDurationPair,
@@ -88,6 +89,7 @@ export function EditorBubbleMenu(props: {
 }): JSX.Element | null {
   const { editor } = props;
   const { t } = useTranslation();
+  const zenMode = useLayoutStore((s) => s.zenMode);
   const [visible, setVisible] = React.useState(false);
   const [placement, setPlacement] = React.useState<BubblePlacement>("top");
   const projectId = useEditorStore((s) => s.projectId);
@@ -137,7 +139,8 @@ export function EditorBubbleMenu(props: {
 
   // Keep BubbleMenu mounted and drive visibility via shouldShow to avoid
   // unmount/remount races while ProseMirror selection updates.
-  const shouldShowBubble = visible && editor.isEditable;
+  // Suppress BubbleMenu entirely in zen mode (AC-3)
+  const shouldShowBubble = visible && editor.isEditable && !zenMode;
   const inlineDisabled = !editor.isEditable || editor.isActive("codeBlock");
 
   const toggleLink = () => {

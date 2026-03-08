@@ -62,7 +62,7 @@ import {
 } from "../../lib/diff/unifiedDiff";
 import { runFireAndForget } from "../../lib/fireAndForget";
 import { invoke } from "../../lib/ipcClient";
-import { extractZenModeContent, getModKey } from "./appShellLayoutHelpers";
+import { getModKey } from "./appShellLayoutHelpers";
 import "../../i18n";
 
 type FileItem = {
@@ -71,16 +71,6 @@ type FileItem = {
   type: string;
 };
 
-let hasWarnedInvalidZenContent = false;
-
-function warnInvalidZenContent(error: unknown): void {
-  if (hasWarnedInvalidZenContent) {
-    return;
-  }
-  hasWarnedInvalidZenContent = true;
-  console.warn("[A2-L-001] Failed to parse ZenMode content JSON", error);
-}
-
 function assertNeverDialogType(value: never): never {
   throw new Error(`Unhandled dialog type: ${String(value)}`);
 }
@@ -88,8 +78,8 @@ function assertNeverDialogType(value: never): never {
 /**
  * ZenModeOverlay - Connects ZenMode to editor state.
  *
- * Why: Separates overlay wiring from AppShell complexity; pulls content from
- * editorStore and autosaveStatus for the status bar.
+ * Why: Separates overlay wiring from AppShell complexity; pulls editor instance
+ * from editorStore and autosaveStatus for the status bar.
  */
 function ZenModeOverlay(props: {
   open: boolean;
@@ -98,7 +88,6 @@ function ZenModeOverlay(props: {
   const { t } = useTranslation();
   const editor = useEditorStore((s) => s.editor);
   const autosaveStatus = useEditorStore((s) => s.autosaveStatus);
-  const documentContentJson = useEditorStore((s) => s.documentContentJson);
 
   // Get current time for status bar
   const [currentTime, setCurrentTime] = React.useState(() =>
@@ -120,14 +109,26 @@ function ZenModeOverlay(props: {
     return () => clearInterval(interval);
   }, [props.open]);
 
-  // Extract content from editor or fallback to stored JSON
-  const content = React.useMemo(() => {
-    if (editor) {
-      const json = JSON.stringify(editor.getJSON());
-      return extractZenModeContent(json, warnInvalidZenContent);
-    }
-    return extractZenModeContent(documentContentJson, warnInvalidZenContent);
-  }, [editor, documentContentJson]);
+  // Extract title from editor content
+  const title = React.useMemo(() => {
+    if (!editor) return t("zenMode.untitledDocument");
+    const json = editor.getJSON();
+    const firstHeading = json.content?.find(
+      (node) => node.type === "heading",
+    );
+    const headingText = firstHeading?.content
+      ?.filter((c) => c.type === "text")
+      .map((c) => c.text ?? "")
+      .join("");
+    return headingText || t("zenMode.untitledDocument");
+  }, [editor, t]);
+
+  // Calculate word count from editor content
+  const wordCount = React.useMemo(() => {
+    if (!editor?.state?.doc) return 0;
+    const text = editor.state.doc.textContent;
+    return text.split(/\s+/).filter(Boolean).length;
+  }, [editor]);
 
   // Map autosave status to display text
   const saveStatus = React.useMemo(() => {
@@ -144,19 +145,16 @@ function ZenModeOverlay(props: {
   }, [autosaveStatus, t]);
 
   // Calculate read time (average 200 words per minute)
-  const readTimeMinutes = Math.max(1, Math.ceil(content.wordCount / 200));
+  const readTimeMinutes = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
     <ZenMode
       open={props.open}
       onExit={props.onExit}
-      content={{
-        title: content.title,
-        paragraphs: content.paragraphs,
-        showCursor: true,
-      }}
+      editor={editor}
+      title={title}
       stats={{
-        wordCount: content.wordCount,
+        wordCount,
         saveStatus,
         readTimeMinutes,
       }}

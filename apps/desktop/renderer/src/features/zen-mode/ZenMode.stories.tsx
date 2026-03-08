@@ -2,21 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { ZenMode } from "./ZenMode";
 
-/**
- * Real content from design spec (MUST use)
- */
-const defaultContent = {
-  title: "The Architecture of Silence",
-  paragraphs: [
-    "Intrigued by beauty, fascinated by technology and fueled with an everlasting devotion to digital craftsmanship.",
-    "Design is not just about making things look good. It is about how things work. In the digital realm, this translates to the seamless integration of form and function. We build immersive environments where typography leads the eye and imagery sets the mood.",
-    "The silence of a well-designed interface is not empty; it is full of potential. It is the breath between notes in a symphony, the white space that gives meaning to the ink. When we strip away the noise—the unnecessary borders, the decorative flourishes, the redundant controls—we are left with something pure.",
-    "We find ourselves in a constant state of refinement. The goal is never to add more, but to take away until nothing else can be removed without breaking the essence. This is the paradox of modern design: it takes immense effort to make something appear effortless.",
-    "Consider the cursor blinking on a blank page",
-  ],
-  showCursor: true,
-};
-
 const defaultStats = {
   wordCount: 1240,
   saveStatus: "Saved",
@@ -31,14 +16,15 @@ const meta: Meta<typeof ZenMode> = {
     docs: {
       description: {
         component:
-          "Fullscreen distraction-free writing mode with centered content, subtle glow effects, and minimal UI hints that appear on hover.",
+          "Fullscreen distraction-free writing mode with real TipTap editor, subtle glow effects, and minimal UI hints that appear on hover. Editor instance is null in Storybook — use the running app for full editing experience.",
       },
     },
   },
   args: {
     open: true,
     onExit: fn(),
-    content: defaultContent,
+    editor: null,
+    title: "The Architecture of Silence",
     stats: defaultStats,
     currentTime: "11:32 PM",
   },
@@ -55,99 +41,38 @@ export default meta;
 type Story = StoryObj<typeof ZenMode>;
 
 /**
- * 1. DefaultZenMode - Default fullscreen zen mode
- *
- * Verifies:
- * - Fullscreen dark background (#050505)
- * - Content centered (horizontal and vertical)
- * - Text color (#888888 muted)
- * - Serif font (Georgia)
- * - Top/bottom hover areas hidden by default
+ * Default fullscreen zen mode (no editor instance in Storybook)
  */
 export const DefaultZenMode: Story = {
   name: "Default Zen Mode",
   args: {
     open: true,
-    content: defaultContent,
+    title: "The Architecture of Silence",
     stats: defaultStats,
     currentTime: "11:32 PM",
   },
 };
 
 /**
- * 2. TypingWithCursor - Typing with blinking cursor
- *
- * Verifies:
- * - Cursor at the end of "hands."
- * - Cursor blinks at 1s interval
- * - Simulated new character input
- * - Cursor follows movement
- */
-export const TypingWithCursor: Story = {
-  name: "Typing With Cursor",
-  args: {
-    open: true,
-    content: {
-      title: "The Architecture of Silence",
-      paragraphs: [
-        "The rain fell in sheets, blurring the city lights into abstract rivers of color. She watched from the fourteenth floor, coffee growing cold in her hands.",
-      ],
-      showCursor: true,
-    },
-    stats: {
-      wordCount: 847,
-      saveStatus: "Saved",
-      readTimeMinutes: 4,
-    },
-    currentTime: "11:32 PM",
-  },
-};
-
-/**
- * 3. HoverTopShowExit - Mouse moves to top area
- *
- * Verifies:
- * - Exit button fades in (opacity 0 → 1)
- * - Button position at top-right
- * - X icon style
- *
- * Note: Hover the top area to see the exit button appear.
+ * Hover top to reveal exit button
  */
 export const HoverTopShowExit: Story = {
   name: "Hover Top Show Exit",
   args: {
     open: true,
-    content: defaultContent,
+    title: "The Architecture of Silence",
     stats: defaultStats,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Move mouse to the top edge of the screen to see the exit button fade in. The exit button and 'Press Esc to exit' hint will appear.",
-      },
-    },
   },
 };
 
 /**
- * 4. HoverBottomShowStatus - Mouse moves to bottom area
- *
- * Verifies:
- * - Status bar fades in
- * - Shows "847 words"
- * - Shows time "11:32 PM"
- *
- * Note: Hover the bottom area to see the status bar appear.
+ * Hover bottom to reveal status bar
  */
 export const HoverBottomShowStatus: Story = {
   name: "Hover Bottom Show Status",
   args: {
     open: true,
-    content: {
-      ...defaultContent,
-      showCursor: false,
-    },
+    title: "The Architecture of Silence",
     stats: {
       wordCount: 847,
       saveStatus: "Saved",
@@ -155,137 +80,46 @@ export const HoverBottomShowStatus: Story = {
     },
     currentTime: "11:32 PM",
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Move mouse to the bottom edge of the screen to see the status bar become fully visible. It shows word count, save status, and read time.",
-      },
-    },
-  },
 };
 
 /**
- * 5. ExitByEscape - ESC key to exit
- *
- * Verifies:
- * - Press ESC triggers onExit callback
- * - Exit animation (fade out)
- *
- * Note: Press ESC key to trigger the onExit callback.
- */
-export const ExitByEscape: Story = {
-  name: "Exit By Escape",
-  args: {
-    open: true,
-    content: defaultContent,
-    stats: defaultStats,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Press the ESC key to trigger the onExit callback. Check the Actions panel to see the callback being triggered.",
-      },
-    },
-  },
-};
-
-/**
- * 6. ExitByClick - Click X button to exit
- *
- * Verifies:
- * - Hover top to show X button
- * - Click X triggers onExit callback
- *
- * Note: Hover the top area and click the X button.
- */
-export const ExitByClick: Story = {
-  name: "Exit By Click",
-  args: {
-    open: true,
-    content: defaultContent,
-    stats: defaultStats,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Hover the top area to show the X button, then click it to trigger the onExit callback. Check the Actions panel to see the callback being triggered.",
-      },
-    },
-  },
-};
-
-/**
- * Closed state - ZenMode not visible
+ * Closed state - renders nothing
  */
 export const Closed: Story = {
   name: "Closed State",
   args: {
     open: false,
-    content: defaultContent,
+    title: "The Architecture of Silence",
     stats: defaultStats,
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "When open is false, the ZenMode component renders nothing.",
-      },
-    },
   },
 };
 
 /**
- * Long content with scrolling
+ * Empty document — shows untitled and placeholder
  */
-export const LongContent: Story = {
-  name: "Long Content With Scrolling",
+export const EmptyDocument: Story = {
+  name: "Empty Document",
   args: {
     open: true,
-    content: {
-      title: "The Architecture of Silence",
-      paragraphs: [
-        "Intrigued by beauty, fascinated by technology and fueled with an everlasting devotion to digital craftsmanship.",
-        "Design is not just about making things look good. It is about how things work. In the digital realm, this translates to the seamless integration of form and function. We build immersive environments where typography leads the eye and imagery sets the mood.",
-        "The silence of a well-designed interface is not empty; it is full of potential. It is the breath between notes in a symphony, the white space that gives meaning to the ink. When we strip away the noise—the unnecessary borders, the decorative flourishes, the redundant controls—we are left with something pure.",
-        "We find ourselves in a constant state of refinement. The goal is never to add more, but to take away until nothing else can be removed without breaking the essence. This is the paradox of modern design: it takes immense effort to make something appear effortless.",
-        "The architecture of silence is built on three pillars: restraint, rhythm, and resonance. Restraint in what we choose to show. Rhythm in how elements relate to each other. Resonance in how the whole speaks to those who experience it.",
-        "Every pixel has purpose. Every transition tells a story. Every interaction builds trust. This is the language of modern interfaces—a vocabulary of subtle cues and gentle guidance.",
-        "In this space between action and reaction, between input and output, we find the essence of user experience. It is not about what the system does, but how it makes people feel.",
-        "The best interfaces disappear. They become extensions of thought, invisible servants of human intention. This invisibility is not absence—it is presence so perfect that it ceases to be noticed.",
-        "Consider the cursor blinking on a blank page",
-      ],
-      showCursor: true,
-    },
+    editor: null,
+    title: "Untitled Document",
     stats: {
-      wordCount: 2847,
+      wordCount: 0,
       saveStatus: "Saved",
-      readTimeMinutes: 12,
+      readTimeMinutes: 1,
     },
     currentTime: "11:45 PM",
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Long content demonstrates the hidden scrollbar behavior. Scroll down to see more content - the scrollbar is hidden for distraction-free writing.",
-      },
-    },
-  },
 };
 
 /**
- * Unsaved changes
+ * Unsaved changes status
  */
 export const UnsavedChanges: Story = {
   name: "Unsaved Changes",
   args: {
     open: true,
-    content: {
-      ...defaultContent,
-      showCursor: true,
-    },
+    title: "The Architecture of Silence",
     stats: {
       wordCount: 1243,
       saveStatus: "Unsaved",
@@ -293,42 +127,16 @@ export const UnsavedChanges: Story = {
     },
     currentTime: "11:35 PM",
   },
-  parameters: {
-    docs: {
-      description: {
-        story: "Shows unsaved status in the bottom status bar.",
-      },
-    },
-  },
 };
 
-// =============================================================================
-// P3: 补充场景
-// =============================================================================
-
 /**
- * 保存中状态
- *
- * 展示正在保存时的状态。
- *
- * 验证点：
- * - 底部状态栏显示 "Saving..."
- * - 显示 Spinner 动画
- * - 用户仍可继续编辑（不阻塞）
- *
- * 浏览器测试步骤：
- * 1. 将鼠标移到底部，显示状态栏
- * 2. 验证显示 "Saving..." 文字和 Spinner
- * 3. 验证光标仍然闪烁（可继续编辑）
+ * Saving state
  */
 export const SavingState: Story = {
   name: "Saving State",
   args: {
     open: true,
-    content: {
-      ...defaultContent,
-      showCursor: true,
-    },
+    title: "The Architecture of Silence",
     stats: {
       wordCount: 1245,
       saveStatus: "Saving...",
@@ -336,53 +144,21 @@ export const SavingState: Story = {
     },
     currentTime: "11:36 PM",
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          '保存中状态。底部状态栏显示 "Saving..." 和 Spinner，用户可继续编辑。',
-      },
-    },
-  },
 };
 
 /**
- * 保存确认状态
- *
- * 展示保存成功后的确认状态。
- *
- * 验证点：
- * - 底部状态栏显示 "Saved"
- * - "Saved" 文字为绿色
- * - 显示绿色勾号图标
- * - 2 秒后自动消失（回到默认状态）
- *
- * 浏览器测试步骤：
- * 1. 将鼠标移到底部，显示状态栏
- * 2. 验证 "Saved" 文字为绿色
- * 3. 验证有绿色勾号图标
+ * Saved confirmation
  */
 export const SavedConfirmation: Story = {
   name: "Saved Confirmation",
   args: {
     open: true,
-    content: {
-      ...defaultContent,
-      showCursor: false,
-    },
+    title: "The Architecture of Silence",
     stats: {
       wordCount: 1245,
       saveStatus: "Saved",
       readTimeMinutes: 6,
     },
     currentTime: "11:36 PM",
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          '保存确认状态。底部状态栏显示绿色 "Saved" 文字和勾号图标，确认保存成功。',
-      },
-    },
   },
 };

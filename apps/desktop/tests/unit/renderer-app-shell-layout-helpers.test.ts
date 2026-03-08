@@ -24,7 +24,6 @@ import {
   );
 
   assert.equal(content.title, "Title");
-  assert.deepEqual(content.paragraphs, ["Paragraph one"]);
   assert.equal(content.wordCount, 3);
 }
 
