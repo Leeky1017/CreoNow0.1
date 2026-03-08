@@ -27,8 +27,8 @@ import { DragHandleExtension } from "./extensions/dragHandle";
 import { SlashCommandPanel } from "./SlashCommandPanel";
 import { EntityCompletionPanel } from "./EntityCompletionPanel";
 import {
+  getSlashCommandRegistry,
   routeSlashCommandExecution,
-  SLASH_COMMAND_REGISTRY,
   type SlashCommandExecutors,
   type SlashCommandId,
 } from "./slashCommands";
@@ -348,11 +348,12 @@ function useEntityCompletion(deps: {
   clearEntityCompletionSession: () => void;
   listKnowledgeEntities: (args: { projectId: string }) => Promise<{ ok: true; data: { items: EntityListItem[] } } | { ok: false }>;
   projectId: string;
+  t: (key: string) => string;
 }) {
   const {
     bootstrapStatus, clearEntityCompletionSession, contentReady, documentId,
     documentStatus, editor, entityCompletionSession, isPreviewMode,
-    listKnowledgeEntities, projectId, setEntityCompletionSession,
+    listKnowledgeEntities, projectId, setEntityCompletionSession, t,
   } = deps;
 
   const entityCompletionSessionRef = React.useRef(entityCompletionSession);
@@ -397,7 +398,7 @@ function useEntityCompletion(deps: {
           status: "error",
           candidates: [],
           selectedIndex: 0,
-          message: "Entity suggestions unavailable.",
+          message: t('editor.entitySuggestionsUnavailable'),
         });
         return;
       }
@@ -613,7 +614,7 @@ function useEditorCommands(deps: {
       return;
     }
     const confirmed = window.confirm(
-      "This document is final. Editing will switch it back to draft. Continue?",
+      t('editor.confirmSwitchToDraft'),
     );
     const decision = resolveFinalDocumentEditDecision({
       status: documentStatus,
@@ -1034,6 +1035,7 @@ function useEditorPaneCore(projectId: string) {
     clearEntityCompletionSession,
     listKnowledgeEntities,
     projectId,
+    t,
   });
 
 
@@ -1184,7 +1186,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
       <SlashCommandPanel
         open={core.isSlashPanelOpen}
         query={core.slashSearchQuery}
-        candidates={SLASH_COMMAND_REGISTRY}
+        candidates={getSlashCommandRegistry()}
         onQueryChange={core.setSlashSearchQuery}
         onSelectCommand={core.handleSlashCommandSelect}
         onRequestClose={core.closeSlashPanel}

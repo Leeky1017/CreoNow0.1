@@ -108,6 +108,8 @@
     }
   },
   "editor": {
+    "entitySuggestionsUnavailable": "Entity suggestions unavailable.",
+    "confirmSwitchToDraft": "This document is final. Editing will switch it back to draft. Continue?",
     "contextMenu": {
       "copy": "Copy",
       "paste": "Paste",
@@ -117,6 +119,7 @@
       "bold": "Bold",
       "italic": "Italic",
       "underline": "Underline",
+      "ai": "AI",
       "aiPolish": "Polish",
       "aiRewrite": "Rewrite"
     },
@@ -132,6 +135,32 @@
       "generating": "Generating...",
       "tooltip": "Trigger continue-writing skill",
       "writing": "Writing..."
+    },
+    "slash": {
+      "continue": {
+        "label": "/Continue",
+        "description": "Continue writing based on surrounding context."
+      },
+      "describe": {
+        "label": "/Describe",
+        "description": "Expand scene details and atmosphere."
+      },
+      "dialogue": {
+        "label": "/Dialogue",
+        "description": "Generate natural character dialogue."
+      },
+      "character": {
+        "label": "/Character",
+        "description": "Add character settings and motivations."
+      },
+      "outline": {
+        "label": "/Outline",
+        "description": "Organize chapter structure and narrative pacing."
+      },
+      "search": {
+        "label": "/Search",
+        "description": "Search for relevant information in the project."
+      }
     },
     "pane": {
       "charLimitReached": "Document has reached the 1,000,000 character limit. Consider splitting the document to continue writing.",
@@ -771,7 +800,21 @@
       "useOurs": "ours",
       "useTheirs": "theirs",
       "useManual": "manual",
-      "submitConflictResolution": "Submit Conflict Resolution"
+      "submitConflictResolution": "Submit Conflict Resolution",
+      "author": {
+        "you": "You",
+        "ai": "AI",
+        "auto": "Auto",
+        "unknown": "Unknown"
+      },
+      "timeGroup": {
+        "justNow": "Just now",
+        "minutesAgo": "{{count}}m ago",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "earlier": "Earlier"
+      },
+      "loadingVersions": "Loading versions..."
     },
     "panel": {
       "closeAriaLabel": "Close version history",
@@ -805,6 +848,10 @@
       "actorLabel": "Actor:",
       "timestampLabel": "Timestamp:",
       "reasonLabel": "Reason:"
+    },
+    "compare": {
+      "noDifferencesFound": "No differences found.",
+      "unknownError": "Unknown error"
     }
   },
   "settings": {

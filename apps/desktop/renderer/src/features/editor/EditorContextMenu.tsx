@@ -262,7 +262,7 @@ export function EditorContextMenu({
           <ContextMenu.Separator className={separatorClass} />
 
           {/* ---- AI actions ---- */}
-          <ContextMenu.Label className={labelClass}>AI</ContextMenu.Label>
+          <ContextMenu.Label className={labelClass}>{t("editor.contextMenu.ai")}</ContextMenu.Label>
 
           {AI_CONTEXT_ACTIONS.map((action) => (
             <ContextMenu.Item

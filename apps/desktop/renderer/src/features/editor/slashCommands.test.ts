@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  SLASH_COMMAND_REGISTRY,
+  getSlashCommandRegistry,
   filterSlashCommands,
   routeSlashCommandExecution,
   type SlashCommandId,
@@ -9,29 +9,23 @@ import {
 
 describe("s2 slash commands", () => {
   it("[SCN-S2-CMD-1] should register exactly six roadmap commands with unique ids", () => {
-    const labels = SLASH_COMMAND_REGISTRY.map((command) => command.label);
-    expect(labels).toEqual([
-      "/续写",
-      "/描写",
-      "/对白",
-      "/角色",
-      "/大纲",
-      "/搜索",
-    ]);
+    const registry = getSlashCommandRegistry();
+    expect(registry).toHaveLength(6);
 
     const uniqueIds = new Set(
-      SLASH_COMMAND_REGISTRY.map((command) => command.id),
+      registry.map((command) => command.id),
     );
-    expect(uniqueIds.size).toBe(SLASH_COMMAND_REGISTRY.length);
+    expect(uniqueIds.size).toBe(registry.length);
   });
 
   it("[SCN-S2-CMD-2] should filter by keyword and recover full list for empty query", () => {
-    expect(filterSlashCommands(SLASH_COMMAND_REGISTRY, "描写")).toEqual([
+    const registry = getSlashCommandRegistry();
+    expect(filterSlashCommands(registry, "描写")).toEqual([
       expect.objectContaining({ id: "describe" }),
     ]);
 
-    expect(filterSlashCommands(SLASH_COMMAND_REGISTRY, "  ")).toEqual(
-      SLASH_COMMAND_REGISTRY,
+    expect(filterSlashCommands(registry, "  ")).toEqual(
+      registry,
     );
   });
 

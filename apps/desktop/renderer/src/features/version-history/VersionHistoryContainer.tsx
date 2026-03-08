@@ -45,13 +45,13 @@ function mapActorToAuthorType(
 function getAuthorName(actor: "user" | "auto" | "ai"): string {
   switch (actor) {
     case "user":
-      return "You";
+      return i18n.t("versionHistory.container.author.you");
     case "ai":
-      return "AI";
+      return i18n.t("versionHistory.container.author.ai");
     case "auto":
-      return "Auto";
+      return i18n.t("versionHistory.container.author.auto");
     default:
-      return "Unknown";
+      return i18n.t("versionHistory.container.author.unknown");
   }
 }
 
@@ -67,10 +67,10 @@ export function formatTimestamp(
   const hours = Math.floor(diff / 3600000);
 
   if (minutes < 1) {
-    return "Just now";
+    return i18n.t("versionHistory.container.timeGroup.justNow");
   }
   if (minutes < 60) {
-    return `${minutes}m ago`;
+    return i18n.t("versionHistory.container.timeGroup.minutesAgo", { count: minutes });
   }
   if (hours < 24) {
     const date = new Date(createdAt);
@@ -101,12 +101,12 @@ function getTimeGroupLabel(createdAt: number): string {
     date.getFullYear() === yesterday.getFullYear();
 
   if (isToday) {
-    return "Today";
+    return "today";
   }
   if (isYesterday) {
-    return "Yesterday";
+    return "yesterday";
   }
-  return "Earlier";
+  return "earlier";
 }
 
 /**
@@ -167,14 +167,19 @@ function convertToTimeGroups(
     groupMap.set(label, existing);
   }
 
-  // Sort groups: Today first, then Yesterday, then Earlier
-  const order = ["Today", "Yesterday", "Earlier"];
+  // Sort groups: today first, then yesterday, then earlier
+  const order = ["today", "yesterday", "earlier"];
+  const labelTranslations: Record<string, string> = {
+    today: i18n.t("versionHistory.container.timeGroup.today"),
+    yesterday: i18n.t("versionHistory.container.timeGroup.yesterday"),
+    earlier: i18n.t("versionHistory.container.timeGroup.earlier"),
+  };
   const groups: TimeGroup[] = [];
 
   for (const label of order) {
     const versions = groupMap.get(label);
     if (versions && versions.length > 0) {
-      groups.push({ label, versions });
+      groups.push({ label: labelTranslations[label] ?? label, versions });
     }
   }
 
@@ -595,7 +600,7 @@ const {
   if (status === "loading") {
     return (
       <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-        Loading versions...
+        {t('versionHistory.container.loadingVersions')}
       </div>
     );
   }

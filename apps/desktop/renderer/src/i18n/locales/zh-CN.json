@@ -108,6 +108,8 @@
     }
   },
   "editor": {
+    "entitySuggestionsUnavailable": "实体建议不可用。",
+    "confirmSwitchToDraft": "此文档已定稿。编辑将使其切回草稿状态。是否继续？",
     "contextMenu": {
       "copy": "复制",
       "paste": "粘贴",
@@ -117,6 +119,7 @@
       "bold": "加粗",
       "italic": "斜体",
       "underline": "下划线",
+      "ai": "AI",
       "aiPolish": "润色",
       "aiRewrite": "改写"
     },
@@ -132,6 +135,32 @@
       "generating": "生成中...",
       "tooltip": "触发续写技能",
       "writing": "续写中..."
+    },
+    "slash": {
+      "continue": {
+        "label": "/续写",
+        "description": "基于当前光标附近上下文继续创作。"
+      },
+      "describe": {
+        "label": "/描写",
+        "description": "扩展场景细节与氛围描写。"
+      },
+      "dialogue": {
+        "label": "/对白",
+        "description": "生成角色间自然对话。"
+      },
+      "character": {
+        "label": "/角色",
+        "description": "补充角色设定与人物动机。"
+      },
+      "outline": {
+        "label": "/大纲",
+        "description": "整理章节结构与叙事节奏。"
+      },
+      "search": {
+        "label": "/搜索",
+        "description": "检索项目中的相关信息。"
+      }
     },
     "pane": {
       "charLimitReached": "文档已达到 1000000 字符上限，建议拆分文档后继续写作。",
@@ -771,7 +800,21 @@
       "useOurs": "我方",
       "useTheirs": "对方",
       "useManual": "手动",
-      "submitConflictResolution": "提交冲突解决"
+      "submitConflictResolution": "提交冲突解决",
+      "author": {
+        "you": "你",
+        "ai": "AI",
+        "auto": "自动",
+        "unknown": "未知"
+      },
+      "timeGroup": {
+        "justNow": "刚刚",
+        "minutesAgo": "{{count}}分钟前",
+        "today": "今天",
+        "yesterday": "昨天",
+        "earlier": "更早"
+      },
+      "loadingVersions": "加载版本中..."
     },
     "panel": {
       "closeAriaLabel": "关闭版本历史",
@@ -805,6 +848,10 @@
       "actorLabel": "操作者：",
       "timestampLabel": "时间戳：",
       "reasonLabel": "原因："
+    },
+    "compare": {
+      "noDifferencesFound": "未发现差异。",
+      "unknownError": "未知错误"
     }
   },
   "settings": {

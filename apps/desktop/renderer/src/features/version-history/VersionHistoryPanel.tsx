@@ -348,6 +348,7 @@ function HoverActions({
   onCompare?: (id: string) => void;
   onPreview?: (id: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       className={[
@@ -369,7 +370,7 @@ function HoverActions({
         "duration-[var(--duration-fast)]",
       ].join(" ")}
     >
-      <Tooltip content="Restore">
+      <Tooltip content={t("versionHistory.panel.restore")}>
         <button
           type="button"
           onClick={() => onRestore?.(versionId)}
@@ -378,7 +379,7 @@ function HoverActions({
           <RestoreIcon />
         </button>
       </Tooltip>
-      <Tooltip content="Compare">
+      <Tooltip content={t("versionHistory.panel.compare")}>
         <button
           type="button"
           onClick={() => onCompare?.(versionId)}
@@ -387,7 +388,7 @@ function HoverActions({
           <CompareIcon />
         </button>
       </Tooltip>
-      <Tooltip content="Preview">
+      <Tooltip content={t("versionHistory.panel.preview")}>
         <button
           type="button"
           onClick={() => onPreview?.(versionId)}
