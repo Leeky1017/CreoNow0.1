@@ -208,6 +208,45 @@ function validateSynopsisOutput(args: {
   return { ok: true, data: true };
 }
 
+function validateConstrainedSkillOutput(args: {
+  outputText: string;
+  output: SkillOutputConstraints;
+}): ServiceResult<true> {
+  const trimmed = args.outputText.trim();
+  const length = Array.from(trimmed).length;
+
+  if (
+    args.output.minChars !== undefined &&
+    length < args.output.minChars
+  ) {
+    return ipcError(
+      "INVALID_ARGUMENT",
+      `skill output must be at least ${args.output.minChars} chars`,
+      { minChars: args.output.minChars, actualChars: length },
+    );
+  }
+
+  if (
+    args.output.maxChars !== undefined &&
+    length > args.output.maxChars
+  ) {
+    return ipcError(
+      "INVALID_ARGUMENT",
+      `skill output must be at most ${args.output.maxChars} chars`,
+      { maxChars: args.output.maxChars, actualChars: length },
+    );
+  }
+
+  if (args.output.singleParagraph === true && /\n/.test(trimmed)) {
+    return ipcError(
+      "INVALID_ARGUMENT",
+      "skill output must be single paragraph",
+    );
+  }
+
+  return { ok: true, data: true };
+}
+
 function validateSkillAvailability(args: {
   skillId: string;
   resolved: ResolvedRunnableSkill;
@@ -315,13 +354,19 @@ function validateSkillRunOutput(args: {
   outputText?: string;
   output?: SkillOutputConstraints;
 }): ServiceResult<true> {
-  if (leafSkillId(args.skillId) !== "synopsis") {
-    return { ok: true, data: true };
-  }
   if (typeof args.outputText !== "string") {
     return { ok: true, data: true };
   }
-  return validateSynopsisOutput({
+  if (leafSkillId(args.skillId) === "synopsis") {
+    return validateSynopsisOutput({
+      outputText: args.outputText,
+      output: args.output,
+    });
+  }
+  if (!args.output) {
+    return { ok: true, data: true };
+  }
+  return validateConstrainedSkillOutput({
     outputText: args.outputText,
     output: args.output,
   });

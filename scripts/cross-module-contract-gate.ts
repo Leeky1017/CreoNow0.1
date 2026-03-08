@@ -81,6 +81,7 @@ const OUTPUT_VALIDATION_MARKERS = [
   /schema\.parse\s*\(/,
   /\.safeParse\s*\(/,
   /validate\w*Output\s*\(/i,
+  /validateSkillRunOutput\s*\(/,
 ];
 
 const KEY_FORMAT_MARKERS = [
@@ -89,6 +90,9 @@ const KEY_FORMAT_MARKERS = [
   /\.test\s*\(/,
   /RegExp\s*\(/,
   /\.length\s*>=\s*\d{2,}/,
+  /API_KEY_FORMAT/,
+  /hasRecognizedApiKeyFormat\s*\(/,
+  /normalizeApiKey\s*\(/,
 ];
 
 function uniqueSorted(values: Iterable<string>): string[] {
@@ -205,31 +209,28 @@ export function scanSkillOutputValidation(
     const functions = extractFunctionBlocks(source);
 
     for (const fn of functions) {
-      const isOutputHandler =
-        /\b(?:validate|handle|process|check)\w*(?:output|result)/i.test(
-          fn.name,
-        );
-      const hasOutputKeywords = /outputText|runSkill|skillResult/i.test(
-        fn.body,
-      );
+      const isRunSkillConsumer = /(?:\.|\b)runSkill\s*\(/.test(fn.body);
+      const isRuntimeOutputValidator = fn.name === "validateSkillRunOutput";
 
-      if (!isOutputHandler && !hasOutputKeywords) continue;
+      if (!isRunSkillConsumer && !isRuntimeOutputValidator) {
+        continue;
+      }
 
       const hasValidation = OUTPUT_VALIDATION_MARKERS.some((p) =>
         p.test(fn.body),
       );
-      const hasBypass = /return\s*\{\s*ok:\s*true[^}]*data:\s*true\s*\}/.test(
-        fn.body,
-      );
+      const hasSynopsisOnlyBypass =
+        /leafSkillId\(args\.skillId\)\s*!==\s*"synopsis"/.test(fn.body) &&
+        /return\s*\{\s*ok:\s*true[^}]*data:\s*true\s*\}/.test(fn.body);
 
-      if (!hasValidation || hasBypass) {
+      if (!hasValidation || hasSynopsisOnlyBypass) {
         violations.push({
           file: path.join(SKILL_SERVICES_DIR, file),
           line: fn.startLine,
           functionName: fn.name,
-          description: hasBypass
+          description: hasSynopsisOnlyBypass
             ? `"${fn.name}" bypasses output validation for some skill paths`
-            : `"${fn.name}" handles skill output without schema validation`,
+            : `"${fn.name}" consumes runSkill result without output validation`,
         });
       }
     }
@@ -257,7 +258,10 @@ export function scanApiKeyFormatValidation(
         /\b(?:normalize|validate|check)\w*(?:key|api)/i.test(fn.name);
       if (!isKeyHandler) continue;
 
-      const hasFormatCheck = KEY_FORMAT_MARKERS.some((p) => p.test(fn.body));
+      const bodyWithoutSignature = fn.body.split("\n").slice(1).join("\n");
+      const hasFormatCheck = KEY_FORMAT_MARKERS.some((p) =>
+        p.test(bodyWithoutSignature),
+      );
       if (!hasFormatCheck) {
         violations.push({
           file: path.join(AI_SERVICES_DIR, file),

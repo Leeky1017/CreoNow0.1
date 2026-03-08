@@ -42,12 +42,12 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-1, AC-2
 
-- [ ] 测试：构造包含 `schema.parse(args)` 的 handler 代码片段 → gate 判定为已验证
-- [ ] 测试：构造直接 destructure 参数无验证的 handler 代码片段 → gate 判定为未验证
-- [ ] 测试：构造自定义 `validateArgs()` 函数调用的 handler → gate 判定为已验证
-- [ ] 测试：违规数 ≤ 基线 → PASS
-- [ ] 测试：违规数 > 基线 → FAIL，输出新增违规列表
-- [ ] 测试：gate 输出格式为 `[IPC_VALIDATION_GATE] PASS/FAIL` + 详细列表
+- [x] 测试：构造包含 `schema.parse(args)` 的 handler 代码片段 → gate 判定为已验证
+- [x] 测试：构造直接 destructure 参数无验证的 handler 代码片段 → gate 判定为未验证
+- [x] 测试：构造自定义 `validateArgs()` 函数调用的 handler → gate 判定为已验证
+- [x] 测试：违规数 ≤ 基线 → PASS
+- [x] 测试：违规数 > 基线 → FAIL，输出新增违规列表
+- [x] 测试：gate 输出格式为 `[IPC_VALIDATION_GATE] PASS/FAIL` + 详细列表
 
 **文件**: `scripts/tests/ipc-handler-validation-gate.test.ts`（新建）
 
@@ -55,15 +55,15 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-3, AC-4
 
-- [ ] 测试：正常方法（含业务逻辑）→ 不检出
-- [ ] 测试：`return []` 方法 → 检出
-- [ ] 测试：`return {}` 方法 → 检出
-- [ ] 测试：`// TODO: implement` 方法 → 检出
-- [ ] 测试：`throw new Error('not implemented')` 方法 → 检出
-- [ ] 测试：空方法体 → 检出
-- [ ] 测试：private 方法 → 不检出（仅检查 public）
-- [ ] 测试：违规数 ≤ 基线 → PASS
-- [ ] 测试：违规数 > 基线 → FAIL
+- [x] 测试：正常方法（含业务逻辑）→ 不检出
+- [x] 测试：`return []` 方法 → 检出
+- [x] 测试：`return {}` 方法 → 检出
+- [x] 测试：`// TODO: implement` 方法 → 检出
+- [x] 测试：`throw new Error('not implemented')` 方法 → 检出
+- [x] 测试：空方法体 → 检出
+- [x] 测试：private 方法 → 不检出（仅检查 public）
+- [x] 测试：违规数 ≤ 基线 → PASS
+- [x] 测试：违规数 > 基线 → FAIL
 
 **文件**: `scripts/tests/service-stub-detector-gate.test.ts`（新建）
 
@@ -88,22 +88,22 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-1, AC-2, AC-5
 
-- [ ] 创建 `scripts/ipc-handler-validation-gate.ts`
-- [ ] 使用 TypeScript AST（ts-morph 或 TypeScript Compiler API）解析 `main/src/ipc/*.ts`
-- [ ] 遍历所有 handler 注册调用，提取 handler 函数体
-- [ ] 检查函数体是否包含 schema/validate 相关调用
-- [ ] 实现 baseline 读写逻辑（`openspec/guards/ipc-validation-baseline.json`）
-- [ ] 输出格式对齐现有 gate（`[IPC_VALIDATION_GATE] PASS/FAIL`）
+- [x] 创建 `scripts/ipc-handler-validation-gate.ts`
+- [x] 使用 TypeScript AST（ts-morph 或 TypeScript Compiler API）解析 `main/src/ipc/*.ts`
+- [x] 遍历所有 handler 注册调用，提取 handler 函数体
+- [x] 检查函数体是否包含 schema/validate 相关调用
+- [x] 实现 baseline 读写逻辑（`openspec/guards/ipc-validation-baseline.json`）
+- [x] 输出格式对齐现有 gate（`[IPC_VALIDATION_GATE] PASS/FAIL`）
 
 ### Task 2.2: 实现 `service-stub-detector-gate.ts`
 
 **映射验收标准**: AC-3, AC-4, AC-6
 
-- [ ] 创建 `scripts/service-stub-detector-gate.ts`
-- [ ] 使用 AST 解析 `main/src/services/**/*.ts` 中的 class 声明
-- [ ] 遍历 public 方法，检查方法体是否匹配桩模式
-- [ ] 实现 baseline 读写逻辑（`openspec/guards/service-stubs-baseline.json`）
-- [ ] 输出格式对齐现有 gate
+- [x] 创建 `scripts/service-stub-detector-gate.ts`
+- [x] 使用 AST 解析 `main/src/services/**/*.ts` 中的 class 声明
+- [x] 遍历 public 方法，检查方法体是否匹配桩模式
+- [x] 实现 baseline 读写逻辑（`openspec/guards/service-stubs-baseline.json`）
+- [x] 输出格式对齐现有 gate
 
 ### Task 2.3: 扩展 `cross-module-contract-gate`
 
@@ -120,19 +120,19 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-7
 
-- [ ] `package.json` 新增 `gate:ipc-validation` 和 `gate:service-stubs` 脚本
-- [ ] `ci.yml` 新增 `ipc-handler-validation` job（条件 `if code_changed`）
-- [ ] `ci.yml` 新增 `service-stub-detection` job（条件 `if code_changed`）
-- [ ] `cross-module-contract-gate` 扩展维度纳入现有 CI job（无需新增 job）
-- [ ] 三个 gate 均纳入 `ci` meta-job 的 needs 列表
+- [x] `package.json` 新增 `gate:ipc-validation` 和 `gate:service-stubs` 脚本
+- [x] `ci.yml` 新增 `ipc-handler-validation` job（条件 `if code_changed`）
+- [x] `ci.yml` 新增 `service-stub-detection` job（条件 `if code_changed`）
+- [x] `cross-module-contract-gate` 扩展维度纳入现有 CI job（无需新增 job）
+- [x] 三个 gate 均纳入 `ci` meta-job 的 needs 列表
 
 ### Task 2.5: 生成初始 Baseline
 
 **映射验收标准**: AC-8
 
-- [ ] 运行 `pnpm gate:ipc-validation --update-baseline` 生成初始 baseline（`openspec/guards/ipc-validation-baseline.json`）
-- [ ] 运行 `pnpm gate:service-stubs --update-baseline` 生成初始 baseline（`openspec/guards/service-stubs-baseline.json`）
-- [ ] 提交 baseline 文件
+- [x] 运行 `pnpm gate:ipc-validation --update-baseline` 生成初始 baseline（`openspec/guards/ipc-validation-baseline.json`）
+- [x] 运行 `pnpm gate:service-stubs --update-baseline` 生成初始 baseline（`openspec/guards/service-stubs-baseline.json`）
+- [x] 提交 baseline 文件
 
 ---
 

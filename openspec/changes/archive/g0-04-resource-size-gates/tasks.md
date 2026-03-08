@@ -39,11 +39,11 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-1, AC-2
 
-- [ ] 测试：构造含 `Buffer.byteLength` 检查的写入代码 → 不检出
-- [ ] 测试：构造直接 `fs.writeFile` 无大小检查的代码 → 检出
-- [ ] 测试：构造 DB INSERT with content 但无大小检查 → 检出
-- [ ] 测试：违规数 ≤ 基线 → PASS
-- [ ] 测试：违规数 > 基线 → FAIL
+- [x] 测试：构造含 `Buffer.byteLength` 检查的写入代码 → 不检出
+- [x] 测试：构造直接 `fs.writeFile` 无大小检查的代码 → 检出
+- [x] 测试：构造 DB INSERT with content 但无大小检查 → 检出
+- [x] 测试：违规数 ≤ 基线 → PASS
+- [x] 测试：违规数 > 基线 → FAIL
 
 **文件**: `scripts/tests/resource-size-gate.test.ts`（新建）
 
@@ -51,10 +51,10 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-3, AC-4
 
-- [ ] 测试：构造 mock build output 目录，总大小在预算内 → PASS
-- [ ] 测试：构造 mock build output 目录，总大小超预算 → FAIL
-- [ ] 测试：--update-baseline 模式更新 baseline 文件
-- [ ] 测试：输出包含各 chunk 大小变化明细
+- [x] 测试：构造 mock build output 目录，总大小在预算内 → PASS
+- [x] 测试：构造 mock build output 目录，总大小超预算 → FAIL
+- [x] 测试：--update-baseline 模式更新 baseline 文件
+- [x] 测试：输出包含各 chunk 大小变化明细
 
 **文件**: `scripts/tests/bundle-size-budget.test.ts`（新建）
 
@@ -64,31 +64,31 @@ W0-GATE: 门禁基础设施
 
 ### Task 2.1: 实现 `resource-size-gate.ts`
 
-- [ ] 创建 `scripts/resource-size-gate.ts`
-- [ ] AST 扫描文件写入调用（`fs.writeFile`, `fs.writeFileSync`, `db.run` with INSERT/UPDATE）
-- [ ] 检查调用前上下文中是否有大小检查逻辑
-- [ ] 实现 baseline 读写（`openspec/guards/resource-size-baseline.json`）
+- [x] 创建 `scripts/resource-size-gate.ts`
+- [x] AST 扫描文件写入调用（`fs.writeFile`, `fs.writeFileSync`, `db.run` with INSERT/UPDATE）
+- [x] 检查调用前上下文中是否有大小检查逻辑
+- [x] 实现 baseline 读写（`openspec/guards/resource-size-baseline.json`）
 
 ### Task 2.2: 实现 `bundle-size-budget.ts`
 
-- [ ] 创建 `scripts/bundle-size-budget.ts`
-- [ ] 读取 build output 目录（`apps/desktop/dist/`），统计各 `.js` / `.mjs` / `.cjs` 文件大小
-- [ ] 对比 baseline，计算差异百分比
-- [ ] 实现 baseline 读写（`openspec/guards/bundle-size-baseline.json`）
+- [x] 创建 `scripts/bundle-size-budget.ts`
+- [x] 读取 build output 目录（`apps/desktop/dist/`），统计各 `.js` / `.mjs` / `.cjs` 文件大小
+- [x] 对比 baseline，计算差异百分比
+- [x] 实现 baseline 读写（`openspec/guards/bundle-size-baseline.json`）
 
 ### Task 2.3: CI 集成
 
-- [ ] `package.json` 新增命令
-- [ ] `ci.yml` 新增 job（resource-size 在 code_changed 时运行，bundle-budget 在 PR + desktop_changed 时运行，先生成真实 build 产物再执行 gate）
-- [ ] 纳入 ci meta-job
-- [ ] **当前模式说明**：bundle-budget job 已升级为 required gate；CI 需先执行 `pnpm -C apps/desktop build` 生成真实桌面构建产物，再运行 `pnpm gate:bundle-budget`。当构建产物缺失时，gate 必须直接 FAIL，不得回退为 `0B / 0B PASS`。
+- [x] `package.json` 新增命令
+- [x] `ci.yml` 新增 job（resource-size 在 code_changed 时运行，bundle-budget 在 PR + desktop_changed 时运行，先生成真实 build 产物再执行 gate）
+- [x] 纳入 ci meta-job
+- [x] **当前模式说明**：bundle-budget job 已升级为 required gate；CI 需先执行 `pnpm -C apps/desktop build` 生成真实桌面构建产物，再运行 `pnpm gate:bundle-budget`。当构建产物缺失时，gate 必须直接 FAIL，不得回退为 `0B / 0B PASS`。
 
 ---
 
 ## Phase 3: Refactor（收口）
 
-- [ ] 更新 `scripts/README.md`
-- [ ] 更新 `docs/references/toolchain.md`
+- [x] 更新 `scripts/README.md`
+- [x] 更新 `docs/references/toolchain.md`
 
 ---
 

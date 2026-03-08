@@ -27,8 +27,9 @@ import {
   writeFileSync(
     path.join(skillDir, "executor.ts"),
     `
-function validateSkillRunOutput(args: { skillId: string; outputText?: string }) {
-  const validated = outputSchema.parse(args.outputText);
+async function execute(deps: { runSkill: (args: unknown) => Promise<{ data: { outputText: string } }> }) {
+  const run = await deps.runSkill({});
+  const validated = outputSchema.parse(run.data.outputText);
   return { ok: true, data: validated };
 }
     `,
@@ -57,8 +58,9 @@ function validateSkillRunOutput(args: { skillId: string; outputText?: string }) 
   writeFileSync(
     path.join(skillDir, "executor.ts"),
     `
-function handleSkillResult(outputText: string) {
-  return { ok: true, data: outputText };
+async function execute(deps: { runSkill: (args: unknown) => Promise<{ data: { outputText: string } }> }) {
+  const run = await deps.runSkill({});
+  return { ok: true, data: run.data.outputText };
 }
     `,
   );
@@ -69,7 +71,7 @@ function handleSkillResult(outputText: string) {
     "Handler without schema validation should be flagged",
   );
   assert.ok(
-    violations[0].functionName === "handleSkillResult",
+    violations[0].functionName === "execute",
     "Should report the correct function name",
   );
 }

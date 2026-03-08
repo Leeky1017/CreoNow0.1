@@ -41,13 +41,13 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-1, AC-2
 
-- [ ] 测试：`className="h-[600px]"` 触发违规
-- [ ] 测试：`className="w-[400px]"` 触发违规
-- [ ] 测试：`className="min-h-[800px]"` 触发违规
-- [ ] 测试：`className="h-[16px]"` 不触发（≤48px 豁免）
-- [ ] 测试：`className="h-full"` 不触发
-- [ ] 测试：`className="max-w-prose"` 不触发
-- [ ] 测试：`className="h-[50vh]"` 不触发（非 px）
+- [x] 测试：`className="h-[600px]"` 触发违规
+- [x] 测试：`className="w-[400px]"` 触发违规
+- [x] 测试：`className="min-h-[800px]"` 触发违规
+- [x] 测试：`className="h-[16px]"` 不触发（≤48px 豁免）
+- [x] 测试：`className="h-full"` 不触发
+- [x] 测试：`className="max-w-prose"` 不触发
+- [x] 测试：`className="h-[50vh]"` 不触发（非 px）
 
 **文件**: `scripts/eslint-rules/__tests__/no-hardcoded-dimension.test.cjs`（新建）
 
@@ -55,10 +55,10 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-3, AC-4
 
-- [ ] 测试：构造含 ErrorBoundary 包裹的路由组件 → gate 判定为覆盖
-- [ ] 测试：构造无 ErrorBoundary 的路由组件 → gate 判定为未覆盖
-- [ ] 测试：违规数 ≤ 基线 → PASS
-- [ ] 测试：违规数 > 基线 → FAIL
+- [x] 测试：构造含 ErrorBoundary 包裹的路由组件 → gate 判定为覆盖
+- [x] 测试：构造无 ErrorBoundary 的路由组件 → gate 判定为未覆盖
+- [x] 测试：违规数 ≤ 基线 → PASS
+- [x] 测试：违规数 > 基线 → FAIL
 
 **文件**: `scripts/tests/error-boundary-coverage-gate.test.ts`（新建）
 
@@ -66,14 +66,14 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-5, AC-6, AC-7, AC-8
 
-- [ ] 测试：Provider 嵌套 13 层 + 阈值 10 → 报警
-- [ ] 测试：Provider 嵌套 8 层 + 阈值 10 → 不报警
-- [ ] 测试：650 行文件 + 阈值 500 → 超限报告
-- [ ] 测试：300 行文件 + 阈值 500 → 不报告
-- [ ] 测试：有 aria-live 的组件 → 不在缺失列表
-- [ ] 测试：无 aria-live 的动态组件 → 在缺失列表
-- [ ] 测试：各维度 ≤ 基线 → PASS
-- [ ] 测试：任一维度 > 基线 → FAIL
+- [x] 测试：Provider 嵌套 13 层 + 阈值 10 → 报警
+- [x] 测试：Provider 嵌套 8 层 + 阈值 10 → 不报警
+- [x] 测试：650 行文件 + 阈值 500 → 超限报告
+- [x] 测试：300 行文件 + 阈值 500 → 不报告
+- [x] 测试：有 aria-live 的组件 → 不在缺失列表
+- [x] 测试：无 aria-live 的动态组件 → 在缺失列表
+- [x] 测试：各维度 ≤ 基线 → PASS
+- [x] 测试：任一维度 > 基线 → FAIL
 
 **文件**: `scripts/tests/architecture-health-gate.test.ts`（新建）
 
@@ -83,40 +83,40 @@ W0-GATE: 门禁基础设施
 
 ### Task 2.1: 实现 `no-hardcoded-dimension` 规则
 
-- [ ] 创建 `scripts/eslint-rules/no-hardcoded-dimension.cjs`
-- [ ] 正则匹配：`(h|w|min-h|min-w|max-h|max-w)-\[(\d+)px\]`，检查数值 > 48
-- [ ] Literal + TemplateLiteral visitor
-- [ ] 在 `index.cjs` 中注册，`.eslintrc.cjs` 中启用 `warn`
+- [x] 创建 `scripts/eslint-rules/no-hardcoded-dimension.cjs`
+- [x] 正则匹配：`(h|w|min-h|min-w|max-h|max-w)-\[(\d+)px\]`，检查数值 > 48
+- [x] Literal + TemplateLiteral visitor
+- [x] 在 `index.cjs` 中注册，`.eslintrc.cjs` 中启用 `warn`
 
 ### Task 2.2: 实现 `error-boundary-coverage-gate.ts`
 
-- [ ] 创建 `scripts/error-boundary-coverage-gate.ts`
-- [ ] 解析路由配置（查找 `createBrowserRouter` / `<Route>` / routes 数组）
-- [ ] 检查每个路由的 element/component 祖先链中是否有 ErrorBoundary
-- [ ] 实现 baseline 读写（`openspec/guards/error-boundary-baseline.json`）
+- [x] 创建 `scripts/error-boundary-coverage-gate.ts`
+- [x] 解析路由配置（查找 `createBrowserRouter` / `<Route>` / routes 数组）
+- [x] 检查每个路由的 element/component 祖先链中是否有 ErrorBoundary
+- [x] 实现 baseline 读写（`openspec/guards/error-boundary-baseline.json`）
 
 ### Task 2.3: 实现 `architecture-health-gate.ts`
 
-- [ ] 创建 `scripts/architecture-health-gate.ts`
-- [ ] Provider 嵌套检测：解析 `App.tsx` 或入口组件的 JSX 树，计算 Provider 组件嵌套深度，超过阈值（默认 10 层）报警
-- [ ] 文件行数检测：遍历 `renderer/src/**/*.{ts,tsx}`（排除 `*.test.*`/`*.stories.*`/`*.spec.*`），报告超过 500 行的文件
-- [ ] ARIA-live 检测策略：
+- [x] 创建 `scripts/architecture-health-gate.ts`
+- [x] Provider 嵌套检测：解析 `App.tsx` 或入口组件的 JSX 树，计算 Provider 组件嵌套深度，超过阈值（默认 10 层）报警
+- [x] 文件行数检测：遍历 `renderer/src/**/*.{ts,tsx}`（排除 `*.test.*`/`*.stories.*`/`*.spec.*`），报告超过 500 行的文件
+- [x] ARIA-live 检测策略：
   - 定义动态内容组件清单（硬编码初始列表）：`Toast`, `Alert`, `StatusBar`, `Notification`, `ProgressBar`, `SnackBar`
   - 启发式补充：扫描 `renderer/src/components/` 下含 `useState`/`useEffect` + `set*` 动态更新且渲染用户可见文本的组件
   - 对清单内组件检查是否包含 `aria-live` 属性
   - 输出：缺失 ARIA-live 的组件列表与建议值（`polite` / `assertive`）
-- [ ] 实现 baseline 读写（`openspec/guards/architecture-health-baseline.json`）
+- [x] 实现 baseline 读写（`openspec/guards/architecture-health-baseline.json`）
 
 ### Task 2.4: CI 集成
 
-- [ ] `package.json` 新增 `gate:error-boundary` 和 `gate:architecture-health` 脚本
-- [ ] `ci.yml` 新增 job
-- [ ] 纳入 ci meta-job
+- [x] `package.json` 新增 `gate:error-boundary` 和 `gate:architecture-health` 脚本
+- [x] `ci.yml` 新增 job
+- [x] 纳入 ci meta-job
 
 ### Task 2.5: 生成初始 Baseline
 
-- [ ] 运行 gate 生成初始 baseline（`openspec/guards/error-boundary-baseline.json`、`openspec/guards/architecture-health-baseline.json`）
-- [ ] 提交 baseline 文件
+- [x] 运行 gate 生成初始 baseline（`openspec/guards/error-boundary-baseline.json`、`openspec/guards/architecture-health-baseline.json`）
+- [x] 提交 baseline 文件
 
 ---
 
@@ -124,8 +124,8 @@ W0-GATE: 门禁基础设施
 
 ### Task 3.1: 文档更新
 
-- [ ] 更新 `scripts/README.md`
-- [ ] 更新 `docs/references/coding-standards.md`
+- [x] 更新 `scripts/README.md`
+- [x] 更新 `docs/references/coding-standards.md`
 
 ---
 

@@ -44,10 +44,10 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-1
 
-- [ ] 测试：构造含 `### Scenario S-TEST-01:` 标题的 spec.md → 提取出 `S-TEST-01`
-- [ ] 测试：构造含多个 Scenario 的 spec.md → 全部提取
-- [ ] 测试：构造无 Scenario 的 spec.md → 返回空列表
-- [ ] 测试：Scenario ID 支持 `S-XXX-NN` 格式
+- [x] 测试：构造含 `### Scenario S-TEST-01:` 标题的 spec.md → 提取出 `S-TEST-01`
+- [x] 测试：构造含多个 Scenario 的 spec.md → 全部提取
+- [x] 测试：构造无 Scenario 的 spec.md → 返回空列表
+- [x] 测试：Scenario ID 支持 `S-XXX-NN` 格式
 
 **文件**: `scripts/tests/spec-test-mapping-gate.test.ts`（新建）
 
@@ -55,10 +55,10 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-2
 
-- [ ] 测试：测试文件含 `// Scenario: S-TEST-01` 注释 → 映射成功
-- [ ] 测试：测试文件 describe 名含 `S-TEST-01` → 映射成功
-- [ ] 测试：测试文件不含任何 Scenario 引用 → 对应 Scenario 未映射
-- [ ] 测试：一个测试文件映射多个 Scenario → 全部成功
+- [x] 测试：测试文件含 `// Scenario: S-TEST-01` 注释 → 映射成功
+- [x] 测试：测试文件 describe 名含 `S-TEST-01` → 映射成功
+- [x] 测试：测试文件不含任何 Scenario 引用 → 对应 Scenario 未映射
+- [x] 测试：一个测试文件映射多个 Scenario → 全部成功
 
 **文件**: `scripts/tests/spec-test-mapping-gate.test.ts`
 
@@ -66,9 +66,9 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-4
 
-- [ ] 测试：未映射数 ≤ 基线 → PASS
-- [ ] 测试：未映射数 > 基线 → FAIL，输出新增未映射列表
-- [ ] 测试：--update-baseline 模式更新 baseline
+- [x] 测试：未映射数 ≤ 基线 → PASS
+- [x] 测试：未映射数 > 基线 → FAIL，输出新增未映射列表
+- [x] 测试：--update-baseline 模式更新 baseline
 
 **文件**: `scripts/tests/spec-test-mapping-gate.test.ts`
 
@@ -76,12 +76,12 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-10, AC-11
 
-- [ ] 测试：Scenario 标题含 `should NOT render editable` → 自动归类为 negation 维度
-- [ ] 测试：Scenario 标签含 `@capability` → 归类为 capability 维度
-- [ ] 测试：Scenario 标题含 `CJK` 或 `中文` → 归类为 cjk 维度
-- [ ] 测试：Scenario 描述含 `拒绝` 或 `reject` → 归类为 rejection 维度
-- [ ] 测试：无标签且无关键词的 Scenario → 归类为 general，不计入 Tier 2 维度统计
-- [ ] 测试：输出包含 Tier 2 维度汇总（各类的 mapped/total/百分比）
+- [x] 测试：Scenario 标题含 `should NOT render editable` → 自动归类为 negation 维度
+- [x] 测试：Scenario 标签含 `@capability` → 归类为 capability 维度
+- [x] 测试：Scenario 标题含 `CJK` 或 `中文` → 归类为 cjk 维度
+- [x] 测试：Scenario 描述含 `拒绝` 或 `reject` → 归类为 rejection 维度
+- [x] 测试：无标签且无关键词的 Scenario → 归类为 general，不计入 Tier 2 维度统计
+- [x] 测试：输出包含 Tier 2 维度汇总（各类的 mapped/total/百分比）
 
 **文件**: `scripts/tests/spec-test-mapping-gate.test.ts`
 
@@ -91,46 +91,46 @@ W0-GATE: 门禁基础设施
 
 ### Task 2.1: 实现 `spec-test-mapping-gate.ts`
 
-- [ ] 创建 `scripts/spec-test-mapping-gate.ts`
-- [ ] 解析器：读取 `*.spec.md` 文件，正则提取 `### Scenario (S-[A-Z]+-\d+)` 格式的 ID
-- [ ] **标签解析**：提取 Scenario 标题/描述中的 `@negation`、`@capability`、`@cjk`、`@rejection` 标签；若无显式标签，根据关键词启发匹配（`should NOT` → negation，`声称支持`/`capability` → capability，`中文`/`CJK` → cjk，`拒绝`/`reject`/`deny` → rejection）
-- [ ] 搜索器：在 `**/*.test.{ts,tsx}` 和 `**/*.spec.{ts,tsx}` 中搜索 Scenario ID 引用
-- [ ] 匹配器：构建 Scenario → 测试文件 映射表
-- [ ] 报告器：输出未映射列表 + 覆盖率
-- [ ] **Tier 2 维度报告**：按 negation / capability / cjk / rejection 分类输出各维度的覆盖率，格式 `[SPEC_TEST_MAP] Tier-2 summary: negation: C/T (XX%)`
-- [ ] 实现 baseline 读写（`openspec/guards/spec-test-mapping-baseline.json`）
+- [x] 创建 `scripts/spec-test-mapping-gate.ts`
+- [x] 解析器：读取 `*.spec.md` 文件，正则提取 `### Scenario (S-[A-Z]+-\d+)` 格式的 ID
+- [x] **标签解析**：提取 Scenario 标题/描述中的 `@negation`、`@capability`、`@cjk`、`@rejection` 标签；若无显式标签，根据关键词启发匹配（`should NOT` → negation，`声称支持`/`capability` → capability，`中文`/`CJK` → cjk，`拒绝`/`reject`/`deny` → rejection）
+- [x] 搜索器：在 `**/*.test.{ts,tsx}` 和 `**/*.spec.{ts,tsx}` 中搜索 Scenario ID 引用
+- [x] 匹配器：构建 Scenario → 测试文件 映射表
+- [x] 报告器：输出未映射列表 + 覆盖率
+- [x] **Tier 2 维度报告**：按 negation / capability / cjk / rejection 分类输出各维度的覆盖率，格式 `[SPEC_TEST_MAP] Tier-2 summary: negation: C/T (XX%)`
+- [x] 实现 baseline 读写（`openspec/guards/spec-test-mapping-baseline.json`）
 
 ### Task 2.2: 文档更新——否定测试约定
 
-- [ ] 在 `docs/references/testing/README.md` 增加"否定测试（Negative Testing）"章节：
+- [x] 在 `docs/references/testing/README.md` 增加"否定测试（Negative Testing）"章节：
   - 假 UI / 未实现功能必须有 `describe('should NOT ...')` 块
   - 能力声明必须有真实性验证测试
   - 异步操作拒绝路径必须有测试覆盖
 
 ### Task 2.3: 文档更新——Guard 测试质量约定
 
-- [ ] 在 `docs/references/testing/README.md` 增加"Guard 测试要求"章节：
+- [x] 在 `docs/references/testing/README.md` 增加"Guard 测试要求"章节：
   - 每个 gate 测试必须有 PASS + FAIL fixture
   - FAIL fixture 必须验证 gate 能正确检出违规
   - CJK / 多语言场景作为推荐测试维度
 
 ### Task 2.4: CI 集成
 
-- [ ] `package.json` 新增 `gate:spec-test-mapping` 脚本
-- [ ] `ci.yml` 新增 `spec-test-mapping` job（条件：if docs_only ≠ true）
-- [ ] 纳入 ci meta-job
+- [x] `package.json` 新增 `gate:spec-test-mapping` 脚本
+- [x] `ci.yml` 新增 `spec-test-mapping` job（条件：if docs_only ≠ true）
+- [x] 纳入 ci meta-job
 
 ### Task 2.5: 生成初始 Baseline
 
-- [ ] 运行 gate 生成初始 baseline
-- [ ] 提交 baseline
+- [x] 运行 gate 生成初始 baseline
+- [x] 提交 baseline
 
 ---
 
 ## Phase 3: Refactor（收口）
 
-- [ ] 更新 `scripts/README.md`
-- [ ] 更新 `docs/references/toolchain.md`
+- [x] 更新 `scripts/README.md`
+- [x] 更新 `docs/references/toolchain.md`
 
 ---
 

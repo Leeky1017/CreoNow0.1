@@ -33,9 +33,9 @@
   ],
   "desiredEnvelope": "ok",
   "skillOutputValidation": {
-    "approvedUnvalidatedCount": 1
+    "approvedUnvalidatedCount": 0
   },
   "apiKeyFormatValidation": {
-    "approvedWeakCount": 1
+    "approvedWeakCount": 0
   }
 }
