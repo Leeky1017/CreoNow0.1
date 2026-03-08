@@ -59,6 +59,16 @@
 | `agent_github_delivery.py`        | GitHub 能力探测、PR/评论模板、gh/MCP 通道选择 |
 | `ipc-acceptance-gate.ts`         | IPC 契约验收门禁                           |
 | `contract-generate.ts`           | IPC 契约代码生成                           |
+| `cross-module-contract-gate.ts`  | cross-module 契约对齐门禁（含 skill-output / api-key-format 维度）|
+| `cross-module-contract-autofix.ts` | cross-module 失败分类与安全自动修复      |
+| `resource-size-gate.ts`          | 资源文件大小 baseline ratchet 门禁         |
+| `bundle-size-budget.ts`          | 构建产物体积预算门禁                       |
+| `ipc-handler-validation-gate.ts` | IPC handler schema 校验覆盖门禁            |
+| `service-stub-detector-gate.ts`  | Service 桩方法检测门禁                     |
+| `error-boundary-coverage-gate.ts`| ErrorBoundary 覆盖门禁                     |
+| `architecture-health-gate.ts`    | 架构健康度门禁                             |
+| `spec-test-mapping-gate.ts`      | Spec Scenario→测试映射门禁                 |
+| `lint-ratchet.ts`                | ESLint warning budget ratchet              |
 
 脚本约定：
 

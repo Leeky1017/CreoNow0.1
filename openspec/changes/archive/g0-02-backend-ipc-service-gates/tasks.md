@@ -71,12 +71,12 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-9, AC-10
 
-- [ ] 测试：Skill handler 函数在调用 LLM 后使用 `outputSchema.parse(result)` → 不检出
-- [ ] 测试：Skill handler 直接 `return llmResult` 无 schema 校验 → 检出
-- [ ] 测试：API Key 配置校验函数包含长度/前缀检查 → 不检出
-- [ ] 测试：API Key 配置仅 `if (!key)` 非空检查 → 检出
-- [ ] 测试：扩展维度违规数 ≤ 基线 → PASS
-- [ ] 测试：扩展维度违规数 > 基线 → FAIL
+- [x] 测试：Skill handler 函数在调用 LLM 后使用 `outputSchema.parse(result)` → 不检出
+- [x] 测试：Skill handler 直接 `return llmResult` 无 schema 校验 → 检出
+- [x] 测试：API Key 配置校验函数包含长度/前缀检查 → 不检出
+- [x] 测试：API Key 配置仅 `if (!key)` 非空检查 → 检出
+- [x] 测试：扩展维度违规数 ≤ 基线 → PASS
+- [x] 测试：扩展维度违规数 > 基线 → FAIL
 
 **文件**: `scripts/tests/cross-module-contract-gate.test.ts`（已有文件，补充测试）
 
@@ -109,12 +109,12 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-9, AC-10
 
-- [ ] 在 `scripts/cross-module-contract-gate.ts` 中新增 `skill-output-validation` 检查维度
-- [ ] 扫描 `main/src/ipc/` 和 `main/src/services/` 中的 Skill handler 函数
-- [ ] 检查 LLM 返回结果（如 `response`, `result`, `completion`）后是否经过 schema/validate 校验
-- [ ] 新增 `api-key-format-validation` 检查维度
-- [ ] 扫描 API Key 配置/校验函数，检查是否包含格式检查（长度/前缀/正则）而非仅 `if (!key)`
-- [ ] 扩展维度纳入现有 baseline ratchet 机制
+- [x] 在 `scripts/cross-module-contract-gate.ts` 中新增 `skill-output-validation` 检查维度
+- [x] 扫描 `main/src/ipc/` 和 `main/src/services/` 中的 Skill handler 函数
+- [x] 检查 LLM 返回结果（如 `response`, `result`, `completion`）后是否经过 schema/validate 校验
+- [x] 新增 `api-key-format-validation` 检查维度
+- [x] 扫描 API Key 配置/校验函数，检查是否包含格式检查（长度/前缀/正则）而非仅 `if (!key)`
+- [x] 扩展维度纳入现有 baseline ratchet 机制
 
 ### Task 2.4: CI 集成
 
@@ -140,8 +140,8 @@ W0-GATE: 门禁基础设施
 
 ### Task 3.1: 文档更新
 
-- [ ] 更新 `scripts/README.md` 记录新 gate
-- [ ] 更新 `docs/references/toolchain.md` 记录新 CI job
+- [x] 更新 `scripts/README.md` 记录新 gate
+- [x] 更新 `docs/references/toolchain.md` 记录新 CI job
 
 ---
 

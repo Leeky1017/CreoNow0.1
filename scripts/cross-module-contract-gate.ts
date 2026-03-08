@@ -1,8 +1,15 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export type ContractEnvelope = "ok" | "success" | "unknown";
+
+export type SourceScanViolation = {
+  file: string;
+  line: number;
+  functionName: string;
+  description: string;
+};
 
 export type CrossModuleContractBaseline = {
   version: string;
@@ -17,12 +24,20 @@ export type CrossModuleContractBaseline = {
     actual: Exclude<ContractEnvelope, "unknown">;
     reason: string;
   };
+  skillOutputValidation?: {
+    approvedUnvalidatedCount: number;
+  };
+  apiKeyFormatValidation?: {
+    approvedWeakCount: number;
+  };
 };
 
 export type CrossModuleContractActual = {
   channels: string[];
   errorCodes: string[];
   envelope: ContractEnvelope;
+  skillOutputViolations?: SourceScanViolation[];
+  apiKeyFormatViolations?: SourceScanViolation[];
 };
 
 export type CrossModuleContractGateResult = {
@@ -43,6 +58,38 @@ const BASELINE_PATH = path.join(
   "guards",
   "cross-module-contract-baseline.json",
 );
+
+const SKILL_SERVICES_DIR = path.join(
+  "apps",
+  "desktop",
+  "main",
+  "src",
+  "services",
+  "skills",
+);
+const AI_SERVICES_DIR = path.join(
+  "apps",
+  "desktop",
+  "main",
+  "src",
+  "services",
+  "ai",
+);
+
+const OUTPUT_VALIDATION_MARKERS = [
+  /outputSchema\.parse\s*\(/,
+  /schema\.parse\s*\(/,
+  /\.safeParse\s*\(/,
+  /validate\w*Output\s*\(/i,
+];
+
+const KEY_FORMAT_MARKERS = [
+  /\.startsWith\s*\(/,
+  /\.match\s*\(/,
+  /\.test\s*\(/,
+  /RegExp\s*\(/,
+  /\.length\s*>=\s*\d{2,}/,
+];
 
 function uniqueSorted(values: Iterable<string>): string[] {
   return [...new Set(values)].sort((a, b) => a.localeCompare(b));
@@ -106,6 +153,125 @@ function parseSupplementalPushChannels(repoRoot: string): string[] {
   );
 }
 
+type FunctionBlock = {
+  name: string;
+  body: string;
+  startLine: number;
+};
+
+function extractFunctionBlocks(source: string): FunctionBlock[] {
+  const blocks: FunctionBlock[] = [];
+  const lines = source.split("\n");
+
+  for (let i = 0; i < lines.length; i++) {
+    const match = lines[i].match(/function\s+(\w+)\s*\(/);
+    if (!match) continue;
+
+    const name = match[1];
+    let depth = 0;
+    let started = false;
+    const bodyLines: string[] = [];
+
+    for (let j = i; j < lines.length; j++) {
+      for (const ch of lines[j]) {
+        if (ch === "{") {
+          depth++;
+          started = true;
+        }
+        if (ch === "}") depth--;
+      }
+      bodyLines.push(lines[j]);
+      if (started && depth === 0) break;
+    }
+
+    blocks.push({ name, body: bodyLines.join("\n"), startLine: i + 1 });
+  }
+
+  return blocks;
+}
+
+export function scanSkillOutputValidation(
+  repoRoot: string = process.cwd(),
+): SourceScanViolation[] {
+  const dir = path.resolve(repoRoot, SKILL_SERVICES_DIR);
+  if (!existsSync(dir)) return [];
+
+  const files = readdirSync(dir).filter((f) => f.endsWith(".ts"));
+  const violations: SourceScanViolation[] = [];
+
+  for (const file of files) {
+    const filePath = path.join(dir, file);
+    const source = readFileSync(filePath, "utf-8");
+    const functions = extractFunctionBlocks(source);
+
+    for (const fn of functions) {
+      const isOutputHandler =
+        /\b(?:validate|handle|process|check)\w*(?:output|result)/i.test(
+          fn.name,
+        );
+      const hasOutputKeywords = /outputText|runSkill|skillResult/i.test(
+        fn.body,
+      );
+
+      if (!isOutputHandler && !hasOutputKeywords) continue;
+
+      const hasValidation = OUTPUT_VALIDATION_MARKERS.some((p) =>
+        p.test(fn.body),
+      );
+      const hasBypass = /return\s*\{\s*ok:\s*true[^}]*data:\s*true\s*\}/.test(
+        fn.body,
+      );
+
+      if (!hasValidation || hasBypass) {
+        violations.push({
+          file: path.join(SKILL_SERVICES_DIR, file),
+          line: fn.startLine,
+          functionName: fn.name,
+          description: hasBypass
+            ? `"${fn.name}" bypasses output validation for some skill paths`
+            : `"${fn.name}" handles skill output without schema validation`,
+        });
+      }
+    }
+  }
+
+  return violations;
+}
+
+export function scanApiKeyFormatValidation(
+  repoRoot: string = process.cwd(),
+): SourceScanViolation[] {
+  const dir = path.resolve(repoRoot, AI_SERVICES_DIR);
+  if (!existsSync(dir)) return [];
+
+  const files = readdirSync(dir).filter((f) => f.endsWith(".ts"));
+  const violations: SourceScanViolation[] = [];
+
+  for (const file of files) {
+    const filePath = path.join(dir, file);
+    const source = readFileSync(filePath, "utf-8");
+    const functions = extractFunctionBlocks(source);
+
+    for (const fn of functions) {
+      const isKeyHandler =
+        /\b(?:normalize|validate|check)\w*(?:key|api)/i.test(fn.name);
+      if (!isKeyHandler) continue;
+
+      const hasFormatCheck = KEY_FORMAT_MARKERS.some((p) => p.test(fn.body));
+      if (!hasFormatCheck) {
+        violations.push({
+          file: path.join(AI_SERVICES_DIR, file),
+          line: fn.startLine,
+          functionName: fn.name,
+          description: `"${fn.name}" validates API key without format/prefix/length check`,
+        });
+      }
+    }
+  }
+
+  return violations;
+}
+
 function readJson<T>(absPath: string): T {
   const raw = readFileSync(absPath, "utf8");
   return JSON.parse(raw) as T;
@@ -145,6 +311,29 @@ export function readGeneratedCrossModuleContractActual(
     errorCodes: parseErrorCodes(generated),
     envelope: parseEnvelope(generated),
   };
+}
+
+function evaluateRatchetDimension(args: {
+  tag: string;
+  violations: SourceScanViolation[];
+  approvedCount: number | undefined;
+  issues: string[];
+  drifts: string[];
+}): void {
+  if (args.approvedCount === undefined) return;
+
+  if (args.violations.length > args.approvedCount) {
+    args.issues.push(
+      `[${args.tag}] ${args.violations.length} violations (approved: ${args.approvedCount})`,
+    );
+    for (const v of args.violations) {
+      args.issues.push(`  ${v.file}:${v.line} ${v.description}`);
+    }
+  } else if (args.violations.length > 0) {
+    args.drifts.push(
+      `[${args.tag}] ${args.violations.length} approved (threshold: ${args.approvedCount})`,
+    );
+  }
 }
 
 export function evaluateCrossModuleContractGate(
@@ -245,6 +434,25 @@ export function evaluateCrossModuleContractGate(
     }
   }
 
+  // ── Skill output validation dimension ──
+  evaluateRatchetDimension({
+    tag: "skill-output-validation",
+    violations: actual.skillOutputViolations ?? [],
+    approvedCount:
+      baseline.skillOutputValidation?.approvedUnvalidatedCount,
+    issues,
+    drifts,
+  });
+
+  // ── API key format validation dimension ──
+  evaluateRatchetDimension({
+    tag: "api-key-format-validation",
+    violations: actual.apiKeyFormatViolations ?? [],
+    approvedCount: baseline.apiKeyFormatValidation?.approvedWeakCount,
+    issues,
+    drifts,
+  });
+
   return {
     ok: issues.length === 0,
     drifts,
@@ -257,6 +465,10 @@ export function runCrossModuleContractGate(
 ): CrossModuleContractGateResult {
   const baseline = readBaseline(repoRoot);
   const actual = readGeneratedCrossModuleContractActual(repoRoot);
+
+  actual.skillOutputViolations = scanSkillOutputValidation(repoRoot);
+  actual.apiKeyFormatViolations = scanApiKeyFormatValidation(repoRoot);
+
   return evaluateCrossModuleContractGate(baseline, actual);
 }
 
