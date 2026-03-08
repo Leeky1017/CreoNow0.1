@@ -182,3 +182,30 @@
 
 - [ ] 若 `main.tsx` 中的 `onError` 回调超过 20 行，提取为独立函数 `handleGlobalError` 放入 `globalErrorHandlers.ts`
 - [ ] 确保提取后 Toast 调用和日志 IPC 调用的职责清晰分离
+
+---
+
+## TDD 规范引用
+
+> 本 Change 的所有测试必须遵循 `docs/references/testing/` 中的规范。开始写测试前，先阅读以下文档。
+
+**必读文档**：
+- 测试哲学与反模式：`docs/references/testing/01-philosophy-and-anti-patterns.md`
+- 测试类型决策树：`docs/references/testing/02-test-type-decision-guide.md`
+- 前端测试模式：`docs/references/testing/03-frontend-testing-patterns.md`
+- 命令与 CI 映射：`docs/references/testing/07-test-command-and-ci-map.md`
+
+**本地验证命令**：
+```bash
+pnpm -C apps/desktop vitest run <test-file-pattern>   # 单元/集成测试
+pnpm typecheck                                         # 类型检查
+pnpm lint                                              # ESLint
+pnpm -C apps/desktop storybook:build                   # Storybook 视觉验收
+```
+
+**五大反模式（Red Line）**：
+1. ❌ 字符串匹配源码检测实现 → 用行为断言
+2. ❌ 只验证存在性（`toBeTruthy`）→ 验证具体值（`toEqual`）
+3. ❌ 过度 mock 导致测的是 mock 本身 → 只 mock 边界依赖
+4. ❌ 仅测 happy path → 必须覆盖 edge + error 路径
+5. ❌ 无意义测试名称 → 名称必须说明前置条件和预期行为
