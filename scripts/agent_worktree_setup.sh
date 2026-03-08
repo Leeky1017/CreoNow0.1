@@ -50,6 +50,7 @@ if [[ "$(pwd -P)" != "$(cd "$REPO_ROOT" && pwd -P)" ]]; then
 fi
 
 scripts/agent_controlplane_sync.sh
+scripts/agent_git_hooks_install.sh .
 
 if [[ ! "$N" =~ ^[0-9]+$ ]]; then
   echo "ERROR: issue-number must be numeric, got: $N" >&2
@@ -69,6 +70,7 @@ git fetch origin main
 git worktree add -b "$BRANCH" "$DIR" origin/main
 echo "Worktree created: $DIR"
 echo "Branch: $BRANCH"
+scripts/agent_git_hooks_install.sh "$DIR"
 
 if [[ "$BOOTSTRAP" == "true" ]]; then
   if command -v pnpm >/dev/null 2>&1 && [[ -f "${DIR}/package.json" ]]; then

@@ -42,6 +42,7 @@ import { createCreonowWatchService } from "./services/context/watchService";
 import { createProjectLifecycle } from "./services/projects/projectLifecycle";
 import { createUtilityProcessFoundation } from "./services/utilityprocess/utilityProcessFoundation";
 import { resolvePreloadEntryPathFromBuildConfig } from "./runtimePathResolver";
+import { resolveRuntimeGovernanceFromEnv } from "./config/runtimeGovernance";
 import {
   createDebouncedSaveWindowState,
   loadWindowState,
@@ -241,6 +242,7 @@ function registerIpcHandlers(deps: {
   builtinSkillsDir: string;
   env: NodeJS.ProcessEnv;
 }): void {
+  const runtimeGovernance = resolveRuntimeGovernanceFromEnv(deps.env);
   const onnxModelPath = deps.env.CREONOW_ONNX_MODEL_PATH?.trim() ?? "";
   const onnxProvider = deps.env.CREONOW_ONNX_PROVIDER?.trim() ?? "cpu";
   const onnxDimension = parsePositiveInteger(
@@ -421,6 +423,7 @@ function registerIpcHandlers(deps: {
     stateExtractor,
     semanticIndex,
     computeRunner: utilityProcessFoundation.compute,
+    embeddingQueueDebounceMs: runtimeGovernance.embedding.queueDebounceMs,
   });
 
   registerExportIpcHandlers({

@@ -32,6 +32,7 @@
     "gate:resource-size:update": "tsx scripts/resource-size-gate.ts --update-baseline",
     "gate:bundle-budget": "tsx scripts/bundle-size-budget.ts",
     "gate:bundle-budget:update": "tsx scripts/bundle-size-budget.ts --update-baseline",
+    "gate:ai-rate-limit": "tsx scripts/ai-rate-limit-coverage-gate.ts",
     "gate:ipc-validation": "tsx scripts/ipc-handler-validation-gate.ts",
     "gate:ipc-validation:update": "tsx scripts/ipc-handler-validation-gate.ts --update-baseline",
     "gate:service-stubs": "tsx scripts/service-stub-detector-gate.ts",

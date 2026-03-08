@@ -40,12 +40,13 @@ class VsCodeAgentGuidanceTests(unittest.TestCase):
         self.assertIn("FINAL-VERDICT", text)
         self.assertIn("--enable-auto-merge", text)
         self.assertIn("missing_tool / missing_auth / missing_permission", text)
+        self.assertIn("scripts/agent_task_begin.sh", text)
 
     def test_delivery_prompt_should_exist_for_vscode_agent_mode(self) -> None:
         path = REPO_ROOT / ".github" / "prompts" / "creonow-delivery.prompt.md"
         self.assertTrue(path.exists(), ".github/prompts/creonow-delivery.prompt.md must exist")
         text = path.read_text(encoding="utf-8")
-        self.assertIn("scripts/agent_worktree_setup.sh", text)
+        self.assertIn("scripts/agent_task_begin.sh", text)
         self.assertIn("scripts/agent_pr_preflight.sh", text)
         self.assertIn("scripts/agent_github_delivery.py pr-payload", text)
         self.assertIn("FINAL-VERDICT", text)

@@ -13,6 +13,7 @@ import re
 import subprocess
 import sys
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -52,6 +53,28 @@ def git_root() -> str:
     if result.code != 0:
         raise RuntimeError("[REPO] not a git repository")
     return result.out.strip()
+
+
+def git_common_dir(repo_root: str) -> str:
+    cmd = ["git", "rev-parse", "--git-common-dir"]
+    result = run(cmd, cwd=repo_root)
+    print_command_and_output(cmd, result)
+    if result.code != 0:
+        raise RuntimeError("[REPO] failed to get git common dir")
+    return result.out.strip()
+
+
+def controlplane_root(repo_root: str) -> str:
+    common = git_common_dir(repo_root)
+    return str((Path(repo_root) / common).resolve().parent)
+
+
+def ensure_isolated_worktree(repo_root: str) -> None:
+    cp_root = controlplane_root(repo_root)
+    if Path(repo_root).resolve() == Path(cp_root).resolve():
+        raise RuntimeError(
+            f"[WORKTREE] run from an isolated task worktree, not controlplane root: {repo_root}"
+        )
 
 
 def current_branch(repo_root: str) -> str:
@@ -134,6 +157,7 @@ def main() -> int:
     try:
         print("== Repo checks ==")
         repo = git_root()
+        ensure_isolated_worktree(repo)
         branch = current_branch(repo)
 
         print("\n== Branch contract ==")

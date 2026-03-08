@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "${CREONOW_ALLOW_CONTROLPLANE_BYPASS:-}" == "1" ]]; then
+  exit 0
+fi
+
+TOPLEVEL="$(git rev-parse --show-toplevel)"
+COMMON_DIR="$(git rev-parse --git-common-dir)"
+CONTROLPLANE_ROOT="$(cd "$(dirname "$COMMON_DIR")" && pwd -P)"
+BRANCH="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || echo HEAD)"
+
+if [[ "$(cd "$TOPLEVEL" && pwd -P)" == "$CONTROLPLANE_ROOT" ]]; then
+  echo "ERROR: direct commits from controlplane root are blocked." >&2
+  echo "Current branch: $BRANCH" >&2
+  echo "Use scripts/agent_task_begin.sh <issue-number> <slug> to create a task worktree first." >&2
+  echo "Override only for emergency hotfixes with CREONOW_ALLOW_CONTROLPLANE_BYPASS=1." >&2
+  exit 1
+fi
+
+if [[ "$BRANCH" == "main" ]]; then
+  echo "ERROR: commits on main are blocked. Use a task/<N>-<slug> worktree branch." >&2
+  echo "Override only for emergency hotfixes with CREONOW_ALLOW_CONTROLPLANE_BYPASS=1." >&2
+  exit 1
+fi

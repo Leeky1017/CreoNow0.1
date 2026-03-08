@@ -37,6 +37,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 8. **Issue 新鲜度强制**：新任务必须使用当前 OPEN Issue；禁止复用已关闭或历史 Issue。
 9. **环境基线强制**：创建 `task/*` 分支和 worktree 前，必须先同步控制面到最新 `origin/main`。
 10. **完成变更归档强制**：当 `openspec/changes/<change>/tasks.md` 全部勾选完成时，必须归档到 `openspec/changes/archive/`。
+11. **控制面主工作树禁改强制**：除 Owner 明示的紧急热修外，禁止在控制面 `main` 直接编辑受管文件；必须先执行 `scripts/agent_task_begin.sh <N> <slug>`（gh-only 入口；若仅有 MCP，请改走 `agent_controlplane_sync.sh` + `agent_worktree_setup.sh`）进入 `.worktrees/issue-<N>-<slug>`。执行 `scripts/agent_task_begin.sh`、`scripts/agent_worktree_setup.sh` 或 `scripts/agent_controlplane_sync.sh` 后，repo-managed git hooks 会阻止控制面根目录提交与直接推送 `main`。
 
 ---
 
@@ -53,12 +54,20 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 | ------------- | ------------------------------------------------------------------------------------------------------------------ |
 | 1. 任务准入   | 当前 OPEN Issue 已创建或认领，`N` 和 `SLUG` 已确定                                                                 |
 | 2. 规格制定   | OpenSpec spec 已编写或更新；若有上游依赖则已确认上游状态                                                     |
-| 3. 环境隔离   | 控制面 `origin/main` 已同步，Worktree 已创建，工作目录已切换                                                       |
+| 3. 环境隔离   | 控制面 `origin/main` 已同步，`scripts/agent_task_begin.sh <N> <slug>`（gh-only；MCP-only 会话改走手动脚本链路）或等效步骤已创建 Worktree，工作目录已切换到 `.worktrees/issue-<N>-<slug>` |
 | 4. 实现与测试 | 按 TDD 循环实现；所有测试通过；测试写法与类型选择遵循 `docs/references/testing/README.md` |
 | 5. 提交与合并 | PR 已创建；所选 GitHub 通道已确认；指定审计 Agent 的 `FINAL-VERDICT` + `ACCEPT` 评论已存在后，gh 通道方可显式开启 auto-merge；CI 全绿；PR 已确认合并                     |
 | 6. 收口与归档 | 控制面 `main` 已包含任务提交；worktree 已清理                                                                       |
 
 ---
+
+### 建议的任务启动命令（默认路径）
+
+```bash
+python3 scripts/agent_github_delivery.py capabilities
+scripts/agent_task_begin.sh "$N" "$SLUG"  # gh-only；MCP-only 会话改走手动脚本链路
+cd ".worktrees/issue-${N}-${SLUG}"
+```
 
 ## 四、异常处理规则
 
@@ -73,6 +82,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 | 上游依赖与当前 change 假设不一致 | 先更新 proposal/spec/tasks 再进入实现                                                         |
 | 非 `task/*` 分支提交 PR              | PR body 必须包含 `Skip-Reason:`                                                          |
 | 改动仅停留在 `task/*` 分支           | 继续完成合并回 `main`                                                                   |
+| 在控制面根目录直接开发 / 提交 / 推送 main | 立即停止并迁移到 task worktree；必要时通过 `.githooks` / preflight 报错阻断                       |
 | required checks 与本文件不一致       | 阻断交付并升级治理，禁止宣称“门禁全绿”                                                      |
 | 误用已关闭/历史 Issue                | 立即停止实现，改为新建 OPEN Issue，并从最新 `origin/main` 重建 worktree                     |
 | 活跃 change 已完成但未归档           | 阻断交付，先归档到 `openspec/changes/archive/` 再继续                                       |

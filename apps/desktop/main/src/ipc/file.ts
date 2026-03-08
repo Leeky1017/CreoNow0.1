@@ -177,6 +177,7 @@ type FileHandlerDeps = {
   stateExtractor?: StateExtractor | null;
   semanticIndex?: SemanticChunkIndexService;
   computeRunner?: EmbeddingComputeRunner | null;
+  embeddingQueueDebounceMs?: number;
 };
 
 function registerFileDocumentCrudHandlers(deps: FileHandlerDeps): void {
@@ -724,6 +725,7 @@ export function registerFileIpcHandlers(deps: FileHandlerDeps): void {
       logger: deps.logger,
       semanticIndex: deps.semanticIndex,
       computeRunner: deps.computeRunner,
+      debounceMs: deps.embeddingQueueDebounceMs,
     });
 
   registerFileDocumentCrudHandlers(deps);

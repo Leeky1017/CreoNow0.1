@@ -52,6 +52,8 @@
 | 脚本                             | 职责                                       |
 | -------------------------------- | ------------------------------------------ |
 | `agent_controlplane_sync.sh`     | 同步控制面 `origin/main`                   |
+| `agent_git_hooks_install.sh`     | 为当前 repo/worktree 安装 `.githooks`      |
+| `agent_task_begin.sh`            | gh-only fail-closed 任务入口：capabilities + sync + worktree |
 | `agent_worktree_setup.sh`        | 创建 `.worktrees/issue-<N>-<slug>`         |
 | `agent_worktree_cleanup.sh`      | 清理 worktree                              |
 | `agent_pr_preflight.py`          | PR 提交前校验（Branch、Issue）         |
@@ -68,6 +70,7 @@
 | `error-boundary-coverage-gate.ts`| ErrorBoundary 覆盖门禁                     |
 | `architecture-health-gate.ts`    | 架构健康度门禁                             |
 | `spec-test-mapping-gate.ts`      | Spec Scenario→测试映射门禁                 |
+| `ai-rate-limit-coverage-gate.ts` | AI 请求限流 + scheduler / queue coverage gate    |
 | `lint-ratchet.ts`                | ESLint warning budget ratchet              |
 
 脚本约定：
@@ -79,3 +82,6 @@
 - 所有脚本使用 `set -euo pipefail`
 - 退出码：`0` 成功，`1` 可恢复失败，`2` 不可恢复失败
 - 输出前缀：`[OK]`、`[FAIL]`、`[SKIP]`、`[WARN]`
+
+
+本仓库在执行 `agent_task_begin.sh`、`agent_worktree_setup.sh` 或 `agent_controlplane_sync.sh` 后启用 repo-managed git hooks：`.githooks/pre-commit` 阻止控制面根目录提交，`.githooks/pre-push` 阻止直接推送 `main`。

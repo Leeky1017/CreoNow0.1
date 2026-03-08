@@ -13,8 +13,9 @@ description: 'Create or update a CreoNow delivery PR with the repo audit-first G
 - [脚本说明](../../scripts/README.md)
 
 然后严格执行：
+0. 禁止在控制面 `main` 根目录直接开发；若当前目录仍是控制面根目录，先转入 `.worktrees/issue-<N>-<slug>`。
 1. 运行 `python3 scripts/agent_github_delivery.py capabilities` 判定当前使用 `gh`、GitHub MCP，还是应当阻断。
-2. 如需新任务，确认 / 创建 Issue，并使用 `scripts/agent_worktree_setup.sh <N> <slug>` 建立隔离 worktree。
+2. 如需新任务，确认 / 创建 Issue，并优先使用 `scripts/agent_task_begin.sh <N> <slug>` 建立隔离 worktree（gh-only 入口；若仅有 MCP，请按 repo docs 手动执行 controlplane sync + worktree setup）。
 3. 在提交前运行 `scripts/agent_pr_preflight.sh`。
 4. 创建或更新 PR 时，使用 `python3 scripts/agent_github_delivery.py pr-payload ...` 生成 title/body，保持与仓库模板一致。
 5. 若需发布 blocker 评论，使用 `python3 scripts/agent_github_delivery.py comment-payload ...` 生成文案。

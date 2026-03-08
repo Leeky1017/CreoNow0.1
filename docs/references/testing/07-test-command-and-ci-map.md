@@ -44,8 +44,10 @@
 | `integration-test`           | `pnpm test:integration`                                     | root 侧集成测试        |
 | `test-discovery-consistency` | `pnpm test:discovery:consistency`                           | 发现与执行一致性（阻断） |
 | `coverage-gate`              | `pnpm test:coverage:desktop` / `pnpm test:coverage:core`    | 生成 coverage artifact |
+| `cross-module-check`         | `pnpm cross-module:check`                                   | cross-module 契约与 skill/api-key 门禁 |
 | `storybook-build`            | `pnpm -C apps/desktop storybook:build`                      | 视觉验收基础门禁       |
 | `windows-e2e`                | `pnpm -C apps/desktop test:e2e`                             | Windows 平台 E2E       |
+| `gate-ai-rate-limit`         | `pnpm gate:ai-rate-limit`                                   | AI 请求限流 + scheduler / queue coverage |
 
 ## Wave 0 Gate 命令
 
@@ -59,8 +61,9 @@
 | `pnpm gate:architecture-health`    | `scripts/architecture-health-gate.ts` | 架构健康度                   |
 | `pnpm gate:spec-test-mapping`      | `scripts/spec-test-mapping-gate.ts`   | Spec Scenario→测试映射       |
 | `pnpm cross-module:check`          | `scripts/cross-module-contract-gate.ts`  | cross-module 契约对齐（含 skill-output / api-key-format）|
+| `pnpm gate:ai-rate-limit`         | `scripts/ai-rate-limit-coverage-gate.ts` | AI 请求限流 + scheduler / queue coverage |
 
-所有 gate 支持 `--update-baseline` 参数生成/更新 baseline 文件。
+所有 gate 支持 `--update-baseline` 参数生成/更新 baseline 文件（行为型 coverage gate 除外）。
 
 ## 当前已知状态
 

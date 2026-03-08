@@ -316,6 +316,13 @@ while [[ $# -gt 0 ]]; do
 done
 
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+COMMON_DIR="$(git rev-parse --git-common-dir)"
+CONTROLPLANE_ROOT="$(cd "$(dirname "$COMMON_DIR")" && pwd -P)"
+if [[ "$(cd "$REPO_ROOT" && pwd -P)" == "$CONTROLPLANE_ROOT" ]]; then
+  echo "ERROR: run this script from an isolated task worktree, not the controlplane root: $CONTROLPLANE_ROOT" >&2
+  exit 2
+fi
 if [[ ! "$BRANCH" =~ ^task/([0-9]+)-([a-z0-9-]+)$ ]]; then
   echo "ERROR: branch must be task/<N>-<slug>, got: $BRANCH" >&2
   exit 2

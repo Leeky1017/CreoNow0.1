@@ -184,7 +184,7 @@ jobs:
   cross-module-check:
     runs-on: ubuntu-latest
     needs: changes
-    if: needs.changes.outputs.ipc_changed == 'true'
+    if: needs.changes.outputs.code_changed == 'true'
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
@@ -302,6 +302,19 @@ jobs:
       - name: Bundle size budget gate
         run: pnpm gate:bundle-budget
 
+  gate-ai-rate-limit:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code_changed == 'true'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node-pnpm
+      - name: AI rate-limit coverage gate
+        run: pnpm gate:ai-rate-limit
+
   windows-e2e:
     runs-on: windows-latest
     needs: changes
@@ -416,6 +429,7 @@ jobs:
       - gate-architecture-health
       - gate-spec-test-mapping
       - gate-bundle-budget
+      - gate-ai-rate-limit
       - windows-e2e
     timeout-minutes: 2
     steps:

@@ -10,6 +10,27 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import agent_pr_preflight  # noqa: E402
 
 
+class WorktreeIsolationTests(unittest.TestCase):
+    """Preflight must not run from controlplane root."""
+
+    def test_ensure_isolated_worktree_should_fail_on_controlplane_root(self) -> None:
+        with mock.patch.object(
+            agent_pr_preflight,
+            "controlplane_root",
+            return_value="/tmp/repo",
+        ):
+            with self.assertRaisesRegex(RuntimeError, r"\[WORKTREE\].*isolated task worktree"):
+                agent_pr_preflight.ensure_isolated_worktree("/tmp/repo")
+
+    def test_ensure_isolated_worktree_should_pass_for_secondary_worktree(self) -> None:
+        with mock.patch.object(
+            agent_pr_preflight,
+            "controlplane_root",
+            return_value="/tmp/repo",
+        ):
+            agent_pr_preflight.ensure_isolated_worktree("/tmp/repo/.worktrees/issue-42-demo")
+
+
 class BranchContractTests(unittest.TestCase):
     """Branch must be task/<N>-<slug>."""
 
@@ -18,6 +39,9 @@ class BranchContractTests(unittest.TestCase):
             agent_pr_preflight,
             "git_root",
             return_value="/tmp/repo",
+        ), mock.patch.object(
+            agent_pr_preflight,
+            "ensure_isolated_worktree"
         ), mock.patch.object(
             agent_pr_preflight,
             "current_branch",
@@ -33,6 +57,9 @@ class BranchContractTests(unittest.TestCase):
             return_value="/tmp/repo",
         ), mock.patch.object(
             agent_pr_preflight,
+            "ensure_isolated_worktree"
+        ), mock.patch.object(
+            agent_pr_preflight,
             "current_branch",
             return_value="task/42-SomeFeature",
         ):
@@ -44,6 +71,9 @@ class BranchContractTests(unittest.TestCase):
             agent_pr_preflight,
             "git_root",
             return_value="/tmp/repo",
+        ), mock.patch.object(
+            agent_pr_preflight,
+            "ensure_isolated_worktree"
         ), mock.patch.object(
             agent_pr_preflight,
             "current_branch",
@@ -186,11 +216,12 @@ class EndToEndFlowTests(unittest.TestCase):
             return agent_pr_preflight.CmdResult(0, pr_payload)
 
         run_mock = mock.patch.object(agent_pr_preflight, "run", side_effect=run_side_effect)
-        return git_root_mock, branch_mock, run_mock
+        worktree_mock = mock.patch.object(agent_pr_preflight, "ensure_isolated_worktree")
+        return git_root_mock, branch_mock, run_mock, worktree_mock
 
     def test_main_should_pass_with_valid_flow(self) -> None:
-        gm, bm, rm = self._mock_valid_flow()
-        with gm, bm, rm:
+        gm, bm, rm, wm = self._mock_valid_flow()
+        with gm, bm, rm, wm:
             rc = agent_pr_preflight.main()
         self.assertEqual(0, rc)
 
@@ -198,6 +229,8 @@ class EndToEndFlowTests(unittest.TestCase):
         closed_payload = '{"number": 42, "state": "closed", "title": "test", "url": "https://example.com"}'
         with mock.patch.object(
             agent_pr_preflight, "git_root", return_value="/tmp/repo"
+        ), mock.patch.object(
+            agent_pr_preflight, "ensure_isolated_worktree"
         ), mock.patch.object(
             agent_pr_preflight, "current_branch", return_value="task/42-memory-decay"
         ), mock.patch.object(
