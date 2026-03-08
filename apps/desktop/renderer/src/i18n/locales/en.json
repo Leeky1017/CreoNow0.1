@@ -1393,6 +1393,7 @@
       "CONTEXT_TOKENIZER_MISMATCH": "Tokenizer configuration mismatch.",
       "DB_ERROR": "Data storage error. Please try again.",
       "DOCUMENT_SAVE_CONFLICT": "Save conflict. Please refresh and try again.",
+      "DOCUMENT_SIZE_EXCEEDED": "Document size exceeds the 5 MB limit.",
       "EMBEDDING_PROVIDER_UNAVAILABLE": "Embedding service is unavailable.",
       "ENCODING_FAILED": "Data encoding failed.",
       "FORBIDDEN": "This operation is not authorized.",

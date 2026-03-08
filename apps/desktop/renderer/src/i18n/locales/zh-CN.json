@@ -1393,6 +1393,7 @@
       "CONTEXT_TOKENIZER_MISMATCH": "分词器配置不匹配",
       "DB_ERROR": "数据存储异常，请重试",
       "DOCUMENT_SAVE_CONFLICT": "文档保存冲突，请刷新后重试",
+      "DOCUMENT_SIZE_EXCEEDED": "文档大小超出 5MB 限制",
       "EMBEDDING_PROVIDER_UNAVAILABLE": "向量化服务不可用",
       "ENCODING_FAILED": "数据编码失败",
       "FORBIDDEN": "当前操作未授权",

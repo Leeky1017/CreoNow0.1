@@ -9,6 +9,7 @@ export type DocumentErrorCode =
   | "ALREADY_EXISTS"
   | "CONFLICT"
   | "DB_ERROR"
+  | "DOCUMENT_SIZE_EXCEEDED"
   | "ENCODING_FAILED"
   | "INVALID_ARGUMENT"
   | "NOT_FOUND"

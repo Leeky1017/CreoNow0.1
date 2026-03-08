@@ -140,6 +140,18 @@ describe("errorMessages", () => {
     expect(localized.message).not.toBe(raw);
   });
 
+  it("DOCUMENT_SIZE_EXCEEDED 返回本地化文案，不透传后端原文", () => {
+    const raw = "Document size exceeds limit: 7340032 bytes";
+    const localized = localizeIpcError({
+      code: "DOCUMENT_SIZE_EXCEEDED",
+      message: raw,
+    });
+
+    expect(localized.message).toBe(i18n.t("error.code.DOCUMENT_SIZE_EXCEEDED"));
+    expect(localized.message).not.toContain("7340032");
+    expect(localized.message).not.toBe(raw);
+  });
+
   // ── Task 1.6: i18n key 完整性 ──
 
   it("zh-CN.json error.code 条目数等于 IpcErrorCode 成员数", () => {
