@@ -129,6 +129,18 @@ describe("errorMessages", () => {
     expect(localized.message).not.toContain("SQLITE_CONSTRAINT");
   });
 
+  it("SKILL_OUTPUT_INVALID 返回本地化文案，不透传后端原文", () => {
+    const raw = "Skill output invalid: html/script block detected";
+    const localized = localizeIpcError({
+      code: "SKILL_OUTPUT_INVALID",
+      message: raw,
+    });
+
+    expect(localized.message).toBe(i18n.t("error.code.SKILL_OUTPUT_INVALID"));
+    expect(localized.message).not.toContain("html");
+    expect(localized.message).not.toBe(raw);
+  });
+
   // ── Task 1.6: i18n key 完整性 ──
 
   it("zh-CN.json error.code 条目数等于 IpcErrorCode 成员数", () => {

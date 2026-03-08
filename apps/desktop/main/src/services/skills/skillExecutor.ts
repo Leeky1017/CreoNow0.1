@@ -349,20 +349,89 @@ function validateSkillInput(args: {
   };
 }
 
+const CREATIVE_SKILLS_STRICT = new Set(["polish", "rewrite"]);
+const CREATIVE_SKILLS_LOOSE = new Set(["continue", "expand"]);
+
+const STRICT_INFLATE_LIMIT = 10;
+const LOOSE_INFLATE_LIMIT = 20;
+
+const CODE_BLOCK_PATTERN = /```/u;
+const HTML_TAG_PATTERN = /<\/?[a-z][\w-]*(?:\s[^>]*)?\s*\/?>/iu;
+
+function validateCreativeSkillOutput(args: {
+  skillId: string;
+  outputText?: string;
+  inputText?: string;
+}): ServiceResult<true> {
+  const leaf = leafSkillId(args.skillId);
+  const trimmed = (args.outputText ?? "").trim();
+
+  if (trimmed.length === 0) {
+    return ipcError("SKILL_OUTPUT_INVALID", "AI 返回了空内容，请重试");
+  }
+
+  if (CODE_BLOCK_PATTERN.test(trimmed)) {
+    return ipcError("SKILL_OUTPUT_INVALID", "AI 输出包含代码块，不适用于创意写作");
+  }
+
+  if (HTML_TAG_PATTERN.test(trimmed)) {
+    return ipcError("SKILL_OUTPUT_INVALID", "AI 输出包含 HTML 标签，不适用于创意写作");
+  }
+
+  const inputLength = (args.inputText ?? "").trim().length;
+  if (inputLength > 0) {
+    const limit = CREATIVE_SKILLS_STRICT.has(leaf)
+      ? STRICT_INFLATE_LIMIT
+      : LOOSE_INFLATE_LIMIT;
+    if (trimmed.length > inputLength * limit) {
+      return ipcError(
+        "SKILL_OUTPUT_INVALID",
+        `AI 输出膨胀超过 ${limit} 倍，请重试`,
+        { inputLength, outputLength: trimmed.length, limit },
+      );
+    }
+  }
+
+  return { ok: true, data: true };
+}
+
 function validateSkillRunOutput(args: {
   skillId: string;
   outputText?: string;
+  inputText?: string;
   output?: SkillOutputConstraints;
 }): ServiceResult<true> {
   if (typeof args.outputText !== "string") {
     return { ok: true, data: true };
   }
-  if (leafSkillId(args.skillId) === "synopsis") {
+
+  const leaf = leafSkillId(args.skillId);
+
+  if (leaf === "synopsis") {
     return validateSynopsisOutput({
       outputText: args.outputText,
       output: args.output,
     });
   }
+
+  if (CREATIVE_SKILLS_STRICT.has(leaf) || CREATIVE_SKILLS_LOOSE.has(leaf)) {
+    const creativeResult = validateCreativeSkillOutput({
+      skillId: args.skillId,
+      outputText: args.outputText,
+      inputText: args.inputText,
+    });
+    if (!creativeResult.ok) {
+      return creativeResult;
+    }
+    if (args.output) {
+      return validateConstrainedSkillOutput({
+        outputText: args.outputText,
+        output: args.output,
+      });
+    }
+    return { ok: true, data: true };
+  }
+
   if (!args.output) {
     return { ok: true, data: true };
   }
@@ -479,6 +548,7 @@ export function createSkillExecutor(deps: SkillExecutorDeps): SkillExecutor {
       const outputValidation = validateSkillRunOutput({
         skillId: args.skillId,
         outputText: run.data.outputText,
+        inputText: args.input,
         output: resolved.data.output,
       });
       if (!outputValidation.ok) {

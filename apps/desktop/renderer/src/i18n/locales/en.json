@@ -1444,6 +1444,7 @@
       "SKILL_CAPACITY_EXCEEDED": "Skill usage limit reached.",
       "SKILL_DEPENDENCY_MISSING": "Required skill dependency is missing.",
       "SKILL_INPUT_EMPTY": "Please enter content before using this skill.",
+      "SKILL_OUTPUT_INVALID": "AI output was invalid. Please try again.",
       "SKILL_QUEUE_OVERFLOW": "Skill queue is full. Please try later.",
       "SKILL_SCOPE_VIOLATION": "Skill scope violation.",
       "SKILL_TIMEOUT": "Skill execution timed out.",
