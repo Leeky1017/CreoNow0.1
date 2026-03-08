@@ -205,6 +205,86 @@ jobs:
       - name: Storybook build check
         run: pnpm -C apps/desktop storybook:build
 
+  # ── Wave 0 Gate Jobs ──────────────────────────────────────────────
+
+  gate-resource-size:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code_changed == 'true'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node-pnpm
+      - name: Resource size gate
+        run: pnpm gate:resource-size
+
+  gate-ipc-validation:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code_changed == 'true'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node-pnpm
+      - name: IPC handler validation gate
+        run: pnpm gate:ipc-validation
+
+  gate-service-stubs:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code_changed == 'true'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node-pnpm
+      - name: Service stub detector gate
+        run: pnpm gate:service-stubs
+
+  gate-error-boundary:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code_changed == 'true'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node-pnpm
+      - name: Error boundary coverage gate
+        run: pnpm gate:error-boundary
+
+  gate-architecture-health:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.code_changed == 'true'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node-pnpm
+      - name: Architecture health gate
+        run: pnpm gate:architecture-health
+
+  gate-spec-test-mapping:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-node-pnpm
+      - name: Spec-test mapping gate
+        run: pnpm gate:spec-test-mapping
+
   windows-e2e:
     runs-on: windows-latest
     needs: changes
@@ -312,6 +392,12 @@ jobs:
       - contract-check
       - cross-module-check
       - storybook-build
+      - gate-resource-size
+      - gate-ipc-validation
+      - gate-service-stubs
+      - gate-error-boundary
+      - gate-architecture-health
+      - gate-spec-test-mapping
       - windows-e2e
     timeout-minutes: 2
     steps:

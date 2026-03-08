@@ -227,7 +227,21 @@ test -x scripts/agent_pr_automerge_and_sync.sh && echo EXEC_OK
 - 每个问题必须附带证据：具体文件路径、行号、相关代码片段
 - 验证命令的完整输出（通过或失败）必须包含在 PR 评论中
 
-### 8.8 审计交付口径
+### 8.8 Tier 3 产品行为验证（非自动化检查项）
+
+PRE-AUDIT 必须包含**至少 1 条产品行为验证**——纯 diff review 不计入：
+
+1. **前端 PR 必须有用户场景验证**：以用户身份操作应用，附截图或命令输出证明行为符合 spec.md 定义
+2. **字体渲染验证**（涉及 UI 改动时）：按 `docs/references/font-verification-checklist.md` 执行，附截图。无 UI 改动标注 "N/A — 无 UI 变更"
+3. **Design Token 使用率验证**（涉及样式改动时）：确认新增样式全部使用 Design Token，无 Tailwind 原始色值或硬编码值
+4. **CJK 场景验证**（涉及文本显示改动时）：中英文混排、纯 CJK 段落截图
+
+FINAL-VERDICT 必须逐条回应以下问题：
+- "作为用户，修改后行为是否符合 spec.md 定义？"
+- "列举至少 1 个用户场景的预期行为与实际行为对照"
+- "PR template 中 Tier 3 检查项是否全部填写？未填 = REJECT"
+
+### 8.9 审计交付口径
 
 > "能发现问题、能定位根因、能明确阻断"优先于"写一堆建议"。
 > 审计的第一职责是划红线，不是润色方案。

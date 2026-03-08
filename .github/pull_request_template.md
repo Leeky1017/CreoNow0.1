@@ -34,3 +34,12 @@ Skip-Reason: <必填，按上方示例替换>
 
 - 回滚 commit/分支：
 - 回滚后需要恢复的数据或配置：
+
+## 非自动化检查（Tier 3）
+
+> 涉及 UI 改动时必填。仅改 `main/src/`、`scripts/`、`openspec/` 等后端/工具/文档的 PR 可标 N/A。
+
+- [ ] **字体渲染**：验证中英文混排页面无方块字/fallback 异常，附 DevTools 截图或 `document.fonts.check()` 输出（参见 `docs/references/font-verification-checklist.md`）
+- [ ] **品牌调性**：新增样式全部使用 Design Token（`--font-family-*`、`--color-*`、`--shadow-*`），未引入 Tailwind 原始色值或硬编码值
+- [ ] **无障碍**：动态内容区域（Toast、Alert、状态栏）使用 `aria-live` 或 `role="alert"`，键盘可达
+- [ ] **CJK 场景**：中文/日文/韩文文本无截断、无溢出，长文本段落排版正常

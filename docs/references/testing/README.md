@@ -61,3 +61,76 @@
 | `06-guard-and-lint-policy.md`         | Guard 与 ESLint 的边界在哪里？                      |
 | `07-test-command-and-ci-map.md`       | 本地命令、CI job、coverage、storybook 如何对应？    |
 | `08-migration-and-review-playbook.md` | 历史弱测试如何迁移？review 时看什么？               |
+
+---
+
+## 否定测试（Negative Testing）
+
+> 覆盖 Tier 2 Pattern #15（假 UI 无否定测试）、#16（Export 虚假声称）
+
+**何时需要否定测试**：组件/功能被标记为"占位"、"假 UI"、"未实现"时，必须有明确的否定测试证明该组件**不提供**声称的能力。
+
+**约定**：
+
+1. 假 UI / 占位组件必须有 `describe('should NOT ...')` 测试块，至少包含一个 `it()` 断言该组件不提供编辑/保存/导出等能力
+2. 能力声明必须有真实性验证测试——如果 spec 声称"支持 Markdown 导出"，必须有测试调用导出函数并检查输出
+3. 异步操作的拒绝路径必须有测试覆盖——包括超时、权限不足、资源不存在等场景
+
+**示例**：
+
+```tsx
+// ❌ 错误：看起来有编辑功能但没有否定测试
+describe('ZenMode', () => {
+  it('renders', () => { ... });
+});
+
+// ✅ 正确：明确断言不可编辑
+describe('ZenMode (readonly placeholder)', () => {
+  describe('should NOT provide editing', () => {
+    it('should NOT render editable textarea', () => {
+      render(<ZenMode />);
+      expect(screen.queryByRole('textbox')).toBeNull();
+    });
+    it('should NOT respond to keyboard input', () => { ... });
+  });
+});
+```
+
+---
+
+## Guard 测试要求
+
+> 覆盖 Tier 2 Pattern #23（Guard 测试浅层化）
+
+**约定**：
+
+1. 每个 gate 的测试必须包含 **≥1 PASS fixture** 和 **≥1 FAIL fixture**
+2. PASS fixture：构造符合规范的代码/结构 → gate 不报告违规
+3. FAIL fixture：构造违规代码/结构 → gate 正确检出并报告违规
+4. FAIL fixture 必须覆盖该 gate 的**关键违规模式**，不能只测最简单的情况
+5. CJK / 多语言场景作为推荐测试维度——如果 gate 检测文本/i18n 相关问题，应包含 CJK 测试用例
+
+**示例**：
+
+```ts
+// PASS fixture: 有 size 检查的 writeFile
+{
+  const root = setupTestDir();
+  writeFileSync(path.join(root, 'safe.ts'), `
+    if (Buffer.byteLength(data) > MAX_SIZE) throw new Error("Too large");
+    fs.writeFileSync(path, data);
+  `);
+  const violations = scanViolations(root);
+  assert.equal(violations.length, 0, "Size-checked write should PASS");
+}
+
+// FAIL fixture: 无 size 检查的 writeFile
+{
+  const root = setupTestDir();
+  writeFileSync(path.join(root, 'unsafe.ts'), `
+    fs.writeFileSync(path, data);
+  `);
+  const violations = scanViolations(root);
+  assert.equal(violations.length, 1, "Unchecked write should FAIL");
+}
+```

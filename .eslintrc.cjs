@@ -127,6 +127,9 @@ module.exports = {
           },
         ],
         "creonow/no-raw-tailwind-tokens": "error",
+        "creonow/no-native-html-element": "warn",
+        "creonow/no-raw-error-code-in-ui": "warn",
+        "creonow/no-hardcoded-dimension": "warn",
         "no-restricted-syntax": [
           "error",
           {
@@ -136,6 +139,14 @@ module.exports = {
               "Do not use bare void async IIFE. Use runFireAndForget() with explicit error handling.",
           },
         ],
+      },
+    },
+    {
+      // Stories: relax i18n but warn on raw tokens
+      files: ["**/*.stories.{ts,tsx}"],
+      rules: {
+        "i18next/no-literal-string": "off",
+        "creonow/no-raw-tailwind-tokens": "warn",
       },
     },
     {
