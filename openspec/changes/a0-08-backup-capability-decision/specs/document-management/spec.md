@@ -2,7 +2,7 @@
 
 - **Parent Change**: `a0-08-backup-capability-decision`
 - **Base Spec**: `openspec/specs/document-management/spec.md`
-- **GitHub Issue**: 待创建
+- **GitHub Issue**: #1035
 - **类型**: 决策框架（Decision Framework）——本文档不定义行为变更，而是定义决策过程的结构化要求
 
 ---

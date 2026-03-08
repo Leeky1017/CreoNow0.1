@@ -1,7 +1,7 @@
 # Tasks: A0-08 备份能力真伪核查
 
-- **GitHub Issue**: 待创建
-- **分支**: `task/<N>-backup-capability-decision`（Issue 创建后补充编号）
+- **GitHub Issue**: #1035
+- **分支**: `task/1035-backup-capability-decision`
 - **Delta Spec**: `specs/document-management/spec.md`
 - **前置依赖**: 无
 
@@ -128,3 +128,10 @@ P0-3: 能力诚实分级与假功能处置
 - [ ] 决策门槛四项自检通过
 - [ ] PR body 包含 `Closes #<N>`（Issue 创建后补充）
 - [ ] 审计评论闭环完成（PRE-AUDIT → RE-AUDIT → FINAL-VERDICT）
+
+---
+
+## TDD 规范引用
+
+> 本任务为文档/决策类，不涉及代码实现。验收方式为输出物审查，而非自动化测试。
+> 若决策结论导致后续实现任务，该实现任务必须遵循 `docs/references/testing/` 中的完整 TDD 规范。

@@ -38,9 +38,34 @@
 ### P2. Test-First（测试先行）
 
 先写测试，再写实现。Red → Green → Refactor。
-- Spec 中的 Scenario 必须有对应测试
+- **写测试前，必须阅读 `docs/references/testing/README.md` 及其子文档**
+- Spec 中的 Scenario 必须有对应测试（`spec-test-mapping-gate` CI 自动验证）
 - 测试验证行为，不验证实现细节
 - 测试必须独立、确定、有意义
+- Red phase 必须看到测试因"行为缺失"而失败；Green phase 必须重新运行测试确认通过
+
+**测试类型决策**（详见 `docs/references/testing/02-test-type-decision-guide.md`）：
+- 单函数/Store/Hook → 单元测试
+- 多模块协作 → 集成测试
+- 关键用户路径（启动/编辑/保存/AI/导出/设置） → E2E 测试
+- 跨文件/跨层/跨进程约束 → Guard；能用 ESLint 解决的不写 Guard
+
+**五大反模式（必须避免）**（详见 `docs/references/testing/01-philosophy-and-anti-patterns.md`）：
+1. 字符串匹配源码检测实现（`source.includes('xxx')`）→ 用行为断言
+2. 只验证存在性（`toBeTruthy()`）→ 验证具体值（`toEqual()`）
+3. 过度 mock 导致测的是 mock 本身 → 只 mock 边界依赖
+4. 仅测 happy path → 必须覆盖 edge + error 路径
+5. 无意义测试名称（`test1`、`should work`） → 名称说明前置条件和预期行为
+
+**前端测试查询优先级**：`getByRole` > `getByLabelText` > `getByTestId` >> `getByText`
+
+**本地验证命令**（详见 `docs/references/testing/07-test-command-and-ci-map.md`）：
+```bash
+pnpm -C apps/desktop vitest run <pattern>   # 单元/集成测试
+pnpm typecheck                               # 类型检查
+pnpm lint                                    # ESLint
+pnpm -C apps/desktop storybook:build         # Storybook（前端）
+```
 
 ### P3. Gates（门禁全绿）
 
