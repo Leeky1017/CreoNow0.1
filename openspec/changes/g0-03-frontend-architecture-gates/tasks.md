@@ -11,6 +11,12 @@
 
 W0-GATE: 门禁基础设施
 
+## 三层执行模型归属
+
+**Tier 1: CI 自动阻断** —— 本 Change 产出的 ESLint 规则 + Guard gate 纳入 CI，以 baseline ratchet 模式阻断增量违规。覆盖 Pattern #8, #11, #20, #26, #28。
+
+公共约定见 `EXECUTION_ORDER.md` §二·五。
+
 ---
 
 ## 验收标准
@@ -87,15 +93,19 @@ W0-GATE: 门禁基础设施
 - [ ] 创建 `scripts/error-boundary-coverage-gate.ts`
 - [ ] 解析路由配置（查找 `createBrowserRouter` / `<Route>` / routes 数组）
 - [ ] 检查每个路由的 element/component 祖先链中是否有 ErrorBoundary
-- [ ] 实现 baseline 读写
+- [ ] 实现 baseline 读写（`openspec/guards/error-boundary-baseline.json`）
 
 ### Task 2.3: 实现 `architecture-health-gate.ts`
 
 - [ ] 创建 `scripts/architecture-health-gate.ts`
-- [ ] Provider 嵌套检测：解析入口组件 JSX，计算嵌套深度
-- [ ] 文件行数检测：遍历文件统计行数
-- [ ] ARIA-live 检测：在标记为"动态内容"的组件中搜索 `aria-live`
-- [ ] 实现 baseline 读写
+- [ ] Provider 嵌套检测：解析 `App.tsx` 或入口组件的 JSX 树，计算 Provider 组件嵌套深度，超过阈值（默认 10 层）报警
+- [ ] 文件行数检测：遍历 `renderer/src/**/*.{ts,tsx}`（排除 `*.test.*`/`*.stories.*`/`*.spec.*`），报告超过 500 行的文件
+- [ ] ARIA-live 检测策略：
+  - 定义动态内容组件清单（硬编码初始列表）：`Toast`, `Alert`, `StatusBar`, `Notification`, `ProgressBar`, `SnackBar`
+  - 启发式补充：扫描 `renderer/src/components/` 下含 `useState`/`useEffect` + `set*` 动态更新且渲染用户可见文本的组件
+  - 对清单内组件检查是否包含 `aria-live` 属性
+  - 输出：缺失 ARIA-live 的组件列表与建议值（`polite` / `assertive`）
+- [ ] 实现 baseline 读写（`openspec/guards/architecture-health-baseline.json`）
 
 ### Task 2.4: CI 集成
 

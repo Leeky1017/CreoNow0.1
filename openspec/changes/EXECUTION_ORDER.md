@@ -98,6 +98,47 @@ AMP 审计在 5 轮独立审查中识别出 28 类高频问题。以下矩阵说
 
 ---
 
+## 二·五、Gate 开发公共约定
+
+> 所有 G0 系列 gate（G0-01~G0-05）的实现必须遵循以下约定，确保 gate 之间行为一致、可预测。
+
+### Baseline 机制
+
+| 项目 | 约定 |
+|------|------|
+| 存储位置 | `openspec/guards/<gate-name>-baseline.json` |
+| 格式 | JSON，至少包含 `{ "count": N, "updatedAt": "ISO-8601" }` |
+| 更新命令 | `pnpm gate:<gate-name> --update-baseline` |
+| 首次生成 | gate 实现完成后立即生成初始 baseline 并提交 |
+| Ratchet 规则 | 当前违规数 ≤ baseline 数 → PASS；当前 > baseline → FAIL + 列出新增违规 |
+
+### 输出格式
+
+```
+[<GATE_NAME>] PASS  violations: M (baseline: N)
+[<GATE_NAME>] FAIL  violations: M (baseline: N)  +K new:
+  - file:line — description
+```
+
+### CI 集成
+
+| 项目 | 约定 |
+|------|------|
+| pnpm 命令 | `gate:<gate-name>` 统一前缀 |
+| CI job 名 | `gate-<gate-name>`（与 pnpm 命令同名） |
+| 触发条件 | 默认 `if code_changed`；需要 build 产物的 gate（如 bundle-budget）额外加 build 依赖 |
+| meta-job | 纳入 `ci` meta-job 的 `needs` 列表 |
+| 初始模式 | 默认 required；需要观察期的 gate 可设 `continue-on-error: true`（必须在 tasks.md 中声明） |
+
+### 测试约定
+
+- 每个 gate 的测试必须包含 **≥1 PASS fixture + ≥1 FAIL fixture**
+- 测试文件位置：`scripts/__tests__/<gate-name>.test.ts`
+- ESLint 规则测试：`scripts/eslint-rules/__tests__/<rule-name>.test.cjs`
+- 详见 `docs/references/testing/06-guard-and-lint-policy.md`
+
+---
+
 ## 三、任务簇总览
 
 | 任务簇 | 目标 | 包含任务 |
@@ -396,3 +437,4 @@ Phase 0 完成的标志不是"所有 PR 已合并"，而是：
 | 2025-07-14 | 全量重建：从 6 个 change 扩展为 24 个 A0 change，重写依赖拓扑与波次编排 |
 | 2025-07-14 | 增加 Wave 0 门禁基础设施（6 个 G0 change）；新增 28-Pattern 全覆盖矩阵；新增 GitHub Issue 全量追踪；波次编号调整（原 Wave 1-4 不变，前插 Wave 0） |
 | 2026-03-08 | 28-Pattern 矩阵升级为三层执行模型（Tier 1/2/3）；波次表补充 Issue 编号列；Issue 全量追踪从 25 个扩展到 31 个；#982 已关闭标注 |
+| 2026-03-08 | G0 系列补强：新增 §二·五 Gate 开发公共约定；G0-02 补充 cross-module-contract-gate 扩展任务（Pattern #7/#19）；G0-03 细化 ARIA-live 检测策略与 baseline 路径；G0-04 对齐报告模式/阻断模式转换机制；G0-05 新增 Tier 2 语义维度支持（S-T2-01~05）；G0-06 强化协议文档交付标准；全部 G0 tasks.md 增加三层执行模型归属声明 |

@@ -11,6 +11,12 @@
 
 W0-GATE: 门禁基础设施
 
+## 三层执行模型归属
+
+**Tier 1: CI 自动阻断** —— resource-size gate 从一开始即为 CI required；bundle-budget gate 初始以报告模式运行（`continue-on-error: true`），稳定后升级为 required。覆盖 Pattern #6。
+
+公共约定见 `EXECUTION_ORDER.md` §二·五。
+
 ---
 
 ## 验收标准
@@ -75,6 +81,7 @@ W0-GATE: 门禁基础设施
 - [ ] `package.json` 新增命令
 - [ ] `ci.yml` 新增 job（resource-size 在 code_changed 时运行，bundle-budget 在 PR + desktop_changed 时运行，需要 build 产物）
 - [ ] 纳入 ci meta-job
+- [ ] **启动模式说明**：bundle-budget job 初始以 `continue-on-error: true` 运行（报告模式，不阻断 CI）；gate 本身始终输出 PASS/FAIL 结论，但 CI job 不阻断合并。待基线稳定 + 团队确认后，升级为 required（去除 `continue-on-error`）。resource-size gate 从一开始即为 required。
 
 ---
 

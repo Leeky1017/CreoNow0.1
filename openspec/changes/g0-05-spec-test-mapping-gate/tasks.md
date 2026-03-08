@@ -11,6 +11,13 @@
 
 W0-GATE: 门禁基础设施
 
+## 三层执行模型归属
+
+**Tier 2: CI 半自动 + 审计交叉验证** —— gate 检查测试“存在性”（Scenario 有无对应测试），审计 Agent 验证测试“有效性”（测试是否真正覆盖行为）。
+同时输出 Tier 2 语义维度汇总（否定测试/能力声称/CJK/拒绝路径），供审计 Agent 作为验证输入。覆盖 Pattern #15~18, #22, #23。
+
+公共约定见 `EXECUTION_ORDER.md` §二·五。
+
 ---
 
 ## 验收标准
@@ -26,6 +33,8 @@ W0-GATE: 门禁基础设施
 | AC-7 | `docs/references/testing/README.md` 增加 guard 测试质量约定章节 | S-GTEST-01 |
 | AC-8 | `pnpm gate:spec-test-mapping` 命令可执行 | 全局 |
 | AC-9 | CI 新增对应 job | 全局 |
+| AC-10 | gate 输出包含 Tier 2 语义维度汇总（否定测试/能力声称/CJK/拒绝路径 分类覆盖率） | S-T2-01~05 |
+| AC-11 | Scenario 支持 `@tag` 标签注解以标识语义类型 | S-T2-01~04 |
 
 ---
 
@@ -63,6 +72,19 @@ W0-GATE: 门禁基础设施
 
 **文件**: `scripts/__tests__/spec-test-mapping-gate.test.ts`
 
+### Task 1.4: Tier 2 语义维度测试
+
+**映射验收标准**: AC-10, AC-11
+
+- [ ] 测试：Scenario 标题含 `should NOT render editable` → 自动归类为 negation 维度
+- [ ] 测试：Scenario 标签含 `@capability` → 归类为 capability 维度
+- [ ] 测试：Scenario 标题含 `CJK` 或 `中文` → 归类为 cjk 维度
+- [ ] 测试：Scenario 描述含 `拒绝` 或 `reject` → 归类为 rejection 维度
+- [ ] 测试：无标签且无关键词的 Scenario → 归类为 general，不计入 Tier 2 维度统计
+- [ ] 测试：输出包含 Tier 2 维度汇总（各类的 mapped/total/百分比）
+
+**文件**: `scripts/__tests__/spec-test-mapping-gate.test.ts`
+
 ---
 
 ## Phase 2: Green（实现）
@@ -71,9 +93,11 @@ W0-GATE: 门禁基础设施
 
 - [ ] 创建 `scripts/spec-test-mapping-gate.ts`
 - [ ] 解析器：读取 `*.spec.md` 文件，正则提取 `### Scenario (S-[A-Z]+-\d+)` 格式的 ID
+- [ ] **标签解析**：提取 Scenario 标题/描述中的 `@negation`、`@capability`、`@cjk`、`@rejection` 标签；若无显式标签，根据关键词启发匹配（`should NOT` → negation，`声称支持`/`capability` → capability，`中文`/`CJK` → cjk，`拒绝`/`reject`/`deny` → rejection）
 - [ ] 搜索器：在 `**/*.test.{ts,tsx}` 和 `**/*.spec.{ts,tsx}` 中搜索 Scenario ID 引用
 - [ ] 匹配器：构建 Scenario → 测试文件 映射表
 - [ ] 报告器：输出未映射列表 + 覆盖率
+- [ ] **Tier 2 维度报告**：按 negation / capability / cjk / rejection 分类输出各维度的覆盖率，格式 `[SPEC_TEST_MAP] Tier-2 summary: negation: C/T (XX%)`
 - [ ] 实现 baseline 读写（`openspec/guards/spec-test-mapping-baseline.json`）
 
 ### Task 2.2: 文档更新——否定测试约定

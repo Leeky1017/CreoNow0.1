@@ -11,6 +11,12 @@
 
 W0-GATE: 门禁基础设施
 
+## 三层执行模型归属
+
+**Tier 1: CI 自动阻断** —— 本 Change 产出的 Guard gate 纳入 CI，以 baseline ratchet 模式阻断增量违规。覆盖 Pattern #7, #9, #14, #19。
+
+公共约定见 `EXECUTION_ORDER.md` §二·五。
+
 ---
 
 ## 验收标准
@@ -25,6 +31,8 @@ W0-GATE: 门禁基础设施
 | AC-6 | `pnpm gate:service-stubs` 命令可执行，输出格式统一 | 全局 |
 | AC-7 | CI 新增对应 job，纳入 `ci` meta-job | 全局 |
 | AC-8 | 初始 baseline 文件已生成并提交 | S-IPC-03, S-STUB-05 |
+| AC-9 | `cross-module-contract-gate` 扩展能检出 Skill handler 输出无 schema 校验 | S-SKILL-01 |
+| AC-10 | `cross-module-contract-gate` 扩展能检出 API Key 仅非空检查 | S-KEY-01 |
 
 ---
 
@@ -59,6 +67,19 @@ W0-GATE: 门禁基础设施
 
 **文件**: `scripts/__tests__/service-stub-detector-gate.test.ts`（新建）
 
+### Task 1.3: cross-module-contract-gate 扩展测试
+
+**映射验收标准**: AC-9, AC-10
+
+- [ ] 测试：Skill handler 函数在调用 LLM 后使用 `outputSchema.parse(result)` → 不检出
+- [ ] 测试：Skill handler 直接 `return llmResult` 无 schema 校验 → 检出
+- [ ] 测试：API Key 配置校验函数包含长度/前缀检查 → 不检出
+- [ ] 测试：API Key 配置仅 `if (!key)` 非空检查 → 检出
+- [ ] 测试：扩展维度违规数 ≤ 基线 → PASS
+- [ ] 测试：扩展维度违规数 > 基线 → FAIL
+
+**文件**: `scripts/__tests__/cross-module-contract-gate.test.ts`（已有文件，补充测试）
+
 ---
 
 ## Phase 2: Green（实现）
@@ -84,16 +105,28 @@ W0-GATE: 门禁基础设施
 - [ ] 实现 baseline 读写逻辑（`openspec/guards/service-stubs-baseline.json`）
 - [ ] 输出格式对齐现有 gate
 
-### Task 2.3: CI 集成
+### Task 2.3: 扩展 `cross-module-contract-gate`
+
+**映射验收标准**: AC-9, AC-10
+
+- [ ] 在 `scripts/cross-module-contract-gate.ts` 中新增 `skill-output-validation` 检查维度
+- [ ] 扫描 `main/src/ipc/` 和 `main/src/services/` 中的 Skill handler 函数
+- [ ] 检查 LLM 返回结果（如 `response`, `result`, `completion`）后是否经过 schema/validate 校验
+- [ ] 新增 `api-key-format-validation` 检查维度
+- [ ] 扫描 API Key 配置/校验函数，检查是否包含格式检查（长度/前缀/正则）而非仅 `if (!key)`
+- [ ] 扩展维度纳入现有 baseline ratchet 机制
+
+### Task 2.4: CI 集成
 
 **映射验收标准**: AC-7
 
 - [ ] `package.json` 新增 `gate:ipc-validation` 和 `gate:service-stubs` 脚本
 - [ ] `ci.yml` 新增 `ipc-handler-validation` job（条件 `if code_changed`）
 - [ ] `ci.yml` 新增 `service-stub-detection` job（条件 `if code_changed`）
-- [ ] 两个 job 纳入 `ci` meta-job 的 needs 列表
+- [ ] `cross-module-contract-gate` 扩展维度纳入现有 CI job（无需新增 job）
+- [ ] 三个 gate 均纳入 `ci` meta-job 的 needs 列表
 
-### Task 2.4: 生成初始 Baseline
+### Task 2.5: 生成初始 Baseline
 
 **映射验收标准**: AC-8
 

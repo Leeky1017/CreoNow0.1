@@ -11,6 +11,12 @@
 
 W0-GATE: 门禁基础设施
 
+## 三层执行模型归属
+
+**Tier 1: CI 自动阻断** —— 本 Change 产出的所有 ESLint 规则纳入 CI `lint` job，新违规直接红灯，零人工干预。覆盖 Pattern #2, #4, #12, #13。
+
+公共约定见 `EXECUTION_ORDER.md` §二·五。
+
 ---
 
 ## 验收标准
