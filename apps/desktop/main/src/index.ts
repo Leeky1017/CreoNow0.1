@@ -17,6 +17,7 @@ import { registerFileIpcHandlers } from "./ipc/file";
 import { registerExportIpcHandlers } from "./ipc/export";
 import { registerJudgeIpcHandlers } from "./ipc/judge";
 import { registerKnowledgeGraphIpcHandlers } from "./ipc/knowledgeGraph";
+import { registerLogIpcHandlers } from "./ipc/log";
 import { registerEmbeddingIpcHandlers } from "./ipc/embedding";
 import { registerMemoryIpcHandlers } from "./ipc/memory";
 import { registerProjectIpcHandlers } from "./ipc/project";
@@ -357,6 +358,11 @@ function registerIpcHandlers(deps: {
   registerDialogIpcHandlers({
     ipcMain: guardedIpcMain,
     showOpenDialog: (options) => dialog.showOpenDialog(options),
+  });
+
+  registerLogIpcHandlers({
+    ipcMain: guardedIpcMain,
+    logger: deps.logger,
   });
 
   registerDbDebugIpcHandlers({

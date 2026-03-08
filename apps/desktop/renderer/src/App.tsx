@@ -3,6 +3,7 @@ import React from "react";
 import { AppShell } from "./components/layout/AppShell";
 import { OnboardingPage } from "./features/onboarding";
 import { invoke } from "./lib/ipcClient";
+import { GlobalErrorToastBridge } from "./lib/GlobalErrorToastBridge";
 import { createPreferenceStore } from "./lib/preferences";
 import { createAiStore, AiStoreProvider } from "./stores/aiStore";
 import { createEditorStore, EditorStoreProvider } from "./stores/editorStore";
@@ -160,6 +161,7 @@ export function App(): JSX.Element {
                               <AppRouter />
                             </div>
                           </div>
+                          <GlobalErrorToastBridge />
                         </LayoutStoreProvider>
                       </VersionStoreProvider>
                     </MemoryStoreProvider>

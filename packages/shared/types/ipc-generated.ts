@@ -194,6 +194,7 @@ export const IPC_CHANNELS = [
   "knowledge:rules:inject",
   "knowledge:suggestion:accept",
   "knowledge:suggestion:dismiss",
+  "log:renderer-error",
   "memory:clear:all",
   "memory:clear:project",
   "memory:distill:progress",
@@ -1744,6 +1745,16 @@ export type IpcChannelSpec = {
     response: {
       dismissed: true;
     };
+  };
+  "log:renderer-error": {
+    request: {
+      source: "unhandledrejection" | "error";
+      name: string;
+      message: string;
+      stack: string | undefined;
+      timestamp: string;
+    };
+    response: Record<string, never>;
   };
   "memory:clear:all": {
     request: {

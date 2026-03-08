@@ -879,7 +879,7 @@
       "writingExperience": "Writing Experience",
       "dataAndStorage": "Data & Storage",
       "editorDefaults": "Editor Defaults",
-      "differentiateAiEditsDescription": "When enabled, AI-generated entries in Version History show an extra \u201c{{marker}}\u201d marker."
+      "differentiateAiEditsDescription": "When enabled, AI-generated entries in Version History show an extra “{{marker}}” marker."
     },
     "appearance": {
       "colorWhite": "White",
@@ -1336,6 +1336,12 @@
     },
     "spinner": {
       "loading": "Loading"
+    }
+  },
+  "globalError": {
+    "toast": {
+      "title": "An unexpected error occurred",
+      "description": "The application encountered a problem. Your data has been saved."
     }
   }
 }
