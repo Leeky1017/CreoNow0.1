@@ -8,6 +8,8 @@
 | 脚本                                 | 职责                                            | 调用时机             |
 | ------------------------------------ | ----------------------------------------------- | -------------------- |
 | `agent_controlplane_sync.sh`         | 同步控制面的 main 到最新                        | 阶段 3 前 + 阶段 6   |
+| `agent_git_hooks_install.sh`         | 为当前 repo/worktree 安装 repo-managed git hooks | 阶段 3：环境隔离     |
+| `agent_task_begin.sh`                | gh-only fail-closed 任务入口：capabilities + sync + worktree + hook 安装 | 阶段 3：环境隔离 |
 | `agent_worktree_setup.sh`            | 创建 worktree 隔离环境                          | 阶段 3：环境隔离     |
 | `agent_pr_preflight.sh`              | 提交前 / PR 前的预检查                          | 阶段 5：提交前       |
 | `agent_pr_automerge_and_sync.sh`   | 创建 PR；默认不开 auto-merge，显式开启时需审计通过（仅 gh 通道） | 阶段 5：提交与合并 |
@@ -25,6 +27,7 @@
 | `error-boundary-coverage-gate.ts`    | ErrorBoundary 覆盖门禁                          | CI / preflight       |
 | `architecture-health-gate.ts`        | 架构健康度门禁                                  | CI / preflight       |
 | `spec-test-mapping-gate.ts`          | Spec Scenario→测试映射门禁                      | CI / preflight       |
+| `ai-rate-limit-coverage-gate.ts`      | AI 请求限流 + scheduler / queue coverage gate        | CI / preflight       |
 | `lint-ratchet.ts`                    | ESLint warning budget ratchet                   | CI / preflight       |
 
 ## 使用约定
@@ -49,3 +52,6 @@
 - `agent_github_delivery.py pr-payload` / `comment-payload` 负责统一 PR title/body 与阻断评论文案，避免不同通道各写一套模板。
 - 可选环境变量：`AGENT_PR_SUMMARY`、`AGENT_PR_USER_IMPACT`、`AGENT_PR_WORST_CASE`、`AGENT_PR_ROLLBACK_REF`，用于在自动创建 PR 时覆盖默认占位文案。
 - `agent_pr_automerge_and_sync.sh` 在 GitHub TLS 抖动时会标记 `transient` 并自动重试，必要时回退到 `gh run list` 快照通道。
+
+- 控制面根目录（controlplane root）禁止直接提交受管改动；在运行 `agent_task_begin.sh`、`agent_worktree_setup.sh` 或 `agent_controlplane_sync.sh` 后，由 `.githooks/pre-commit` / `.githooks/pre-push` 阻止。
+- 紧急热修若必须绕过，需显式设置 `CREONOW_ALLOW_CONTROLPLANE_BYPASS=1`，并在 PR / 审计记录中说明原因。

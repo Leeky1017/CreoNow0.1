@@ -8,6 +8,12 @@ fi
 
 COMMON_DIR="$(git rev-parse --git-common-dir)"
 CONTROLPLANE_ROOT="$(cd "$(dirname "$COMMON_DIR")" && pwd)"
+HOOKS_DIR="$CONTROLPLANE_ROOT/.githooks"
+
+if [[ -d "$HOOKS_DIR" ]]; then
+  chmod +x "$HOOKS_DIR"/*
+  git -C "$CONTROLPLANE_ROOT" config core.hooksPath "$HOOKS_DIR"
+fi
 
 DIRTY="$(git -C "$CONTROLPLANE_ROOT" status --porcelain=v1)"
 if [[ -n "$DIRTY" ]]; then

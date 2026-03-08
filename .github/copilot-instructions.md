@@ -3,7 +3,10 @@
 在这个仓库里，VS Code / GitHub Copilot Agent 不应把 GitHub 交付理解成“用户手动补最后一步”。请遵守以下规则：
 
 - 先读 `AGENTS.md`、`openspec/project.md`、相关 `openspec/specs/<module>/spec.md`、`docs/delivery-skill.md`。
+- 默认禁止在控制面 `main` 根目录直接实现；先运行 `scripts/agent_task_begin.sh <N> <slug>` 进入 `.worktrees/issue-<N>-<slug>`（gh-only；若仅有 MCP，请改走手动脚本链路）。
 - 优先复用仓库脚本，而不是即兴拼命令：
+  - `scripts/agent_task_begin.sh`
+  - `scripts/agent_git_hooks_install.sh`
   - `scripts/agent_worktree_setup.sh`
   - `scripts/agent_pr_preflight.sh`
   - `scripts/agent_pr_automerge_and_sync.sh`

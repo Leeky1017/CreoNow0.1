@@ -8,6 +8,8 @@ class ScriptPermissionTests(unittest.TestCase):
         repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
         expected_scripts = (
             "agent_controlplane_sync.sh",
+            "agent_git_hooks_install.sh",
+            "agent_task_begin.sh",
             "agent_worktree_setup.sh",
             "agent_worktree_cleanup.sh",
             "agent_pr_preflight.sh",

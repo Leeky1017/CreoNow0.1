@@ -124,7 +124,6 @@ type RunEntry = {
   emitEvent: (event: AiStreamEvent) => void;
 };
 
-const DEFAULT_LLM_RATE_LIMIT_PER_MINUTE = 60;
 const PROVIDER_HALF_OPEN_AFTER_MS = 15 * 60 * 1000;
 const STREAM_CHUNK_BATCH_WINDOW_MS = 20;
 const STREAM_CHUNK_MAX_BATCH_COUNT = 4;
@@ -1988,8 +1987,9 @@ export function createAiService(deps: AiServiceDeps): AiService {
   const sessionTokenTotalsByKey = new Map<string, number>();
   const sessionChatMessagesByKey = new Map<string, ChatMessageManager>();
   const skillScheduler = createSkillScheduler({
-    globalConcurrencyLimit: 8,
-    sessionQueueLimit: 20,
+    globalConcurrencyLimit: runtimeGovernance.skills.globalConcurrencyLimit,
+    sessionQueueLimit: runtimeGovernance.skills.sessionQueueLimit,
+    slotRecoveryTimeoutMs: runtimeGovernance.skills.slotRecoveryTimeoutMs,
   });
   const now = deps.now ?? (() => Date.now());
   const providerResolver = createProviderResolver({
@@ -2003,7 +2003,7 @@ export function createAiService(deps: AiServiceDeps): AiService {
         setTimeout(resolve, ms);
       }));
   const rateLimitPerMinute =
-    deps.rateLimitPerMinute ?? DEFAULT_LLM_RATE_LIMIT_PER_MINUTE;
+    deps.rateLimitPerMinute ?? runtimeGovernance.ai.rateLimitPerMinute;
   const retryBackoffMs =
     deps.retryBackoffMs ?? runtimeGovernance.ai.retryBackoffMs;
   const sessionTokenBudget =

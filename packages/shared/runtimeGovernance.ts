@@ -7,9 +7,18 @@ export type RuntimeGovernance = {
   ai: {
     timeoutMs: number;
     retryBackoffMs: readonly number[];
+    rateLimitPerMinute: number;
     sessionTokenBudget: number;
     streamRateLimitPerSecond: number;
     chatMessageCapacity: number;
+  };
+  skills: {
+    globalConcurrencyLimit: number;
+    sessionQueueLimit: number;
+    slotRecoveryTimeoutMs: number;
+  };
+  embedding: {
+    queueDebounceMs: number;
   };
   kg: {
     queryTimeoutMs: number;
@@ -26,9 +35,18 @@ export const RUNTIME_GOVERNANCE_DEFAULTS: RuntimeGovernance = {
   ai: {
     timeoutMs: 10_000,
     retryBackoffMs: [1_000, 2_000, 4_000],
+    rateLimitPerMinute: 60,
     sessionTokenBudget: 200_000,
     streamRateLimitPerSecond: 5_000,
     chatMessageCapacity: 2_000,
+  },
+  skills: {
+    globalConcurrencyLimit: 8,
+    sessionQueueLimit: 20,
+    slotRecoveryTimeoutMs: 125_000,
+  },
+  embedding: {
+    queueDebounceMs: 120,
   },
   kg: {
     queryTimeoutMs: 2_000,
@@ -161,6 +179,14 @@ export function resolveRuntimeGovernanceFromEnv(
     }),
     RUNTIME_GOVERNANCE_DEFAULTS.ai.retryBackoffMs,
   );
+  const aiRateLimitPerMinute = parsePositiveInt(
+    pickRaw({
+      env,
+      primaryKey: "CN_AI_RATE_LIMIT_PER_MINUTE",
+      legacyKey: "CREONOW_AI_RATE_LIMIT_PER_MINUTE",
+    }),
+    RUNTIME_GOVERNANCE_DEFAULTS.ai.rateLimitPerMinute,
+  );
   const aiSessionTokenBudget = parsePositiveInt(
     pickRaw({
       env,
@@ -184,6 +210,40 @@ export function resolveRuntimeGovernanceFromEnv(
       legacyKey: "CREONOW_AI_CHAT_MESSAGE_CAPACITY",
     }),
     RUNTIME_GOVERNANCE_DEFAULTS.ai.chatMessageCapacity,
+  );
+
+  const skillGlobalConcurrencyLimit = parsePositiveInt(
+    pickRaw({
+      env,
+      primaryKey: "CN_SKILL_GLOBAL_CONCURRENCY_LIMIT",
+      legacyKey: "CREONOW_SKILL_GLOBAL_CONCURRENCY_LIMIT",
+    }),
+    RUNTIME_GOVERNANCE_DEFAULTS.skills.globalConcurrencyLimit,
+  );
+  const skillSessionQueueLimit = parsePositiveInt(
+    pickRaw({
+      env,
+      primaryKey: "CN_SKILL_SESSION_QUEUE_LIMIT",
+      legacyKey: "CREONOW_SKILL_SESSION_QUEUE_LIMIT",
+    }),
+    RUNTIME_GOVERNANCE_DEFAULTS.skills.sessionQueueLimit,
+  );
+  const skillSlotRecoveryTimeoutMs = parsePositiveInt(
+    pickRaw({
+      env,
+      primaryKey: "CN_SKILL_SLOT_RECOVERY_TIMEOUT_MS",
+      legacyKey: "CREONOW_SKILL_SLOT_RECOVERY_TIMEOUT_MS",
+    }),
+    RUNTIME_GOVERNANCE_DEFAULTS.skills.slotRecoveryTimeoutMs,
+  );
+
+  const embeddingQueueDebounceMs = parsePositiveInt(
+    pickRaw({
+      env,
+      primaryKey: "CN_EMBEDDING_QUEUE_DEBOUNCE_MS",
+      legacyKey: "CREONOW_EMBEDDING_QUEUE_DEBOUNCE_MS",
+    }),
+    RUNTIME_GOVERNANCE_DEFAULTS.embedding.queueDebounceMs,
   );
 
   const kgQueryTimeoutMs = parsePositiveInt(
@@ -211,9 +271,18 @@ export function resolveRuntimeGovernanceFromEnv(
     ai: {
       timeoutMs: aiTimeoutMs,
       retryBackoffMs: aiRetryBackoffMs,
+      rateLimitPerMinute: aiRateLimitPerMinute,
       sessionTokenBudget: aiSessionTokenBudget,
       streamRateLimitPerSecond: aiStreamRateLimitPerSecond,
       chatMessageCapacity: aiChatMessageCapacity,
+    },
+    skills: {
+      globalConcurrencyLimit: skillGlobalConcurrencyLimit,
+      sessionQueueLimit: skillSessionQueueLimit,
+      slotRecoveryTimeoutMs: skillSlotRecoveryTimeoutMs,
+    },
+    embedding: {
+      queueDebounceMs: embeddingQueueDebounceMs,
     },
     kg: {
       queryTimeoutMs: kgQueryTimeoutMs,
