@@ -47,6 +47,21 @@
 | `storybook-build`            | `pnpm -C apps/desktop storybook:build`                      | 视觉验收基础门禁       |
 | `windows-e2e`                | `pnpm -C apps/desktop test:e2e`                             | Windows 平台 E2E       |
 
+## Wave 0 Gate 命令
+
+| 命令                               | 对应脚本                              | 说明                         |
+| ---------------------------------- | ------------------------------------- | ---------------------------- |
+| `pnpm gate:resource-size`          | `scripts/resource-size-gate.ts`       | 资源文件大小 ratchet         |
+| `pnpm gate:bundle-budget`          | `scripts/bundle-size-budget.ts`       | 构建产物体积预算             |
+| `pnpm gate:ipc-validation`         | `scripts/ipc-handler-validation-gate.ts` | IPC handler schema 校验   |
+| `pnpm gate:service-stubs`          | `scripts/service-stub-detector-gate.ts`  | Service 桩方法检测        |
+| `pnpm gate:error-boundary`         | `scripts/error-boundary-coverage-gate.ts`| ErrorBoundary 覆盖        |
+| `pnpm gate:architecture-health`    | `scripts/architecture-health-gate.ts` | 架构健康度                   |
+| `pnpm gate:spec-test-mapping`      | `scripts/spec-test-mapping-gate.ts`   | Spec Scenario→测试映射       |
+| `pnpm cross-module:check`          | `scripts/cross-module-contract-gate.ts`  | cross-module 契约对齐（含 skill-output / api-key-format）|
+
+所有 gate 支持 `--update-baseline` 参数生成/更新 baseline 文件。
+
 ## 当前已知状态
 
 ### Discovery consistency

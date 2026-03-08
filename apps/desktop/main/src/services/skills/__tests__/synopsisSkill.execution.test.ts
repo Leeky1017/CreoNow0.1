@@ -117,3 +117,44 @@ function buildRunArgs() {
   const okResult = await validSynopsis.execute(buildRunArgs());
   assert.equal(okResult.ok, true);
 }
+
+// G0-02-SKILL-OUTPUT: non-synopsis skill with declared output constraints must validate runtime output
+{
+  const constrainedExecutor = createSkillExecutor({
+    resolveSkill: (skillId) => ({
+      ok: true,
+      data: {
+        id: skillId,
+        enabled: true,
+        valid: true,
+        prompt: {
+          system: "rewrite-system",
+          user: "{{input}}",
+        },
+        output: {
+          minChars: 20,
+          maxChars: 40,
+          singleParagraph: true,
+        },
+      },
+    }),
+    runSkill: async () => ({
+      ok: true,
+      data: {
+        executionId: "ex-rewrite-too-short",
+        runId: "run-rewrite-too-short",
+        outputText: "太短。",
+      },
+    }),
+  });
+
+  const constrainedResult = await constrainedExecutor.execute({
+    ...buildRunArgs(),
+    skillId: "builtin:rewrite",
+  });
+  assert.equal(constrainedResult.ok, false);
+  if (constrainedResult.ok) {
+    throw new Error("Expected constrained non-synopsis output to be rejected");
+  }
+  assert.equal(constrainedResult.error.code, "INVALID_ARGUMENT");
+}

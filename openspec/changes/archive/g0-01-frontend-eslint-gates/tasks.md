@@ -41,13 +41,13 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-1, AC-2
 
-- [ ] 测试：`<button>` 在生产 JSX 中触发违规报告
-- [ ] 测试：`<input>`, `<select>`, `<textarea>` 同样触发
-- [ ] 测试：`<dialog>`, `<a>`, `<label>` 同样触发
-- [ ] 测试：`<Button>` (大写/组件) 不触发
-- [ ] 测试：`<div>`, `<span>`, `<p>`, `<h1>` 等布局元素不触发
-- [ ] 测试：`<img>`, `<video>`, `<canvas>` 等媒体元素不触发
-- [ ] 测试：报告消息包含替代组件建议
+- [x] 测试：`<button>` 在生产 JSX 中触发违规报告
+- [x] 测试：`<input>`, `<select>`, `<textarea>` 同样触发
+- [x] 测试：`<dialog>`, `<a>`, `<label>` 同样触发
+- [x] 测试：`<Button>` (大写/组件) 不触发
+- [x] 测试：`<div>`, `<span>`, `<p>`, `<h1>` 等布局元素不触发
+- [x] 测试：`<img>`, `<video>`, `<canvas>` 等媒体元素不触发
+- [x] 测试：报告消息包含替代组件建议
 
 **文件**: `scripts/eslint-rules/__tests__/no-native-html-element.test.cjs`（新建）
 
@@ -55,13 +55,13 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-3, AC-4
 
-- [ ] 测试：`<p>{error.code}</p>` 触发违规报告
-- [ ] 测试：`` `Error: ${err.code}` `` 在 JSX return 中触发
-- [ ] 测试：`if (error.code === 'X')` 不触发
-- [ ] 测试：`console.error(error.code)` 不触发
-- [ ] 测试：`catch (e) { logger.warn(e.code) }` 不触发
-- [ ] 测试：`switch (error.code) { case ... }` 不触发
-- [ ] 测试：非 `.code` 的 member 访问（如 `error.message`）不触发
+- [x] 测试：`<p>{error.code}</p>` 触发违规报告
+- [x] 测试：`` `Error: ${err.code}` `` 在 JSX return 中触发
+- [x] 测试：`if (error.code === 'X')` 不触发
+- [x] 测试：`console.error(error.code)` 不触发
+- [x] 测试：`catch (e) { logger.warn(e.code) }` 不触发
+- [x] 测试：`switch (error.code) { case ... }` 不触发
+- [x] 测试：非 `.code` 的 member 访问（如 `error.message`）不触发
 
 **文件**: `scripts/eslint-rules/__tests__/no-raw-error-code-in-ui.test.cjs`（新建）
 
@@ -69,9 +69,9 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-5
 
-- [ ] 测试：`className="shadow-lg"` 触发 `no-raw-tailwind-tokens` 违规
-- [ ] 测试：`className="shadow-xl shadow-2xl"` 触发两次违规
-- [ ] 测试：`className="shadow-[var(--shadow-card)]"` 不触发
+- [x] 测试：`className="shadow-lg"` 触发 `no-raw-tailwind-tokens` 违规
+- [x] 测试：`className="shadow-xl shadow-2xl"` 触发两次违规
+- [x] 测试：`className="shadow-[var(--shadow-card)]"` 不触发
 
 **文件**: `scripts/eslint-rules/__tests__/no-raw-tailwind-tokens.test.cjs`（已有文件，补充测试）
 
@@ -83,39 +83,39 @@ W0-GATE: 门禁基础设施
 
 **映射验收标准**: AC-1, AC-2, AC-9
 
-- [ ] 创建 `scripts/eslint-rules/no-native-html-element.cjs`
-- [ ] 定义禁止标签列表：`button, input, select, textarea, dialog, a, label`
-- [ ] 实现 `JSXOpeningElement` visitor，检查 `node.name.name` 是否在禁止列表中
-- [ ] 定义替代组件映射表（`button` → `Button`, `input` → `Input` 等）
-- [ ] 在 `index.cjs` 中注册导出
+- [x] 创建 `scripts/eslint-rules/no-native-html-element.cjs`
+- [x] 定义禁止标签列表：`button, input, select, textarea, dialog, a, label`
+- [x] 实现 `JSXOpeningElement` visitor，检查 `node.name.name` 是否在禁止列表中
+- [x] 定义替代组件映射表（`button` → `Button`, `input` → `Input` 等）
+- [x] 在 `index.cjs` 中注册导出
 
 ### Task 2.2: 实现 `no-raw-error-code-in-ui` 规则
 
 **映射验收标准**: AC-3, AC-4, AC-9
 
-- [ ] 创建 `scripts/eslint-rules/no-raw-error-code-in-ui.cjs`
-- [ ] 实现 `MemberExpression` visitor，检测 `*.code` / `*.errorCode` 模式
-- [ ] 通过 AST 上下文判断是否在 JSX return 路径中（检查祖先节点链）
-- [ ] 排除 if/switch/catch/console 上下文
-- [ ] 在 `index.cjs` 中注册导出
+- [x] 创建 `scripts/eslint-rules/no-raw-error-code-in-ui.cjs`
+- [x] 实现 `MemberExpression` visitor，检测 `*.code` / `*.errorCode` 模式
+- [x] 通过 AST 上下文判断是否在 JSX return 路径中（检查祖先节点链）
+- [x] 排除 if/switch/catch/console 上下文
+- [x] 在 `index.cjs` 中注册导出
 
 ### Task 2.3: 扩展阴影类匹配
 
 **映射验收标准**: AC-5
 
-- [ ] 审查 `no-raw-tailwind-tokens.cjs` 中的正则表达式
-- [ ] 如未覆盖，增加 `shadow-(sm|md|lg|xl|2xl|inner|none)` 匹配模式
-- [ ] 排除 `shadow-[var(--*)]` 的 CSS 变量引用
+- [x] 审查 `no-raw-tailwind-tokens.cjs` 中的正则表达式
+- [x] 如未覆盖，增加 `shadow-(sm|md|lg|xl|2xl|inner|none)` 匹配模式
+- [x] 排除 `shadow-[var(--*)]` 的 CSS 变量引用
 
 ### Task 2.4: 配置 ESLint overrides
 
 **映射验收标准**: AC-6, AC-7, AC-8
 
-- [ ] `.eslintrc.cjs` 新增 renderer override 段启用 `creonow/no-native-html-element: warn`
-- [ ] `.eslintrc.cjs` 新增 renderer override 段启用 `creonow/no-raw-error-code-in-ui: warn`
-- [ ] `.eslintrc.cjs` 新增 `.stories.tsx` override 段启用 `creonow/no-raw-tailwind-tokens: warn`
-- [ ] 运行 `pnpm lint:warning-budget:update` 更新 baseline
-- [ ] 验证 `pnpm lint:warning-budget` 通过
+- [x] `.eslintrc.cjs` 新增 renderer override 段启用 `creonow/no-native-html-element: warn`
+- [x] `.eslintrc.cjs` 新增 renderer override 段启用 `creonow/no-raw-error-code-in-ui: warn`
+- [x] `.eslintrc.cjs` 新增 `.stories.tsx` override 段启用 `creonow/no-raw-tailwind-tokens: warn`
+- [x] 运行 `pnpm lint:warning-budget:update` 更新 baseline
+- [x] 验证 `pnpm lint:warning-budget` 通过
 
 ---
 
@@ -123,9 +123,9 @@ W0-GATE: 门禁基础设施
 
 ### Task 3.1: 文档更新
 
-- [ ] 更新 `scripts/README.md` 记录新规则
-- [ ] 更新 `docs/references/coding-standards.md` 记录新门禁
-- [ ] 确认 `AGENTS.md` 禁令与新规则一致
+- [x] 更新 `scripts/README.md` 记录新规则
+- [x] 更新 `docs/references/coding-standards.md` 记录新门禁
+- [x] 确认 `AGENTS.md` 禁令与新规则一致
 
 ---
 

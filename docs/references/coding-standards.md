@@ -35,3 +35,16 @@
 - 数据库操作统一通过 DAO 层，禁止在 Service 中直接写 SQL
 - LLM 调用必须通过 AI Service 抽象层，禁止在业务模块中直接调用 API
 - 所有持久化操作必须支持事务回滚
+
+## 自定义 ESLint 规则
+
+项目在 `scripts/eslint-rules/` 维护自定义规则，由 `pnpm lint` 统一执行：
+
+| 规则 | 职责 |
+|------|------|
+| `no-native-html-element` | L3 Feature 组件禁止直接使用 `<button>` 等原生 HTML，必须使用 L1 Primitives |
+| `no-raw-tailwind-tokens` | 禁止使用 Tailwind 内置阴影类，必须走 `--shadow-*` Design Token |
+| `no-hardcoded-dimension` | 禁止硬编码尺寸值 |
+| `no-raw-error-code-in-ui` | 禁止 UI 层直接使用原始错误码字符串 |
+
+配合 `lint-ratchet.ts` 实现 warning budget ratchet：新增 warning 阻断，存量逐步收敛。

@@ -16,8 +16,16 @@
 | `ipc-acceptance-gate.ts`             | IPC acceptance SLO 门禁                         | 阶段 4：实现与测试   |
 | `test-discovery-consistency-gate.ts` | 测试发现与执行计划一致性校验                    | 阶段 4：实现与测试   |
 | `contract-generate.ts`               | 生成 IPC 契约类型定义                           | CI / 手动            |
-| `cross-module-contract-gate.ts`      | cross-module 契约对齐门禁                       | CI / preflight       |
+| `cross-module-contract-gate.ts`      | cross-module 契约对齐门禁（含 skill-output / api-key-format 维度）| CI / preflight       |
 | `cross-module-contract-autofix.ts`   | cross-module 失败分类与安全自动修复（开发分支） | 开发分支手动触发     |
+| `resource-size-gate.ts`              | 资源文件大小门禁（baseline ratchet）            | CI / preflight       |
+| `bundle-size-budget.ts`              | 构建产物体积预算门禁                            | CI / preflight       |
+| `ipc-handler-validation-gate.ts`     | IPC handler schema 校验覆盖门禁                 | CI / preflight       |
+| `service-stub-detector-gate.ts`      | Service 桩方法检测门禁                          | CI / preflight       |
+| `error-boundary-coverage-gate.ts`    | ErrorBoundary 覆盖门禁                          | CI / preflight       |
+| `architecture-health-gate.ts`        | 架构健康度门禁                                  | CI / preflight       |
+| `spec-test-mapping-gate.ts`          | Spec Scenario→测试映射门禁                      | CI / preflight       |
+| `lint-ratchet.ts`                    | ESLint warning budget ratchet                   | CI / preflight       |
 
 ## 使用约定
 

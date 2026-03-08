@@ -31,5 +31,11 @@
     "SEARCH_TIMEOUT",
     "CONTEXT_SCOPE_VIOLATION"
   ],
-  "desiredEnvelope": "ok"
+  "desiredEnvelope": "ok",
+  "skillOutputValidation": {
+    "approvedUnvalidatedCount": 0
+  },
+  "apiKeyFormatValidation": {
+    "approvedWeakCount": 0
+  }
 }

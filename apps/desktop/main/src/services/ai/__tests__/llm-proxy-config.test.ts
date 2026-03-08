@@ -84,3 +84,16 @@ assert.equal(
   false,
   "public config must not return raw API key",
 );
+
+const invalidUpdate = service.update({
+  patch: {
+    providerMode: "openai-byok",
+    openAiByokApiKey: "plain-text-key",
+  },
+});
+
+assert.equal(invalidUpdate.ok, false);
+if (invalidUpdate.ok) {
+  throw new Error("expected invalid API key format to be rejected");
+}
+assert.equal(invalidUpdate.error.code, "INVALID_ARGUMENT");

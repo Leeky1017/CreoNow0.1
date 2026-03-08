@@ -80,6 +80,11 @@ const KEY_ANTH_BYOK_BASE_URL =
 const KEY_ANTH_BYOK_API_KEY =
   "creonow.ai.provider.anthropicByok.apiKey" as const;
 const ENCRYPTED_SECRET_PREFIX = "__safe_storage_v1__:";
+const API_KEY_FORMAT = /^(?:sk|pk|rk|ak)-[A-Za-z0-9._-]{4,}$/u;
+
+function hasRecognizedApiKeyFormat(value: string): boolean {
+  return API_KEY_FORMAT.test(value);
+}
 
 type SettingsRow = { valueJson: string };
 
@@ -135,7 +140,50 @@ function normalizeApiKey(raw: unknown): string | null {
     return null;
   }
   const trimmed = raw.trim();
-  return trimmed.length > 0 ? trimmed : null;
+  if (trimmed.length === 0) {
+    return null;
+  }
+  return hasRecognizedApiKeyFormat(trimmed) ? trimmed : null;
+}
+
+function validatePatchedApiKeys(args: {
+  patch: Partial<{
+    apiKey: string;
+    openAiCompatibleApiKey: string;
+    openAiByokApiKey: string;
+    anthropicByokApiKey: string;
+  }>;
+}): ServiceResult<true> {
+  const candidates: Array<{ fieldName: string; value: string | undefined }> = [
+    { fieldName: "apiKey", value: args.patch.apiKey },
+    {
+      fieldName: "openAiCompatibleApiKey",
+      value: args.patch.openAiCompatibleApiKey,
+    },
+    { fieldName: "openAiByokApiKey", value: args.patch.openAiByokApiKey },
+    {
+      fieldName: "anthropicByokApiKey",
+      value: args.patch.anthropicByokApiKey,
+    },
+  ];
+
+  for (const candidate of candidates) {
+    if (typeof candidate.value !== "string") {
+      continue;
+    }
+    if (candidate.value.trim().length === 0) {
+      continue;
+    }
+    if (normalizeApiKey(candidate.value) === null) {
+      return ipcError(
+        "INVALID_ARGUMENT",
+        `${candidate.fieldName} has invalid API key format`,
+        { fieldName: candidate.fieldName },
+      );
+    }
+  }
+
+  return { ok: true, data: true };
 }
 
 /**
@@ -552,6 +600,11 @@ export function createAiProxySettingsService(deps: {
     const patchKeys = Object.keys(args.patch);
     if (patchKeys.length === 0) {
       return ipcError("INVALID_ARGUMENT", "patch is required");
+    }
+
+    const keyValidation = validatePatchedApiKeys({ patch: args.patch });
+    if (!keyValidation.ok) {
+      return keyValidation;
     }
 
     const existing = getRaw();
