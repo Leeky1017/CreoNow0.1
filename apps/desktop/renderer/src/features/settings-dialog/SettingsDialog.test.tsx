@@ -11,7 +11,6 @@ vi.mock("./SettingsGeneral", () => ({
     typewriterScroll: false,
     smartPunctuation: true,
     localAutoSave: true,
-    backupInterval: "5min",
     defaultTypography: "inter",
     interfaceScale: 100,
   },

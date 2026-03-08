@@ -194,7 +194,7 @@ describe("VersionHistoryPanel", () => {
     expect(previewButtons.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("calls onRestore when clicking Restore button", () => {
+  it("Restore button is disabled (Coming Soon)", () => {
     const onRestore = vi.fn();
     render(
       <VersionHistoryPanel
@@ -205,12 +205,14 @@ describe("VersionHistoryPanel", () => {
       />,
     );
 
-    // Get the button with text "Restore" (not just title)
     const restoreButtons = screen.getAllByRole("button", { name: /Restore/i });
-    // Click the first one which should be the explicit button in the selected card
+    // All Restore buttons should be disabled
+    for (const btn of restoreButtons) {
+      expect(btn).toBeDisabled();
+    }
+    // Click should not trigger onRestore
     fireEvent.click(restoreButtons[0]);
-
-    expect(onRestore).toHaveBeenCalledWith("v-1042");
+    expect(onRestore).not.toHaveBeenCalled();
   });
 
   it("calls onCompare when clicking Compare button", () => {

@@ -339,7 +339,7 @@ function WordChangeBadge({ change }: { change: WordChange }) {
  */
 function HoverActions({
   versionId,
-  onRestore,
+  onRestore: _onRestore,
   onCompare,
   onPreview,
 }: {
@@ -348,6 +348,8 @@ function HoverActions({
   onCompare?: (id: string) => void;
   onPreview?: (id: string) => void;
 }) {
+  const { t } = useTranslation();
+  void _onRestore; // Reserved for future use
   return (
     <div
       className={[
@@ -369,11 +371,12 @@ function HoverActions({
         "duration-[var(--duration-fast)]",
       ].join(" ")}
     >
-      <Tooltip content="Restore">
+      <Tooltip content={t('versionHistory.panel.restoreComingSoon')}>
         <button
           type="button"
-          onClick={() => onRestore?.(versionId)}
-          className="focus-ring p-1.5 rounded-md hover:bg-[var(--color-bg-overlay)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+          disabled
+          aria-disabled="true"
+          className="focus-ring p-1.5 rounded-md text-[var(--color-fg-muted)] opacity-50 cursor-not-allowed"
         >
           <RestoreIcon />
         </button>
@@ -465,14 +468,17 @@ function VersionCard({
 
         {/* Action buttons */}
         <div className="grid grid-cols-3 gap-2 mt-3">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => onRestore?.(version.id)}
-            className="!h-7 !text-[10px] !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
-          >
-            {t("versionHistory.panel.restore")}
-          </Button>
+          <Tooltip content={t('versionHistory.panel.restoreComingSoon')}>
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled
+              aria-disabled="true"
+              className="!h-7 !text-[10px] !px-0 !bg-[var(--color-bg-active)]"
+            >
+              {t("versionHistory.panel.restore")}
+            </Button>
+          </Tooltip>
           <Button
             variant="secondary"
             size="sm"

@@ -19,7 +19,6 @@ export interface GeneralSettings {
   typewriterScroll: boolean;
   smartPunctuation: boolean;
   localAutoSave: boolean;
-  backupInterval: string;
   defaultTypography: string;
   interfaceScale: number;
 }
@@ -59,15 +58,6 @@ const dividerStyles = [
   "bg-[var(--color-separator)]",
   "my-12",
 ].join(" ");
-
-/**
- * Backup interval options
- */
-const backupIntervalOptions = [
-  { value: "5min", label: "Every 5 minutes" },
-  { value: "15min", label: "Every 15 minutes" },
-  { value: "1hour", label: "Every hour" },
-];
 
 /**
  * Typography options
@@ -186,15 +176,6 @@ export function SettingsGeneral({
               updateSetting("localAutoSave", checked)
             }
           />
-
-          <FormField label={t('settings.general.backupInterval')} htmlFor="backup-interval" help={t('settings.general.backupIntervalHelp')} className="mt-2">
-            <Select
-              options={backupIntervalOptions}
-              value={settings.backupInterval}
-              onValueChange={(value) => updateSetting("backupInterval", value)}
-              fullWidth
-            />
-          </FormField>
         </div>
       </div>
 
@@ -249,7 +230,6 @@ export const defaultGeneralSettings: GeneralSettings = {
   typewriterScroll: false,
   smartPunctuation: true,
   localAutoSave: true,
-  backupInterval: "5min",
   defaultTypography: "inter",
   interfaceScale: 100,
 };

@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Avatar, Button, Text } from "../../components/primitives";
+import { Tooltip } from "../../components/primitives/Tooltip";
 
 /**
  * Subscription plan types
@@ -129,9 +130,11 @@ export function SettingsAccount({
               {account.email}
             </Text>
           </div>
-          <Button variant="secondary" size="sm" className="ml-auto">
-            {t('settingsDialog.account.editProfile')}
-          </Button>
+          <Tooltip content={t('settingsDialog.account.comingSoonTooltip')}>
+            <Button variant="secondary" size="sm" className="ml-auto" disabled aria-disabled="true">
+              {t('settingsDialog.account.editProfile')}
+            </Button>
+          </Tooltip>
         </div>
       </div>
 
@@ -161,14 +164,18 @@ export function SettingsAccount({
 
           <div className="flex gap-3">
             {account.plan === "free" && (
-              <Button variant="primary" size="sm" onClick={onUpgrade} disabled>
-                {t('settingsDialog.account.upgradeToPro')}
-              </Button>
+              <Tooltip content={t('settingsDialog.account.comingSoonTooltip')}>
+                <Button variant="primary" size="sm" onClick={onUpgrade} disabled aria-disabled="true">
+                  {t('settingsDialog.account.upgradeToPro')}
+                </Button>
+              </Tooltip>
             )}
             {account.plan !== "free" && (
-              <Button variant="secondary" size="sm" disabled>
-                {t('settingsDialog.account.manageSubscription')}
-              </Button>
+              <Tooltip content={t('settingsDialog.account.comingSoonTooltip')}>
+                <Button variant="secondary" size="sm" disabled aria-disabled="true">
+                  {t('settingsDialog.account.manageSubscription')}
+                </Button>
+              </Tooltip>
             )}
           </div>
           <Text size="small" color="muted" as="p" className="mt-3">
@@ -193,14 +200,17 @@ export function SettingsAccount({
                 {t('settingsDialog.account.deleteAccountDescription')}
               </Text>
             </div>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={onDeleteAccount}
-              disabled
-            >
-              {t('settingsDialog.account.deleteAccount')}
-            </Button>
+            <Tooltip content={t('settingsDialog.account.comingSoonTooltip')}>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={onDeleteAccount}
+                disabled
+                aria-disabled="true"
+              >
+                {t('settingsDialog.account.deleteAccount')}
+              </Button>
+            </Tooltip>
           </div>
           <Text size="small" color="muted" as="p" className="mt-3">
             {t('settingsDialog.account.comingSoon')}

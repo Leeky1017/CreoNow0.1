@@ -792,7 +792,8 @@
       "autoSaveOn": "自动保存已开启（上次保存于 {{time}}）",
       "autoSaveOff": "自动保存已关闭",
       "configureAutoSave": "配置自动保存设置",
-      "wordsChanged": "{{value}} 词已变更"
+      "wordsChanged": "{{value}} 词已变更",
+      "restoreComingSoon": "版本恢复功能正在开发中"
     },
     "preview": {
       "actorUser": "用户",
@@ -868,7 +869,8 @@
       "manageSubscription": "管理订阅",
       "dangerZone": "危险操作",
       "deleteAccount": "删除账户",
-      "deleteAccountDescription": "永久删除你的账户及所有关联数据。"
+      "deleteAccountDescription": "永久删除你的账户及所有关联数据。",
+      "comingSoonTooltip": "账户功能正在开发中"
     },
     "general": {
       "zhCN": "中文 (简体)",
@@ -879,7 +881,7 @@
       "writingExperience": "写作体验",
       "dataAndStorage": "数据与存储",
       "editorDefaults": "编辑器默认值",
-      "differentiateAiEditsDescription": "启用后，版本历史中 AI 生成的条目将显示额外的\u201c{{marker}}\u201d标记。"
+      "differentiateAiEditsDescription": "启用后，版本历史中 AI 生成的条目将显示额外的“{{marker}}”标记。"
     },
     "appearance": {
       "colorWhite": "白色",
@@ -1337,5 +1339,9 @@
     "spinner": {
       "loading": "加载中"
     }
+  },
+  "common": {
+    "comingSoon": "即将推出",
+    "featureInDevelopment": "此功能正在开发中"
   }
 }

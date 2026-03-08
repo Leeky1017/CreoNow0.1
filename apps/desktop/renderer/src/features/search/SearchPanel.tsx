@@ -10,7 +10,7 @@ import { Toggle } from "../../components/primitives/Toggle";
 import { useFileStore } from "../../stores/fileStore";
 import { useSearchStore, type SearchStatus } from "../../stores/searchStore";
 
-import { ArrowRight, ChevronDown, ChevronUp, CornerDownLeft, FileText, Folder, Frown, Globe, Lightbulb, RefreshCw, Search, Share2, Sparkles, TriangleAlert, X } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronUp, CornerDownLeft, FileText, Folder, Frown, Lightbulb, RefreshCw, Search, Share2, Sparkles, TriangleAlert, X } from "lucide-react";
 /**
  * Search category filter options.
  */
@@ -437,13 +437,7 @@ function SearchResultsArea(props: {
             {t("search.suggestionsText")}
           </p>
         </div>
-        <Button
-          variant="primary"
-          className="mt-6 !px-4 !py-2 !h-auto !bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] !text-sm !font-medium !rounded-lg hover:!bg-[var(--color-info)] hover:!brightness-110"
-        >
-          <Globe className="w-4 h-4" size={16} strokeWidth={1.5} />
-          {t("search.searchAllProjects")}
-        </Button>
+        {/* placeholder: hidden in v0.1, restore when search expansion is implemented */}
         <Button
           variant="ghost"
           onClick={props.onClearQuery}
@@ -515,16 +509,7 @@ function SearchResultsArea(props: {
           </ResultGroup>
         )}
 
-      {props.totalResults > 5 && (
-        <div className="p-2 text-center border-t border-[var(--color-separator)] mt-2">
-          <Button
-            variant="ghost"
-            className="!text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-info)] !py-2 w-full !h-auto"
-          >
-            {t("search.results.viewMore", { count: props.totalResults - 5 })}
-          </Button>
-        </div>
-      )}
+      {/* placeholder: hidden in v0.1, restore when search expansion is implemented */}
     </>
   );
 }

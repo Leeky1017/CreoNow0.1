@@ -792,7 +792,8 @@
       "autoSaveOn": "Auto-save on (last saved {{time}})",
       "autoSaveOff": "Auto-save off",
       "configureAutoSave": "Configure auto-save settings",
-      "wordsChanged": "{{value}} words changed"
+      "wordsChanged": "{{value}} words changed",
+      "restoreComingSoon": "Version restore is in development"
     },
     "preview": {
       "actorUser": "User",
@@ -868,7 +869,8 @@
       "manageSubscription": "Manage Subscription",
       "dangerZone": "Danger Zone",
       "deleteAccount": "Delete Account",
-      "deleteAccountDescription": "Permanently delete your account and all associated data."
+      "deleteAccountDescription": "Permanently delete your account and all associated data.",
+      "comingSoonTooltip": "Account features are in development"
     },
     "general": {
       "zhCN": "Chinese (Simplified)",
@@ -879,7 +881,7 @@
       "writingExperience": "Writing Experience",
       "dataAndStorage": "Data & Storage",
       "editorDefaults": "Editor Defaults",
-      "differentiateAiEditsDescription": "When enabled, AI-generated entries in Version History show an extra \u201c{{marker}}\u201d marker."
+      "differentiateAiEditsDescription": "When enabled, AI-generated entries in Version History show an extra “{{marker}}” marker."
     },
     "appearance": {
       "colorWhite": "White",
@@ -1337,5 +1339,9 @@
     "spinner": {
       "loading": "Loading"
     }
+  },
+  "common": {
+    "comingSoon": "Coming Soon",
+    "featureInDevelopment": "This feature is in development"
   }
 }

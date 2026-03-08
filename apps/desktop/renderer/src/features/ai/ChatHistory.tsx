@@ -16,6 +16,7 @@ type ChatHistoryProps = {
  */
 export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
   const { t } = useTranslation();
+  void props.onSelectChat; // Reserved for future use — chat persistence not yet available
 
   if (!props.open) {
     return null;
@@ -56,6 +57,9 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
           </Text>
           <Text size="tiny" color="muted" className="mt-1 block">
             {t('ai.chatHistory.emptyDescription')}
+          </Text>
+          <Text size="tiny" color="muted" className="mt-2 block" aria-label={t('common.comingSoon')}>
+            {t('common.comingSoon')}
           </Text>
         </div>
       </div>
