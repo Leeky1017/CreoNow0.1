@@ -147,7 +147,7 @@ describe("FileTreePanel", () => {
       render(<FileTreePanel projectId="test-project" />);
 
       expect(screen.getByRole("alert")).toBeInTheDocument();
-      expect(screen.getByText(/IO_ERROR/)).toBeInTheDocument();
+      expect(screen.getByText(/Failed to load files/)).toBeInTheDocument();
       expect(screen.getByText("Dismiss")).toBeInTheDocument();
     });
   });

@@ -419,7 +419,6 @@ describe("CreateProjectDialog — error and edge cases", () => {
 
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
-      expect(screen.getByText(/IO_ERROR/)).toBeInTheDocument();
       expect(screen.getByText(/Failed to create project/)).toBeInTheDocument();
     });
 
@@ -457,7 +456,6 @@ describe("CreateProjectDialog — error and edge cases", () => {
         await user.click(screen.getByTestId("create-project-submit"));
 
         await waitFor(() => {
-          expect(screen.getByText(/NAME_CONFLICT/)).toBeInTheDocument();
           expect(screen.getByText(/Project already exists/)).toBeInTheDocument();
         });
 
@@ -503,7 +501,6 @@ describe("CreateProjectDialog — error and edge cases", () => {
         await user.click(screen.getByTestId("create-project-submit"));
 
         await waitFor(() => {
-          expect(screen.getByText(/IO_ERROR/)).toBeInTheDocument();
           expect(screen.getByText(/Disk full/)).toBeInTheDocument();
         });
 

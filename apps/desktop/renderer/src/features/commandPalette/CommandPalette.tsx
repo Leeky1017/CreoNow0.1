@@ -321,7 +321,7 @@ function buildDefaultCommands(ctx: {
             ctx.dialogActions.onOpenSettings();
             ctx.onOpenChange(false);
           } else {
-            ctx.setErrorText("ACTION_FAILED: Settings dialog not available");
+            ctx.setErrorText(ctx.t("commandPalette.error.settingsUnavailable"));
           }
         },
       },
@@ -338,7 +338,7 @@ function buildDefaultCommands(ctx: {
             ctx.dialogActions.onOpenExport();
             ctx.onOpenChange(false);
           } else {
-            ctx.setErrorText("ACTION_FAILED: Export dialog not available");
+            ctx.setErrorText(ctx.t("commandPalette.error.exportUnavailable"));
           }
         },
       },
@@ -355,7 +355,7 @@ function buildDefaultCommands(ctx: {
             ctx.layoutActions.onToggleSidebar();
             ctx.onOpenChange(false);
           } else {
-            ctx.setErrorText("ACTION_FAILED: Layout actions not available");
+            ctx.setErrorText(ctx.t("commandPalette.error.layoutActionFailed"));
           }
         },
       },
@@ -372,7 +372,7 @@ function buildDefaultCommands(ctx: {
             ctx.layoutActions.onToggleRightPanel();
             ctx.onOpenChange(false);
           } else {
-            ctx.setErrorText("ACTION_FAILED: Layout actions not available");
+            ctx.setErrorText(ctx.t("commandPalette.error.layoutActionFailed"));
           }
         },
       },
@@ -389,7 +389,7 @@ function buildDefaultCommands(ctx: {
             ctx.layoutActions.onToggleZenMode();
             ctx.onOpenChange(false);
           } else {
-            ctx.setErrorText("ACTION_FAILED: Layout actions not available");
+            ctx.setErrorText(ctx.t("commandPalette.error.layoutActionFailed"));
           }
         },
       },
@@ -403,7 +403,7 @@ function buildDefaultCommands(ctx: {
         onSelect: async () => {
           ctx.setErrorText(null);
           if (!ctx.currentProjectId) {
-            ctx.setErrorText("NO_PROJECT: Please open a project first");
+            ctx.setErrorText(ctx.t("commandPalette.error.noProject"));
             return;
           }
           if (ctx.documentActions?.onCreateDocument) {
@@ -411,10 +411,10 @@ function buildDefaultCommands(ctx: {
               await ctx.documentActions.onCreateDocument();
               ctx.onOpenChange(false);
             } catch {
-              ctx.setErrorText("ACTION_FAILED: Failed to create document");
+              ctx.setErrorText(ctx.t("commandPalette.error.actionFailed"));
             }
           } else {
-            ctx.setErrorText("ACTION_FAILED: Document actions not available");
+            ctx.setErrorText(ctx.t("commandPalette.error.actionFailed"));
           }
         },
       },
@@ -429,7 +429,7 @@ function buildDefaultCommands(ctx: {
             ctx.layoutActions.onOpenVersionHistory();
             ctx.onOpenChange(false);
           } else {
-            ctx.setErrorText("ACTION_FAILED: Version history action not available");
+            ctx.setErrorText(ctx.t("commandPalette.error.actionFailed"));
           }
         },
       },
@@ -446,7 +446,7 @@ function buildDefaultCommands(ctx: {
             ctx.dialogActions.onOpenCreateProject();
             ctx.onOpenChange(false);
           } else {
-            ctx.setErrorText("ACTION_FAILED: Create project dialog not available");
+            ctx.setErrorText(ctx.t("commandPalette.error.actionFailed"));
           }
         },
       },
@@ -655,11 +655,11 @@ export function CommandPalette({
         >
           {/* 错误提示 */}
           {errorText && (
-            <div className="px-3 py-2 mb-2 bg-[var(--color-error-subtle)] rounded-[var(--radius-sm)]">
+            <div role="alert" className="px-3 py-2 mb-2 bg-[var(--color-error-subtle)] rounded-[var(--radius-sm)]">
               <Text
                 data-testid="command-palette-error"
                 size="small"
-                color="error"
+                className="text-[var(--color-error)]"
               >
                 {errorText}
               </Text>

@@ -19,10 +19,10 @@ const USER_FACING_MESSAGE_BY_CODE: Partial<
 };
 
 export function getUserFacingErrorMessage(error: {
-  code: IpcErrorCode;
+  code: IpcErrorCode | string;
   message: string;
 }): string {
-  const resolver = USER_FACING_MESSAGE_BY_CODE[error.code];
+  const resolver = USER_FACING_MESSAGE_BY_CODE[error.code as IpcErrorCode];
   if (!resolver) {
     return error.message;
   }

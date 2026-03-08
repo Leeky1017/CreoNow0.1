@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import type { IpcError, IpcResponse } from "@shared/types/ipc-generated";
 import { Button, Checkbox, Select, Tooltip } from "../../components/primitives";
 import { invoke } from "../../lib/ipcClient";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 import { Check, File, FileCode, FileOutput, FileText, X } from "lucide-react";
 /**
@@ -417,14 +419,12 @@ function ConfigView({
         {error ? (
           <div
             data-testid="export-error"
+            role="alert"
             className="p-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)]"
           >
             <div className="flex items-start gap-3">
-              <div className="flex-1 text-xs text-[var(--color-fg-muted)]">
-                <div data-testid="export-error-code" className="font-mono">
-                  {error.code}
-                </div>
-                <div data-testid="export-error-message">{error.message}</div>
+              <div className="flex-1 text-xs text-[var(--color-error)]">
+                <div data-testid="export-error-message">{getUserFacingErrorMessage(error)}</div>
               </div>
               <Button
                 variant="ghost"

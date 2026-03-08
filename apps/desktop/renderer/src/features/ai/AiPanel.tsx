@@ -52,6 +52,8 @@ import {
 } from "./ModelPicker";
 import { useAiStream } from "./useAiStream";
 import { onAiModelCatalogUpdated } from "./modelCatalogEvents";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 import {
   JUDGE_RESULT_CHANNEL,
   type JudgeResultEvent,
@@ -437,7 +439,7 @@ function buildAiErrorConfigs(args: {
     ? {
         type: "service_error",
         title: t('ai.panel.modelsUnavailable'),
-        description: `${modelsLastError.code}: ${modelsLastError.message}`,
+        description: getUserFacingErrorMessage(modelsLastError),
         errorCode: modelsLastError.code,
       }
     : null;

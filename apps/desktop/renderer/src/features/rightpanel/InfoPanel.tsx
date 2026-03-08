@@ -8,6 +8,8 @@ import { Text } from "../../components/primitives/Text";
 import { invoke } from "../../lib/ipcClient";
 import { useFileStore, type DocumentListItem } from "../../stores/fileStore";
 import "../../i18n";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 type StatsSummary = IpcResponseData<"stats:day:gettoday">["summary"];
 
@@ -145,11 +147,10 @@ function TodayStatsSection(props: {
           <Text
             data-testid="info-panel-stats-error"
             size="small"
-            color="muted"
-            className="text-center"
+            className="text-center text-[var(--color-error)]"
+            role="alert"
           >
-            <span data-testid="info-panel-stats-error-code">{error.code}</span>:{" "}
-            {error.message}
+            {getUserFacingErrorMessage(error)}
           </Text>
         </Card>
       </section>

@@ -3,6 +3,8 @@ import { Dialog } from "../../components/primitives/Dialog";
 import { Button } from "../../components/primitives/Button";
 import { Textarea } from "../../components/primitives/Textarea";
 import { Text } from "../../components/primitives/Text";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 type PreviewVersion = {
   versionId: string;
@@ -73,10 +75,11 @@ export function VersionPreviewDialog(
         {!props.loading && props.error ? (
           <div
             data-testid="version-preview-error"
+            role="alert"
             className="rounded-[var(--radius-sm)] border border-[var(--color-error)] bg-[var(--color-error-subtle)] p-3"
           >
             <Text size="small" className="text-[var(--color-error)]">
-              {props.error.code}: {props.error.message}
+              {getUserFacingErrorMessage(props.error)}
             </Text>
           </div>
         ) : null}

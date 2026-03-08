@@ -11,6 +11,8 @@ import {
 import { CharacterDetailDialog } from "./CharacterDetailDialog";
 import { characterToMetadataJson, kgToCharacters } from "./characterFromKg";
 import type { Character } from "./types";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 export interface CharacterCardListContainerProps {
   projectId: string;
@@ -155,8 +157,8 @@ export function CharacterCardListContainer({
         <span className="text-sm text-[var(--color-error-default)]">
           {t('character.panelContainer.loadError')}
         </span>
-        <span className="text-xs text-[var(--color-fg-muted)]">
-          {lastError.code}: {lastError.message}
+        <span className="text-xs text-[var(--color-error)]" role="alert">
+          {getUserFacingErrorMessage(lastError)}
         </span>
       </div>
     );

@@ -503,9 +503,9 @@ describe("AiErrorCard", () => {
       errorCode: "upstream_error_503",
     };
 
-    render(<AiErrorCard error={error} />);
+    render(<AiErrorCard error={error} errorCodeTestId="ai-error-code-test" />);
 
-    expect(screen.getByText("upstream_error_503")).toBeInTheDocument();
+    expect(screen.getByTestId("ai-error-code-test")).toHaveTextContent("Service is experiencing issues.");
   });
 
   it("displays countdown for rate limit errors", () => {

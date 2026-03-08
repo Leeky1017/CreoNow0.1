@@ -5,6 +5,8 @@ import type { IpcError, IpcResponseData } from "@shared/types/ipc-generated";
 import { Button, Card, Text } from "../../components/primitives";
 import { invoke } from "../../lib/ipcClient";
 import { useProjectStore } from "../../stores/projectStore";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 type PanelScope = "global" | "project";
 type SemanticRule = IpcResponseData<"memory:semantic:list">["items"][number];
@@ -494,8 +496,8 @@ export function MemoryPanel(): JSX.Element {
       {state.error ? (
         <Card noPadding className="shrink-0 p-2.5">
           <div className="flex items-center gap-2">
-            <Text data-testid="memory-error-code" size="code" color="muted">
-              {state.error.code}
+            <Text data-testid="memory-error" size="small" className="text-[var(--color-error)]" role="alert">
+              {getUserFacingErrorMessage(state.error)}
             </Text>
             <Button
               variant="ghost"
@@ -506,9 +508,6 @@ export function MemoryPanel(): JSX.Element {
               {t('memory.panel.dismissError')}
             </Button>
           </div>
-          <Text size="small" color="muted" className="mt-1.5 block">
-            {state.error.message}
-          </Text>
         </Card>
       ) : null}
 

@@ -18,6 +18,8 @@ import { invoke } from "../../lib/ipcClient";
 import { CreateProjectDialog } from "../projects/CreateProjectDialog";
 import { DeleteProjectDialog } from "../projects/DeleteProjectDialog";
 import { RenameProjectDialog } from "./RenameProjectDialog";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 import {
   useProjectStore,
   type ProjectListItem,
@@ -425,7 +427,7 @@ function useDashboardActions() {
       });
       setRenameSubmitting(false);
       if (!res.ok) {
-        setRenameErrorText(`${res.error.code}: ${res.error.message}`);
+        setRenameErrorText(getUserFacingErrorMessage(res.error));
         return;
       }
       setRenameDialogOpen(false);
@@ -624,8 +626,8 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
           {lastError ? (
             <div role="alert" className="w-full max-w-xl mb-8">
               <div className="p-3 border border-[var(--color-separator)] rounded-[var(--radius-md)] bg-[var(--color-bg-surface)]">
-                <Text size="small" className="mb-2 block">
-                  {lastError.code}: {lastError.message}
+                <Text size="small" className="mb-2 block text-[var(--color-error)]">
+                  {getUserFacingErrorMessage(lastError)}
                 </Text>
                 <Button
                   variant="secondary"
@@ -709,8 +711,8 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
             role="alert"
             className="px-12 py-3 border-b border-[var(--color-separator)]"
           >
-            <Text size="small" className="mb-2 block">
-              {lastError.code}: {lastError.message}
+            <Text size="small" className="mb-2 block text-[var(--color-error)]">
+              {getUserFacingErrorMessage(lastError)}
             </Text>
             <Button variant="secondary" size="sm" onClick={() => clearError()}>
               {t("dashboard.dismiss")}

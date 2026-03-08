@@ -124,7 +124,7 @@ describe("AiSettingsSection", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("ai-test-result")).toHaveTextContent(
-        "AI_AUTH_FAILED",
+        "Proxy unauthorized",
       );
     });
   });

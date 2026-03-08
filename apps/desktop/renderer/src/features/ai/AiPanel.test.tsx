@@ -211,8 +211,7 @@ describe("AiPanel", () => {
       render(<AiPanel />);
 
       expect(screen.getByTestId("ai-error-code")).toBeInTheDocument();
-      expect(screen.getByText("TIMEOUT")).toBeInTheDocument();
-      expect(screen.getByText("Request timed out")).toBeInTheDocument();
+      expect(screen.getByTestId("ai-error-code")).toHaveTextContent("Request timed out");
     });
   });
 

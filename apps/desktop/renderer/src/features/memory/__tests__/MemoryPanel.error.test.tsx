@@ -52,10 +52,9 @@ describe("MemoryPanel error handling", () => {
     render(<MemoryPanel />);
 
     await waitFor(() => {
-      expect(screen.getByTestId("memory-error-code")).toHaveTextContent(
-        "INTERNAL_ERROR",
+      expect(screen.getByTestId("memory-error")).toHaveTextContent(
+        "内部错误",
       );
     });
-    expect(screen.getByText("invoke exploded")).toBeInTheDocument();
   });
 });

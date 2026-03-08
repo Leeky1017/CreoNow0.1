@@ -6,6 +6,8 @@ import { invoke } from "../../lib/ipcClient";
 import { runFireAndForget } from "../../lib/fireAndForget";
 import { Button, Heading, Text } from "../../components/primitives";
 import { useJudgeEnsure } from "../../hooks/useJudgeEnsure";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 type JudgeModelState =
   IpcChannelSpec["judge:model:getstate"]["response"]["state"];
@@ -15,7 +17,7 @@ type JudgeModelState =
  */
 function formatState(state: JudgeModelState): string {
   if (state.status === "error") {
-    return `error (${state.error.code})`;
+    return getUserFacingErrorMessage(state.error);
   }
   return state.status;
 }
@@ -51,7 +53,7 @@ export function JudgeSection(): JSX.Element {
           clearError();
           return;
         }
-        setErrorText(`${res.error.code}: ${res.error.message}`);
+        setErrorText(getUserFacingErrorMessage(res.error));
       },
       (error) => {
         if (canceled) {
@@ -79,7 +81,7 @@ export function JudgeSection(): JSX.Element {
       return;
     }
 
-    setErrorText(`${result.error.code}: ${result.error.message}`);
+    setErrorText(getUserFacingErrorMessage(result.error));
     setState({
       status: "error",
       error: { code: result.error.code, message: result.error.message },
@@ -90,7 +92,7 @@ export function JudgeSection(): JSX.Element {
     ? { status: "downloading" }
     : state;
   const displayError = ensureError
-    ? `${ensureError.code}: ${ensureError.message}`
+    ? getUserFacingErrorMessage(ensureError)
     : errorText;
 
   return (
@@ -122,7 +124,7 @@ export function JudgeSection(): JSX.Element {
         </Button>
 
         {displayError ? (
-          <Text data-testid="judge-error" size="small" color="muted">
+          <Text data-testid="judge-error" size="small" className="text-[var(--color-error)]" role="alert">
             {displayError}
           </Text>
         ) : null}

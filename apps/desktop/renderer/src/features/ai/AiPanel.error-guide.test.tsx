@@ -227,7 +227,7 @@ describe("AiPanel error guidance", () => {
     render(<AiPanel />);
 
     expect(await screen.findByTestId("ai-error-code")).toHaveTextContent(
-      "UNKNOWN_ERROR",
+      "Something went wrong",
     );
     expect(screen.queryByTestId("ai-error-guide-db")).not.toBeInTheDocument();
     expect(
@@ -245,7 +245,7 @@ describe("AiPanel error guidance", () => {
     render(<AiPanel />);
 
     expect(await screen.findByTestId("ai-error-code")).toHaveTextContent(
-      "UPSTREAM_ERROR",
+      "Gateway timeout",
     );
     expect(
       screen.queryByTestId("ai-error-guide-provider"),

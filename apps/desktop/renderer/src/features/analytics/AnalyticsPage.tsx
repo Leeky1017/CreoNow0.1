@@ -8,6 +8,8 @@ import { Dialog } from "../../components/primitives/Dialog";
 import { Heading } from "../../components/primitives/Heading";
 import { Text } from "../../components/primitives/Text";
 import { invoke } from "../../lib/ipcClient";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 type StatsSummary = {
   wordsWritten: number;
@@ -147,8 +149,8 @@ export function AnalyticsPageContent(): JSX.Element {
       </header>
 
       {error ? (
-        <Text data-testid="analytics-error" size="small" color="muted">
-          {error.code}: {error.message}
+        <Text data-testid="analytics-error" size="small" className="text-[var(--color-error)]" role="alert">
+          {getUserFacingErrorMessage(error)}
         </Text>
       ) : null}
 

@@ -21,6 +21,8 @@ import {
   type DocumentType,
 } from "../../stores/fileStore";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 type EditingState =
   | { mode: "idle" }
@@ -1243,8 +1245,8 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
           role="alert"
           className="p-3 border-b border-[var(--color-separator)]"
         >
-          <Text size="small" className="mb-2 block">
-            {state.lastError.code}: {state.lastError.message}
+          <Text size="small" className="mb-2 block text-[var(--color-error)]">
+            {getUserFacingErrorMessage(state.lastError)}
           </Text>
           <Button variant="secondary" size="sm" onClick={() => state.clearError()}>
             {t('files.tree.dismiss')}

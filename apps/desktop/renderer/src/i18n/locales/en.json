@@ -27,6 +27,13 @@
         "command": "Command",
         "file": "File",
         "recent": "Recent"
+      },
+      "error": {
+        "settingsUnavailable": "Settings dialog is currently unavailable",
+        "exportUnavailable": "Export dialog is currently unavailable",
+        "layoutActionFailed": "Layout action failed",
+        "noProject": "Please open a project first",
+        "actionFailed": "Action failed, please try again later"
       }
     },
     "statusBar": {
@@ -812,6 +819,7 @@
       "notConfigured": "Not configured",
       "configured": "Configured",
       "connectionSuccess": "Connection successful ({{latency}}ms)",
+      "connectionFailed": "Connection failed",
       "title": "AI Configuration",
       "save": "Save",
       "testConnection": "Test Connection"
@@ -1114,7 +1122,7 @@
     },
     "defaultDocumentTitle": "Untitled Document",
     "error": {
-      "noProject": "NO_PROJECT: Please open a project first",
+      "noProject": "Please open a project first",
       "unknown": "Export failed due to unknown error"
     }
   },

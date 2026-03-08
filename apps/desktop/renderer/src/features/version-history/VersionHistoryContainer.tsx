@@ -18,6 +18,8 @@ import { invoke } from "../../lib/ipcClient";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { RESTORE_VERSION_CONFIRM_COPY } from "./restoreConfirmCopy";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore";
 import { i18n } from "../../i18n";
 
@@ -671,8 +673,8 @@ const {
           </div>
         ) : null}
         {branchMergeStatus === "error" && branchMergeError ? (
-          <div className="text-[11px] text-[var(--color-error)]">
-            {branchMergeError.code}: {branchMergeError.message}
+          <div role="alert" className="text-[11px] text-[var(--color-error)]">
+            {getUserFacingErrorMessage(branchMergeError)}
           </div>
         ) : null}
       </div>
@@ -723,9 +725,9 @@ const {
         </div>
       ) : null}
       {previewStatus === "error" && previewError ? (
-        <div className="px-3 py-2 text-xs text-[var(--color-error)]">
+        <div role="alert" className="px-3 py-2 text-xs text-[var(--color-error)]">
           <span data-testid="version-preview-error">
-            {previewError.code}: {previewError.message}
+            {getUserFacingErrorMessage(previewError)}
           </span>
         </div>
       ) : null}

@@ -2,6 +2,9 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { AiErrorCardProps, AiErrorType } from "./types";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../../lib/errorMessages";
+import type { IpcErrorCode } from "@shared/types/ipc-generated";
 
 /**
 
@@ -766,8 +769,8 @@ export function AiErrorCard({
           {/* Error code for service errors */}
 
           {error.errorCode && (
-            <div data-testid={errorCodeTestId} className={errorCodeStyles}>
-              {error.errorCode}
+            <div data-testid={errorCodeTestId} className={errorCodeStyles} role="alert">
+              {getUserFacingErrorMessage({ code: error.errorCode as IpcErrorCode, message: error.description })}
             </div>
           )}
 

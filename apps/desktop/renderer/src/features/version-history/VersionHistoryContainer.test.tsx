@@ -265,7 +265,7 @@ describe("VersionHistoryContainer", () => {
     await user.click(screen.getByTestId("version-preview-trigger"));
 
     const error = await screen.findByTestId("version-preview-error");
-    expect(error).toHaveTextContent("NOT_FOUND: Version not found");
+    expect(error).toHaveTextContent("Version not found");
   });
 
   it("restore requires confirmation and refreshes editor only after confirm", async () => {

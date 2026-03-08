@@ -11,6 +11,8 @@ import type {
 } from "../../components/features/KnowledgeGraph/types";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { useKgStore, type KgEntity, type KgRelation, type KgActions } from "../../stores/kgStore";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 import { TimelineView, type TimelineEventItem } from "./TimelineView";
 import { buildForceDirectedGraph } from "./graphRenderAdapter";
 import {
@@ -914,8 +916,8 @@ function KgListView(props: {
           className="p-3 border-b border-[var(--color-separator)]"
         >
           <div className="flex gap-2 items-center">
-            <Text data-testid="kg-error-code" size="code" color="muted">
-              {lastError.code}
+            <Text data-testid="kg-error" size="small" className="text-[var(--color-error)]">
+              {getUserFacingErrorMessage(lastError)}
             </Text>
             <Button
               variant="secondary"
@@ -926,9 +928,6 @@ function KgListView(props: {
               {t('kg.panel.dismiss')}
             </Button>
           </div>
-          <Text size="small" className="mt-1.5 block">
-            {lastError.message}
-          </Text>
         </div>
       ) : null}
 
@@ -1122,8 +1121,8 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
             className="p-3 border-b border-[var(--color-separator)] shrink-0"
           >
             <div className="flex gap-2 items-center">
-              <Text data-testid="kg-error-code" size="code" color="muted">
-                {lastError.code}
+              <Text data-testid="kg-error" size="small" className="text-[var(--color-error)]">
+                {getUserFacingErrorMessage(lastError)}
               </Text>
               <Button
                 variant="secondary"
@@ -1134,9 +1133,6 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                 {t('kg.panel.dismiss')}
               </Button>
             </div>
-            <Text size="small" className="mt-1.5 block">
-              {lastError.message}
-            </Text>
           </div>
         ) : null}
 

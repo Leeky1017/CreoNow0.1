@@ -10,6 +10,8 @@ import { Text } from "../../components/primitives/Text";
 import { useJudgeEnsure } from "../../hooks/useJudgeEnsure";
 import { invoke } from "../../lib/ipcClient";
 import { useProjectStore } from "../../stores/projectStore";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 import {
   QualityGatesPanelContent,
   type CheckGroup,
@@ -38,7 +40,7 @@ function formatJudgeState(state: JudgeModelState, t: TFunction): {
     case "not_ready":
       return { label: t('rightPanel.quality.notReady'), status: "not_ready" };
     case "error":
-      return { label: t('rightPanel.quality.errorWithCode', { code: state.error.code }), status: "error" };
+      return { label: t('rightPanel.quality.errorWithCode', { code: getUserFacingErrorMessage(state.error) }), status: "error" };
   }
 }
 
@@ -106,12 +108,10 @@ function JudgeStatusSection(props: {
             <Text
               data-testid="quality-panel-judge-error"
               size="small"
-              color="muted"
+              className="text-[var(--color-error)]"
+              role="alert"
             >
-              <span data-testid="quality-panel-judge-error-code">
-                {error.code}
-              </span>
-              : {error.message}
+              {getUserFacingErrorMessage(error)}
             </Text>
           </div>
         </div>
@@ -191,12 +191,10 @@ function ConstraintsSection(props: {
         <Text
           data-testid="quality-panel-constraints-error"
           size="small"
-          color="muted"
+          className="text-[var(--color-error)]"
+          role="alert"
         >
-          <span data-testid="quality-panel-constraints-error-code">
-            {error.code}
-          </span>
-          : {error.message}
+          {getUserFacingErrorMessage(error)}
         </Text>
       </Card>
     );

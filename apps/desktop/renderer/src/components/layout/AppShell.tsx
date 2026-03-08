@@ -63,6 +63,8 @@ import {
 import { runFireAndForget } from "../../lib/fireAndForget";
 import { invoke } from "../../lib/ipcClient";
 import { extractZenModeContent, getModKey } from "./appShellLayoutHelpers";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 import "../../i18n";
 
 type FileItem = {
@@ -658,7 +660,7 @@ function useAppShellController() {
       onCreateDocument: async () => {
         if (!currentProjectId) throw new Error("No project selected");
         const res = await createDocument({ projectId: currentProjectId });
-        if (!res.ok) throw new Error(`${res.error.code}: ${res.error.message}`);
+        if (!res.ok) throw new Error(getUserFacingErrorMessage(res.error));
       },
     }), [createDocument, currentProjectId]);
 

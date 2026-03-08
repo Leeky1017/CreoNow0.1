@@ -8,6 +8,8 @@ import { Input } from "../../components/primitives/Input";
 import { Text } from "../../components/primitives/Text";
 import { invoke } from "../../lib/ipcClient";
 import { emitAiModelCatalogUpdated } from "../ai/modelCatalogEvents";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 type AiSettings = IpcResponseData<"ai:config:get">;
 
@@ -39,7 +41,7 @@ export function AiSettingsSection(): JSX.Element {
     const res = await invoke("ai:config:get", {});
     if (!res.ok) {
       setStatus("idle");
-      setErrorText(`${res.error.code}: ${res.error.message}`);
+      setErrorText(getUserFacingErrorMessage(res.error));
       return;
     }
 
@@ -101,7 +103,7 @@ export function AiSettingsSection(): JSX.Element {
 
     const res = await invoke("ai:config:update", { patch });
     if (!res.ok) {
-      setErrorText(`${res.error.code}: ${res.error.message}`);
+      setErrorText(getUserFacingErrorMessage(res.error));
       return;
     }
 
@@ -118,7 +120,7 @@ export function AiSettingsSection(): JSX.Element {
 
     const res = await invoke("ai:config:test", {});
     if (!res.ok) {
-      setErrorText(`${res.error.code}: ${res.error.message}`);
+      setErrorText(getUserFacingErrorMessage(res.error));
       return;
     }
 
@@ -128,7 +130,9 @@ export function AiSettingsSection(): JSX.Element {
     }
 
     setTestResult(
-      `${res.data.error?.code ?? "ERROR"}: ${res.data.error?.message ?? "failed"} (${res.data.latencyMs}ms)`,
+      res.data.error
+        ? getUserFacingErrorMessage(res.data.error)
+        : t('settings.ai.connectionFailed'),
     );
   }
 
@@ -193,7 +197,7 @@ export function AiSettingsSection(): JSX.Element {
       </div>
 
       {errorText ? (
-        <Text data-testid="ai-error" size="small" color="muted">
+        <Text data-testid="ai-error" size="small" className="text-[var(--color-error)]" role="alert">
           {errorText}
         </Text>
       ) : null}

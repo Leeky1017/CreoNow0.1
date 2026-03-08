@@ -27,6 +27,13 @@
         "command": "命令",
         "file": "文件",
         "recent": "最近使用"
+      },
+      "error": {
+        "settingsUnavailable": "设置对话框暂不可用",
+        "exportUnavailable": "导出对话框暂不可用",
+        "layoutActionFailed": "布局操作失败",
+        "noProject": "请先打开一个项目",
+        "actionFailed": "操作失败，请稍后重试"
       }
     },
     "statusBar": {
@@ -812,6 +819,7 @@
       "notConfigured": "未配置",
       "configured": "已配置",
       "connectionSuccess": "连接成功 ({{latency}}ms)",
+      "connectionFailed": "连接失败",
       "title": "AI 配置",
       "save": "保存",
       "testConnection": "测试连接"
@@ -1114,7 +1122,7 @@
     },
     "defaultDocumentTitle": "未命名文档",
     "error": {
-      "noProject": "NO_PROJECT: 请先打开一个项目",
+      "noProject": "请先打开一个项目",
       "unknown": "由于未知错误导出失败"
     }
   },

@@ -18,6 +18,8 @@ import {
 import { useProjectStore } from "../../stores/projectStore";
 import { useTemplateStore } from "../../stores/templateStore";
 import { CreateTemplateDialog } from "./CreateTemplateDialog";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 import { Plus } from "lucide-react";
 // =============================================================================
@@ -314,11 +316,11 @@ function FormContent({
       {lastError && (
         <Text
           size="small"
-          color="muted"
           as="div"
           className="text-[var(--color-error)]"
+          role="alert"
         >
-          {lastError.code}: {lastError.message}
+          {getUserFacingErrorMessage(lastError)}
         </Text>
       )}
 

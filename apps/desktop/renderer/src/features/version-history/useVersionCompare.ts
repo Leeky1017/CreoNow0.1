@@ -5,6 +5,8 @@
 import { useCallback, useState } from "react";
 import { useEditorStore } from "../../stores/editorStore";
 import { invoke } from "../../lib/ipcClient";
+// TODO: A0-20 合并后重命名为 getHumanErrorMessage
+import { getUserFacingErrorMessage } from "../../lib/errorMessages";
 
 export type CompareState = {
   status: "idle" | "loading" | "ready" | "error";
@@ -62,7 +64,7 @@ export function useVersionCompare() {
           setCompareState({
             status: "error",
             diffText: "",
-            error: `${res.error.code}: ${res.error.message}`,
+            error: getUserFacingErrorMessage(res.error),
           });
           return;
         }

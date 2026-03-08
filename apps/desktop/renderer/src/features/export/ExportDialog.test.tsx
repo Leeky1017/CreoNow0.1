@@ -48,7 +48,7 @@ describe("ExportDialog", () => {
     render(<ExportDialog open={true} onOpenChange={() => {}} />);
 
     expect(screen.getByTestId("export-submit")).toBeDisabled();
-    expect(screen.getByText(/NO_PROJECT:/)).toBeInTheDocument();
+    expect(screen.getByText(/Please open a project first/)).toBeInTheDocument();
   });
 
   it("renders controlled progress view", () => {
@@ -101,12 +101,7 @@ describe("ExportDialog", () => {
     );
 
     expect(screen.getByTestId("export-error")).toBeInTheDocument();
-    expect(screen.getByTestId("export-error-code")).toHaveTextContent(
-      "IO_ERROR",
-    );
-    expect(screen.getByTestId("export-error-message")).toHaveTextContent(
-      "failed",
-    );
+    expect(screen.getByTestId("export-error")).toHaveTextContent("failed");
     expect(screen.getByRole("button", { name: "Dismiss" })).toBeInTheDocument();
   });
 
@@ -128,10 +123,7 @@ describe("ExportDialog", () => {
     await user.click(screen.getByTestId("export-submit"));
 
     expect(await screen.findByTestId("export-error")).toBeInTheDocument();
-    expect(screen.getByTestId("export-error-code")).toHaveTextContent(
-      "IO_ERROR",
-    );
-    expect(screen.getByTestId("export-error-message")).toHaveTextContent(
+    expect(screen.getByTestId("export-error")).toHaveTextContent(
       "disk write permission denied",
     );
     expect(screen.queryByTestId("export-success")).not.toBeInTheDocument();
