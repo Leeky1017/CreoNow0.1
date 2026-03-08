@@ -19,7 +19,7 @@ tester.run("creonow/no-raw-tailwind-tokens (shadow extension)", rule, {
     { code: `const x = "shadow-[0_4px_6px_rgba(0,0,0,0.1)]";` },
     // Design token usage — should not trigger
     { code: `const x = "shadow-surface";` },
-    // Drop shadow variant — should not trigger  
+    // Drop shadow variant — should not trigger
     { code: `const x = "drop-shadow-md";` },
     // CSS variable name — should not trigger
     { code: `const x = "--shadow-md";` },
