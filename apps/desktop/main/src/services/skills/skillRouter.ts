@@ -16,6 +16,56 @@ type InferSkillArgs = {
   explicitSkillId?: string;
 };
 
+// ---------------------------------------------------------------------------
+// 否定语境守卫 (Negation Guard)
+// ---------------------------------------------------------------------------
+
+const CN_NEGATION_WORDS: readonly string[] = [
+  "不要", "别", "不想", "不用", "不需要", "停止", "取消", "禁止", "不必", "无需",
+];
+
+const EN_NEGATION_WORDS: readonly string[] = [
+  "don't", "do not", "stop", "never", "cancel", "no more",
+];
+
+const CN_DOUBLE_NEGATION: readonly string[] = [
+  "不是不想", "不是不要", "并非不要", "并非不想",
+];
+
+const NEGATION_WINDOW = 12;
+
+export function isNegated(input: string, keywordIndex: number, _keyword: string): boolean {
+  const windowStart = Math.max(0, keywordIndex - NEGATION_WINDOW);
+  const window = input.substring(windowStart, keywordIndex);
+
+  for (const dn of CN_DOUBLE_NEGATION) {
+    if (window.includes(dn)) {
+      return false;
+    }
+  }
+
+  for (const neg of CN_NEGATION_WORDS) {
+    if (window.includes(neg)) {
+      return true;
+    }
+  }
+
+  const windowLower = window.toLowerCase();
+  for (const neg of EN_NEGATION_WORDS) {
+    if (windowLower.includes(neg)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function matchesKeyword(input: string, keyword: string): boolean {
+  const idx = input.indexOf(keyword);
+  if (idx === -1) return false;
+  return !isNegated(input, idx, keyword);
+}
+
 const KEYWORD_RULES: ReadonlyArray<{
   keywords: readonly string[];
   skillId: string;
@@ -68,7 +118,7 @@ export function inferSkillFromInput(args: InferSkillArgs): string {
       return "builtin:polish";
     }
 
-    const isRewriteIntent = REWRITE_KEYWORDS.some((kw) => input.includes(kw));
+    const isRewriteIntent = REWRITE_KEYWORDS.some((kw) => matchesKeyword(input, kw));
     if (isRewriteIntent && input.length < 20) {
       return "builtin:rewrite";
     }
@@ -76,7 +126,7 @@ export function inferSkillFromInput(args: InferSkillArgs): string {
 
   // 3. Keyword matching
   for (const rule of KEYWORD_RULES) {
-    if (rule.keywords.some((kw) => input.includes(kw))) {
+    if (rule.keywords.some((kw) => matchesKeyword(input, kw))) {
       return rule.skillId;
     }
   }
