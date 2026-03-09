@@ -1,9 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   EDITOR_SHORTCUTS,
   getAllShortcuts,
-  isMac,
 } from "../shortcuts";
 
 describe("EDITOR_SHORTCUTS.inlineAi", () => {
