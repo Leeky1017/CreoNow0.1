@@ -26,6 +26,7 @@ import {
   VersionStoreProvider,
   createVersionStore,
 } from "../stores/versionStore";
+import { PreferenceProvider } from "../lib/PreferenceContext";
 
 // =============================================================================
 // Test Fixtures
@@ -209,27 +210,29 @@ function IntegrationTestWrapper({
   const themeStore = React.useMemo(() => createThemeStore(mockPreferences), []);
 
   return (
-    <LayoutStoreProvider store={layoutStore}>
-      <ProjectStoreProvider store={projectStore}>
-        <FileStoreProvider store={fileStore}>
-          <EditorStoreProvider store={editorStore}>
-            <ThemeStoreProvider store={themeStore}>
-              <AiStoreProvider store={aiStore}>
-                <MemoryStoreProvider store={memoryStore}>
-                  <SearchStoreProvider store={searchStore}>
-                    <KgStoreProvider store={kgStore}>
-                      <VersionStoreProvider store={versionStore}>
-                        {children}
-                      </VersionStoreProvider>
-                    </KgStoreProvider>
-                  </SearchStoreProvider>
-                </MemoryStoreProvider>
-              </AiStoreProvider>
-            </ThemeStoreProvider>
-          </EditorStoreProvider>
-        </FileStoreProvider>
-      </ProjectStoreProvider>
-    </LayoutStoreProvider>
+    <PreferenceProvider value={mockPreferences}>
+      <LayoutStoreProvider store={layoutStore}>
+        <ProjectStoreProvider store={projectStore}>
+          <FileStoreProvider store={fileStore}>
+            <EditorStoreProvider store={editorStore}>
+              <ThemeStoreProvider store={themeStore}>
+                <AiStoreProvider store={aiStore}>
+                  <MemoryStoreProvider store={memoryStore}>
+                    <SearchStoreProvider store={searchStore}>
+                      <KgStoreProvider store={kgStore}>
+                        <VersionStoreProvider store={versionStore}>
+                          {children}
+                        </VersionStoreProvider>
+                      </KgStoreProvider>
+                    </SearchStoreProvider>
+                  </MemoryStoreProvider>
+                </AiStoreProvider>
+              </ThemeStoreProvider>
+            </EditorStoreProvider>
+          </FileStoreProvider>
+        </ProjectStoreProvider>
+      </LayoutStoreProvider>
+    </PreferenceProvider>
   );
 }
 

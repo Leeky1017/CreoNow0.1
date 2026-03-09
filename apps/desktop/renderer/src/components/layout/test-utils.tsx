@@ -23,6 +23,7 @@ import {
   createSearchStore,
 } from "../../stores/searchStore";
 import { KgStoreProvider, createKgStore } from "../../stores/kgStore";
+import { PreferenceProvider } from "../../lib/PreferenceContext";
 
 /**
  * Mock preferences for testing layout components.
@@ -141,25 +142,27 @@ export function LayoutTestWrapper({
   );
 
   return (
-    <LayoutStoreProvider store={layoutStore}>
-      <ProjectStoreProvider store={projectStore}>
-        <FileStoreProvider store={fileStore}>
-          <EditorStoreProvider store={editorStore}>
-            <ThemeStoreProvider store={themeStore}>
-              <AiStoreProvider store={aiStore}>
-                <MemoryStoreProvider store={memoryStore}>
-                  <SearchStoreProvider store={searchStore}>
-                    <KgStoreProvider store={kgStore}>
-                      {children}
-                    </KgStoreProvider>
-                  </SearchStoreProvider>
-                </MemoryStoreProvider>
-              </AiStoreProvider>
-            </ThemeStoreProvider>
-          </EditorStoreProvider>
-        </FileStoreProvider>
-      </ProjectStoreProvider>
-    </LayoutStoreProvider>
+    <PreferenceProvider value={mockPreferences}>
+      <LayoutStoreProvider store={layoutStore}>
+        <ProjectStoreProvider store={projectStore}>
+          <FileStoreProvider store={fileStore}>
+            <EditorStoreProvider store={editorStore}>
+              <ThemeStoreProvider store={themeStore}>
+                <AiStoreProvider store={aiStore}>
+                  <MemoryStoreProvider store={memoryStore}>
+                    <SearchStoreProvider store={searchStore}>
+                      <KgStoreProvider store={kgStore}>
+                        {children}
+                      </KgStoreProvider>
+                    </SearchStoreProvider>
+                  </MemoryStoreProvider>
+                </AiStoreProvider>
+              </ThemeStoreProvider>
+            </EditorStoreProvider>
+          </FileStoreProvider>
+        </ProjectStoreProvider>
+      </LayoutStoreProvider>
+    </PreferenceProvider>
   );
 }
 

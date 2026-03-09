@@ -31,6 +31,7 @@ import {
 } from "../../stores/searchStore";
 import { KgStoreProvider, createKgStore } from "../../stores/kgStore";
 import { ThemeStoreProvider, createThemeStore } from "../../stores/themeStore";
+import { PreferenceProvider } from "../../lib/PreferenceContext";
 
 const mockPreferences = {
   get: <T,>(): T | null => null,
@@ -108,27 +109,29 @@ function TestWrapper({
   const themeStore = React.useMemo(() => createThemeStore(mockPreferences), []);
 
   return (
-    <LayoutStoreProvider store={layoutStore}>
-      <ProjectStoreProvider store={projectStore}>
-        <FileStoreProvider store={fileStore}>
-          <EditorStoreProvider store={editorStore}>
-            <VersionStoreProvider store={versionStore}>
-              <ThemeStoreProvider store={themeStore}>
-                <AiStoreProvider store={aiStore}>
-                  <MemoryStoreProvider store={memoryStore}>
-                    <SearchStoreProvider store={searchStore}>
-                      <KgStoreProvider store={kgStore}>
-                        {children}
-                      </KgStoreProvider>
-                    </SearchStoreProvider>
-                  </MemoryStoreProvider>
-                </AiStoreProvider>
-              </ThemeStoreProvider>
-            </VersionStoreProvider>
-          </EditorStoreProvider>
-        </FileStoreProvider>
-      </ProjectStoreProvider>
-    </LayoutStoreProvider>
+    <PreferenceProvider value={mockPreferences}>
+      <LayoutStoreProvider store={layoutStore}>
+        <ProjectStoreProvider store={projectStore}>
+          <FileStoreProvider store={fileStore}>
+            <EditorStoreProvider store={editorStore}>
+              <VersionStoreProvider store={versionStore}>
+                <ThemeStoreProvider store={themeStore}>
+                  <AiStoreProvider store={aiStore}>
+                    <MemoryStoreProvider store={memoryStore}>
+                      <SearchStoreProvider store={searchStore}>
+                        <KgStoreProvider store={kgStore}>
+                          {children}
+                        </KgStoreProvider>
+                      </SearchStoreProvider>
+                    </MemoryStoreProvider>
+                  </AiStoreProvider>
+                </ThemeStoreProvider>
+              </VersionStoreProvider>
+            </EditorStoreProvider>
+          </FileStoreProvider>
+        </ProjectStoreProvider>
+      </LayoutStoreProvider>
+    </PreferenceProvider>
   );
 }
 
