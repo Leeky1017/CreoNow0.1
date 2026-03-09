@@ -1080,6 +1080,9 @@
     },
     "format": {
       "pdfDescription": "便携文档",
+      "pdfPlainTextHint": "纯文本导出 · 不含格式",
+      "docxPlainTextHint": "纯文本导出 · 不含格式",
+      "plainTextOnly": "纯文本导出",
       "plainText": "纯文本",
       "unsupported": "不支持",
       "pdfPlainTextHint": "纯文本导出 · 不含格式",

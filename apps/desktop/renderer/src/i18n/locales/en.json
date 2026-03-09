@@ -1080,6 +1080,9 @@
     },
     "format": {
       "pdfDescription": "Portable Document",
+      "pdfPlainTextHint": "Plain text export · no formatting",
+      "docxPlainTextHint": "Plain text export · no formatting",
+      "plainTextOnly": "Plain text only",
       "plainText": "Plain Text",
       "unsupported": "UNSUPPORTED",
       "pdfPlainTextHint": "Plain text export · no formatting",

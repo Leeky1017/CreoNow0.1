@@ -247,6 +247,59 @@ describe("ExportDialog", () => {
     expect(screen.getByRole("button", { name: "Dismiss" })).toBeInTheDocument();
   });
 
+  describe("format description labels (A0-19)", () => {
+    it("shows plain text hint for PDF format", () => {
+      render(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      const pdfCard = screen.getByTestId("export-format-pdf");
+      expect(pdfCard).toHaveTextContent("Plain text export · no formatting");
+    });
+
+    it("shows plain text hint for DOCX format", () => {
+      render(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      const docxCard = screen.getByTestId("export-format-docx");
+      expect(docxCard).toHaveTextContent("Plain text export · no formatting");
+    });
+
+    it("keeps .md description for Markdown format", () => {
+      render(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      const mdCard = screen.getByTestId("export-format-markdown");
+      expect(mdCard).toHaveTextContent(".md");
+    });
+
+    it("keeps .txt description for TXT format", () => {
+      render(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      const txtCard = screen.getByTestId("export-format-txt");
+      expect(txtCard).toHaveTextContent(".txt");
+    });
+
+    it("shows Chinese hint after switching to zh-CN locale", async () => {
+      await i18n.changeLanguage("zh-CN");
+      render(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      const pdfCard = screen.getByTestId("export-format-pdf");
+      expect(pdfCard).toHaveTextContent("纯文本导出 · 不含格式");
+
+      const docxCard = screen.getByTestId("export-format-docx");
+      expect(docxCard).toHaveTextContent("纯文本导出 · 不含格式");
+
+      await i18n.changeLanguage("en");
+    });
+  });
+
   it("shows explicit error and avoids success state when export IPC throws", async () => {
     const user = userEvent.setup();
     vi.spyOn(ipcClient, "invoke").mockRejectedValueOnce(
