@@ -423,7 +423,7 @@ function useEntityCompletion(deps: {
         message: null,
       });
     },
-    [listKnowledgeEntities, projectId, setEntityCompletionSession],
+    [listKnowledgeEntities, projectId, setEntityCompletionSession, t],
   );
 
   React.useEffect(() => {
