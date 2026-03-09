@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../components/primitives";
 
 type InlineAiDiffPreviewProps = {
   state: "streaming" | "ready";
@@ -153,29 +154,35 @@ export function InlineAiDiffPreview(props: InlineAiDiffPreviewProps): JSX.Elemen
           justifyContent: "flex-end",
         }}
       >
-        <button
+        <Button
           onClick={onReject}
           aria-label={t("editor.inlineAi.a11y.rejectButton")}
           data-testid="inline-ai-reject"
+          variant="ghost"
+          size="sm"
         >
           {t("editor.inlineAi.reject")}
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={onRegenerate}
           disabled={isStreaming}
           aria-label={t("editor.inlineAi.a11y.regenerateButton")}
           data-testid="inline-ai-regenerate"
+          variant="secondary"
+          size="sm"
         >
           {t("editor.inlineAi.regenerate")}
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={onAccept}
           disabled={isStreaming}
           aria-label={t("editor.inlineAi.a11y.acceptButton")}
           data-testid="inline-ai-accept"
+          variant="primary"
+          size="sm"
         >
           {t("editor.inlineAi.accept")}
-        </button>
+        </Button>
       </div>
     </div>
   );

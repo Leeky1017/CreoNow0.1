@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Input } from "../../components/primitives";
 
 type InlineAiInputProps = {
   onSubmit: (instruction: string) => void;
@@ -53,7 +54,7 @@ export function InlineAiInput(props: InlineAiInputProps): JSX.Element {
         minWidth: "320px",
       }}
     >
-      <input
+      <Input
         ref={inputRef}
         type="text"
         value={value}
@@ -62,8 +63,8 @@ export function InlineAiInput(props: InlineAiInputProps): JSX.Element {
         placeholder={t("editor.inlineAi.placeholder")}
         aria-label={t("editor.inlineAi.a11y.inputLabel")}
         className="inline-ai-input"
+        fullWidth
         style={{
-          width: "100%",
           border: "none",
           outline: "none",
           background: "transparent",
