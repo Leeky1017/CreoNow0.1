@@ -1,3 +1,4 @@
+import { describe, it } from "vitest";
 import assert from "node:assert/strict";
 
 import type { AiStreamEvent } from "@shared/types/ai";
@@ -48,8 +49,8 @@ function repeat(char: string, count: number): string {
   return char.repeat(count);
 }
 
-// ─── AC-1: 正常输出通过校验 ───────────────────────────────
-{
+describe("skillOutputValidation", () => {
+  it("AC-1: 正常输出通过校验", async () => {
   // polish: 输入 500 字，输出 480 字纯文本
   const polishResult = await buildExecutor(
     "builtin:polish",
@@ -97,10 +98,9 @@ function repeat(char: string, count: number): string {
     repeat("甲", 800),
   ).execute(buildRunArgs("builtin:expand", repeat("乙", 100)));
   assert.equal(expandResult.ok, true, "expand 正常输出应通过");
-}
+  });
 
-// ─── AC-2: 空输出拦截 ────────────────────────────────────
-{
+  it("AC-2: 空输出拦截", async () => {
   // 空字符串
   const emptyResult = await buildExecutor("builtin:polish", "").execute(
     buildRunArgs("builtin:polish", repeat("乙", 100)),
@@ -121,17 +121,18 @@ function repeat(char: string, count: number): string {
     assert.equal(whitespaceResult.error.code, "SKILL_OUTPUT_INVALID");
   }
 
-  // undefined
+  // undefined → V-EMPTY
   const undefinedResult = await buildExecutor(
     "builtin:expand",
     undefined,
   ).execute(buildRunArgs("builtin:expand", repeat("乙", 100)));
-  // undefined outputText 跳过校验（与 synopsis 行为一致）
-  assert.equal(undefinedResult.ok, true, "undefined 输出跳过校验");
-}
+  assert.equal(undefinedResult.ok, false, "undefined 输出应命中 V-EMPTY");
+  if (!undefinedResult.ok) {
+    assert.equal(undefinedResult.error.code, "SKILL_OUTPUT_INVALID");
+  }
+  });
 
-// ─── AC-3: 代码块污染检测 ────────────────────────────────
-{
+  it("AC-3: 代码块污染检测", async () => {
   // 带语言标识的代码块
   const codeBlockWithLang = await buildExecutor(
     "builtin:polish",
@@ -159,10 +160,9 @@ function repeat(char: string, count: number): string {
     "使用 `console.log` 来调试程序",
   ).execute(buildRunArgs("builtin:polish", repeat("乙", 100)));
   assert.equal(inlineCode.ok, true, "单反引号 inline code 不应被拦截");
-}
+  });
 
-// ─── AC-4: HTML 标签污染检测 ─────────────────────────────
-{
+  it("AC-4: HTML 标签污染检测", async () => {
   // <div>text</div>
   const divTag = await buildExecutor(
     "builtin:polish",
@@ -201,10 +201,9 @@ function repeat(char: string, count: number): string {
     "当 a < b 且 c > d 时需要注意边界条件",
   ).execute(buildRunArgs("builtin:rewrite", repeat("乙", 100)));
   assert.equal(mathInequality.ok, true, "数学不等式不应被误伤");
-}
+  });
 
-// ─── AC-5: strict 膨胀检测（polish/rewrite ≤10x） ────────
-{
+  it("AC-5: strict 膨胀检测 (polish/rewrite ≤10x)", async () => {
   // polish: 输入 200 字，输出 2500 字（12.5 倍）→ 拦截
   const polishInflated = await buildExecutor(
     "builtin:polish",
@@ -229,10 +228,9 @@ function repeat(char: string, count: number): string {
     repeat("甲", 1100),
   ).execute(buildRunArgs("builtin:rewrite", repeat("乙", 100)));
   assert.equal(rewriteInflated.ok, false, "rewrite 11 倍膨胀应被拦截");
-}
+  });
 
-// ─── AC-6: loose 膨胀检测（continue/expand ≤20x） ────────
-{
+  it("AC-6: loose 膨胀检测 (continue/expand ≤20x)", async () => {
   // continue: 输入 300 字，输出 4000 字（13.3 倍）→ 通过
   const continueExecutorOk = createSkillExecutor({
     resolveSkill: (id) => ({
@@ -293,10 +291,9 @@ function repeat(char: string, count: number): string {
     repeat("甲", 2100),
   ).execute(buildRunArgs("builtin:expand", repeat("乙", 100)));
   assert.equal(expandInflated.ok, false, "expand 21 倍膨胀应被拦截");
-}
+  });
 
-// ─── AC-7: synopsis 现有校验不受影响 ─────────────────────
-{
+  it("AC-7: synopsis 现有校验不受影响", async () => {
   const validSynopsisOutput =
     "主角在雨夜回到旧宅，发现遗嘱夹层中的手稿残页与失踪案相连，并从管家证词中确认父亲生前隐瞒了关键交易。" +
     "她在阁楼与弟弟激烈冲突后，决定暂缓公开证据，先追查账本来源以避免家族被反噬，同时安排同伴分头核验码头货单与银行流水。" +
@@ -354,10 +351,9 @@ function repeat(char: string, count: number): string {
   if (!synopsisShortResult.ok) {
     assert.equal(synopsisShortResult.error.code, "INVALID_ARGUMENT");
   }
-}
+  });
 
-// ─── AC-8: 无输入基准时跳过膨胀检测 ─────────────────────
-{
+  it("AC-8: 无输入基准时跳过膨胀检测", async () => {
   // inputText 为空字符串，输出 5000 字→仅格式校验，通过
   const emptyInputResult = await buildExecutor(
     "builtin:polish",
@@ -398,4 +394,5 @@ function repeat(char: string, count: number): string {
     true,
     "输入为空时跳过膨胀检测，5000 字纯文本应通过",
   );
-}
+  });
+});

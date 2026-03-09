@@ -401,8 +401,9 @@ function validateSkillRunOutput(args: {
   inputText?: string;
   output?: SkillOutputConstraints;
 }): ServiceResult<true> {
-  if (typeof args.outputText !== "string") {
-    return { ok: true, data: true };
+  // V-EMPTY: undefined, null, or empty after trim → SKILL_OUTPUT_INVALID
+  if (typeof args.outputText !== "string" || args.outputText.trim().length === 0) {
+    return ipcError("SKILL_OUTPUT_INVALID", "AI 返回了空内容，请重试");
   }
 
   const leaf = leafSkillId(args.skillId);
