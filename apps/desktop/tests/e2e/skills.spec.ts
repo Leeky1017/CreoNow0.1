@@ -116,7 +116,7 @@ test("skills: list + toggle disables run + command palette opens", async () => {
   }
 
   await runInput(page, "hello");
-  await expect(page.getByTestId("ai-error-code")).toContainText("UNSUPPORTED");
+  await expect(page.getByTestId("ai-error-code")).toContainText("Skill is disabled");
 
   await page.keyboard.press("Control+P");
   await expect(page.getByTestId("command-palette")).toBeVisible();
