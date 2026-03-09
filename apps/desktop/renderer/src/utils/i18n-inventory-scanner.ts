@@ -7,6 +7,18 @@
 
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
+import {
+  isCommentLine,
+  isConsoleLine,
+  isCssClassName,
+  isI18nWrapped,
+  isImportLine,
+  isTechnicalConstant,
+  isTrivialString,
+  isTypeDefinition,
+  NON_VISIBLE_JSX_ATTRS,
+} from "./i18n-inventory-scan-rules";
+export { isCssClassName, isTechnicalConstant } from "./i18n-inventory-scan-rules";
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -28,42 +40,66 @@ export interface ScanOptions {
   basePath?: string;
 }
 
+const MODULE_RULES: Array<{ pattern: RegExp; module: string }> = [
+  { pattern: /features\/editor\//u, module: "editor" },
+  { pattern: /features\/ai\//u, module: "ai-service" },
+  { pattern: /features\/version-history\//u, module: "version-control" },
+  { pattern: /features\/search\//u, module: "search" },
+  { pattern: /features\/settings-dialog\//u, module: "settings" },
+  { pattern: /features\/settings\//u, module: "settings" },
+  { pattern: /features\/export\//u, module: "export" },
+  { pattern: /features\/diff\//u, module: "diff" },
+  { pattern: /features\/outline\//u, module: "outline" },
+  { pattern: /features\/kg\//u, module: "knowledge-graph" },
+  { pattern: /features\/character\//u, module: "character" },
+  { pattern: /features\/onboarding\//u, module: "onboarding" },
+  { pattern: /features\/dashboard\//u, module: "dashboard" },
+  { pattern: /features\/shortcuts\//u, module: "shortcuts" },
+  { pattern: /features\/commandPalette\//u, module: "command-palette" },
+  { pattern: /features\/files\//u, module: "files" },
+  { pattern: /features\/memory\//u, module: "memory" },
+  { pattern: /features\/projects\//u, module: "projects" },
+  { pattern: /features\/analytics\//u, module: "analytics" },
+  { pattern: /features\/quality-gates\//u, module: "quality-gates" },
+  { pattern: /features\/zen-mode\//u, module: "zen-mode" },
+  { pattern: /components\//u, module: "components" },
+  { pattern: /stores\//u, module: "stores" },
+  { pattern: /hooks\//u, module: "hooks" },
+  { pattern: /lib\//u, module: "lib" },
+  { pattern: /services\//u, module: "services" },
+];
+
+const P0_PRIORITY_PATTERNS = [
+  /features\/editor\//u,
+  /features\/version-history\//u,
+  /features\/ai\//u,
+  /features\/export\//u,
+  /features\/diff\//u,
+];
+
+const STRING_PATTERN = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'/gu;
+const JSX_TEXT_PATTERN = />\s*([^<>{}\n]+?)\s*</gu;
+const LETTER_PATTERN = /[a-zA-Z\u4e00-\u9fff]/u;
+const JSX_FREE_LINE_PATTERN = /<[/a-zA-Z]/u;
+const NON_STATEMENT_PATTERN = /^[a-z]+\s*[=(]/u;
+const CONTROL_FLOW_PATTERN = /^(const|let|var|return|if|else|for|while|switch|case|break|default|throw|try|catch|finally|function|class|export|import)\b/u;
+const USER_FACING_CONTEXT_PATTERN = /(?:label|description|message|text|title|placeholder|content|error|diffText|status|reason)\s*:/u;
+const ATTR_NAME_PATTERN = /(\w[\w-]*)\s*=\s*\{?\s*$/u;
+const COMMON_PROP_PATTERN = /^(?:on[A-Z]|ref|style|css)/u;
+const SHORT_MEANINGFUL_STRINGS = new Set(["AI", "OK", "No"]);
+
 /* ------------------------------------------------------------------ */
 /* Module classification                                               */
 /* ------------------------------------------------------------------ */
 
 export function classifyModule(relPath: string): string {
-  if (/features\/editor\//u.test(relPath)) return "editor";
-  if (/features\/ai\//u.test(relPath)) return "ai-service";
-  if (/features\/version-history\//u.test(relPath)) return "version-control";
   if (/features\/rightpanel\//u.test(relPath)) {
     if (/[Aa]i/u.test(relPath)) return "ai-service";
     if (/[Vv]ersion/u.test(relPath)) return "version-control";
     return "workbench";
   }
-  if (/features\/search\//u.test(relPath)) return "search";
-  if (/features\/settings-dialog\//u.test(relPath)) return "settings";
-  if (/features\/settings\//u.test(relPath)) return "settings";
-  if (/features\/export\//u.test(relPath)) return "export";
-  if (/features\/diff\//u.test(relPath)) return "diff";
-  if (/features\/outline\//u.test(relPath)) return "outline";
-  if (/features\/kg\//u.test(relPath)) return "knowledge-graph";
-  if (/features\/character\//u.test(relPath)) return "character";
-  if (/features\/onboarding\//u.test(relPath)) return "onboarding";
-  if (/features\/dashboard\//u.test(relPath)) return "dashboard";
-  if (/features\/shortcuts\//u.test(relPath)) return "shortcuts";
-  if (/features\/commandPalette\//u.test(relPath)) return "command-palette";
-  if (/features\/files\//u.test(relPath)) return "files";
-  if (/features\/memory\//u.test(relPath)) return "memory";
-  if (/features\/projects\//u.test(relPath)) return "projects";
-  if (/features\/analytics\//u.test(relPath)) return "analytics";
-  if (/features\/quality-gates\//u.test(relPath)) return "quality-gates";
-  if (/features\/zen-mode\//u.test(relPath)) return "zen-mode";
-  if (/components\//u.test(relPath)) return "components";
-  if (/stores\//u.test(relPath)) return "stores";
-  if (/hooks\//u.test(relPath)) return "hooks";
-  if (/lib\//u.test(relPath)) return "lib";
-  if (/services\//u.test(relPath)) return "services";
+  const match = MODULE_RULES.find((rule) => rule.pattern.test(relPath));
+  if (match) return match.module;
   return "workbench";
 }
 
@@ -72,13 +108,7 @@ export function classifyModule(relPath: string): string {
 /* ------------------------------------------------------------------ */
 
 export function classifyPriority(relPath: string): "P0" | "P1" {
-  // P0: 用户核心路径——编辑器、版本历史、AI 面板、导出、Diff
-  if (/features\/editor\//u.test(relPath)) return "P0";
-  if (/features\/version-history\//u.test(relPath)) return "P0";
-  if (/features\/ai\//u.test(relPath)) return "P0";
-  if (/features\/export\//u.test(relPath)) return "P0";
-  if (/features\/diff\//u.test(relPath)) return "P0";
-  return "P1";
+  return P0_PRIORITY_PATTERNS.some((pattern) => pattern.test(relPath)) ? "P0" : "P1";
 }
 
 /* ------------------------------------------------------------------ */
@@ -136,199 +166,132 @@ export function collectSourceFiles(rootDir: string): string[] {
   return results.sort();
 }
 
-/* ------------------------------------------------------------------ */
-/* Exclusion rules                                                     */
-/* ------------------------------------------------------------------ */
-
-/** Strings that look like CSS / Tailwind class lists */
-export function isCssClassName(str: string): boolean {
-  const trimmed = str.trim();
-  if (!trimmed) return false;
-
-  // Single-token Tailwind utility detection
-  // Matches patterns like: rounded-[var(--radius-md)], bg-[var(--color-bg)],
-  // text-sm, mb-0.5, p-1, w-12, h-full, min-w-[180px], [&>svg]:w-12,
-  // focus-visible:outline, data-[state=closed]:fade-out-0, etc.
-  const singleTwPattern =
-    /^!?(?:\[&[^\]]*\]:)?(?:[a-z][\w-]*)(?::[\w-]+)*(?:\[.*\])?(?:\/[\d.]+)?$/u;
-  const twPrefixes =
-    /^!?(?:\[&[^\]]*\]:)?(?:flex|grid|block|inline|hidden|absolute|relative|fixed|sticky|static|overflow|transition|animate|pointer-events|select|resize|truncate|whitespace|break|sr-only|not-sr-only|bg-|text-|border-|rounded|shadow|ring|outline|p-|px-|py-|pt-|pr-|pb-|pl-|m-|mx-|my-|mt-|mr-|mb-|ml-|w-|h-|min-|max-|gap-|space-|font-|leading-|tracking-|z-|opacity-|cursor-|top-|right-|bottom-|left-|inset-|aspect-|columns-|items-|justify-|content-|self-|place-|order-|grow|shrink|basis-|table|decoration-|underline|line-through|no-underline|object-|align-|caption-|list-|indent-|accent-|caret-|scroll-|snap-|touch-|will-change-|appearance-|fill-|stroke-|transform|translate|rotate|skew|scale|origin-|backface-|perspective-|blur-|brightness-|contrast-|drop-shadow|grayscale|hue-rotate|invert|saturate|sepia|backdrop-|duration-|ease-|delay-|motion-reduce|motion-safe|focus-visible|focus-within|hover|active|disabled|data-|aria-|group-|peer-|first-|last-|odd-|even-|dark:|sm:|md:|lg:|xl:|2xl:)[:\w.\-[\]()\/,=']*$/u;
-
-  const tokens = trimmed.split(/\s+/u);
-
-  if (tokens.length === 1) {
-    if (twPrefixes.test(tokens[0])) return true;
-    if (singleTwPattern.test(tokens[0]) && /[-[\]]/u.test(tokens[0])) return true;
-    // Negative-prefix Tailwind utilities like -translate-y-1/2
-    if (/^-[a-z]+-/u.test(tokens[0])) return true;
-  }
-  // CSS property values
-  const cssValues = /^(?:center|left|right|top|bottom|none|auto|inherit|initial|unset|normal|nowrap|wrap|visible|collapse|separate|contain|cover|fill|stretch)(?:\s+(?:center|left|right|top|bottom|none|auto))*$/u;
-  if (cssValues.test(trimmed)) return true;
-
-  // Multi-token: check if majority look like Tailwind classes
-  if (tokens.length >= 2) {
-    const cssLikeCount = tokens.filter(
-      (t) => twPrefixes.test(t) || (singleTwPattern.test(t) && /[-[\]]/u.test(t)),
-    ).length;
-    if (cssLikeCount >= tokens.length * 0.6) return true;
-  }
-
-  return false;
-}
-
-/** Whether a string is purely a programming identifier (not user-facing text) */
-export function isTechnicalConstant(str: string): boolean {
-  // Route paths
-  if (/^\/[a-z]/u.test(str)) return true;
-  // UPPER_SNAKE_CASE constants (require underscore or 3+ chars to avoid catching "AI", "OK" etc.)
-  if (/^[A-Z][A-Z0-9_]+$/u.test(str)) {
-    const shortUserFacing = new Set(["AI", "OK", "NO", "ON", "GO"]);
-    if (!shortUserFacing.has(str)) return true;
-  }
-  // IPC / event channels like "version:snapshot:diff"
-  if (/^[a-z]+:[a-z]+/u.test(str)) return true;
-  // Color hex
-  if (/^#[0-9a-fA-F]{3,8}$/u.test(str)) return true;
-  // CSS var references
-  if (/^var\(--/u.test(str)) return true;
-  // Mime types
-  if (/^[a-z]+\/[a-z+.-]+$/u.test(str)) return true;
-  // File extensions
-  if (/^\.[a-z]{1,6}$/u.test(str)) return true;
-  // camelCase / PascalCase single-word identifiers without spaces
-  if (/^[a-z][a-zA-Z0-9]*$/u.test(str) && str.length < 30) return true;
-  if (/^[A-Z][a-zA-Z0-9]*$/u.test(str) && str.length < 30 && !/\s/u.test(str)) {
-    // Common user-facing words should NOT be excluded
-    const userFacingWords = new Set([
-      "You", "Auto", "Today", "Yesterday", "Earlier", "Loading",
-      "Restore", "Compare", "Preview", "Settings", "Save", "Cancel",
-      "Export", "Delete", "Edit", "Close", "Open", "Search",
-      "Back", "Next", "Previous", "Done", "Error", "Warning",
-      "Info", "Success", "Failed", "Pass", "Fail", "Score",
-      "Version", "Current", "Draft", "Final",
-      "Apply", "Reject", "Accept", "Dismiss", "Retry",
-      "Add", "Remove", "Create", "Update", "Rename",
-      "Copy", "Paste", "Cut", "Undo", "Redo",
-      "Bold", "Italic", "Underline", "Markdown",
-      "General", "Appearance", "Advanced",
-    ]);
-    if (userFacingWords.has(str)) return false;
-    // PascalCase with internal transitions => class/type identifier
-    if (/[a-z][A-Z]/u.test(str)) return true;
-  }
-  // snake_case identifiers (common in error codes)
-  if (/^[a-z][a-z0-9]*(_[a-z0-9]+)+$/u.test(str)) return true;
-  // kebab-case with only lowercase (technical IDs)
-  if (/^[a-z]+(-[a-z0-9]+)+$/u.test(str) && str.length < 40) return true;
-  // HTML tags / DOM elements
-  const htmlTags = new Set([
-    "div", "span", "p", "br", "strong", "b", "em", "i", "u", "s", "code",
-    "pre", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li",
-    "blockquote", "hr", "a", "img", "table", "tr", "td", "th", "thead",
-    "tbody", "button", "input", "textarea", "select", "option", "form",
-    "label", "section", "article", "header", "footer", "nav", "main",
-    "aside", "dialog", "details", "summary", "strike",
-  ]);
-  if (htmlTags.has(str.toLowerCase())) return true;
-  // ARIA role values
-  const ariaRoles = new Set([
-    "alert", "alertdialog", "button", "checkbox", "dialog", "grid",
-    "link", "listbox", "menu", "menubar", "menuitem", "option",
-    "progressbar", "radio", "radiogroup", "scrollbar", "searchbox",
-    "slider", "spinbutton", "status", "tab", "tablist", "tabpanel",
-    "textbox", "timer", "toolbar", "tooltip", "tree", "treeitem",
-    "presentation", "none", "group", "region", "log", "marquee",
-  ]);
-  if (ariaRoles.has(str.toLowerCase())) return true;
-  // TypeScript built-in and common generic type names
-  const tsTypes = new Set([
-    "Promise", "Partial", "Record", "Map", "Set", "Array", "Readonly",
-    "Required", "Pick", "Omit", "Exclude", "Extract", "NonNullable",
-    "ReturnType", "Parameters", "InstanceType", "ConstructorParameters",
-    "Awaited", "Uppercase", "Lowercase", "Capitalize", "Uncapitalize",
-    "HTMLElement", "Element", "ReactNode", "JSX", "React", "Event",
-  ]);
-  if (tsTypes.has(str)) return true;
-  // Double-underscore prefixed identifiers (__meta_json etc.)
-  if (/^__/u.test(str)) return true;
-  // Query parameters / URL fragments
-  if (/^[a-z]+=\w+/u.test(str)) return true;
-  return false;
-}
-
-/** Whether a string is too short or trivial to be user-facing text */
-function isTrivialString(str: string): boolean {
-  const trimmed = str.trim();
-  if (trimmed.length === 0) return true;
-  if (trimmed.length === 1) return true;
-  // Pure numbers / numeric expressions
-  if (/^[\d.,\s%+\-*/()]+$/u.test(trimmed)) return true;
-  // Pure punctuation / symbols
-  if (/^[^a-zA-Z\u4e00-\u9fff]+$/u.test(trimmed)) return true;
-  return false;
-}
-
-/** Check if a line is inside a console.log/warn/error/info/debug call */
-function isConsoleLine(line: string): boolean {
-  return /console\.(log|warn|error|info|debug)\s*\(/u.test(line);
-}
-
-/** Check if a line is a comment */
-function isCommentLine(line: string): boolean {
-  const trimmed = line.trim();
+function shouldSkipLine(line: string): boolean {
   return (
-    trimmed.startsWith("//") ||
-    trimmed.startsWith("*") ||
-    trimmed.startsWith("/*") ||
-    trimmed.startsWith("/**")
+    isCommentLine(line) ||
+    isConsoleLine(line) ||
+    isImportLine(line) ||
+    isTypeDefinition(line)
   );
 }
 
-/** Check if the line is an import/require/from statement */
-function isImportLine(line: string): boolean {
+function shouldSkipStringLiteral(
+  str: string,
+  line: string,
+  beforeMatch: string,
+  isTsx: boolean,
+): boolean {
+  if (isTrivialString(str) || isI18nWrapped(line, str) || isCssClassName(str) || isTechnicalConstant(str)) {
+    return true;
+  }
+
+  if (!LETTER_PATTERN.test(str)) return true;
+  if (str.length <= 2 && !SHORT_MEANINGFUL_STRINGS.has(str)) return true;
+
+  const attrMatch = ATTR_NAME_PATTERN.exec(beforeMatch);
+  if (attrMatch && NON_VISIBLE_JSX_ATTRS.has(attrMatch[1])) return true;
+  if (/className\s*=\s*\{[^}]*$/u.test(beforeMatch)) return true;
+  if (/\bcn\([^)]*$/u.test(beforeMatch)) return true;
+  if (/\.join\(\s*$/u.test(beforeMatch)) return true;
+
+  if (!isTsx) {
+    const isUserFacingContext =
+      USER_FACING_CONTEXT_PATTERN.test(beforeMatch) ||
+      /return\s+["']/u.test(beforeMatch) ||
+      /\|\|\s*["']/u.test(beforeMatch) ||
+      /\?\s*["']/u.test(beforeMatch);
+    if (!isUserFacingContext) return true;
+  }
+
+  if (/=\s*\{?\s*$/u.test(beforeMatch)) {
+    const possibleProp = beforeMatch.trim().split(/\s+/u).pop() ?? "";
+    if (COMMON_PROP_PATTERN.test(possibleProp)) return true;
+  }
+
+  return false;
+}
+
+function collectQuotedStringMatches(
+  line: string,
+  lineNum: number,
+  relFilePath: string,
+  isTsx: boolean,
+): Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[] {
+  const results: Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[] = [];
+  let match: RegExpExecArray | null;
+
+  STRING_PATTERN.lastIndex = 0;
+  while ((match = STRING_PATTERN.exec(line)) !== null) {
+    const str = match[1] ?? match[2];
+    if (str === undefined) continue;
+
+    const beforeMatch = line.slice(0, match.index);
+    if (shouldSkipStringLiteral(str, line, beforeMatch, isTsx)) continue;
+
+    results.push({ filePath: relFilePath, line: lineNum, rawString: str });
+  }
+
+  return results;
+}
+
+function isStandaloneJsxTextLine(
+  trimmed: string,
+  prevLine: string,
+  nextLine: string,
+): boolean {
+  if (JSX_FREE_LINE_PATTERN.test(trimmed)) return false;
+  if (/^\{/u.test(trimmed) || /^\/\//u.test(trimmed)) return false;
+  if (NON_STATEMENT_PATTERN.test(trimmed) || CONTROL_FLOW_PATTERN.test(trimmed)) return false;
+  if (!LETTER_PATTERN.test(trimmed)) return false;
+  if (isTrivialString(trimmed) || isCssClassName(trimmed) || isTechnicalConstant(trimmed)) {
+    return false;
+  }
+
+  return (/>$/u.test(prevLine) || /className=/u.test(prevLine)) && /<\//u.test(nextLine);
+}
+
+function collectJsxTextMatches(
+  line: string,
+  lineNum: number,
+  relFilePath: string,
+  prevLine: string,
+  nextLine: string,
+  existing: Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[],
+): Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[] {
+  const results: Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[] = [];
   const trimmed = line.trim();
-  return (
-    trimmed.startsWith("import ") ||
-    trimmed.startsWith("import{") ||
-    /^\} from /u.test(trimmed) ||
-    /require\(/u.test(trimmed)
-  );
-}
 
-/** Check if the line is a type/interface definition */
-function isTypeDefinition(line: string): boolean {
-  const trimmed = line.trim();
-  return /^(?:type|interface|export\s+type|export\s+interface)\s/u.test(trimmed);
-}
+  if (/^<\w/u.test(trimmed) && !/>.*[a-zA-Z\u4e00-\u9fff].*</u.test(trimmed)) {
+    return results;
+  }
 
-/** Check if the string is wrapped in t() on this line */
-function isI18nWrapped(line: string, str: string): boolean {
-  const escaped = str.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
-  return new RegExp(`t\\(\\s*["'\`]${escaped}["'\`]`, "u").test(line);
-}
+  let jsxMatch: RegExpExecArray | null;
+  JSX_TEXT_PATTERN.lastIndex = 0;
+  while ((jsxMatch = JSX_TEXT_PATTERN.exec(line)) !== null) {
+    const text = jsxMatch[1].trim();
+    if (isTrivialString(text) || !LETTER_PATTERN.test(text)) continue;
+    if (isCssClassName(text) || isTechnicalConstant(text)) continue;
+    if (existing.some((entry) => entry.line === lineNum && entry.rawString === text)) continue;
+    if (/^\{?t\(/u.test(text) || /^\{/u.test(text)) continue;
+    if (/^[)]:?\s/u.test(text) || /[({]$/u.test(text) || /^\)\s*:\s*\w/u.test(text)) {
+      continue;
+    }
 
-/** Non-visible JSX props that should never be flagged */
-const NON_VISIBLE_JSX_ATTRS = new Set([
-  "className", "class", "key", "id", "data-testid", "testId",
-  "role", "type", "name", "htmlFor", "method", "action",
-  "href", "src", "rel", "target", "encType", "accept",
-  "autoComplete", "inputMode", "pattern", "spellCheck",
-  "tabIndex", "dir", "lang", "slot", "is",
-  "aria-live", "aria-atomic", "aria-relevant", "aria-busy",
-  "aria-hidden", "aria-expanded", "aria-selected", "aria-disabled",
-  "aria-controls", "aria-haspopup", "aria-owns", "aria-flowto",
-  "aria-describedby", "aria-labelledby", "aria-activedescendant",
-  "aria-orientation", "aria-valuenow", "aria-valuemin", "aria-valuemax",
-  "aria-valuetext", "aria-sort", "aria-level", "aria-setsize",
-  "aria-posinset", "aria-colcount", "aria-colindex", "aria-colspan",
-  "aria-rowcount", "aria-rowindex", "aria-rowspan",
-  "data-state", "data-side", "data-align", "data-orientation",
-  "variant", "size", "color", "weight", "asChild", "as",
-  "strokeWidth", "viewBox", "fill", "stroke", "d", "xmlns",
-  "width", "height", "cx", "cy", "r", "rx", "ry",
-  "x", "y", "x1", "y1", "x2", "y2", "points", "transform",
-]);
+    results.push({ filePath: relFilePath, line: lineNum, rawString: text });
+  }
+
+  if (isStandaloneJsxTextLine(trimmed, prevLine, nextLine)) {
+    const text = trimmed;
+    const alreadyTracked = [...existing, ...results].some(
+      (entry) => entry.line === lineNum && entry.rawString === text,
+    );
+    if (!alreadyTracked) {
+      results.push({ filePath: relFilePath, line: lineNum, rawString: text });
+    }
+  }
+
+  return results;
+}
 
 /* ------------------------------------------------------------------ */
 /* Core scanning logic                                                 */
@@ -361,127 +324,17 @@ export function scanFileContent(
       continue;
     }
 
-    if (isCommentLine(line)) continue;
-    if (isConsoleLine(line)) continue;
-    if (isImportLine(line)) continue;
-    if (isTypeDefinition(line)) continue;
+    if (shouldSkipLine(line)) continue;
 
-    // ──────────────────────────────────────────────
-    // 1. Detect quoted string literals
-    // ──────────────────────────────────────────────
-    const stringPattern = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'/gu;
-    let match: RegExpExecArray | null;
+    results.push(...collectQuotedStringMatches(line, lineNum, relFilePath, isTsx));
 
-    while ((match = stringPattern.exec(line)) !== null) {
-      const str = match[1] ?? match[2];
-      if (str === undefined) continue;
+    if (!isTsx) continue;
 
-      if (isTrivialString(str)) continue;
-      if (isI18nWrapped(line, str)) continue;
-      if (isCssClassName(str)) continue;
-      if (isTechnicalConstant(str)) continue;
-
-      // Must contain at least one letter
-      if (!/[a-zA-Z\u4e00-\u9fff]/u.test(str)) continue;
-
-      // Short strings (≤2 chars) — only flag well-known user-visible words
-      if (str.length <= 2) {
-        const meaningfulShort = new Set(["AI", "OK", "No"]);
-        if (!meaningfulShort.has(str)) continue;
-      }
-
-      // Check what JSX attribute (if any) this string is the value of
-      const beforeMatch = line.slice(0, match.index);
-      const attrMatch = /(\w[\w-]*)\s*=\s*\{?\s*$/u.exec(beforeMatch);
-      if (attrMatch) {
-        const attrName = attrMatch[1];
-        // Skip non-visible attributes
-        if (NON_VISIBLE_JSX_ATTRS.has(attrName)) continue;
-        // User-visible attributes are always flagged (handled below)
-      }
-
-      // className={...} or cn(...) contexts
-      if (/className\s*=\s*\{[^}]*$/u.test(beforeMatch)) continue;
-      if (/\bcn\([^)]*$/u.test(beforeMatch)) continue;
-      if (/\.join\(\s*$/u.test(beforeMatch)) continue;
-
-      // For .ts files (non-JSX), only flag strings in user-facing contexts
-      if (!isTsx) {
-        const isUserFacingContext =
-          /(?:label|description|message|text|title|placeholder|content|error|diffText|status|reason)\s*:/u.test(beforeMatch) ||
-          /return\s+["']/u.test(beforeMatch) ||
-          /\|\|\s*["']/u.test(beforeMatch) ||
-          /\?\s*["']/u.test(beforeMatch);
-        if (!isUserFacingContext) continue;
-      }
-
-      // Skip JSX prop values for non-visible attributes (broader catch)
-      if (/=\s*\{?\s*$/u.test(beforeMatch)) {
-        // If we couldn't identify the attr name, check common framework patterns
-        const possibleProp = beforeMatch.trim().split(/\s+/u).pop() ?? "";
-        if (/^(?:on[A-Z]|ref|style|css)/u.test(possibleProp)) continue;
-      }
-
-      results.push({ filePath: relFilePath, line: lineNum, rawString: str });
-    }
-
-    // ──────────────────────────────────────────────
-    // 2. Detect JSX text content (>text<)
-    // ──────────────────────────────────────────────
-    if (isTsx) {
-      const trimmed = line.trim();
-      // Skip lines that are purely opening tags with no text
-      if (/^<\w/u.test(trimmed) && !/>.*[a-zA-Z\u4e00-\u9fff].*</u.test(trimmed)) continue;
-
-      // Pattern 1: text between > and < on same line
-      const jsxTextPattern = />\s*([^<>{}\n]+?)\s*</gu;
-      let jsxMatch: RegExpExecArray | null;
-
-      while ((jsxMatch = jsxTextPattern.exec(line)) !== null) {
-        const text = jsxMatch[1].trim();
-        if (isTrivialString(text)) continue;
-        if (!/[a-zA-Z\u4e00-\u9fff]/u.test(text)) continue;
-        if (isCssClassName(text)) continue;
-        if (isTechnicalConstant(text)) continue;
-
-        if (results.some((r) => r.line === lineNum && r.rawString === text)) continue;
-
-        if (/^\{?t\(/u.test(text)) continue;
-        if (/^\{/u.test(text)) continue;
-        // Skip JSX expression fragments like ") : help ? ("
-        if (/^[)]:?\s/u.test(text) || /[({]$/u.test(text)) continue;
-        if (/^\)\s*:\s*\w/u.test(text)) continue;
-
-        results.push({ filePath: relFilePath, line: lineNum, rawString: text });
-      }
-
-      // Pattern 2: standalone text line inside JSX (no tags on this line)
-      // e.g., "        Loading versions..."
-      if (
-        !/<[/a-zA-Z]/u.test(trimmed) &&       // no JSX tags
-        !/^\{/u.test(trimmed) &&               // not an expression
-        !/^\/\//u.test(trimmed) &&             // not a comment
-        !/^[a-z]+\s*[=(]/u.test(trimmed) &&    // not a statement
-        !/^(const|let|var|return|if|else|for|while|switch|case|break|default|throw|try|catch|finally|function|class|export|import)\b/u.test(trimmed) &&
-        /[a-zA-Z\u4e00-\u9fff]/u.test(trimmed) &&
-        !isTrivialString(trimmed) &&
-        !isCssClassName(trimmed) &&
-        !isTechnicalConstant(trimmed)
-      ) {
-        // Check surrounding context (prev/next lines) for JSX tags
-        const prevLine = i > 0 ? lines[i - 1].trim() : "";
-        const nextLine = i < lines.length - 1 ? lines[i + 1].trim() : "";
-        const inJsxContext =
-          (/>$/u.test(prevLine) || /className=/u.test(prevLine)) &&
-          /<\//u.test(nextLine);
-        if (inJsxContext) {
-          const text = trimmed;
-          if (!results.some((r) => r.line === lineNum && r.rawString === text)) {
-            results.push({ filePath: relFilePath, line: lineNum, rawString: text });
-          }
-        }
-      }
-    }
+    const prevLine = i > 0 ? lines[i - 1].trim() : "";
+    const nextLine = i < lines.length - 1 ? lines[i + 1].trim() : "";
+    results.push(
+      ...collectJsxTextMatches(line, lineNum, relFilePath, prevLine, nextLine, results),
+    );
   }
 
   return results;
