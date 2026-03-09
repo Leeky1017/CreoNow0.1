@@ -1,11 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 import {
   LAYOUT_SHORTCUTS,
-  EDITOR_SHORTCUTS,
   getAllShortcuts,
   getShortcutDisplay,
-  isMac,
 } from "./shortcuts";
 
 describe("shortcuts — globalSearch", () => {
