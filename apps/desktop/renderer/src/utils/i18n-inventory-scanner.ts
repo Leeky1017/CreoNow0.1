@@ -330,12 +330,6 @@ const NON_VISIBLE_JSX_ATTRS = new Set([
   "x", "y", "x1", "y1", "x2", "y2", "points", "transform",
 ]);
 
-/** User-visible JSX attributes that SHOULD be i18n */
-const USER_VISIBLE_ATTRS = new Set([
-  "title", "placeholder", "aria-label", "aria-description",
-  "alt", "content" /* Tooltip content */,
-]);
-
 /* ------------------------------------------------------------------ */
 /* Core scanning logic                                                 */
 /* ------------------------------------------------------------------ */
