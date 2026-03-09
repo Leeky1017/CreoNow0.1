@@ -162,6 +162,26 @@
       "accept": "Accept",
       "reject": "Reject"
     },
+    "inlineAi": {
+      "placeholder": "Enter AI instruction…",
+      "accept": "Accept",
+      "reject": "Reject",
+      "regenerate": "Regenerate",
+      "generating": "AI is generating…",
+      "executionError": "AI execution failed, please try again",
+      "conflictError": "Selection content has been modified, cannot apply changes",
+      "quickPolish": "Polish",
+      "quickRewrite": "Rewrite",
+      "quickTranslate": "Translate",
+      "a11y": {
+        "dialogLabel": "Inline AI Input",
+        "inputLabel": "AI instruction input",
+        "previewLabel": "AI modification preview",
+        "acceptButton": "Accept AI changes",
+        "rejectButton": "Reject AI changes",
+        "regenerateButton": "Regenerate AI changes"
+      }
+    },
     "slashCommand": {
       "searchPlaceholder": "Search slash commands...",
       "noCommandsFound": "No commands found."

@@ -162,6 +162,26 @@
       "accept": "接受",
       "reject": "拒绝"
     },
+    "inlineAi": {
+      "placeholder": "输入 AI 指令…",
+      "accept": "接受",
+      "reject": "拒绝",
+      "regenerate": "重新生成",
+      "generating": "AI 生成中…",
+      "executionError": "AI 执行失败，请重试",
+      "conflictError": "选区内容已被修改，无法应用更改",
+      "quickPolish": "润色",
+      "quickRewrite": "改写",
+      "quickTranslate": "翻译",
+      "a11y": {
+        "dialogLabel": "内联 AI 输入",
+        "inputLabel": "AI 指令输入框",
+        "previewLabel": "AI 修改预览",
+        "acceptButton": "接受 AI 修改",
+        "rejectButton": "拒绝 AI 修改",
+        "regenerateButton": "重新生成 AI 修改"
+      }
+    },
     "slashCommand": {
       "searchPlaceholder": "搜索斜杠命令...",
       "noCommandsFound": "未找到命令。"
