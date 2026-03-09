@@ -108,12 +108,19 @@ function JudgeStatusSection(props: {
               size="small"
               color="muted"
             >
-              <span data-testid="quality-panel-judge-error-code">
-                {error.code}
-              </span>
-              : {error.message}
+              {t('rightPanel.quality.errorWithCode')}
             </Text>
           </div>
+          <Button
+            data-testid="quality-panel-judge-ensure"
+            variant="secondary"
+            size="sm"
+            onClick={onEnsure}
+            disabled={ensureBusy}
+            loading={ensureBusy}
+          >
+            {t('rightPanel.quality.retry')}
+          </Button>
         </div>
       </Card>
     );
