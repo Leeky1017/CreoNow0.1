@@ -129,7 +129,6 @@ vi.mock("@radix-ui/react-radio-group", async () => {
     },
   };
 });
-
 beforeAll(async () => {
   await act(async () => {
     await i18n.changeLanguage("en");
