@@ -9,6 +9,7 @@ import {
   type DocumentStatus,
   type DocumentType,
 } from "../services/documents/documentService";
+import { MAX_DOCUMENT_SIZE_BYTES } from "../services/documents/documentCoreService";
 import { deriveContent } from "../services/documents/derive";
 import type { EmbeddingComputeRunner } from "../services/embedding/embeddingComputeOffload";
 import {
@@ -384,12 +385,6 @@ function registerFileDocumentContentHandlers(
         reason: SaveReason;
       },
     ): Promise<IpcResponse<{ updatedAt: number; contentHash: string }>> => {
-      if (!deps.db) {
-        return {
-          ok: false,
-          error: { code: "DB_ERROR", message: "Database not ready" },
-        };
-      }
       if (
         payload.projectId.trim().length === 0 ||
         payload.documentId.trim().length === 0
@@ -400,6 +395,25 @@ function registerFileDocumentContentHandlers(
             code: "INVALID_ARGUMENT",
             message: "projectId/documentId is required",
           },
+        };
+      }
+
+      const contentByteLength = Buffer.byteLength(payload.contentJson, "utf-8");
+      if (contentByteLength > MAX_DOCUMENT_SIZE_BYTES) {
+        const sizeMB = (contentByteLength / (1024 * 1024)).toFixed(1);
+        return {
+          ok: false,
+          error: {
+            code: "DOCUMENT_SIZE_EXCEEDED",
+            message: `Document size ${sizeMB} MB exceeds limit (5 MB)`,
+          },
+        };
+      }
+
+      if (!deps.db) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
         };
       }
 

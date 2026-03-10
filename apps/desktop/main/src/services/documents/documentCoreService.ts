@@ -40,6 +40,10 @@ const AUTOSAVE_COMPACT_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 const DEFAULT_MAX_SNAPSHOTS_PER_DOCUMENT = 50_000;
 const DEFAULT_MAX_DIFF_PAYLOAD_BYTES = 2 * 1024 * 1024;
 const DEFAULT_BRANCH_MERGE_TIMEOUT_MS = 5_000;
+
+/** 文档最大字节体积（5 MB），IPC 层与 Service 层共用 */
+export const MAX_DOCUMENT_SIZE_BYTES = 5 * 1024 * 1024;
+
 const BRANCH_NAME_PATTERN = /^[a-z0-9-]{3,32}$/u;
 
 const DOCUMENT_TYPE_SET = new Set<DocumentType>([
@@ -1167,6 +1171,18 @@ function createDocSaveOps(
     save: ({ projectId, documentId, contentJson, actor, reason }) => {
       if (!isReasonValidForActor(actor, reason)) {
         return documentError("INVALID_ARGUMENT", "actor/reason mismatch");
+      }
+
+      const serializedForSizeCheck = typeof contentJson === "string"
+        ? contentJson
+        : JSON.stringify(contentJson);
+      const contentByteLength = Buffer.byteLength(serializedForSizeCheck, "utf-8");
+      if (contentByteLength > MAX_DOCUMENT_SIZE_BYTES) {
+        const sizeMB = (contentByteLength / (1024 * 1024)).toFixed(1);
+        return documentError(
+          "DOCUMENT_SIZE_EXCEEDED",
+          `Document size ${sizeMB} MB exceeds limit (5 MB)`,
+        );
       }
 
       const derived = deriveContent({ contentJson });

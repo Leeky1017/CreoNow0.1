@@ -85,6 +85,7 @@ export const IPC_ERROR_CODES = [
   "CONTEXT_BUDGET_INVALID_MINIMUM",
   "CONTEXT_BUDGET_CONFLICT",
   "CONTEXT_TOKENIZER_MISMATCH",
+  "DOCUMENT_SIZE_EXCEEDED",
 ] as const;
 
 export type IpcErrorCode = (typeof IPC_ERROR_CODES)[number];

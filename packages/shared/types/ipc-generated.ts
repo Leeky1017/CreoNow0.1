@@ -27,6 +27,7 @@ export type IpcErrorCode =
   | "CONTEXT_TOKENIZER_MISMATCH"
   | "DB_ERROR"
   | "DOCUMENT_SAVE_CONFLICT"
+  | "DOCUMENT_SIZE_EXCEEDED"
   | "EMBEDDING_PROVIDER_UNAVAILABLE"
   | "ENCODING_FAILED"
   | "FORBIDDEN"
@@ -407,7 +408,8 @@ export type IpcChannelSpec = {
           | "CONTEXT_BUDGET_INVALID_RATIO"
           | "CONTEXT_BUDGET_INVALID_MINIMUM"
           | "CONTEXT_BUDGET_CONFLICT"
-          | "CONTEXT_TOKENIZER_MISMATCH";
+          | "CONTEXT_TOKENIZER_MISMATCH"
+          | "DOCUMENT_SIZE_EXCEEDED";
         message: string;
       };
       latencyMs: number;
@@ -1247,7 +1249,8 @@ export type IpcChannelSpec = {
                 | "CONTEXT_BUDGET_INVALID_RATIO"
                 | "CONTEXT_BUDGET_INVALID_MINIMUM"
                 | "CONTEXT_BUDGET_CONFLICT"
-                | "CONTEXT_TOKENIZER_MISMATCH";
+                | "CONTEXT_TOKENIZER_MISMATCH"
+                | "DOCUMENT_SIZE_EXCEEDED";
               message: string;
             };
             status: "error";
@@ -1353,7 +1356,8 @@ export type IpcChannelSpec = {
                 | "CONTEXT_BUDGET_INVALID_RATIO"
                 | "CONTEXT_BUDGET_INVALID_MINIMUM"
                 | "CONTEXT_BUDGET_CONFLICT"
-                | "CONTEXT_TOKENIZER_MISMATCH";
+                | "CONTEXT_TOKENIZER_MISMATCH"
+                | "DOCUMENT_SIZE_EXCEEDED";
               message: string;
             };
             status: "error";
@@ -1856,7 +1860,8 @@ export type IpcChannelSpec = {
         | "CONTEXT_BUDGET_INVALID_RATIO"
         | "CONTEXT_BUDGET_INVALID_MINIMUM"
         | "CONTEXT_BUDGET_CONFLICT"
-        | "CONTEXT_TOKENIZER_MISMATCH";
+        | "CONTEXT_TOKENIZER_MISMATCH"
+        | "DOCUMENT_SIZE_EXCEEDED";
       message?: string;
       progress: number;
       projectId: string;
@@ -1955,7 +1960,8 @@ export type IpcChannelSpec = {
         | "CONTEXT_BUDGET_INVALID_RATIO"
         | "CONTEXT_BUDGET_INVALID_MINIMUM"
         | "CONTEXT_BUDGET_CONFLICT"
-        | "CONTEXT_TOKENIZER_MISMATCH";
+        | "CONTEXT_TOKENIZER_MISMATCH"
+        | "DOCUMENT_SIZE_EXCEEDED";
       message?: string;
       progress: number;
       projectId: string;
@@ -2919,7 +2925,8 @@ export type IpcChannelSpec = {
           | "CONTEXT_BUDGET_INVALID_RATIO"
           | "CONTEXT_BUDGET_INVALID_MINIMUM"
           | "CONTEXT_BUDGET_CONFLICT"
-          | "CONTEXT_TOKENIZER_MISMATCH";
+          | "CONTEXT_TOKENIZER_MISMATCH"
+          | "DOCUMENT_SIZE_EXCEEDED";
         error_message?: string;
         id: string;
         name: string;
