@@ -249,7 +249,7 @@ describe("ExportDialog", () => {
 
   describe("format description labels (A0-19)", () => {
     it("shows structured capability hint for PDF format", () => {
-      render(
+      renderWithToastProvider(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
@@ -260,7 +260,7 @@ describe("ExportDialog", () => {
     });
 
     it("shows structured capability hint for DOCX format", () => {
-      render(
+      renderWithToastProvider(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
@@ -271,7 +271,7 @@ describe("ExportDialog", () => {
     });
 
     it("shows structured capability hint for Markdown format", () => {
-      render(
+      renderWithToastProvider(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
@@ -282,7 +282,7 @@ describe("ExportDialog", () => {
     });
 
     it("keeps a plain-text boundary hint for TXT format", () => {
-      render(
+      renderWithToastProvider(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
@@ -292,7 +292,7 @@ describe("ExportDialog", () => {
 
     it("shows Chinese structured hints after switching to zh-CN locale", async () => {
       await act(async () => { await i18n.changeLanguage("zh-CN"); });
-      render(
+      renderWithToastProvider(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
@@ -312,7 +312,7 @@ describe("ExportDialog", () => {
     });
 
     it("does not show the old plain-text-only copy for PDF or DOCX", () => {
-      render(
+      renderWithToastProvider(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
@@ -362,7 +362,7 @@ describe("ExportDialog", () => {
       },
     });
 
-    render(
+    renderWithToastProvider(
       <ExportDialog
         open={true}
         onOpenChange={() => {}}
