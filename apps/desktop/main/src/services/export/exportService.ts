@@ -4,12 +4,18 @@ import { createWriteStream } from "node:fs";
 
 import type Database from "better-sqlite3";
 import PDFDocument from "pdfkit";
-import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 
 import type { Logger } from "../../logging/logger";
 import { atomicWrite } from "../documents/atomicWrite";
 import { createDocumentService } from "../documents/documentService";
 import { ipcError, type ServiceResult } from "../shared/ipcResult";
+import {
+  buildDocxBuffer,
+  buildPdfRenderPlan,
+  parseStructuredExportDocument,
+  renderPdfPlan,
+  renderStructuredMarkdownExport,
+} from "./exportRichText";
 export type { ServiceResult };
 
 export type ExportResult = {
@@ -39,6 +45,16 @@ export type ExportService = {
   }) => Promise<ServiceResult<ExportResult>>;
 };
 
+const MAX_EXPORT_FILE_SIZE_BYTES = 20 * 1024 * 1024;
+
+function assertSizeWithinLimit(args: { bytes: number; format: string }): void {
+  if (args.bytes > MAX_EXPORT_FILE_SIZE_BYTES) {
+    throw new Error(
+      `${args.format} export exceeds size limit (${MAX_EXPORT_FILE_SIZE_BYTES} bytes)`,
+    );
+  }
+}
+
 function isSafePathSegment(segment: string): boolean {
   if (segment.length === 0) {
     return false;
@@ -47,14 +63,6 @@ function isSafePathSegment(segment: string): boolean {
     return false;
   }
   return !segment.includes("/") && !segment.includes("\\");
-}
-
-function composeMarkdownExport(args: { title: string; body: string }): string {
-  const trimmedBody = args.body.trim();
-  if (trimmedBody.length === 0) {
-    return `# ${args.title}\n`;
-  }
-  return `# ${args.title}\n\n${trimmedBody}\n`;
 }
 
 function composeTxtExport(args: { title: string; body: string }): string {
@@ -186,10 +194,19 @@ function createTextExportOps(
         return doc;
       }
 
-      const markdown = composeMarkdownExport({
-        title: doc.data.title,
-        body: doc.data.contentMd,
+      const structured = parseStructuredExportDocument({
+        contentJson: doc.data.contentJson,
       });
+      if (!structured.ok) {
+        return ipcError("INVALID_ARGUMENT", structured.message);
+      }
+
+      const markdown = renderStructuredMarkdownExport({
+        title: doc.data.title,
+        document: structured.data,
+      });
+      const markdownBytes = Buffer.byteLength(markdown, "utf8");
+      assertSizeWithinLimit({ bytes: markdownBytes, format: "markdown" });
       await atomicWrite({
         targetPath: absPath,
         writeTemp: async (tempPath) => {
@@ -197,7 +214,7 @@ function createTextExportOps(
         },
       });
 
-      const bytesWritten = Buffer.byteLength(markdown, "utf8");
+      const bytesWritten = markdownBytes;
       deps.logger.info("export_succeeded", {
         format: "markdown",
         documentId,
@@ -263,6 +280,8 @@ function createTextExportOps(
         title: doc.data.title,
         body: doc.data.contentText,
       });
+      const textBytes = Buffer.byteLength(text, "utf8");
+      assertSizeWithinLimit({ bytes: textBytes, format: "txt" });
       await atomicWrite({
         targetPath: absPath,
         writeTemp: async (tempPath) => {
@@ -270,7 +289,7 @@ function createTextExportOps(
         },
       });
 
-      const bytesWritten = Buffer.byteLength(text, "utf8");
+      const bytesWritten = textBytes;
       deps.logger.info("export_succeeded", {
         format: "txt",
         documentId,
@@ -339,6 +358,20 @@ function createBinaryExportOps(
         return doc;
       }
 
+      const structured = parseStructuredExportDocument({
+        contentJson: doc.data.contentJson,
+      });
+      if (!structured.ok) {
+        return ipcError("INVALID_ARGUMENT", structured.message);
+      }
+
+      const plan = buildPdfRenderPlan({
+        title: doc.data.title,
+        document: structured.data,
+      });
+      const estimatedPdfSourceBytes = Buffer.byteLength(doc.data.contentJson, "utf8");
+      assertSizeWithinLimit({ bytes: estimatedPdfSourceBytes, format: "pdf" });
+
       let bytesWritten = 0;
       await atomicWrite({
         targetPath: absPath,
@@ -362,18 +395,16 @@ function createBinaryExportOps(
 
             pdfDoc.pipe(stream);
 
-            pdfDoc
-              .font("Helvetica-Bold")
-              .fontSize(24)
-              .text(doc.data.title, { align: "left" });
-            pdfDoc.moveDown(2);
-
-            pdfDoc.font("Helvetica").fontSize(12).text(doc.data.contentText, {
-              align: "left",
-              lineGap: 4,
-            });
-
-            pdfDoc.end();
+            void renderPdfPlan({
+              pdfDoc,
+              plan,
+            }).then(
+              () => pdfDoc.end(),
+              (error) => {
+                stream.destroy(error as Error);
+                reject(error);
+              },
+            );
           });
         },
       });
@@ -439,34 +470,18 @@ function createBinaryExportOps(
         return docData;
       }
 
-      const paragraphs: Paragraph[] = [];
-
-      paragraphs.push(
-        new Paragraph({
-          text: docData.data.title,
-          heading: HeadingLevel.TITLE,
-        }),
-      );
-
-      const lines = docData.data.contentText.split(/\n+/);
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.length === 0) {
-          paragraphs.push(new Paragraph({ children: [] }));
-        } else {
-          paragraphs.push(
-            new Paragraph({
-              children: [new TextRun(trimmed)],
-            }),
-          );
-        }
+      const structured = parseStructuredExportDocument({
+        contentJson: docData.data.contentJson,
+      });
+      if (!structured.ok) {
+        return ipcError("INVALID_ARGUMENT", structured.message);
       }
 
-      const docx = new Document({
-        sections: [{ children: paragraphs }],
+      const buffer = await buildDocxBuffer({
+        title: docData.data.title,
+        document: structured.data,
       });
-
-      const buffer = await Packer.toBuffer(docx);
+      assertSizeWithinLimit({ bytes: buffer.length, format: "docx" });
       await atomicWrite({
         targetPath: absPath,
         writeTemp: async (tempPath) => {

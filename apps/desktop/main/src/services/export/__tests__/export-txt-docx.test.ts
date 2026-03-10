@@ -4,114 +4,22 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import Database from "better-sqlite3";
+import JSZip from "jszip";
+import { it } from "vitest";
 
-import type { Logger } from "../../../logging/logger";
 import { createExportService } from "../exportService";
-
-function createNoopLogger(): Logger {
-  return {
-    logPath: "<test>",
-    info: () => {},
-    error: () => {},
-  };
-}
-
-function createTestDb(): Database.Database {
-  const db = new Database(":memory:");
-  db.pragma("foreign_keys = ON");
-  db.exec(`
-    CREATE TABLE projects (
-      project_id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      root_path TEXT NOT NULL,
-      type TEXT NOT NULL DEFAULT 'novel',
-      description TEXT NOT NULL DEFAULT '',
-      stage TEXT NOT NULL DEFAULT 'outline',
-      target_word_count INTEGER,
-      target_chapter_count INTEGER,
-      narrative_person TEXT NOT NULL DEFAULT 'first',
-      language_style TEXT NOT NULL DEFAULT '',
-      target_audience TEXT NOT NULL DEFAULT '',
-      default_skill_set_id TEXT,
-      knowledge_graph_id TEXT,
-      created_at INTEGER NOT NULL,
-      updated_at INTEGER NOT NULL,
-      archived_at INTEGER
-    );
-
-    CREATE TABLE documents (
-      document_id TEXT PRIMARY KEY,
-      project_id TEXT NOT NULL,
-      type TEXT NOT NULL DEFAULT 'chapter',
-      title TEXT NOT NULL,
-      content_json TEXT NOT NULL,
-      content_text TEXT NOT NULL,
-      content_md TEXT NOT NULL,
-      content_hash TEXT NOT NULL,
-      status TEXT NOT NULL DEFAULT 'draft',
-      sort_order INTEGER NOT NULL DEFAULT 0,
-      parent_id TEXT,
-      created_at INTEGER NOT NULL,
-      updated_at INTEGER NOT NULL,
-      FOREIGN KEY(project_id) REFERENCES projects(project_id) ON DELETE CASCADE
-    );
-
-    CREATE TABLE settings (
-      scope TEXT NOT NULL,
-      key TEXT NOT NULL,
-      value_json TEXT NOT NULL,
-      updated_at INTEGER NOT NULL,
-      PRIMARY KEY (scope, key)
-    );
-  `);
-  return db;
-}
-
-function seedProjectAndDocument(args: {
-  db: Database.Database;
-  projectId: string;
-  documentId: string;
-  title: string;
-  contentText: string;
-  contentMd: string;
-}): void {
-  const now = Date.now();
-  args.db
-    .prepare(
-      `
-      INSERT INTO projects (
-        project_id, name, root_path, type, description, stage, created_at, updated_at
-      ) VALUES (?, ?, ?, 'novel', '', 'outline', ?, ?)
-    `,
-    )
-    .run(args.projectId, "Export Project", `/tmp/${args.projectId}`, now, now);
-
-  args.db
-    .prepare(
-      `
-      INSERT INTO documents (
-        document_id, project_id, type, title, content_json, content_text, content_md,
-        content_hash, status, sort_order, parent_id, created_at, updated_at
-      ) VALUES (?, ?, 'chapter', ?, '{}', ?, ?, 'hash', 'draft', 0, NULL, ?, ?)
-    `,
-    )
-    .run(
-      args.documentId,
-      args.projectId,
-      args.title,
-      args.contentText,
-      args.contentMd,
-      now,
-      now,
-    );
-}
+import {
+  PLAIN_TEXT_TRAP,
+  STRUCTURED_EXPORT_CONTENT_JSON,
+  STRUCTURED_EXPORT_TITLE,
+} from "./exportFixture";
+import { createNoopLogger, createTestDb, seedProjectAndDocument } from "./exportTestHelpers";
 
 /**
  * Scenario: S3-EXPORT-S2
- * should export txt/docx as deterministic artifacts with semantic title+content.
+ * should keep txt plain-text while docx retains structured semantics from TipTap JSON.
  */
-{
+it("keeps txt plain-text while docx preserves structured semantics", async () => {
   const projectId = `project-${randomUUID()}`;
   const documentId = `doc-${randomUUID()}`;
   const userDataDir = await fs.mkdtemp(path.join(os.tmpdir(), "creonow-exp-"));
@@ -122,9 +30,10 @@ function seedProjectAndDocument(args: {
       db,
       projectId,
       documentId,
-      title: "Character Card",
-      contentText: "Name: Alice\nTrait: Curious",
-      contentMd: "Name: Alice\n\nTrait: Curious",
+      title: STRUCTURED_EXPORT_TITLE,
+      contentJson: STRUCTURED_EXPORT_CONTENT_JSON,
+      contentText: PLAIN_TEXT_TRAP,
+      contentMd: PLAIN_TEXT_TRAP,
     });
 
     const service = createExportService({
@@ -145,8 +54,8 @@ function seedProjectAndDocument(args: {
     );
     assert.match(
       txtOutput,
-      /^Character Card\n\nName: Alice\nTrait: Curious$/,
-      "txt export should preserve title + plain-text semantics",
+      /^Structured Export Sample\n\nPLAIN TEXT FALLBACK SHOULD NOT APPEAR$/u,
+      "txt export should remain the only plain-text export path",
     );
 
     const firstDocxRes = await service.exportDocx({ projectId, documentId });
@@ -160,6 +69,23 @@ function seedProjectAndDocument(args: {
       firstDocx.subarray(0, 2).toString("utf8"),
       "PK",
       "docx export should produce a zip container artifact",
+    );
+
+    const archive = await JSZip.loadAsync(firstDocx);
+    const documentXml = await archive.file("word/document.xml")?.async("string");
+    const relsXml = await archive.file("word/_rels/document.xml.rels")?.async("string");
+
+    assert.ok(documentXml, "docx archive should contain word/document.xml");
+    assert.ok(relsXml, "docx archive should contain relationship metadata");
+    assert.ok(documentXml?.includes("Heading2"));
+    assert.ok(documentXml?.includes("w:b"));
+    assert.ok(documentXml?.includes("w:i"));
+    assert.ok(documentXml?.includes("w:u"));
+    assert.ok(documentXml?.includes("w:numPr"));
+    assert.ok(relsXml?.includes("https://example.com/archive"));
+    assert.ok(relsXml?.includes("image"));
+    assert.ok(
+      Array.from(Object.keys(archive.files)).some((name) => name.startsWith("word/media/")),
     );
 
     const secondDocxRes = await service.exportDocx({ projectId, documentId });
@@ -184,4 +110,4 @@ function seedProjectAndDocument(args: {
     db.close();
     await fs.rm(userDataDir, { recursive: true, force: true });
   }
-}
+});

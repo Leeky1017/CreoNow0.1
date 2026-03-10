@@ -128,7 +128,7 @@ function getFormatOptions(t: TFunction): FormatOption[] {
     {
       value: "pdf",
       label: "PDF",
-      description: t('export.format.pdfDescription'),
+      description: t('export.format.pdfPlainTextHint'),
       icon: <FileText size={20} strokeWidth={1.5} />,
     },
     {
@@ -140,7 +140,7 @@ function getFormatOptions(t: TFunction): FormatOption[] {
     {
       value: "docx",
       label: "Word",
-      description: ".docx",
+      description: t('export.format.docxPlainTextHint'),
       icon: <FileText size={20} strokeWidth={1.5} />,
     },
     {

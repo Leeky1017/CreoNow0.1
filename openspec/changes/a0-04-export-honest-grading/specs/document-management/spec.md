@@ -1,4 +1,4 @@
-# Delta Spec: document-management — 导出能力诚实分级
+# Delta Spec: document-management — 真实结构化导出能力
 
 - **Parent Change**: `a0-04-export-honest-grading`
 - **Base Spec**: `openspec/specs/document-management/spec.md`
@@ -6,82 +6,83 @@
 
 ---
 
-## 变更: Requirement「文档导出」— 格式能力分级
+## 变更: Requirement「文档导出」— 结构化导出承诺
 
 **替换** Base Spec 中「文档导出」Requirement 的导出格式表及相关描述。
 
 ### 导出格式表（替换原表）
 
-系统**必须**支持将文档导出为以下格式——每种格式有明确的能力级别：
+系统**必须**支持将文档导出为以下格式，并以 TipTap JSON 的结构语义为唯一真实输入源：
 
-| 格式 | 扩展名 | 能力级别（v0.1） | 说明 |
-|------|--------|-----------------|------|
-| Markdown | `.md` | **格式化** | 完整转换 TipTap JSON 为 Markdown 语法，保留标题层级、粗体、斜体、列表等格式 |
-| PDF | `.pdf` | **纯文本** | 仅导出正文纯文本（`contentText`），Helvetica 12pt，不保留粗体/斜体/标题层级/图片/表格 |
-| DOCX | `.docx` | **纯文本** | 按行拆分为 Paragraph + TextRun，不解析格式信息，不嵌入图片/表格 |
-| TXT | `.txt` | **纯文本** | 纯文本输出 |
+| 格式 | 扩展名 | 能力级别（v0.1） | 最低验收语义 |
+|------|--------|-----------------|--------------|
+| Markdown | `.md` | **结构化** | 标题层级、段落与换行、粗体、斜体、下划线、有序/无序列表、引用块、链接、行内代码、分隔线、图片 |
+| PDF | `.pdf` | **结构化** | 标题层级、段落与换行、粗体、斜体、下划线、有序/无序列表、引用块、链接、行内代码、分隔线、图片 |
+| DOCX | `.docx` | **结构化** | 标题层级、段落与换行、粗体、斜体、下划线、有序/无序列表、引用块、链接、行内代码、分隔线、图片 |
+| TXT | `.txt` | **纯文本** | 纯文本导出 |
 
-> **v0.2 路线图预告**：PDF/DOCX 格式化导出（支持标题层级、粗体/斜体、图片嵌入、表格）计划在 v0.2 实现。v0.1 阶段 PDF/DOCX 仅支持纯文本导出。
+> v0.1 的“结构化”定义是语义保真，不要求像素级排版复刻；但禁止退化为纯文本平铺。
 
-### ExportDialog 格式选项能力标注
+### 显式失败约束
 
-ExportDialog 中的格式选项**必须**在用户选择前明确展示能力级别——用户不应在导出完成后才发现格式丢失。
+对于当前编辑器允许创建的节点或 mark，导出实现**禁止** silently downgrade。
 
-格式选项的 `description` 字段**必须**遵循以下规则：
+- **若已支持**：必须按目标格式正确导出其语义
+- **若暂不支持**：必须在写文件前失败，并返回显式错误，指出不支持的节点或 mark 类型
+- **禁止**命中未知结构后继续回落到 `contentText`
 
-| 格式 | label | description | 备注 |
+### ExportDialog 一致性要求
+
+ExportDialog 中的格式说明**必须**反映真实能力，而非历史降级结论：
+
+| 格式 | label | description | 要求 |
 |------|-------|-------------|------|
-| PDF | `"PDF"` | `t('export.format.pdfPlainTextHint')`（"纯文本导出 · 不含格式"） | 替代原"便携文档" |
-| Markdown | `"Markdown"` | `".md"` | 保持不变 |
-| DOCX | `"Word"` | `t('export.format.docxPlainTextHint')`（"纯文本导出 · 不含格式"） | 替代原 ".docx" |
-| TXT | `t('export.format.plainText')` | `".txt"` | 保持不变 |
+| PDF | `"PDF"` | 真实结构化导出说明 | 不得再使用“纯文本导出 · 不含格式” |
+| Markdown | `"Markdown"` | 真实结构化导出说明 | 可保留扩展名补充 |
+| DOCX | `"Word"` | 真实结构化导出说明 | 不得再仅显示 `.docx` 充当能力说明 |
+| TXT | `t('export.format.plainText')` | 纯文本说明 | 明确与其他结构化格式区分 |
 
-### Design Token 引用
+### 测试夹具要求
 
-| 用途 | Token |
-|------|-------|
-| 能力标注文字色 | `--color-fg-muted` |
-| 能力标注字体 | `--font-family-ui`，12px |
+导出模块**必须**提供固定 fixture 文档，至少覆盖：
 
-### i18n Key 要求
+- 标题
+- 粗体
+- 斜体
+- 列表
+- 链接
+- 图片
 
-新增以下 i18n key，`zh-CN.json` 和 `en.json` **必须**同步：
-
-| Key | zh-CN | en |
-|-----|-------|----|
-| `export.format.pdfPlainTextHint` | 纯文本导出 · 不含格式 | Plain text export · no formatting |
-| `export.format.docxPlainTextHint` | 纯文本导出 · 不含格式 | Plain text export · no formatting |
-| `export.format.plainTextOnly` | 纯文本导出 | Plain text only |
+该 fixture **必须**用于 Markdown / PDF / DOCX 的可重复断言，而非只做“文件生成成功”验证。
 
 ---
 
-#### Scenario: 用户在 ExportDialog 中看到 PDF/DOCX 的能力标注
+#### Scenario: 用户导出 Markdown 后仍保留结构语义
 
-- **假设** 用户打开 ExportDialog
-- **当** 用户浏览导出格式选项列表
-- **则** PDF 格式选项的 description 显示 `t('export.format.pdfPlainTextHint')`（"纯文本导出 · 不含格式"）
-- **并且** DOCX 格式选项的 description 显示 `t('export.format.docxPlainTextHint')`（"纯文本导出 · 不含格式"）
-- **并且** Markdown 格式选项的 description 保持为 ".md"
-- **并且** TXT 格式选项的 description 保持为 ".txt"
+- **假设** 当前文档包含标题、粗体、斜体、列表、链接与图片
+- **当** 用户通过 ExportDialog 导出 Markdown
+- **则** 导出的 `.md` 文件保留对应 Markdown 结构语法
+- **并且** 不通过 `contentText` 回退生成正文
 
-#### Scenario: 用户选择 PDF 导出后获得纯文本内容
+#### Scenario: 用户导出 PDF 后不再退化为纯文本管线
 
-- **假设** 用户正在编辑一篇包含粗体、斜体、二级标题的文档「第一章」
-- **当** 用户通过 ExportDialog 选择 PDF 格式并确认导出
-- **则** 系统通过 `export:document` 导出的 PDF 文件仅包含正文纯文本
-- **并且** 不包含粗体/斜体格式标记
-- **并且** 不包含标题层级区分（全文统一 Helvetica 12pt）
-- **并且** 不包含图片
+- **假设** 当前文档包含标题、粗体、列表、引用块与图片
+- **当** 用户导出 PDF
+- **则** PDF 导出管线从 TipTap JSON 结构模型生成中间样式块
+- **并且** 测试可断言标题、列表、行内样式或图片块已进入结构化渲染层
+- **并且** 实现不得直接以 `contentText` 整段写入正文作为最终导出路径
 
-#### Scenario: 用户选择 Markdown 导出保留格式
+#### Scenario: 用户导出 DOCX 后保留语义节点
 
-- **假设** 用户正在编辑一篇包含粗体、斜体、二级标题的文档「第一章」
-- **当** 用户通过 ExportDialog 选择 Markdown 格式并确认导出
-- **则** 系统导出的 `.md` 文件保留标题层级（`##`）、粗体（`**text**`）、斜体（`*text*`）等 Markdown 格式语法
+- **假设** 当前文档包含标题、粗体、列表、链接与图片
+- **当** 用户导出 DOCX
+- **则** DOCX 包内部包含与标题、文本样式、列表或图片关系相对应的结构信息
+- **并且** 测试可断言该结构信息存在
 
-#### Scenario: i18n 切换后能力标注文案跟随
+#### Scenario: 命中暂不支持的结构时导出前显式报错
 
-- **假设** 用户将界面语言切换为英文
-- **当** 用户打开 ExportDialog 浏览格式选项
-- **则** PDF 的 description 显示 "Plain text export · no formatting"
-- **并且** DOCX 的 description 显示 "Plain text export · no formatting"
+- **假设** 当前文档包含编辑器允许创建、但当前目标格式尚未实现的结构节点或 mark
+- **当** 用户执行导出
+- **则** 系统在写文件前失败
+- **并且** 返回明确错误，指出不支持的结构类型
+- **并且** 不生成降级后的残缺文件

@@ -1081,7 +1081,10 @@
     "format": {
       "pdfDescription": "Portable Document",
       "plainText": "Plain Text",
-      "unsupported": "UNSUPPORTED"
+      "unsupported": "UNSUPPORTED",
+      "pdfPlainTextHint": "Plain text export · no formatting",
+      "docxPlainTextHint": "Plain text export · no formatting",
+      "plainTextOnly": "Plain text only"
     },
     "pageSize": {
       "letter": "Letter",

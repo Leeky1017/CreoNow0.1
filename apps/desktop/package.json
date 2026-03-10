@@ -78,6 +78,7 @@
     "electron-rebuild": "^3.2.9",
     "electron-vite": "^5.0.0",
     "jsdom": "^27.4.0",
+    "jszip": "^3.10.1",
     "storybook": "^8.6.15",
     "tailwindcss": "^4.1.18",
     "vite": "^7.3.1",

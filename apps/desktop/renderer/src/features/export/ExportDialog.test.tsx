@@ -1,14 +1,145 @@
-import { beforeAll, describe, it, expect, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { afterEach, beforeAll, describe, it, expect, vi } from "vitest";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type {
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
 
 import type { IpcError } from "@shared/types/ipc-generated";
 import { ExportDialog } from "./ExportDialog";
 import * as ipcClient from "../../lib/ipcClient";
 import { i18n } from "../../i18n";
 
+vi.mock("@radix-ui/react-dialog", async (importOriginal) => {
+  const actual = (await importOriginal()) as Record<string, unknown>;
+
+  return {
+    ...actual,
+    Root: ({ children }: { children: ReactNode }) => <>{children}</>,
+    Portal: ({ children }: { children: ReactNode }) => <>{children}</>,
+    Overlay: ({ children, ...props }: HTMLAttributes<HTMLDivElement>) => (
+      <div {...props}>{children}</div>
+    ),
+    Content: ({ children, ...props }: HTMLAttributes<HTMLDivElement>) => (
+      <div {...props}>{children}</div>
+    ),
+    Title: ({ children, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
+      <h2 {...props}>{children}</h2>
+    ),
+    Description: ({ children, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
+      <p {...props}>{children}</p>
+    ),
+    Close: ({ children, ...props }: ButtonHTMLAttributes<HTMLButtonElement>) => (
+      <button type="button" {...props}>
+        {children}
+      </button>
+    ),
+  };
+});
+
+vi.mock("../../components/primitives", async () => {
+  const actual = await vi.importActual("../../components/primitives");
+
+  return {
+    ...actual,
+    Select: ({
+      value,
+      onValueChange,
+      options,
+      disabled,
+    }: {
+      value: string;
+      onValueChange?: (value: string) => void;
+      options: Array<{ value: string; label: string }>;
+      disabled?: boolean;
+    }) => (
+      <select
+        data-testid="export-page-size-select"
+        value={value}
+        disabled={disabled}
+        onChange={(event) => onValueChange?.(event.target.value)}
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    ),
+  };
+});
+
+vi.mock("@radix-ui/react-radio-group", async () => {
+  const React = await import("react");
+  const RadioGroupContext = React.createContext<{
+    value?: string;
+    onValueChange?: (value: string) => void;
+  }>({});
+
+  return {
+    Root: ({
+      children,
+      value,
+      onValueChange,
+      ...props
+    }: {
+      children: React.ReactNode;
+      value?: string;
+      onValueChange?: (value: string) => void;
+    } & React.HTMLAttributes<HTMLDivElement>) => (
+      <RadioGroupContext.Provider value={{ value, onValueChange }}>
+        <div {...props} data-value={value}>
+          {children}
+        </div>
+      </RadioGroupContext.Provider>
+    ),
+    Item: ({
+      children,
+      value,
+      disabled,
+      ...props
+    }: {
+      children: React.ReactNode;
+      value: string;
+      disabled?: boolean;
+    } & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+      const radioGroup = React.useContext(RadioGroupContext);
+      const isChecked = radioGroup.value === value;
+
+      return (
+        <button
+          type="button"
+          role="radio"
+          aria-checked={isChecked}
+          data-state={isChecked ? "checked" : "unchecked"}
+          disabled={disabled}
+          onClick={() => {
+            if (!disabled) {
+              radioGroup.onValueChange?.(value);
+            }
+          }}
+          {...props}
+        >
+          {children}
+        </button>
+      );
+    },
+  };
+});
+
 beforeAll(async () => {
-  await i18n.changeLanguage("en");
+  await act(async () => {
+    await i18n.changeLanguage("en");
+  });
+});
+
+afterEach(async () => {
+  cleanup();
+  await act(async () => {
+    await i18n.changeLanguage("en");
+  });
 });
 
 describe("ExportDialog", () => {
@@ -135,5 +266,65 @@ describe("ExportDialog", () => {
       "disk write permission denied",
     );
     expect(screen.queryByTestId("export-success")).not.toBeInTheDocument();
+  });
+});
+
+describe("ExportDialog format capability hints", () => {
+  it("shows plain text hint for PDF and DOCX format options", async () => {
+    await act(async () => {
+      await i18n.changeLanguage("en");
+    });
+    render(
+      <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+    );
+
+    const hints = screen.getAllByText("Plain text export · no formatting");
+    expect(hints).toHaveLength(2);
+  });
+
+  it("keeps Markdown format description as .md", async () => {
+    await act(async () => {
+      await i18n.changeLanguage("en");
+    });
+    render(
+      <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+    );
+
+    expect(screen.getByText(".md")).toBeInTheDocument();
+  });
+
+  it("keeps TXT format description as .txt", async () => {
+    await act(async () => {
+      await i18n.changeLanguage("en");
+    });
+    render(
+      <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+    );
+
+    expect(screen.getByText(".txt")).toBeInTheDocument();
+  });
+
+  it("shows Chinese hint when locale is zh-CN", async () => {
+    await act(async () => {
+      await i18n.changeLanguage("zh-CN");
+    });
+    render(
+      <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+    );
+
+    const hints = screen.getAllByText("纯文本导出 · 不含格式");
+    expect(hints.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("shows English hint when locale is en", async () => {
+    await act(async () => {
+      await i18n.changeLanguage("en");
+    });
+    render(
+      <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+    );
+
+    const hints = screen.getAllByText("Plain text export · no formatting");
+    expect(hints.length).toBeGreaterThanOrEqual(2);
   });
 });

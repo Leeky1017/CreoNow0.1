@@ -1,4 +1,4 @@
-# Tasks: A0-04 导出能力诚实分级
+# Tasks: A0-04 真实结构化导出能力
 
 - **GitHub Issue**: #1002
 - **分支**: `task/1002-export-honest-grading`
@@ -10,103 +10,91 @@
 
 | ID | 标准 | 对应 Scenario |
 |----|------|--------------|
-| AC-1 | ExportDialog 中 PDF 格式选项的 description 显示 `t('export.format.pdfPlainTextHint')`（"纯文本导出 · 不含格式"） | 用户在 ExportDialog 中看到 PDF/DOCX 的能力标注 |
-| AC-2 | ExportDialog 中 DOCX 格式选项的 description 显示 `t('export.format.docxPlainTextHint')`（"纯文本导出 · 不含格式"） | 用户在 ExportDialog 中看到 PDF/DOCX 的能力标注 |
-| AC-3 | Markdown 和 TXT 格式选项的 description 不变 | 用户在 ExportDialog 中看到 PDF/DOCX 的能力标注 |
-| AC-4 | 切换界面语言为英文后，PDF/DOCX description 显示 "Plain text export · no formatting" | i18n 切换后能力标注文案跟随 |
-| AC-5 | `zh-CN.json` 和 `en.json` 包含 `export.format.pdfPlainTextHint`、`export.format.docxPlainTextHint`、`export.format.plainTextOnly` 三个 key | i18n 要求 |
-| AC-6 | `document-management/spec.md` 中导出格式表已更新，PDF/DOCX 标注为"纯文本"能力级别 | Spec 校准 |
+| AC-1 | Markdown 导出基于固定 fixture 保留标题、粗体、斜体、列表、链接、图片等结构语义 | 用户导出 Markdown 后仍保留结构语义 |
+| AC-2 | PDF 导出不再走 `contentText` 纯文本路径，测试可断言结构化样式转换层被调用 | 用户导出 PDF 后不再退化为纯文本管线 |
+| AC-3 | DOCX 导出文件内部结构可断言 heading、run formatting、list 或 image relationship 等语义存在 | 用户导出 DOCX 后保留语义节点 |
+| AC-4 | 命中暂不支持结构时，导出前显式报错并指出结构类型，不生成残缺文件 | 命中暂不支持的结构时导出前显式报错 |
+| AC-5 | `openspec/specs/document-management/spec.md` 已改为真实结构化导出承诺 | Spec 校准 |
+| AC-6 | 导出相关测试使用固定 fixture，结果可重复、可断言 | 全部 Scenario |
 
 ---
 
 ## Phase 1: Red（测试先行）
 
-### Task 1.1: ExportDialog 格式选项 description 测试
+### Task 1.1: 固定 fixture 与 Markdown 语义测试
 
-**映射验收标准**: AC-1, AC-2, AC-3
+**映射验收标准**: AC-1, AC-6
 
-编写 ExportDialog 格式选项能力标注的单元测试：
+- [ ] 新建固定导出 fixture，覆盖标题、粗体、斜体、列表、链接、图片
+- [ ] 测试：Markdown 导出结果保留 heading、emphasis、list、link、image 语义
+- [ ] 测试：Markdown 导出明确来自 TipTap JSON 结构，而非 `contentText` 拼接回退
 
-- [ ] 测试：渲染 ExportDialog，断言 PDF 格式选项的 description 文本包含 `t('export.format.pdfPlainTextHint')` 的值（"纯文本导出 · 不含格式"）
-- [ ] 测试：渲染 ExportDialog，断言 DOCX 格式选项的 description 文本包含 `t('export.format.docxPlainTextHint')` 的值（"纯文本导出 · 不含格式"）
-- [ ] 测试：渲染 ExportDialog，断言 Markdown 格式选项的 description 文本为 ".md"
-- [ ] 测试：渲染 ExportDialog，断言 TXT 格式选项的 description 文本为 ".txt"
+**文件**: `apps/desktop/main/src/services/export/__tests__/`、相关 fixture 文件
 
-**文件**: `apps/desktop/renderer/src/features/export/ExportDialog.test.tsx`（扩展现有文件）
+### Task 1.2: PDF 结构化管线测试
 
-### Task 1.2: i18n 语言切换后标注文案测试
+**映射验收标准**: AC-2, AC-6
+
+- [ ] 测试：PDF 导出对 fixture 中的结构节点生成可断言的样式块或渲染指令
+- [ ] 测试：PDF 导出不再直接以 `contentText` 整段写正文
+- [ ] 测试：图片节点进入 PDF 结构化转换层
+
+**文件**: `apps/desktop/main/src/services/export/__tests__/`（新增或扩展）
+
+### Task 1.3: DOCX 结构语义测试
+
+**映射验收标准**: AC-3, AC-6
+
+- [ ] 测试：DOCX 包内部存在 heading、run formatting、list 或 image relationship 对应结构
+- [ ] 测试：重复导出保持稳定输出路径与稳定结构
+
+**文件**: `apps/desktop/main/src/services/export/__tests__/`（新增或扩展）
+
+### Task 1.4: 显式失败测试
 
 **映射验收标准**: AC-4
 
-- [ ] 测试：在 `en` locale 下渲染 ExportDialog，断言 PDF description 显示 "Plain text export · no formatting"
-- [ ] 测试：在 `en` locale 下渲染 ExportDialog，断言 DOCX description 显示 "Plain text export · no formatting"
-- [ ] 测试：在 `zh-CN` locale 下渲染 ExportDialog，断言 PDF description 显示 "纯文本导出 · 不含格式"
-
-**文件**: `apps/desktop/renderer/src/features/export/ExportDialog.test.tsx`（扩展现有文件）
-
-### Task 1.3: i18n key 完整性测试
-
-**映射验收标准**: AC-5
-
-- [ ] 测试：`zh-CN.json` 包含 `export.format.pdfPlainTextHint`、`export.format.docxPlainTextHint`、`export.format.plainTextOnly` 三个 key
-- [ ] 测试：`en.json` 包含相同的三个 key
-- [ ] 测试：中英文文件中 `export.format.*` 命名空间下 key 数量一致
-
-**文件**: `apps/desktop/tests/i18n/export-keys.test.ts`（新建）
+- [ ] 测试：fixture 含暂不支持结构时，导出在写文件前失败
+- [ ] 测试：错误消息包含不支持的节点或 mark 类型
+- [ ] 测试：失败时不留下导出文件
 
 ---
 
 ## Phase 2: Green（实现）
 
-### Task 2.1: 修改 ExportDialog 格式选项 description
+### Task 2.1: 建立 TipTap JSON 导出中间模型
 
-实现 PDF/DOCX 格式选项的能力标注：
+- [ ] 为导出服务增加结构化解析层，将 TipTap JSON 转为 Markdown / PDF / DOCX 共用的中间表示
+- [ ] 覆盖标题、段落、换行、粗体、斜体、下划线、有序/无序列表、引用块、链接、行内代码、分隔线、图片
+- [ ] 为不支持结构提供显式失败分支
 
-- [ ] 修改 `getFormatOptions()` 中 PDF 选项的 `description`：从 `t('export.format.pdfDescription')` 改为 `t('export.format.pdfPlainTextHint')`
-- [ ] 修改 `getFormatOptions()` 中 DOCX 选项的 `description`：从 `".docx"` 改为 `t('export.format.docxPlainTextHint')`
-- [ ] 确认 Markdown 和 TXT 选项不变
-- [ ] 所有文案通过 `t()` 函数获取，禁止裸字符串字面量
+**文件**: `apps/desktop/main/src/services/export/exportService.ts` 及同目录新增辅助模块
 
-**文件**: `apps/desktop/renderer/src/features/export/ExportDialog.tsx`（修改 `getFormatOptions` 函数）
+### Task 2.2: 实现 Markdown / PDF / DOCX 真正结构化导出
 
-### Task 2.2: 新增 i18n key
+- [ ] Markdown：补齐缺失结构映射
+- [ ] PDF：从结构模型生成样式块与绘制顺序，不再从 `contentText` 直出
+- [ ] DOCX：按结构模型生成 heading、runs、lists、links、images，不再按纯文本拆段
+- [ ] TXT：继续保留纯文本导出，不受影响
 
-- [ ] 在 `zh-CN.json` 的 `export.format` 命名空间新增：
-  - `"pdfPlainTextHint": "纯文本导出 · 不含格式"`
-  - `"docxPlainTextHint": "纯文本导出 · 不含格式"`
-  - `"plainTextOnly": "纯文本导出"`
-- [ ] 在 `en.json` 的 `export.format` 命名空间新增：
-  - `"pdfPlainTextHint": "Plain text export · no formatting"`
-  - `"docxPlainTextHint": "Plain text export · no formatting"`
-  - `"plainTextOnly": "Plain text only"`
-- [ ] 可选：保留原 `pdfDescription` key 不删除（避免其他引用点报错），但 ExportDialog 不再使用
+### Task 2.3: 同步主 Spec
 
-**文件**: `apps/desktop/renderer/src/i18n/locales/zh-CN.json`、`apps/desktop/renderer/src/i18n/locales/en.json`（修改）
-
-### Task 2.3: 更新主 Spec 导出格式表
-
-- [ ] 修改 `openspec/specs/document-management/spec.md` 中「文档导出」Requirement 的格式表，增加"能力级别（v0.1）"列
-- [ ] PDF 说明改为"仅导出正文纯文本，不保留格式/图片"
-- [ ] DOCX 说明改为"按行拆分为段落，不保留格式/图片/表格"
-- [ ] 新增 v0.2 路线图预告注释
-
-**文件**: `openspec/specs/document-management/spec.md`（修改「文档导出」Requirement 部分）
+- [ ] 修改 `openspec/specs/document-management/spec.md` 中「文档导出」Requirement，使 PDF / DOCX / Markdown 的真实能力与本变更一致
 
 ---
 
-## Phase 3: Refactor
+## Phase 3: Refactor & 验收
 
-### Task 3.1: 清理 UNSUPPORTED_FORMAT_REASONS
+### Task 3.1: 定向集成或 E2E 验收
 
-- [ ] 评估 `ExportDialog.tsx` 中 `UNSUPPORTED_FORMAT_REASONS` 空映射是否应填入 PDF/DOCX 的纯文本说明，或保持空映射（因为格式仍可用，只是能力受限）
-- [ ] 若决定使用此机制，将 PDF/DOCX 的纯文本提示迁入映射表，由 `getUnsupportedReason()` 统一提供
+- [ ] 为真实导出能力补充定向集成测试或 E2E，验证从编辑器到落盘的完整链路
+- [ ] 至少覆盖一条包含标题、列表、链接、图片的真实导出路径
 
-**文件**: `apps/desktop/renderer/src/features/export/ExportDialog.tsx`（可选修改）
+### Task 3.2: 验证与文档回写准备
 
-### Task 3.2: Storybook 验证
-
-- [ ] 确认 ExportDialog 在 Storybook 中可构建（`pnpm -C apps/desktop storybook:build`）
-- [ ] 确认 PDF/DOCX 格式选项的 description 在 Story 中正确显示能力标注文案
+- [ ] 运行导出相关 renderer / core 测试
+- [ ] 运行 `pnpm -C apps/desktop storybook:build`
+- [ ] 输出供 A0-06 / A0-07 / A0-11 回写使用的真实能力证据
 
 ---
 
@@ -114,15 +102,12 @@
 
 | 条目 | 检查项 | 状态 |
 |------|--------|------|
-| AC-1 PDF 标注 | ExportDialog 中 PDF description 为"纯文本导出 · 不含格式" | [ ] |
-| AC-2 DOCX 标注 | ExportDialog 中 DOCX description 为"纯文本导出 · 不含格式" | [ ] |
-| AC-3 其他格式不变 | Markdown ".md"、TXT ".txt" 不受影响 | [ ] |
-| AC-4 i18n 切换 | 英文下显示 "Plain text export · no formatting" | [ ] |
-| AC-5 i18n key | 两个 locale 文件均含新增 key | [ ] |
-| AC-6 Spec 校准 | 主 spec 导出表已标注能力级别 | [ ] |
-| 禁止裸字符串 | ExportDialog 无新增裸字符串字面量 | [ ] |
-| 禁止原始色值 | 无新增 Tailwind 原始色值 | [ ] |
-| Storybook 可构建 | `storybook:build` 通过 | [ ] |
+| AC-1 Markdown 结构保真 | fixture 中的 heading/emphasis/list/link/image 仍在 | [ ] |
+| AC-2 PDF 非纯文本路径 | 不再直接从 `contentText` 渲染正文 | [ ] |
+| AC-3 DOCX 结构可断言 | heading/run/list/image 语义存在 | [ ] |
+| AC-4 显式失败 | 不支持结构时失败且不落残缺文件 | [ ] |
+| AC-5 Spec 校准 | 主 spec 已改为真实结构化导出承诺 | [ ] |
+| AC-6 Fixture 可重复 | 测试夹具稳定、断言明确 | [ ] |
 
 ---
 

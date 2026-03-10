@@ -1,4 +1,4 @@
-# A0-04 导出能力诚实分级
+# A0-04 真实结构化导出能力
 
 - **GitHub Issue**: #1002
 - **所属任务簇**: P0-3（能力诚实分级与假功能处置）
@@ -11,58 +11,51 @@
 
 ### 1. 用户现象
 
-用户在 ExportDialog 中选择 PDF 或 DOCX 导出时，自然期望保留文档中的粗体、斜体、标题层级、图片等富文本格式——毕竟 PDF 和 Word 本身就是格式化文档的代名词。然而实际导出的文件仅含纯文本，所有格式信息被静默丢弃。用户打开导出文件后发现"一马平川"，与编辑器中所见截然不同。这是典型的"口惠而实不至"——承诺了锦绣文章，交付的是白纸黑字。
+用户点击 PDF 或 DOCX，不是为了把文章压成一条平线，而是为了带着层次、语气与证据离开编辑器。当前实现却仍以 `contentText` 为舟，以纯文本为桨，标题、粗斜体、列表、引用、链接、图片一并沉没。界面若继续以“诚实降级”搪塞，便是把能力缺口写成验收目标，本末倒置。
 
 ### 2. 根因
 
-Spec 与实现之间存在系统性不一致：
+- **导出后端走错数据源**：PDF 直接写 `contentText`，DOCX 以换行拆段，均绕开 TipTap JSON 的结构信息
+- **验证口径失真**：现有测试只证明“文件写出来了”，没有证明“语义还活着”
+- **Spec 曾被错误收口**：把“纯文本诚实标注”当成 v0.1 目标，等于默认接受 silently downgrade
+- **UI 与实现互相掩护**：ExportDialog 只改说法，不改能力，文案成了遮羞布
 
-- **Spec 承诺过高**：`openspec/specs/document-management/spec.md` 中导出 Requirement 的格式表将 PDF 描述为"排版后的 PDF 文件"、DOCX 描述为"Microsoft Word 格式"，暗示支持格式化输出
-- **实现仅支持纯文本**：
-  - PDF 导出使用 `contentText` 纯文本，Helvetica 12pt 单一字体，无富文本解析、无图片嵌入
-  - DOCX 导出按行拆分为 `Paragraph` + `TextRun`，不解析 TipTap JSON 格式信息、无图片、无表格
-- **UI 无能力标注**：`ExportDialog.tsx` 的 PDF 选项描述仅为 `t('export.format.pdfDescription')`（"便携文档"），DOCX 描述仅为 ".docx"——均无任何暗示实际是纯文本导出
-- **`UNSUPPORTED_FORMAT_REASONS` 映射为空**：代码中预留了格式不支持提示机制，但映射表为空，所有格式标记为"已支持"
+### 3. 当前 follow-up scope 的含义
 
-### 3. v0.1 威胁
-
-- **信任损耗**：用户以为能导出格式化文档，实际打开后全是纯文本——一次受骗，十次怀疑。创作工具的导出是用户"交卷"的时刻，此处失信代价极高
-- **Spec 债务蔓延**：如果 spec 在 v0.1 不校准，后续开发 Agent 会基于错误承诺做排期和实现——"差之毫厘，缪以千里"
-- **竞品对比劣势**：主流创作工具（Scrivener、Typora）的 PDF/DOCX 导出至少保留基本格式，CreoNow 若不标注能力级别会被视为 bug 而非 feature gap
+Owner 已明确批准 follow-up scope change：v0.1 的 PDF / DOCX 不再接受“仅纯文本导出”的非目标定义。A0-04 必须回到真实能力交付主线，先更新 OpenSpec，再以测试与实现完成收口。
 
 ### 4. 证据来源
 
 | 文档 | 章节 | 内容 |
 |------|------|------|
-| `docs/audit/amp/01-master-roadmap.md` | §4.2 可信度必修项 | PDF/DOCX 导出能力与 spec 承诺不一致 |
-| `docs/audit/amp/08-backend-module-health-audit.md` | §四 导出模块健康度 | "PDF: uses `contentText` only, Helvetica 12pt, no rich text/images；DOCX: splits by line into Paragraph + TextRun, no format/images/tables" |
-| `docs/audit/amp/08-backend-module-health-audit.md` | §4.5 导出概况表 | "PDF/DOCX 导出：ExportDialog 展示四种格式，全部仅导出纯文本" |
-| `openspec/specs/document-management/spec.md` | Requirement: 文档导出 | PDF 描述为"排版后的 PDF 文件"、DOCX 描述为"Microsoft Word 格式"——暗示格式化能力 |
-| `ExportDialog.tsx` | L126-155 | `getFormatOptions()` 中 PDF description 为 `t('export.format.pdfDescription')`（"便携文档"），DOCX description 为 ".docx"，无纯文本提示；`UNSUPPORTED_FORMAT_REASONS` 为空映射 |
+| `docs/audit/amp/08-backend-module-health-audit.md` | 导出模块 | PDF 仍用 `contentText`，DOCX 仍按纯文本拆段 |
+| `apps/desktop/main/src/services/export/exportService.ts` | `exportPdf` / `exportDocx` | 结构信息未参与导出 |
+| `apps/desktop/main/src/services/export/__tests__/export-markdown.test.ts` | 现有测试 | 只验证标题与段落，未覆盖结构语义 |
+| `apps/desktop/main/src/services/export/__tests__/export-txt-docx.test.ts` | 现有测试 | 只验证 DOCX 是 zip 容器，不验证内部语义 |
 
 ---
 
 ## What：做什么
 
-1. **修正 document-management spec 中导出格式表**：明确 PDF/DOCX 在 v0.1 为纯文本导出，正文不保留格式信息（粗体、斜体、标题层级、图片、表格）；Markdown 导出保留格式
-2. **ExportDialog PDF/DOCX 选项添加能力标注**：在 PDF 和 DOCX 格式选项的 description 中添加 `t('export.format.plainTextOnly')`（"纯文本导出"）标注，让用户在选择前即知晓能力边界
-3. **补充 i18n key**：`zh-CN.json` 和 `en.json` 新增 `export.format.plainTextOnly`、`export.format.pdfPlainTextHint`、`export.format.docxPlainTextHint` 等 key
-4. **补充 Scenario**：新增导出格式选择时能力标注可见、导出 PDF 后内容为纯文本的行为场景
+1. **把导出实现改回 TipTap JSON 主线**：Markdown、PDF、DOCX 都以结构化文档模型为输入，而非退回 `contentText`
+2. **定义真实支持的最低语义集**：至少保留标题层级、段落与换行、粗体、斜体、下划线、有序列表、无序列表、引用块、链接、行内代码、分隔线、图片
+3. **禁止 silently downgrade**：对编辑器允许创建但当前导出管线尚不支持的节点或 mark，只允许两种结果：正确导出，或在导出前显式报错并指出不支持项
+4. **补齐可重复验证**：引入固定 fixture 文档，并为 Markdown / PDF / DOCX 分别断言结构语义仍在
+5. **同步主 spec**：`openspec/specs/document-management/spec.md` 与 delta spec 一致改为真实结构化导出承诺
 
 ---
 
 ## Non-Goals：不做什么
 
-1. **不实现 PDF/DOCX 富文本导出**——v0.1 不投入 TipTap JSON → 富文本解析的工程量；格式化导出属于 v0.2+ 路线图范畴
-2. **不修改导出后端逻辑**——本任务仅校准 spec 与 UI 标注，不改变 `exportService` 的输出行为
-3. **不新增导出格式（如 EPUB、HTML）**——格式扩展不在 v0.1 范围内
-4. **不修改 Markdown 导出行为**——Markdown 导出已正确转换 TipTap JSON 格式，不在本次校准范围
-5. **不为 PDF/DOCX 添加 disabled 或移除入口**——用户仍可导出纯文本 PDF/DOCX，只是需要被诚实告知能力边界
+1. **不追求像素级复刻编辑器排版**：v0.1 的目标是语义保真，不是版式 1:1 复写
+2. **不扩展新格式**：EPUB、HTML、ODT 等不在本次范围
+3. **不把未支持内容悄悄剥离**：若暂不支持，必须显式失败，这属于约束而非留白
+4. **不把本任务简化为 UI 改词**：文案同步属于收口项，不能替代能力交付
 
 ---
 
 ## 依赖与影响
 
-- **上游依赖**: 无——本任务是 P0-3 任务簇中的规范基线，不依赖其他 A0 任务
-- **被依赖于**: A0-19（Export 纯文本诚实标注）——A0-19 以本任务的 spec 修正和分级结论为前提
-- **受益于**: A0-06（发布事实表）——导出能力分级结论可直接纳入发布事实表
+- **上游依赖**: 无，A0-04 是真实导出能力主线
+- **被依赖于**: A0-19（导出能力 UI 与真实实现一致）、A0-06 / A0-07 / A0-11（事实表与边界文档回写）
+- **受影响模块**: `main/src/services/export/*`、`renderer/src/features/export/*`、主 spec 与相关 docs PR

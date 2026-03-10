@@ -4,114 +4,21 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import Database from "better-sqlite3";
+import { it } from "vitest";
 
-import type { Logger } from "../../../logging/logger";
 import { createExportService } from "../exportService";
-
-function createNoopLogger(): Logger {
-  return {
-    logPath: "<test>",
-    info: () => {},
-    error: () => {},
-  };
-}
-
-function createTestDb(): Database.Database {
-  const db = new Database(":memory:");
-  db.pragma("foreign_keys = ON");
-  db.exec(`
-    CREATE TABLE projects (
-      project_id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      root_path TEXT NOT NULL,
-      type TEXT NOT NULL DEFAULT 'novel',
-      description TEXT NOT NULL DEFAULT '',
-      stage TEXT NOT NULL DEFAULT 'outline',
-      target_word_count INTEGER,
-      target_chapter_count INTEGER,
-      narrative_person TEXT NOT NULL DEFAULT 'first',
-      language_style TEXT NOT NULL DEFAULT '',
-      target_audience TEXT NOT NULL DEFAULT '',
-      default_skill_set_id TEXT,
-      knowledge_graph_id TEXT,
-      created_at INTEGER NOT NULL,
-      updated_at INTEGER NOT NULL,
-      archived_at INTEGER
-    );
-
-    CREATE TABLE documents (
-      document_id TEXT PRIMARY KEY,
-      project_id TEXT NOT NULL,
-      type TEXT NOT NULL DEFAULT 'chapter',
-      title TEXT NOT NULL,
-      content_json TEXT NOT NULL,
-      content_text TEXT NOT NULL,
-      content_md TEXT NOT NULL,
-      content_hash TEXT NOT NULL,
-      status TEXT NOT NULL DEFAULT 'draft',
-      sort_order INTEGER NOT NULL DEFAULT 0,
-      parent_id TEXT,
-      created_at INTEGER NOT NULL,
-      updated_at INTEGER NOT NULL,
-      FOREIGN KEY(project_id) REFERENCES projects(project_id) ON DELETE CASCADE
-    );
-
-    CREATE TABLE settings (
-      scope TEXT NOT NULL,
-      key TEXT NOT NULL,
-      value_json TEXT NOT NULL,
-      updated_at INTEGER NOT NULL,
-      PRIMARY KEY (scope, key)
-    );
-  `);
-  return db;
-}
-
-function seedProjectAndDocument(args: {
-  db: Database.Database;
-  projectId: string;
-  documentId: string;
-  title: string;
-  contentText: string;
-  contentMd: string;
-}): void {
-  const now = Date.now();
-  args.db
-    .prepare(
-      `
-      INSERT INTO projects (
-        project_id, name, root_path, type, description, stage, created_at, updated_at
-      ) VALUES (?, ?, ?, 'novel', '', 'outline', ?, ?)
-    `,
-    )
-    .run(args.projectId, "Export Project", `/tmp/${args.projectId}`, now, now);
-
-  args.db
-    .prepare(
-      `
-      INSERT INTO documents (
-        document_id, project_id, type, title, content_json, content_text, content_md,
-        content_hash, status, sort_order, parent_id, created_at, updated_at
-      ) VALUES (?, ?, 'chapter', ?, '{}', ?, ?, 'hash', 'draft', 0, NULL, ?, ?)
-    `,
-    )
-    .run(
-      args.documentId,
-      args.projectId,
-      args.title,
-      args.contentText,
-      args.contentMd,
-      now,
-      now,
-    );
-}
+import {
+  PLAIN_TEXT_TRAP,
+  STRUCTURED_EXPORT_CONTENT_JSON,
+  STRUCTURED_EXPORT_TITLE,
+} from "./exportFixture";
+import { createNoopLogger, createTestDb, seedProjectAndDocument } from "./exportTestHelpers";
 
 /**
  * Scenario: S3-EXPORT-S1
- * should export markdown with title heading + paragraph structure.
+ * should export markdown from TipTap JSON with retained structure instead of plain-text fallback.
  */
-{
+it("exports markdown from structured contentJson instead of plain-text fallback", async () => {
   const projectId = `project-${randomUUID()}`;
   const documentId = `doc-${randomUUID()}`;
   const userDataDir = await fs.mkdtemp(path.join(os.tmpdir(), "creonow-exp-"));
@@ -122,9 +29,10 @@ function seedProjectAndDocument(args: {
       db,
       projectId,
       documentId,
-      title: "Chapter One",
-      contentText: "First paragraph\nSecond paragraph",
-      contentMd: "First paragraph\n\nSecond paragraph",
+      title: STRUCTURED_EXPORT_TITLE,
+      contentJson: STRUCTURED_EXPORT_CONTENT_JSON,
+      contentText: PLAIN_TEXT_TRAP,
+      contentMd: PLAIN_TEXT_TRAP,
     });
 
     const service = createExportService({
@@ -142,17 +50,21 @@ function seedProjectAndDocument(args: {
     const outputPath = path.join(userDataDir, result.data.relativePath);
     const markdown = await fs.readFile(outputPath, "utf8");
 
-    assert.match(
-      markdown,
-      /^# Chapter One\n\n/,
-      "markdown should include a heading generated from document title",
-    );
-    assert.ok(
-      markdown.includes("First paragraph\n\nSecond paragraph"),
-      "markdown should preserve paragraph breaks from the source document",
-    );
+    assert.match(markdown, /^# Structured Export Sample\n\n/u);
+    assert.ok(markdown.includes("## Scene Heading"));
+    assert.ok(markdown.includes("**bold words**"));
+    assert.ok(markdown.includes("*italic words*"));
+    assert.ok(markdown.includes("<u>underlined words</u>"));
+    assert.ok(markdown.includes("`inline code`"));
+    assert.ok(markdown.includes("[read the archive](https://example.com/archive)"));
+    assert.ok(markdown.includes("- First bullet"));
+    assert.ok(markdown.includes("1. First ordered"));
+    assert.ok(markdown.includes("> Quoted memory"));
+    assert.ok(markdown.includes("---"));
+    assert.ok(markdown.includes("![Tiny diagram](data:image/png;base64,"));
+    assert.ok(!markdown.includes(PLAIN_TEXT_TRAP));
   } finally {
     db.close();
     await fs.rm(userDataDir, { recursive: true, force: true });
   }
-}
+});
