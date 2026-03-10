@@ -448,7 +448,7 @@ export function parseStructuredExportDocument(args: {
 }
 
 function escapeMarkdownText(text: string): string {
-  return text.replace(/([\\`*_{}\[\]()#+\-.!|>])/g, "\\$1");
+  return text.replace(/([\\`*_{}[\]()#+\-.!|>])/g, "\\$1");
 }
 
 function applyMarkdownMarks(text: string, marks: ExportMark[]): string {
@@ -491,7 +491,7 @@ function renderInlineMarkdown(inlines: ExportInline[]): string {
       if (inline.type === "hardBreak") {
         return "  \n";
       }
-      const title = inline.title.length > 0 ? ` \"${inline.title.replaceAll("\"", '\\\"')}\"` : "";
+      const title = inline.title.length > 0 ? ` "${inline.title.replaceAll("\"", "\\\"")}"` : "";
       return `![${inline.alt}](${inline.src}${title})`;
     })
     .join("");
@@ -529,7 +529,7 @@ function renderBlockMarkdown(block: ExportBlock, depth = 0): string {
     case "codeBlock":
       return `\`\`\`${block.language ?? ""}\n${block.text}\n\`\`\``;
     case "image": {
-      const title = block.title.length > 0 ? ` \"${block.title.replaceAll("\"", '\\\"')}\"` : "";
+      const title = block.title.length > 0 ? ` "${block.title.replaceAll("\"", "\\\"")}"` : "";
       return `![${block.alt}](${block.src}${title})`;
     }
   }

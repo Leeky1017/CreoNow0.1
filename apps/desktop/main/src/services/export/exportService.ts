@@ -7,6 +7,7 @@ import PDFDocument from "pdfkit";
 
 import type { Logger } from "../../logging/logger";
 import { atomicWrite } from "../documents/atomicWrite";
+import { MAX_DOCUMENT_SIZE_BYTES } from "../documents/documentCoreService";
 import { createDocumentService } from "../documents/documentService";
 import { ipcError, type ServiceResult } from "../shared/ipcResult";
 import {
@@ -44,6 +45,16 @@ export type ExportService = {
     documentId?: string;
   }) => Promise<ServiceResult<ExportResult>>;
 };
+
+const MAX_EXPORT_FILE_SIZE_BYTES = MAX_DOCUMENT_SIZE_BYTES * 4;
+
+function assertSizeWithinLimit(args: { bytes: number; format: string }): void {
+  if (args.bytes > MAX_EXPORT_FILE_SIZE_BYTES) {
+    throw new Error(
+      `${args.format} export exceeds size limit (${MAX_EXPORT_FILE_SIZE_BYTES} bytes)`,
+    );
+  }
+}
 
 function isSafePathSegment(segment: string): boolean {
   if (segment.length === 0) {
@@ -195,6 +206,8 @@ function createTextExportOps(
         title: doc.data.title,
         document: structured.data,
       });
+      const markdownBytes = Buffer.byteLength(markdown, "utf8");
+      assertSizeWithinLimit({ bytes: markdownBytes, format: "markdown" });
       await atomicWrite({
         targetPath: absPath,
         writeTemp: async (tempPath) => {
@@ -202,7 +215,7 @@ function createTextExportOps(
         },
       });
 
-      const bytesWritten = Buffer.byteLength(markdown, "utf8");
+      const bytesWritten = markdownBytes;
       deps.logger.info("export_succeeded", {
         format: "markdown",
         documentId,
@@ -268,6 +281,8 @@ function createTextExportOps(
         title: doc.data.title,
         body: doc.data.contentText,
       });
+      const textBytes = Buffer.byteLength(text, "utf8");
+      assertSizeWithinLimit({ bytes: textBytes, format: "txt" });
       await atomicWrite({
         targetPath: absPath,
         writeTemp: async (tempPath) => {
@@ -275,7 +290,7 @@ function createTextExportOps(
         },
       });
 
-      const bytesWritten = Buffer.byteLength(text, "utf8");
+      const bytesWritten = textBytes;
       deps.logger.info("export_succeeded", {
         format: "txt",
         documentId,
@@ -355,6 +370,8 @@ function createBinaryExportOps(
         title: doc.data.title,
         document: structured.data,
       });
+      const estimatedPdfSourceBytes = Buffer.byteLength(doc.data.contentJson, "utf8");
+      assertSizeWithinLimit({ bytes: estimatedPdfSourceBytes, format: "pdf" });
 
       let bytesWritten = 0;
       await atomicWrite({
@@ -465,6 +482,7 @@ function createBinaryExportOps(
         title: docData.data.title,
         document: structured.data,
       });
+      assertSizeWithinLimit({ bytes: buffer.length, format: "docx" });
       await atomicWrite({
         targetPath: absPath,
         writeTemp: async (tempPath) => {
