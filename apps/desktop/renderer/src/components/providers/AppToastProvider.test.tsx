@@ -64,20 +64,20 @@ describe("AppToastProvider", () => {
   // AC-2: 未包裹 AppToastProvider 时抛出明确错误
   // ===========================================================================
   it("未包裹 AppToastProvider 时调用 useAppToast() 抛出明确错误", () => {
-    let capturedError: Error | null = null;
+    let capturedErrorMessage: string | null = null;
 
     function Orphan(): JSX.Element {
       try {
         useAppToast();
       } catch (error) {
-        capturedError = error instanceof Error ? error : new Error(String(error));
+        capturedErrorMessage = error instanceof Error ? error.message : String(error);
       }
       return <div />;
     }
 
     render(<Orphan />);
 
-    expect(capturedError?.message).toBe(
+    expect(capturedErrorMessage).toBe(
       "useAppToast must be used within AppToastProvider",
     );
   });
