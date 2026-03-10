@@ -5,7 +5,6 @@ import { i18n } from "../i18n";
 export type ErrorMessageResolver = (backendMessage: string) => string;
 
 const TIMEOUT_DETAIL_PATTERN = /\((\d+ms)\)/u;
-
 const t = (key: string): string => i18n.t(key);
 
 export const USER_FACING_MESSAGE_BY_CODE: Record<
@@ -125,7 +124,11 @@ export function getHumanErrorMessage(error: {
 }): string {
   const resolver = USER_FACING_MESSAGE_BY_CODE[error.code];
   if (!resolver) {
+<<<<<<< HEAD
     return t("error.generic");
+=======
+    return GENERIC_ERROR_MESSAGE;
+>>>>>>> bb95d266 (fix(skills): validate output against real document context)
   }
   return resolver(error.message);
 }

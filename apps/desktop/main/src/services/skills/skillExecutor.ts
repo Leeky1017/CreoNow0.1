@@ -442,6 +442,21 @@ function validateSkillRunOutput(args: {
   });
 }
 
+function resolveValidationInputText(args: {
+  skillId: string;
+  rawInputText: string;
+  contextPrompt?: string;
+}): string {
+  if (leafSkillId(args.skillId) === "continue") {
+    const contextPrompt = args.contextPrompt?.trim() ?? "";
+    if (contextPrompt.length > 0) {
+      return contextPrompt;
+    }
+  }
+
+  return args.rawInputText;
+}
+
 function createValidatedStreamEmitter(args: {
   emitEvent: (event: AiStreamEvent) => void;
   skillId: string;
@@ -545,20 +560,6 @@ export function createSkillExecutor(deps: SkillExecutorDeps): SkillExecutor {
         template: resolved.data.prompt?.user ?? "",
         input: inputForPrompt,
       });
-      const runArgs: SkillExecutorRunArgs = {
-        ...args,
-        systemPrompt,
-        input: userPrompt,
-        timeoutMs: resolved.data.timeoutMs,
-        emitEvent: args.stream
-          ? createValidatedStreamEmitter({
-              emitEvent: args.emitEvent,
-              skillId: args.skillId,
-              inputText: args.input,
-              output: resolved.data.output,
-            })
-          : args.emitEvent,
-      };
 
       let contextPrompt: string | undefined;
       const contextAssemblyExecutionId = `${args.skillId}:${args.ts}`;
@@ -570,7 +571,6 @@ export function createSkillExecutor(deps: SkillExecutorDeps): SkillExecutor {
         });
         if (assembled && assembled.prompt.trim().length > 0) {
           contextPrompt = assembled.prompt;
-          runArgs.system = contextPrompt;
         }
       } catch (error) {
         deps.logger?.warn("context_assembly_degraded", {
@@ -579,6 +579,28 @@ export function createSkillExecutor(deps: SkillExecutorDeps): SkillExecutor {
           error: normalizeErrorMessage(error),
         });
       }
+
+      const validationInputText = resolveValidationInputText({
+        skillId: args.skillId,
+        rawInputText: args.input,
+        contextPrompt,
+      });
+
+      const runArgs: SkillExecutorRunArgs = {
+        ...args,
+        systemPrompt,
+        input: userPrompt,
+        timeoutMs: resolved.data.timeoutMs,
+        ...(contextPrompt ? { system: contextPrompt } : {}),
+        emitEvent: args.stream
+          ? createValidatedStreamEmitter({
+              emitEvent: args.emitEvent,
+              skillId: args.skillId,
+              inputText: validationInputText,
+              output: resolved.data.output,
+            })
+          : args.emitEvent,
+      };
 
       const run = await deps.runSkill(runArgs);
 
@@ -599,7 +621,7 @@ export function createSkillExecutor(deps: SkillExecutorDeps): SkillExecutor {
       const outputValidation = validateSkillRunOutput({
         skillId: args.skillId,
         outputText: run.data.outputText,
-        inputText: args.input,
+        inputText: validationInputText,
         output: resolved.data.output,
       });
       if (!outputValidation.ok) {

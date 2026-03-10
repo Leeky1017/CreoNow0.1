@@ -5,7 +5,6 @@ import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import { i18n } from "../i18n";
 import zhCN from "../i18n/locales/zh-CN.json";
 import en from "../i18n/locales/en.json";
-
 import {
   getHumanErrorMessage,
   localizeIpcError,

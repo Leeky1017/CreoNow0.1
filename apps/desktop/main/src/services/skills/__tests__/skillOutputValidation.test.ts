@@ -407,6 +407,60 @@ describe("skillOutputValidation", () => {
     "输入为空时跳过膨胀检测，5000 字纯文本应通过",
   );
   });
+
+  it("continue 在空输入但存在真实文档上下文时，仍应按上下文基准拦截异常膨胀", async () => {
+    const contextPrompt = repeat("文", 400);
+
+    const continueWithContext = createSkillExecutor({
+      resolveSkill: (id) => ({
+        ok: true,
+        data: {
+          id,
+          enabled: true,
+          valid: true,
+          inputType: "document" as const,
+          prompt: { system: "system", user: "{{input}}" },
+        },
+      }),
+      assembleContext: async () => ({
+        prompt: contextPrompt,
+        tokenCount: contextPrompt.length,
+        stablePrefixHash: "hash-continue-context",
+        stablePrefixUnchanged: false,
+        warnings: [],
+        assemblyOrder: ["rules", "settings", "retrieved", "immediate"],
+        layers: {
+          rules: { source: [], tokenCount: 0, truncated: false },
+          settings: { source: [], tokenCount: 0, truncated: false },
+          retrieved: { source: [], tokenCount: 0, truncated: false },
+          immediate: {
+            source: ["immediate:ai_panel_input"],
+            tokenCount: contextPrompt.length,
+            truncated: false,
+          },
+        },
+      }),
+      runSkill: async () => ({
+        ok: true,
+        data: {
+          executionId: "ex-continue-context",
+          runId: "run-continue-context",
+          outputText: repeat("甲", 9000),
+        },
+      }),
+    });
+
+    const result = await continueWithContext.execute({
+      ...buildRunArgs("builtin:continue", ""),
+      context: { projectId: "p1", documentId: "d1" },
+    });
+
+    assert.equal(result.ok, false, "实机 continue 路径应按文档上下文基准拦截异常膨胀");
+    if (!result.ok) {
+      assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+      assert.ok(result.error.message.includes("20"));
+    }
+  });
 });
 
 describe("skillOutputValidation stream mode", () => {
