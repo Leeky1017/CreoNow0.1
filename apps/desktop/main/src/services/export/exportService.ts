@@ -7,7 +7,6 @@ import PDFDocument from "pdfkit";
 
 import type { Logger } from "../../logging/logger";
 import { atomicWrite } from "../documents/atomicWrite";
-import { MAX_DOCUMENT_SIZE_BYTES } from "../documents/documentCoreService";
 import { createDocumentService } from "../documents/documentService";
 import { ipcError, type ServiceResult } from "../shared/ipcResult";
 import {
@@ -46,7 +45,7 @@ export type ExportService = {
   }) => Promise<ServiceResult<ExportResult>>;
 };
 
-const MAX_EXPORT_FILE_SIZE_BYTES = MAX_DOCUMENT_SIZE_BYTES * 4;
+const MAX_EXPORT_FILE_SIZE_BYTES = 20 * 1024 * 1024;
 
 function assertSizeWithinLimit(args: { bytes: number; format: string }): void {
   if (args.bytes > MAX_EXPORT_FILE_SIZE_BYTES) {
