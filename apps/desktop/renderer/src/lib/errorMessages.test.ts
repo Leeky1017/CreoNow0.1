@@ -5,7 +5,6 @@ import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import { i18n } from "../i18n";
 import zhCN from "../i18n/locales/zh-CN.json";
 import en from "../i18n/locales/en.json";
-
 import {
   getHumanErrorMessage,
   localizeIpcError,
@@ -127,6 +126,18 @@ describe("errorMessages", () => {
       message: "SQLITE_CONSTRAINT: UNIQUE constraint failed",
     });
     expect(localized.message).not.toContain("SQLITE_CONSTRAINT");
+  });
+
+  it("SKILL_OUTPUT_INVALID 返回本地化文案，不透传后端原文", () => {
+    const raw = "Skill output invalid: html/script block detected";
+    const localized = localizeIpcError({
+      code: "SKILL_OUTPUT_INVALID",
+      message: raw,
+    });
+
+    expect(localized.message).toBe(i18n.t("error.code.SKILL_OUTPUT_INVALID"));
+    expect(localized.message).not.toContain("html");
+    expect(localized.message).not.toBe(raw);
   });
 
   // ── Task 1.6: i18n key 完整性 ──

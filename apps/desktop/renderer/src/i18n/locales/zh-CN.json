@@ -1444,6 +1444,7 @@
       "SKILL_CAPACITY_EXCEEDED": "技能使用量已达上限",
       "SKILL_DEPENDENCY_MISSING": "技能缺少必要依赖",
       "SKILL_INPUT_EMPTY": "请输入内容后再使用此技能",
+      "SKILL_OUTPUT_INVALID": "AI 输出异常，请重新尝试",
       "SKILL_QUEUE_OVERFLOW": "技能队列已满，请稍后重试",
       "SKILL_SCOPE_VIOLATION": "技能访问范围越界",
       "SKILL_TIMEOUT": "技能执行超时",

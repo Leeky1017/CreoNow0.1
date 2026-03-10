@@ -54,47 +54,73 @@ function asObject(x: unknown): JsonObject | null {
   return x as JsonObject;
 }
 
+function collectMessageContentText(content: unknown): string[] {
+  if (typeof content === "string") {
+    return [content];
+  }
+
+  if (!Array.isArray(content)) {
+    return [];
+  }
+
+  const texts: string[] = [];
+  for (const partValue of content) {
+    const part = asObject(partValue);
+    const text = part ? part.text : null;
+    if (typeof text === "string") {
+      texts.push(text);
+    }
+  }
+  return texts;
+}
+
+function extractRequestText(body: unknown): string {
+  const obj = asObject(body);
+  if (!obj) {
+    return "";
+  }
+
+  const texts: string[] = [];
+
+  const system = obj.system;
+  if (typeof system === "string") {
+    texts.push(system);
+  } else if (Array.isArray(system)) {
+    for (const partValue of system) {
+      const part = asObject(partValue);
+      const text = part ? part.text : null;
+      if (typeof text === "string") {
+        texts.push(text);
+      }
+    }
+  }
+
+  const messages = Array.isArray(obj.messages) ? obj.messages : [];
+  for (const messageValue of messages) {
+    const message = asObject(messageValue);
+    if (!message) {
+      continue;
+    }
+    texts.push(...collectMessageContentText(message.content));
+  }
+
+  return texts.join("\n");
+}
+
 /**
  * Extract user text from an OpenAI chat completion request.
  */
 function extractOpenAiUserText(body: unknown): string | null {
-  const obj = asObject(body);
-  const messages = obj ? obj.messages : null;
-  if (!Array.isArray(messages)) {
-    return null;
-  }
-
-  const last = messages[messages.length - 1];
-  const msg = asObject(last);
-  const content = msg ? msg.content : null;
-  return typeof content === "string" ? content : null;
+  const text = extractRequestText(body);
+  return text.length > 0 ? text : null;
 }
 
 /**
  * Extract user text from an Anthropic messages request.
  */
 function extractAnthropicUserText(body: unknown): string | null {
-  const obj = asObject(body);
-  const messages = obj ? obj.messages : null;
-  if (!Array.isArray(messages)) {
-    return null;
-  }
-
-  const last = messages[messages.length - 1];
-  const msg = asObject(last);
-  const content = msg ? msg.content : null;
-  if (typeof content === "string") {
-    return content;
-  }
-
-  const parts = Array.isArray(content) ? content : null;
-  if (!parts) {
-    return null;
-  }
-  const first = parts[0];
-  const part = asObject(first);
-  const text = part ? part.text : null;
-  return typeof text === "string" ? text : null;
+  const text = extractRequestText(body);
+  return text.length > 0 ? text : null;
 }
 
 /**

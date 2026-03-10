@@ -5,7 +5,6 @@ import { i18n } from "../i18n";
 export type ErrorMessageResolver = (backendMessage: string) => string;
 
 const TIMEOUT_DETAIL_PATTERN = /\((\d+ms)\)/u;
-
 const t = (key: string): string => i18n.t(key);
 
 export const USER_FACING_MESSAGE_BY_CODE: Record<
@@ -104,6 +103,7 @@ export const USER_FACING_MESSAGE_BY_CODE: Record<
   SKILL_CAPACITY_EXCEEDED: () => t("error.code.SKILL_CAPACITY_EXCEEDED"),
   SKILL_DEPENDENCY_MISSING: () => t("error.code.SKILL_DEPENDENCY_MISSING"),
   SKILL_INPUT_EMPTY: () => t("error.code.SKILL_INPUT_EMPTY"),
+  SKILL_OUTPUT_INVALID: () => t("error.code.SKILL_OUTPUT_INVALID"),
   SKILL_QUEUE_OVERFLOW: () => t("error.code.SKILL_QUEUE_OVERFLOW"),
   SKILL_SCOPE_VIOLATION: () => t("error.code.SKILL_SCOPE_VIOLATION"),
   SKILL_TIMEOUT: () => t("error.code.SKILL_TIMEOUT"),

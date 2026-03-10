@@ -99,24 +99,30 @@ test("skills: list + toggle disables run + command palette opens", async () => {
   await runInput(page, "hello");
   await expect(page.getByTestId("ai-output")).toContainText("E2E_RESULT");
 
-  const toggled = await page.evaluate(async (id) => {
+  await page.getByTestId("ai-skills-toggle").click();
+  await page.getByTestId(`ai-skill-toggle-${firstEnabledValid.id}`).click();
+  await expect(page.getByTestId(`ai-skill-${firstEnabledValid.id}`)).toBeDisabled();
+  await page.locator('[role="presentation"]').click();
+
+  const disabledRun = await page.evaluate(async (skillId) => {
     if (!window.creonow) {
       throw new Error("Missing window.creonow bridge");
     }
-    return await window.creonow.invoke("skill:registry:toggle", {
-      id,
-      enabled: false,
+    return await window.creonow.invoke("ai:skill:run", {
+      skillId,
+      input: "hello",
+      mode: "ask",
+      model: "gpt-5.2",
+      stream: false,
+      candidateCount: 1,
+      context: {},
     });
   }, firstEnabledValid.id);
-  expect(toggled.ok).toBe(true);
-  if (!toggled.ok) {
-    throw new Error(
-      `Expected ok skill:registry:toggle, got: ${toggled.error.code}`,
-    );
+  expect(disabledRun.ok).toBe(false);
+  if (disabledRun.ok) {
+    throw new Error("Expected disabled skill run to be rejected");
   }
-
-  await runInput(page, "hello");
-  await expect(page.getByTestId("ai-error-code")).toContainText("UNSUPPORTED");
+  expect(disabledRun.error.code).toBe("UNSUPPORTED");
 
   await page.keyboard.press("Control+P");
   await expect(page.getByTestId("command-palette")).toBeVisible();
