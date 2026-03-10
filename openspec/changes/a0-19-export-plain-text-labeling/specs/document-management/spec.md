@@ -1,4 +1,4 @@
-# Delta Spec: document-management — Export 纯文本诚实标注
+# Delta Spec: document-management — 导出能力 UI 与真实实现一致
 
 - **Parent Change**: `a0-19-export-plain-text-labeling`
 - **Base Spec**: `openspec/specs/document-management/spec.md`
@@ -8,86 +8,69 @@
 
 ## 变更摘要
 
-在 ExportDialog 的 PDF/DOCX 格式选项中添加"纯文本导出 · 不含格式"的明确标注，使用户在选择导出格式前即知晓 v0.1 的能力边界。此变更是 A0-04（导出能力诚实分级）的 UI 实施步骤。
+ExportDialog、i18n 与导出失败提示**必须**围绕 A0-04 的真实结构化导出能力重新校准。A0-19 的目标不再是“纯文本诚实标注”，而是“UI 不说错、不说空、也不说过头”。
 
 ---
 
 ## 前置依赖
 
-- **A0-04 完成状态**：A0-04 已完成 `document-management/spec.md` 中导出格式表的能力级别校准——本变更以 A0-04 的分级结论为行为依据
+- **A0-04 完成状态**：A0-04 已把 PDF / DOCX / Markdown 收口为真实结构化导出主线；本变更以该实现与测试结果为行为依据
 
 ---
 
-## 变更: ExportDialog 格式选项能力标注
+## 变更: ExportDialog 与错误反馈一致性
 
-**替换** ExportDialog 中 PDF 和 DOCX 格式选项的 `description` 字段。
+### 格式选项描述
 
-### 格式选项描述（替换原描述）
+ExportDialog 中的格式选项**必须**体现真实能力差异：
 
-ExportDialog 中的格式选项**必须**在用户选择前明确展示能力级别：
+| 格式 | label | description 要求 |
+|------|-------|------------------|
+| PDF | `"PDF"` | 描述真实结构化导出能力，不得再使用“纯文本导出 · 不含格式” |
+| DOCX | `"Word"` | 描述真实结构化导出能力，不得再仅用扩展名充当能力说明 |
+| Markdown | `"Markdown"` | 描述真实结构化 Markdown 导出能力 |
+| TXT | `t('export.format.plainText')` | 明确纯文本能力边界 |
 
-| 格式 | label | description（替换后） | 替换前 |
-|------|-------|----------------------|--------|
-| PDF | `"PDF"` | `t('export.format.pdfPlainTextHint')`（"纯文本导出 · 不含格式"） | `t('export.format.pdfDescription')`（"便携文档"） |
-| DOCX | `"Word"` | `t('export.format.docxPlainTextHint')`（"纯文本导出 · 不含格式"） | `".docx"` |
-| Markdown | `"Markdown"` | `".md"` | 不变 |
-| TXT | `t('export.format.plainText')` | `".txt"` | 不变 |
+### 失败提示
 
-### i18n Key 要求
+当导出前命中暂不支持结构时：
 
-新增以下 i18n key，`zh-CN.json` 和 `en.json` **必须**同步：
+- UI **必须**显示明确、可本地化的失败原因
+- 失败原因 **必须**指出不支持的节点或 mark 类型
+- UI **不得**回退展示模糊的“导出失败”总括语，除非无更具体信息
 
-| Key | zh-CN | en |
-|-----|-------|----|
-| `export.format.pdfPlainTextHint` | 纯文本导出 · 不含格式 | Plain text export · no formatting |
-| `export.format.docxPlainTextHint` | 纯文本导出 · 不含格式 | Plain text export · no formatting |
-| `export.format.plainTextOnly` | 纯文本导出 | Plain text only |
+### i18n 要求
 
-> 注：原 `export.format.pdfDescription` key 保留不删除（避免潜在引用点报错），但 ExportDialog 不再使用。
-
-### Design Token 引用
-
-| 用途 | Token |
-|------|-------|
-| 能力标注文字色 | `--color-fg-muted` |
-| 能力标注字体 | `--font-family-ui`，12px |
-
-### 约束
-
-- **禁止**在 ExportDialog 中使用裸字符串字面量——所有标注文案通过 `t()` 函数获取
-- **禁止**使用 Tailwind 原始色值——样式通过语义化 Design Token 实现
-- **禁止**修改 Markdown / TXT 格式选项的 description——这两个格式不在本变更范围内
-- **禁止**修改导出后端逻辑——本变更只改 UI 标注，`exportService` 行为不变
+- `zh-CN.json` 与 `en.json` **必须**删除或替换过期的 plain-text-only 主界面文案
+- 新增真实结构化导出描述与不支持结构失败提示所需 key
+- 中英文 key 集保持一致
 
 ---
 
-### Scenario: 用户在 ExportDialog 中看到 PDF/DOCX 的能力标注
+### Scenario: 用户在 ExportDialog 中看到与真实能力一致的格式说明
 
 - **假设** 用户打开 ExportDialog
-- **当** 用户浏览导出格式选项列表
-- **则** PDF 格式选项的 description 显示 `t('export.format.pdfPlainTextHint')`（"纯文本导出 · 不含格式"）
-- **并且** DOCX 格式选项的 description 显示 `t('export.format.docxPlainTextHint')`（"纯文本导出 · 不含格式"）
-- **并且** Markdown 格式选项的 description 保持为 ".md"
-- **并且** TXT 格式选项的 description 保持为 ".txt"
+- **当** 用户浏览 Markdown、PDF、DOCX、TXT 选项
+- **则** PDF / DOCX / Markdown 的描述反映真实结构化导出能力
+- **并且** TXT 的描述明确其纯文本边界
+- **并且** 不再出现“纯文本导出 · 不含格式”作为 PDF / DOCX 主文案
 
-### Scenario: i18n 切换后能力标注文案跟随
+### Scenario: 命中不支持结构时 UI 给出明确原因
 
-- **假设** 用户将界面语言切换为英文
-- **当** 用户打开 ExportDialog 浏览格式选项
-- **则** PDF 的 description 显示 "Plain text export · no formatting"
-- **并且** DOCX 的 description 显示 "Plain text export · no formatting"
-- **并且** 用户切换回中文后 PDF/DOCX 的 description 显示 "纯文本导出 · 不含格式"
+- **假设** 用户导出的文档包含当前目标格式尚未实现的结构
+- **当** 导出在写文件前失败
+- **则** ExportDialog 或其关联错误表面显示可本地化的明确原因
+- **并且** 原因中指出不支持的结构类型
 
-### Scenario: 用户选择 PDF 导出后确认纯文本内容
+### Scenario: Storybook 中可见真实导出能力说明与失败状态
 
-- **假设** 用户正在编辑一篇包含粗体、斜体、二级标题的文档
-- **当** 用户通过 ExportDialog 选择 PDF 格式并确认导出
-- **则** 导出的 PDF 文件仅包含正文纯文本
-- **并且** 不包含粗体/斜体格式标记
-- **并且** 不包含标题层级区分
+- **假设** 开发者打开 ExportDialog Story
+- **当** 切换到正常导出或失败态
+- **则** 可以看到与真实实现一致的格式说明与错误提示
 
 ---
 
 ## 可访问性要求
 
-- 能力标注文案**必须**被屏幕阅读器可读——description 文本作为格式选项的辅助描述，通过 `aria-describedby` 或语义化 HTML 结构传达
+- 格式说明与失败原因**必须**可被屏幕阅读器读出
+- 失败提示**必须**通过语义化错误区域暴露，而非仅靠颜色区别

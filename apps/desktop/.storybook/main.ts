@@ -12,10 +12,7 @@ const sharedAliasPath = path.resolve(__dirname, "../../../packages/shared");
  * Stories 文件与组件放在同一目录，便于维护。
  */
 const config: StorybookConfig = {
-  stories: [
-    "../renderer/src/**/*.mdx",
-    "../renderer/src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-  ],
+  stories: ["../renderer/src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
   addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
   framework: {
     name: "@storybook/react-vite",
@@ -30,6 +27,30 @@ const config: StorybookConfig = {
   viteFinal: async (config) => {
     return mergeConfig(config, {
       plugins: [tailwindcss()],
+      build: {
+        chunkSizeWarningLimit: 1200,
+        rollupOptions: {
+          onwarn(warning, defaultHandler) {
+            if (
+              warning.code === "MODULE_LEVEL_DIRECTIVE" &&
+              typeof warning.id === "string" &&
+              warning.id.includes("/node_modules/@radix-ui/")
+            ) {
+              return;
+            }
+
+            if (
+              warning.code === "EVAL" &&
+              typeof warning.id === "string" &&
+              warning.id.includes("/node_modules/@storybook/core/dist/preview/runtime.js")
+            ) {
+              return;
+            }
+
+            defaultHandler(warning);
+          },
+        },
+      },
       resolve: {
         alias: {
           "@shared": sharedAliasPath,

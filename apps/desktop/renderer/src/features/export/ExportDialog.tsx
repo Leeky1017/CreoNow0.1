@@ -129,28 +129,45 @@ function getFormatOptions(t: TFunction): FormatOption[] {
     {
       value: "pdf",
       label: "PDF",
-      description: t('export.format.pdfPlainTextHint'),
+      description: t('export.format.pdfStructuredHint'),
       icon: <FileText size={20} strokeWidth={1.5} />,
     },
     {
       value: "markdown",
       label: "Markdown",
-      description: ".md",
+      description: t('export.format.markdownStructuredHint'),
       icon: <FileCode size={20} strokeWidth={1.5} />,
     },
     {
       value: "docx",
       label: "Word",
-      description: t('export.format.docxPlainTextHint'),
+      description: t('export.format.docxStructuredHint'),
       icon: <FileText size={20} strokeWidth={1.5} />,
     },
     {
       value: "txt",
       label: t('export.format.plainText'),
-      description: ".txt",
+      description: t('export.format.txtBoundaryHint'),
       icon: <File size={20} strokeWidth={1.5} />,
     },
   ];
+}
+
+function formatExportError(t: TFunction, error: IpcError): IpcError {
+  if (error.code !== "INVALID_ARGUMENT") {
+    return error;
+  }
+
+  const unsupportedPrefix = "Export format does not yet support:";
+  if (error.message.startsWith(unsupportedPrefix)) {
+    const details = error.message.slice(unsupportedPrefix.length).trim();
+    return {
+      code: "INVALID_ARGUMENT",
+      message: t('export.error.unsupportedStructure', { details }),
+    };
+  }
+
+  return error;
 }
 
 /**
@@ -419,6 +436,7 @@ function ConfigView({
         {error ? (
           <div
             data-testid="export-error"
+            role="alert"
             className="p-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)]"
           >
             <div className="flex items-start gap-3">
@@ -835,7 +853,7 @@ export function ExportDialog({
     }
 
     if (!res.ok) {
-      setLastError(res.error);
+      setLastError(formatExportError(t, res.error));
       setInternalView("config");
       setInternalProgress(0);
       return;
