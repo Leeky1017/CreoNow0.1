@@ -10,6 +10,7 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 
 import { AppShell } from "../components/layout/AppShell";
+import { AppToastProvider } from "../components/providers/AppToastProvider";
 import { LayoutStoreProvider, createLayoutStore } from "../stores/layoutStore";
 import {
   ProjectStoreProvider,
@@ -219,7 +220,7 @@ function IntegrationTestWrapper({
                   <SearchStoreProvider store={searchStore}>
                     <KgStoreProvider store={kgStore}>
                       <VersionStoreProvider store={versionStore}>
-                        {children}
+                        <AppToastProvider>{children}</AppToastProvider>
                       </VersionStoreProvider>
                     </KgStoreProvider>
                   </SearchStoreProvider>

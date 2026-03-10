@@ -1,4 +1,5 @@
 import React from "react";
+import { AppToastProvider } from "../providers/AppToastProvider";
 import {
   LayoutStoreProvider,
   createLayoutStore,
@@ -150,7 +151,7 @@ export function LayoutTestWrapper({
                 <MemoryStoreProvider store={memoryStore}>
                   <SearchStoreProvider store={searchStore}>
                     <KgStoreProvider store={kgStore}>
-                      {children}
+                      <AppToastProvider>{children}</AppToastProvider>
                     </KgStoreProvider>
                   </SearchStoreProvider>
                 </MemoryStoreProvider>

@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { AppShell } from "./AppShell";
+import { AppToastProvider } from "../providers/AppToastProvider";
 import { LayoutStoreProvider, createLayoutStore } from "../../stores/layoutStore";
 import { ProjectStoreProvider, createProjectStore } from "../../stores/projectStore";
 import { FileStoreProvider, createFileStore } from "../../stores/fileStore";
@@ -109,7 +110,7 @@ function AppShellTestWrapper(props: { children: React.ReactNode }): JSX.Element 
                   <MemoryStoreProvider store={memoryStore}>
                     <SearchStoreProvider store={searchStore}>
                       <KgStoreProvider store={kgStore}>
-                        {props.children}
+                        <AppToastProvider>{props.children}</AppToastProvider>
                       </KgStoreProvider>
                     </SearchStoreProvider>
                   </MemoryStoreProvider>

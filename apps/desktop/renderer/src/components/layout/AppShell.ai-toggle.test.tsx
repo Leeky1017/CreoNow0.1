@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import React from "react";
 import { AppShell } from "./AppShell";
+import { AppToastProvider } from "../providers/AppToastProvider";
 import {
   LayoutStoreProvider,
   createLayoutStore,
@@ -118,7 +119,7 @@ function TestWrapper({
                   <MemoryStoreProvider store={memoryStore}>
                     <SearchStoreProvider store={searchStore}>
                       <KgStoreProvider store={kgStore}>
-                        {children}
+                        <AppToastProvider>{children}</AppToastProvider>
                       </KgStoreProvider>
                     </SearchStoreProvider>
                   </MemoryStoreProvider>
