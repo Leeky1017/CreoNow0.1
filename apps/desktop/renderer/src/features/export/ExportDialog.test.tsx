@@ -9,7 +9,7 @@ import { i18n } from "../../i18n";
 
 vi.mock("@radix-ui/react-dialog", async (importOriginal) => {
   const React = await import("react");
-  const actual = await importOriginal<typeof import("@radix-ui/react-dialog")>();
+  const actual = await importOriginal();
 
   return {
     ...actual,
@@ -36,9 +36,7 @@ vi.mock("@radix-ui/react-dialog", async (importOriginal) => {
 });
 
 vi.mock("../../components/primitives", async () => {
-  const actual = await vi.importActual<typeof import("../../components/primitives")>(
-    "../../components/primitives",
-  );
+  const actual = await vi.importActual("../../components/primitives");
 
   return {
     ...actual,
