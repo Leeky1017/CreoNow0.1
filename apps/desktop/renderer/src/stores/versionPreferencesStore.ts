@@ -4,7 +4,7 @@ export const VERSION_SHOW_AI_MARKS_KEY = "creonow.editor.showAiMarks" as const;
 
 type VersionPreferencesState = {
   showAiMarks: boolean;
-  setShowAiMarks: (enabled: boolean) => void;
+  setShowAiMarks: (enabled: boolean) => boolean;
 };
 
 /**
@@ -38,12 +38,12 @@ function readShowAiMarksPreference(): boolean {
  *
  * Why: version history rendering must survive app restarts.
  */
-function writeShowAiMarksPreference(enabled: boolean): void {
+function writeShowAiMarksPreference(enabled: boolean): boolean {
   if (
     typeof window === "undefined" ||
     typeof window.localStorage === "undefined"
   ) {
-    return;
+    return false;
   }
 
   try {
@@ -51,8 +51,10 @@ function writeShowAiMarksPreference(enabled: boolean): void {
       VERSION_SHOW_AI_MARKS_KEY,
       JSON.stringify(enabled),
     );
+    return true;
   } catch (error) {
     console.error("Failed to persist AI marks preference", { error });
+    return false;
   }
 }
 
@@ -65,8 +67,11 @@ export const useVersionPreferencesStore = create<VersionPreferencesState>(
   (set) => ({
     showAiMarks: readShowAiMarksPreference(),
     setShowAiMarks: (enabled) => {
-      writeShowAiMarksPreference(enabled);
-      set({ showAiMarks: enabled });
+      const persisted = writeShowAiMarksPreference(enabled);
+      if (persisted) {
+        set({ showAiMarks: enabled });
+      }
+      return persisted;
     },
   }),
 );

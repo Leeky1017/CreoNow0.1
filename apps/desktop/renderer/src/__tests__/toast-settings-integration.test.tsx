@@ -7,9 +7,14 @@ import {
   SettingsDialog,
 } from "../features/settings-dialog/SettingsDialog";
 
+const setShowAiMarks = vi.fn(() => true);
+
 vi.mock("../stores/versionPreferencesStore", () => ({
-  useVersionPreferencesStore: vi.fn((selector: (s: Record<string, unknown>) => unknown) =>
-    selector({ showAiMarks: false, setShowAiMarks: vi.fn() }),
+  useVersionPreferencesStore: vi.fn((selector: (s: {
+    showAiMarks: boolean;
+    setShowAiMarks: typeof setShowAiMarks;
+  }) => unknown) =>
+    selector({ showAiMarks: false, setShowAiMarks }),
   ),
 }));
 
@@ -21,9 +26,11 @@ vi.mock("../stores/versionPreferencesStore", () => ({
 describe("toast-settings integration", () => {
   afterEach(() => {
     vi.restoreAllMocks();
+    setShowAiMarks.mockReset();
+    setShowAiMarks.mockReturnValue(true);
   });
 
-  it("设置变更后触发 success Toast (AC-7)", async () => {
+  it("持久化设置写入成功后触发 success Toast (AC-7)", async () => {
     const user = userEvent.setup();
 
     render(
@@ -36,14 +43,35 @@ describe("toast-settings integration", () => {
       </AppToastProvider>,
     );
 
-    // Find a toggle in settings and click it to change a setting
     const toggles = screen.getAllByRole("switch");
-    if (toggles.length > 0) {
-      await act(async () => {
-        await user.click(toggles[0]);
-      });
 
-      expect(screen.getByText("Settings saved")).toBeInTheDocument();
-    }
+    await act(async () => {
+      await user.click(toggles[toggles.length - 1]);
+    });
+
+    expect(setShowAiMarks).toHaveBeenCalledWith(true);
+    expect(screen.getByText("Settings saved")).toBeInTheDocument();
+  });
+
+  it("仅修改本地状态设置时不应提前触发 success Toast", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <AppToastProvider>
+        <SettingsDialog
+          open
+          onOpenChange={() => {}}
+          defaultTab="general"
+        />
+      </AppToastProvider>,
+    );
+
+    const toggles = screen.getAllByRole("switch");
+
+    await act(async () => {
+      await user.click(toggles[0]);
+    });
+
+    expect(screen.queryByText("Settings saved")).not.toBeInTheDocument();
   });
 });

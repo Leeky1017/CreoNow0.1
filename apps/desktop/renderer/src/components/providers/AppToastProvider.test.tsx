@@ -1,4 +1,3 @@
-import React from "react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 
@@ -62,27 +61,25 @@ describe("AppToastProvider", () => {
   });
 
   // ===========================================================================
-  // AC-2: 未包裹 AppToastProvider 时返回 no-op（不抛错）
+  // AC-2: 未包裹 AppToastProvider 时抛出明确错误
   // ===========================================================================
-  it("未包裹 AppToastProvider 时调用 useAppToast() 返回 no-op，不抛错", () => {
-    const captured: {
-      showToast: ReturnType<typeof useAppToast>["showToast"] | undefined;
-    } = {
-      showToast: undefined,
-    };
+  it("未包裹 AppToastProvider 时调用 useAppToast() 抛出明确错误", () => {
+    let capturedError: Error | null = null;
 
     function Orphan(): JSX.Element {
-      const { showToast } = useAppToast();
-
-      React.useEffect(() => {
-        captured.showToast = showToast;
-      }, [showToast]);
-
+      try {
+        useAppToast();
+      } catch (error) {
+        capturedError = error instanceof Error ? error : new Error(String(error));
+      }
       return <div />;
     }
 
-    expect(() => render(<Orphan />)).not.toThrow();
-    expect(typeof captured.showToast).toBe("function");
+    render(<Orphan />);
+
+    expect(capturedError?.message).toBe(
+      "useAppToast must be used within AppToastProvider",
+    );
   });
 
   // ===========================================================================

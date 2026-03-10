@@ -177,12 +177,21 @@ export function SettingsDialog({
   const showAiMarks = useVersionPreferencesStore((s) => s.showAiMarks);
   const setShowAiMarks = useVersionPreferencesStore((s) => s.setShowAiMarks);
 
-  const handleSettingsChange = React.useCallback(
-    (settings: GeneralSettings) => {
-      setGeneralSettings(settings);
-      showToast({ title: t("toast.settings.success.title"), variant: "success" });
+  const handleSettingsChange = React.useCallback((settings: GeneralSettings) => {
+    setGeneralSettings(settings);
+  }, []);
+
+  const handleShowAiMarksChange = React.useCallback(
+    (enabled: boolean) => {
+      const persisted = setShowAiMarks(enabled);
+      if (persisted) {
+        showToast({
+          title: t("toast.settings.success.title"),
+          variant: "success",
+        });
+      }
     },
-    [showToast, t],
+    [setShowAiMarks, showToast, t],
   );
 
   React.useEffect(() => {
@@ -198,7 +207,7 @@ export function SettingsDialog({
           <SettingsGeneral
             settings={generalSettings}
             showAiMarks={showAiMarks}
-            onShowAiMarksChange={setShowAiMarks}
+            onShowAiMarksChange={handleShowAiMarksChange}
             onSettingsChange={handleSettingsChange}
           />
         );
