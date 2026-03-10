@@ -5,11 +5,11 @@
  * styling violations that bypass the Design Token system:
  *
  *   1. Tailwind built-in shadows (shadow-lg, shadow-xl, shadow-2xl)
- *      → must use shadow-[var(--shadow-*)]
+ *      → must use a token-wrapped shadow utility
  *   2. Tailwind raw color utilities (bg-red-600, text-green-500, etc.)
  *      → must use semantic Token via var(--)
  *   3. Hardcoded hex (#xxx, #xxxxxx) or rgba() values in className / style
- *      → must use var(--color-*)
+ *      → must use semantic color tokens
  *
  * Allowlisted files:
  *   - SettingsAppearancePage.tsx: theme preview swatches (intentional hex)
@@ -69,7 +69,7 @@ const BARE_SHADOW_REGEX =
 /**
  * Tailwind raw color utilities (not wrapped in var(--)).
  * Matches: bg-red-600, text-green-500, border-gray-200, hover:bg-yellow-400
- * Does NOT match: bg-[var(--color-*)], text-[var(--color-*)]
+ * Does NOT match: token-wrapped bg/text utilities
  *
  * Excluded from detection:
  *   - bg-transparent, text-transparent
@@ -276,7 +276,7 @@ describe("Token global compliance: no style bypass in production files", () => {
         .join("");
       expect.fail(
         `Found ${colorViolations.reduce((n, v) => n + v.violations.length, 0)} raw Tailwind color violation(s) in ${colorViolations.length} file(s).\n` +
-          `Use bg-[var(--color-*)] instead of bg-red-600.\n${report}`,
+          `Use token-wrapped background/text utilities instead of raw palette classes.\n${report}`,
       );
     }
   });
@@ -320,7 +320,7 @@ describe("Token global compliance: no style bypass in production files", () => {
         .join("");
       expect.fail(
         `Found ${hexViolations.reduce((n, v) => n + v.violations.length, 0)} hardcoded hex violation(s) in ${hexViolations.length} file(s).\n` +
-          `Use var(--color-*) tokens instead of #hex values.\n${report}`,
+          `Use semantic color tokens instead of #hex values.\n${report}`,
       );
     }
   });
@@ -342,7 +342,7 @@ describe("Token global compliance: no style bypass in production files", () => {
         .join("");
       expect.fail(
         `Found ${rgbaViolations.reduce((n, v) => n + v.violations.length, 0)} hardcoded rgba() violation(s) in ${rgbaViolations.length} file(s).\n` +
-          `Use var(--color-*) tokens instead of rgba() values.\n${report}`,
+          `Use semantic color tokens instead of rgba() values.\n${report}`,
       );
     }
   });

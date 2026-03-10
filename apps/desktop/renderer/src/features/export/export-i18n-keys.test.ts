@@ -3,9 +3,10 @@ import en from "../../i18n/locales/en.json";
 import zhCN from "../../i18n/locales/zh-CN.json";
 
 const REQUIRED_KEYS = [
-  "pdfPlainTextHint",
-  "docxPlainTextHint",
-  "plainTextOnly",
+  "pdfStructuredHint",
+  "docxStructuredHint",
+  "markdownStructuredHint",
+  "txtBoundaryHint",
 ] as const;
 
 describe("export format i18n keys (A0-19)", () => {

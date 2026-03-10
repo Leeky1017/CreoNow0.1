@@ -1080,9 +1080,10 @@
     },
     "format": {
       "pdfDescription": "便携文档",
-      "pdfPlainTextHint": "纯文本导出 · 不含格式",
-      "docxPlainTextHint": "纯文本导出 · 不含格式",
-      "plainTextOnly": "纯文本导出",
+      "pdfStructuredHint": "结构化分页 · 保留标题、列表、图片",
+      "docxStructuredHint": "结构化 Word 导出 · 保留标题、链接、图片",
+      "markdownStructuredHint": "结构化 Markdown · 保留标题、列表、链接",
+      "txtBoundaryHint": "纯文本导出 · 自动移除格式",
       "plainText": "纯文本",
       "unsupported": "不支持",
       "pdfPlainTextHint": "纯文本导出 · 不含格式",
@@ -1121,6 +1122,7 @@
     "defaultDocumentTitle": "未命名文档",
     "error": {
       "noProject": "NO_PROJECT: 请先打开一个项目",
+      "unsupportedStructure": "当前导出格式暂不支持写出：{{details}}",
       "unknown": "由于未知错误导出失败"
     }
   },

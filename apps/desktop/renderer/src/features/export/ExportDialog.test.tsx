@@ -248,55 +248,80 @@ describe("ExportDialog", () => {
   });
 
   describe("format description labels (A0-19)", () => {
-    it("shows plain text hint for PDF format", () => {
+    it("shows structured capability hint for PDF format", () => {
       render(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
       const pdfCard = screen.getByTestId("export-format-pdf");
-      expect(pdfCard).toHaveTextContent("Plain text export · no formatting");
+      expect(pdfCard).toHaveTextContent(
+        "Structured pages · headings, lists, images",
+      );
     });
 
-    it("shows plain text hint for DOCX format", () => {
+    it("shows structured capability hint for DOCX format", () => {
       render(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
       const docxCard = screen.getByTestId("export-format-docx");
-      expect(docxCard).toHaveTextContent("Plain text export · no formatting");
+      expect(docxCard).toHaveTextContent(
+        "Structured Word export · headings, links, images",
+      );
     });
 
-    it("keeps .md description for Markdown format", () => {
+    it("shows structured capability hint for Markdown format", () => {
       render(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
       const mdCard = screen.getByTestId("export-format-markdown");
-      expect(mdCard).toHaveTextContent(".md");
+      expect(mdCard).toHaveTextContent(
+        "Structured Markdown · headings, lists, links",
+      );
     });
 
-    it("keeps .txt description for TXT format", () => {
+    it("keeps a plain-text boundary hint for TXT format", () => {
       render(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
       const txtCard = screen.getByTestId("export-format-txt");
-      expect(txtCard).toHaveTextContent(".txt");
+      expect(txtCard).toHaveTextContent("Plain text only · formatting removed");
     });
 
-    it("shows Chinese hint after switching to zh-CN locale", async () => {
+    it("shows Chinese structured hints after switching to zh-CN locale", async () => {
       await act(async () => { await i18n.changeLanguage("zh-CN"); });
       render(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
       const pdfCard = screen.getByTestId("export-format-pdf");
-      expect(pdfCard).toHaveTextContent("纯文本导出 · 不含格式");
+      expect(pdfCard).toHaveTextContent("结构化分页 · 保留标题、列表、图片");
 
       const docxCard = screen.getByTestId("export-format-docx");
-      expect(docxCard).toHaveTextContent("纯文本导出 · 不含格式");
+      expect(docxCard).toHaveTextContent("结构化 Word 导出 · 保留标题、链接、图片");
+
+      const markdownCard = screen.getByTestId("export-format-markdown");
+      expect(markdownCard).toHaveTextContent("结构化 Markdown · 保留标题、列表、链接");
+
+      const txtCard = screen.getByTestId("export-format-txt");
+      expect(txtCard).toHaveTextContent("纯文本导出 · 自动移除格式");
 
       await act(async () => { await i18n.changeLanguage("en"); });
+    });
+
+    it("does not show the old plain-text-only copy for PDF or DOCX", () => {
+      render(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      expect(screen.getByTestId("export-format-pdf")).not.toHaveTextContent(
+        "Plain text export · no formatting",
+      );
+      expect(screen.getByTestId("export-format-docx")).not.toHaveTextContent(
+        "Plain text export · no formatting",
+      );
     });
   });
 
@@ -325,6 +350,36 @@ describe("ExportDialog", () => {
       "disk write permission denied",
     );
     expect(screen.queryByTestId("export-success")).not.toBeInTheDocument();
+  });
+
+  it("localizes unsupported-structure failures before showing them in the error surface", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(ipcClient, "invoke").mockResolvedValueOnce({
+      ok: false,
+      error: {
+        code: "INVALID_ARGUMENT",
+        message: "Export format does not yet support: doc.content.0:table",
+      },
+    });
+
+    render(
+      <ExportDialog
+        open={true}
+        onOpenChange={() => {}}
+        projectId="test-project"
+        documentId="doc-1"
+      />,
+    );
+
+    await user.click(screen.getByTestId("export-submit"));
+
+    expect(await screen.findByTestId("export-error")).toBeInTheDocument();
+    expect(screen.getByTestId("export-error-code")).toHaveTextContent(
+      "INVALID_ARGUMENT",
+    );
+    expect(screen.getByTestId("export-error-message")).toHaveTextContent(
+      "This export format cannot write: doc.content.0:table",
+    );
   });
 });
 

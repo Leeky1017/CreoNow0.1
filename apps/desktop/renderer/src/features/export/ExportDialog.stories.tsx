@@ -16,9 +16,10 @@ import { ExportDialog, defaultExportOptions } from "./ExportDialog";
  * - Estimated size: ~2.4 MB
  *
  * Format options:
- * - Markdown (default selected)
- * - PDF (currently UNSUPPORTED in V1)
- * - Word (.docx; currently UNSUPPORTED in V1)
+ * - Markdown structured export
+ * - PDF structured pages
+ * - Word (.docx) structured export
+ * - TXT plain text boundary
  *
  * Export settings:
  * - Include metadata (default checked)
@@ -70,11 +71,11 @@ type Story = StoryObj<typeof ExportDialog>;
 /**
  * Story 1: ConfigViewDefault
  *
- * Default configuration view with PDF selected.
+ * Default configuration view with Markdown selected.
  * Validates:
- * - PDF default selected (blue border + inner dot)
+ * - Markdown default selected (blue border + inner dot)
  * - "Include metadata" and "Embed images" checked by default
- * - Page size A4 selected
+ * - Page size A4 shown in preview badge
  * - Bottom shows "~2.4 MB"
  */
 export const ConfigViewDefault: Story = {
@@ -89,7 +90,7 @@ export const ConfigViewDefault: Story = {
     docs: {
       description: {
         story:
-          "Default config view with PDF format selected. Include metadata and Embed images are checked. Page size is A4.",
+          "Default config view with Markdown selected and structured capability descriptions visible for all formats.",
       },
     },
   },
@@ -319,6 +320,26 @@ export const ProgressViewEmbeddingImages: Story = {
       description: {
         story:
           "Export at 75% progress. Shows 'Embedding images...' step label.",
+      },
+    },
+  },
+};
+
+export const UnsupportedStructureError: Story = {
+  args: {
+    open: true,
+    projectId: "storybook-project",
+    documentTitle: "The Architecture of Silence",
+    error: {
+      code: "INVALID_ARGUMENT",
+      message: "This export format cannot write: doc.content.0:table",
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Config view with an explicit unsupported-structure failure, showing the same error surface users get before file write.",
       },
     },
   },

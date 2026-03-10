@@ -1,9 +1,9 @@
-# Tasks: A0-19 Export 纯文本诚实标注
+# Tasks: A0-19 导出能力 UI 与真实实现一致
 
 - **GitHub Issue**: #998
 - **分支**: `task/998-export-plain-text-labeling`
 - **Delta Spec**: `specs/document-management/spec.md`
-- **前置依赖**: **A0-04**（导出能力诚实分级）
+- **前置依赖**: **A0-04**（真实结构化导出能力）
 
 ---
 
@@ -17,78 +17,61 @@ P0-3: 能力诚实分级与假功能处置
 
 | ID | 标准 | 对应 Scenario |
 |----|------|--------------|
-| AC-1 | ExportDialog 中 PDF 格式选项的 description 显示 `t('export.format.pdfPlainTextHint')`（"纯文本导出 · 不含格式"） | 用户在 ExportDialog 中看到 PDF/DOCX 的能力标注 |
-| AC-2 | ExportDialog 中 DOCX 格式选项的 description 显示 `t('export.format.docxPlainTextHint')`（"纯文本导出 · 不含格式"） | 用户在 ExportDialog 中看到 PDF/DOCX 的能力标注 |
-| AC-3 | Markdown 和 TXT 格式选项的 description 不变 | 用户在 ExportDialog 中看到 PDF/DOCX 的能力标注 |
-| AC-4 | 切换界面语言为英文后，PDF/DOCX description 显示 "Plain text export · no formatting" | i18n 切换后能力标注文案跟随 |
-| AC-5 | `zh-CN.json` 和 `en.json` 包含 `export.format.pdfPlainTextHint`、`export.format.docxPlainTextHint`、`export.format.plainTextOnly` 三个 key | i18n 要求 |
-| AC-6 | 所有新增文案通过 `t()` 函数获取，无裸字符串字面量 | 全部 Scenario |
+| AC-1 | ExportDialog 中 Markdown / PDF / DOCX / TXT 的说明与真实能力一致 | 用户在 ExportDialog 中看到与真实能力一致的格式说明 |
+| AC-2 | PDF / DOCX 主文案中不再出现“纯文本导出 · 不含格式”旧口径 | 用户在 ExportDialog 中看到与真实能力一致的格式说明 |
+| AC-3 | 命中不支持结构时，UI 显示明确且可本地化的失败原因 | 命中不支持结构时 UI 给出明确原因 |
+| AC-4 | Storybook 覆盖正常态与失败态，并可见真实能力说明 | Storybook 中可见真实导出能力说明与失败状态 |
+| AC-5 | `zh-CN.json` 与 `en.json` 的导出相关 key 与主界面文案保持一致 | 全部 Scenario |
 
 ---
 
 ## Phase 1: Red（测试先行）
 
-### Task 1.1: ExportDialog 格式选项 description 测试
+### Task 1.1: ExportDialog 文案一致性测试
 
-**映射验收标准**: AC-1, AC-2, AC-3
+**映射验收标准**: AC-1, AC-2, AC-5
 
-编写 ExportDialog 格式选项能力标注的单元测试：
+- [ ] 测试：Markdown / PDF / DOCX / TXT 的说明文案与真实能力一致
+- [ ] 测试：PDF / DOCX 不再显示“纯文本导出 · 不含格式”
+- [ ] 测试：中英文 locale 下文案一致映射
 
-- [ ] 测试：渲染 ExportDialog，断言 PDF 格式选项的 description 文本包含 `t('export.format.pdfPlainTextHint')` 的值（"纯文本导出 · 不含格式"）
-- [ ] 测试：渲染 ExportDialog，断言 DOCX 格式选项的 description 文本包含 `t('export.format.docxPlainTextHint')` 的值（"纯文本导出 · 不含格式"）
-- [ ] 测试：渲染 ExportDialog，断言 Markdown 格式选项的 description 文本为 ".md"
-- [ ] 测试：渲染 ExportDialog，断言 TXT 格式选项的 description 文本为 ".txt"
+**文件**: `apps/desktop/renderer/src/features/export/ExportDialog.test.tsx`
 
-**文件**: `apps/desktop/renderer/src/features/export/ExportDialog.test.tsx`（扩展现有文件）
+### Task 1.2: 失败提示测试
 
-### Task 1.2: i18n 语言切换后标注文案测试
+**映射验收标准**: AC-3
+
+- [ ] 测试：导出前命中不支持结构时，错误区显示明确原因
+- [ ] 测试：错误消息包含不支持的节点或 mark 类型
+
+**文件**: `apps/desktop/renderer/src/features/export/ExportDialog.test.tsx` 及相关错误表面测试
+
+### Task 1.3: Storybook 与交互测试
 
 **映射验收标准**: AC-4
 
-- [ ] 测试：在 `en` locale 下渲染 ExportDialog，断言 PDF description 显示 "Plain text export · no formatting"
-- [ ] 测试：在 `en` locale 下渲染 ExportDialog，断言 DOCX description 显示 "Plain text export · no formatting"
-- [ ] 测试：在 `zh-CN` locale 下渲染 ExportDialog，断言 PDF description 显示 "纯文本导出 · 不含格式"
-
-**文件**: `apps/desktop/renderer/src/features/export/ExportDialog.test.tsx`（扩展现有文件）
-
-### Task 1.3: i18n key 完整性测试
-
-**映射验收标准**: AC-5
-
-- [ ] 测试：`zh-CN.json` 包含 `export.format.pdfPlainTextHint`、`export.format.docxPlainTextHint`、`export.format.plainTextOnly` 三个 key
-- [ ] 测试：`en.json` 包含相同的三个 key
-- [ ] 测试：中英文文件中 `export.format.*` 命名空间下 key 数量一致
-
-**文件**: `apps/desktop/tests/i18n/export-keys.test.ts`（新建）
+- [ ] 为 ExportDialog 增加正常态与失败态 Story
+- [ ] 交互测试覆盖格式切换、提交失败、错误提示展示
 
 ---
 
 ## Phase 2: Green（实现）
 
-### Task 2.1: 修改 ExportDialog 格式选项 description
+### Task 2.1: 重写 ExportDialog 文案与提示
 
-实现 PDF/DOCX 格式选项的能力标注：
+- [ ] 更新 `getFormatOptions()`，让 PDF / DOCX / Markdown / TXT 的说明文案与真实能力一致
+- [ ] 删除或替换过期的 plain-text-only 主文案
+- [ ] 保持所有用户可见文案走 i18n
 
-- [ ] 修改 `getFormatOptions()` 中 PDF 选项的 `description`：从 `t('export.format.pdfDescription')` 改为 `t('export.format.pdfPlainTextHint')`
-- [ ] 修改 `getFormatOptions()` 中 DOCX 选项的 `description`：从 `".docx"` 改为 `t('export.format.docxPlainTextHint')`
-- [ ] 确认 Markdown 和 TXT 选项不变
-- [ ] 所有文案通过 `t()` 函数获取，禁止裸字符串字面量
+### Task 2.2: 收口导出失败表面
 
-**文件**: `apps/desktop/renderer/src/features/export/ExportDialog.tsx`（修改 `getFormatOptions` 函数）
+- [ ] 当导出前命中不支持结构时，在 ExportDialog 或关联错误表面显示明确原因
+- [ ] 确保错误态对屏幕阅读器可读
 
-### Task 2.2: 新增 i18n key
+### Task 2.3: 同步 i18n
 
-- [ ] 在 `zh-CN.json` 的 `export.format` 命名空间新增：
-  - `"pdfPlainTextHint": "纯文本导出 · 不含格式"`
-  - `"docxPlainTextHint": "纯文本导出 · 不含格式"`
-  - `"plainTextOnly": "纯文本导出"`
-- [ ] 在 `en.json` 的 `export.format` 命名空间新增：
-  - `"pdfPlainTextHint": "Plain text export · no formatting"`
-  - `"docxPlainTextHint": "Plain text export · no formatting"`
-  - `"plainTextOnly": "Plain text only"`
-- [ ] 保留原 `pdfDescription` key 不删除（避免其他引用点报错），但 ExportDialog 不再使用
-
-**文件**: `apps/desktop/renderer/src/i18n/locales/zh-CN.json`、`apps/desktop/renderer/src/i18n/locales/en.json`（修改）
+- [ ] 更新 `zh-CN.json` / `en.json` 的导出文案 key
+- [ ] 删除或替换过期纯文本兜底文案在主界面的使用点
 
 ---
 
@@ -96,15 +79,12 @@ P0-3: 能力诚实分级与假功能处置
 
 ### Task 3.1: Storybook 验证
 
-- [ ] 确认 ExportDialog 在 Storybook 中可构建（`pnpm -C apps/desktop storybook:build`）
-- [ ] 确认 PDF/DOCX 格式选项的 description 在 Story 中正确显示能力标注文案
+- [ ] `pnpm -C apps/desktop storybook:build` 通过
+- [ ] Story 中可见真实能力说明与失败提示
 
-### Task 3.2: 清理评估
+### Task 3.2: 与 A0-04 对照复核
 
-- [ ] 评估 `ExportDialog.tsx` 中 `UNSUPPORTED_FORMAT_REASONS` 空映射是否应填入 PDF/DOCX 的纯文本说明
-- [ ] 若决定使用此机制，将 PDF/DOCX 的纯文本提示迁入映射表
-
-**文件**: `apps/desktop/renderer/src/features/export/ExportDialog.tsx`（可选修改）
+- [ ] 对照 A0-04 的实现与 fixture 结果，确认 UI 未夸大也未缩小能力
 
 ---
 
@@ -112,14 +92,11 @@ P0-3: 能力诚实分级与假功能处置
 
 | 条目 | 检查项 | 状态 |
 |------|--------|------|
-| AC-1 PDF 标注 | ExportDialog 中 PDF description 为"纯文本导出 · 不含格式" | [ ] |
-| AC-2 DOCX 标注 | ExportDialog 中 DOCX description 为"纯文本导出 · 不含格式" | [ ] |
-| AC-3 其他格式不变 | Markdown ".md"、TXT ".txt" 不受影响 | [ ] |
-| AC-4 i18n 切换 | 英文下显示 "Plain text export · no formatting" | [ ] |
-| AC-5 i18n key | 两个 locale 文件均含新增 key | [ ] |
-| AC-6 禁止裸字符串 | ExportDialog 无新增裸字符串字面量 | [ ] |
-| 禁止原始色值 | 无新增 Tailwind 原始色值 | [ ] |
-| Storybook 可构建 | `storybook:build` 通过 | [ ] |
+| AC-1 UI 一致 | 四种格式说明与真实能力一致 | [ ] |
+| AC-2 旧口径移除 | PDF / DOCX 不再显示纯文本旧提示 | [ ] |
+| AC-3 失败明确 | 不支持结构时给出明确、可本地化原因 | [ ] |
+| AC-4 Storybook 覆盖 | 正常态与失败态均有 Story | [ ] |
+| AC-5 i18n 收口 | 中英文 key 与主界面文案一致 | [ ] |
 
 ---
 
