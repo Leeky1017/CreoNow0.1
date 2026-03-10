@@ -124,11 +124,7 @@ export function getHumanErrorMessage(error: {
 }): string {
   const resolver = USER_FACING_MESSAGE_BY_CODE[error.code];
   if (!resolver) {
-<<<<<<< HEAD
     return t("error.generic");
-=======
-    return GENERIC_ERROR_MESSAGE;
->>>>>>> bb95d266 (fix(skills): validate output against real document context)
   }
   return resolver(error.message);
 }
