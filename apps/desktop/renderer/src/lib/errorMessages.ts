@@ -125,11 +125,7 @@ export function getHumanErrorMessage(error: {
 }): string {
   const resolver = USER_FACING_MESSAGE_BY_CODE[error.code];
   if (!resolver) {
-<<<<<<< HEAD
     return t("error.generic");
-=======
-    return GENERIC_ERROR_MESSAGE;
->>>>>>> a51cfd76 (fix(errors): humanize document size limit contract)
   }
   return resolver(error.message);
 }
