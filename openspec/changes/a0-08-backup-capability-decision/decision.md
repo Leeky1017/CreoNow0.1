@@ -8,7 +8,7 @@
 
 ## 一、事实核查（Q1 — Q10）
 
-### Q1: UI 中有无备份入口/按钮？
+### Q1: Settings UI 中 `backupInterval` 控件是否已渲染？用户能否交互？
 
 **结论**: ✅ 有，但仅为视觉展示。
 
@@ -26,58 +26,62 @@
 
 ---
 
-### Q2: 点击后调用什么 IPC channel？
+### Q2: `backupInterval` 用户选择的值是否被持久化？存储在哪里？
 
-**结论**: ❌ 无任何 IPC 调用。
+**结论**: ❌ 没有被持久化，值只停留在对话框本地状态中。
 
 **证据**:
 - `SettingsGeneral.tsx` L194：`onValueChange={(value) => updateSetting("backupInterval", value)}`
 - `updateSetting` 定义于 L110-113：仅调用 `onSettingsChange({ ...settings, [key]: value })`
 - `SettingsDialog.tsx` L171-172：`onSettingsChange={setGeneralSettings}` — 这是 React `useState` 的 setter
 - `SettingsDialog.tsx` L167：`const [generalSettings, setGeneralSettings] = React.useState<GeneralSettings>(defaultGeneralSettings)`
-- **数据流终点**：值仅存于组件本地状态，对话框关闭即丢失。无 IPC channel 调用，无 localStorage 持久化，无 store 写入。
+- **数据流终点**：值仅存于组件本地状态，对话框关闭即丢失。无 PreferenceStore 写入、无 localStorage 持久化、无 IPC 保存链路。
 - `packages/shared/` 和 `apps/desktop/preload/` 中均无 "backup" 相关代码。
 
 ---
 
-### Q3: 后端是否有对应 handler？
+### Q3: 是否存在 `backupService` 或任何名称包含 `backup` 的 Service 类？
+
+**结论**: ❌ 完全没有。
+
+**证据**:
+- `apps/desktop/main/src/services/` 下搜索 `backupService|BackupService|backup.*Service` 无命中。
+- 后端 `main/src/services/ai/` 中出现的 "backup" 全部指代 **AI Provider 故障转移机制**（备用 AI 服务商），与文档备份功能完全无关。
+
+---
+
+### Q4: 是否存在备份相关的 IPC handler（如 `backup:start`、`backup:restore`）？
 
 **结论**: ❌ 完全没有。
 
 **证据**:
 - `apps/desktop/main/src/ipc/` 目录下无任何文件包含 "backup" 字符串（搜索结果为空）。
 - `packages/shared/` 中无 backup 相关 IPC channel 定义。
-- 后端 `main/src/services/ai/` 中出现的 "backup" 全部指代 **AI Provider 故障转移机制**（备用 AI 服务商），与文档备份功能完全无关。
+- `apps/desktop/preload/` 中无 backup 相关 bridge 暴露。
 
 ---
 
-### Q4: handler 是否有真实实现（不是 stub）？
+### Q5: 是否存在定时调度逻辑（`setInterval`、`cron`、`electron-scheduler`）执行备份？
 
-**结论**: ❌ 不适用——handler 本身不存在。
+**结论**: ❌ 完全没有。
 
-**证据**: 同 Q3。
+**证据**:
+- `apps/desktop/main/src/` 中搜索 `setInterval.*backup|backup.*schedule|backup.*cron|backup.*timer` 无命中。
+- 无任何调度器、定时任务或后台轮询与备份相关。
 
 ---
 
-### Q5: 备份文件存储位置？
+### Q6: 备份数据写入何处？文件系统独立目录？SQLite 附加表？
 
-**结论**: ❌ 未定义，无任何存储逻辑。
+**结论**: ❌ 未定义，无任何写盘逻辑。
 
 **证据**:
 - `apps/desktop/main/src/` 中搜索 `backup.*write|backup.*save|backup.*path|backup.*dir` 无命中（排除 AI failover 测试文件后）。
-- 无任何代码创建备份目录或写入备份文件。
+- 无任何代码创建备份目录、生成备份文件或写入 SQLite 备份表。
 
 ---
 
-### Q6: 备份文件格式？
-
-**结论**: ❌ 未定义。
-
-**证据**: 无任何序列化/反序列化逻辑涉及 "backup"。
-
----
-
-### Q7: 是否有恢复功能？
+### Q7: 是否存在备份恢复入口（UI 按钮或 IPC handler）？
 
 **结论**: ❌ 完全没有。
 
@@ -87,13 +91,11 @@
 
 ---
 
-### Q8: 是否有自动备份？
+### Q8: "上次备份：X 分钟前"的时间戳数据源是什么？是真实计算还是硬编码？
 
-**结论**: ❌ 完全没有。
+**结论**: ❌ 为硬编码假数据，不是真实时间戳。
 
 **证据**:
-- `apps/desktop/main/src/` 中搜索 `setInterval.*backup|backup.*schedule|backup.*cron|backup.*timer` 均无命中。
-- 无任何定时调度逻辑与备份相关。
 - 帮助文案 `backupIntervalHelp` 为**硬编码假数据**：
   - en: `"Last backup: 2 minutes ago"` (`en.json` L852)
   - zh-CN: `"上次备份：2 分钟前"` (`zh-CN.json` L852)
@@ -115,7 +117,7 @@
 
 ---
 
-### Q10: spec 中是否定义了备份行为？
+### Q10: document-management spec 中是否定义了备份行为？如果有，定义了什么？
 
 **结论**: ❌ Spec 未定义备份行为。
 
