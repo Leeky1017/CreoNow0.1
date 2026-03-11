@@ -75,7 +75,7 @@
 ### Coverage
 
 - renderer 侧已有 coverage threshold。
-- backend/core 侧未来可继续收紧，但不应在未准备好时口头宣称“已强制”。
+- backend/core 侧已设置 coverage threshold（statements: 5%, branches: 3%, functions: 6%, lines: 4%），配置位于 `vitest.config.core.ts`，CI 通过 `pnpm test:coverage:core` 校验阈值并阻断下行。
 
 ### Storybook
 
@@ -116,22 +116,11 @@
 
 ### 1. 后端 coverage threshold 对齐
 
-现状：
+**已完成**（G0.5-02, Issue #1073）。
 
-- `apps/desktop/vitest.config.ts` 已对 renderer coverage 设置阈值。
-- `apps/desktop/vitest.config.core.ts` 尚未设置同级别的 backend threshold。
-
-第二阶段动作：
-
-1. 先基于 `pnpm test:coverage:core` 连续收集基线。
-2. 为 backend/core 设定首个可达阈值，而不是直接照搬 renderer 数字。
-3. 将 `coverage-gate` 从“上传 artifact”升级为“校验阈值 + 失败阻断”。
-
-升级条件：
-
-- backend coverage 连续多轮稳定
-- 历史盲区已有补测
-- 失败成本低于维护收益
+- `apps/desktop/vitest.config.core.ts` 已配置 coverage thresholds：statements 5%, branches 3%, functions 6%, lines 4%。
+- 阈值基于当前 baseline - 2% 设定，阻断覆盖率下行。
+- 后续可随补测进度逐步收紧阈值。
 
 ### 2. spec-scenario-test 映射门禁
 

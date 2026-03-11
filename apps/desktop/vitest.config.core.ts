@@ -73,6 +73,12 @@ export default defineConfig({
       exclude: [
         "main/src/**/*.test.{ts,tsx}",
       ],
+      thresholds: {
+        statements: 5,
+        branches: 3,
+        functions: 6,
+        lines: 4,
+      },
     },
   },
 });
