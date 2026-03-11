@@ -54,6 +54,7 @@ describe("AC-1: 已知裸字符串覆盖", () => {
     { file: "useVersionCompare.ts", content: "No differences found." },
     { file: "useVersionCompare.ts", content: "Unknown error" },
     { file: "AiPanel.tsx", content: " Then restart the app." },
+    { file: "AiPanel.tsx", content: "code" },
     { file: "AiPanel.tsx", content: "AI" },
   ];
 
@@ -241,6 +242,7 @@ describe("AC-4: 排除规则", () => {
   });
 
   it("should not exclude user-visible text as technical constants", () => {
+    expect(isTechnicalConstant("code")).toBe(false);
     expect(isTechnicalConstant("Loading versions...")).toBe(false);
     expect(isTechnicalConstant("Entity suggestions unavailable.")).toBe(false);
     expect(isTechnicalConstant("This document is final")).toBe(false);

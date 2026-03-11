@@ -51,6 +51,7 @@ const BARE_TW_TOKENS = new Set([
   "inline-flex", "flex", "grid", "hidden", "table", "border", "truncate", "underline",
   "line-through", "sr-only", "not-sr-only", "contents", "isolate", "visible", "invisible",
 ]);
+const USER_FACING_LOWERCASE_WORDS = new Set(["code"]);
 const SHORT_USER_FACING = new Set(["AI", "OK", "NO", "ON", "GO"]);
 const USER_FACING_PASCAL_WORDS = new Set([
   "You", "Auto", "Today", "Yesterday", "Earlier", "Loading",
@@ -151,7 +152,7 @@ function isShortUpperConstant(str: string): boolean {
 }
 
 function isShortIdentifierLike(str: string): boolean {
-  return /^[a-z][a-zA-Z0-9]*$/u.test(str) && str.length < 30;
+  return /^[a-z][a-zA-Z0-9]*$/u.test(str) && str.length < 30 && !USER_FACING_LOWERCASE_WORDS.has(str);
 }
 
 function isPascalCaseTechnicalIdentifier(str: string): boolean {
@@ -168,6 +169,9 @@ function isPascalCaseTechnicalIdentifier(str: string): boolean {
 
 function isSemanticPlatformToken(str: string): boolean {
   const lower = str.toLowerCase();
+  if (USER_FACING_LOWERCASE_WORDS.has(lower)) {
+    return false;
+  }
   return HTML_TAGS.has(lower) || ARIA_ROLES.has(lower) || TS_TYPES.has(str);
 }
 
