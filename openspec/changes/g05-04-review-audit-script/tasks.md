@@ -13,7 +13,7 @@ W0.5-GATE: 审计补丁 — 制度门禁补齐
 
 ## 问题根因
 
-`AGENTS.md` §6.4 列出审计必跑命令（5 条），但审计 Agent 需手动逐条执行。`07-test-command-and-ci-map.md` 描述了"第二阶段：审计脚本化与 reviewer wrapper"但标注为未落地。
+`AGENTS.md` §6.4 列出审计必跑命令（6 条），但审计 Agent 需手动逐条执行。`07-test-command-and-ci-map.md` 描述了"第二阶段：审计脚本化与 reviewer wrapper"但标注为未落地。
 
 > 详见 `docs/references/testing-excellence-roadmap.md` §六 GAP-6。
 
