@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { AppToastProvider } from "../../components/providers/AppToastProvider";
 import { createPreferenceStore } from "../../lib/preferences";
 import { createThemeStore, ThemeStoreProvider } from "../../stores/themeStore";
 import { SettingsDialog } from "./SettingsDialog";
@@ -52,14 +53,16 @@ const meta: Meta<typeof SettingsDialog> = {
   decorators: [
     (Story) => {
       return (
-        <ThemeStoreProvider store={themeStore}>
-          <div
-            className="w-full h-screen bg-[var(--color-bg-base)]"
-            data-theme="dark"
-          >
-            <Story />
-          </div>
-        </ThemeStoreProvider>
+        <AppToastProvider>
+          <ThemeStoreProvider store={themeStore}>
+            <div
+              className="w-full h-screen bg-[var(--color-bg-base)]"
+              data-theme="dark"
+            >
+              <Story />
+            </div>
+          </ThemeStoreProvider>
+        </AppToastProvider>
       );
     },
   ],

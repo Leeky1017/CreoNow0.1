@@ -11,6 +11,14 @@ import {
   EDITOR_INLINE_BUBBLE_MENU_PLUGIN_KEY,
 } from "./EditorBubbleMenu";
 import { EditorToolbar } from "./EditorToolbar";
+import {
+  createEditorStore,
+  EditorStoreProvider,
+} from "../../stores/editorStore";
+
+const mockEditorStore = createEditorStore({
+  invoke: () => Promise.resolve(undefined as never),
+});
 
 /**
  * EditorPane integrates TipTap editor with toolbar and autosave.
@@ -22,6 +30,13 @@ const meta: Meta = {
   parameters: {
     layout: "fullscreen",
   },
+  decorators: [
+    (Story) => (
+      <EditorStoreProvider store={mockEditorStore}>
+        <Story />
+      </EditorStoreProvider>
+    ),
+  ],
 };
 
 export default meta;

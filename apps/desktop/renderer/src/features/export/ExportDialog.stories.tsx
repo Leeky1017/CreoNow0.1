@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { AppToastProvider } from "../../components/providers/AppToastProvider";
 import { ExportDialog, defaultExportOptions } from "./ExportDialog";
 
 /**
@@ -55,12 +56,14 @@ const meta: Meta<typeof ExportDialog> = {
   },
   decorators: [
     (Story) => (
-      <div
-        className="w-full h-screen bg-[var(--color-bg-base)]"
-        data-theme="dark"
-      >
-        <Story />
-      </div>
+      <AppToastProvider>
+        <div
+          className="w-full h-screen bg-[var(--color-bg-base)]"
+          data-theme="dark"
+        >
+          <Story />
+        </div>
+      </AppToastProvider>
     ),
   ],
 };
