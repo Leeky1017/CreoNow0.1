@@ -29,7 +29,7 @@ W0.5-GATE: 审计补丁 — 制度门禁补齐
 | AC-2 | `.eslintrc.cjs` 中该规则设为 `"error"` |
 | AC-3 | 新建一个无 `describe()` 的 `.test.ts` 文件 → `pnpm lint` 报错 |
 | AC-4 | 新建一个有 `describe()` 的 `.test.ts` 文件 → `pnpm lint` 通过 |
-| AC-5 | 存量目录（`main/src`、`tests/unit`、`tests/integration`、`scripts/tests`）通过 `overrides` 临时设为 `"warn"`，不阻断 CI |
+| AC-5 | 存量目录（`main/src`、`tests/unit`、`tests/integration`、`scripts/tests`、`tests/e2e`、`tests/perf`、`renderer/src/**/*.snapshot.test.*`）及其 `*.spec.*` 变体通过 `overrides` 临时设为 `"warn"`，不阻断 CI |
 | AC-6 | 该规则有对应的 ESLint rule test（`scripts/eslint-rules/__tests__/require-describe-in-tests.test.cjs`） |
 | AC-7 | 同步更新 `01-philosophy-and-anti-patterns.md`、`06-guard-and-lint-policy.md`、`07-test-command-and-ci-map.md` |
 
@@ -63,10 +63,18 @@ W0.5-GATE: 审计补丁 — 制度门禁补齐
 **映射验收标准**: AC-5
 
 - [ ] 在 `.eslintrc.cjs` 的 `overrides` 中对存量目录设为 `"warn"`：
-  - `apps/desktop/tests/unit/**/*.test.*`
-  - `apps/desktop/tests/integration/**/*.test.*`
   - `apps/desktop/main/src/**/*.test.*`
+  - `apps/desktop/tests/unit/**/*.test.*`
+  - `apps/desktop/tests/unit/**/*.spec.*`
+  - `apps/desktop/tests/integration/**/*.test.*`
+  - `apps/desktop/tests/integration/**/*.spec.*`
+  - `apps/desktop/tests/e2e/**/*.spec.*`
+  - `apps/desktop/tests/perf/**/*.test.*`
+  - `apps/desktop/tests/perf/**/*.spec.*`
+  - `apps/desktop/renderer/src/**/*.snapshot.test.*`
   - `scripts/tests/**/*.test.*`
+
+> **发现说明**：初始 spec 仅列出 4 个目录的 `*.test.*` 模式。实施时排查发现 E2E（21 文件）、perf（7 文件）、snapshot（2 文件）以及 unit/integration 的 `*.spec.*` 变体（27 文件）同样缺少 `describe()` 包装。按 P1 原则「开发中发现 spec 遗漏场景，先更新 spec 再实现」同步扩展。
 
 ### Task 2.3: 文档同步
 

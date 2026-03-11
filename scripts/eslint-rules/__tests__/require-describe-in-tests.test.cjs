@@ -136,3 +136,5 @@ tester.run("creonow/require-describe-in-tests", rule, {
     },
   ],
 });
+
+console.log("✅ require-describe-in-tests: all tests passed");

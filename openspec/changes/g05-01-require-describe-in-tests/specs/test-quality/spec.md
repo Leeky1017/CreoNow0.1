@@ -34,10 +34,13 @@ THEN   该规则不报错
 ### Scenario S-G05-01-03: 存量目录在过渡期只告警不阻断
 
 ```
-GIVEN  `apps/desktop/tests/unit/` 中存在尚未迁移的旧测试文件
+GIVEN  存量目录（main/src、tests/unit、tests/integration、scripts/tests、
+       tests/e2e、tests/perf、renderer/src/**/*.snapshot.test.*）
+       及其 *.spec.* 变体中存在尚未迁移的旧测试文件
 WHEN   运行 `pnpm lint`
 THEN   规则输出 warning
 AND    CI 不因该 warning 直接失败
+AND    lint-ratchet 基线锁定当前 warning 数，新增违规仍被 ratchet 门禁阻断
 ```
 
 ### Scenario S-G05-01-04: 迁移完成的目录收紧为 error
