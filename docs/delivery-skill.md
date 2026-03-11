@@ -35,6 +35,7 @@ Commit type：`feat` / `fix` / `refactor` / `test` / `docs` / `chore` / `ci`
 6. **门禁全绿 + 串行合并**：PR 必须通过 `ci`、`merge-serial`；auto-merge 仅可在指定审计 Agent 已发布 `FINAL-VERDICT` + `ACCEPT` 评论后显式开启。
 7. **控制面收口**：所有变更提交后必须合并回控制面 `main`，仅停留在 `task/*` 分支不算交付完成。
 8. **Issue 新鲜度强制**：新任务必须使用当前 OPEN Issue；禁止复用已关闭或历史 Issue。
+  - 边界说明：该规则仅用于任务准入。若 PR 已因 `Closes #N` 成功合并并自动关闭 Issue，则 `agent_pr_automerge_and_sync.sh` 的 rerun / retry 应识别为终局成功，不得继续等待 Issue 重新打开。
 9. **环境基线强制**：创建 `task/*` 分支和 worktree 前，必须先同步控制面到最新 `origin/main`。
 10. **完成变更归档强制**：当 `openspec/changes/<change>/tasks.md` 全部勾选完成时，必须归档到 `openspec/changes/archive/`。
 11. **控制面主工作树禁改强制**：除 Owner 明示的紧急热修外，禁止在控制面 `main` 直接编辑受管文件；必须先执行 `scripts/agent_task_begin.sh <N> <slug>`（gh-only 入口；若仅有 MCP，请改走 `agent_controlplane_sync.sh` + `agent_worktree_setup.sh`）进入 `.worktrees/issue-<N>-<slug>`。执行 `scripts/agent_task_begin.sh`、`scripts/agent_worktree_setup.sh` 或 `scripts/agent_controlplane_sync.sh` 后，repo-managed git hooks 会阻止控制面根目录提交与直接推送 `main`。
@@ -85,6 +86,7 @@ cd ".worktrees/issue-${N}-${SLUG}"
 | 在控制面根目录直接开发 / 提交 / 推送 main | 立即停止并迁移到 task worktree；必要时通过 `.githooks` / preflight 报错阻断                       |
 | required checks 与本文件不一致       | 阻断交付并升级治理，禁止宣称“门禁全绿”                                                      |
 | 误用已关闭/历史 Issue                | 立即停止实现，改为新建 OPEN Issue，并从最新 `origin/main` 重建 worktree                     |
+| PR 已合并且 `Closes #N` 已自动关闭 Issue | 视为交付终局成功；允许 `agent_pr_automerge_and_sync.sh` 直接完成 sync / 退出，不再等待 Issue reopen |
 | 活跃 change 已完成但未归档           | 阻断交付，先归档到 `openspec/changes/archive/` 再继续                                       |
 
 ---
@@ -107,6 +109,8 @@ openspec/             .github/workflows/
 
 - 既往不符合项 A：复用历史/已关闭 Issue 执行新任务，导致上下文错位与返工。
   - 现行防线：仅允许使用当前 OPEN Issue；preflight 强制校验 Issue 状态。
+- 既往不符合项 D：PR 已合并并自动关闭 Issue 后，合并脚本 rerun 仍按任务准入规则死等，导致收口卡住。
+  - 现行防线：`agent_pr_automerge_and_sync.sh` 必须识别 merged PR 为终局成功，只对未完成任务继续执行 OPEN Issue preflight。
 - 既往不符合项 B：串行依赖只维护顺序，未强制下游在实现前核对上游产出，导致需求漂移返工。
   - 现行防线：对存在上游依赖的 change 强制确认上游状态，发现漂移先更新 change 文档再进入实现。
 - 既往不符合项 C：活跃 change 已完成但未归档，遂回让后续 Agent 错误认为其仍活跃。

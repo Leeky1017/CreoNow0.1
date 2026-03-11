@@ -29,6 +29,7 @@ EOF
 }
 
 PR_NUMBER=""
+PR_URL=""
 NO_CREATE="false"
 NO_SYNC="false"
 SKIP_PREFLIGHT="false"
@@ -253,6 +254,69 @@ rebase_onto_origin_main() {
   git push --force-with-lease
 }
 
+find_pr_number_for_branch() {
+  local state="$1"
+  run_gh_with_retry gh pr list --state "$state" --head "$BRANCH" --limit 1 --json number --jq '.[0].number' 2>/dev/null || true
+}
+
+pr_is_merged() {
+  local pr_number="$1"
+  local merged_at=""
+  local rc=0
+
+  [[ -z "$pr_number" ]] && return 1
+
+  set +e
+  merged_at="$(run_gh_with_retry gh pr view "$pr_number" --json mergedAt --jq '.mergedAt // ""' 2>/dev/null)"
+  rc=$?
+  set -e
+
+  if [[ $rc -ne 0 ]]; then
+    return 1
+  fi
+
+  [[ -n "$merged_at" && "$merged_at" != "null" ]]
+}
+
+sync_controlplane_and_verify() {
+  if [[ "$NO_SYNC" == "true" ]]; then
+    return 0
+  fi
+
+  scripts/agent_controlplane_sync.sh
+
+  COMMON_DIR="$(git rev-parse --git-common-dir)"
+  CONTROLPLANE_ROOT="$(cd "$(dirname "$COMMON_DIR")" && pwd)"
+
+  LOCAL_HEAD="$(git -C "$CONTROLPLANE_ROOT" rev-parse main)"
+  REMOTE_HEAD="$(git -C "$CONTROLPLANE_ROOT" rev-parse origin/main)"
+
+  if [[ "$LOCAL_HEAD" != "$REMOTE_HEAD" ]]; then
+    echo "ERROR: controlplane main not in sync with origin/main" >&2
+    echo "  local : $LOCAL_HEAD" >&2
+    echo "  remote: $REMOTE_HEAD" >&2
+    exit 1
+  fi
+}
+
+exit_if_pr_already_merged() {
+  local merged_pr_number="${PR_NUMBER:-}"
+
+  if [[ -z "$merged_pr_number" ]]; then
+    merged_pr_number="$(find_pr_number_for_branch merged)"
+  fi
+
+  if ! pr_is_merged "$merged_pr_number"; then
+    return 1
+  fi
+
+  PR_NUMBER="$merged_pr_number"
+  echo "INFO: PR #${PR_NUMBER} already merged; skipping preflight wait and finishing delivery." >&2
+  sync_controlplane_and_verify
+  echo "OK: PR #${PR_NUMBER} was already merged; nothing left but sync." >&2
+  exit 0
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --pr)
@@ -341,6 +405,10 @@ if [[ "$SKIP_PREFLIGHT" != "true" ]]; then
   set -e
 fi
 
+if [[ $PREFLIGHT_RC -ne 0 ]]; then
+  exit_if_pr_already_merged || true
+fi
+
 if [[ -z "$PR_NUMBER" ]]; then
   PR_NUMBER="$(run_gh_with_retry gh pr list --head "$BRANCH" --json number --jq '.[0].number' 2>/dev/null || true)"
 fi
@@ -372,6 +440,10 @@ if [[ "$SKIP_PREFLIGHT" != "true" ]]; then
   set -e
 fi
 
+if [[ $PREFLIGHT_RC -ne 0 ]]; then
+  exit_if_pr_already_merged || true
+fi
+
 if [[ $PREFLIGHT_RC -ne 0 && "$FORCE" != "true" ]]; then
   if [[ "$WAIT_PREFLIGHT" != "true" ]]; then
     echo "ERROR: preflight reported issues (exit ${PREFLIGHT_RC})." >&2
@@ -392,6 +464,8 @@ if [[ $PREFLIGHT_RC -ne 0 && "$FORCE" != "true" ]]; then
     if [[ $PREFLIGHT_RC -eq 0 ]]; then
       break
     fi
+
+    exit_if_pr_already_merged || true
 
     if [[ "$WAIT_TIMEOUT_SECONDS" != "0" ]]; then
       NOW_TS="$(date +%s)"
@@ -493,19 +567,6 @@ if [[ "$NO_SYNC" == "true" ]]; then
   exit 0
 fi
 
-scripts/agent_controlplane_sync.sh
-
-COMMON_DIR="$(git rev-parse --git-common-dir)"
-CONTROLPLANE_ROOT="$(cd "$(dirname "$COMMON_DIR")" && pwd)"
-
-LOCAL_HEAD="$(git -C "$CONTROLPLANE_ROOT" rev-parse main)"
-REMOTE_HEAD="$(git -C "$CONTROLPLANE_ROOT" rev-parse origin/main)"
-
-if [[ "$LOCAL_HEAD" != "$REMOTE_HEAD" ]]; then
-  echo "ERROR: controlplane main not in sync with origin/main" >&2
-  echo "  local : $LOCAL_HEAD" >&2
-  echo "  remote: $REMOTE_HEAD" >&2
-  exit 1
-fi
+sync_controlplane_and_verify
 
 echo "OK: merged PR #${PR_NUMBER} and synced controlplane main"

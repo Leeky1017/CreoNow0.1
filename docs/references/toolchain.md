@@ -78,6 +78,7 @@
 - GitHub 交付前必须先运行 `python3 scripts/agent_github_delivery.py capabilities`，显式确认当前使用 `gh` 还是 GitHub MCP 通道。
 - `auto` 模式默认优先 `gh`；若 `gh` 缺失或未认证，但 GitHub MCP 具备写权限，则回退到 GitHub MCP。
 - Shell 脚本 `agent_pr_automerge_and_sync.sh` 仅负责 `gh` 通道；默认只创建/更新 PR。若要开启 auto-merge，必须显式传入 `--enable-auto-merge`，且 PR 上已存在指定审计 Agent 的 `FINAL-VERDICT` + `ACCEPT` 评论。GitHub MCP 通道应复用 `agent_github_delivery.py` 生成的 payload，并通过会话内 GitHub 工具执行远程 PR/评论操作。
+- `agent_pr_preflight.py` 中的 OPEN Issue 校验只服务于任务准入；若 `agent_pr_automerge_and_sync.sh` 在 rerun / retry 时检测到 PR 已合并、Issue 已因 `Closes #N` 自动关闭，则应直接按终局成功收口，而不是继续卡在 CLOSED Issue 上。
 
 - 所有脚本使用 `set -euo pipefail`
 - 退出码：`0` 成功，`1` 可恢复失败，`2` 不可恢复失败

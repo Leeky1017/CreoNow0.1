@@ -40,12 +40,14 @@
   - 分支命名必须符合 `task/<N>-<slug>`
   - `task/<N>-<slug>` 对应 GitHub Issue `#N` 必须为 `OPEN`（阻断复用已关闭/历史 Issue）
   - 当前分支的开放 PR body 必须包含 `Closes #N`
+- `agent_pr_automerge_and_sync.sh` 对**未完成任务**沿用上述 preflight；但若已检测到 PR 成功合并，且 Issue 因 `Closes #N` 自动关闭，则应直接完成 sync / 退出，不再把 CLOSED Issue 当成合并后的阻断条件。
 - `agent_pr_preflight.sh` 为轻量预检入口，直接执行：
   - `scripts/agent_pr_preflight.sh`
 - 一键提交前预检命令（可直接复制）：
   - `scripts/agent_pr_preflight.sh`
 - `agent_worktree_setup.sh` 默认会在新 worktree 内执行 `pnpm install --frozen-lockfile`（可用 `--no-bootstrap` 关闭）。
 - `agent_pr_automerge_and_sync.sh` 默认只创建/更新 PR，不自动开启 auto-merge；必须在指定审计 Agent 留下 `FINAL-VERDICT` + `ACCEPT` 评论后，显式传入 `--enable-auto-merge` 才会继续。
+- 若脚本 rerun 时发现当前 PR 已合并，则应将其视为终局成功：允许直接收口并同步控制面，不再等待 preflight 中的 OPEN Issue 条件恢复。
 - `agent_github_delivery.py capabilities` 会输出结构化能力探测结果：`gh` 是否安装/认证、GitHub MCP 是否可用/可写、以及当前应选通道。
 - `agent_pr_automerge_and_sync.sh` 进入 GitHub 远程操作前会先校验所选通道；若结果不是 `gh`，会明确阻断并提示改用 GitHub MCP + `agent_github_delivery.py` 生成的 payload。
 - GitHub MCP 回退路径依赖环境变量：`CODEX_GITHUB_CHANNEL`（`auto|gh|mcp|none`）、`CODEX_GITHUB_MCP_AVAILABLE`、`CODEX_GITHUB_MCP_WRITE_CAPABLE`。
