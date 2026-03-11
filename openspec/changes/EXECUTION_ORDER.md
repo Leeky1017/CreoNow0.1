@@ -146,7 +146,7 @@ AMP 审计在 5 轮独立审查中识别出 28 类高频问题。以下矩阵说
 |--------|------|----------|
 | **W0-GATE** 门禁基础设施 | 建门禁阻断 28 类高频问题的增量回流 | G0-01~G0-06 |
 | **W0.5-GATE** 审计补丁 — 制度门禁补齐 | 补齐 Wave 0 遗漏的制度门禁与视觉回归 | G0.5-01~G0.5-06 |
-| **T-MIG** 测试结构存量迁移 | 将 339 个存量测试文件迁移到 describe/it + 清理浅断言 + 降低 getByText 占比 | T-MIG-01~T-MIG-07 |
+| **T-MIG** 测试结构存量迁移 | 将 286 个存量测试文件迁移到 describe/it + 清理 18 处浅断言 + 降低约 160 处 getByText 占比 | T-MIG-01~T-MIG-07 |
 | **P0-1** 真实编辑与 AI 入口收口 | 让"可写作、可调用 AI"从承诺变成真实能力 | A0-01, A0-12 |
 | **P0-2** 失败可见与错误人话化 | 让失败不再静默，让错误不再说黑话 | A0-13, A0-20, A0-21, A0-22, A0-02, A0-03 |
 | **P0-3** 能力诚实分级与假功能处置 | 把"界面里看起来有"与"系统里实际上有"重新对齐 | A0-04, A0-06, A0-08, A0-15, A0-17, A0-18, A0-19 |
@@ -426,7 +426,7 @@ AMP 审计在 5 轮独立审查中识别出 28 类高频问题。以下矩阵说
 | T-MIG-06 | P2 | toBeTruthy/toBeDefined → 具体断言 | 18 处 | 无 |
 | T-MIG-07 | P3 | getByText 占比降到 <25% | ~160 处 | 无 |
 
-### Wave 1（无上游依赖，Wave 0 后可立即启动）
+### Wave 1（无上游依赖，Wave 0.5 后可立即启动）
 
 | ID | Issue | 任务 | 说明 |
 |----|-------|------|------|
@@ -546,4 +546,4 @@ Phase 0 完成的标志不是"所有 PR 已合并"，而是：
 | 2026-03-08 | 28-Pattern 矩阵升级为三层执行模型（Tier 1/2/3）；波次表补充 Issue 编号列；Issue 全量追踪从 25 个扩展到 30 个；#982 已关闭标注 |
 | 2026-03-08 | G0 系列补强：新增 §二·五 Gate 开发公共约定；G0-02 补充 cross-module-contract-gate 扩展任务（Pattern #7/#19）；G0-03 细化 ARIA-live 检测策略与 baseline 路径；G0-04 对齐报告模式/阻断模式转换机制；G0-05 新增 Tier 2 语义维度支持（S-T2-01~05）；G0-06 强化协议文档交付标准；全部 G0 tasks.md 增加三层执行模型归属声明 |
 | 2026-03-09 | Wave 0 收口：G0-01~G0-06 全部标记已完成（PR #1037）；cross-module-contract-gate 扩展 skill-output-validation 和 api-key-format-validation 两个维度；活跃数量从 30 降至 24；同步 scripts/README.md、toolchain.md、coding-standards.md、07-test-command-and-ci-map.md |
-| 2026-03-10 | Wave 0 独立审计补丁（#1066）：修正 Issue 计数 31→30；修正 rate-limit gate 描述（已存在于 CI）；PR template `Fixes`→`Closes`；新增 Wave 0.5 层（G0.5-01~G0.5-06）覆盖 GAP-2/3/6/7/8 + 视觉回归测试；新增 T-MIG 存量迁移 TODO（T-MIG-01~07，~339 文件 + 18 浅断言 + 160 getByText）；更新依赖拓扑图、串行路径、完成标志 |
+| 2026-03-10 | Wave 0 独立审计补丁（#1066）：修正 Issue 计数 31→30；修正 rate-limit gate 描述（已存在于 CI）；PR template `Fixes`→`Closes`；新增 Wave 0.5 层（G0.5-01~G0.5-06）覆盖 GAP-2/3/6/7/8 + 视觉回归测试；新增 T-MIG 存量迁移 TODO（T-MIG-01~07，286 个测试文件 + 18 处浅断言 + ~160 处 getByText）；更新依赖拓扑图、串行路径、完成标志 |
