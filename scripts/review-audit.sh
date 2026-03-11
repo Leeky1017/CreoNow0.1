@@ -20,8 +20,9 @@ run_step() {
     (( PASS++ ))
     printf '[OK]  %s\n' "$title"
   else
+    local rc=$?
     (( FAIL++ ))
-    printf '[FAIL] %s (exit %d)\n' "$title" "$?"
+    printf '[FAIL] %s (exit %d)\n' "$title" "$rc"
   fi
 }
 
@@ -52,8 +53,8 @@ else
 fi
 
 # ── 6/6 ──────────────────────────────────────────────
-run_step 6 "test -x scripts/agent_pr_automerge_and_sync.sh" \
-  test -x scripts/agent_pr_automerge_and_sync.sh
+run_step 6 "test -x scripts/agent_pr_automerge_and_sync.sh && echo EXEC_OK" \
+  bash -c 'test -x scripts/agent_pr_automerge_and_sync.sh && echo EXEC_OK'
 
 # ── 汇总 ─────────────────────────────────────────────
 printf '\n══════════════════════════════════════\n'
