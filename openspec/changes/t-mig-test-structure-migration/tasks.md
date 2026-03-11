@@ -1,6 +1,6 @@
 # Tasks: T-MIG 测试结构存量迁移计划
 
-- **GitHub Issue**: 各批次分别创建
+- **GitHub Issue**: 待创建（umbrella）
 - **分支**: 各批次分别创建
 - **Delta Spec**: N/A（结构迁移，不改行为）
 - **前置依赖**: G0.5-01（`require-describe-in-tests` ESLint 规则必须先就位）

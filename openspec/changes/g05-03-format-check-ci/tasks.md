@@ -2,7 +2,7 @@
 
 - **GitHub Issue**: 待创建
 - **分支**: 待创建
-- **Delta Spec**: N/A（CI 配置变更）
+- **Delta Spec**: `specs/ci-gates/spec.md`
 - **前置依赖**: 无
 
 ---

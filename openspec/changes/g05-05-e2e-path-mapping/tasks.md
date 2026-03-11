@@ -2,7 +2,7 @@
 
 - **GitHub Issue**: 待创建
 - **分支**: 待创建
-- **Delta Spec**: N/A（文档补齐）
+- **Delta Spec**: `specs/test-quality/spec.md`
 - **前置依赖**: 无
 
 ---

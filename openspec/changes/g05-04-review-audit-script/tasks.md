@@ -2,7 +2,7 @@
 
 - **GitHub Issue**: 待创建
 - **分支**: 待创建
-- **Delta Spec**: N/A（工具脚本）
+- **Delta Spec**: `specs/audit-protocol/spec.md`
 - **前置依赖**: 无
 
 ---

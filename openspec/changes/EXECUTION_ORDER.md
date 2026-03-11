@@ -8,7 +8,7 @@
 
 ## 一、执行策略
 
-- 当前活跃 change 数量：**31**（24 止血 + 7 Wave 0.5 制度门禁/视觉回归；Wave 0 门禁 6 个已完成；7 个迁移 TODO 待启动）
+- 当前活跃 change 数量：**31**（24 止血 + 6 个 Wave 0.5 change + 1 个 T-MIG umbrella change；Wave 0 门禁 6 个已完成）
 - 执行模式：按**实现波次（Wave）**推进，同波次内可并行，跨波次依赖必须串行
 - **Wave 0 先行原则**：门禁基础设施必须在止血任务之前就位——"治病前先把体检仪器装好"
 - **Wave 0.5 补丁原则**：独立审计发现的制度漏洞必须在止血实施前补齐——"磨刀不误砍柴工"
@@ -146,7 +146,7 @@ AMP 审计在 5 轮独立审查中识别出 28 类高频问题。以下矩阵说
 |--------|------|----------|
 | **W0-GATE** 门禁基础设施 | 建门禁阻断 28 类高频问题的增量回流 | G0-01~G0-06 |
 | **W0.5-GATE** 审计补丁 — 制度门禁补齐 | 补齐 Wave 0 遗漏的制度门禁与视觉回归 | G0.5-01~G0.5-06 |
-| **T-MIG** 测试结构存量迁移 | 将 286 个存量测试文件迁移到 describe/it + 清理 18 处浅断言 + 降低约 160 处 getByText 占比 | T-MIG-01~T-MIG-07 |
+| **T-MIG** 测试结构存量迁移 | 用 1 个 umbrella change 管理 7 个 TODO 子批次：286 个测试文件迁移 + 18 处浅断言 + ~160 处 getByText 降率 | T-MIG（含 7 个子批次） |
 | **P0-1** 真实编辑与 AI 入口收口 | 让"可写作、可调用 AI"从承诺变成真实能力 | A0-01, A0-12 |
 | **P0-2** 失败可见与错误人话化 | 让失败不再静默，让错误不再说黑话 | A0-13, A0-20, A0-21, A0-22, A0-02, A0-03 |
 | **P0-3** 能力诚实分级与假功能处置 | 把"界面里看起来有"与"系统里实际上有"重新对齐 | A0-04, A0-06, A0-08, A0-15, A0-17, A0-18, A0-19 |
@@ -173,24 +173,18 @@ AMP 审计在 5 轮独立审查中识别出 28 类高频问题。以下矩阵说
 
 | ID | slug | GitHub Issue | 任务簇 | 载体类型 | 来源 |
 |----|------|-------------|--------|----------|------|
-| G0.5-01 | `g05-01-require-describe-in-tests` | 待创建 | W0.5-GATE | OpenSpec Change | GAP-8: 测试结构规范无自动化拦截 |
-| G0.5-02 | `g05-02-backend-coverage-threshold` | 待创建 | W0.5-GATE | 直接 PR | GAP-2: Backend coverage 阈值未设置 |
-| G0.5-03 | `g05-03-format-check-ci` | 待创建 | W0.5-GATE | 直接 PR | GAP-3: `format:check` 未接入 CI |
-| G0.5-04 | `g05-04-review-audit-script` | 待创建 | W0.5-GATE | 直接 PR | GAP-6: 审计一键脚本未落地 |
-| G0.5-05 | `g05-05-e2e-path-mapping` | 待创建 | W0.5-GATE | 直接 PR | GAP-7: E2E 关键路径映射不透明 |
-| G0.5-06 | `g05-06-visual-regression-testing` | 待创建 | W0.5-GATE | OpenSpec Change | 视觉回归测试基础设施为零 |
+| G0.5-01 | `g05-01-require-describe-in-tests` | 待创建（change 已建） | W0.5-GATE | OpenSpec Change | GAP-8: 测试结构规范无自动化拦截 |
+| G0.5-02 | `g05-02-backend-coverage-threshold` | 待创建（change 已建） | W0.5-GATE | OpenSpec Change | GAP-2: Backend coverage 阈值未设置 |
+| G0.5-03 | `g05-03-format-check-ci` | 待创建（change 已建） | W0.5-GATE | OpenSpec Change | GAP-3: `format:check` 未接入 CI |
+| G0.5-04 | `g05-04-review-audit-script` | 待创建（change 已建） | W0.5-GATE | OpenSpec Change | GAP-6: 审计一键脚本未落地 |
+| G0.5-05 | `g05-05-e2e-path-mapping` | 待创建（change 已建） | W0.5-GATE | OpenSpec Change | GAP-7: E2E 关键路径映射不透明 |
+| G0.5-06 | `g05-06-visual-regression-testing` | 待创建（change 已建） | W0.5-GATE | OpenSpec Change | 视觉回归测试基础设施为零 |
 
-### 存量迁移 TODO（T-MIG-01 ~ T-MIG-07）— 与 A0/A1 并行推进
+### 存量迁移 TODO 总控（T-MIG umbrella，含 7 个子批次）— 与 A0/A1 并行推进
 
-| ID | slug | GitHub Issue | 任务簇 | 优先级 | 范围 | 文件数 |
-|----|------|-------------|--------|--------|------|--------|
-| T-MIG-01 | `t-mig-01-scripts-tests-migration` | 待创建 | T-MIG | P0 | `scripts/tests/` 门禁测试 → describe/it | 13 |
-| T-MIG-02 | `t-mig-02-unit-main-style-migration` | 待创建 | T-MIG | P1 | `tests/unit/` async function main → describe/it | 13 |
-| T-MIG-03 | `t-mig-03-unit-bare-block-migration` | 待创建 | T-MIG | P2 | `tests/unit/` 裸块 → describe/it | 21 |
-| T-MIG-04 | `t-mig-04-backend-describe-migration` | 待创建 | T-MIG | P3 | `main/src/` 无 describe → describe/it | 152 |
-| T-MIG-05 | `t-mig-05-integration-describe-migration` | 待创建 | T-MIG | P4 | `tests/integration/` → describe/it | 87 |
-| T-MIG-06 | `t-mig-06-shallow-assertion-cleanup` | 待创建 | T-MIG | P2 | toBeTruthy/toBeDefined → 具体断言 | 18 处 |
-| T-MIG-07 | `t-mig-07-getbytext-reduction` | 待创建 | T-MIG | P3 | getByText 占比从 33.6% 降到 <25% | ~160 处 |
+| ID | slug | GitHub Issue | 任务簇 | 管理方式 | 范围 |
+|----|------|-------------|--------|----------|------|
+| T-MIG | `t-mig-test-structure-migration` | 待创建（umbrella） | T-MIG | 1 个 umbrella change + 7 个待拆分子 Issue | `describe/it` 迁移、浅断言替换、`getByText` 降率 |
 
 ### Wave 1-5: 止血实现（A0-01 ~ A0-24）
 
@@ -260,21 +254,27 @@ AMP 审计在 5 轮独立审查中识别出 28 类高频问题。以下矩阵说
 | #984 | A0-23 | 活跃 |
 | #985 | A0-24 | 活跃 |
 
-### Wave 0.5 Issue（待创建，6 个）
+### Wave 0.5 Issue（待拆分，6 个；change 目录已建）
 
 | 对应 Change | 任务 | 状态 |
 |-------------|------|------|
-| G0.5-01 | ESLint `require-describe-in-tests` | 待创建 |
-| G0.5-02 | 后端 coverage threshold | 待创建 |
-| G0.5-03 | `format:check` 接入 CI | 待创建 |
-| G0.5-04 | 审计一键脚本 `review-audit.sh` | 待创建 |
-| G0.5-05 | E2E 关键路径映射表 | 待创建 |
-| G0.5-06 | 前端视觉回归测试基础设施 | 待创建 |
+| G0.5-01 | ESLint `require-describe-in-tests` | change 已建，Issue 待创建 |
+| G0.5-02 | 后端 coverage threshold | change 已建，Issue 待创建 |
+| G0.5-03 | `format:check` 接入 CI | change 已建，Issue 待创建 |
+| G0.5-04 | 审计一键脚本 `review-audit.sh` | change 已建，Issue 待创建 |
+| G0.5-05 | E2E 关键路径映射表 | change 已建，Issue 待创建 |
+| G0.5-06 | 前端视觉回归测试基础设施 | change 已建，Issue 待创建 |
 
-### 存量迁移 TODO Issue（待创建，7 个）
+### 存量迁移 TODO 总控与子 Issue（1 个 umbrella + 7 个待拆分子 Issue）
 
-| 对应 Change | 优先级 | 任务 | 状态 |
-|-------------|--------|------|------|
+| 对应 Change | 类型 | 状态 |
+|-------------|------|------|
+| T-MIG | umbrella change / umbrella issue | change 已建，Issue 待创建 |
+
+### T-MIG 子 Issue（待创建，7 个）
+
+| 子批次 | 优先级 | 任务 | 状态 |
+|--------|--------|------|------|
 | T-MIG-01 | P0 | scripts/tests 门禁测试迁移 | 待创建 |
 | T-MIG-02 | P1 | tests/unit 脚本式 main 迁移 | 待创建 |
 | T-MIG-03 | P2 | tests/unit 裸块迁移 | 待创建 |
@@ -361,11 +361,10 @@ AMP 审计在 5 轮独立审查中识别出 28 类高频问题。以下矩阵说
         └───────────────────────────────────────────┘
 
         ┌───────────────────────────────────────────┐
-        │   Parallel T-MIG（与 Wave 1-4 并行推进，   │
-        │   前置条件仅 G0.5-01 ESLint 规则就位）      │
-        │ T-MIG-01 (P0) → T-MIG-02 (P1) →          │
-        │ T-MIG-03/06 (P2) → T-MIG-04/07 (P3) →    │
-        │ T-MIG-05 (P4)                              │
+        │   Parallel T-MIG（1 个 umbrella change，    │
+        │   与 Wave 1-4 并行推进；前置条件 G0.5-01）  │
+        │ 子批次：01(P0) → 02(P1) → 03/06(P2) →     │
+        │        04/07(P3) → 05(P4)                  │
         │ 每批完成后收紧 ESLint override              │
         └───────────────────────────────────────────┘
 ```
@@ -395,12 +394,12 @@ AMP 审计在 5 轮独立审查中识别出 28 类高频问题。以下矩阵说
 
 | ID | Issue | 任务 | 说明 | 来源 |
 |----|-------|------|------|------|
-| G0.5-01 | 待创建 | ESLint `require-describe-in-tests` | 测试结构规范自动拦截，存量目录临时 `warn` 豁免 | GAP-8 |
-| G0.5-02 | 待创建 | 后端 coverage threshold | `vitest.config.core.ts` 添加 `thresholds`，CI 阻断 | GAP-2 |
-| G0.5-03 | 待创建 | `format:check` 接入 CI | `ci.yml` lint job 新增 step | GAP-3 |
-| G0.5-04 | 待创建 | 审计一键脚本 `review-audit.sh` | 封装 AGENTS.md §6.4 全部命令 | GAP-6 |
-| G0.5-05 | 待创建 | E2E 关键路径映射表 | `05-e2e-testing-patterns.md` 新增映射章节 + 空洞评估 | GAP-7 |
-| G0.5-06 | 待创建 | 前端视觉回归测试基础设施 | Playwright + Storybook 截图对比，Dark/Light 双主题，CI 集成 | 审计发现 |
+| G0.5-01 | 待创建（change 已建） | ESLint `require-describe-in-tests` | 测试结构规范自动拦截，存量目录临时 `warn` 豁免 | GAP-8 |
+| G0.5-02 | 待创建（change 已建） | 后端 coverage threshold | `vitest.config.core.ts` 添加 `thresholds`，CI 阻断 | GAP-2 |
+| G0.5-03 | 待创建（change 已建） | `format:check` 接入 CI | `ci.yml` lint job 新增 step | GAP-3 |
+| G0.5-04 | 待创建（change 已建） | 审计一键脚本 `review-audit.sh` | 封装 AGENTS.md §6.4 全部命令 | GAP-6 |
+| G0.5-05 | 待创建（change 已建） | E2E 关键路径映射表 | `05-e2e-testing-patterns.md` 新增映射章节 + 空洞评估 | GAP-7 |
+| G0.5-06 | 待创建（change 已建） | 前端视觉回归测试基础设施 | Playwright + Storybook 截图对比，Dark/Light 双主题，CI 集成 | 审计发现 |
 
 **Wave 0.5 完成标志**：
 1. 新 PR 中无 `describe()` 的测试文件被 ESLint 自动拦截
@@ -410,8 +409,9 @@ AMP 审计在 5 轮独立审查中识别出 28 类高频问题。以下矩阵说
 5. 7 条关键路径 ↔ E2E 映射表完整
 6. 原语 + 布局 + 核心功能组件有 dark/light 双主题视觉 baseline 截图，样式变更时 CI 失败
 
-### 存量迁移 TODO（与 Wave 1-4 并行推进）
+### 存量迁移 TODO（以 T-MIG umbrella change 管理 7 个子批次）
 
+> `t-mig-test-structure-migration` 作为 umbrella change 管理以下 7 个子批次。
 > 这些迁移任务在 Wave 0.5 完成后启动，可与 A0 止血工作并行推进。
 > 前置条件：G0.5-01 ESLint 规则已就位。
 > 每批迁移完成后，从 ESLint override 中移除该目录，棘轮只紧不松。
@@ -546,4 +546,5 @@ Phase 0 完成的标志不是"所有 PR 已合并"，而是：
 | 2026-03-08 | 28-Pattern 矩阵升级为三层执行模型（Tier 1/2/3）；波次表补充 Issue 编号列；Issue 全量追踪从 25 个扩展到 30 个；#982 已关闭标注 |
 | 2026-03-08 | G0 系列补强：新增 §二·五 Gate 开发公共约定；G0-02 补充 cross-module-contract-gate 扩展任务（Pattern #7/#19）；G0-03 细化 ARIA-live 检测策略与 baseline 路径；G0-04 对齐报告模式/阻断模式转换机制；G0-05 新增 Tier 2 语义维度支持（S-T2-01~05）；G0-06 强化协议文档交付标准；全部 G0 tasks.md 增加三层执行模型归属声明 |
 | 2026-03-09 | Wave 0 收口：G0-01~G0-06 全部标记已完成（PR #1037）；cross-module-contract-gate 扩展 skill-output-validation 和 api-key-format-validation 两个维度；活跃数量从 30 降至 24；同步 scripts/README.md、toolchain.md、coding-standards.md、07-test-command-and-ci-map.md |
-| 2026-03-10 | Wave 0 独立审计补丁（#1066）：修正 Issue 计数 31→30；修正 rate-limit gate 描述（已存在于 CI）；PR template `Fixes`→`Closes`；新增 Wave 0.5 层（G0.5-01~G0.5-06）覆盖 GAP-2/3/6/7/8 + 视觉回归测试；新增 T-MIG 存量迁移 TODO（T-MIG-01~07，286 个测试文件 + 18 处浅断言 + ~160 处 getByText）；更新依赖拓扑图、串行路径、完成标志 |
+| 2026-03-10 | Wave 0 独立审计补丁（#1066）：修正 Issue 计数 31→30；修正 rate-limit gate 描述（已存在于 CI）；PR template `Fixes`→`Closes`；新增 Wave 0.5 层（G0.5-01~G0.5-06）覆盖 GAP-2/3/6/7/8 + 视觉回归测试；新增 T-MIG 存量迁移 TODO 总控（umbrella change 下辖 7 个子批次，286 个测试文件 + 18 处浅断言 + ~160 处 getByText）；更新依赖拓扑图、串行路径、完成标志 |
+| 2026-03-11 | 对齐仓库真实状态：G0.5-01~06 全部补齐 `proposal.md` 与 delta spec，EO 中的 Wave 0.5 状态从“仅任务设想”改为“change 已建、Issue 待拆分”；T-MIG 从伪装成 7 个独立 change 调整为 1 个 umbrella change + 7 个子批次 |

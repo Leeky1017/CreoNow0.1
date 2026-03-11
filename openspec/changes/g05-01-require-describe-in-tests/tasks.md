@@ -2,7 +2,7 @@
 
 - **GitHub Issue**: 待创建
 - **分支**: 待创建
-- **Delta Spec**: N/A（ESLint 规则，无 spec 变更）
+- **Delta Spec**: `specs/test-quality/spec.md`
 - **前置依赖**: 无
 
 ---

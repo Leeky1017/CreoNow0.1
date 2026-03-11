@@ -2,7 +2,7 @@
 
 - **GitHub Issue**: 待创建
 - **分支**: 待创建
-- **Delta Spec**: N/A（测试基础设施）
+- **Delta Spec**: `specs/visual-regression/spec.md`
 - **前置依赖**: 无
 
 ---
