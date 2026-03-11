@@ -47,6 +47,7 @@ module.exports = {
       { max: 300, skipBlankLines: true, skipComments: true },
     ],
     "react/react-in-jsx-scope": "off",
+    "creonow/require-describe-in-tests": "error",
   },
   overrides: [
     {
@@ -147,6 +148,19 @@ module.exports = {
       rules: {
         "i18next/no-literal-string": "off",
         "creonow/no-raw-tailwind-tokens": "warn",
+      },
+    },
+    {
+      // Legacy test directories: warn-only until T-MIG migration completes
+      files: [
+        "apps/desktop/main/src/**/*.test.*",
+        "apps/desktop/tests/**/*.test.*",
+        "apps/desktop/tests/**/*.spec.*",
+        "apps/desktop/renderer/src/**/*.snapshot.test.*",
+        "scripts/tests/**/*.test.*",
+      ],
+      rules: {
+        "creonow/require-describe-in-tests": "warn",
       },
     },
     {

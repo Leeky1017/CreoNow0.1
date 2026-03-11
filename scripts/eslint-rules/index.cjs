@@ -12,6 +12,7 @@ const noRawTailwindTokens = require("./no-raw-tailwind-tokens.cjs");
 const noNativeHtmlElement = require("./no-native-html-element.cjs");
 const noRawErrorCodeInUi = require("./no-raw-error-code-in-ui.cjs");
 const noHardcodedDimension = require("./no-hardcoded-dimension.cjs");
+const requireDescribeInTests = require("./require-describe-in-tests.cjs");
 
 module.exports = {
   rules: {
@@ -19,5 +20,6 @@ module.exports = {
     "no-native-html-element": noNativeHtmlElement,
     "no-raw-error-code-in-ui": noRawErrorCodeInUi,
     "no-hardcoded-dimension": noHardcodedDimension,
+    "require-describe-in-tests": requireDescribeInTests,
   },
 };

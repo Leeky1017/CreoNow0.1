@@ -15,6 +15,7 @@ Guard 只处理 ESLint 难以覆盖的跨文件、跨层、跨产物一致性问
 - 命名规则
 - i18n 调用约束
 - 禁止某些 API / 语法 / 原始样式值
+- 测试文件结构约束（如 `creonow/require-describe-in-tests`）
 
 原因：
 
@@ -46,6 +47,7 @@ Guard 只处理 ESLint 难以覆盖的跨文件、跨层、跨产物一致性问
 - i18n hardcode
 - import 规范
 - 浅层静态字符串匹配类前端约束
+- 测试结构规范（`require-describe-in-tests`，已完成）
 
 更适合保留为 Guard 的类型：
 

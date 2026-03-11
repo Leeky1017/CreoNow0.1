@@ -38,7 +38,7 @@
 
 | CI Job                       | 实际命令                                                    | 说明                   |
 | ---------------------------- | ----------------------------------------------------------- | ---------------------- |
-| `lint-and-typecheck`         | `pnpm lint` / `pnpm lint:warning-budget` / `pnpm typecheck` | 基础静态门禁           |
+| `lint-and-typecheck`         | `pnpm lint` / `pnpm lint:warning-budget` / `pnpm typecheck` | 基础静态门禁（含 `creonow/require-describe-in-tests`）|
 | `unit-test-core`             | `pnpm test:unit`                                            | root 侧单元测试计划    |
 | `unit-test-renderer`         | `pnpm -C apps/desktop test:run`                             | renderer/store vitest  |
 | `integration-test`           | `pnpm test:integration`                                     | root 侧集成测试        |

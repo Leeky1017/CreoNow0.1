@@ -54,7 +54,7 @@ CreoNow 采用 `Red -> Green -> Refactor`：
 - 推荐格式：`it('should <expected behavior> when <condition>')`
 
 ## 仓库中的正例
-
+> **自动化守门**：`describe()` 结构要求现由 ESLint 规则 `creonow/require-describe-in-tests` 自动拦截。新测试文件缺少 `describe()` 将直接阻断 CI；存量目录暂以 warn 过渡，随 T-MIG 批次迁移逐步收紧为 error。
 这些文件值得当作“如何写”的样板：
 
 - `apps/desktop/renderer/src/stores/onboardingStore.test.tsx`

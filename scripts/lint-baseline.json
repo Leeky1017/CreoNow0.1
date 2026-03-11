@@ -1,18 +1,19 @@
 {
-  "version": "2026-03-08",
-  "generatedAt": "2026-03-08T08:51:33.462Z",
+  "version": "2026-03-11",
+  "generatedAt": "2026-03-11T20:00:00.000Z",
   "source": "eslint-json",
   "governance": {
-    "issue": "#1037",
-    "reason": "Wave 0 gate rules (G0-01/G0-03) added as warn-level; baseline updated to include initial debt"
+    "issue": "#1072",
+    "reason": "G0.5-01: require-describe-in-tests rule added as warn for legacy files; baseline updated to include initial debt"
   },
   "snapshot": {
-    "totalViolations": 297,
+    "totalViolations": 702,
     "byRule": {
       "creonow/no-hardcoded-dimension": 63,
       "creonow/no-native-html-element": 222,
       "creonow/no-raw-error-code-in-ui": 8,
-      "creonow/no-raw-tailwind-tokens": 4
+      "creonow/no-raw-tailwind-tokens": 4,
+      "creonow/require-describe-in-tests": 405
     }
   }
 }
