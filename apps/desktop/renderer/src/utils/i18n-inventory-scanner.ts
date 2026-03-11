@@ -8,17 +8,25 @@
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import {
+  classifyModule,
+  classifyPriority,
   isCommentLine,
   isConsoleLine,
   isCssClassName,
   isI18nWrapped,
   isImportLine,
+  isLikelyCodeFragment,
   isTechnicalConstant,
   isTrivialString,
   isTypeDefinition,
   NON_VISIBLE_JSX_ATTRS,
 } from "./i18n-inventory-scan-rules";
-export { isCssClassName, isTechnicalConstant } from "./i18n-inventory-scan-rules";
+export {
+  classifyModule,
+  classifyPriority,
+  isCssClassName,
+  isTechnicalConstant,
+} from "./i18n-inventory-scan-rules";
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -40,43 +48,6 @@ export interface ScanOptions {
   basePath?: string;
 }
 
-const MODULE_RULES: Array<{ pattern: RegExp; module: string }> = [
-  { pattern: /features\/editor\//u, module: "editor" },
-  { pattern: /features\/ai\//u, module: "ai-service" },
-  { pattern: /features\/version-history\//u, module: "version-control" },
-  { pattern: /features\/search\//u, module: "search" },
-  { pattern: /features\/settings-dialog\//u, module: "settings" },
-  { pattern: /features\/settings\//u, module: "settings" },
-  { pattern: /features\/export\//u, module: "export" },
-  { pattern: /features\/diff\//u, module: "diff" },
-  { pattern: /features\/outline\//u, module: "outline" },
-  { pattern: /features\/kg\//u, module: "knowledge-graph" },
-  { pattern: /features\/character\//u, module: "character" },
-  { pattern: /features\/onboarding\//u, module: "onboarding" },
-  { pattern: /features\/dashboard\//u, module: "dashboard" },
-  { pattern: /features\/shortcuts\//u, module: "shortcuts" },
-  { pattern: /features\/commandPalette\//u, module: "command-palette" },
-  { pattern: /features\/files\//u, module: "files" },
-  { pattern: /features\/memory\//u, module: "memory" },
-  { pattern: /features\/projects\//u, module: "projects" },
-  { pattern: /features\/analytics\//u, module: "analytics" },
-  { pattern: /features\/quality-gates\//u, module: "quality-gates" },
-  { pattern: /features\/zen-mode\//u, module: "zen-mode" },
-  { pattern: /components\//u, module: "components" },
-  { pattern: /stores\//u, module: "stores" },
-  { pattern: /hooks\//u, module: "hooks" },
-  { pattern: /lib\//u, module: "lib" },
-  { pattern: /services\//u, module: "services" },
-];
-
-const P0_PRIORITY_PATTERNS = [
-  /features\/editor\//u,
-  /features\/version-history\//u,
-  /features\/ai\//u,
-  /features\/export\//u,
-  /features\/diff\//u,
-];
-
 const STRING_PATTERN = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'/gu;
 const JSX_TEXT_PATTERN = />\s*([^<>{}\n]+?)\s*</gu;
 const LETTER_PATTERN = /[a-zA-Z\u4e00-\u9fff]/u;
@@ -87,29 +58,6 @@ const USER_FACING_CONTEXT_PATTERN = /(?:label|description|message|text|title|pla
 const ATTR_NAME_PATTERN = /(\w[\w-]*)\s*=\s*\{?\s*$/u;
 const COMMON_PROP_PATTERN = /^(?:on[A-Z]|ref|style|css)/u;
 const SHORT_MEANINGFUL_STRINGS = new Set(["AI", "OK", "No"]);
-
-/* ------------------------------------------------------------------ */
-/* Module classification                                               */
-/* ------------------------------------------------------------------ */
-
-export function classifyModule(relPath: string): string {
-  if (/features\/rightpanel\//u.test(relPath)) {
-    if (/[Aa]i/u.test(relPath)) return "ai-service";
-    if (/[Vv]ersion/u.test(relPath)) return "version-control";
-    return "workbench";
-  }
-  const match = MODULE_RULES.find((rule) => rule.pattern.test(relPath));
-  if (match) return match.module;
-  return "workbench";
-}
-
-/* ------------------------------------------------------------------ */
-/* Priority classification                                             */
-/* ------------------------------------------------------------------ */
-
-export function classifyPriority(relPath: string): "P0" | "P1" {
-  return P0_PRIORITY_PATTERNS.some((pattern) => pattern.test(relPath)) ? "P0" : "P1";
-}
 
 /* ------------------------------------------------------------------ */
 /* Suggested key generation                                            */
@@ -270,7 +218,7 @@ function collectJsxTextMatches(
   while ((jsxMatch = JSX_TEXT_PATTERN.exec(line)) !== null) {
     const text = jsxMatch[1].trim();
     if (isTrivialString(text) || !LETTER_PATTERN.test(text)) continue;
-    if (isCssClassName(text) || isTechnicalConstant(text)) continue;
+    if (isCssClassName(text) || isTechnicalConstant(text) || isLikelyCodeFragment(text)) continue;
     if (existing.some((entry) => entry.line === lineNum && entry.rawString === text)) continue;
     if (/^\{?t\(/u.test(text) || /^\{/u.test(text)) continue;
     if (/^[)]:?\s/u.test(text) || /[({]$/u.test(text) || /^\)\s*:\s*\w/u.test(text)) {
@@ -280,7 +228,7 @@ function collectJsxTextMatches(
     results.push({ filePath: relFilePath, line: lineNum, rawString: text });
   }
 
-  if (isStandaloneJsxTextLine(trimmed, prevLine, nextLine)) {
+  if (isStandaloneJsxTextLine(trimmed, prevLine, nextLine) && !isLikelyCodeFragment(trimmed)) {
     const text = trimmed;
     const alreadyTracked = [...existing, ...results].some(
       (entry) => entry.line === lineNum && entry.rawString === text,

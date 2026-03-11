@@ -218,6 +218,13 @@ describe("AC-4: 排除规则", () => {
     expect(isTechnicalConstant("version:snapshot:diff")).toBe(true);
     expect(isTechnicalConstant("#ff0000")).toBe(true);
     expect(isTechnicalConstant("var(--color-bg)")).toBe(true);
+    expect(isTechnicalConstant("workbench.iconBar.files")).toBe(true);
+    expect(isTechnicalConstant("https://example.com")).toBe(true);
+    expect(isTechnicalConstant("2-digit")).toBe(true);
+    expect(isTechnicalConstant("--editor-line-height")).toBe(true);
+    expect(isTechnicalConstant("pnpm -C apps/desktop rebuild:native")).toBe(true);
+    expect(isTechnicalConstant("\\u00A0")).toBe(true);
+    expect(isTechnicalConstant("${lineIndex}")).toBe(true);
   });
 
   it("should not exclude user-visible text as technical constants", () => {
@@ -246,6 +253,29 @@ describe("AC-4: 排除规则", () => {
         r.rawString === "test-btn",
     );
     expect(propValues).toEqual([]);
+  });
+
+  it("should exclude JSX conditional fragments", () => {
+    const code = `<div>{isOpen ? <span>Ready</span> : null}</div>`;
+    const results = scanFileContent(code, "test.tsx");
+    const fragments = results.filter((r) => r.rawString.includes("null") || r.rawString.includes(") :"));
+    expect(fragments).toEqual([]);
+  });
+
+  it("should exclude expression fragments that are not user copy", () => {
+    const code = `<div>{items.length === 0 ? <span>Empty</span> : props.items.length === 0 ? null : null}</div>`;
+    const results = scanFileContent(code, "test.tsx");
+    const fragments = results.filter(
+      (r) => r.rawString.includes("props.") || r.rawString.includes("===") || r.rawString.includes("&&"),
+    );
+    expect(fragments).toEqual([]);
+  });
+
+  it("should exclude type-signature fragments that leak from code parsing", () => {
+    const code = `<div>{formatter as unknown as (value: string): Record<string, string>}</div>`;
+    const results = scanFileContent(code, "test.tsx");
+    const fragments = results.filter((r) => r.rawString.includes("string): Record"));
+    expect(fragments).toEqual([]);
   });
 });
 

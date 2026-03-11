@@ -1,3 +1,153 @@
+const MODULE_RULES: Array<{ pattern: RegExp; module: string }> = [
+  { pattern: /features\/editor\//u, module: "editor" },
+  { pattern: /features\/ai\//u, module: "ai-service" },
+  { pattern: /features\/version-history\//u, module: "version-control" },
+  { pattern: /features\/search\//u, module: "search" },
+  { pattern: /features\/settings-dialog\//u, module: "settings" },
+  { pattern: /features\/settings\//u, module: "settings" },
+  { pattern: /features\/export\//u, module: "export" },
+  { pattern: /features\/diff\//u, module: "diff" },
+  { pattern: /features\/outline\//u, module: "outline" },
+  { pattern: /features\/kg\//u, module: "knowledge-graph" },
+  { pattern: /features\/character\//u, module: "character" },
+  { pattern: /features\/onboarding\//u, module: "onboarding" },
+  { pattern: /features\/dashboard\//u, module: "dashboard" },
+  { pattern: /features\/shortcuts\//u, module: "shortcuts" },
+  { pattern: /features\/commandPalette\//u, module: "command-palette" },
+  { pattern: /features\/files\//u, module: "files" },
+  { pattern: /features\/memory\//u, module: "memory" },
+  { pattern: /features\/projects\//u, module: "projects" },
+  { pattern: /features\/analytics\//u, module: "analytics" },
+  { pattern: /features\/quality-gates\//u, module: "quality-gates" },
+  { pattern: /features\/zen-mode\//u, module: "zen-mode" },
+  { pattern: /components\//u, module: "components" },
+  { pattern: /stores\//u, module: "stores" },
+  { pattern: /hooks\//u, module: "hooks" },
+  { pattern: /lib\//u, module: "lib" },
+  { pattern: /services\//u, module: "services" },
+];
+
+const P0_PATTERNS = [
+  /features\/editor\//u,
+  /features\/version-history\//u,
+  /features\/ai\//u,
+  /features\/export\//u,
+  /features\/diff\//u,
+];
+
+const DATE_TIME_STYLE_VALUES = new Set(["2-digit", "numeric", "short", "long", "narrow"]);
+const CSS_FUNCTION_PATTERN = /^(?:calc|color-mix|radial-gradient|linear-gradient|blur)\(/u;
+const I18N_KEY_PATTERN = /^[a-z][\w-]*(?:\.[\w-]+){1,}$/u;
+const URL_LIKE_PATTERN = /^(?:https?:\/\/|mailto:|file:\/\/)/u;
+const SHELL_COMMAND_PATTERN = /^(?:pnpm|npm|yarn|git|node|tsx|bash)\b/u;
+const SHORT_USER_FACING = new Set(["AI", "OK", "NO", "ON", "GO"]);
+const USER_FACING_PASCAL_WORDS = new Set([
+  "You", "Auto", "Today", "Yesterday", "Earlier", "Loading",
+  "Restore", "Compare", "Preview", "Settings", "Save", "Cancel",
+  "Export", "Delete", "Edit", "Close", "Open", "Search",
+  "Back", "Next", "Previous", "Done", "Error", "Warning",
+  "Info", "Success", "Failed", "Pass", "Fail", "Score",
+  "Version", "Current", "Draft", "Final",
+  "Apply", "Reject", "Accept", "Dismiss", "Retry",
+  "Add", "Remove", "Create", "Update", "Rename",
+  "Copy", "Paste", "Cut", "Undo", "Redo",
+  "Bold", "Italic", "Underline", "Markdown",
+  "General", "Appearance", "Advanced",
+]);
+const HTML_TAGS = new Set([
+  "div", "span", "p", "br", "strong", "b", "em", "i", "u", "s", "code",
+  "pre", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li",
+  "blockquote", "hr", "a", "img", "table", "tr", "td", "th", "thead",
+  "tbody", "button", "input", "textarea", "select", "option", "form",
+  "label", "section", "article", "header", "footer", "nav", "main",
+  "aside", "dialog", "details", "summary", "strike",
+]);
+const ARIA_ROLES = new Set([
+  "alert", "alertdialog", "button", "checkbox", "dialog", "grid",
+  "link", "listbox", "menu", "menubar", "menuitem", "option",
+  "progressbar", "radio", "radiogroup", "scrollbar", "searchbox",
+  "slider", "spinbutton", "status", "tab", "tablist", "tabpanel",
+  "textbox", "timer", "toolbar", "tooltip", "tree", "treeitem",
+  "presentation", "none", "group", "region", "log", "marquee",
+]);
+const TS_TYPES = new Set([
+  "Promise", "Partial", "Record", "Map", "Set", "Array", "Readonly",
+  "Required", "Pick", "Omit", "Exclude", "Extract", "NonNullable",
+  "ReturnType", "Parameters", "InstanceType", "ConstructorParameters",
+  "Awaited", "Uppercase", "Lowercase", "Capitalize", "Uncapitalize",
+  "HTMLElement", "Element", "ReactNode", "JSX", "React", "Event",
+]);
+const DIRECT_TECHNICAL_PATTERNS = [
+  /^\\u[0-9a-fA-F]{4}$/u,
+  /^\$\{[^}]+\}$/u,
+  /^--[a-z0-9-]+$/u,
+  /^\/[a-z]/u,
+  /^[a-z]+:[a-z]+/u,
+  /^[a-z-]+:$/u,
+  /^#[0-9a-fA-F]{3,8}$/u,
+  /^var\(--/u,
+  /^[a-z]+\/[a-z+.-]+$/u,
+  /^\.[a-z]{1,6}$/u,
+  /^[a-z][a-z0-9]*(_[a-z0-9]+)+$/u,
+  /^[a-z]+(-[a-z0-9]+)+$/u,
+  /^__/u,
+  /^[a-z]+=\w+/u,
+];
+
+function matchesAnyPattern(str: string, patterns: readonly RegExp[]): boolean {
+  return patterns.some((pattern) => pattern.test(str));
+}
+
+function isDirectTechnicalConstant(str: string): boolean {
+  return (
+    I18N_KEY_PATTERN.test(str) ||
+    URL_LIKE_PATTERN.test(str) ||
+    SHELL_COMMAND_PATTERN.test(str) ||
+    DATE_TIME_STYLE_VALUES.has(str) ||
+    CSS_FUNCTION_PATTERN.test(str) ||
+    matchesAnyPattern(str, DIRECT_TECHNICAL_PATTERNS)
+  );
+}
+
+function isShortUpperConstant(str: string): boolean {
+  return /^[A-Z][A-Z0-9_]+$/u.test(str) && !SHORT_USER_FACING.has(str);
+}
+
+function isShortIdentifierLike(str: string): boolean {
+  return /^[a-z][a-zA-Z0-9]*$/u.test(str) && str.length < 30;
+}
+
+function isPascalCaseTechnicalIdentifier(str: string): boolean {
+  if (!/^[A-Z][a-zA-Z0-9]*$/u.test(str) || str.length >= 30 || /\s/u.test(str)) {
+    return false;
+  }
+
+  if (USER_FACING_PASCAL_WORDS.has(str)) {
+    return false;
+  }
+
+  return /[a-z][A-Z]/u.test(str);
+}
+
+function isSemanticPlatformToken(str: string): boolean {
+  const lower = str.toLowerCase();
+  return HTML_TAGS.has(lower) || ARIA_ROLES.has(lower) || TS_TYPES.has(str);
+}
+
+export function classifyModule(relPath: string): string {
+  if (/features\/rightpanel\//u.test(relPath)) {
+    if (/[Aa]i/u.test(relPath)) return "ai-service";
+    if (/[Vv]ersion/u.test(relPath)) return "version-control";
+    return "workbench";
+  }
+
+  return MODULE_RULES.find((rule) => rule.pattern.test(relPath))?.module ?? "workbench";
+}
+
+export function classifyPriority(relPath: string): "P0" | "P1" {
+  return P0_PATTERNS.some((pattern) => pattern.test(relPath)) ? "P0" : "P1";
+}
+
 /** Check if a string is too short or trivial to be user-facing text */
 export function isTrivialString(str: string): boolean {
   const trimmed = str.trim();
@@ -101,66 +251,25 @@ export function isCssClassName(str: string): boolean {
 
 /** Whether a string is purely a programming identifier (not user-facing text) */
 export function isTechnicalConstant(str: string): boolean {
-  if (/^\/[a-z]/u.test(str)) return true;
-  if (/^[A-Z][A-Z0-9_]+$/u.test(str)) {
-    const shortUserFacing = new Set(["AI", "OK", "NO", "ON", "GO"]);
-    if (!shortUserFacing.has(str)) return true;
-  }
-  if (/^[a-z]+:[a-z]+/u.test(str)) return true;
-  if (/^#[0-9a-fA-F]{3,8}$/u.test(str)) return true;
-  if (/^var\(--/u.test(str)) return true;
-  if (/^[a-z]+\/[a-z+.-]+$/u.test(str)) return true;
-  if (/^\.[a-z]{1,6}$/u.test(str)) return true;
-  if (/^[a-z][a-zA-Z0-9]*$/u.test(str) && str.length < 30) return true;
-  if (/^[A-Z][a-zA-Z0-9]*$/u.test(str) && str.length < 30 && !/\s/u.test(str)) {
-    const userFacingWords = new Set([
-      "You", "Auto", "Today", "Yesterday", "Earlier", "Loading",
-      "Restore", "Compare", "Preview", "Settings", "Save", "Cancel",
-      "Export", "Delete", "Edit", "Close", "Open", "Search",
-      "Back", "Next", "Previous", "Done", "Error", "Warning",
-      "Info", "Success", "Failed", "Pass", "Fail", "Score",
-      "Version", "Current", "Draft", "Final",
-      "Apply", "Reject", "Accept", "Dismiss", "Retry",
-      "Add", "Remove", "Create", "Update", "Rename",
-      "Copy", "Paste", "Cut", "Undo", "Redo",
-      "Bold", "Italic", "Underline", "Markdown",
-      "General", "Appearance", "Advanced",
-    ]);
-    if (userFacingWords.has(str)) return false;
-    if (/[a-z][A-Z]/u.test(str)) return true;
-  }
-  if (/^[a-z][a-z0-9]*(_[a-z0-9]+)+$/u.test(str)) return true;
-  if (/^[a-z]+(-[a-z0-9]+)+$/u.test(str) && str.length < 40) return true;
+  return (
+    isDirectTechnicalConstant(str) ||
+    isShortUpperConstant(str) ||
+    isShortIdentifierLike(str) ||
+    isPascalCaseTechnicalIdentifier(str) ||
+    isSemanticPlatformToken(str)
+  );
+}
 
-  const htmlTags = new Set([
-    "div", "span", "p", "br", "strong", "b", "em", "i", "u", "s", "code",
-    "pre", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li",
-    "blockquote", "hr", "a", "img", "table", "tr", "td", "th", "thead",
-    "tbody", "button", "input", "textarea", "select", "option", "form",
-    "label", "section", "article", "header", "footer", "nav", "main",
-    "aside", "dialog", "details", "summary", "strike",
-  ]);
-  if (htmlTags.has(str.toLowerCase())) return true;
-
-  const ariaRoles = new Set([
-    "alert", "alertdialog", "button", "checkbox", "dialog", "grid",
-    "link", "listbox", "menu", "menubar", "menuitem", "option",
-    "progressbar", "radio", "radiogroup", "scrollbar", "searchbox",
-    "slider", "spinbutton", "status", "tab", "tablist", "tabpanel",
-    "textbox", "timer", "toolbar", "tooltip", "tree", "treeitem",
-    "presentation", "none", "group", "region", "log", "marquee",
-  ]);
-  if (ariaRoles.has(str.toLowerCase())) return true;
-
-  const tsTypes = new Set([
-    "Promise", "Partial", "Record", "Map", "Set", "Array", "Readonly",
-    "Required", "Pick", "Omit", "Exclude", "Extract", "NonNullable",
-    "ReturnType", "Parameters", "InstanceType", "ConstructorParameters",
-    "Awaited", "Uppercase", "Lowercase", "Capitalize", "Uncapitalize",
-    "HTMLElement", "Element", "ReactNode", "JSX", "React", "Event",
-  ]);
-  if (tsTypes.has(str)) return true;
-  if (/^__/u.test(str)) return true;
-  if (/^[a-z]+=\w+/u.test(str)) return true;
-  return false;
+export function isLikelyCodeFragment(str: string): boolean {
+  return (
+    /[{}]/u.test(str) ||
+    /=>/u.test(str) ||
+    /&&|\|\||===|!==/u.test(str) ||
+    /props\.|\.length/u.test(str) ||
+    /\b(?:string|number|boolean)\):\s*[A-Z]/u.test(str) ||
+    /^=/u.test(str) ||
+    /^\)\s*:/u.test(str) ||
+    /^\)\s*:\s*null\}?$/u.test(str) ||
+    /\bnull\b/u.test(str)
+  );
 }
