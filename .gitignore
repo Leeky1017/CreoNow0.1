@@ -49,6 +49,7 @@ coverage/
 # Playwright
 playwright-report/
 test-results/
+html-report/
 
 # Misc
 *.bak

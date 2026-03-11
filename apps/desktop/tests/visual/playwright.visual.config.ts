@@ -24,7 +24,7 @@ export default defineConfig({
   fullyParallel: true,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI
-    ? [["github"], ["html", { open: "never", outputFolder: path.join(__dirname, "test-results", "report") }]]
+    ? [["github"], ["html", { open: "never", outputFolder: path.join(__dirname, "html-report") }]]
     : [["list"]],
   outputDir: path.join(__dirname, "test-results"),
   snapshotDir: path.join(__dirname, "__screenshots__"),
