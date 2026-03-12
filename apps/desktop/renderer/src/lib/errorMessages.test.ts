@@ -16,7 +16,9 @@ import {
  * 全量错误码列表——与 ipc-generated.ts 中 IpcErrorCode 一一对应。
  * 若上游新增/删除错误码而此处未同步，TypeScript satisfies 断言将编译报错。
  */
-const ALL_ERROR_CODES = Object.keys(USER_FACING_MESSAGE_BY_CODE) as IpcErrorCode[];
+const ALL_ERROR_CODES = Object.keys(
+  USER_FACING_MESSAGE_BY_CODE,
+) as IpcErrorCode[];
 
 describe("errorMessages", () => {
   // ── Task 1.1: 全量映射覆盖 ──
@@ -179,8 +181,7 @@ describe("errorMessages", () => {
   });
 
   it("zh-CN 文案不含技术术语", () => {
-    const techTerms =
-      /SQLITE|ENOENT|Anthropic|OpenAI|ipcRenderer|constraint/iu;
+    const techTerms = /SQLITE|ENOENT|Anthropic|OpenAI|ipcRenderer|constraint/iu;
     for (const [code, value] of Object.entries(zhCN.error.code)) {
       expect(value, `code=${code}`).not.toMatch(techTerms);
     }
