@@ -14,6 +14,7 @@ type NavigationControllerProps = {
   onOpenSettings: () => void;
   onOpenCreateProject: () => void;
   onCreateDocument: () => void;
+  onOpenGlobalSearch: () => void;
 };
 
 /**
@@ -33,11 +34,9 @@ export function NavigationController({
   onOpenSettings,
   onOpenCreateProject,
   onCreateDocument,
+  onOpenGlobalSearch,
 }: NavigationControllerProps): null {
-  const debouncedToggleSidebar = useDebouncedCallback(
-    onToggleSidebar,
-    300,
-  );
+  const debouncedToggleSidebar = useDebouncedCallback(onToggleSidebar, 300);
   const debouncedToggleRightPanel = useDebouncedCallback(
     onToggleRightPanel,
     300,
@@ -146,6 +145,19 @@ export function NavigationController({
     }, [zenMode, canCreateDocument, onCreateDocument]),
     "global",
     10,
+  );
+
+  // Cmd/Ctrl+Shift+F: Open Global Search
+  useHotkey(
+    "nav:global-search",
+    { key: "f", modKey: true, shiftKey: true },
+    React.useCallback(() => {
+      if (!zenMode) {
+        onOpenGlobalSearch();
+      }
+    }, [zenMode, onOpenGlobalSearch]),
+    "global",
+    15,
   );
 
   return null;

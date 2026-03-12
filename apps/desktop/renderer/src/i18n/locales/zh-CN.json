@@ -234,7 +234,10 @@
     "rebuildingQuery": "查询词：\"{{query}}\"",
     "errorTitle": "搜索失败，请重试",
     "retrySearch": "重试搜索",
-    "noResults": "未找到匹配结果",
+    "noResults": {
+      "title": "未找到匹配结果",
+      "suggestion": "建议检查拼写或使用不同关键词"
+    },
     "noResultsQuery": "查询词：\"{{query}}\"",
     "suggestionsTitle": "建议",
     "suggestionsText": "建议检查拼写或使用不同关键词",
@@ -272,7 +275,15 @@
       "toClose": "关闭"
     },
     "inputPlaceholder": "搜索…",
-    "matchScore": "{{score}}% 匹配"
+    "matchScore": "{{score}}% 匹配",
+    "input": {
+      "placeholder": "搜索文档、记忆、知识库...",
+      "ariaLabel": "全局搜索"
+    },
+    "resultCount": "{{count}} 个结果",
+    "shortcut": {
+      "label": "全局搜索"
+    }
   },
   "ai": {
     "contextSummary": "AI 面板上下文摘要",
@@ -879,7 +890,7 @@
       "writingExperience": "写作体验",
       "dataAndStorage": "数据与存储",
       "editorDefaults": "编辑器默认值",
-      "differentiateAiEditsDescription": "启用后，版本历史中 AI 生成的条目将显示额外的\u201c{{marker}}\u201d标记。"
+      "differentiateAiEditsDescription": "启用后，版本历史中 AI 生成的条目将显示额外的“{{marker}}”标记。"
     },
     "appearance": {
       "colorWhite": "白色",

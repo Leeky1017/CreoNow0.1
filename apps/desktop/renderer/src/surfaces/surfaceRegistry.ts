@@ -536,7 +536,10 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
   {
     id: "searchPanel",
     kind: "leftPanel",
-    entryPoints: [{ type: "iconBar", description: "Search icon" }],
+    entryPoints: [
+      { type: "iconBar", description: "Search icon" },
+      { type: "shortcut", description: "Cmd/Ctrl+Shift+F" },
+    ],
     testId: "search-panel",
     storybookTitle: "Features/SearchPanel",
   },

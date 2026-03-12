@@ -22,6 +22,7 @@ describe("WB-P2-S2 NavigationController boundary", () => {
     const onOpenSettings = vi.fn();
     const onOpenCreateProject = vi.fn();
     const onCreateDocument = vi.fn();
+    const onOpenGlobalSearch = vi.fn();
 
     render(
       <NavigationController
@@ -35,6 +36,7 @@ describe("WB-P2-S2 NavigationController boundary", () => {
         onOpenSettings={onOpenSettings}
         onOpenCreateProject={onOpenCreateProject}
         onCreateDocument={onCreateDocument}
+        onOpenGlobalSearch={onOpenGlobalSearch}
       />,
     );
 
@@ -59,6 +61,9 @@ describe("WB-P2-S2 NavigationController boundary", () => {
 
     fireEvent.keyDown(document, { key: "n", ctrlKey: true });
     expect(onCreateDocument).toHaveBeenCalledTimes(1);
+
+    fireEvent.keyDown(document, { key: "f", ctrlKey: true, shiftKey: true });
+    expect(onOpenGlobalSearch).toHaveBeenCalledTimes(1);
   });
 
   it("blocks non-exit shortcuts in ZenMode", () => {
@@ -70,6 +75,7 @@ describe("WB-P2-S2 NavigationController boundary", () => {
     const onOpenSettings = vi.fn();
     const onOpenCreateProject = vi.fn();
     const onCreateDocument = vi.fn();
+    const onOpenGlobalSearch = vi.fn();
 
     render(
       <NavigationController
@@ -83,6 +89,7 @@ describe("WB-P2-S2 NavigationController boundary", () => {
         onOpenSettings={onOpenSettings}
         onOpenCreateProject={onOpenCreateProject}
         onCreateDocument={onCreateDocument}
+        onOpenGlobalSearch={onOpenGlobalSearch}
       />,
     );
 
@@ -95,6 +102,7 @@ describe("WB-P2-S2 NavigationController boundary", () => {
     fireEvent.keyDown(document, { key: ",", ctrlKey: true });
     fireEvent.keyDown(document, { key: "n", ctrlKey: true, shiftKey: true });
     fireEvent.keyDown(document, { key: "n", ctrlKey: true });
+    fireEvent.keyDown(document, { key: "f", ctrlKey: true, shiftKey: true });
 
     expect(onOpenCommandPalette).toHaveBeenCalledTimes(0);
     expect(onToggleSidebar).toHaveBeenCalledTimes(0);
@@ -102,6 +110,7 @@ describe("WB-P2-S2 NavigationController boundary", () => {
     expect(onOpenSettings).toHaveBeenCalledTimes(0);
     expect(onOpenCreateProject).toHaveBeenCalledTimes(0);
     expect(onCreateDocument).toHaveBeenCalledTimes(0);
+    expect(onOpenGlobalSearch).toHaveBeenCalledTimes(0);
   });
 
   it("does not perform width allocation (static boundary)", () => {

@@ -10,7 +10,23 @@ import { Toggle } from "../../components/primitives/Toggle";
 import { useFileStore } from "../../stores/fileStore";
 import { useSearchStore, type SearchStatus } from "../../stores/searchStore";
 
-import { ArrowRight, ChevronDown, ChevronUp, CornerDownLeft, FileText, Folder, Frown, Globe, Lightbulb, RefreshCw, Search, Share2, Sparkles, TriangleAlert, X } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronDown,
+  ChevronUp,
+  CornerDownLeft,
+  FileText,
+  Folder,
+  Frown,
+  Globe,
+  Lightbulb,
+  RefreshCw,
+  Search,
+  Share2,
+  Sparkles,
+  TriangleAlert,
+  X,
+} from "lucide-react";
 /**
  * Search category filter options.
  */
@@ -66,7 +82,7 @@ export async function navigateSearchResult(
   const schedule = args.setTimeoutFn ?? setTimeout;
   schedule(() => {
     args.setFlashKey(null);
-  }, 900);
+  }, 1500);
 
   args.onClose?.();
 }
@@ -174,14 +190,16 @@ function DocumentResultItem(props: {
         <div className="flex items-center justify-between gap-2 mb-0.5">
           <h4
             className={`text-sm font-medium truncate transition-colors ${
-              isActive ? "text-[var(--color-fg-default)]" : "text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)]"
+              isActive
+                ? "text-[var(--color-fg-default)]"
+                : "text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)]"
             }`}
           >
             <HighlightText text={item.title} query={query} />
           </h4>
           {item.matchScore && (
             <span className="text-[10px] font-mono text-[var(--color-info)] bg-[var(--color-info-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-info-subtle)] shrink-0">
-              {t('search.matchScore', { score: item.matchScore })}
+              {t("search.matchScore", { score: item.matchScore })}
             </span>
           )}
         </div>
@@ -196,11 +214,19 @@ function DocumentResultItem(props: {
         </p>
         {item.path && (
           <div className="flex items-center gap-2 mt-2">
-            <Folder className="w-3 h-3 text-[var(--color-fg-placeholder)]" size={16} strokeWidth={1.5} />
-            <span className="text-[10px] text-[var(--color-fg-placeholder)]">{item.path}</span>
+            <Folder
+              className="w-3 h-3 text-[var(--color-fg-placeholder)]"
+              size={16}
+              strokeWidth={1.5}
+            />
+            <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+              {item.path}
+            </span>
             {item.editedTime && (
               <>
-                <span className="text-[10px] text-[var(--color-fg-placeholder)] mx-1">•</span>
+                <span className="text-[10px] text-[var(--color-fg-placeholder)] mx-1">
+                  •
+                </span>
                 <span className="text-[10px] text-[var(--color-fg-placeholder)]">
                   {item.editedTime}
                 </span>
@@ -212,7 +238,11 @@ function DocumentResultItem(props: {
 
       {/* Hover arrow */}
       <div className="hidden group-hover:flex items-center self-center pr-2">
-        <ArrowRight className="w-4 h-4 text-[var(--color-fg-muted)]" size={16} strokeWidth={1.5} />
+        <ArrowRight
+          className="w-4 h-4 text-[var(--color-fg-muted)]"
+          size={16}
+          strokeWidth={1.5}
+        />
       </div>
     </ListItem>
   );
@@ -255,8 +285,14 @@ function MemoryResultItem(props: {
         </p>
         {item.meta && (
           <div className="flex items-center gap-2 mt-2">
-            <Sparkles className="w-3 h-3 text-[var(--color-fg-placeholder)]" size={16} strokeWidth={1.5} />
-            <span className="text-[10px] text-[var(--color-fg-placeholder)]">{item.meta}</span>
+            <Sparkles
+              className="w-3 h-3 text-[var(--color-fg-placeholder)]"
+              size={16}
+              strokeWidth={1.5}
+            />
+            <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+              {item.meta}
+            </span>
           </div>
         )}
       </div>
@@ -296,7 +332,9 @@ function KnowledgeResultItem(props: {
             <span className="text-[10px] text-[var(--color-fg-placeholder)] border border-[var(--color-separator)] px-1.5 py-0.5 rounded">
               {t("search.resultTypes.entity")}
             </span>
-            <span className="text-[10px] text-[var(--color-fg-placeholder)]">{item.meta}</span>
+            <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+              {item.meta}
+            </span>
           </div>
         )}
       </div>
@@ -344,7 +382,9 @@ function KeyHint(props: {
       <span className="flex items-center justify-center min-w-[20px] h-5 px-1 rounded bg-[var(--color-bg-overlay)] border border-[var(--color-separator)] text-[10px] text-[var(--color-fg-muted)] font-mono">
         {props.icon || props.text}
       </span>
-      <span className="text-[10px] text-[var(--color-fg-placeholder)] ml-1">{props.label}</span>
+      <span className="text-[10px] text-[var(--color-fg-placeholder)] ml-1">
+        {props.label}
+      </span>
     </div>
   );
 }
@@ -376,7 +416,11 @@ function SearchResultsArea(props: {
   if (!props.hasQuery && !props.hasResults) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-8">
-        <Search className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4" size={24} strokeWidth={1.5} />
+        <Search
+          className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4"
+          size={24}
+          strokeWidth={1.5}
+        />
         <p className="text-sm text-[var(--color-fg-muted)] text-center">
           {t("search.emptyStateHint")}
         </p>
@@ -387,7 +431,11 @@ function SearchResultsArea(props: {
   if (props.hasQuery && props.effectiveIndexState === "rebuilding") {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-8">
-        <RefreshCw className="w-16 h-16 text-[var(--color-info)] mb-4 motion-safe:animate-pulse" size={24} strokeWidth={1.5} />
+        <RefreshCw
+          className="w-16 h-16 text-[var(--color-info)] mb-4 motion-safe:animate-pulse"
+          size={24}
+          strokeWidth={1.5}
+        />
         <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
           {t("search.rebuildingIndex")}
         </p>
@@ -401,7 +449,11 @@ function SearchResultsArea(props: {
   if (props.hasQuery && props.hasError) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-8">
-        <TriangleAlert className="w-16 h-16 text-[var(--color-error)] mb-4" size={24} strokeWidth={1.5} />
+        <TriangleAlert
+          className="w-16 h-16 text-[var(--color-error)] mb-4"
+          size={24}
+          strokeWidth={1.5}
+        />
         <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
           {t("search.errorTitle")}
         </p>
@@ -419,12 +471,20 @@ function SearchResultsArea(props: {
     );
   }
 
-  if (props.hasQuery && !props.hasResults && props.effectiveStatus !== "loading") {
+  if (
+    props.hasQuery &&
+    !props.hasResults &&
+    props.effectiveStatus !== "loading"
+  ) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-8">
-        <Frown className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4" size={24} strokeWidth={1.5} />
+        <Frown
+          className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4"
+          size={24}
+          strokeWidth={1.5}
+        />
         <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
-          {t("search.noResults")}
+          {t("search.noResults.title")}
         </p>
         <p className="text-xs text-[var(--color-fg-muted)] text-center">
           {t("search.noResultsQuery", { query: props.effectiveQuery })}
@@ -434,7 +494,7 @@ function SearchResultsArea(props: {
             {t("search.suggestionsTitle")}
           </p>
           <p className="text-xs text-[var(--color-fg-muted)]">
-            {t("search.suggestionsText")}
+            {t("search.noResults.suggestion")}
           </p>
         </div>
         <Button
@@ -459,7 +519,10 @@ function SearchResultsArea(props: {
     <>
       {props.documentItems.length > 0 &&
         (props.category === "all" || props.category === "documents") && (
-          <ResultGroup title={t("search.resultTypes.documents")} count={props.documentItems.length}>
+          <ResultGroup
+            title={t("search.resultTypes.documents")}
+            count={props.documentItems.length}
+          >
             {props.documentItems.map((item, index) => (
               <DocumentResultItem
                 key={item.id}
@@ -529,6 +592,100 @@ function SearchResultsArea(props: {
   );
 }
 
+/**
+ * Filter bar with semantic search and archive toggles.
+ */
+function SearchFilterBar(props: {
+  semanticSearch: boolean;
+  includeArchived: boolean;
+  onSemanticChange: (v: boolean) => void;
+  onArchivedChange: (v: boolean) => void;
+}): JSX.Element {
+  const { t } = useTranslation();
+  return (
+    <div className="px-4 py-3 border-t border-[var(--color-separator)] flex items-center justify-between bg-[var(--color-bg-raised)]">
+      <div className="flex items-center gap-6">
+        <Toggle
+          id="semantic-toggle"
+          label={t("search.filters.semanticSearch")}
+          checked={props.semanticSearch}
+          onCheckedChange={props.onSemanticChange}
+        />
+        <Toggle
+          id="archived-toggle"
+          label={t("search.filters.includeArchived")}
+          checked={props.includeArchived}
+          onCheckedChange={props.onArchivedChange}
+        />
+      </div>
+
+      <div className="flex items-center gap-2">
+        <span className="text-[10px] text-[var(--color-fg-placeholder)] uppercase tracking-wider font-medium">
+          {t("search.filters.scope")}
+        </span>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="!flex !items-center !gap-1.5 !px-2 !py-1 !h-auto !rounded !bg-[var(--color-separator)] !border !border-[var(--color-separator)] !text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-fg-default)] hover:!border-[var(--color-bg-overlay)]"
+        >
+          <span>{t("search.filters.currentProject")}</span>
+          <ChevronDown className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Footer with result count and keyboard navigation hints.
+ */
+function SearchFooter(props: {
+  hasResults: boolean;
+  totalResults: number;
+}): JSX.Element {
+  const { t } = useTranslation();
+  return (
+    <div className="border-t border-[var(--color-separator)] px-4 py-3 flex items-center justify-between shrink-0 bg-[var(--color-bg-raised)]">
+      <div className="flex items-center gap-4">
+        {props.hasResults && (
+          <>
+            <span className="text-xs text-[var(--color-fg-muted)] font-medium">
+              {t("search.results.result", { count: props.totalResults })}
+            </span>
+            <div className="h-3 w-px bg-[var(--color-bg-overlay)]" />
+            <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+              {t("search.results.searchTime", { time: "0.04s" })}
+            </span>
+          </>
+        )}
+      </div>
+
+      <div className="flex items-center gap-3">
+        <KeyHint
+          icon={
+            <span className="flex gap-0.5">
+              <ChevronUp className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
+            </span>
+          }
+          label=""
+        />
+        <KeyHint
+          icon={
+            <ChevronDown className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
+          }
+          label={t("search.footer.toNavigate")}
+        />
+        <KeyHint
+          icon={
+            <CornerDownLeft className="w-3 h-3" size={16} strokeWidth={1.5} />
+          }
+          label={t("search.footer.toOpen")}
+        />
+        <KeyHint text="esc" label={t("search.footer.toClose")} />
+      </div>
+    </div>
+  );
+}
 
 /**
  * SearchPanel provides a modal search interface across documents, memories, and knowledge.
@@ -618,15 +775,51 @@ export function SearchPanel(props: {
     }
   }, [open]);
 
+  function handleInputKeyDown(e: React.KeyboardEvent): void {
+    if (e.key === "Enter") {
+      void runFulltext({ projectId, limit: 20 });
+    }
+  }
+
+  const handleItemClick = React.useCallback(
+    (documentId: string): void => {
+      const result = items.find((item) => item.id === documentId);
+      if (!result || result.type !== "document") {
+        onClose?.();
+        return;
+      }
+
+      const targetDocumentId = result.documentId ?? result.id;
+      void navigateSearchResult({
+        projectId,
+        result: {
+          documentId: targetDocumentId,
+          anchor: result.anchor,
+        },
+        setCurrent,
+        setFlashKey,
+        onClose,
+      });
+    },
+    [items, projectId, setCurrent, onClose],
+  );
+
+  function handleRetrySearch(): void {
+    clearError();
+    void runFulltext({ projectId, limit: 20 });
+  }
+
   // Handle keyboard shortcuts — only when panel is open
   useHotkey(
     "search:close",
     { key: "Escape" },
     React.useCallback(() => {
-      if (onClose) {
+      if (effectiveQuery.trim().length > 0) {
+        setQuery("");
+      } else if (onClose) {
         onClose();
       }
-    }, [onClose]),
+    }, [effectiveQuery, setQuery, onClose]),
     "global",
     25,
     open,
@@ -659,36 +852,18 @@ export function SearchPanel(props: {
     open,
   );
 
-  function handleInputKeyDown(e: React.KeyboardEvent): void {
-    if (e.key === "Enter") {
-      void runFulltext({ projectId, limit: 20 });
-    }
-  }
-
-  function handleItemClick(documentId: string): void {
-    const result = items.find((item) => item.id === documentId);
-    if (!result || result.type !== "document") {
-      onClose?.();
-      return;
-    }
-
-    const targetDocumentId = result.documentId ?? result.id;
-    void navigateSearchResult({
-      projectId,
-      result: {
-        documentId: targetDocumentId,
-        anchor: result.anchor,
-      },
-      setCurrent,
-      setFlashKey,
-      onClose,
-    });
-  }
-
-  function handleRetrySearch(): void {
-    clearError();
-    void runFulltext({ projectId, limit: 20 });
-  }
+  useHotkey(
+    "search:activate",
+    { key: "Enter" },
+    React.useCallback(() => {
+      if (hasResults && activeIndex >= 0 && activeIndex < items.length) {
+        handleItemClick(items[activeIndex].id);
+      }
+    }, [hasResults, activeIndex, items, handleItemClick]),
+    "global",
+    25,
+    open && hasResults,
+  );
 
   if (!open) return null;
 
@@ -705,20 +880,22 @@ export function SearchPanel(props: {
       />
 
       {/* Glass Panel Modal */}
-      <div
-        className="relative w-[640px] max-h-[80vh] flex flex-col rounded-xl overflow-hidden z-[var(--z-modal)] bg-[var(--color-bg-surface)] border border-[var(--color-separator)] shadow-[0_24px_48px_-12px_var(--color-shadow)] motion-safe:animate-[slideDown_0.3s_ease-out]"
-      >
+      <div className="relative w-[640px] max-h-[80vh] flex flex-col rounded-xl overflow-hidden z-[var(--z-modal)] bg-[var(--color-bg-surface)] border border-[var(--color-separator)] shadow-[0_24px_48px_-12px_var(--color-shadow)] motion-safe:animate-[slideDown_0.3s_ease-out]">
         {/* Header */}
-        <div
-          className="flex flex-col border-b border-[var(--color-separator)] bg-[var(--color-bg-surface)]"
-        >
+        <div className="flex flex-col border-b border-[var(--color-separator)] bg-[var(--color-bg-surface)]">
           {/* Search input row */}
           <div className="flex items-center px-4 py-4 gap-3">
-            <Search className="w-5 h-5 text-[var(--color-fg-muted)]" size={20} strokeWidth={1.5} />
+            <Search
+              className="w-5 h-5 text-[var(--color-fg-muted)]"
+              size={20}
+              strokeWidth={1.5}
+            />
             <Input
               ref={inputRef}
               data-testid="search-input"
               type="text"
+              role="searchbox"
+              aria-label={t("search.input.ariaLabel")}
               value={effectiveQuery}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={handleInputKeyDown}
@@ -768,38 +945,12 @@ export function SearchPanel(props: {
           </div>
 
           {/* Filter options bar */}
-          <div
-            className="px-4 py-3 border-t border-[var(--color-separator)] flex items-center justify-between bg-[var(--color-bg-raised)]"
-          >
-            <div className="flex items-center gap-6">
-              <Toggle
-                id="semantic-toggle"
-                label={t("search.filters.semanticSearch")}
-                checked={semanticSearch}
-                onCheckedChange={setSemanticSearch}
-              />
-              <Toggle
-                id="archived-toggle"
-                label={t("search.filters.includeArchived")}
-                checked={includeArchived}
-                onCheckedChange={setIncludeArchived}
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] text-[var(--color-fg-placeholder)] uppercase tracking-wider font-medium">
-                {t("search.filters.scope")}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="!flex !items-center !gap-1.5 !px-2 !py-1 !h-auto !rounded !bg-[var(--color-separator)] !border !border-[var(--color-separator)] !text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-fg-default)] hover:!border-[var(--color-bg-overlay)]"
-              >
-                <span>{t("search.filters.currentProject")}</span>
-                <ChevronDown className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
-              </Button>
-            </div>
-          </div>
+          <SearchFilterBar
+            semanticSearch={semanticSearch}
+            includeArchived={includeArchived}
+            onSemanticChange={setSemanticSearch}
+            onArchivedChange={setIncludeArchived}
+          />
         </div>
 
         {/* Results container */}
@@ -826,53 +977,11 @@ export function SearchPanel(props: {
             onRetrySearch={handleRetrySearch}
             onClearQuery={() => setQuery("")}
           />
-
         </div>
 
         {/* Footer */}
-        <div
-          className="border-t border-[var(--color-separator)] px-4 py-3 flex items-center justify-between shrink-0 bg-[var(--color-bg-raised)]"
-        >
-          <div className="flex items-center gap-4">
-            {hasResults && (
-              <>
-                <span className="text-xs text-[var(--color-fg-muted)] font-medium">
-                  {t("search.results.result", { count: totalResults })}
-                </span>
-                <div className="h-3 w-px bg-[var(--color-bg-overlay)]" />
-                <span className="text-[10px] text-[var(--color-fg-placeholder)]">
-                  {t("search.results.searchTime", { time: "0.04s" })}
-                </span>
-              </>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <KeyHint
-              icon={
-                <span className="flex gap-0.5">
-                  <ChevronUp className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
-                </span>
-              }
-              label=""
-            />
-            <KeyHint
-              icon={
-                <ChevronDown className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
-              }
-              label={t("search.footer.toNavigate")}
-            />
-            <KeyHint
-              icon={
-                <CornerDownLeft className="w-3 h-3" size={16} strokeWidth={1.5} />
-              }
-              label={t("search.footer.toOpen")}
-            />
-            <KeyHint text="esc" label={t("search.footer.toClose")} />
-          </div>
-        </div>
+        <SearchFooter hasResults={hasResults} totalResults={totalResults} />
       </div>
-
     </div>
   );
 }

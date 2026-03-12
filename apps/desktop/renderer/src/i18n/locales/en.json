@@ -234,7 +234,10 @@
     "rebuildingQuery": "Query: \"{{query}}\"",
     "errorTitle": "Search failed, please retry",
     "retrySearch": "Retry Search",
-    "noResults": "No matching results",
+    "noResults": {
+      "title": "No matching results",
+      "suggestion": "Try checking your spelling or using different keywords"
+    },
     "noResultsQuery": "Query: \"{{query}}\"",
     "suggestionsTitle": "Suggestions",
     "suggestionsText": "Try checking your spelling or using different keywords",
@@ -272,7 +275,15 @@
       "toClose": "to close"
     },
     "inputPlaceholder": "Search...",
-    "matchScore": "{{score}}% match"
+    "matchScore": "{{score}}% match",
+    "input": {
+      "placeholder": "Search documents, memories, knowledge...",
+      "ariaLabel": "Global search"
+    },
+    "resultCount": "{{count}} result(s)",
+    "shortcut": {
+      "label": "Global Search"
+    }
   },
   "ai": {
     "contextSummary": "AI panel context summary",
@@ -879,7 +890,7 @@
       "writingExperience": "Writing Experience",
       "dataAndStorage": "Data & Storage",
       "editorDefaults": "Editor Defaults",
-      "differentiateAiEditsDescription": "When enabled, AI-generated entries in Version History show an extra \u201c{{marker}}\u201d marker."
+      "differentiateAiEditsDescription": "When enabled, AI-generated entries in Version History show an extra “{{marker}}” marker."
     },
     "appearance": {
       "colorWhite": "White",
