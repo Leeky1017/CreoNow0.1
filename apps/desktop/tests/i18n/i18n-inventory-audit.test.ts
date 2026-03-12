@@ -142,11 +142,31 @@ describe("AC-3: 扫描输出格式", () => {
     });
 
     const validModules = new Set([
-      "editor", "ai-service", "version-control", "search", "settings",
-      "export", "diff", "outline", "knowledge-graph", "character",
-      "onboarding", "dashboard", "shortcuts", "command-palette",
-      "files", "memory", "projects", "analytics", "quality-gates",
-      "zen-mode", "components", "stores", "hooks", "lib", "services",
+      "editor",
+      "ai-service",
+      "version-control",
+      "search",
+      "settings",
+      "export",
+      "diff",
+      "outline",
+      "knowledge-graph",
+      "character",
+      "onboarding",
+      "dashboard",
+      "shortcuts",
+      "command-palette",
+      "files",
+      "memory",
+      "projects",
+      "analytics",
+      "quality-gates",
+      "zen-mode",
+      "components",
+      "stores",
+      "hooks",
+      "lib",
+      "services",
       "workbench",
     ]);
 
@@ -171,11 +191,17 @@ describe("AC-4: 排除规则", () => {
     expect(isCssClassName("shadow-[var(--shadow-lg)]")).toBe(true);
     expect(isCssClassName("data-[state=closed]:fade-out-0")).toBe(true);
     expect(isCssClassName("-translate-y-1/2")).toBe(true);
-    expect(isCssClassName("border border-[var(--color-border-default)]")).toBe(true);
+    expect(isCssClassName("border border-[var(--color-border-default)]")).toBe(
+      true,
+    );
     expect(isCssClassName("url(#arrowhead-selected)")).toBe(true);
     expect(isCssClassName("24px 24px")).toBe(true);
     expect(isCssClassName("[&[data-state=open]>svg]:rotate-180")).toBe(true);
-    expect(isCssClassName("!bg-[var(--color-separator)] !text-[var(--color-fg-muted)] !border !border-transparent hover:!border-[var(--color-bg-overlay)] hover:!text-[var(--color-fg-default)] hover:!bg-[var(--color-bg-overlay)]")).toBe(true);
+    expect(
+      isCssClassName(
+        "!bg-[var(--color-separator)] !text-[var(--color-fg-muted)] !border !border-transparent hover:!border-[var(--color-bg-overlay)] hover:!text-[var(--color-fg-default)] hover:!bg-[var(--color-bg-overlay)]",
+      ),
+    ).toBe(true);
   });
 
   it("should not exclude user-visible text", () => {
@@ -228,14 +254,22 @@ describe("AC-4: 排除规则", () => {
     expect(isTechnicalConstant("https://example.com")).toBe(true);
     expect(isTechnicalConstant("2-digit")).toBe(true);
     expect(isTechnicalConstant("--editor-line-height")).toBe(true);
-    expect(isTechnicalConstant("pnpm -C apps/desktop rebuild:native")).toBe(true);
+    expect(isTechnicalConstant("pnpm -C apps/desktop rebuild:native")).toBe(
+      true,
+    );
     expect(isTechnicalConstant("\\u00A0")).toBe(true);
     expect(isTechnicalConstant("${lineIndex}")).toBe(true);
-    expect(isTechnicalConstant("../../contexts/OpenSettingsContext")).toBe(true);
+    expect(isTechnicalConstant("../../contexts/OpenSettingsContext")).toBe(
+      true,
+    );
     expect(isTechnicalConstant("1em")).toBe(true);
     expect(isTechnicalConstant("14px")).toBe(true);
-    expect(isTechnicalConstant("progress-indeterminate 1.5s ease-in-out infinite")).toBe(true);
-    expect(isTechnicalConstant("[KnowledgeGraphPanel] deps.entityUpdate rejected:")).toBe(true);
+    expect(
+      isTechnicalConstant("progress-indeterminate 1.5s ease-in-out infinite"),
+    ).toBe(true);
+    expect(
+      isTechnicalConstant("[KnowledgeGraphPanel] deps.entityUpdate rejected:"),
+    ).toBe(true);
     expect(isTechnicalConstant("(no component stack)")).toBe(true);
     expect(isTechnicalConstant("0.04s")).toBe(true);
     expect(isTechnicalConstant("1px solid var(--color-separator)")).toBe(true);
@@ -273,7 +307,9 @@ describe("AC-4: 排除规则", () => {
   it("should exclude JSX conditional fragments", () => {
     const code = `<div>{isOpen ? <span>Ready</span> : null}</div>`;
     const results = scanFileContent(code, "test.tsx");
-    const fragments = results.filter((r) => r.rawString.includes("null") || r.rawString.includes(") :"));
+    const fragments = results.filter(
+      (r) => r.rawString.includes("null") || r.rawString.includes(") :"),
+    );
     expect(fragments).toEqual([]);
   });
 
@@ -281,7 +317,10 @@ describe("AC-4: 排除规则", () => {
     const code = `<div>{items.length === 0 ? <span>Empty</span> : props.items.length === 0 ? null : null}</div>`;
     const results = scanFileContent(code, "test.tsx");
     const fragments = results.filter(
-      (r) => r.rawString.includes("props.") || r.rawString.includes("===") || r.rawString.includes("&&"),
+      (r) =>
+        r.rawString.includes("props.") ||
+        r.rawString.includes("===") ||
+        r.rawString.includes("&&"),
     );
     expect(fragments).toEqual([]);
   });
@@ -289,7 +328,9 @@ describe("AC-4: 排除规则", () => {
   it("should exclude type-signature fragments that leak from code parsing", () => {
     const code = `<div>{formatter as unknown as (value: string): Record<string, string>}</div>`;
     const results = scanFileContent(code, "test.tsx");
-    const fragments = results.filter((r) => r.rawString.includes("string): Record"));
+    const fragments = results.filter((r) =>
+      r.rawString.includes("string): Record"),
+    );
     expect(fragments).toEqual([]);
   });
 
@@ -473,7 +514,9 @@ describe("Module classification", () => {
 
   it("should classify settings files correctly", () => {
     expect(
-      classifyModule("renderer/src/features/settings-dialog/SettingsDialog.tsx"),
+      classifyModule(
+        "renderer/src/features/settings-dialog/SettingsDialog.tsx",
+      ),
     ).toBe("settings");
   });
 
@@ -484,20 +527,24 @@ describe("Module classification", () => {
 
 describe("Priority classification", () => {
   it("should mark editor as P0", () => {
-    expect(classifyPriority("renderer/src/features/editor/EditorPane.tsx")).toBe(
-      "P0",
-    );
+    expect(
+      classifyPriority("renderer/src/features/editor/EditorPane.tsx"),
+    ).toBe("P0");
   });
 
   it("should mark version-history as P0", () => {
     expect(
-      classifyPriority("renderer/src/features/version-history/VersionHistoryPanel.tsx"),
+      classifyPriority(
+        "renderer/src/features/version-history/VersionHistoryPanel.tsx",
+      ),
     ).toBe("P0");
   });
 
   it("should mark settings as P1", () => {
     expect(
-      classifyPriority("renderer/src/features/settings-dialog/SettingsDialog.tsx"),
+      classifyPriority(
+        "renderer/src/features/settings-dialog/SettingsDialog.tsx",
+      ),
     ).toBe("P1");
   });
 });

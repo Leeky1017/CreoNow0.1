@@ -5,7 +5,10 @@
 import path from "node:path";
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { runScan, generateChecklist } from "../apps/desktop/renderer/src/utils/i18n-inventory-scanner.js";
+import {
+  runScan,
+  generateChecklist,
+} from "../apps/desktop/renderer/src/utils/i18n-inventory-scanner.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
