@@ -20,6 +20,19 @@ export async function setTheme(page: Page, theme: "dark" | "light"): Promise<voi
 }
 
 /**
+ * 注入 CSS 使原生滚动条在截图中不可见，消除跨环境渲染差异。
+ * Chromium 同时支持 ::-webkit-scrollbar 和 scrollbar-width。
+ */
+async function hideNativeScrollbars(page: Page): Promise<void> {
+  await page.addStyleTag({
+    content: `
+      *::-webkit-scrollbar { display: none !important; }
+      * { scrollbar-width: none !important; }
+    `,
+  });
+}
+
+/**
  * 导航到指定 Story 并设置主题，等待渲染完成
  */
 export async function navigateToStory(
@@ -29,6 +42,7 @@ export async function navigateToStory(
 ): Promise<void> {
   await page.goto(storyUrl(storyId), { waitUntil: "networkidle" });
   await setTheme(page, theme);
+  await hideNativeScrollbars(page);
   // 等待主题 CSS 变量生效
   await page.waitForTimeout(200);
 }
