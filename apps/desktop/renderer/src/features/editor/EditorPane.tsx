@@ -12,6 +12,10 @@ import {
   useEditorStore,
   type EntityCompletionSession,
 } from "../../stores/editorStore";
+<<<<<<< HEAD
+=======
+import { useOptionalLayoutStore } from "../../stores/layoutStore";
+>>>>>>> 14c499b9 (feat(zen-mode): A0-01 禅模式真实可编辑 (#986))
 import { useVersionStore } from "../../stores/versionStore";
 import { useAutosave } from "./useAutosave";
 import { useHotkey } from "../../lib/hotkeys/useHotkey";
@@ -1107,6 +1111,7 @@ function useEditorPaneCore(projectId: string) {
  */
 export function EditorPane(props: { projectId: string }): JSX.Element {
   const core = useEditorPaneCore(props.projectId);
+  const zenMode = useOptionalLayoutStore((s) => s.zenMode) ?? false;
 
   if (core.bootstrapStatus !== "ready") {
     return (
@@ -1206,15 +1211,19 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
         </div>
       ) : null}
       <EditorBubbleMenu editor={core.editor} />
-      <EditorToolbar editor={core.editor} disabled={core.isPreviewMode} />
-      <SlashCommandPanel
-        open={core.isSlashPanelOpen}
-        query={core.slashSearchQuery}
-        candidates={getSlashCommandRegistry()}
-        onQueryChange={core.setSlashSearchQuery}
-        onSelectCommand={core.handleSlashCommandSelect}
-        onRequestClose={core.closeSlashPanel}
-      />
+      {!zenMode && (
+        <EditorToolbar editor={core.editor} disabled={core.isPreviewMode} />
+      )}
+      {!zenMode && (
+        <SlashCommandPanel
+          open={core.isSlashPanelOpen}
+          query={core.slashSearchQuery}
+          candidates={getSlashCommandRegistry()}
+          onQueryChange={core.setSlashSearchQuery}
+          onSelectCommand={core.handleSlashCommandSelect}
+          onRequestClose={core.closeSlashPanel}
+        />
+      )}
       <div
         data-testid="editor-content-region"
         className="relative flex-1 min-h-0 font-[var(--font-family-body)] text-[length:var(--editor-font-size)] leading-[var(--editor-line-height)]"

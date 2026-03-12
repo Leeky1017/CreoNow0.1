@@ -99,8 +99,8 @@ function assertNeverDialogType(value: never): never {
 /**
  * ZenModeOverlay - Connects ZenMode to editor state.
  *
- * Why: Separates overlay wiring from AppShell complexity; pulls content from
- * editorStore and autosaveStatus for the status bar.
+ * Why: Separates overlay wiring from AppShell complexity; passes the real
+ * TipTap editor instance so users can write directly in zen mode.
  */
 function ZenModeOverlay(props: {
   open: boolean;
@@ -131,7 +131,7 @@ function ZenModeOverlay(props: {
     return () => clearInterval(interval);
   }, [props.open]);
 
-  // Extract content from editor or fallback to stored JSON
+  // Extract content metadata for title and word count
   const content = React.useMemo(() => {
     if (editor) {
       const json = JSON.stringify(editor.getJSON());
@@ -161,11 +161,9 @@ function ZenModeOverlay(props: {
     <ZenMode
       open={props.open}
       onExit={props.onExit}
-      content={{
-        title: content.title,
-        paragraphs: content.paragraphs,
-        showCursor: true,
-      }}
+      editor={editor}
+      title={content.title}
+      isEmpty={content.wordCount === 0 && content.paragraphs.length === 0}
       stats={{
         wordCount: content.wordCount,
         saveStatus,

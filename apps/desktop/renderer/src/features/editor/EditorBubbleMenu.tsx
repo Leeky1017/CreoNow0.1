@@ -1,19 +1,27 @@
 import React from "react";
 import type { Editor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 import { InlineFormatButton } from "./InlineFormatButton";
 import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
 import { captureSelectionRef } from "../ai/applySelection";
 import { useEditorStore } from "../../stores/editorStore";
 import { useOptionalAiStore } from "../../stores/aiStore";
+import { useOptionalLayoutStore } from "../../stores/layoutStore";
 import {
   readPrefersReducedMotion,
   resolveReducedMotionDurationPair,
 } from "../../lib/motion/reducedMotion";
 
-import { Bold, Code, Italic, Link, Strikethrough, Underline } from "lucide-react";
+import {
+  Bold,
+  Code,
+  Italic,
+  Link,
+  Strikethrough,
+  Underline,
+} from "lucide-react";
 export const EDITOR_INLINE_BUBBLE_MENU_PLUGIN_KEY = "cn-editor-inline-bubble";
 const BUBBLE_AI_SKILLS = [
   {
@@ -92,6 +100,7 @@ export function EditorBubbleMenu(props: {
   const [placement, setPlacement] = React.useState<BubblePlacement>("top");
   const projectId = useEditorStore((s) => s.projectId);
   const documentId = useEditorStore((s) => s.documentId);
+  const zenMode = useOptionalLayoutStore((s) => s.zenMode) ?? false;
   const aiStatus = useOptionalAiStore((s) => s.status);
   const setSelectionSnapshot = useOptionalAiStore(
     (s) => s.setSelectionSnapshot,
@@ -137,7 +146,8 @@ export function EditorBubbleMenu(props: {
 
   // Keep BubbleMenu mounted and drive visibility via shouldShow to avoid
   // unmount/remount races while ProseMirror selection updates.
-  const shouldShowBubble = visible && editor.isEditable;
+  // Hide in zen mode to keep the distraction-free aesthetic.
+  const shouldShowBubble = visible && editor.isEditable && !zenMode;
   const inlineDisabled = !editor.isEditable || editor.isActive("codeBlock");
 
   const toggleLink = () => {
@@ -244,7 +254,7 @@ export function EditorBubbleMenu(props: {
       </InlineFormatButton>
       <InlineFormatButton
         testId="bubble-link"
-        label={t('editor.bubbleMenu.link')}
+        label={t("editor.bubbleMenu.link")}
         isActive={editor.isActive("link")}
         disabled={inlineDisabled}
         onClick={toggleLink}

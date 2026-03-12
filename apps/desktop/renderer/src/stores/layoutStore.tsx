@@ -88,10 +88,7 @@ function prefKey(
   return `${APP_ID}.layout.${name}` as const;
 }
 
-const LEFT_PANEL_VALUES = [
-  "files",
-  "outline",
-] as const;
+const LEFT_PANEL_VALUES = ["files", "outline"] as const;
 
 const RIGHT_PANEL_VALUES = ["ai", "info", "quality"] as const;
 
@@ -121,7 +118,12 @@ export function createLayoutStore(preferences: PreferenceStore) {
 
   let hadReset = false;
 
-  function validateOrDefault<T>(schema: z.ZodType<T>, raw: unknown, fallback: T, key: string): T {
+  function validateOrDefault<T>(
+    schema: z.ZodType<T>,
+    raw: unknown,
+    fallback: T,
+    key: string,
+  ): T {
     const result = schema.safeParse(raw);
     if (result.success) {
       return result.data;
@@ -153,19 +155,33 @@ export function createLayoutStore(preferences: PreferenceStore) {
           prefKey("panelWidth"),
         );
 
-  const rawSidebarCollapsed = preferences.get<unknown>(prefKey("sidebarCollapsed"));
+  const rawSidebarCollapsed = preferences.get<unknown>(
+    prefKey("sidebarCollapsed"),
+  );
   const initialSidebarCollapsed =
     rawSidebarCollapsed == null
       ? false
-      : validateOrDefault(booleanSchema, rawSidebarCollapsed, false, prefKey("sidebarCollapsed"));
+      : validateOrDefault(
+          booleanSchema,
+          rawSidebarCollapsed,
+          false,
+          prefKey("sidebarCollapsed"),
+        );
 
   const rawPanelCollapsed = preferences.get<unknown>(prefKey("panelCollapsed"));
   const initialPanelCollapsed =
     rawPanelCollapsed == null
       ? false
-      : validateOrDefault(booleanSchema, rawPanelCollapsed, false, prefKey("panelCollapsed"));
+      : validateOrDefault(
+          booleanSchema,
+          rawPanelCollapsed,
+          false,
+          prefKey("panelCollapsed"),
+        );
 
-  const rawActiveRightPanel = preferences.get<unknown>(prefKey("activeRightPanel"));
+  const rawActiveRightPanel = preferences.get<unknown>(
+    prefKey("activeRightPanel"),
+  );
   const initialActiveRightPanel =
     rawActiveRightPanel == null
       ? "ai"
@@ -176,7 +192,9 @@ export function createLayoutStore(preferences: PreferenceStore) {
           prefKey("activeRightPanel"),
         );
 
-  const rawActiveLeftPanel = preferences.get<unknown>(prefKey("activeLeftPanel"));
+  const rawActiveLeftPanel = preferences.get<unknown>(
+    prefKey("activeLeftPanel"),
+  );
   const initialActiveLeftPanel =
     rawActiveLeftPanel == null
       ? "files"
@@ -297,6 +315,21 @@ export function useLayoutStore<T>(selector: (state: LayoutStore) => T): T {
   const store = React.useContext(LayoutStoreContext);
   if (!store) {
     throw new Error("LayoutStoreProvider is missing");
+  }
+  return store(selector);
+}
+
+/**
+ * Read values from layout store when provider exists, otherwise return null.
+ *
+ * Why: editor-only surfaces may render without layout context in unit tests.
+ */
+export function useOptionalLayoutStore<T>(
+  selector: (state: LayoutStore) => T,
+): T | null {
+  const store = React.useContext(LayoutStoreContext);
+  if (!store) {
+    return null;
   }
   return store(selector);
 }

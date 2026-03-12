@@ -1380,6 +1380,11 @@
     "pressEscToExit": "按 Esc 退出",
     "exitAriaLabel": "退出禅模式",
     "pressEscOrF11ToExit": "按 Esc 或 F11 退出",
+    "untitledDocument": "无标题文档",
+    "startWriting": "开始写作…",
+    "a11y": {
+      "dialogLabel": "禅写作模式"
+    },
     "status": {
       "wordCount": "{{count}} 字",
       "readTime": "{{minutes}} 分钟阅读"
