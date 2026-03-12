@@ -1,5 +1,6 @@
 import {
   useAutoSaveToast,
+  useFlushErrorToast,
   useAiErrorToast,
 } from "../../hooks/useToastIntegration";
 
@@ -11,6 +12,7 @@ import {
  */
 export function ToastIntegrationBridge(): null {
   useAutoSaveToast();
+  useFlushErrorToast();
   useAiErrorToast();
   return null;
 }

@@ -17,6 +17,9 @@ const REQUIRED_TOAST_KEYS = [
   "toast.ai.error.title",
   "toast.ai.error.description",
   "toast.settings.success.title",
+  "toast.autosave.retrySuccess.title",
+  "toast.autosave.flushError.title",
+  "toast.autosave.flushError.description",
 ] as const;
 
 function getNestedValue(obj: Record<string, unknown>, path: string): unknown {

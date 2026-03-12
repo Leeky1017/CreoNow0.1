@@ -47,25 +47,55 @@ export function SaveIndicator(props: {
   }, [props.autosaveStatus]);
 
   const isError = displayStatus === "error";
+  const isSaving = displayStatus === "saving";
+  const isSaved = displayStatus === "saved";
   const label = getSaveLabel(displayStatus, t);
+
+  if (isError) {
+    return (
+      <span
+        data-testid="editor-autosave-status"
+        role="button"
+        aria-label={t("workbench.saveIndicator.retryLabel")}
+        aria-live="polite"
+        data-status={displayStatus}
+        tabIndex={0}
+        onClick={() => props.onRetry()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            props.onRetry();
+          }
+        }}
+        className="text-[var(--color-error)] bg-[var(--color-error-subtle)] px-1.5 rounded cursor-pointer underline"
+      >
+        {label}
+      </span>
+    );
+  }
 
   return (
     <span
       data-testid="editor-autosave-status"
+      role="status"
       aria-live="polite"
       data-status={displayStatus}
-      onClick={() => {
-        if (isError) {
-          props.onRetry();
-        }
-      }}
       className={
-        isError
-          ? "text-[var(--color-error)] cursor-pointer underline"
-          : "text-[var(--color-fg-muted)] cursor-default"
+        isSaved ? "text-[var(--color-success)]" : "text-[var(--color-fg-muted)]"
       }
     >
-      {label}
+      {isSaving ? (
+        <>
+          <span
+            className="inline-block w-3 h-3 mr-1 border-2 border-current border-t-transparent rounded-full animate-spin align-middle"
+            aria-hidden="true"
+            data-testid="save-spinner"
+          />
+          {label}
+        </>
+      ) : (
+        label
+      )}
     </span>
   );
 }
