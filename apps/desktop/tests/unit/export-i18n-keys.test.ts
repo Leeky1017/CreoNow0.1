@@ -2,7 +2,17 @@ import { describe, it, expect } from "vitest";
 import en from "../../renderer/src/i18n/locales/en.json";
 import zhCN from "../../renderer/src/i18n/locales/zh-CN.json";
 
+/** Keys that ExportDialog actually uses for structured format hints */
 const REQUIRED_KEYS = [
+  "pdfStructuredHint",
+  "docxStructuredHint",
+  "markdownStructuredHint",
+  "txtBoundaryHint",
+  "plainText",
+] as const;
+
+/** Dead keys removed after A0-04 structured export replaced plain-text fallback */
+const REMOVED_KEYS = [
   "pdfPlainTextHint",
   "docxPlainTextHint",
   "plainTextOnly",
@@ -18,6 +28,16 @@ describe("export format i18n key completeness", () => {
     it(`zh-CN.json contains export.format.${key}`, () => {
       expect(zhCN.export.format).toHaveProperty(key);
       expect((zhCN.export.format as Record<string, string>)[key]).toBeTruthy();
+    });
+  }
+
+  for (const key of REMOVED_KEYS) {
+    it(`en.json no longer contains stale export.format.${key}`, () => {
+      expect(en.export.format).not.toHaveProperty(key);
+    });
+
+    it(`zh-CN.json no longer contains stale export.format.${key}`, () => {
+      expect(zhCN.export.format).not.toHaveProperty(key);
     });
   }
 

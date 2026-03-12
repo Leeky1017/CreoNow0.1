@@ -1142,10 +1142,7 @@
       "markdownStructuredHint": "结构化 Markdown · 保留标题、列表、链接",
       "txtBoundaryHint": "纯文本导出 · 自动移除格式",
       "plainText": "纯文本",
-      "unsupported": "不支持",
-      "pdfPlainTextHint": "纯文本导出 · 不含格式",
-      "docxPlainTextHint": "纯文本导出 · 不含格式",
-      "plainTextOnly": "纯文本导出"
+      "unsupported": "不支持"
     },
     "pageSize": {
       "letter": "Letter",

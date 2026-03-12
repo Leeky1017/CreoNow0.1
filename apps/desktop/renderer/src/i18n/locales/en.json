@@ -1142,10 +1142,7 @@
       "markdownStructuredHint": "Structured Markdown · headings, lists, links",
       "txtBoundaryHint": "Plain text only · formatting removed",
       "plainText": "Plain Text",
-      "unsupported": "UNSUPPORTED",
-      "pdfPlainTextHint": "Plain text export · no formatting",
-      "docxPlainTextHint": "Plain text export · no formatting",
-      "plainTextOnly": "Plain text only"
+      "unsupported": "UNSUPPORTED"
     },
     "pageSize": {
       "letter": "Letter",
