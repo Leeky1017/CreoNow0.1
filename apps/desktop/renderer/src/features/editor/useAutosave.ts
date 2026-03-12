@@ -46,12 +46,14 @@ export function useAutosave(args: {
         window.clearTimeout(timerRef.current);
       }
       timerRef.current = window.setTimeout(() => {
-        void save({
+        save({
           projectId: args.projectId,
           documentId: args.documentId,
           contentJson: json,
           actor: "auto",
           reason: "autosave",
+        }).catch(() => {
+          // editorStore.save already sets autosaveStatus to "error"
         });
       }, 500);
     }
@@ -64,12 +66,14 @@ export function useAutosave(args: {
         timerRef.current = null;
         const queued = lastQueuedJsonRef.current;
         if (queued && queued.length > 0) {
-          void save({
+          save({
             projectId: args.projectId,
             documentId: args.documentId,
             contentJson: queued,
             actor: "auto",
             reason: "autosave",
+          }).catch(() => {
+            // editorStore.save already sets autosaveStatus to "error"
           });
         }
       }

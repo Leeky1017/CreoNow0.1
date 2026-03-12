@@ -8,44 +8,61 @@ import { useOptionalAiStore } from "../stores/aiStore";
 /**
  * useAutoSaveToast — 监听 editorStore.autosaveStatus 变化，触发 Toast
  *
- * - "saved" → success toast
- * - "error" → error toast with retry action
+ * - "error" → error toast with retry action（同一 documentId 连续失败仅触发一次）
+ * - retry 成功 → success toast（"保存已恢复"）
  */
 export function useAutoSaveToast(): void {
   const { t } = useTranslation();
   const { showToast } = useAppToast();
   const autosaveStatus = useEditorStore((s) => s.autosaveStatus);
+  const documentId = useEditorStore((s) => s.documentId);
   const retryLastAutosave = useEditorStore((s) => s.retryLastAutosave);
   const prevStatusRef = React.useRef(autosaveStatus);
+  const errorToastedDocIdRef = React.useRef<string | null>(null);
 
   React.useEffect(() => {
     const prev = prevStatusRef.current;
     prevStatusRef.current = autosaveStatus;
 
-    // 只在状态真正变化时触发
     if (prev === autosaveStatus) {
       return;
     }
 
-    if (autosaveStatus === "saved") {
+    if (autosaveStatus === "error") {
+      // 同一文档连续失败只触发一次 Toast
+      if (errorToastedDocIdRef.current === documentId) {
+        return;
+      }
+      errorToastedDocIdRef.current = documentId;
+
       showToast({
-        title: t("toast.save.success.title"),
-        variant: "success",
-      });
-    } else if (autosaveStatus === "error") {
-      showToast({
-        title: t("toast.save.error.title"),
-        description: t("toast.save.error.description"),
+        title: t("autosave.toast.error.title"),
+        description: t("autosave.toast.error.description"),
         variant: "error",
         action: {
-          label: t("toast.save.error.retry"),
+          label: t("autosave.toast.error.retry"),
           onClick: () => {
             retryLastAutosave();
           },
         },
       });
+    } else if (autosaveStatus === "saved" && prev === "saving") {
+      // 仅在从 error→saving→saved 路径（重试成功）时显示恢复 Toast
+      // 清除去重标记以允许后续失败再触发
+      if (errorToastedDocIdRef.current !== null) {
+        errorToastedDocIdRef.current = null;
+        showToast({
+          title: t("autosave.toast.retrySuccess.title"),
+          variant: "success",
+        });
+      }
     }
-  }, [autosaveStatus, showToast, t, retryLastAutosave]);
+  }, [autosaveStatus, documentId, showToast, t, retryLastAutosave]);
+
+  // 文档切换时重置去重标记
+  React.useEffect(() => {
+    errorToastedDocIdRef.current = null;
+  }, [documentId]);
 }
 
 /**

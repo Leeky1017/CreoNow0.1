@@ -8,13 +8,13 @@ function getSaveLabel(
   t: (key: string) => string,
 ): string {
   if (status === "saving") {
-    return t("workbench.saveIndicator.saving");
+    return t("autosave.status.saving");
   }
   if (status === "saved") {
-    return t("workbench.saveIndicator.saved");
+    return t("autosave.status.saved");
   }
   if (status === "error") {
-    return t("workbench.saveIndicator.error");
+    return t("autosave.status.error");
   }
   return "";
 }
@@ -52,7 +52,9 @@ export function SaveIndicator(props: {
   return (
     <span
       data-testid="editor-autosave-status"
+      role={isError ? "button" : "status"}
       aria-live="polite"
+      aria-label={isError ? t("autosave.a11y.retryLabel") : undefined}
       data-status={displayStatus}
       onClick={() => {
         if (isError) {
@@ -61,7 +63,7 @@ export function SaveIndicator(props: {
       }}
       className={
         isError
-          ? "text-[var(--color-error)] cursor-pointer underline"
+          ? "text-[var(--color-error)] bg-[var(--color-error-subtle)] rounded-[var(--radius-sm)] px-2 py-1 cursor-pointer"
           : "text-[var(--color-fg-muted)] cursor-default"
       }
     >

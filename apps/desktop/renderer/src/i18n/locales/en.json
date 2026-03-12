@@ -107,6 +107,30 @@
       "close": "Close"
     }
   },
+  "autosave": {
+    "status": {
+      "saving": "Saving…",
+      "saved": "Saved",
+      "error": "Save failed"
+    },
+    "toast": {
+      "error": {
+        "title": "Save failed",
+        "description": "Auto-save failed. Your recent changes may not be saved.",
+        "retry": "Retry"
+      },
+      "retrySuccess": {
+        "title": "Save recovered"
+      },
+      "flushError": {
+        "title": "Previous document save issue",
+        "description": "The previous document may not be fully saved. Please go back and check."
+      }
+    },
+    "a11y": {
+      "retryLabel": "Retry save"
+    }
+  },
   "editor": {
     "contextMenu": {
       "copy": "Copy",

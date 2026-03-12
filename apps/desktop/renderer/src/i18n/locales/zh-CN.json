@@ -107,6 +107,30 @@
       "close": "关闭"
     }
   },
+  "autosave": {
+    "status": {
+      "saving": "保存中…",
+      "saved": "已保存",
+      "error": "保存失败"
+    },
+    "toast": {
+      "error": {
+        "title": "保存失败",
+        "description": "自动保存未成功，您的最近修改可能未保存。",
+        "retry": "重试"
+      },
+      "retrySuccess": {
+        "title": "保存已恢复"
+      },
+      "flushError": {
+        "title": "上一文档保存异常",
+        "description": "切换前的文档可能未完全保存，请返回检查。"
+      }
+    },
+    "a11y": {
+      "retryLabel": "重试保存"
+    }
+  },
   "editor": {
     "contextMenu": {
       "copy": "复制",

@@ -12,7 +12,7 @@ import {
 /**
  * 测试：保存场景 Toast 集成
  *
- * AC-3: 文档保存成功后出现 success Toast
+ * AC-3: 普通保存成功后不触发 success Toast（仅重试后恢复才触发）
  * AC-4: 文档保存失败后出现 error Toast（含重试 action）
  */
 
@@ -30,7 +30,7 @@ describe("toast-save integration", () => {
     vi.restoreAllMocks();
   });
 
-  it("editorStore.save() 成功后触发 success Toast (AC-3)", async () => {
+  it("editorStore.save() 成功后不触发 success Toast (AC-3)", async () => {
     const mockInvoke = createMockInvoke({
       ok: true,
       data: { version: 1 },
@@ -72,8 +72,9 @@ describe("toast-save integration", () => {
       });
     });
 
-    // Should show success toast
-    expect(screen.getByText("Document saved")).toBeInTheDocument();
+    // Should NOT show success toast (only retry recovery triggers success toast)
+    expect(screen.queryByText("Document saved")).not.toBeInTheDocument();
+    expect(screen.queryByText("Save recovered")).not.toBeInTheDocument();
   });
 
   it("editorStore.save() 失败后触发 error Toast 含重试按钮 (AC-4)", async () => {
@@ -121,7 +122,7 @@ describe("toast-save integration", () => {
     // Should show error toast
     expect(screen.getByText("Save failed")).toBeInTheDocument();
     expect(
-      screen.getByText("Unable to save document. Please try again."),
+      screen.getByText("Auto-save failed. Your recent changes may not be saved."),
     ).toBeInTheDocument();
 
     // Should have retry action button
