@@ -832,7 +832,7 @@
       "light": "Light"
     },
     "judge": {
-      "title": "Judge model",
+      "title": "Quality Check",
       "status": "Status:",
       "loading": "loading",
       "ensure": "Ensure"
@@ -904,12 +904,12 @@
       "navGeneral": "General",
       "navAppearance": "Appearance",
       "navAi": "AI",
-      "navJudge": "Judge",
+      "navJudge": "Quality",
       "navAnalytics": "Analytics",
       "navAccount": "Account",
       "title": "Settings",
       "close": "Close",
-      "description": "Configure application settings including appearance, AI, judge, and analytics."
+      "description": "Configure application settings including appearance, AI, quality check, and analytics."
     },
     "export": {
       "formatPdf": "PDF",
@@ -1284,9 +1284,9 @@
       "downloading": "Downloading...",
       "notReady": "Not ready",
       "errorWithCode": "Error ({{code}})",
-      "loadingJudgeStatus": "Loading judge status...",
-      "judgeStatusUnavailable": "Judge status unavailable",
-      "judgeModelLabel": "Judge Model:",
+      "loadingJudgeStatus": "Loading quality check status...",
+      "judgeStatusUnavailable": "Quality check unavailable",
+      "judgeModelLabel": "Quality Check:",
       "initialize": "Initialize",
       "retry": "Retry",
       "loadingConstraints": "Loading constraints...",
@@ -1295,8 +1295,8 @@
       "rulesCount_other": "{{count}} rules",
       "moreCount": "+{{count}} more",
       "systemGroup": "System",
-      "judgeModelCheck": "Judge Model",
-      "judgeModelDescription": "Local AI model for quality evaluation",
+      "judgeModelCheck": "Quality Check",
+      "judgeModelDescription": "Rule-based quality checks for writing",
       "available": "Available",
       "writingConstraints": "Writing Constraints",
       "activeConstraints": "Active Constraints",
@@ -1305,7 +1305,7 @@
       "rulesDefinedCount_other": "{{count}} rules defined",
       "panelTitle": "Quality",
       "noProjectSelected": "No project selected",
-      "judgeModelHeading": "Judge Model",
+      "judgeModelHeading": "Quality Check",
       "projectConstraints": "Project Constraints"
     }
   },
