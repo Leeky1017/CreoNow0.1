@@ -889,6 +889,16 @@ export const ipcContract = {
         summary: STATS_SUMMARY_SCHEMA,
       }),
     },
+    "log:renderererror:write": {
+      request: s.object({
+        source: s.union(s.literal("unhandledrejection"), s.literal("error")),
+        name: s.string(),
+        message: s.string(),
+        stack: s.optional(s.string()),
+        timestamp: s.string(),
+      }),
+      response: s.object({}),
+    },
     "export:document:markdown": {
       request: s.object({
         projectId: s.string(),

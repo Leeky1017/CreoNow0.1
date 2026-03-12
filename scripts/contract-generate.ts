@@ -58,6 +58,7 @@ const DOMAIN_REGISTRY: Readonly<Record<string, string>> = {
   file: "Document Management",
   judge: "AI Service",
   knowledge: "Knowledge Graph",
+  log: "Logging",
   memory: "Memory System",
   project: "Project Management",
   rag: "Search and Retrieval",

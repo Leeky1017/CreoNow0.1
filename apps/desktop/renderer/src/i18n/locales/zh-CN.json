@@ -1463,5 +1463,11 @@
       "VERSION_ROLLBACK_CONFLICT": "版本回滚冲突",
       "VERSION_SNAPSHOT_COMPACTED": "版本快照已压缩"
     }
+  },
+  "globalError": {
+    "toast": {
+      "title": "系统遇到意外问题",
+      "description": "部分功能可能受影响，请尝试重新操作。如问题持续，请重启应用。"
+    }
   }
 }

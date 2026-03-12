@@ -18,6 +18,7 @@ import { registerExportIpcHandlers } from "./ipc/export";
 import { registerJudgeIpcHandlers } from "./ipc/judge";
 import { registerKnowledgeGraphIpcHandlers } from "./ipc/knowledgeGraph";
 import { registerEmbeddingIpcHandlers } from "./ipc/embedding";
+import { registerLoggingIpcHandlers } from "./ipc/logging";
 import { registerMemoryIpcHandlers } from "./ipc/memory";
 import { registerProjectIpcHandlers } from "./ipc/project";
 import { registerRagIpcHandlers } from "./ipc/rag";
@@ -437,6 +438,11 @@ function registerIpcHandlers(deps: {
     ipcMain: guardedIpcMain,
     db: deps.db,
     logger: deps.logger,
+  });
+
+  registerLoggingIpcHandlers({
+    ipcMain: guardedIpcMain,
+    userDataDir: deps.userDataDir,
   });
 
   registerEmbeddingIpcHandlers({
