@@ -1,6 +1,5 @@
 # 测试命令与 CI 映射
 
-
 ## 总览
 
 测试命令分三层：
@@ -36,32 +35,33 @@
 
 ## CI 对应关系
 
-| CI Job                       | 实际命令                                                    | 说明                   |
-| ---------------------------- | ----------------------------------------------------------- | ---------------------- |
-| `lint-and-typecheck`         | `pnpm lint` / `pnpm lint:warning-budget` / `pnpm typecheck` | 基础静态门禁（含 `creonow/require-describe-in-tests`）|
-| `unit-test-core`             | `pnpm test:unit`                                            | root 侧单元测试计划    |
-| `unit-test-renderer`         | `pnpm -C apps/desktop test:run`                             | renderer/store vitest  |
-| `integration-test`           | `pnpm test:integration`                                     | root 侧集成测试        |
-| `test-discovery-consistency` | `pnpm test:discovery:consistency`                           | 发现与执行一致性（阻断） |
-| `coverage-gate`              | `pnpm test:coverage:desktop` / `pnpm test:coverage:core`    | 生成 coverage artifact |
-| `cross-module-check`         | `pnpm cross-module:check`                                   | cross-module 契约与 skill/api-key 门禁 |
-| `storybook-build`            | `pnpm -C apps/desktop storybook:build`                      | 视觉验收基础门禁       |
-| `windows-e2e`                | `pnpm -C apps/desktop test:e2e`                             | Windows 平台 E2E       |
-| `gate-ai-rate-limit`         | `pnpm gate:ai-rate-limit`                                   | AI 请求限流 + scheduler / queue coverage |
+| CI Job                       | 实际命令                                                    | 说明                                                   |
+| ---------------------------- | ----------------------------------------------------------- | ------------------------------------------------------ |
+| `lint-and-typecheck`         | `pnpm lint` / `pnpm lint:warning-budget` / `pnpm typecheck` | 基础静态门禁（含 `creonow/require-describe-in-tests`） |
+| `unit-test-core`             | `pnpm test:unit`                                            | root 侧单元测试计划                                    |
+| `unit-test-renderer`         | `pnpm -C apps/desktop test:run`                             | renderer/store vitest                                  |
+| `integration-test`           | `pnpm test:integration`                                     | root 侧集成测试                                        |
+| `test-discovery-consistency` | `pnpm test:discovery:consistency`                           | 发现与执行一致性（阻断）                               |
+| `coverage-gate`              | `pnpm test:coverage:desktop` / `pnpm test:coverage:core`    | 生成 coverage artifact                                 |
+| `cross-module-check`         | `pnpm cross-module:check`                                   | cross-module 契约与 skill/api-key 门禁                 |
+| `storybook-build`            | `pnpm -C apps/desktop storybook:build`                      | 视觉验收基础门禁                                       |
+| `windows-e2e`                | `pnpm -C apps/desktop test:e2e`                             | Windows 平台 E2E                                       |
+| `gate-ai-rate-limit`         | `pnpm gate:ai-rate-limit`                                   | AI 请求限流 + scheduler / queue coverage               |
+| `format-check`               | delta `prettier --check`（仅检查 PR 变更文件）              | 格式一致性（始终运行，不受 docs-only 跳过）            |
 
 ## Wave 0 Gate 命令
 
-| 命令                               | 对应脚本                              | 说明                         |
-| ---------------------------------- | ------------------------------------- | ---------------------------- |
-| `pnpm gate:resource-size`          | `scripts/resource-size-gate.ts`       | 资源文件大小 ratchet         |
-| `pnpm gate:bundle-budget`          | `scripts/bundle-size-budget.ts`       | 构建产物体积预算             |
-| `pnpm gate:ipc-validation`         | `scripts/ipc-handler-validation-gate.ts` | IPC handler schema 校验   |
-| `pnpm gate:service-stubs`          | `scripts/service-stub-detector-gate.ts`  | Service 桩方法检测        |
-| `pnpm gate:error-boundary`         | `scripts/error-boundary-coverage-gate.ts`| ErrorBoundary 覆盖        |
-| `pnpm gate:architecture-health`    | `scripts/architecture-health-gate.ts` | 架构健康度                   |
-| `pnpm gate:spec-test-mapping`      | `scripts/spec-test-mapping-gate.ts`   | Spec Scenario→测试映射       |
-| `pnpm cross-module:check`          | `scripts/cross-module-contract-gate.ts`  | cross-module 契约对齐（含 skill-output / api-key-format）|
-| `pnpm gate:ai-rate-limit`         | `scripts/ai-rate-limit-coverage-gate.ts` | AI 请求限流 + scheduler / queue coverage |
+| 命令                            | 对应脚本                                  | 说明                                                      |
+| ------------------------------- | ----------------------------------------- | --------------------------------------------------------- |
+| `pnpm gate:resource-size`       | `scripts/resource-size-gate.ts`           | 资源文件大小 ratchet                                      |
+| `pnpm gate:bundle-budget`       | `scripts/bundle-size-budget.ts`           | 构建产物体积预算                                          |
+| `pnpm gate:ipc-validation`      | `scripts/ipc-handler-validation-gate.ts`  | IPC handler schema 校验                                   |
+| `pnpm gate:service-stubs`       | `scripts/service-stub-detector-gate.ts`   | Service 桩方法检测                                        |
+| `pnpm gate:error-boundary`      | `scripts/error-boundary-coverage-gate.ts` | ErrorBoundary 覆盖                                        |
+| `pnpm gate:architecture-health` | `scripts/architecture-health-gate.ts`     | 架构健康度                                                |
+| `pnpm gate:spec-test-mapping`   | `scripts/spec-test-mapping-gate.ts`       | Spec Scenario→测试映射                                    |
+| `pnpm cross-module:check`       | `scripts/cross-module-contract-gate.ts`   | cross-module 契约对齐（含 skill-output / api-key-format） |
+| `pnpm gate:ai-rate-limit`       | `scripts/ai-rate-limit-coverage-gate.ts`  | AI 请求限流 + scheduler / queue coverage                  |
 
 所有 gate 支持 `--update-baseline` 参数生成/更新 baseline 文件（行为型 coverage gate 除外）。
 
@@ -84,9 +84,10 @@
 
 ### Format check
 
-- `pnpm format:check` 当前是可用的根目录命令，可用于本地统一校验代码与文档的 Prettier 基线。
-- 截至当前 `main`，它**尚未**作为独立 CI job 接入 `.github/workflows/ci.yml`。
-- 若未来将其接入 CI，必须先同步更新工作流，再回写本文件。
+- `format-check` 已作为独立 CI job 接入 `.github/workflows/ci.yml`，并纳入 `ci` 汇总门禁。
+- 该 job **始终运行**（不受 `docs_only` 跳过条件影响），确保文档 PR 也受格式校验。
+- 采用 **delta 模式**：仅对 PR 中变更的文件执行 `prettier --check`，不全仓扫描。
+- 本地可通过 `pnpm format:check` 校验全仓格式，或手动对变更文件执行 `npx prettier --check <file>`。
 
 ## 本地验证建议
 
@@ -142,16 +143,15 @@
 
 ### 3. 审计脚本化与 reviewer wrapper
 
-**状态：已落地（G0.5-04）**
+目标：
 
-`scripts/review-audit.sh` 一键封装 `AGENTS.md` §6.4 全部 6 条审计必跑命令。
+- 把 `git diff --check`、`pytest -q scripts/tests`、`python3 -m py_compile ...` 等审计必跑命令收口成一个 reviewer 入口。
 
-```bash
-scripts/review-audit.sh              # 默认 diff base = origin/main
-scripts/review-audit.sh <base-ref>   # 自定义 base
-```
+第二阶段动作：
 
-输出包含逐条标题、`[OK]`/`[FAIL]`/`[SKIP]` 前缀，以及汇总结论。
+1. 设计 `scripts/review-audit.sh` 或等价 wrapper。
+2. 输出统一摘要，方便贴入 PR comment。
+3. 评估是否需要配套测试模板 / 脚手架，避免“先搭空架子，后无人使用”。
 
 原则：
 
