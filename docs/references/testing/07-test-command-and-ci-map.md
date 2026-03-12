@@ -142,15 +142,16 @@
 
 ### 3. 审计脚本化与 reviewer wrapper
 
-目标：
+**状态：已落地（G0.5-04）**
 
-- 把 `git diff --check`、`pytest -q scripts/tests`、`python3 -m py_compile ...` 等审计必跑命令收口成一个 reviewer 入口。
+`scripts/review-audit.sh` 一键封装 `AGENTS.md` §6.4 全部 6 条审计必跑命令。
 
-第二阶段动作：
+```bash
+scripts/review-audit.sh              # 默认 diff base = origin/main
+scripts/review-audit.sh <base-ref>   # 自定义 base
+```
 
-1. 设计 `scripts/review-audit.sh` 或等价 wrapper。
-2. 输出统一摘要，方便贴入 PR comment。
-3. 评估是否需要配套测试模板 / 脚手架，避免“先搭空架子，后无人使用”。
+输出包含逐条标题、`[OK]`/`[FAIL]`/`[SKIP]` 前缀，以及汇总结论。
 
 原则：
 

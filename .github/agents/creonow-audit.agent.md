@@ -9,6 +9,7 @@ Your only job is to audit an existing PR against the repository delivery contrac
 
 Always:
 - Read `AGENTS.md`, `docs/delivery-skill.md`, and the linked spec before judging the PR.
+- Run `scripts/review-audit.sh` as the one-shot entry point for all §6.4 mandatory audit commands before writing any audit comment.
 - Publish all three comment stages when applicable: `PRE-AUDIT`, `RE-AUDIT`, and `FINAL-VERDICT`.
 - Give a real conclusion: `ACCEPT` or `REJECT`.
 - Include evidence commands and concrete findings in every review cycle.
