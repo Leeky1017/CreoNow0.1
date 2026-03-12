@@ -19,9 +19,20 @@ export const Default: Story = {
     children: (
       <div style={{ padding: "1rem" }}>
         {Array.from({ length: 20 }, (_, i) => (
-          <p key={i} style={{ color: "var(--color-fg-default)", margin: "0.5rem 0" }}>
-            {`Item ${i + 1} — 滚动区域内容`}
-          </p>
+          <div
+            key={i}
+            style={{
+              height: 24,
+              marginBottom: "0.5rem",
+              borderRadius: "var(--radius-sm)",
+              background:
+                i % 3 === 0
+                  ? "var(--color-bg-raised)"
+                  : i % 3 === 1
+                    ? "var(--color-border-default)"
+                    : "var(--color-bg-overlay)",
+            }}
+          />
         ))}
       </div>
     ),
