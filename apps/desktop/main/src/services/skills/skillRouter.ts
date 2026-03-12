@@ -54,6 +54,72 @@ const REWRITE_KEYWORDS: readonly string[] = [
   "改", "重写", "改写", "rewrite", "修改",
 ];
 
+// ─── 否定语境守卫 ───
+
+const CN_NEGATION_WORDS: readonly string[] = [
+  "不需要", "不想", "不要", "不用", "不必", "无需",
+  "停止", "取消", "禁止", "别",
+];
+
+const EN_NEGATION_WORDS: readonly string[] = [
+  "don't", "do not", "stop", "never", "cancel", "without", "not ", "no ",
+];
+
+const CN_DOUBLE_NEGATION_PREFIXES: readonly string[] = [
+  "不是不想", "不是不要", "并非不要", "并非不想",
+];
+
+/** 否定检测窗口：关键词前方 N 个字符 */
+const CN_WINDOW = 6;
+const EN_WINDOW = 12;
+
+/**
+ * 判断 input 中位于 keywordIndex 的 keyword 是否被否定修饰。
+ * 规则：在关键词前方窗口内搜索否定词；若命中再检查双重否定。
+ */
+export function isNegated(
+  input: string,
+  keywordIndex: number,
+  _keyword: string,
+): boolean {
+  const windowStart = Math.max(0, keywordIndex - Math.max(CN_WINDOW, EN_WINDOW));
+  const prefix = input.slice(windowStart, keywordIndex);
+
+  // 先检查双重否定（优先级高于单否定）
+  for (const dp of CN_DOUBLE_NEGATION_PREFIXES) {
+    if (prefix.includes(dp)) {
+      return false;
+    }
+  }
+
+  // 中文否定词——使用中文窗口
+  const cnStart = Math.max(0, keywordIndex - CN_WINDOW);
+  const cnPrefix = input.slice(cnStart, keywordIndex);
+  for (const neg of CN_NEGATION_WORDS) {
+    if (cnPrefix.includes(neg)) {
+      return true;
+    }
+  }
+
+  // 英文否定词——使用英文窗口
+  const enStart = Math.max(0, keywordIndex - EN_WINDOW);
+  const enPrefix = input.slice(enStart, keywordIndex).toLowerCase();
+  for (const neg of EN_NEGATION_WORDS) {
+    if (enPrefix.includes(neg)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/** 检查 input 是否包含 keyword，且该 keyword 未被否定修饰 */
+function matchesKeyword(input: string, keyword: string): boolean {
+  const idx = input.indexOf(keyword);
+  if (idx === -1) return false;
+  return !isNegated(input, idx, keyword);
+}
+
 export function inferSkillFromInput(args: InferSkillArgs): string {
   // 1. Explicit override
   if (args.explicitSkillId?.trim()) {
@@ -68,7 +134,7 @@ export function inferSkillFromInput(args: InferSkillArgs): string {
       return "builtin:polish";
     }
 
-    const isRewriteIntent = REWRITE_KEYWORDS.some((kw) => input.includes(kw));
+    const isRewriteIntent = REWRITE_KEYWORDS.some((kw) => matchesKeyword(input, kw));
     if (isRewriteIntent && input.length < 20) {
       return "builtin:rewrite";
     }
@@ -76,7 +142,7 @@ export function inferSkillFromInput(args: InferSkillArgs): string {
 
   // 3. Keyword matching
   for (const rule of KEYWORD_RULES) {
-    if (rule.keywords.some((kw) => input.includes(kw))) {
+    if (rule.keywords.some((kw) => matchesKeyword(input, kw))) {
       return rule.skillId;
     }
   }
