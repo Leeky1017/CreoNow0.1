@@ -45,13 +45,13 @@ function mapActorToAuthorType(
 function getAuthorName(actor: "user" | "auto" | "ai"): string {
   switch (actor) {
     case "user":
-      return "You";
+      return i18n.t("versionHistory.container.author.you");
     case "ai":
-      return "AI";
+      return i18n.t("versionHistory.container.author.ai");
     case "auto":
-      return "Auto";
+      return i18n.t("versionHistory.container.author.auto");
     default:
-      return "Unknown";
+      return i18n.t("versionHistory.container.author.unknown");
   }
 }
 
@@ -67,10 +67,10 @@ export function formatTimestamp(
   const hours = Math.floor(diff / 3600000);
 
   if (minutes < 1) {
-    return "Just now";
+    return i18n.t("versionHistory.container.timeGroup.justNow");
   }
   if (minutes < 60) {
-    return `${minutes}m ago`;
+    return i18n.t("versionHistory.container.timeGroup.minutesAgo", { minutes });
   }
   if (hours < 24) {
     const date = new Date(createdAt);
@@ -101,12 +101,12 @@ function getTimeGroupLabel(createdAt: number): string {
     date.getFullYear() === yesterday.getFullYear();
 
   if (isToday) {
-    return "Today";
+    return "today";
   }
   if (isYesterday) {
-    return "Yesterday";
+    return "yesterday";
   }
-  return "Earlier";
+  return "earlier";
 }
 
 /**
@@ -168,19 +168,23 @@ function convertToTimeGroups(
   }
 
   // Sort groups: Today first, then Yesterday, then Earlier
-  const order = ["Today", "Yesterday", "Earlier"];
+  const TIME_GROUP_KEY_TO_I18N: Record<string, string> = {
+    today: "versionHistory.container.timeGroup.today",
+    yesterday: "versionHistory.container.timeGroup.yesterday",
+    earlier: "versionHistory.container.timeGroup.earlier",
+  };
+  const order = ["today", "yesterday", "earlier"];
   const groups: TimeGroup[] = [];
 
-  for (const label of order) {
-    const versions = groupMap.get(label);
+  for (const key of order) {
+    const versions = groupMap.get(key);
     if (versions && versions.length > 0) {
-      groups.push({ label, versions });
+      groups.push({ label: i18n.t(TIME_GROUP_KEY_TO_I18N[key]), versions });
     }
   }
 
   return groups;
 }
-
 
 type ConflictFormEntry = {
   resolution: "ours" | "theirs" | "manual";
@@ -190,11 +194,15 @@ type ConflictFormEntry = {
 function BranchConflictItem(props: {
   conflict: BranchMergeConflict;
   selected: ConflictFormEntry;
-  onResolutionChange: (conflictId: string, resolution: "ours" | "theirs" | "manual") => void;
+  onResolutionChange: (
+    conflictId: string,
+    resolution: "ours" | "theirs" | "manual",
+  ) => void;
   onManualTextChange: (conflictId: string, manualText: string) => void;
   t: ReturnType<typeof useTranslation>["t"];
 }): JSX.Element {
-  const { conflict, selected, onResolutionChange, onManualTextChange, t } = props;
+  const { conflict, selected, onResolutionChange, onManualTextChange, t } =
+    props;
   return (
     <div
       key={conflict.conflictId}
@@ -202,12 +210,14 @@ function BranchConflictItem(props: {
       className="space-y-2 rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2"
     >
       <div className="text-[11px] text-[var(--color-fg-muted)]">
-        {t('versionHistory.container.conflictNumber', { number: conflict.index + 1 })}
+        {t("versionHistory.container.conflictNumber", {
+          number: conflict.index + 1,
+        })}
       </div>
       <div className="grid grid-cols-1 gap-2 text-xs text-[var(--color-fg-default)]">
         <div>
           <div className="text-[11px] text-[var(--color-fg-muted)]">
-            {t('versionHistory.container.base')}
+            {t("versionHistory.container.base")}
           </div>
           <pre className="whitespace-pre-wrap font-mono text-xs">
             {conflict.baseText}
@@ -215,7 +225,7 @@ function BranchConflictItem(props: {
         </div>
         <div>
           <div className="text-[11px] text-[var(--color-fg-muted)]">
-            {t('versionHistory.container.ours')}
+            {t("versionHistory.container.ours")}
           </div>
           <pre className="whitespace-pre-wrap font-mono text-xs">
             {conflict.oursText}
@@ -223,7 +233,7 @@ function BranchConflictItem(props: {
         </div>
         <div>
           <div className="text-[11px] text-[var(--color-fg-muted)]">
-            {t('versionHistory.container.theirs')}
+            {t("versionHistory.container.theirs")}
           </div>
           <pre className="whitespace-pre-wrap font-mono text-xs">
             {conflict.theirsText}
@@ -237,22 +247,18 @@ function BranchConflictItem(props: {
             type="radio"
             name={`resolution-${conflict.conflictId}`}
             checked={selected.resolution === "ours"}
-            onChange={() =>
-              onResolutionChange(conflict.conflictId, "ours")
-            }
+            onChange={() => onResolutionChange(conflict.conflictId, "ours")}
           />
-          {t('versionHistory.container.useOurs')}
+          {t("versionHistory.container.useOurs")}
         </label>
         <label className="inline-flex items-center gap-1">
           <input
             type="radio"
             name={`resolution-${conflict.conflictId}`}
             checked={selected.resolution === "theirs"}
-            onChange={() =>
-              onResolutionChange(conflict.conflictId, "theirs")
-            }
+            onChange={() => onResolutionChange(conflict.conflictId, "theirs")}
           />
-          {t('versionHistory.container.useTheirs')}
+          {t("versionHistory.container.useTheirs")}
         </label>
         <label className="inline-flex items-center gap-1">
           <input
@@ -260,11 +266,9 @@ function BranchConflictItem(props: {
             type="radio"
             name={`resolution-${conflict.conflictId}`}
             checked={selected.resolution === "manual"}
-            onChange={() =>
-              onResolutionChange(conflict.conflictId, "manual")
-            }
+            onChange={() => onResolutionChange(conflict.conflictId, "manual")}
           />
-          {t('versionHistory.container.useManual')}
+          {t("versionHistory.container.useManual")}
         </label>
       </div>
       {selected.resolution === "manual" ? (
@@ -273,10 +277,7 @@ function BranchConflictItem(props: {
           className="h-20 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-2 font-mono text-xs text-[var(--color-fg-default)]"
           value={selected.manualText}
           onChange={(event) =>
-            onManualTextChange(
-              conflict.conflictId,
-              event.target.value,
-            )
+            onManualTextChange(conflict.conflictId, event.target.value)
           }
         />
       ) : null}
@@ -291,7 +292,10 @@ function useConflictResolution(
   resolveBranchConflict: VersionStoreActions["resolveBranchConflict"],
 ): {
   conflictForm: Record<string, ConflictFormEntry>;
-  handleResolutionChange: (conflictId: string, resolution: "ours" | "theirs" | "manual") => void;
+  handleResolutionChange: (
+    conflictId: string,
+    resolution: "ours" | "theirs" | "manual",
+  ) => void;
   handleManualTextChange: (conflictId: string, manualText: string) => void;
   hasInvalidManualResolution: boolean;
   handleResolveConflicts: () => Promise<void>;
@@ -460,14 +464,18 @@ export function VersionHistoryContainer(
   const [currentHash, setCurrentHash] = React.useState<string | null>(null);
   const [sourceBranchName, setSourceBranchName] = React.useState("alt-ending");
   const [targetBranchName, setTargetBranchName] = React.useState("main");
-const {
-  conflictForm,
-  handleResolutionChange,
-  handleManualTextChange,
-  hasInvalidManualResolution,
-  handleResolveConflicts,
-} = useConflictResolution(mergeConflicts, documentId, mergeSessionId, resolveBranchConflict);
-
+  const {
+    conflictForm,
+    handleResolutionChange,
+    handleManualTextChange,
+    hasInvalidManualResolution,
+    handleResolveConflicts,
+  } = useConflictResolution(
+    mergeConflicts,
+    documentId,
+    mergeSessionId,
+    resolveBranchConflict,
+  );
 
   // Fetch version list when documentId changes
   React.useEffect(() => {
@@ -556,12 +564,13 @@ const {
       if (!documentId) return;
 
       const item = items.find((candidate) => candidate.versionId === versionId);
-      const timestamp = item ? formatTimestamp(item.createdAt) : t("versionHistory.container.history");
+      const timestamp = item
+        ? formatTimestamp(item.createdAt)
+        : t("versionHistory.container.history");
       void startPreview(documentId, { versionId, timestamp });
     },
     [documentId, items, startPreview, t],
   );
-
 
   const handleMergeBranches = React.useCallback(async () => {
     if (!documentId) {
@@ -580,14 +589,10 @@ const {
     });
   }, [documentId, mergeBranch, sourceBranchName, targetBranchName]);
 
-
-
-
-
   if (!documentId) {
     return (
       <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-        {t('versionHistory.container.openDocumentToViewHistory')}
+        {t("versionHistory.container.openDocumentToViewHistory")}
       </div>
     );
   }
@@ -595,7 +600,7 @@ const {
   if (status === "loading") {
     return (
       <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-        Loading versions...
+        {t("versionHistory.container.loadingVersions")}
       </div>
     );
   }
@@ -603,7 +608,7 @@ const {
   if (status === "error") {
     return (
       <div className="p-3 text-xs text-[var(--color-error)]">
-        {t('versionHistory.container.failedToLoadHistory')}
+        {t("versionHistory.container.failedToLoadHistory")}
       </div>
     );
   }
@@ -611,7 +616,7 @@ const {
   if (items.length === 0) {
     return (
       <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-        {t('versionHistory.container.noVersionsYet')}
+        {t("versionHistory.container.noVersionsYet")}
       </div>
     );
   }
@@ -630,11 +635,11 @@ const {
       />
       <div className="mx-3 mt-3 space-y-2 rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-3">
         <div className="text-xs font-semibold text-[var(--color-fg-default)]">
-          {t('versionHistory.container.branchMerge')}
+          {t("versionHistory.container.branchMerge")}
         </div>
         <div className="grid grid-cols-1 gap-2">
           <label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
-            {t('versionHistory.container.sourceBranch')}
+            {t("versionHistory.container.sourceBranch")}
             <input
               data-testid="branch-merge-source-input"
               className="rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2 py-1 text-xs text-[var(--color-fg-default)]"
@@ -643,7 +648,7 @@ const {
             />
           </label>
           <label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
-            {t('versionHistory.container.targetBranch')}
+            {t("versionHistory.container.targetBranch")}
             <input
               data-testid="branch-merge-target-input"
               className="rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2 py-1 text-xs text-[var(--color-fg-default)]"
@@ -663,11 +668,13 @@ const {
             targetBranchName.trim().length === 0
           }
         >
-          {branchMergeStatus === "loading" ? t('versionHistory.container.merging') : t('versionHistory.container.mergeBranches')}
+          {branchMergeStatus === "loading"
+            ? t("versionHistory.container.merging")
+            : t("versionHistory.container.mergeBranches")}
         </button>
         {branchMergeStatus === "ready" ? (
           <div className="text-[11px] text-[var(--color-success)]">
-            {t('versionHistory.container.branchMergeCompleted')}
+            {t("versionHistory.container.branchMergeCompleted")}
           </div>
         ) : null}
         {branchMergeStatus === "error" && branchMergeError ? (
@@ -683,33 +690,33 @@ const {
         >
           <div className="flex items-center justify-between gap-2">
             <div className="text-xs font-semibold text-[var(--color-fg-default)]">
-              {t('versionHistory.container.mergeConflictDiff')}
+              {t("versionHistory.container.mergeConflictDiff")}
             </div>
             <button
               type="button"
               className="focus-ring rounded border border-[var(--color-border-default)] px-2 py-1 text-[11px] text-[var(--color-fg-muted)]"
               onClick={clearBranchMergeState}
             >
-              {t('versionHistory.container.dismiss')}
+              {t("versionHistory.container.dismiss")}
             </button>
           </div>
 
-{mergeConflicts.map((conflict) => {
-  const selected = conflictForm[conflict.conflictId] ?? {
-    resolution: "ours" as const,
-    manualText: "",
-  };
-  return (
-    <BranchConflictItem
-      key={conflict.conflictId}
-      conflict={conflict}
-      selected={selected}
-      onResolutionChange={handleResolutionChange}
-      onManualTextChange={handleManualTextChange}
-      t={t}
-    />
-  );
-})}
+          {mergeConflicts.map((conflict) => {
+            const selected = conflictForm[conflict.conflictId] ?? {
+              resolution: "ours" as const,
+              manualText: "",
+            };
+            return (
+              <BranchConflictItem
+                key={conflict.conflictId}
+                conflict={conflict}
+                selected={selected}
+                onResolutionChange={handleResolutionChange}
+                onManualTextChange={handleManualTextChange}
+                t={t}
+              />
+            );
+          })}
 
           <button
             type="button"
@@ -718,7 +725,7 @@ const {
             onClick={() => void handleResolveConflicts()}
             disabled={hasInvalidManualResolution}
           >
-            {t('versionHistory.container.submitConflictResolution')}
+            {t("versionHistory.container.submitConflictResolution")}
           </button>
         </div>
       ) : null}

@@ -22,8 +22,16 @@ import { useOptionalAiStore } from "../../stores/aiStore";
 /* ------------------------------------------------------------------ */
 
 const AI_CONTEXT_ACTIONS = [
-  { id: "builtin:polish", labelKey: "editor.contextMenu.aiPolish", testId: "ctx-ai-polish" },
-  { id: "builtin:rewrite", labelKey: "editor.contextMenu.aiRewrite", testId: "ctx-ai-rewrite" },
+  {
+    id: "builtin:polish",
+    labelKey: "editor.contextMenu.aiPolish",
+    testId: "ctx-ai-polish",
+  },
+  {
+    id: "builtin:rewrite",
+    labelKey: "editor.contextMenu.aiRewrite",
+    testId: "ctx-ai-rewrite",
+  },
 ] as const;
 
 /* ------------------------------------------------------------------ */
@@ -69,14 +77,12 @@ const menuItemClass = [
   "data-[disabled]:pointer-events-none",
 ].join(" ");
 
-const separatorClass =
-  "my-1 h-px bg-[var(--color-border-default)]";
+const separatorClass = "my-1 h-px bg-[var(--color-border-default)]";
 
 const labelClass =
   "px-2 py-1 text-xs font-medium text-[var(--color-fg-muted)] select-none";
 
-const shortcutClass =
-  "ml-auto text-xs text-[var(--color-fg-muted)]";
+const shortcutClass = "ml-auto text-xs text-[var(--color-fg-muted)]";
 
 /* ------------------------------------------------------------------ */
 /* Component                                                           */
@@ -111,9 +117,7 @@ export function EditorContextMenu({
   /* ---- Handlers ---- */
 
   const handleCopy = React.useCallback(() => {
-    void navigator.clipboard.writeText(
-      window.getSelection()?.toString() ?? "",
-    );
+    void navigator.clipboard.writeText(window.getSelection()?.toString() ?? "");
   }, []);
 
   const handlePaste = React.useCallback(async () => {
@@ -173,7 +177,10 @@ export function EditorContextMenu({
             <ClipboardCopy size={16} strokeWidth={1.5} />
             {t("editor.contextMenu.copy")}
             <span className={shortcutClass}>
-              {EDITOR_SHORTCUTS.bold.display().replace("B", "C").replace("⌘C", "⌘C")}
+              {EDITOR_SHORTCUTS.bold
+                .display()
+                .replace("B", "C")
+                .replace("⌘C", "⌘C")}
             </span>
           </ContextMenu.Item>
 
@@ -218,7 +225,9 @@ export function EditorContextMenu({
           <ContextMenu.Separator className={separatorClass} />
 
           {/* ---- Formatting ---- */}
-          <ContextMenu.Label className={labelClass}>{t("editor.contextMenu.format")}</ContextMenu.Label>
+          <ContextMenu.Label className={labelClass}>
+            {t("editor.contextMenu.format")}
+          </ContextMenu.Label>
 
           <ContextMenu.Item
             data-testid="ctx-bold"
@@ -262,7 +271,9 @@ export function EditorContextMenu({
           <ContextMenu.Separator className={separatorClass} />
 
           {/* ---- AI actions ---- */}
-          <ContextMenu.Label className={labelClass}>AI</ContextMenu.Label>
+          <ContextMenu.Label className={labelClass}>
+            {t("editor.contextMenu.ai")}
+          </ContextMenu.Label>
 
           {AI_CONTEXT_ACTIONS.map((action) => (
             <ContextMenu.Item

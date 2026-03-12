@@ -118,7 +118,8 @@
       "italic": "斜体",
       "underline": "下划线",
       "aiPolish": "润色",
-      "aiRewrite": "改写"
+      "aiRewrite": "改写",
+      "ai": "AI"
     },
     "bubbleMenu": {
       "link": "链接",
@@ -165,6 +166,33 @@
     "slashCommand": {
       "searchPlaceholder": "搜索斜杠命令...",
       "noCommandsFound": "未找到命令。"
+    },
+    "confirmSwitchToDraft": "此文档已定稿。继续编辑将切换回草稿状态，确定继续？",
+    "slash": {
+      "continue": {
+        "label": "/续写",
+        "description": "基于当前光标附近上下文继续创作。"
+      },
+      "describe": {
+        "label": "/描写",
+        "description": "扩展场景细节与氛围描写。"
+      },
+      "dialogue": {
+        "label": "/对白",
+        "description": "生成角色间自然对话。"
+      },
+      "character": {
+        "label": "/角色",
+        "description": "补充角色设定与人物动机。"
+      },
+      "outline": {
+        "label": "/大纲",
+        "description": "整理章节结构与叙事节奏。"
+      },
+      "search": {
+        "label": "/搜索",
+        "description": "检索项目中的相关信息。"
+      }
     }
   },
   "dashboard": {
@@ -782,7 +810,21 @@
       "useOurs": "我方",
       "useTheirs": "对方",
       "useManual": "手动",
-      "submitConflictResolution": "提交冲突解决"
+      "submitConflictResolution": "提交冲突解决",
+      "author": {
+        "you": "你",
+        "ai": "AI",
+        "auto": "自动",
+        "unknown": "未知"
+      },
+      "timeGroup": {
+        "justNow": "刚刚",
+        "today": "今天",
+        "yesterday": "昨天",
+        "earlier": "更早",
+        "minutesAgo": "{{minutes}}分钟前"
+      },
+      "loadingVersions": "加载版本中..."
     },
     "panel": {
       "closeAriaLabel": "关闭版本历史",
@@ -816,6 +858,10 @@
       "actorLabel": "操作者：",
       "timestampLabel": "时间戳：",
       "reasonLabel": "原因："
+    },
+    "compare": {
+      "noDifferences": "未发现差异。",
+      "unknownError": "未知错误"
     }
   },
   "settings": {

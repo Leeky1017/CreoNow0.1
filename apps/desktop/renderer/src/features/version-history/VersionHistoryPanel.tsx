@@ -284,7 +284,11 @@ function VersionMeta({
       {affectedParagraphs !== undefined && affectedParagraphs > 0 && (
         <>
           {reason && <span className="opacity-40">·</span>}
-          <span>{t("versionHistory.panel.affectedParagraphs", { count: affectedParagraphs })}</span>
+          <span>
+            {t("versionHistory.panel.affectedParagraphs", {
+              count: affectedParagraphs,
+            })}
+          </span>
         </>
       )}
     </div>
@@ -348,6 +352,7 @@ function HoverActions({
   onCompare?: (id: string) => void;
   onPreview?: (id: string) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       className={[
@@ -369,7 +374,7 @@ function HoverActions({
         "duration-[var(--duration-fast)]",
       ].join(" ")}
     >
-      <Tooltip content="Restore">
+      <Tooltip content={t("versionHistory.panel.restore")}>
         <button
           type="button"
           onClick={() => onRestore?.(versionId)}
@@ -378,7 +383,7 @@ function HoverActions({
           <RestoreIcon />
         </button>
       </Tooltip>
-      <Tooltip content="Compare">
+      <Tooltip content={t("versionHistory.panel.compare")}>
         <button
           type="button"
           onClick={() => onCompare?.(versionId)}
@@ -387,7 +392,7 @@ function HoverActions({
           <CompareIcon />
         </button>
       </Tooltip>
-      <Tooltip content="Preview">
+      <Tooltip content={t("versionHistory.panel.preview")}>
         <button
           type="button"
           onClick={() => onPreview?.(versionId)}
@@ -527,7 +532,9 @@ function VersionCard({
           <span className="text-[var(--color-fg-placeholder)] font-medium">
             {version.wordChange.count === 0
               ? t("versionHistory.panel.wordsChanged", { value: "0" })
-              : t("versionHistory.panel.wordsChanged", { value: `${version.wordChange.type === "added" ? "+" : "-"}${version.wordChange.count}` })}
+              : t("versionHistory.panel.wordsChanged", {
+                  value: `${version.wordChange.type === "added" ? "+" : "-"}${version.wordChange.count}`,
+                })}
           </span>
         </div>
       </div>
@@ -558,7 +565,9 @@ function VersionCard({
       {version.affectedParagraphs !== undefined &&
         version.affectedParagraphs > 0 && (
           <div className="text-[10px] text-[var(--color-fg-placeholder)] mt-1 mb-1">
-            {t("versionHistory.panel.affectedParagraphs", { count: version.affectedParagraphs })}
+            {t("versionHistory.panel.affectedParagraphs", {
+              count: version.affectedParagraphs,
+            })}
           </div>
         )}
 
@@ -726,7 +735,7 @@ export function VersionHistoryPanelContent({
             type="button"
             onClick={onClose}
             className={`focus-ring ${closeButtonStyles}`}
-            aria-label={t('versionHistory.panel.closeAriaLabel')}
+            aria-label={t("versionHistory.panel.closeAriaLabel")}
           >
             <CloseIcon />
           </button>

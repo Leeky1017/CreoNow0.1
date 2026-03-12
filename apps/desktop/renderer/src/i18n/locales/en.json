@@ -118,7 +118,8 @@
       "italic": "Italic",
       "underline": "Underline",
       "aiPolish": "Polish",
-      "aiRewrite": "Rewrite"
+      "aiRewrite": "Rewrite",
+      "ai": "AI"
     },
     "bubbleMenu": {
       "link": "Link",
@@ -165,6 +166,33 @@
     "slashCommand": {
       "searchPlaceholder": "Search slash commands...",
       "noCommandsFound": "No commands found."
+    },
+    "confirmSwitchToDraft": "This document is final. Editing will switch it back to draft. Continue?",
+    "slash": {
+      "continue": {
+        "label": "/Continue",
+        "description": "Continue writing from cursor context."
+      },
+      "describe": {
+        "label": "/Describe",
+        "description": "Expand scene details and atmosphere."
+      },
+      "dialogue": {
+        "label": "/Dialogue",
+        "description": "Generate natural character dialogue."
+      },
+      "character": {
+        "label": "/Character",
+        "description": "Supplement character traits and motivations."
+      },
+      "outline": {
+        "label": "/Outline",
+        "description": "Organize chapter structure and narrative rhythm."
+      },
+      "search": {
+        "label": "/Search",
+        "description": "Search for relevant information in the project."
+      }
     }
   },
   "dashboard": {
@@ -782,7 +810,21 @@
       "useOurs": "ours",
       "useTheirs": "theirs",
       "useManual": "manual",
-      "submitConflictResolution": "Submit Conflict Resolution"
+      "submitConflictResolution": "Submit Conflict Resolution",
+      "author": {
+        "you": "You",
+        "ai": "AI",
+        "auto": "Auto",
+        "unknown": "Unknown"
+      },
+      "timeGroup": {
+        "justNow": "Just now",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "earlier": "Earlier",
+        "minutesAgo": "{{minutes}}m ago"
+      },
+      "loadingVersions": "Loading versions..."
     },
     "panel": {
       "closeAriaLabel": "Close version history",
@@ -816,6 +858,10 @@
       "actorLabel": "Actor:",
       "timestampLabel": "Timestamp:",
       "reasonLabel": "Reason:"
+    },
+    "compare": {
+      "noDifferences": "No differences found.",
+      "unknownError": "Unknown error"
     }
   },
   "settings": {

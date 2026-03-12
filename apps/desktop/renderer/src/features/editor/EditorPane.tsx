@@ -8,7 +8,10 @@ import BubbleMenuExtension from "@tiptap/extension-bubble-menu";
 import type { IpcResponseData } from "@shared/types/ipc-generated";
 
 import { useOptionalAiStore } from "../../stores/aiStore";
-import { useEditorStore, type EntityCompletionSession } from "../../stores/editorStore";
+import {
+  useEditorStore,
+  type EntityCompletionSession,
+} from "../../stores/editorStore";
 import { useVersionStore } from "../../stores/versionStore";
 import { useAutosave } from "./useAutosave";
 import { useHotkey } from "../../lib/hotkeys/useHotkey";
@@ -28,7 +31,7 @@ import { SlashCommandPanel } from "./SlashCommandPanel";
 import { EntityCompletionPanel } from "./EntityCompletionPanel";
 import {
   routeSlashCommandExecution,
-  SLASH_COMMAND_REGISTRY,
+  getSlashCommandRegistry,
   type SlashCommandExecutors,
   type SlashCommandId,
 } from "./slashCommands";
@@ -346,13 +349,25 @@ function useEntityCompletion(deps: {
   entityCompletionSession: EntityCompletionSession;
   setEntityCompletionSession: (patch: Partial<EntityCompletionSession>) => void;
   clearEntityCompletionSession: () => void;
-  listKnowledgeEntities: (args: { projectId: string }) => Promise<{ ok: true; data: { items: EntityListItem[] } } | { ok: false }>;
+  listKnowledgeEntities: (args: {
+    projectId: string;
+  }) => Promise<
+    { ok: true; data: { items: EntityListItem[] } } | { ok: false }
+  >;
   projectId: string;
 }) {
   const {
-    bootstrapStatus, clearEntityCompletionSession, contentReady, documentId,
-    documentStatus, editor, entityCompletionSession, isPreviewMode,
-    listKnowledgeEntities, projectId, setEntityCompletionSession,
+    bootstrapStatus,
+    clearEntityCompletionSession,
+    contentReady,
+    documentId,
+    documentStatus,
+    editor,
+    entityCompletionSession,
+    isPreviewMode,
+    listKnowledgeEntities,
+    projectId,
+    setEntityCompletionSession,
   } = deps;
 
   const entityCompletionSessionRef = React.useRef(entityCompletionSession);
@@ -397,7 +412,7 @@ function useEntityCompletion(deps: {
           status: "error",
           candidates: [],
           selectedIndex: 0,
-          message: "Entity suggestions unavailable.",
+          message: null,
         });
         return;
       }
@@ -579,31 +594,54 @@ function useEntityCompletion(deps: {
     setEntityCompletionSession,
   ]);
 
-
   return { applyEntityCompletionCandidate };
 }
 
 function useEditorCommands(deps: {
   editor: ReturnType<typeof useEditor>;
   aiSetSelectedSkillId: ((id: string) => void) | null;
-  aiRun: ((args?: { inputOverride?: string; context?: { projectId?: string; documentId?: string } }) => Promise<void>) | null;
+  aiRun:
+    | ((args?: {
+        inputOverride?: string;
+        context?: { projectId?: string; documentId?: string };
+      }) => Promise<void>)
+    | null;
   aiStatus: string;
   documentId: string | null;
   projectId: string;
   isPreviewMode: boolean;
   documentStatus: string | null;
-  save: (args: { projectId: string; documentId: string; contentJson: string; actor: "user" | "auto"; reason: "manual-save" | "autosave" }) => Promise<void>;
+  save: (args: {
+    projectId: string;
+    documentId: string;
+    contentJson: string;
+    actor: "user" | "auto";
+    reason: "manual-save" | "autosave";
+  }) => Promise<void>;
   closeSlashPanel: () => void;
   contentReady: boolean;
   bootstrapStatus: string;
-  downgradeFinalStatusForEdit: (args: { projectId: string; documentId: string }) => Promise<boolean>;
+  downgradeFinalStatusForEdit: (args: {
+    projectId: string;
+    documentId: string;
+  }) => Promise<boolean>;
   t: (key: string) => string;
 }) {
   const {
-    aiRun, aiSetSelectedSkillId, aiStatus, bootstrapStatus,
-    closeSlashPanel, contentReady, documentId, documentStatus,
-    downgradeFinalStatusForEdit, editor, isPreviewMode, projectId,
+    aiRun,
+    aiSetSelectedSkillId,
+    aiStatus,
+    bootstrapStatus,
+    closeSlashPanel,
+    contentReady,
+    documentId,
+    documentStatus,
+    downgradeFinalStatusForEdit,
+    editor,
+    isPreviewMode,
+    projectId,
     save,
+    t,
   } = deps;
 
   const aiStreamCheckpointRef = React.useRef<AiStreamCheckpoint | null>(null);
@@ -612,9 +650,7 @@ function useEditorCommands(deps: {
     if (!documentId || documentStatus !== "final") {
       return;
     }
-    const confirmed = window.confirm(
-      "This document is final. Editing will switch it back to draft. Continue?",
-    );
+    const confirmed = window.confirm(t("editor.confirmSwitchToDraft"));
     const decision = resolveFinalDocumentEditDecision({
       status: documentStatus,
       confirmed,
@@ -660,14 +696,7 @@ function useEditorCommands(deps: {
       // Next Ctrl+Z will revert the entire AI round via undoAiStream.
       // Checkpoint is cleared on manual user edit (see onUpdate handler).
     },
-    [
-      aiRun,
-      aiSetSelectedSkillId,
-      aiStatus,
-      documentId,
-      editor,
-      projectId,
-    ],
+    [aiRun, aiSetSelectedSkillId, aiStatus, documentId, editor, projectId],
   );
 
   /**
@@ -689,10 +718,7 @@ function useEditorCommands(deps: {
   // (Replaces the former useEffect + window.addEventListener("keydown"))
 
   const editorReady =
-    !!editor &&
-    bootstrapStatus === "ready" &&
-    !!documentId &&
-    contentReady;
+    !!editor && bootstrapStatus === "ready" && !!documentId && contentReady;
 
   // Cmd/Ctrl+Enter: Continue Writing (AI skill)
   useHotkey(
@@ -783,9 +809,12 @@ function useEditorCommands(deps: {
     [closeSlashPanel, onWriteClick, runSlashAiSkill],
   );
 
-
-
-  return { handleSlashCommandSelect, onWriteClick, requestEditFromFinal, aiStreamCheckpointRef };
+  return {
+    handleSlashCommandSelect,
+    onWriteClick,
+    requestEditFromFinal,
+    aiStreamCheckpointRef,
+  };
 }
 
 function useEditorPaneCore(projectId: string) {
@@ -837,7 +866,9 @@ function useEditorPaneCore(projectId: string) {
     (nextCount: number) => {
       setDocumentCharacterCount(nextCount);
       setCapacityWarning(
-        shouldWarnDocumentCapacity(nextCount) ? t('editor.pane.charLimitReached') : null,
+        shouldWarnDocumentCapacity(nextCount)
+          ? t("editor.pane.charLimitReached")
+          : null,
       );
     },
     [setCapacityWarning, setDocumentCharacterCount, t],
@@ -846,7 +877,6 @@ function useEditorPaneCore(projectId: string) {
   React.useEffect(() => {
     slashPanelOpenRef.current = isSlashPanelOpen;
   }, [isSlashPanelOpen]);
-
 
   const openSlashPanel = React.useCallback(() => {
     setIsSlashPanelOpen(true);
@@ -902,10 +932,7 @@ function useEditorPaneCore(projectId: string) {
           pasteLength: clipboardText.length,
         });
         const shouldContinueOverflow =
-          !overflow ||
-          window.confirm(
-            t('editor.pane.pasteLimitExceeded'),
-          );
+          !overflow || window.confirm(t("editor.pane.pasteLimitExceeded"));
 
         const allowedLength = shouldContinueOverflow
           ? clipboardText.length
@@ -965,7 +992,9 @@ function useEditorPaneCore(projectId: string) {
     try {
       setContentReady(false);
       suppressAutosaveRef.current = true;
-      editor.commands.setContent(parseEditorContentJsonSafely(activeContentJson));
+      editor.commands.setContent(
+        parseEditorContentJsonSafely(activeContentJson),
+      );
     } finally {
       window.setTimeout(() => {
         suppressAutosaveRef.current = false;
@@ -1007,10 +1036,7 @@ function useEditorPaneCore(projectId: string) {
 
       // Clear AI undo checkpoint on any manual edit — the user has
       // implicitly accepted the AI output by continuing to type.
-      if (
-        aiStreamCheckpointRef.current &&
-        !isAiRunning(aiStatus)
-      ) {
+      if (aiStreamCheckpointRef.current && !isAiRunning(aiStatus)) {
         aiStreamCheckpointRef.current = null;
       }
     };
@@ -1036,7 +1062,6 @@ function useEditorPaneCore(projectId: string) {
     projectId,
   });
 
-
   useAutosave({
     enabled:
       bootstrapStatus === "ready" &&
@@ -1049,7 +1074,6 @@ function useEditorPaneCore(projectId: string) {
     editor,
     suppressRef: suppressAutosaveRef,
   });
-
 
   return {
     t,
@@ -1087,7 +1111,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
   if (core.bootstrapStatus !== "ready") {
     return (
       <Text as="div" size="body" color="muted" className="p-4">
-        {core.t('editor.pane.loadingEditor')}
+        {core.t("editor.pane.loadingEditor")}
       </Text>
     );
   }
@@ -1095,7 +1119,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
   if (!core.documentId) {
     return (
       <Text as="div" size="body" color="muted" className="p-4">
-        {core.t('editor.pane.noDocumentSelected')}
+        {core.t("editor.pane.noDocumentSelected")}
       </Text>
     );
   }
@@ -1103,7 +1127,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
   if (!core.contentReady) {
     return (
       <Text as="div" size="body" color="muted" className="p-4">
-        {core.t('editor.pane.loadingDocument')}
+        {core.t("editor.pane.loadingDocument")}
       </Text>
     );
   }
@@ -1136,17 +1160,19 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
           className="flex items-center justify-between gap-3 border-b border-[var(--color-border-default)] bg-[var(--color-bg-raised)] px-4 py-2"
         >
           <Text size="small" color="muted">
-            {core.t('editor.pane.previewingVersion', { timestamp: core.previewTimestamp ?? core.t('editor.pane.history') })}
+            {core.t("editor.pane.previewingVersion", {
+              timestamp: core.previewTimestamp ?? core.t("editor.pane.history"),
+            })}
           </Text>
           <div className="flex items-center gap-2">
-            <Tooltip content={core.t('editor.pane.restoreTooltip')}>
+            <Tooltip content={core.t("editor.pane.restoreTooltip")}>
               <Button
                 data-testid="preview-restore-placeholder"
                 variant="secondary"
                 size="sm"
                 disabled={true}
               >
-                {core.t('editor.pane.restoreVersion')}
+                {core.t("editor.pane.restoreVersion")}
               </Button>
             </Tooltip>
             <Button
@@ -1155,7 +1181,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
               size="sm"
               onClick={core.exitPreview}
             >
-              {core.t('editor.pane.backToCurrent')}
+              {core.t("editor.pane.backToCurrent")}
             </Button>
           </div>
         </div>
@@ -1167,7 +1193,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
           className="flex items-center justify-between gap-3 border-b border-[var(--color-separator)] bg-[var(--color-bg-surface)] px-4 py-2"
         >
           <Text size="small" color="muted">
-            {core.t('editor.pane.finalDocumentHint')}
+            {core.t("editor.pane.finalDocumentHint")}
           </Text>
           <Button
             data-testid="final-document-edit-trigger"
@@ -1175,7 +1201,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
             size="sm"
             onClick={() => void core.requestEditFromFinal()}
           >
-            {core.t('editor.pane.editAnyway')}
+            {core.t("editor.pane.editAnyway")}
           </Button>
         </div>
       ) : null}
@@ -1184,7 +1210,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
       <SlashCommandPanel
         open={core.isSlashPanelOpen}
         query={core.slashSearchQuery}
-        candidates={SLASH_COMMAND_REGISTRY}
+        candidates={getSlashCommandRegistry()}
         onQueryChange={core.setSlashSearchQuery}
         onSelectCommand={core.handleSlashCommandSelect}
         onRequestClose={core.closeSlashPanel}
@@ -1219,7 +1245,11 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
             core.editor.isEditable &&
             core.editor.state.selection.empty
           }
-          disabled={!core.aiSetSelectedSkillId || !core.aiRun || isAiRunning(core.aiStatus)}
+          disabled={
+            !core.aiSetSelectedSkillId ||
+            !core.aiRun ||
+            isAiRunning(core.aiStatus)
+          }
           running={isAiRunning(core.aiStatus)}
           onClick={() => void core.onWriteClick()}
         />

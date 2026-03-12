@@ -5,6 +5,7 @@
 import { useCallback, useState } from "react";
 import { useEditorStore } from "../../stores/editorStore";
 import { invoke } from "../../lib/ipcClient";
+import { i18n } from "../../i18n";
 
 export type CompareState = {
   status: "idle" | "loading" | "ready" | "error";
@@ -69,11 +70,15 @@ export function useVersionCompare() {
 
         setCompareState({
           status: "ready",
-          diffText: res.data.diffText || "No differences found.",
+          diffText:
+            res.data.diffText || i18n.t("versionHistory.compare.noDifferences"),
           aiMarked: res.data.aiMarked,
         });
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Unknown error";
+        const message =
+          err instanceof Error
+            ? err.message
+            : i18n.t("versionHistory.compare.unknownError");
         setCompareState({
           status: "error",
           diffText: "",
