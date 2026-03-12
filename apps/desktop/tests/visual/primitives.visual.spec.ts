@@ -42,13 +42,15 @@ const PRIMITIVE_STORIES: Array<{ component: string; storyId: string; story: stri
   { component: "tooltip", storyId: "primitives-tooltip--default", story: "default" },
 ];
 
-for (const { component, storyId, story } of PRIMITIVE_STORIES) {
-  test(`${component} / ${story}`, async ({ page }, testInfo) => {
-    const theme = testInfo.project.name as "dark" | "light";
-    await navigateToStory(page, storyId, theme);
+test.describe("Primitives visual regression", () => {
+  for (const { component, storyId, story } of PRIMITIVE_STORIES) {
+    test(`${component} / ${story}`, async ({ page }, testInfo) => {
+      const theme = testInfo.project.name as "dark" | "light";
+      await navigateToStory(page, storyId, theme);
 
-    await expect(page.locator("#storybook-root")).toHaveScreenshot(
-      screenshotName(component, story, theme) + ".png",
-    );
-  });
-}
+      await expect(page.locator("#storybook-root")).toHaveScreenshot(
+        screenshotName(component, story, theme) + ".png",
+      );
+    });
+  }
+});

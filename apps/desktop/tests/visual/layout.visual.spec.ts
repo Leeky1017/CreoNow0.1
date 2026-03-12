@@ -23,13 +23,15 @@ const LAYOUT_STORIES: Array<{ component: string; storyId: string; story: string 
   { component: "statusbar", storyId: "layout-statusbar--saving-state", story: "saving-state" },
 ];
 
-for (const { component, storyId, story } of LAYOUT_STORIES) {
-  test(`${component} / ${story}`, async ({ page }, testInfo) => {
-    const theme = testInfo.project.name as "dark" | "light";
-    await navigateToStory(page, storyId, theme);
+test.describe("Layout visual regression", () => {
+  for (const { component, storyId, story } of LAYOUT_STORIES) {
+    test(`${component} / ${story}`, async ({ page }, testInfo) => {
+      const theme = testInfo.project.name as "dark" | "light";
+      await navigateToStory(page, storyId, theme);
 
-    await expect(page.locator("#storybook-root")).toHaveScreenshot(
-      screenshotName(component, story, theme) + ".png",
-    );
-  });
-}
+      await expect(page.locator("#storybook-root")).toHaveScreenshot(
+        screenshotName(component, story, theme) + ".png",
+      );
+    });
+  }
+});

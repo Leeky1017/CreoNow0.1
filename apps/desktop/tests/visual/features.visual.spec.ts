@@ -39,18 +39,20 @@ const FEATURE_STORIES: FeatureStory[] = [
   { component: "search", storyId: "features-searchpanel--default", story: "default" },
 ];
 
-for (const { component, storyId, story, waitFor, locator } of FEATURE_STORIES) {
-  test(`${component} / ${story}`, async ({ page }, testInfo) => {
-    const theme = testInfo.project.name as "dark" | "light";
-    await navigateToStory(page, storyId, theme);
+test.describe("Features visual regression", () => {
+  for (const { component, storyId, story, waitFor, locator } of FEATURE_STORIES) {
+    test(`${component} / ${story}`, async ({ page }, testInfo) => {
+      const theme = testInfo.project.name as "dark" | "light";
+      await navigateToStory(page, storyId, theme);
 
-    if (waitFor) {
-      await page.locator(waitFor).first().waitFor({ state: "visible", timeout: 10_000 });
-    }
+      if (waitFor) {
+        await page.locator(waitFor).first().waitFor({ state: "visible", timeout: 10_000 });
+      }
 
-    const target = page.locator(locator ?? "#storybook-root");
-    await expect(target).toHaveScreenshot(
-      screenshotName(component, story, theme) + ".png",
-    );
-  });
-}
+      const target = page.locator(locator ?? "#storybook-root");
+      await expect(target).toHaveScreenshot(
+        screenshotName(component, story, theme) + ".png",
+      );
+    });
+  }
+});
