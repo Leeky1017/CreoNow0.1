@@ -3,10 +3,7 @@ import { render, screen, act } from "@testing-library/react";
 
 import { AppToastProvider } from "../components/providers/AppToastProvider";
 import { useAiErrorToast } from "../hooks/useToastIntegration";
-import {
-  createAiStore,
-  AiStoreProvider,
-} from "../stores/aiStore";
+import { createAiStore, AiStoreProvider } from "../stores/aiStore";
 
 /**
  * 测试：AI 错误与导出场景 Toast 集成

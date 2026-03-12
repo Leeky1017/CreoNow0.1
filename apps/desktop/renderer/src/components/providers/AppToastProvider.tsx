@@ -82,10 +82,7 @@ export function AppToastProvider({
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const contextValue = React.useMemo(
-    () => ({ showToast }),
-    [showToast],
-  );
+  const contextValue = React.useMemo(() => ({ showToast }), [showToast]);
 
   return (
     <AppToastContext.Provider value={contextValue}>

@@ -1,4 +1,7 @@
-import { useAutoSaveToast, useAiErrorToast } from "../../hooks/useToastIntegration";
+import {
+  useAutoSaveToast,
+  useAiErrorToast,
+} from "../../hooks/useToastIntegration";
 
 /**
  * ToastIntegrationBridge — 无 UI 输出的桥接组件

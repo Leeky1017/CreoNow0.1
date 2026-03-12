@@ -23,7 +23,11 @@ function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
   const parts = path.split(".");
   let current: unknown = obj;
   for (const part of parts) {
-    if (current === null || current === undefined || typeof current !== "object") {
+    if (
+      current === null ||
+      current === undefined ||
+      typeof current !== "object"
+    ) {
       return undefined;
     }
     current = (current as Record<string, unknown>)[part];
@@ -32,23 +36,17 @@ function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
 }
 
 describe("toast i18n key 完备性 (AC-11)", () => {
-  it.each(REQUIRED_TOAST_KEYS)(
-    "en.json 包含 key: %s",
-    (key) => {
-      const value = getNestedValue(en as Record<string, unknown>, key);
-      expect(value).toBeDefined();
-      expect(typeof value).toBe("string");
-      expect((value as string).length).toBeGreaterThan(0);
-    },
-  );
+  it.each(REQUIRED_TOAST_KEYS)("en.json 包含 key: %s", (key) => {
+    const value = getNestedValue(en as Record<string, unknown>, key);
+    expect(value).toBeDefined();
+    expect(typeof value).toBe("string");
+    expect((value as string).length).toBeGreaterThan(0);
+  });
 
-  it.each(REQUIRED_TOAST_KEYS)(
-    "zh-CN.json 包含 key: %s",
-    (key) => {
-      const value = getNestedValue(zhCN as Record<string, unknown>, key);
-      expect(value).toBeDefined();
-      expect(typeof value).toBe("string");
-      expect((value as string).length).toBeGreaterThan(0);
-    },
-  );
+  it.each(REQUIRED_TOAST_KEYS)("zh-CN.json 包含 key: %s", (key) => {
+    const value = getNestedValue(zhCN as Record<string, unknown>, key);
+    expect(value).toBeDefined();
+    expect(typeof value).toBe("string");
+    expect((value as string).length).toBeGreaterThan(0);
+  });
 });

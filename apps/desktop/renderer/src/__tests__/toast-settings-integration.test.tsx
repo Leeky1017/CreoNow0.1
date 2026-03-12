@@ -3,18 +3,18 @@ import { render, screen, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { AppToastProvider } from "../components/providers/AppToastProvider";
-import {
-  SettingsDialog,
-} from "../features/settings-dialog/SettingsDialog";
+import { SettingsDialog } from "../features/settings-dialog/SettingsDialog";
 
 const setShowAiMarks = vi.fn(() => true);
 
 vi.mock("../stores/versionPreferencesStore", () => ({
-  useVersionPreferencesStore: vi.fn((selector: (s: {
-    showAiMarks: boolean;
-    setShowAiMarks: typeof setShowAiMarks;
-  }) => unknown) =>
-    selector({ showAiMarks: false, setShowAiMarks }),
+  useVersionPreferencesStore: vi.fn(
+    (
+      selector: (s: {
+        showAiMarks: boolean;
+        setShowAiMarks: typeof setShowAiMarks;
+      }) => unknown,
+    ) => selector({ showAiMarks: false, setShowAiMarks }),
   ),
 }));
 
@@ -35,11 +35,7 @@ describe("toast-settings integration", () => {
 
     render(
       <AppToastProvider>
-        <SettingsDialog
-          open
-          onOpenChange={() => {}}
-          defaultTab="general"
-        />
+        <SettingsDialog open onOpenChange={() => {}} defaultTab="general" />
       </AppToastProvider>,
     );
 
@@ -58,11 +54,7 @@ describe("toast-settings integration", () => {
 
     render(
       <AppToastProvider>
-        <SettingsDialog
-          open
-          onOpenChange={() => {}}
-          defaultTab="general"
-        />
+        <SettingsDialog open onOpenChange={() => {}} defaultTab="general" />
       </AppToastProvider>,
     );
 

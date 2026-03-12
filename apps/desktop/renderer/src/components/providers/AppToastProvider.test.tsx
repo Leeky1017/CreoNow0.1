@@ -1,10 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 
-import {
-  AppToastProvider,
-  useAppToast,
-} from "./AppToastProvider";
+import { AppToastProvider, useAppToast } from "./AppToastProvider";
 
 /**
  * 便捷消费者组件：调用 showToast 并渲染按钮
@@ -70,7 +67,8 @@ describe("AppToastProvider", () => {
       try {
         useAppToast();
       } catch (error) {
-        capturedErrorMessage = error instanceof Error ? error.message : String(error);
+        capturedErrorMessage =
+          error instanceof Error ? error.message : String(error);
       }
       return <div />;
     }

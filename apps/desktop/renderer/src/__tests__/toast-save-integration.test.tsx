@@ -4,10 +4,7 @@ import userEvent from "@testing-library/user-event";
 
 import { AppToastProvider } from "../components/providers/AppToastProvider";
 import { useAutoSaveToast } from "../hooks/useToastIntegration";
-import {
-  createEditorStore,
-  EditorStoreProvider,
-} from "../stores/editorStore";
+import { createEditorStore, EditorStoreProvider } from "../stores/editorStore";
 
 /**
  * 测试：保存场景 Toast 集成
@@ -16,7 +13,11 @@ import {
  * AC-4: 文档保存失败后出现 error Toast（含重试 action）
  */
 
-function createMockInvoke(result: { ok: boolean; data?: unknown; error?: unknown }) {
+function createMockInvoke(result: {
+  ok: boolean;
+  data?: unknown;
+  error?: unknown;
+}) {
   return vi.fn().mockResolvedValue(result);
 }
 
