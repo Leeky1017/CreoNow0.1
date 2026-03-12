@@ -18,7 +18,6 @@ import {
   FileText,
   Folder,
   Frown,
-  Globe,
   Lightbulb,
   RefreshCw,
   Search,
@@ -254,15 +253,13 @@ function DocumentResultItem(props: {
 function MemoryResultItem(props: {
   item: SearchResultItem;
   query: string;
-  onClick: () => void;
 }): JSX.Element {
   const { t } = useTranslation();
-  const { item, query, onClick } = props;
+  const { item, query } = props;
 
   return (
     <ListItem
-      interactive
-      onClick={onClick}
+      disabled
       className="group w-full text-left mx-2 mt-1 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3"
     >
       {/* Icon */}
@@ -276,9 +273,14 @@ function MemoryResultItem(props: {
           <h4 className="text-sm font-medium text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] transition-colors truncate">
             <HighlightText text={item.title} query={query} />
           </h4>
-          <span className="text-[10px] font-mono text-[var(--color-success)] bg-[var(--color-success-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-success-subtle)] opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-            {t("search.resultTypes.highRelevance")}
-          </span>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[10px] font-mono text-[var(--color-success)] bg-[var(--color-success-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-success-subtle)] opacity-0 group-hover:opacity-100 transition-opacity">
+              {t("search.resultTypes.highRelevance")}
+            </span>
+            <span className="text-[10px] font-medium text-[var(--color-fg-muted)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] px-1.5 py-0.5 rounded">
+              {t("common.comingSoon")}
+            </span>
+          </div>
         </div>
         <p className="text-xs text-[var(--color-fg-placeholder)] group-hover:text-[var(--color-fg-muted)] transition-colors leading-relaxed line-clamp-1">
           <HighlightText text={item.snippet || ""} query={query} />
@@ -306,15 +308,13 @@ function MemoryResultItem(props: {
 function KnowledgeResultItem(props: {
   item: SearchResultItem;
   query: string;
-  onClick: () => void;
 }): JSX.Element {
   const { t } = useTranslation();
-  const { item, query, onClick } = props;
+  const { item, query } = props;
 
   return (
     <ListItem
-      interactive
-      onClick={onClick}
+      disabled
       className="group w-full text-left mx-2 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3"
     >
       {/* Icon */}
@@ -327,16 +327,19 @@ function KnowledgeResultItem(props: {
         <h4 className="text-sm font-medium text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] transition-colors truncate mb-1">
           <HighlightText text={item.title} query={query} />
         </h4>
-        {item.meta && (
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] text-[var(--color-fg-placeholder)] border border-[var(--color-separator)] px-1.5 py-0.5 rounded">
-              {t("search.resultTypes.entity")}
-            </span>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-[var(--color-fg-placeholder)] border border-[var(--color-separator)] px-1.5 py-0.5 rounded">
+            {t("search.resultTypes.entity")}
+          </span>
+          <span className="text-[10px] font-medium text-[var(--color-fg-muted)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] px-1.5 py-0.5 rounded">
+            {t("common.comingSoon")}
+          </span>
+          {item.meta ? (
             <span className="text-[10px] text-[var(--color-fg-placeholder)]">
               {item.meta}
             </span>
-          </div>
-        )}
+          ) : null}
+        </div>
       </div>
     </ListItem>
   );
@@ -461,50 +464,6 @@ function SearchResultsArea(props: {
           {props.lastError?.message}
         </p>
         <Button
-          variant="primary"
-          onClick={props.onRetrySearch}
-          className="mt-6 !px-4 !py-2 !h-auto !bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] !text-sm !font-medium !rounded-lg hover:!bg-[var(--color-info)] hover:!brightness-110"
-        >
-          {t("search.retrySearch")}
-        </Button>
-      </div>
-    );
-  }
-
-  if (
-    props.hasQuery &&
-    !props.hasResults &&
-    props.effectiveStatus !== "loading"
-  ) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 px-8">
-        <Frown
-          className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4"
-          size={24}
-          strokeWidth={1.5}
-        />
-        <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
-          {t("search.noResults.title")}
-        </p>
-        <p className="text-xs text-[var(--color-fg-muted)] text-center">
-          {t("search.noResultsQuery", { query: props.effectiveQuery })}
-        </p>
-        <div className="mt-6 p-4 bg-[var(--color-separator)] rounded-lg border border-[var(--color-separator)]">
-          <p className="text-[10px] text-[var(--color-fg-placeholder)] font-medium uppercase tracking-wider mb-2">
-            {t("search.suggestionsTitle")}
-          </p>
-          <p className="text-xs text-[var(--color-fg-muted)]">
-            {t("search.noResults.suggestion")}
-          </p>
-        </div>
-        <Button
-          variant="primary"
-          className="mt-6 !px-4 !py-2 !h-auto !bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] !text-sm !font-medium !rounded-lg hover:!bg-[var(--color-info)] hover:!brightness-110"
-        >
-          <Globe className="w-4 h-4" size={16} strokeWidth={1.5} />
-          {t("search.searchAllProjects")}
-        </Button>
-        <Button
           variant="ghost"
           onClick={props.onClearQuery}
           className="mt-3 !h-auto !text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-fg-default)]"
@@ -552,7 +511,6 @@ function SearchResultsArea(props: {
                 key={item.id}
                 item={item}
                 query={props.effectiveQuery}
-                onClick={() => props.onItemClick(item.id)}
               />
             ))}
           </ResultGroup>
@@ -572,19 +530,10 @@ function SearchResultsArea(props: {
                 key={item.id}
                 item={item}
                 query={props.effectiveQuery}
-                onClick={() => props.onItemClick(item.id)}
               />
             ))}
           </ResultGroup>
         )}
-
-      {props.totalResults > 5 && (
-        <div className="p-2 text-center border-t border-[var(--color-separator)] mt-2">
-          <Button
-            variant="ghost"
-            className="!text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-info)] !py-2 w-full !h-auto"
-          >
-            {t("search.results.viewMore", { count: props.totalResults - 5 })}
           </Button>
         </div>
       )}
@@ -651,10 +600,6 @@ function SearchFooter(props: {
           <>
             <span className="text-xs text-[var(--color-fg-muted)] font-medium">
               {t("search.results.result", { count: props.totalResults })}
-            </span>
-            <div className="h-3 w-px bg-[var(--color-bg-overlay)]" />
-            <span className="text-[10px] text-[var(--color-fg-placeholder)]">
-              {t("search.results.searchTime", { time: "0.04s" })}
             </span>
           </>
         )}

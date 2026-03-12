@@ -1,4 +1,8 @@
 {
+  "common": {
+    "comingSoon": "即将推出",
+    "featureInDevelopment": "此功能正在开发中"
+  },
   "workbench": {
     "bootstrap": {
       "appShell": "工作台外壳"
@@ -925,7 +929,8 @@
       "manageSubscription": "管理订阅",
       "dangerZone": "危险操作",
       "deleteAccount": "删除账户",
-      "deleteAccountDescription": "永久删除你的账户及所有关联数据。"
+      "deleteAccountDescription": "永久删除你的账户及所有关联数据。",
+      "comingSoonTooltip": "账户功能即将推出"
     },
     "general": {
       "zhCN": "中文 (简体)",
@@ -1518,10 +1523,13 @@
       "VERSION_SNAPSHOT_COMPACTED": "版本快照已压缩"
     }
   },
-  "globalError": {
+"globalError": {
     "toast": {
       "title": "系统遇到意外问题",
       "description": "部分功能可能受影响，请尝试重新操作。如问题持续，请重启应用。"
     }
+  },
+  "versionControl": {
+    "restoreComingSoon": "版本恢复功能即将推出"
   }
 }

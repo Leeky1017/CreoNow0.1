@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Avatar, Button, Text } from "../../components/primitives";
+import { Avatar, Button, Text, Tooltip } from "../../components/primitives";
 
 /**
  * Subscription plan types
@@ -109,15 +109,17 @@ export function SettingsAccount({
     <div className="max-w-[560px]">
       {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">
-        {t('settingsDialog.account.title')}
+        {t("settingsDialog.account.title")}
       </h1>
       <p className="text-[var(--color-fg-subtle)] text-sm mb-12 font-light">
-        {t('settingsDialog.account.subtitle')}
+        {t("settingsDialog.account.subtitle")}
       </p>
 
       {/* Profile Section */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.account.profile')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.account.profile")}
+        </h4>
 
         <div className={`${cardStyles} flex items-center gap-4`}>
           <Avatar src={account.avatarUrl} fallback={account.name} size="lg" />
@@ -129,9 +131,17 @@ export function SettingsAccount({
               {account.email}
             </Text>
           </div>
-          <Button variant="secondary" size="sm" className="ml-auto">
-            {t('settingsDialog.account.editProfile')}
-          </Button>
+          <Tooltip content={t("settingsDialog.account.comingSoonTooltip")}>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="ml-auto"
+              disabled
+              aria-disabled="true"
+            >
+              {t("settingsDialog.account.editProfile")}
+            </Button>
+          </Tooltip>
         </div>
       </div>
 
@@ -139,13 +149,15 @@ export function SettingsAccount({
 
       {/* Subscription Section */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.account.subscription')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.account.subscription")}
+        </h4>
 
         <div className={cardStyles}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <Text size="body" weight="medium" color="default">
-                {t('settingsDialog.account.currentPlan')}
+                {t("settingsDialog.account.currentPlan")}
               </Text>
               <PlanBadge plan={account.plan} />
             </div>
@@ -161,18 +173,33 @@ export function SettingsAccount({
 
           <div className="flex gap-3">
             {account.plan === "free" && (
-              <Button variant="primary" size="sm" onClick={onUpgrade} disabled>
-                {t('settingsDialog.account.upgradeToPro')}
-              </Button>
+              <Tooltip content={t("settingsDialog.account.comingSoonTooltip")}>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={onUpgrade}
+                  disabled
+                  aria-disabled="true"
+                >
+                  {t("settingsDialog.account.upgradeToPro")}
+                </Button>
+              </Tooltip>
             )}
             {account.plan !== "free" && (
-              <Button variant="secondary" size="sm" disabled>
-                {t('settingsDialog.account.manageSubscription')}
-              </Button>
+              <Tooltip content={t("settingsDialog.account.comingSoonTooltip")}>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  disabled
+                  aria-disabled="true"
+                >
+                  {t("settingsDialog.account.manageSubscription")}
+                </Button>
+              </Tooltip>
             )}
           </div>
           <Text size="small" color="muted" as="p" className="mt-3">
-            {t('settingsDialog.account.comingSoon')}
+            {t("settingsDialog.account.comingSoon")}
           </Text>
         </div>
       </div>
@@ -181,29 +208,34 @@ export function SettingsAccount({
 
       {/* Danger Zone */}
       <div className="mb-6">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.account.dangerZone')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.account.dangerZone")}
+        </h4>
 
         <div className={cardStyles}>
           <div className="flex items-center justify-between">
             <div>
               <Text size="body" weight="medium" color="default">
-                {t('settingsDialog.account.deleteAccount')}
+                {t("settingsDialog.account.deleteAccount")}
               </Text>
               <Text size="small" color="muted" as="p" className="mt-1">
-                {t('settingsDialog.account.deleteAccountDescription')}
+                {t("settingsDialog.account.deleteAccountDescription")}
               </Text>
             </div>
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={onDeleteAccount}
-              disabled
-            >
-              {t('settingsDialog.account.deleteAccount')}
-            </Button>
+            <Tooltip content={t("settingsDialog.account.comingSoonTooltip")}>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={onDeleteAccount}
+                disabled
+                aria-disabled="true"
+              >
+                {t("settingsDialog.account.deleteAccount")}
+              </Button>
+            </Tooltip>
           </div>
           <Text size="small" color="muted" as="p" className="mt-3">
-            {t('settingsDialog.account.comingSoon')}
+            {t("settingsDialog.account.comingSoon")}
           </Text>
         </div>
       </div>

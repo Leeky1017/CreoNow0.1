@@ -49,9 +49,21 @@ const RIGHT_PANEL_TABS: Array<{
   labelKey: string;
   testId: string;
 }> = [
-  { type: "ai", labelKey: "workbench.rightPanel.tabAi", testId: "right-panel-tab-ai" },
-  { type: "info", labelKey: "workbench.rightPanel.tabInfo", testId: "right-panel-tab-info" },
-  { type: "quality", labelKey: "workbench.rightPanel.tabQuality", testId: "right-panel-tab-quality" },
+  {
+    type: "ai",
+    labelKey: "workbench.rightPanel.tabAi",
+    testId: "right-panel-tab-ai",
+  },
+  {
+    type: "info",
+    labelKey: "workbench.rightPanel.tabInfo",
+    testId: "right-panel-tab-info",
+  },
+  {
+    type: "quality",
+    labelKey: "workbench.rightPanel.tabQuality",
+    testId: "right-panel-tab-quality",
+  },
 ];
 
 /**
@@ -195,12 +207,8 @@ export function RightPanel(props: {
               <ChatHistory
                 open={aiHistoryOpen}
                 onOpenChange={setAiHistoryOpen}
-                onSelectChat={(chatId) => {
+                onSelectChat={() => {
                   setAiHistoryOpen(false);
-                  // TODO: Load chat by ID when chat persistence is implemented (P1 scope)
-                  console.info(
-                    `[ChatHistory] select chat: ${chatId} — chat persistence not yet available`,
-                  );
                 }}
               />
             </div>

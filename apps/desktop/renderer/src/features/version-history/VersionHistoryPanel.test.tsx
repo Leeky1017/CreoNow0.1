@@ -194,7 +194,7 @@ describe("VersionHistoryPanel", () => {
     expect(previewButtons.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("calls onRestore when clicking Restore button", () => {
+  it("does not call onRestore because Restore button is disabled (coming soon)", () => {
     const onRestore = vi.fn();
     render(
       <VersionHistoryPanel
@@ -207,10 +207,11 @@ describe("VersionHistoryPanel", () => {
 
     // Get the button with text "Restore" (not just title)
     const restoreButtons = screen.getAllByRole("button", { name: /Restore/i });
-    // Click the first one which should be the explicit button in the selected card
+    // Restore button should be disabled — clicking does nothing
+    expect(restoreButtons[0]).toBeDisabled();
     fireEvent.click(restoreButtons[0]);
 
-    expect(onRestore).toHaveBeenCalledWith("v-1042");
+    expect(onRestore).not.toHaveBeenCalled();
   });
 
   it("calls onCompare when clicking Compare button", () => {
@@ -418,7 +419,9 @@ describe("VersionHistoryPanel — display and metadata", () => {
     expect(screen.getByText("AI Modification")).toBeInTheDocument();
     expect(screen.getByText("2 paragraphs affected")).toBeInTheDocument();
     expect(screen.getByText("Change Preview")).toBeInTheDocument();
-    expect(screen.getByText("Add了新的安全协议Chapters...")).toBeInTheDocument();
+    expect(
+      screen.getByText("Add了新的安全协议Chapters..."),
+    ).toBeInTheDocument();
   });
 
   it("renders ai-accept reason as AI Modification label", () => {
