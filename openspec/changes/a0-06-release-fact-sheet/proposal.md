@@ -29,13 +29,13 @@ v0.1 缺少一张诚实的发布事实表——哪些能力真实存在并稳定
 
 ### 4. 证据来源
 
-| 文档 | 章节 | 内容 |
-|------|------|------|
-| `docs/audit/amp/01-master-roadmap.md` | §5.2 | Phase 0 优先动作第 9 条：发布事实表中声明本地数据安全边界 |
-| `docs/audit/amp/06-windows-release-readiness.md` | §五 | 最低要求：在发布事实表中诚实声明数据存储边界 |
-| `docs/audit/amp/08-backend-module-health-audit.md` | §七 | 后端模块健康度总表——每个模块的真实完成度与缺口 |
-| `docs/audit/amp/05-implementation-backlog.md` | P0-3 | 能力诚实分级与假功能处置任务簇：发布事实表 |
-| `docs/audit/amp/10-phase-0-issue-execution-plan.md` | 载体分类表 | A0-06 定义为「直接 PR」，纯文档不改代码行为 |
+| 文档                                                | 章节       | 内容                                                      |
+| --------------------------------------------------- | ---------- | --------------------------------------------------------- |
+| `docs/audit/amp/01-master-roadmap.md`               | §5.2       | Phase 0 优先动作第 9 条：发布事实表中声明本地数据安全边界 |
+| `docs/audit/amp/06-windows-release-readiness.md`    | §五        | 最低要求：在发布事实表中诚实声明数据存储边界              |
+| `docs/audit/amp/08-backend-module-health-audit.md`  | §七        | 后端模块健康度总表——每个模块的真实完成度与缺口            |
+| `docs/audit/amp/05-implementation-backlog.md`       | P0-3       | 能力诚实分级与假功能处置任务簇：发布事实表                |
+| `docs/audit/amp/10-phase-0-issue-execution-plan.md` | 载体分类表 | A0-06 定义为「直接 PR」，纯文档不改代码行为               |
 
 ---
 
