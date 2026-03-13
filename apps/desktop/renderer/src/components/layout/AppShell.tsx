@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
+import { LAYOUT_SHORTCUTS } from "../../config/shortcuts";
 import {
   useLayoutStore,
   LAYOUT_DEFAULTS,
@@ -178,7 +179,7 @@ function ZenModeOverlay(props: {
 /**
  * Build the static command palette entries (non-file items).
  */
-function buildCommandEntries(args: {
+export function buildCommandEntries(args: {
   modKey: string;
   t: ReturnType<typeof useTranslation>["t"];
   currentProjectId: string | null;
@@ -191,6 +192,7 @@ function buildCommandEntries(args: {
   createDocument: (args: { projectId: string }) => Promise<{ ok: boolean }>;
   openVersionHistoryPanel: () => void;
   setCreateProjectDialogOpen: (open: boolean) => void;
+  openGlobalSearch: () => void;
   close: () => void;
 }): CommandItem[] {
   return [
@@ -245,6 +247,17 @@ function buildCommandEntries(args: {
       category: "command",
       onSelect: () => {
         args.setZenMode(!args.zenMode);
+        args.close();
+      },
+    },
+    {
+      id: "open-global-search",
+      label: args.t("search.shortcut.label"),
+      shortcut: LAYOUT_SHORTCUTS.globalSearch.display(),
+      group: "command",
+      category: "command",
+      onSelect: () => {
+        args.openGlobalSearch();
         args.close();
       },
     },
@@ -348,6 +361,7 @@ function buildFileEntries(args: {
  */
 function AppShellOverlays(props: {
   spotlightOpen: boolean;
+  searchFocusNonce: number;
   currentProjectId: string | null;
   onCloseSpotlight: () => void;
   dialogType: DialogType | null;
@@ -382,6 +396,7 @@ function AppShellOverlays(props: {
           <SearchPanel
             projectId={props.currentProjectId ?? "__no_project__"}
             open={true}
+            focusNonce={props.searchFocusNonce}
             onClose={props.onCloseSpotlight}
           />
         </div>
@@ -614,6 +629,8 @@ function useAppShellController() {
   const [exportDialogOpen, setExportDialogOpen] = React.useState(false);
   const [createProjectDialogOpen, setCreateProjectDialogOpen] =
     React.useState(false);
+  const [searchFocusNonce, setSearchFocusNonce] = React.useState(0);
+  const searchRestoreFocusRef = React.useRef<HTMLElement | null>(null);
 
   const { compareState, closeCompare } = useVersionCompare();
   const { confirm, dialogProps } = useConfirmDialog();
@@ -706,6 +723,27 @@ function useAppShellController() {
     [],
   );
 
+  const openGlobalSearch = React.useCallback(() => {
+    if (typeof document !== "undefined") {
+      const activeElement = document.activeElement;
+      searchRestoreFocusRef.current =
+        activeElement instanceof HTMLElement ? activeElement : null;
+    }
+    setSpotlightOpen(true);
+    setSearchFocusNonce((value) => value + 1);
+  }, [setSpotlightOpen]);
+
+  const closeGlobalSearch = React.useCallback(() => {
+    setSpotlightOpen(false);
+    const restoreTarget = searchRestoreFocusRef.current;
+    if (restoreTarget) {
+      queueMicrotask(() => {
+        restoreTarget.focus();
+      });
+    }
+  }, [setSpotlightOpen]);
+
+
   const layoutActions = React.useMemo<CommandPaletteLayoutActions>(
     () => ({
       onToggleSidebar: toggleSidebarVisibility,
@@ -777,6 +815,7 @@ function useAppShellController() {
       },
       openVersionHistoryPanel,
       setCreateProjectDialogOpen,
+      openGlobalSearch,
       close,
     });
     const fileEntries = buildFileEntries({
@@ -860,6 +899,9 @@ function useAppShellController() {
     handleSwitchProject,
     openCommandPalette,
     openSettingsDialog,
+    openGlobalSearch,
+    closeGlobalSearch,
+    searchFocusNonce,
     commandPaletteKey,
     commandPaletteOpen,
     setCommandPaletteOpen,
@@ -1054,7 +1096,7 @@ export function AppShell(): JSX.Element {
           if (!ctrl.currentProjectId) return;
           void ctrl.createDocument({ projectId: ctrl.currentProjectId });
         }}
-        onOpenGlobalSearch={() => ctrl.setSpotlightOpen(true)}
+        onOpenGlobalSearch={ctrl.openGlobalSearch}
       />
 
       <PanelOrchestrator>
@@ -1162,8 +1204,9 @@ export function AppShell(): JSX.Element {
             overlays={
               <AppShellOverlays
                 spotlightOpen={ctrl.spotlightOpen}
+                searchFocusNonce={ctrl.searchFocusNonce}
                 currentProjectId={ctrl.currentProjectId}
-                onCloseSpotlight={() => ctrl.setSpotlightOpen(false)}
+                onCloseSpotlight={ctrl.closeGlobalSearch}
                 dialogType={ctrl.dialogType}
                 onCloseDialog={() => ctrl.setDialogType(null)}
                 dialogTitleResolver={(d) => resolveDialogTitle(d, ctrl.t)}

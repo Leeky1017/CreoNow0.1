@@ -703,6 +703,7 @@ function SearchFooter(props: {
 export function SearchPanel(props: {
   projectId: string;
   open: boolean;
+  focusNonce?: number;
   onClose?: () => void;
   /** Mock results for storybook demonstration */
   mockResults?: SearchResultItem[];
@@ -721,6 +722,7 @@ export function SearchPanel(props: {
     mockQuery,
     mockStatus,
     mockIndexState,
+    focusNonce = 0,
   } = props;
 
   const { t } = useTranslation();
@@ -773,7 +775,7 @@ export function SearchPanel(props: {
     if (open) {
       inputRef.current?.focus();
     }
-  }, [open]);
+  }, [focusNonce, open]);
 
   function handleInputKeyDown(e: React.KeyboardEvent): void {
     if (e.key === "Enter") {
