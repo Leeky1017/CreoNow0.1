@@ -582,6 +582,39 @@ function useAppShellAiCompare() {
   };
 }
 
+function useGlobalSearchFocusController(args: {
+  setSpotlightOpen: (open: boolean) => void;
+}) {
+  const { setSpotlightOpen } = args;
+  const [searchFocusNonce, setSearchFocusNonce] = React.useState(0);
+  const [searchRestoreTarget, setSearchRestoreTarget] = React.useState<HTMLElement | null>(null);
+
+  const openGlobalSearch = React.useCallback(() => {
+    const activeElement =
+      typeof document !== "undefined" && document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+    setSearchRestoreTarget(activeElement);
+    setSpotlightOpen(true);
+    setSearchFocusNonce((value) => value + 1);
+  }, [setSpotlightOpen]);
+
+  const closeGlobalSearch = React.useCallback(() => {
+    setSpotlightOpen(false);
+    if (searchRestoreTarget) {
+      queueMicrotask(() => {
+        searchRestoreTarget.focus();
+      });
+    }
+  }, [searchRestoreTarget, setSpotlightOpen]);
+
+  return {
+    searchFocusNonce,
+    openGlobalSearch,
+    closeGlobalSearch,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // useAppShellController – all state, effects, callbacks and memos
 // ---------------------------------------------------------------------------
@@ -629,12 +662,12 @@ function useAppShellController() {
   const [exportDialogOpen, setExportDialogOpen] = React.useState(false);
   const [createProjectDialogOpen, setCreateProjectDialogOpen] =
     React.useState(false);
-  const [searchFocusNonce, setSearchFocusNonce] = React.useState(0);
-  const searchRestoreFocusRef = React.useRef<HTMLElement | null>(null);
 
   const { compareState, closeCompare } = useVersionCompare();
   const { confirm, dialogProps } = useConfirmDialog();
   const aiCompare = useAppShellAiCompare();
+  const { searchFocusNonce, openGlobalSearch, closeGlobalSearch } =
+    useGlobalSearchFocusController({ setSpotlightOpen });
 
   // Bootstrap projects on mount
   React.useEffect(() => {
@@ -722,26 +755,6 @@ function useAppShellController() {
     },
     [],
   );
-
-  const openGlobalSearch = React.useCallback(() => {
-    if (typeof document !== "undefined") {
-      const activeElement = document.activeElement;
-      searchRestoreFocusRef.current =
-        activeElement instanceof HTMLElement ? activeElement : null;
-    }
-    setSpotlightOpen(true);
-    setSearchFocusNonce((value) => value + 1);
-  }, [setSpotlightOpen]);
-
-  const closeGlobalSearch = React.useCallback(() => {
-    setSpotlightOpen(false);
-    const restoreTarget = searchRestoreFocusRef.current;
-    if (restoreTarget) {
-      queueMicrotask(() => {
-        restoreTarget.focus();
-      });
-    }
-  }, [setSpotlightOpen]);
 
   const layoutActions = React.useMemo<CommandPaletteLayoutActions>(
     () => ({
@@ -862,6 +875,7 @@ function useAppShellController() {
     toggleSidebarVisibility,
     withRecentTracking,
     zenMode,
+    openGlobalSearch,
   ]);
 
   return {
