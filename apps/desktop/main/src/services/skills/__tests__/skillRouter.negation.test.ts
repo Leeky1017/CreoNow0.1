@@ -93,6 +93,13 @@ describe("isNegated — 双重否定", () => {
     const input = "并非不要扩写";
     expect(isNegated(input, input.indexOf("扩写"), "扩写")).toBe(false);
   });
+
+  it("not that I don't want to + continue writing → 非否定（双重否定 = 正向）", () => {
+    const input = "not that I don't want to continue writing this scene";
+    expect(
+      isNegated(input, input.indexOf("continue writing"), "continue writing"),
+    ).toBe(false);
+  });
 });
 
 // ── S-NEG-5: 正向关键词无否定前缀 → 不否定 ──────────────────────
@@ -177,6 +184,15 @@ describe("inferSkillFromInput — 否定场景", () => {
     expect(
       inferSkillFromInput({
         input: "不是不想续写，请帮我续写后面的内容",
+        hasSelection: false,
+      }),
+    ).toBe("builtin:continue");
+  });
+
+  it("not that I don't want to continue writing → builtin:continue", () => {
+    expect(
+      inferSkillFromInput({
+        input: "not that I don't want to continue writing this chapter",
         hasSelection: false,
       }),
     ).toBe("builtin:continue");
