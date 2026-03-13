@@ -80,7 +80,9 @@ export function useFlushErrorToast(): void {
   const { showToast } = useAppToast();
   const documentId = useEditorStore((s) => s.documentId);
   const pendingFlushError = useEditorStore((s) => s.pendingFlushError);
-  const clearPendingFlushError = useEditorStore((s) => s.clearPendingFlushError);
+  const clearPendingFlushError = useEditorStore(
+    (s) => s.clearPendingFlushError,
+  );
 
   React.useEffect(() => {
     if (!pendingFlushError || !documentId) {

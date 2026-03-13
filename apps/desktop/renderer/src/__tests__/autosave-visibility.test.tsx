@@ -288,7 +288,8 @@ describe("A0-02 文档切换 flush 失败 Toast", () => {
       store.setState({
         projectId: "proj-1",
         documentId: "doc-1",
-        lastSavedOrQueuedJson: '{"type":"doc","content":[{"type":"paragraph"}]}',
+        lastSavedOrQueuedJson:
+          '{"type":"doc","content":[{"type":"paragraph"}]}',
         autosaveStatus: "idle",
         autosaveError: null,
       });

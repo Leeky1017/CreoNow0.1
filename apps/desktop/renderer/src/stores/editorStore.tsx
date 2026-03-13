@@ -128,7 +128,13 @@ function createSaveQueueUnexpectedErrorHandler(deps: {
   get: () => EditorStore;
   set: (patch: Partial<EditorStore>) => void;
 }) {
-  return ({ request, error }: { request: EditorSaveRequest; error: unknown }) => {
+  return ({
+    request,
+    error,
+  }: {
+    request: EditorSaveRequest;
+    error: unknown;
+  }) => {
     const stillCurrent =
       deps.get().projectId === request.projectId &&
       deps.get().documentId === request.documentId;
@@ -278,7 +284,9 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
         if (currentRes.ok) {
           documentId = currentRes.data.documentId;
         } else if (currentRes.error.code === "NOT_FOUND") {
-          const listRes = await deps.invoke("file:document:list", { projectId });
+          const listRes = await deps.invoke("file:document:list", {
+            projectId,
+          });
           if (!shouldCommit()) return;
           if (!listRes.ok) {
             set({ bootstrapStatus: "error" });
