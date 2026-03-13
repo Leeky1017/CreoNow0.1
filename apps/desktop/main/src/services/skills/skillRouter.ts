@@ -122,7 +122,10 @@ export function isNegated(
       if (prefix.includes(dn)) return false;
     }
   } else {
-    const normalizedPrefix = prefix.toLowerCase().replace(/\s+/g, " ").trimEnd();
+    const normalizedPrefix = prefix
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .trimEnd();
     for (const pattern of EN_DOUBLE_NEGATION_PATTERNS) {
       if (pattern.test(normalizedPrefix)) return false;
     }

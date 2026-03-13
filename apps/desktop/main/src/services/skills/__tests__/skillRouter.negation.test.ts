@@ -207,7 +207,6 @@ describe("inferSkillFromInput — 否定场景", () => {
     ).toBe("builtin:continue");
   });
 
-
   // S-NEG-6: 窗口外否定不触发
   it("否定词距离超出窗口 → 正常匹配 builtin:continue", () => {
     expect(
