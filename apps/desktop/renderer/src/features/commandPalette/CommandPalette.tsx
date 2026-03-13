@@ -26,7 +26,17 @@ import { Text } from "../../components/primitives/Text";
 import { CommandItem as CommandItemComposite } from "../../components/composites/CommandItem";
 import { useProjectStore } from "../../stores/projectStore";
 import "../../i18n";
-import { Download, FolderPlus, History, Maximize, PanelLeft, PanelRight, Search, Settings, SquarePen } from "lucide-react";
+import {
+  Download,
+  FolderPlus,
+  History,
+  Maximize,
+  PanelLeft,
+  PanelRight,
+  Search,
+  Settings,
+  SquarePen,
+} from "lucide-react";
 import { fuzzyFilter } from "./fuzzyMatch";
 
 // =============================================================================
@@ -308,148 +318,166 @@ function buildDefaultCommands(ctx: {
   documentActions: CommandPaletteProps["documentActions"];
 }): CommandItem[] {
   return [
-      // === Settings ===
-      {
-        id: "open-settings",
-        label: "Open Settings",
-        icon: <SettingsIcon className="text-[var(--color-fg-muted)]" />,
-        shortcut: `${ctx.modKey},`,
-        group: GROUP_IDS.suggestions,
-        onSelect: () => {
-          ctx.setErrorText(null);
-          if (ctx.dialogActions?.onOpenSettings) {
-            ctx.dialogActions.onOpenSettings();
+    // === Settings ===
+    {
+      id: "open-settings",
+      label: "Open Settings",
+      icon: <SettingsIcon className="text-[var(--color-fg-muted)]" />,
+      shortcut: `${ctx.modKey},`,
+      group: GROUP_IDS.suggestions,
+      onSelect: () => {
+        ctx.setErrorText(null);
+        if (ctx.dialogActions?.onOpenSettings) {
+          ctx.dialogActions.onOpenSettings();
+          ctx.onOpenChange(false);
+        } else {
+          ctx.setErrorText(
+            ctx.t("workbench.commandPalette.errors.settingsUnavailable"),
+          );
+        }
+      },
+    },
+    // === Export ===
+    {
+      id: "export",
+      label: "Export…",
+      icon: <DownloadIcon className="text-[var(--color-fg-muted)]" />,
+      group: GROUP_IDS.suggestions,
+      onSelect: () => {
+        ctx.setErrorText(null);
+        // Always open ExportDialog; it handles NO_PROJECT error internally
+        if (ctx.dialogActions?.onOpenExport) {
+          ctx.dialogActions.onOpenExport();
+          ctx.onOpenChange(false);
+        } else {
+          ctx.setErrorText(
+            ctx.t("workbench.commandPalette.errors.exportUnavailable"),
+          );
+        }
+      },
+    },
+    // === Layout: Toggle Sidebar ===
+    {
+      id: "toggle-sidebar",
+      label: "Toggle Sidebar",
+      icon: <SidebarIcon className="text-[var(--color-fg-muted)]" />,
+      shortcut: `${ctx.modKey}\\`,
+      group: GROUP_IDS.layout,
+      onSelect: () => {
+        ctx.setErrorText(null);
+        if (ctx.layoutActions?.onToggleSidebar) {
+          ctx.layoutActions.onToggleSidebar();
+          ctx.onOpenChange(false);
+        } else {
+          ctx.setErrorText(
+            ctx.t("workbench.commandPalette.errors.layoutUnavailable"),
+          );
+        }
+      },
+    },
+    // === Layout: Toggle Right Panel ===
+    {
+      id: "toggle-right-panel",
+      label: "Toggle Right Panel",
+      icon: <PanelRightIcon className="text-[var(--color-fg-muted)]" />,
+      shortcut: `${ctx.modKey}L`,
+      group: GROUP_IDS.layout,
+      onSelect: () => {
+        ctx.setErrorText(null);
+        if (ctx.layoutActions?.onToggleRightPanel) {
+          ctx.layoutActions.onToggleRightPanel();
+          ctx.onOpenChange(false);
+        } else {
+          ctx.setErrorText(
+            ctx.t("workbench.commandPalette.errors.layoutUnavailable"),
+          );
+        }
+      },
+    },
+    // === Layout: Zen Mode ===
+    {
+      id: "toggle-zen-mode",
+      label: "Toggle Zen Mode",
+      icon: <MaximizeIcon className="text-[var(--color-fg-muted)]" />,
+      shortcut: "F11",
+      group: GROUP_IDS.layout,
+      onSelect: () => {
+        ctx.setErrorText(null);
+        if (ctx.layoutActions?.onToggleZenMode) {
+          ctx.layoutActions.onToggleZenMode();
+          ctx.onOpenChange(false);
+        } else {
+          ctx.setErrorText(
+            ctx.t("workbench.commandPalette.errors.layoutUnavailable"),
+          );
+        }
+      },
+    },
+    // === Document: Create New Document ===
+    {
+      id: "create-new-document",
+      label: "Create New Document",
+      icon: <EditIcon className="text-[var(--color-fg-muted)]" />,
+      shortcut: `${ctx.modKey}N`,
+      group: GROUP_IDS.document,
+      onSelect: async () => {
+        ctx.setErrorText(null);
+        if (!ctx.currentProjectId) {
+          ctx.setErrorText(ctx.t("workbench.commandPalette.errors.noProject"));
+          return;
+        }
+        if (ctx.documentActions?.onCreateDocument) {
+          try {
+            await ctx.documentActions.onCreateDocument();
             ctx.onOpenChange(false);
-          } else {
-            ctx.setErrorText(ctx.t("workbench.commandPalette.errors.settingsUnavailable"));
+          } catch {
+            ctx.setErrorText(
+              ctx.t("workbench.commandPalette.errors.createDocumentFailed"),
+            );
           }
-        },
+        } else {
+          ctx.setErrorText(
+            ctx.t("workbench.commandPalette.errors.documentUnavailable"),
+          );
+        }
       },
-      // === Export ===
-      {
-        id: "export",
-        label: "Export…",
-        icon: <DownloadIcon className="text-[var(--color-fg-muted)]" />,
-        group: GROUP_IDS.suggestions,
-        onSelect: () => {
-          ctx.setErrorText(null);
-          // Always open ExportDialog; it handles NO_PROJECT error internally
-          if (ctx.dialogActions?.onOpenExport) {
-            ctx.dialogActions.onOpenExport();
-            ctx.onOpenChange(false);
-          } else {
-            ctx.setErrorText(ctx.t("workbench.commandPalette.errors.exportUnavailable"));
-          }
-        },
+    },
+    {
+      id: "open-version-history",
+      label: "Open Version History",
+      icon: <HistoryIcon className="text-[var(--color-fg-muted)]" />,
+      group: GROUP_IDS.document,
+      onSelect: () => {
+        ctx.setErrorText(null);
+        if (ctx.layoutActions?.onOpenVersionHistory) {
+          ctx.layoutActions.onOpenVersionHistory();
+          ctx.onOpenChange(false);
+        } else {
+          ctx.setErrorText(
+            ctx.t("workbench.commandPalette.errors.versionHistoryUnavailable"),
+          );
+        }
       },
-      // === Layout: Toggle Sidebar ===
-      {
-        id: "toggle-sidebar",
-        label: "Toggle Sidebar",
-        icon: <SidebarIcon className="text-[var(--color-fg-muted)]" />,
-        shortcut: `${ctx.modKey}\\`,
-        group: GROUP_IDS.layout,
-        onSelect: () => {
-          ctx.setErrorText(null);
-          if (ctx.layoutActions?.onToggleSidebar) {
-            ctx.layoutActions.onToggleSidebar();
-            ctx.onOpenChange(false);
-          } else {
-            ctx.setErrorText(ctx.t("workbench.commandPalette.errors.layoutUnavailable"));
-          }
-        },
+    },
+    // === Project: Create New Project ===
+    {
+      id: "create-new-project",
+      label: "Create New Project",
+      icon: <FolderPlusIcon className="text-[var(--color-fg-muted)]" />,
+      shortcut: `${ctx.modKey}⇧N`,
+      group: GROUP_IDS.project,
+      onSelect: () => {
+        ctx.setErrorText(null);
+        if (ctx.dialogActions?.onOpenCreateProject) {
+          ctx.dialogActions.onOpenCreateProject();
+          ctx.onOpenChange(false);
+        } else {
+          ctx.setErrorText(
+            ctx.t("workbench.commandPalette.errors.createProjectUnavailable"),
+          );
+        }
       },
-      // === Layout: Toggle Right Panel ===
-      {
-        id: "toggle-right-panel",
-        label: "Toggle Right Panel",
-        icon: <PanelRightIcon className="text-[var(--color-fg-muted)]" />,
-        shortcut: `${ctx.modKey}L`,
-        group: GROUP_IDS.layout,
-        onSelect: () => {
-          ctx.setErrorText(null);
-          if (ctx.layoutActions?.onToggleRightPanel) {
-            ctx.layoutActions.onToggleRightPanel();
-            ctx.onOpenChange(false);
-          } else {
-            ctx.setErrorText(ctx.t("workbench.commandPalette.errors.layoutUnavailable"));
-          }
-        },
-      },
-      // === Layout: Zen Mode ===
-      {
-        id: "toggle-zen-mode",
-        label: "Toggle Zen Mode",
-        icon: <MaximizeIcon className="text-[var(--color-fg-muted)]" />,
-        shortcut: "F11",
-        group: GROUP_IDS.layout,
-        onSelect: () => {
-          ctx.setErrorText(null);
-          if (ctx.layoutActions?.onToggleZenMode) {
-            ctx.layoutActions.onToggleZenMode();
-            ctx.onOpenChange(false);
-          } else {
-            ctx.setErrorText(ctx.t("workbench.commandPalette.errors.layoutUnavailable"));
-          }
-        },
-      },
-      // === Document: Create New Document ===
-      {
-        id: "create-new-document",
-        label: "Create New Document",
-        icon: <EditIcon className="text-[var(--color-fg-muted)]" />,
-        shortcut: `${ctx.modKey}N`,
-        group: GROUP_IDS.document,
-        onSelect: async () => {
-          ctx.setErrorText(null);
-          if (!ctx.currentProjectId) {
-            ctx.setErrorText(ctx.t("workbench.commandPalette.errors.noProject"));
-            return;
-          }
-          if (ctx.documentActions?.onCreateDocument) {
-            try {
-              await ctx.documentActions.onCreateDocument();
-              ctx.onOpenChange(false);
-            } catch {
-              ctx.setErrorText(ctx.t("workbench.commandPalette.errors.createDocumentFailed"));
-            }
-          } else {
-            ctx.setErrorText(ctx.t("workbench.commandPalette.errors.documentUnavailable"));
-          }
-        },
-      },
-      {
-        id: "open-version-history",
-        label: "Open Version History",
-        icon: <HistoryIcon className="text-[var(--color-fg-muted)]" />,
-        group: GROUP_IDS.document,
-        onSelect: () => {
-          ctx.setErrorText(null);
-          if (ctx.layoutActions?.onOpenVersionHistory) {
-            ctx.layoutActions.onOpenVersionHistory();
-            ctx.onOpenChange(false);
-          } else {
-            ctx.setErrorText(ctx.t("workbench.commandPalette.errors.versionHistoryUnavailable"));
-          }
-        },
-      },
-      // === Project: Create New Project ===
-      {
-        id: "create-new-project",
-        label: "Create New Project",
-        icon: <FolderPlusIcon className="text-[var(--color-fg-muted)]" />,
-        shortcut: `${ctx.modKey}⇧N`,
-        group: GROUP_IDS.project,
-        onSelect: () => {
-          ctx.setErrorText(null);
-          if (ctx.dialogActions?.onOpenCreateProject) {
-            ctx.dialogActions.onOpenCreateProject();
-            ctx.onOpenChange(false);
-          } else {
-            ctx.setErrorText(ctx.t("workbench.commandPalette.errors.createProjectUnavailable"));
-          }
-        },
-      },
+    },
   ];
 }
 
@@ -619,7 +647,7 @@ export function CommandPalette({
         data-testid="command-palette"
         role="dialog"
         aria-modal="true"
-        aria-label={t('workbench.commandPalette.ariaLabel')}
+        aria-label={t("workbench.commandPalette.ariaLabel")}
         onClick={(e) => e.stopPropagation()}
         className="w-[600px] max-w-[90vw] flex flex-col bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
@@ -641,7 +669,7 @@ export function CommandPalette({
             onKeyDown={handleKeyDown}
             placeholder={t("workbench.commandPalette.searchPlaceholder")}
             className="flex-1 bg-transparent border-none text-[15px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] outline-none"
-            aria-label={t('workbench.commandPalette.searchAriaLabel')}
+            aria-label={t("workbench.commandPalette.searchAriaLabel")}
           />
         </div>
 
