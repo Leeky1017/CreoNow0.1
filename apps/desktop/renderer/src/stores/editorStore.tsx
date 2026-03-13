@@ -155,6 +155,76 @@ function createSaveQueueUnexpectedErrorHandler(deps: {
   };
 }
 
+function createRetryLastAutosaveAction(deps: {
+  get: () => EditorStore;
+  set: (patch: Partial<EditorStore>) => void;
+}) {
+  return async () => {
+    const state = deps.get();
+    if (
+      !state.projectId ||
+      !state.documentId ||
+      !state.lastSavedOrQueuedJson ||
+      state.lastSavedOrQueuedJson.length === 0
+    ) {
+      return;
+    }
+
+    deps.set({ autosaveError: null });
+    await state.save({
+      projectId: state.projectId,
+      documentId: state.documentId,
+      contentJson: state.lastSavedOrQueuedJson,
+      actor: "auto",
+      reason: "autosave",
+    });
+  };
+}
+
+function createFlushPendingAutosaveAction(deps: {
+  get: () => EditorStore;
+  set: (patch: Partial<EditorStore>) => void;
+}) {
+  return async () => {
+    const state = deps.get();
+    if (
+      !state.projectId ||
+      !state.documentId ||
+      !state.lastSavedOrQueuedJson ||
+      state.lastSavedOrQueuedJson.length === 0
+    ) {
+      deps.set({ pendingFlushError: null });
+      return;
+    }
+
+    await state.save({
+      projectId: state.projectId,
+      documentId: state.documentId,
+      contentJson: state.lastSavedOrQueuedJson,
+      actor: "auto",
+      reason: "autosave",
+    });
+
+    const current = deps.get();
+    if (
+      current.projectId === state.projectId &&
+      current.documentId === state.documentId &&
+      current.autosaveStatus === "error" &&
+      current.autosaveError
+    ) {
+      deps.set({
+        pendingFlushError: {
+          documentId: state.documentId,
+          error: current.autosaveError,
+        },
+      });
+      return;
+    }
+
+    deps.set({ pendingFlushError: null });
+  };
+}
+
 /**
  * Create a zustand store for editor/document state.
  *
@@ -454,65 +524,15 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
         return true;
       },
 
-      retryLastAutosave: async () => {
-        const state = get();
-        if (
-          !state.projectId ||
-          !state.documentId ||
-          !state.lastSavedOrQueuedJson ||
-          state.lastSavedOrQueuedJson.length === 0
-        ) {
-          return;
-        }
+      retryLastAutosave: createRetryLastAutosaveAction({
+        get,
+        set: (patch) => set(patch),
+      }),
 
-        set({ autosaveError: null });
-        await state.save({
-          projectId: state.projectId,
-          documentId: state.documentId,
-          contentJson: state.lastSavedOrQueuedJson,
-          actor: "auto",
-          reason: "autosave",
-        });
-      },
-
-      flushPendingAutosave: async () => {
-        const state = get();
-        if (
-          !state.projectId ||
-          !state.documentId ||
-          !state.lastSavedOrQueuedJson ||
-          state.lastSavedOrQueuedJson.length === 0
-        ) {
-          set({ pendingFlushError: null });
-          return;
-        }
-
-        await state.save({
-          projectId: state.projectId,
-          documentId: state.documentId,
-          contentJson: state.lastSavedOrQueuedJson,
-          actor: "auto",
-          reason: "autosave",
-        });
-
-        const current = get();
-        if (
-          current.projectId === state.projectId &&
-          current.documentId === state.documentId &&
-          current.autosaveStatus === "error" &&
-          current.autosaveError
-        ) {
-          set({
-            pendingFlushError: {
-              documentId: state.documentId,
-              error: current.autosaveError,
-            },
-          });
-          return;
-        }
-
-        set({ pendingFlushError: null });
-      },
+      flushPendingAutosave: createFlushPendingAutosaveAction({
+        get,
+        set: (patch) => set(patch),
+      }),
 
       clearPendingFlushError: () => {
         set({ pendingFlushError: null });
