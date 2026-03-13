@@ -61,13 +61,13 @@ const dividerStyles = [
 ].join(" ");
 
 /**
- * Backup interval options
+ * Backup interval options — retained for v0.2 (A0-17: hidden in v0.1)
  */
-const backupIntervalOptions = [
-  { value: "5min", label: "Every 5 minutes" },
-  { value: "15min", label: "Every 15 minutes" },
-  { value: "1hour", label: "Every hour" },
-];
+// const backupIntervalOptions = [
+//   { value: "5min", label: "Every 5 minutes" },
+//   { value: "15min", label: "Every 15 minutes" },
+//   { value: "1hour", label: "Every hour" },
+// ];
 
 /**
  * Typography options
@@ -92,13 +92,16 @@ export function SettingsGeneral({
 }: SettingsGeneralProps): JSX.Element {
   const { t } = useTranslation();
 
-  const languageOptions = React.useMemo(() => [
-    { value: "zh-CN", label: t('settingsDialog.general.zhCN') },
-    { value: "en", label: "English" },
-  ], [t]);
+  const languageOptions = React.useMemo(
+    () => [
+      { value: "zh-CN", label: t("settingsDialog.general.zhCN") },
+      { value: "en", label: "English" },
+    ],
+    [t],
+  );
 
-  const [currentLanguage, setCurrentLanguage] = React.useState(
-    () => getLanguagePreference(),
+  const [currentLanguage, setCurrentLanguage] = React.useState(() =>
+    getLanguagePreference(),
   );
 
   const handleLanguageChange = React.useCallback((value: string) => {
@@ -118,16 +121,22 @@ export function SettingsGeneral({
     <div className="max-w-[560px]">
       {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">
-        {t('settingsDialog.general.title')}
+        {t("settingsDialog.general.title")}
       </h1>
       <p className="text-[var(--color-fg-subtle)] text-sm mb-12 font-light">
-        {t('settingsDialog.general.subtitle')}
+        {t("settingsDialog.general.subtitle")}
       </p>
 
       {/* Language Section */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.general.language')}</h4>
-        <FormField label={t('settings.general.displayLanguage')} htmlFor="display-language" help={t('settings.general.displayLanguageHelp')}>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.general.language")}
+        </h4>
+        <FormField
+          label={t("settings.general.displayLanguage")}
+          htmlFor="display-language"
+          help={t("settings.general.displayLanguageHelp")}
+        >
           <Select
             options={languageOptions}
             value={currentLanguage}
@@ -141,19 +150,21 @@ export function SettingsGeneral({
 
       {/* Writing Experience Section */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.general.writingExperience')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.general.writingExperience")}
+        </h4>
 
         <div className="flex flex-col gap-8">
           <Toggle
-            label={t('settings.general.focusMode')}
-            description={t('settings.general.focusModeDescription')}
+            label={t("settings.general.focusMode")}
+            description={t("settings.general.focusModeDescription")}
             checked={settings.focusMode}
             onCheckedChange={(checked) => updateSetting("focusMode", checked)}
           />
 
           <Toggle
-            label={t('settings.general.typewriterScroll')}
-            description={t('settings.general.typewriterScrollDescription')}
+            label={t("settings.general.typewriterScroll")}
+            description={t("settings.general.typewriterScrollDescription")}
             checked={settings.typewriterScroll}
             onCheckedChange={(checked) =>
               updateSetting("typewriterScroll", checked)
@@ -161,8 +172,8 @@ export function SettingsGeneral({
           />
 
           <Toggle
-            label={t('settings.general.smartPunctuation')}
-            description={t('settings.general.smartPunctuationDescription')}
+            label={t("settings.general.smartPunctuation")}
+            description={t("settings.general.smartPunctuationDescription")}
             checked={settings.smartPunctuation}
             onCheckedChange={(checked) =>
               updateSetting("smartPunctuation", checked)
@@ -175,26 +186,21 @@ export function SettingsGeneral({
 
       {/* Data & Storage Section */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.general.dataAndStorage')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.general.dataAndStorage")}
+        </h4>
 
         <div className="flex flex-col gap-6">
           <Toggle
-            label={t('settings.general.localAutoSave')}
-            description={t('settings.general.localAutoSaveDescription')}
+            label={t("settings.general.localAutoSave")}
+            description={t("settings.general.localAutoSaveDescription")}
             checked={settings.localAutoSave}
             onCheckedChange={(checked) =>
               updateSetting("localAutoSave", checked)
             }
           />
 
-          <FormField label={t('settings.general.backupInterval')} htmlFor="backup-interval" help={t('settings.general.backupIntervalHelp')} className="mt-2">
-            <Select
-              options={backupIntervalOptions}
-              value={settings.backupInterval}
-              onValueChange={(value) => updateSetting("backupInterval", value)}
-              fullWidth
-            />
-          </FormField>
+          {/* A0-17: Backup interval hidden — no backend in v0.1 (see openspec/changes/a0-17-backup-entry-resolution/) */}
         </div>
       </div>
 
@@ -202,19 +208,27 @@ export function SettingsGeneral({
 
       {/* Editor Defaults Section */}
       <div className="mb-6">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.general.editorDefaults')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.general.editorDefaults")}
+        </h4>
 
         <div className="flex flex-col gap-8 mb-8">
           <Toggle
-            label={t('settings.general.differentiateAiEdits')}
-            description={t('settingsDialog.general.differentiateAiEditsDescription', { marker: t('settingsDialog.general.aiModifyMarker') })}
+            label={t("settings.general.differentiateAiEdits")}
+            description={t(
+              "settingsDialog.general.differentiateAiEditsDescription",
+              { marker: t("settingsDialog.general.aiModifyMarker") },
+            )}
             checked={showAiMarks}
             onCheckedChange={onShowAiMarksChange}
           />
         </div>
 
         <div className="grid grid-cols-2 gap-8">
-          <FormField label={t('settings.general.defaultTypography')} htmlFor="default-typography">
+          <FormField
+            label={t("settings.general.defaultTypography")}
+            htmlFor="default-typography"
+          >
             <Select
               options={typographyOptions}
               value={settings.defaultTypography}
@@ -225,7 +239,10 @@ export function SettingsGeneral({
             />
           </FormField>
 
-          <FormField label={t('settings.general.interfaceScale')} htmlFor="interface-scale">
+          <FormField
+            label={t("settings.general.interfaceScale")}
+            htmlFor="interface-scale"
+          >
             <Slider
               min={80}
               max={120}
