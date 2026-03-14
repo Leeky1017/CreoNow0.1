@@ -1,6 +1,11 @@
 import React from "react";
 
 import { AppShell } from "./components/layout/AppShell";
+import { AppToastProvider } from "./components/providers/AppToastProvider";
+import { GlobalErrorToastBridge } from "./components/providers/GlobalErrorToastBridge";
+import { ToastIntegrationBridge } from "./components/providers/ToastIntegrationBridge";
+import { WindowTitleBar } from "./components/window/WindowTitleBar";
+import { PreferencesProvider } from "./contexts/PreferencesContext";
 import { OnboardingPage } from "./features/onboarding";
 import { invoke } from "./lib/ipcClient";
 import { createPreferenceStore } from "./lib/preferences";
@@ -15,6 +20,10 @@ import {
   OnboardingStoreProvider,
   useOnboardingStore,
 } from "./stores/onboardingStore";
+import {
+  createProjectStore,
+  ProjectStoreProvider,
+} from "./stores/projectStore";
 import { createSearchStore, SearchStoreProvider } from "./stores/searchStore";
 import {
   createThemeStore,
@@ -22,17 +31,9 @@ import {
   type ThemeMode,
 } from "./stores/themeStore";
 import {
-  createProjectStore,
-  ProjectStoreProvider,
-} from "./stores/projectStore";
-import {
   createVersionStore,
   VersionStoreProvider,
 } from "./stores/versionStore";
-import { WindowTitleBar } from "./components/window/WindowTitleBar";
-import { AppToastProvider } from "./components/providers/AppToastProvider";
-import { ToastIntegrationBridge } from "./components/providers/ToastIntegrationBridge";
-import { GlobalErrorToastBridge } from "./components/providers/GlobalErrorToastBridge";
 
 /**
  * AppRouter decides which screen to show based on onboarding status.
@@ -146,37 +147,39 @@ export function App(): JSX.Element {
   }, []);
 
   return (
-    <ThemeStoreProvider store={themeStore}>
-      <AppToastProvider>
-        <OnboardingStoreProvider store={onboardingStore}>
-          <AiStoreProvider store={aiStore}>
-            <ProjectStoreProvider store={projectStore}>
-              <EditorStoreProvider store={editorStore}>
-                <FileStoreProvider store={fileStore}>
-                  <KgStoreProvider store={kgStore}>
-                    <SearchStoreProvider store={searchStore}>
-                      <MemoryStoreProvider store={memoryStore}>
-                        <VersionStoreProvider store={versionStore}>
-                          <LayoutStoreProvider store={layoutStore}>
-                            <ToastIntegrationBridge />
-                            <GlobalErrorToastBridge />
-                            <div className="flex h-full min-h-0 flex-col">
-                              <WindowTitleBar />
-                              <div className="min-h-0 flex-1">
-                                <AppRouter />
+    <PreferencesProvider value={preferences}>
+      <ThemeStoreProvider store={themeStore}>
+        <AppToastProvider>
+          <OnboardingStoreProvider store={onboardingStore}>
+            <AiStoreProvider store={aiStore}>
+              <ProjectStoreProvider store={projectStore}>
+                <EditorStoreProvider store={editorStore}>
+                  <FileStoreProvider store={fileStore}>
+                    <KgStoreProvider store={kgStore}>
+                      <SearchStoreProvider store={searchStore}>
+                        <MemoryStoreProvider store={memoryStore}>
+                          <VersionStoreProvider store={versionStore}>
+                            <LayoutStoreProvider store={layoutStore}>
+                              <ToastIntegrationBridge />
+                              <GlobalErrorToastBridge />
+                              <div className="flex h-full min-h-0 flex-col">
+                                <WindowTitleBar />
+                                <div className="min-h-0 flex-1">
+                                  <AppRouter />
+                                </div>
                               </div>
-                            </div>
-                          </LayoutStoreProvider>
-                        </VersionStoreProvider>
-                      </MemoryStoreProvider>
-                    </SearchStoreProvider>
-                  </KgStoreProvider>
-                </FileStoreProvider>
-              </EditorStoreProvider>
-            </ProjectStoreProvider>
-          </AiStoreProvider>
-        </OnboardingStoreProvider>
-      </AppToastProvider>
-    </ThemeStoreProvider>
+                            </LayoutStoreProvider>
+                          </VersionStoreProvider>
+                        </MemoryStoreProvider>
+                      </SearchStoreProvider>
+                    </KgStoreProvider>
+                  </FileStoreProvider>
+                </EditorStoreProvider>
+              </ProjectStoreProvider>
+            </AiStoreProvider>
+          </OnboardingStoreProvider>
+        </AppToastProvider>
+      </ThemeStoreProvider>
+    </PreferencesProvider>
   );
 }

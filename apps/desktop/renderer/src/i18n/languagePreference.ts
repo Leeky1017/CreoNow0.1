@@ -1,23 +1,27 @@
 /**
- * Language preference persistence — localStorage-only, no i18n dependency.
+ * Language preference persistence backed by the shared PreferenceStore key.
  *
- * Reading and writing are intentionally decoupled from the i18n instance
- * to avoid circular imports (index.ts → languagePreference → index.ts).
- * Callers that need to hot-switch the UI language should also call
- * `i18n.changeLanguage(lng)` after `setLanguagePreference(lng)`.
+ * Why: language selection must use the same persistence channel as the rest of
+ * Settings → General, rather than an ad-hoc standalone localStorage key.
  */
 
-const STORAGE_KEY = "creonow-language";
-const DEFAULT_LANGUAGE = "zh-CN";
+import { createPreferenceStore } from "../lib/preferences";
+
+const DEFAULT_LANGUAGE = "zh-CN" as const;
+const LANGUAGE_KEY = "creonow.settings.language" as const;
+
+function createBrowserPreferenceStore() {
+  return createPreferenceStore(localStorage);
+}
 
 /**
- * Read the persisted language preference from localStorage.
- * Falls back to `"zh-CN"` when absent, corrupted, or localStorage
- * is unavailable.
+ * Read the persisted language preference from the shared PreferenceStore.
+ * Falls back to `"zh-CN"` when absent, corrupted, or localStorage is
+ * unavailable.
  */
 export function getLanguagePreference(): string {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = createBrowserPreferenceStore().get<string>(LANGUAGE_KEY);
     if (stored === "en" || stored === "zh-CN") {
       return stored;
     }
@@ -28,12 +32,12 @@ export function getLanguagePreference(): string {
 }
 
 /**
- * Persist the language choice to localStorage.
+ * Persist the language choice through the shared PreferenceStore.
  * Silently fails when localStorage is unavailable.
  */
 export function setLanguagePreference(lng: string): void {
   try {
-    localStorage.setItem(STORAGE_KEY, lng);
+    createBrowserPreferenceStore().set(LANGUAGE_KEY, lng);
   } catch {
     // localStorage may be unavailable in some environments
   }

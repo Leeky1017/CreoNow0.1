@@ -3,6 +3,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { AppToastProvider } from "../../components/providers/AppToastProvider";
+import { createPreferenceStore } from "../../lib/preferences";
+import { PreferencesProvider } from "../../contexts/PreferencesContext";
 import { SettingsDialog } from "./SettingsDialog";
 
 vi.mock("./SettingsGeneral", () => ({
@@ -49,8 +51,33 @@ vi.mock("../analytics/AnalyticsPage", () => ({
   ),
 }));
 
+function createMockStorage(): Storage {
+  const store = new Map<string, string>();
+  return {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      store.set(key, value);
+    },
+    removeItem: (key: string) => {
+      store.delete(key);
+    },
+    clear: () => {
+      store.clear();
+    },
+    key: (index: number) => Array.from(store.keys())[index] ?? null,
+    get length() {
+      return store.size;
+    },
+  };
+}
+
 function renderWithToastProvider(ui: JSX.Element) {
-  return render(<AppToastProvider>{ui}</AppToastProvider>);
+  const preferences = createPreferenceStore(createMockStorage());
+  return render(
+    <PreferencesProvider value={preferences}>
+      <AppToastProvider>{ui}</AppToastProvider>
+    </PreferencesProvider>,
+  );
 }
 
 describe("SettingsDialog", () => {

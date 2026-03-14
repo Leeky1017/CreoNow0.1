@@ -5,6 +5,8 @@ import {
   setLanguagePreference,
 } from "../languagePreference";
 
+const LANGUAGE_KEY = "creonow.settings.language";
+
 describe("languagePreference", () => {
   let mockStorage: Record<string, string>;
 
@@ -18,6 +20,13 @@ describe("languagePreference", () => {
       removeItem: vi.fn((key: string) => {
         delete mockStorage[key];
       }),
+      clear: vi.fn(() => {
+        mockStorage = {};
+      }),
+      key: vi.fn((index: number) => Object.keys(mockStorage)[index] ?? null),
+      get length() {
+        return Object.keys(mockStorage).length;
+      },
     });
   });
 
@@ -25,17 +34,19 @@ describe("languagePreference", () => {
     vi.unstubAllGlobals();
   });
 
-  it("reads language from localStorage", () => {
-    mockStorage["creonow-language"] = "en";
+  it("reads language from the shared PreferenceStore key", () => {
+    mockStorage["creonow.version"] = "1";
+    mockStorage[LANGUAGE_KEY] = JSON.stringify("en");
     expect(getLanguagePreference()).toBe("en");
   });
 
-  it("falls back to zh-CN when localStorage is empty", () => {
+  it("falls back to zh-CN when storage is empty", () => {
     expect(getLanguagePreference()).toBe("zh-CN");
   });
 
   it("falls back to zh-CN for unsupported values", () => {
-    mockStorage["creonow-language"] = "fr";
+    mockStorage["creonow.version"] = "1";
+    mockStorage[LANGUAGE_KEY] = JSON.stringify("fr");
     expect(getLanguagePreference()).toBe("zh-CN");
   });
 
@@ -45,15 +56,21 @@ describe("languagePreference", () => {
         throw new Error("SecurityError");
       },
       setItem: vi.fn(),
+      removeItem: vi.fn(),
+      clear: vi.fn(),
+      key: vi.fn(),
+      get length() {
+        return 0;
+      },
     });
     expect(getLanguagePreference()).toBe("zh-CN");
   });
 
-  it("persists language to localStorage", () => {
+  it("persists language to the shared PreferenceStore key", () => {
     setLanguagePreference("en");
     expect(localStorage.setItem).toHaveBeenCalledWith(
-      "creonow-language",
-      "en",
+      LANGUAGE_KEY,
+      JSON.stringify("en"),
     );
   });
 
@@ -62,6 +79,12 @@ describe("languagePreference", () => {
       getItem: vi.fn(() => null),
       setItem: () => {
         throw new Error("QuotaExceededError");
+      },
+      removeItem: vi.fn(),
+      clear: vi.fn(),
+      key: vi.fn(),
+      get length() {
+        return 0;
       },
     });
     expect(() => setLanguagePreference("en")).not.toThrow();

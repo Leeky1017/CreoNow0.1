@@ -19,6 +19,8 @@ import {
 } from "./SettingsAccount";
 import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore";
 import { useAppToast } from "../../components/providers/AppToastProvider";
+import { usePreferences } from "../../contexts/PreferencesContext";
+import type { PreferenceStore } from "../../lib/preferences";
 
 import { X } from "lucide-react";
 /**
@@ -49,14 +51,16 @@ type TFunction = (key: string, options?: Record<string, unknown>) => string;
 /**
  * Nav item configuration.
  */
-function getNavItems(t: TFunction): Array<{ value: SettingsTab; label: string }> {
+function getNavItems(
+  t: TFunction,
+): Array<{ value: SettingsTab; label: string }> {
   return [
-    { value: "general", label: t('settingsDialog.dialog.navGeneral') },
-    { value: "appearance", label: t('settingsDialog.dialog.navAppearance') },
-    { value: "ai", label: t('settingsDialog.dialog.navAi') },
-    { value: "judge", label: t('settingsDialog.dialog.navJudge') },
-    { value: "analytics", label: t('settingsDialog.dialog.navAnalytics') },
-    { value: "account", label: t('settingsDialog.dialog.navAccount') },
+    { value: "general", label: t("settingsDialog.dialog.navGeneral") },
+    { value: "appearance", label: t("settingsDialog.dialog.navAppearance") },
+    { value: "ai", label: t("settingsDialog.dialog.navAi") },
+    { value: "judge", label: t("settingsDialog.dialog.navJudge") },
+    { value: "analytics", label: t("settingsDialog.dialog.navAnalytics") },
+    { value: "account", label: t("settingsDialog.dialog.navAccount") },
   ];
 }
 
@@ -154,6 +158,51 @@ const closeButtonStyles = [
 ].join(" ");
 
 /**
+ * Read persisted GeneralSettings from PreferenceStore, falling back to defaults.
+ */
+function readGeneralSettings(prefs: PreferenceStore): GeneralSettings {
+  return {
+    focusMode:
+      prefs.get<boolean>("creonow.settings.focusMode") ??
+      defaultGeneralSettings.focusMode,
+    typewriterScroll:
+      prefs.get<boolean>("creonow.settings.typewriterScroll") ??
+      defaultGeneralSettings.typewriterScroll,
+    smartPunctuation:
+      prefs.get<boolean>("creonow.settings.smartPunctuation") ??
+      defaultGeneralSettings.smartPunctuation,
+    localAutoSave:
+      prefs.get<boolean>("creonow.settings.localAutoSave") ??
+      defaultGeneralSettings.localAutoSave,
+    backupInterval:
+      prefs.get<string>("creonow.settings.backupInterval") ??
+      defaultGeneralSettings.backupInterval,
+    defaultTypography:
+      prefs.get<string>("creonow.settings.defaultFont") ??
+      defaultGeneralSettings.defaultTypography,
+    interfaceScale:
+      prefs.get<number>("creonow.settings.interfaceScale") ??
+      defaultGeneralSettings.interfaceScale,
+  };
+}
+
+/**
+ * Write GeneralSettings to PreferenceStore.
+ */
+function writeGeneralSettings(
+  prefs: PreferenceStore,
+  settings: GeneralSettings,
+): void {
+  prefs.set("creonow.settings.focusMode", settings.focusMode);
+  prefs.set("creonow.settings.typewriterScroll", settings.typewriterScroll);
+  prefs.set("creonow.settings.smartPunctuation", settings.smartPunctuation);
+  prefs.set("creonow.settings.localAutoSave", settings.localAutoSave);
+  prefs.set("creonow.settings.backupInterval", settings.backupInterval);
+  prefs.set("creonow.settings.defaultFont", settings.defaultTypography);
+  prefs.set("creonow.settings.interfaceScale", settings.interfaceScale);
+}
+
+/**
  * SettingsDialog is the single-path Settings surface.
  *
  * Why: Settings must be reachable via a single, testable entry point (Cmd/Ctrl+,,
@@ -166,10 +215,11 @@ export function SettingsDialog({
 }: SettingsDialogProps): JSX.Element {
   const { t } = useTranslation();
   const { showToast } = useAppToast();
+  const preferences = usePreferences();
   const navItems = getNavItems(t);
   const [activeTab, setActiveTab] = React.useState<SettingsTab>(defaultTab);
   const [generalSettings, setGeneralSettings] = React.useState<GeneralSettings>(
-    defaultGeneralSettings,
+    () => readGeneralSettings(preferences),
   );
   const [accountSettings] = React.useState<AccountSettings>(
     defaultAccountSettings,
@@ -177,9 +227,13 @@ export function SettingsDialog({
   const showAiMarks = useVersionPreferencesStore((s) => s.showAiMarks);
   const setShowAiMarks = useVersionPreferencesStore((s) => s.setShowAiMarks);
 
-  const handleSettingsChange = React.useCallback((settings: GeneralSettings) => {
-    setGeneralSettings(settings);
-  }, []);
+  const handleSettingsChange = React.useCallback(
+    (settings: GeneralSettings) => {
+      setGeneralSettings(settings);
+      writeGeneralSettings(preferences, settings);
+    },
+    [preferences],
+  );
 
   const handleShowAiMarksChange = React.useCallback(
     (enabled: boolean) => {
@@ -197,8 +251,9 @@ export function SettingsDialog({
   React.useEffect(() => {
     if (open) {
       setActiveTab(defaultTab);
+      setGeneralSettings(readGeneralSettings(preferences));
     }
-  }, [defaultTab, open]);
+  }, [defaultTab, open, preferences]);
 
   function renderContent(): JSX.Element {
     switch (activeTab) {
@@ -255,7 +310,7 @@ export function SettingsDialog({
                 weight="semibold"
                 className="tracking-[0.15em]"
               >
-                {t('settingsDialog.dialog.title')}
+                {t("settingsDialog.dialog.title")}
               </Text>
             </div>
 
@@ -286,7 +341,9 @@ export function SettingsDialog({
             {/* Close button */}
             <DialogPrimitive.Close className={closeButtonStyles}>
               <X size={20} strokeWidth={1.5} />
-              <span className="sr-only">{t('settingsDialog.dialog.close')}</span>
+              <span className="sr-only">
+                {t("settingsDialog.dialog.close")}
+              </span>
             </DialogPrimitive.Close>
 
             {/* Scrollable content */}
@@ -296,10 +353,10 @@ export function SettingsDialog({
 
             {/* Hidden title for accessibility */}
             <DialogPrimitive.Title className="sr-only">
-              {t('settingsDialog.dialog.title')}
+              {t("settingsDialog.dialog.title")}
             </DialogPrimitive.Title>
             <DialogPrimitive.Description className="sr-only">
-              {t('settingsDialog.dialog.description')}
+              {t("settingsDialog.dialog.description")}
             </DialogPrimitive.Description>
           </div>
         </DialogPrimitive.Content>
