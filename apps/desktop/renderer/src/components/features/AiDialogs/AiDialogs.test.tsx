@@ -11,6 +11,7 @@ import type {
   AiInlineConfirmProps,
   DiffChange,
 } from "./types";
+import { i18n } from "../../../i18n";
 
 // =============================================================================
 // Test Data
@@ -495,7 +496,7 @@ describe("AiErrorCard", () => {
     expect(hasRetryWillSucceed).toBe(false);
   });
 
-  it("displays error code for service errors", () => {
+  it("shows a humanized service error instead of the raw error code", () => {
     const error: AiErrorConfig = {
       type: "service_error",
       title: "Service Error",
@@ -505,7 +506,8 @@ describe("AiErrorCard", () => {
 
     render(<AiErrorCard error={error} />);
 
-    expect(screen.getByText("upstream_error_503")).toBeInTheDocument();
+    expect(screen.getByText(i18n.t("error.generic"))).toBeInTheDocument();
+    expect(screen.queryByText("upstream_error_503")).not.toBeInTheDocument();
   });
 
   it("displays countdown for rate limit errors", () => {

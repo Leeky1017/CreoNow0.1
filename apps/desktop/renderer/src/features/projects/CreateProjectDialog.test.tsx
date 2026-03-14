@@ -419,8 +419,9 @@ describe("CreateProjectDialog — error and edge cases", () => {
 
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
-      expect(screen.getByText(/IO_ERROR/)).toBeInTheDocument();
-      expect(screen.getByText(/Failed to create project/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Read\/write operation failed/),
+      ).toBeInTheDocument();
     });
 
     it("ProjectCreateGo back错误时应显示可见错误并记录诊断上下文", async () => {
@@ -457,8 +458,9 @@ describe("CreateProjectDialog — error and edge cases", () => {
         await user.click(screen.getByTestId("create-project-submit"));
 
         await waitFor(() => {
-          expect(screen.getByText(/NAME_CONFLICT/)).toBeInTheDocument();
-          expect(screen.getByText(/Project already exists/)).toBeInTheDocument();
+          expect(
+            screen.getByText(/Something unexpected happened/),
+          ).toBeInTheDocument();
         });
 
         expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -503,8 +505,9 @@ describe("CreateProjectDialog — error and edge cases", () => {
         await user.click(screen.getByTestId("create-project-submit"));
 
         await waitFor(() => {
-          expect(screen.getByText(/IO_ERROR/)).toBeInTheDocument();
-          expect(screen.getByText(/Disk full/)).toBeInTheDocument();
+          expect(
+            screen.getByText(/Read\/write operation failed/),
+          ).toBeInTheDocument();
         });
 
         expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -591,7 +594,9 @@ describe("CreateProjectDialog — error and edge cases", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText("AI-assisted creation is temporarily unavailable. Please create manually or try again later"),
+          screen.getByText(
+            "AI-assisted creation is temporarily unavailable. Please create manually or try again later",
+          ),
         ).toBeInTheDocument();
       });
 

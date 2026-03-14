@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import type { IpcErrorCode } from "@shared/types/ipc-generated";
 
+import { getHumanErrorMessage } from "../../../lib/errorMessages";
 import type { AiErrorCardProps, AiErrorType } from "./types";
 
 /**
@@ -244,17 +246,27 @@ function RetryButtonContent(props: {
     return (
       <>
         <Spinner />
-        <span>{t('ai.error.retrying')}</span>
+        <span>{t("ai.error.retrying")}</span>
       </>
     );
   }
   if (props.retryState === "success") {
-    return <span className="text-[var(--color-success)]">{t('ai.error.success')}</span>;
+    return (
+      <span className="text-[var(--color-success)]">
+        {t("ai.error.success")}
+      </span>
+    );
   }
   if (props.retryState === "error") {
-    return <span className="text-[var(--color-error)]">{t('ai.error.failed')}</span>;
+    return (
+      <span className="text-[var(--color-error)]">{t("ai.error.failed")}</span>
+    );
   }
-  return <span>{props.isTimeout ? t('ai.error.tryAgain') : t('ai.error.retry')}</span>;
+  return (
+    <span>
+      {props.isTimeout ? t("ai.error.tryAgain") : t("ai.error.retry")}
+    </span>
+  );
 }
 
 /**
@@ -277,13 +289,21 @@ function AiErrorCardActions(props: {
       {props.errorType === "usage_limit" && (
         <>
           {props.onUpgradePlan && (
-            <button type="button" className={upgradeButtonStyles} onClick={props.onUpgradePlan}>
-              {t('ai.error.upgradePlan')}
+            <button
+              type="button"
+              className={upgradeButtonStyles}
+              onClick={props.onUpgradePlan}
+            >
+              {t("ai.error.upgradePlan")}
             </button>
           )}
           {props.onViewUsage && (
-            <button type="button" className={linkButtonStyles} onClick={props.onViewUsage}>
-              {t('ai.error.viewUsage')}
+            <button
+              type="button"
+              className={linkButtonStyles}
+              onClick={props.onViewUsage}
+            >
+              {t("ai.error.viewUsage")}
             </button>
           )}
         </>
@@ -292,13 +312,25 @@ function AiErrorCardActions(props: {
       {props.errorType === "service_error" && (
         <>
           {props.onRetry && (
-            <button type="button" className={retryButtonStyles} onClick={props.handleRetry} disabled={props.retryState === "loading"}>
-              <RetryButtonContent retryState={props.retryState} isTimeout={false} />
+            <button
+              type="button"
+              className={retryButtonStyles}
+              onClick={props.handleRetry}
+              disabled={props.retryState === "loading"}
+            >
+              <RetryButtonContent
+                retryState={props.retryState}
+                isTimeout={false}
+              />
             </button>
           )}
           {props.onCheckStatus && (
-            <button type="button" className={linkButtonStyles} onClick={props.onCheckStatus}>
-              {t('ai.error.checkStatus')}
+            <button
+              type="button"
+              className={linkButtonStyles}
+              onClick={props.onCheckStatus}
+            >
+              {t("ai.error.checkStatus")}
               <ExternalLinkIcon />
             </button>
           )}
@@ -315,7 +347,10 @@ function AiErrorCardActions(props: {
             onClick={props.handleRetry}
             disabled={props.isRetryDisabled}
           >
-            <RetryButtonContent retryState={props.retryState} isTimeout={props.errorType === "timeout"} />
+            <RetryButtonContent
+              retryState={props.retryState}
+              isTimeout={props.errorType === "timeout"}
+            />
           </button>
         )}
     </div>
@@ -729,6 +764,12 @@ export function AiErrorCard({
 
   const opacityClass =
     cardState === "dismissing" ? "opacity-0 scale-95" : "opacity-100 scale-100";
+  const localizedErrorCode = error.errorCode
+    ? getHumanErrorMessage({
+        code: error.errorCode as IpcErrorCode,
+        message: error.errorCode,
+      })
+    : null;
 
   return (
     <div
@@ -741,7 +782,7 @@ export function AiErrorCard({
           type="button"
           className={dismissButtonStyles}
           onClick={handleDismiss}
-          title={t('ai.error.dismiss')}
+          title={t("ai.error.dismiss")}
         >
           <CloseIcon />
         </button>
@@ -765,16 +806,18 @@ export function AiErrorCard({
 
           {/* Error code for service errors */}
 
-          {error.errorCode && (
+          {localizedErrorCode ? (
             <div data-testid={errorCodeTestId} className={errorCodeStyles}>
-              {error.errorCode}
+              {localizedErrorCode}
             </div>
-          )}
+          ) : null}
 
           {/* Countdown for rate limit */}
 
           {error.type === "rate_limit" && countdown > 0 && (
-            <div className={countdownStyles}>{t('ai.error.countdownRetry', { seconds: countdown })}</div>
+            <div className={countdownStyles}>
+              {t("ai.error.countdownRetry", { seconds: countdown })}
+            </div>
           )}
 
           {/* Ready to retry message when countdown completes */}
@@ -782,7 +825,9 @@ export function AiErrorCard({
           {error.type === "rate_limit" &&
             countdownComplete &&
             countdown === 0 && (
-              <div className={readyToRetryStyles}>{t('ai.error.readyToRetry')}</div>
+              <div className={readyToRetryStyles}>
+                {t("ai.error.readyToRetry")}
+              </div>
             )}
 
           {/* Actions */}

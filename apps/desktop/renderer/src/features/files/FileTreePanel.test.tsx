@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { FileTreePanel } from "./FileTreePanel";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 
 // Mock stores
 vi.mock("../../stores/fileStore", () => ({
@@ -73,9 +74,7 @@ describe("FileTreePanel", () => {
     it("当无Documents时应显示空状态提示", () => {
       render(<FileTreePanel projectId="test-project" />);
 
-      expect(
-        screen.getByText("No Files"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("No Files")).toBeInTheDocument();
       expect(
         screen.getByText("Start by creating your first file"),
       ).toBeInTheDocument();
@@ -147,7 +146,15 @@ describe("FileTreePanel", () => {
       render(<FileTreePanel projectId="test-project" />);
 
       expect(screen.getByRole("alert")).toBeInTheDocument();
-      expect(screen.getByText(/IO_ERROR/)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          getHumanErrorMessage({
+            code: "IO_ERROR",
+            message: "Failed to load files",
+          }),
+        ),
+      ).toBeInTheDocument();
+      expect(screen.queryByText(/IO_ERROR/)).not.toBeInTheDocument();
       expect(screen.getByText("Dismiss")).toBeInTheDocument();
     });
   });

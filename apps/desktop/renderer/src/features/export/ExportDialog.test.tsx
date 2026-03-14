@@ -238,11 +238,9 @@ describe("ExportDialog", () => {
     );
 
     expect(screen.getByTestId("export-error")).toBeInTheDocument();
-    expect(screen.getByTestId("export-error-code")).toHaveTextContent(
-      "IO_ERROR",
-    );
+    expect(screen.queryByTestId("export-error-code")).not.toBeInTheDocument();
     expect(screen.getByTestId("export-error-message")).toHaveTextContent(
-      "failed",
+      "Read/write operation failed. Please try again.",
     );
     expect(screen.getByRole("button", { name: "Dismiss" })).toBeInTheDocument();
   });
@@ -351,11 +349,9 @@ describe("ExportDialog", () => {
     await user.click(screen.getByTestId("export-submit"));
 
     expect(await screen.findByTestId("export-error")).toBeInTheDocument();
-    expect(screen.getByTestId("export-error-code")).toHaveTextContent(
-      "IO_ERROR",
-    );
+    expect(screen.queryByTestId("export-error-code")).not.toBeInTheDocument();
     expect(screen.getByTestId("export-error-message")).toHaveTextContent(
-      "disk write permission denied",
+      "Read/write operation failed. Please try again.",
     );
     expect(screen.queryByTestId("export-success")).not.toBeInTheDocument();
   });
@@ -382,9 +378,7 @@ describe("ExportDialog", () => {
     await user.click(screen.getByTestId("export-submit"));
 
     expect(await screen.findByTestId("export-error")).toBeInTheDocument();
-    expect(screen.getByTestId("export-error-code")).toHaveTextContent(
-      "INVALID_ARGUMENT",
-    );
+    expect(screen.queryByTestId("export-error-code")).not.toBeInTheDocument();
     expect(screen.getByTestId("export-error-message")).toHaveTextContent(
       "This export format cannot write: doc.content.0:table",
     );

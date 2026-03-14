@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 const mocks = vi.hoisted(() => {
@@ -227,7 +228,10 @@ describe("AiPanel error guidance", () => {
     render(<AiPanel />);
 
     expect(await screen.findByTestId("ai-error-code")).toHaveTextContent(
-      "UNKNOWN_ERROR",
+      getHumanErrorMessage({
+        code: "UNKNOWN_ERROR" as never,
+        message: "Something went wrong",
+      }),
     );
     expect(screen.queryByTestId("ai-error-guide-db")).not.toBeInTheDocument();
     expect(
@@ -245,7 +249,10 @@ describe("AiPanel error guidance", () => {
     render(<AiPanel />);
 
     expect(await screen.findByTestId("ai-error-code")).toHaveTextContent(
-      "UPSTREAM_ERROR",
+      getHumanErrorMessage({
+        code: "UPSTREAM_ERROR",
+        message: "Gateway timeout",
+      }),
     );
     expect(
       screen.queryByTestId("ai-error-guide-provider"),

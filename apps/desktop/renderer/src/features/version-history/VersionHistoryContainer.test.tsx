@@ -8,6 +8,7 @@ import {
   createVersionStore,
   type UseVersionStore,
 } from "../../stores/versionStore";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 
 const invokeMock = vi.hoisted(() => vi.fn());
 const startCompareMock = vi.hoisted(() => vi.fn());
@@ -244,7 +245,7 @@ describe("VersionHistoryContainer", () => {
     expect(versionStore.getState().previewContentJson).not.toBeNull();
   });
 
-  it("shows IPC error code/message when preview read fails", async () => {
+  it("shows humanized preview error when preview read fails", async () => {
     const user = userEvent.setup();
     const versionStore = createVersionStore({ invoke: invokeMock as never });
     installInvokeMock({
@@ -265,7 +266,10 @@ describe("VersionHistoryContainer", () => {
     await user.click(screen.getByTestId("version-preview-trigger"));
 
     const error = await screen.findByTestId("version-preview-error");
-    expect(error).toHaveTextContent("NOT_FOUND: Version not found");
+    expect(error).toHaveTextContent(
+      getHumanErrorMessage({ code: "NOT_FOUND", message: "Version not found" }),
+    );
+    expect(error).not.toHaveTextContent("NOT_FOUND");
   });
 
   it("restore requires confirmation and refreshes editor only after confirm", async () => {

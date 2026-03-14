@@ -6,6 +6,7 @@ import { Card } from "../../components/primitives/Card";
 import { Heading } from "../../components/primitives/Heading";
 import { Text } from "../../components/primitives/Text";
 import { invoke } from "../../lib/ipcClient";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useFileStore, type DocumentListItem } from "../../stores/fileStore";
 import "../../i18n";
 
@@ -82,7 +83,7 @@ function DocumentInfoSection(props: {
           color="muted"
           className="text-center"
         >
-          {t('rightPanel.info.noDocumentSelected')}
+          {t("rightPanel.info.noDocumentSelected")}
         </Text>
       </Card>
     );
@@ -91,16 +92,16 @@ function DocumentInfoSection(props: {
   return (
     <section>
       <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-        {t('rightPanel.info.currentDocument')}
+        {t("rightPanel.info.currentDocument")}
       </Heading>
       <Card className="p-3 rounded-[var(--radius-md)]">
         <StatItem
-          label={t('rightPanel.info.title')}
-          value={document.title || t('rightPanel.info.untitled')}
+          label={t("rightPanel.info.title")}
+          value={document.title || t("rightPanel.info.untitled")}
           testId="info-panel-doc-title"
         />
         <StatItem
-          label={t('rightPanel.info.updated')}
+          label={t("rightPanel.info.updated")}
           value={formatDate(document.updatedAt)}
           testId="info-panel-doc-updated"
         />
@@ -124,11 +125,11 @@ function TodayStatsSection(props: {
     return (
       <section>
         <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-          {t('rightPanel.info.todaysProgress')}
+          {t("rightPanel.info.todaysProgress")}
         </Heading>
         <Card className="p-3 rounded-[var(--radius-md)]">
           <Text size="small" color="muted" className="text-center">
-            {t('rightPanel.info.loading')}
+            {t("rightPanel.info.loading")}
           </Text>
         </Card>
       </section>
@@ -139,7 +140,7 @@ function TodayStatsSection(props: {
     return (
       <section>
         <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-          {t('rightPanel.info.todaysProgress')}
+          {t("rightPanel.info.todaysProgress")}
         </Heading>
         <Card className="p-3 rounded-[var(--radius-md)] border-[var(--color-error)]/20">
           <Text
@@ -148,8 +149,7 @@ function TodayStatsSection(props: {
             color="muted"
             className="text-center"
           >
-            <span data-testid="info-panel-stats-error-code">{error.code}</span>:{" "}
-            {error.message}
+            {getHumanErrorMessage(error)}
           </Text>
         </Card>
       </section>
@@ -160,11 +160,11 @@ function TodayStatsSection(props: {
     return (
       <section>
         <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-          {t('rightPanel.info.todaysProgress')}
+          {t("rightPanel.info.todaysProgress")}
         </Heading>
         <Card className="p-3 rounded-[var(--radius-md)]">
           <Text size="small" color="muted" className="text-center">
-            {t('rightPanel.info.noStatsAvailable')}
+            {t("rightPanel.info.noStatsAvailable")}
           </Text>
         </Card>
       </section>
@@ -174,26 +174,26 @@ function TodayStatsSection(props: {
   return (
     <section>
       <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-        {t('rightPanel.info.todaysProgress')}
+        {t("rightPanel.info.todaysProgress")}
       </Heading>
       <Card className="p-3 rounded-[var(--radius-md)]">
         <StatItem
-          label={t('rightPanel.info.wordsWritten')}
+          label={t("rightPanel.info.wordsWritten")}
           value={stats.wordsWritten.toLocaleString()}
           testId="info-panel-words-written"
         />
         <StatItem
-          label={t('rightPanel.info.writingTime')}
+          label={t("rightPanel.info.writingTime")}
           value={formatDuration(stats.writingSeconds)}
           testId="info-panel-writing-time"
         />
         <StatItem
-          label={t('rightPanel.info.skillsUsed')}
+          label={t("rightPanel.info.skillsUsed")}
           value={stats.skillsUsed}
           testId="info-panel-skills-used"
         />
         <StatItem
-          label={t('rightPanel.info.documentsCreated')}
+          label={t("rightPanel.info.documentsCreated")}
           value={stats.documentsCreated}
           testId="info-panel-docs-created"
         />
@@ -276,7 +276,7 @@ export function InfoPanel(props: InfoPanelProps = {}): JSX.Element {
       className="flex flex-col gap-4 p-4 h-full overflow-auto"
     >
       <Heading level="h3" className="font-bold text-[15px]">
-        {t('rightPanel.info.panelTitle')}
+        {t("rightPanel.info.panelTitle")}
       </Heading>
 
       <DocumentInfoSection document={currentDocument} />

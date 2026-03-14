@@ -14,6 +14,7 @@ import {
 import { useDeferredLoading } from "../../lib/useDeferredLoading";
 import { DashboardSkeleton } from "./DashboardSkeleton";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
+import type { UseConfirmDialogReturn } from "../../hooks/useConfirmDialog";
 import { invoke } from "../../lib/ipcClient";
 import { CreateProjectDialog } from "../projects/CreateProjectDialog";
 import { DeleteProjectDialog } from "../projects/DeleteProjectDialog";
@@ -25,6 +26,7 @@ import {
 
 import { FilePlus, MoreHorizontal, PenTool, Search } from "lucide-react";
 import { i18n } from "../../i18n";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 // =============================================================================
 // Types
 // =============================================================================
@@ -47,7 +49,10 @@ function DashboardLoadingState(): JSX.Element {
 
   if (!showSkeleton) {
     return (
-      <div data-testid="dashboard-loading" className="flex-1 flex items-center justify-center" />
+      <div
+        data-testid="dashboard-loading"
+        className="flex-1 flex items-center justify-center"
+      />
     );
   }
 
@@ -118,7 +123,11 @@ function HeroCard(props: {
       </div>
       <div className="w-[35%] max-w-[280px] hidden lg:block bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)] relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center text-[var(--color-fg-faint)]">
-          <PenTool className="w-16 h-16 opacity-20" size={24} strokeWidth={1.5} />
+          <PenTool
+            className="w-16 h-16 opacity-20"
+            size={24}
+            strokeWidth={1.5}
+          />
         </div>
       </div>
     </div>
@@ -129,9 +138,7 @@ function HeroCard(props: {
  * Three-dot menu icon for project actions.
  */
 function MoreIcon(): JSX.Element {
-  return (
-    <MoreHorizontal className="w-4 h-4" size={16} strokeWidth={1.5} />
-  );
+  return <MoreHorizontal className="w-4 h-4" size={16} strokeWidth={1.5} />;
 }
 
 /**
@@ -187,7 +194,9 @@ function ProjectCard(props: {
       if (onArchiveToggle) {
         items.push({
           key: "archive",
-          label: isArchived ? t("dashboard.menu.unarchive") : t("dashboard.menu.archive"),
+          label: isArchived
+            ? t("dashboard.menu.unarchive")
+            : t("dashboard.menu.archive"),
           onSelect: () => onArchiveToggle(project.projectId, !isArchived),
         });
       }
@@ -425,7 +434,7 @@ function useDashboardActions() {
       });
       setRenameSubmitting(false);
       if (!res.ok) {
-        setRenameErrorText(`${res.error.code}: ${res.error.message}`);
+        setRenameErrorText(getHumanErrorMessage(res.error));
         return;
       }
       setRenameDialogOpen(false);
@@ -532,6 +541,66 @@ function useDashboardActions() {
 }
 
 /**
+ * Renders the create / rename / delete / system dialog cluster.
+ */
+function DashboardDialogs(props: {
+  createDialogOpen: boolean;
+  setCreateDialogOpen: (v: boolean) => void;
+  renameDialogOpen: boolean;
+  renameTargetProject: ProjectListItem | null;
+  renameSubmitting: boolean;
+  renameErrorText: string | null;
+  setRenameDialogOpen: (v: boolean) => void;
+  setRenameTargetProject: (v: ProjectListItem | null) => void;
+  setRenameErrorText: (v: string | null) => void;
+  handleRenameSubmit: (name: string) => Promise<void>;
+  deleteDialogOpen: boolean;
+  deleteTargetProject: ProjectListItem | null;
+  deleteSubmitting: boolean;
+  setDeleteDialogOpen: (v: boolean) => void;
+  setDeleteTargetProject: (v: ProjectListItem | null) => void;
+  handleDeleteConfirm: () => Promise<void>;
+  dialogProps: UseConfirmDialogReturn["dialogProps"];
+}): JSX.Element {
+  return (
+    <>
+      <CreateProjectDialog
+        open={props.createDialogOpen}
+        onOpenChange={props.setCreateDialogOpen}
+      />
+      <RenameProjectDialog
+        open={props.renameDialogOpen}
+        initialName={props.renameTargetProject?.name ?? ""}
+        submitting={props.renameSubmitting}
+        errorText={props.renameErrorText}
+        onOpenChange={(open) => {
+          props.setRenameDialogOpen(open);
+          if (!open) {
+            props.setRenameTargetProject(null);
+            props.setRenameErrorText(null);
+          }
+        }}
+        onSubmit={props.handleRenameSubmit}
+      />
+      <DeleteProjectDialog
+        open={props.deleteDialogOpen}
+        projectName={props.deleteTargetProject?.name ?? ""}
+        documentCount={0}
+        submitting={props.deleteSubmitting}
+        onOpenChange={(open) => {
+          props.setDeleteDialogOpen(open);
+          if (!open) {
+            props.setDeleteTargetProject(null);
+          }
+        }}
+        onConfirm={props.handleDeleteConfirm}
+      />
+      <SystemDialog {...props.dialogProps} />
+    </>
+  );
+}
+
+/**
  * DashboardPage - Project overview and selection screen.
  *
  * Why: After onboarding, users need a central hub to see their projects,
@@ -606,8 +675,6 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
   // Remaining active projects for grid (exclude hero)
   const gridProjects = activeProjects.slice(1);
 
-
-
   // Loading state
   if (bootstrapStatus === "loading") {
     return <DashboardLoadingState />;
@@ -625,7 +692,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
             <div role="alert" className="w-full max-w-xl mb-8">
               <div className="p-3 border border-[var(--color-separator)] rounded-[var(--radius-md)] bg-[var(--color-bg-surface)]">
                 <Text size="small" className="mb-2 block">
-                  {lastError.code}: {lastError.message}
+                  {getHumanErrorMessage(lastError)}
                 </Text>
                 <Button
                   variant="secondary"
@@ -710,7 +777,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
             className="px-12 py-3 border-b border-[var(--color-separator)]"
           >
             <Text size="small" className="mb-2 block">
-              {lastError.code}: {lastError.message}
+              {getHumanErrorMessage(lastError)}
             </Text>
             <Button variant="secondary" size="sm" onClick={() => clearError()}>
               {t("dashboard.dismiss")}
@@ -723,16 +790,17 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
           {/* Continue Writing (Hero) */}
           {heroProject && (
             <>
-              <SectionTitle
-                className="animate-fade-in-up"
-              >
+              <SectionTitle className="animate-fade-in-up">
                 {t("dashboard.continueWriting")}
               </SectionTitle>
               <div className="mb-16">
                 <HeroCard
                   project={heroProject}
                   onClick={() =>
-                    void hookHandleProjectSelect(heroProject.projectId, props.onProjectSelect)
+                    void hookHandleProjectSelect(
+                      heroProject.projectId,
+                      props.onProjectSelect,
+                    )
                   }
                 />
               </div>
@@ -742,9 +810,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
           {/* Recent Projects Grid */}
           {(gridProjects.length > 0 || searchQuery) && (
             <>
-              <SectionTitle
-                className="mt-8 animate-fade-in-up animation-delay-200"
-              >
+              <SectionTitle className="mt-8 animate-fade-in-up animation-delay-200">
                 {t("dashboard.recentProjects")}
               </SectionTitle>
 
@@ -753,7 +819,12 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
                   <ProjectCard
                     key={project.projectId}
                     project={project}
-                    onClick={() => void hookHandleProjectSelect(project.projectId, props.onProjectSelect)}
+                    onClick={() =>
+                      void hookHandleProjectSelect(
+                        project.projectId,
+                        props.onProjectSelect,
+                      )
+                    }
                     onRename={handleRename}
                     onDuplicate={handleDuplicate}
                     onArchiveToggle={handleArchiveToggle}
@@ -796,7 +867,9 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
                     className="focus-ring text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
                     onClick={() => setArchivedExpanded((prev) => !prev)}
                   >
-                    {archivedExpanded ? t("dashboard.collapse") : t("dashboard.expand")}
+                    {archivedExpanded
+                      ? t("dashboard.collapse")
+                      : t("dashboard.expand")}
                   </button>
                 }
                 className="animate-fade-in-up animation-delay-200"
@@ -810,7 +883,10 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
                       key={project.projectId}
                       project={project}
                       onClick={() =>
-                        void hookHandleProjectSelect(project.projectId, props.onProjectSelect)
+                        void hookHandleProjectSelect(
+                          project.projectId,
+                          props.onProjectSelect,
+                        )
                       }
                       onRename={handleRename}
                       onDuplicate={handleDuplicate}
@@ -825,38 +901,25 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
         </div>
       </div>
 
-      <CreateProjectDialog
-        open={createDialogOpen}
-        onOpenChange={setCreateDialogOpen}
+      <DashboardDialogs
+        createDialogOpen={createDialogOpen}
+        setCreateDialogOpen={setCreateDialogOpen}
+        renameDialogOpen={renameDialogOpen}
+        renameTargetProject={renameTargetProject}
+        renameSubmitting={renameSubmitting}
+        renameErrorText={renameErrorText}
+        setRenameDialogOpen={setRenameDialogOpen}
+        setRenameTargetProject={setRenameTargetProject}
+        setRenameErrorText={setRenameErrorText}
+        handleRenameSubmit={handleRenameSubmit}
+        deleteDialogOpen={deleteDialogOpen}
+        deleteTargetProject={deleteTargetProject}
+        deleteSubmitting={deleteSubmitting}
+        setDeleteDialogOpen={setDeleteDialogOpen}
+        setDeleteTargetProject={setDeleteTargetProject}
+        handleDeleteConfirm={handleDeleteConfirm}
+        dialogProps={dialogProps}
       />
-      <RenameProjectDialog
-        open={renameDialogOpen}
-        initialName={renameTargetProject?.name ?? ""}
-        submitting={renameSubmitting}
-        errorText={renameErrorText}
-        onOpenChange={(open) => {
-          setRenameDialogOpen(open);
-          if (!open) {
-            setRenameTargetProject(null);
-            setRenameErrorText(null);
-          }
-        }}
-        onSubmit={handleRenameSubmit}
-      />
-      <DeleteProjectDialog
-        open={deleteDialogOpen}
-        projectName={deleteTargetProject?.name ?? ""}
-        documentCount={0}
-        submitting={deleteSubmitting}
-        onOpenChange={(open) => {
-          setDeleteDialogOpen(open);
-          if (!open) {
-            setDeleteTargetProject(null);
-          }
-        }}
-        onConfirm={handleDeleteConfirm}
-      />
-      <SystemDialog {...dialogProps} />
     </>
   );
 }

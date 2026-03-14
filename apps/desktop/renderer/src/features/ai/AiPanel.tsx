@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import { useTranslation } from "react-i18next";
 import type { Editor } from "@tiptap/react";
-import type { IpcError } from "@shared/types/ipc-generated";
+import type { IpcError, IpcErrorCode } from "@shared/types/ipc-generated";
 import type { SettingsTab } from "../settings-dialog/SettingsDialog";
 
 import {
@@ -65,6 +65,7 @@ import {
 } from "./aiPanelFormatting";
 
 import { ArrowUp } from "lucide-react";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 const RECENT_MODELS_STORAGE_KEY = "creonow.ai.recentModels";
 const CANDIDATE_COUNT_STORAGE_KEY = "creonow.ai.candidateCount";
 const DB_REBUILD_DEFAULT_COMMAND = "pnpm -C apps/desktop rebuild:native";
@@ -195,7 +196,13 @@ function SendStopButton(props: {
   const { t } = useTranslation();
 
   return (
-    <Tooltip content={props.isWorking ? t('ai.panel.stopGenerating') : t('ai.panel.sendMessage')}>
+    <Tooltip
+      content={
+        props.isWorking
+          ? t("ai.panel.stopGenerating")
+          : t("ai.panel.sendMessage")
+      }
+    >
       <button
         data-testid="ai-send-stop"
         type="button"
@@ -203,18 +210,18 @@ function SendStopButton(props: {
         onClick={props.isWorking ? props.onStop : props.onSend}
         disabled={props.disabled}
       >
-      {props.isWorking ? (
-        // Stop icon: circle with square
+        {props.isWorking ? (
+          // Stop icon: circle with square
 
-        <div className="w-5 h-5 rounded-full border-2 border-current flex items-center justify-center">
-          <div className="w-2 h-2 bg-current rounded-[1px]" />
-        </div>
-      ) : (
-        // Send icon: arrow up
+          <div className="w-5 h-5 rounded-full border-2 border-current flex items-center justify-center">
+            <div className="w-2 h-2 bg-current rounded-[1px]" />
+          </div>
+        ) : (
+          // Send icon: arrow up
 
-        <ArrowUp size={16} strokeWidth={1.5} />
-      )}
-    </button>
+          <ArrowUp size={16} strokeWidth={1.5} />
+        )}
+      </button>
     </Tooltip>
   );
 }
@@ -304,7 +311,7 @@ function ErrorGuideCard(props: {
                 className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
                 onClick={() => void handleCopyCommand()}
               >
-                {copied ? t('ai.panel.copied') : t('ai.panel.copy')}
+                {copied ? t("ai.panel.copied") : t("ai.panel.copy")}
               </button>
             </div>
           ) : null}
@@ -374,7 +381,7 @@ export function CodeBlock(props: {
             onClick={handleCopy}
             className="focus-ring px-2 py-0.5 text-[11px] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
           >
-            {copied ? t('ai.panel.copied') : t('ai.panel.copy')}
+            {copied ? t("ai.panel.copied") : t("ai.panel.copy")}
           </button>
 
           {props.onApply && (
@@ -383,7 +390,7 @@ export function CodeBlock(props: {
               onClick={props.onApply}
               className="focus-ring px-2 py-0.5 text-[11px] text-[var(--color-fg-accent)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
             >
-              {t('ai.panel.applyCode')}
+              {t("ai.panel.applyCode")}
             </button>
           )}
         </div>
@@ -427,7 +434,7 @@ function buildAiErrorConfigs(args: {
   const skillsErrorConfig: AiErrorConfig | null = skillsLastError
     ? {
         type: "service_error",
-        title: t('ai.panel.skillsUnavailable'),
+        title: t("ai.panel.skillsUnavailable"),
         description: skillsLastError.message,
         errorCode: skillsLastError.code,
       }
@@ -436,8 +443,10 @@ function buildAiErrorConfigs(args: {
   const modelsErrorConfig: AiErrorConfig | null = modelsLastError
     ? {
         type: "service_error",
-        title: t('ai.panel.modelsUnavailable'),
-        description: `${modelsLastError.code}: ${modelsLastError.message}`,
+        title: t("ai.panel.modelsUnavailable"),
+        description: getHumanErrorMessage(
+          modelsLastError as { code: IpcErrorCode; message: string },
+        ),
         errorCode: modelsLastError.code,
       }
     : null;
@@ -453,11 +462,11 @@ function buildAiErrorConfigs(args: {
               : "service_error",
         title:
           lastError.code === "TIMEOUT" || lastError.code === "SKILL_TIMEOUT"
-            ? t('ai.panel.timeout')
+            ? t("ai.panel.timeout")
             : lastError.code === "RATE_LIMITED" ||
                 lastError.code === "AI_RATE_LIMITED"
-              ? t('ai.panel.rateLimited')
-              : t('ai.panel.aiError'),
+              ? t("ai.panel.rateLimited")
+              : t("ai.panel.aiError"),
         description: lastError.message,
         errorCode: lastError.code,
       }
@@ -503,8 +512,12 @@ function buildAiErrorConfigs(args: {
 type AiPanelEffectsDeps = {
   refreshSkills: () => Promise<void>;
   selectedModel: string;
-  setModelsStatus: React.Dispatch<React.SetStateAction<"idle" | "loading" | "ready" | "error">>;
-  setModelsLastError: React.Dispatch<React.SetStateAction<ModelsListError | null>>;
+  setModelsStatus: React.Dispatch<
+    React.SetStateAction<"idle" | "loading" | "ready" | "error">
+  >;
+  setModelsLastError: React.Dispatch<
+    React.SetStateAction<ModelsListError | null>
+  >;
   setAvailableModels: React.Dispatch<React.SetStateAction<AiModelOption[]>>;
   setSelectedModel: React.Dispatch<React.SetStateAction<AiModel>>;
   setRecentModelIds: React.Dispatch<React.SetStateAction<string[]>>;
@@ -512,7 +525,9 @@ type AiPanelEffectsDeps = {
   candidateCount: number;
   editor: Editor | null;
   bootstrapStatus: string;
-  setSelectionSnapshot: (snapshot: { selectionRef: SelectionRef; selectionText: string } | null) => void;
+  setSelectionSnapshot: (
+    snapshot: { selectionRef: SelectionRef; selectionText: string } | null,
+  ) => void;
   lastCandidates: AiCandidate[];
   selectedCandidateId: string | null;
   setSelectedCandidateId: (id: string | null) => void;
@@ -524,7 +539,10 @@ type AiPanelEffectsDeps = {
   selectionText: string;
   setProposal: (p: AiProposal | null) => void;
   setCompareMode: (enabled: boolean, versionId?: string | null) => void;
-  pendingSelectionSnapshotRef: React.MutableRefObject<{ selectionRef: SelectionRef; selectionText: string } | null>;
+  pendingSelectionSnapshotRef: React.MutableRefObject<{
+    selectionRef: SelectionRef;
+    selectionText: string;
+  } | null>;
   setInlineDiffConfirmOpen: React.Dispatch<React.SetStateAction<boolean>>;
   lastRunId: string | null;
   projectId: string | null;
@@ -540,15 +558,41 @@ type AiPanelEffectsDeps = {
 
 function useAiPanelEffects(d: AiPanelEffectsDeps): void {
   const {
-    activeOutputText, activeRunId, bootstrapStatus, candidateCount, editor,
-    evaluatedRunIdRef, handleNewChatRef, lastCandidates, lastHandledNewChatSignalRef,
-    lastRequest, lastRunId, newChatSignal, outputText,
-    pendingSelectionSnapshotRef, projectId, proposal, refreshSkills,
-    selectedCandidateId, selectedModel, selectionRef, selectionText,
-    setAvailableModels, setCandidateCount, setCompareMode, setInlineDiffConfirmOpen,
-    setJudgeResult, setModelsLastError, setModelsStatus, setProposal,
-    setRecentModelIds, setSelectedCandidateId, setSelectedModel, setSelectionSnapshot,
-    status, t,
+    activeOutputText,
+    activeRunId,
+    bootstrapStatus,
+    candidateCount,
+    editor,
+    evaluatedRunIdRef,
+    handleNewChatRef,
+    lastCandidates,
+    lastHandledNewChatSignalRef,
+    lastRequest,
+    lastRunId,
+    newChatSignal,
+    outputText,
+    pendingSelectionSnapshotRef,
+    projectId,
+    proposal,
+    refreshSkills,
+    selectedCandidateId,
+    selectedModel,
+    selectionRef,
+    selectionText,
+    setAvailableModels,
+    setCandidateCount,
+    setCompareMode,
+    setInlineDiffConfirmOpen,
+    setJudgeResult,
+    setModelsLastError,
+    setModelsStatus,
+    setProposal,
+    setRecentModelIds,
+    setSelectedCandidateId,
+    setSelectedModel,
+    setSelectionSnapshot,
+    status,
+    t,
   } = d;
 
   const refreshModels = React.useCallback(async () => {
@@ -558,20 +602,32 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
       const res = await invoke("ai:models:list", {});
       if (!res.ok) {
         setModelsStatus("error");
-        setModelsLastError({ code: res.error.code, message: res.error.message });
+        setModelsLastError({
+          code: res.error.code,
+          message: res.error.message,
+        });
         return;
       }
       setAvailableModels(res.data.items);
       setModelsStatus("ready");
       if (res.data.items.length === 0) return;
-      const selectedExists = res.data.items.some((item) => item.id === selectedModel);
+      const selectedExists = res.data.items.some(
+        (item) => item.id === selectedModel,
+      );
       if (!selectedExists) setSelectedModel(res.data.items[0].id);
     } catch (error) {
-      const cause = error instanceof Error ? error.message : String(error ?? "unknown");
+      const cause =
+        error instanceof Error ? error.message : String(error ?? "unknown");
       setModelsStatus("error");
       setModelsLastError({ code: "INTERNAL", message: cause });
     }
-  }, [selectedModel, setAvailableModels, setModelsLastError, setModelsStatus, setSelectedModel]);
+  }, [
+    selectedModel,
+    setAvailableModels,
+    setModelsLastError,
+    setModelsStatus,
+    setSelectedModel,
+  ]);
 
   React.useEffect(() => {
     void refreshSkills();
@@ -584,7 +640,9 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
       if (!raw) return;
       const parsed = JSON.parse(raw) as unknown;
       if (!Array.isArray(parsed)) return;
-      const items = parsed.filter((item): item is string => typeof item === "string").slice(0, 8);
+      const items = parsed
+        .filter((item): item is string => typeof item === "string")
+        .slice(0, 8);
       setRecentModelIds(items);
     } catch (error) {
       console.error("AiPanel localStorage read failed", {
@@ -598,9 +656,15 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
   React.useEffect(() => {
     if (selectedModel.trim().length === 0) return;
     setRecentModelIds((prev) => {
-      const next = [selectedModel, ...prev.filter((id) => id !== selectedModel)].slice(0, 8);
+      const next = [
+        selectedModel,
+        ...prev.filter((id) => id !== selectedModel),
+      ].slice(0, 8);
       try {
-        window.localStorage.setItem(RECENT_MODELS_STORAGE_KEY, JSON.stringify(next));
+        window.localStorage.setItem(
+          RECENT_MODELS_STORAGE_KEY,
+          JSON.stringify(next),
+        );
       } catch (error) {
         console.error("AiPanel localStorage write failed", {
           operation: "write",
@@ -630,7 +694,10 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
 
   React.useEffect(() => {
     try {
-      window.localStorage.setItem(CANDIDATE_COUNT_STORAGE_KEY, String(candidateCount));
+      window.localStorage.setItem(
+        CANDIDATE_COUNT_STORAGE_KEY,
+        String(candidateCount),
+      );
     } catch (error) {
       console.error("AiPanel localStorage write failed", {
         operation: "write",
@@ -641,7 +708,9 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
   }, [candidateCount]);
 
   React.useEffect(() => {
-    return onAiModelCatalogUpdated(() => { void refreshModels(); });
+    return onAiModelCatalogUpdated(() => {
+      void refreshModels();
+    });
   }, [refreshModels]);
 
   React.useEffect(() => {
@@ -651,10 +720,15 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
       if (!captured.ok) return;
       const normalized = captured.data.selectionText.trim();
       if (normalized.length === 0) return;
-      setSelectionSnapshot({ selectionRef: captured.data.selectionRef, selectionText: normalized });
+      setSelectionSnapshot({
+        selectionRef: captured.data.selectionRef,
+        selectionText: normalized,
+      });
     };
     editor.on("selectionUpdate", onSelectionUpdate);
-    return () => { editor?.off("selectionUpdate", onSelectionUpdate); };
+    return () => {
+      editor?.off("selectionUpdate", onSelectionUpdate);
+    };
   }, [bootstrapStatus, editor, setSelectionSnapshot]);
 
   React.useEffect(() => {
@@ -662,18 +736,22 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
       if (selectedCandidateId !== null) setSelectedCandidateId(null);
       return;
     }
-    const selectedExists = lastCandidates.some((item) => item.id === selectedCandidateId);
+    const selectedExists = lastCandidates.some(
+      (item) => item.id === selectedCandidateId,
+    );
     if (!selectedExists) setSelectedCandidateId(lastCandidates[0]?.id ?? null);
   }, [lastCandidates, selectedCandidateId, setSelectedCandidateId]);
 
   React.useEffect(() => {
     if (status !== "idle") return;
-    if (proposal || !activeRunId || activeOutputText.trim().length === 0) return;
+    if (proposal || !activeRunId || activeOutputText.trim().length === 0)
+      return;
     const effectiveSnapshot =
       selectionRef && selectionText.length > 0
         ? { selectionRef: selectionRef, selectionText: selectionText }
         : pendingSelectionSnapshotRef.current;
-    if (!effectiveSnapshot || effectiveSnapshot.selectionText.length === 0) return;
+    if (!effectiveSnapshot || effectiveSnapshot.selectionText.length === 0)
+      return;
     setProposal({
       runId: activeRunId,
       selectionRef: effectiveSnapshot.selectionRef,
@@ -682,7 +760,17 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
     });
     pendingSelectionSnapshotRef.current = null;
     if (typeof setCompareMode === "function") setCompareMode(true, null);
-  }, [activeOutputText, activeRunId, setCompareMode, proposal, selectionRef, selectionText, setProposal, status, pendingSelectionSnapshotRef]);
+  }, [
+    activeOutputText,
+    activeRunId,
+    setCompareMode,
+    proposal,
+    selectionRef,
+    selectionText,
+    setProposal,
+    status,
+    pendingSelectionSnapshotRef,
+  ]);
 
   React.useEffect(() => {
     if (!proposal) setInlineDiffConfirmOpen(false);
@@ -698,7 +786,9 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
       setJudgeResult(result);
     }
     window.addEventListener(JUDGE_RESULT_CHANNEL, onJudgeResultEvent);
-    return () => { window.removeEventListener(JUDGE_RESULT_CHANNEL, onJudgeResultEvent); };
+    return () => {
+      window.removeEventListener(JUDGE_RESULT_CHANNEL, onJudgeResultEvent);
+    };
   }, [lastRunId, projectId, setJudgeResult]);
 
   React.useEffect(() => {
@@ -728,9 +818,18 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
           error: error instanceof Error ? error.message : String(error),
         });
       }
-      if (evaluatedRunIdRef.current === lastRunId) evaluatedRunIdRef.current = null;
+      if (evaluatedRunIdRef.current === lastRunId)
+        evaluatedRunIdRef.current = null;
     });
-  }, [lastRequest, lastRunId, outputText, projectId, status, t, evaluatedRunIdRef]);
+  }, [
+    lastRequest,
+    lastRunId,
+    outputText,
+    projectId,
+    status,
+    t,
+    evaluatedRunIdRef,
+  ]);
 
   React.useEffect(() => {
     const signal = newChatSignal ?? 0;
@@ -763,7 +862,9 @@ type AiPanelActionsDeps = {
   applyStatus: AiApplyStatus;
   setInput: (v: string) => void;
   setSelectedSkillId: (id: string) => void;
-  setSelectionSnapshot: (s: { selectionRef: SelectionRef; selectionText: string } | null) => void;
+  setSelectionSnapshot: (
+    s: { selectionRef: SelectionRef; selectionText: string } | null,
+  ) => void;
   setLastRequest: React.Dispatch<React.SetStateAction<string | null>>;
   setJudgeResult: React.Dispatch<React.SetStateAction<JudgeResultEvent | null>>;
   setProposal: (p: AiProposal | null) => void;
@@ -781,24 +882,45 @@ type AiPanelActionsDeps = {
     candidateCount?: number;
     streamOverride?: boolean;
   }) => Promise<void>;
-  regenerateWithStrongNegative: (args?: { projectId?: string }) => Promise<void>;
+  regenerateWithStrongNegative: (args?: {
+    projectId?: string;
+  }) => Promise<void>;
   refreshSkills: () => Promise<void>;
-  persistAiApply: (args: { projectId: string; documentId: string; contentJson: string; runId: string }) => Promise<void>;
-  logAiApplyConflict: (args: { documentId: string; runId: string }) => Promise<void>;
+  persistAiApply: (args: {
+    projectId: string;
+    documentId: string;
+    contentJson: string;
+    runId: string;
+  }) => Promise<void>;
+  logAiApplyConflict: (args: {
+    documentId: string;
+    runId: string;
+  }) => Promise<void>;
   clearEvaluatedRunId: () => void;
-  setPendingSelectionSnapshot: (v: { selectionRef: SelectionRef; selectionText: string } | null) => void;
+  setPendingSelectionSnapshot: (
+    v: { selectionRef: SelectionRef; selectionText: string } | null,
+  ) => void;
   focusTextarea: () => void;
   t: (key: string) => string;
 };
 
 function createAiPanelActions(a: AiPanelActionsDeps) {
-  async function onRun(args?: { inputOverride?: string; skillIdOverride?: string }): Promise<void> {
+  async function onRun(args?: {
+    inputOverride?: string;
+    skillIdOverride?: string;
+  }): Promise<void> {
     const effectiveSkillId = args?.skillIdOverride ?? a.selectedSkillId;
     const inputToSend = (args?.inputOverride ?? a.input).trim();
     const allowEmptyInput = isContinueSkill(effectiveSkillId);
-    let selectionSnapshotForRun: { selectionRef: SelectionRef; selectionText: string } | null =
+    let selectionSnapshotForRun: {
+      selectionRef: SelectionRef;
+      selectionText: string;
+    } | null =
       a.selectionRef && a.selectionText.trim().length > 0
-        ? { selectionRef: a.selectionRef, selectionText: a.selectionText.trim() }
+        ? {
+            selectionRef: a.selectionRef,
+            selectionText: a.selectionText.trim(),
+          }
         : null;
     let selectionContextText = selectionSnapshotForRun?.selectionText ?? "";
     if (!selectionContextText && a.editor && a.bootstrapStatus === "ready") {
@@ -807,8 +929,14 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
         const normalized = captured.data.selectionText.trim();
         if (normalized.length > 0) {
           selectionContextText = normalized;
-          selectionSnapshotForRun = { selectionRef: captured.data.selectionRef, selectionText: normalized };
-          a.setSelectionSnapshot({ selectionRef: captured.data.selectionRef, selectionText: normalized });
+          selectionSnapshotForRun = {
+            selectionRef: captured.data.selectionRef,
+            selectionText: normalized,
+          };
+          a.setSelectionSnapshot({
+            selectionRef: captured.data.selectionRef,
+            selectionText: normalized,
+          });
         }
       }
     }
@@ -829,7 +957,10 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
     try {
       await a.run({
         inputOverride: composedInput,
-        context: { projectId: a.currentProject?.projectId ?? a.projectId ?? undefined, documentId: a.documentId ?? undefined },
+        context: {
+          projectId: a.currentProject?.projectId ?? a.projectId ?? undefined,
+          documentId: a.documentId ?? undefined,
+        },
         mode: a.selectedMode,
         model: a.selectedModel,
         candidateCount: a.candidateCount,
@@ -860,7 +991,9 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
     a.setSelectedCandidateId(null);
     a.setJudgeResult(null);
     a.clearEvaluatedRunId();
-    await a.regenerateWithStrongNegative({ projectId: a.currentProject?.projectId ?? a.projectId ?? undefined });
+    await a.regenerateWithStrongNegative({
+      projectId: a.currentProject?.projectId ?? a.projectId ?? undefined,
+    });
   }
 
   async function handleSkillSelect(skillId: string): Promise<void> {
@@ -877,29 +1010,63 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
     await onRun({ skillIdOverride: skillId, inputOverride });
   }
 
-  async function handleSkillToggle(args: { skillId: string; enabled: boolean }): Promise<void> {
-    const toggled = await invoke("skill:registry:toggle", { skillId: args.skillId, enabled: args.enabled });
-    if (!toggled.ok) { a.setError(toggled.error); return; }
+  async function handleSkillToggle(args: {
+    skillId: string;
+    enabled: boolean;
+  }): Promise<void> {
+    const toggled = await invoke("skill:registry:toggle", {
+      skillId: args.skillId,
+      enabled: args.enabled,
+    });
+    if (!toggled.ok) {
+      a.setError(toggled.error);
+      return;
+    }
     await a.refreshSkills();
   }
 
-  async function handleSkillScopeUpdate(args: { id: string; scope: "global" | "project" }): Promise<void> {
-    const updated = await invoke("skill:custom:update", { id: args.id, scope: args.scope });
-    if (!updated.ok) { a.setError(updated.error); return; }
+  async function handleSkillScopeUpdate(args: {
+    id: string;
+    scope: "global" | "project";
+  }): Promise<void> {
+    const updated = await invoke("skill:custom:update", {
+      id: args.id,
+      scope: args.scope,
+    });
+    if (!updated.ok) {
+      a.setError(updated.error);
+      return;
+    }
     await a.refreshSkills();
   }
 
   async function onApply(): Promise<void> {
     if (!a.editor || !a.proposal || !a.projectId || !a.documentId) return;
-    if (!a.inlineDiffConfirmOpen) { a.setInlineDiffConfirmOpen(true); return; }
-    const applied = applySelection({ editor: a.editor, selectionRef: a.proposal.selectionRef, replacementText: a.proposal.replacementText });
+    if (!a.inlineDiffConfirmOpen) {
+      a.setInlineDiffConfirmOpen(true);
+      return;
+    }
+    const applied = applySelection({
+      editor: a.editor,
+      selectionRef: a.proposal.selectionRef,
+      replacementText: a.proposal.replacementText,
+    });
     if (!applied.ok) {
       a.setError(applied.error);
-      if (applied.error.code === "CONFLICT") void a.logAiApplyConflict({ documentId: a.documentId, runId: a.proposal.runId });
+      if (applied.error.code === "CONFLICT")
+        void a.logAiApplyConflict({
+          documentId: a.documentId,
+          runId: a.proposal.runId,
+        });
       return;
     }
     const json = JSON.stringify(a.editor.getJSON());
-    await a.persistAiApply({ projectId: a.projectId, documentId: a.documentId, contentJson: json, runId: a.proposal.runId });
+    await a.persistAiApply({
+      projectId: a.projectId,
+      documentId: a.documentId,
+      contentJson: json,
+      runId: a.proposal.runId,
+    });
     a.setInlineDiffConfirmOpen(false);
   }
 
@@ -907,7 +1074,8 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       const allowEmptyInput = isContinueSkill(a.selectedSkillId);
-      if (!isRunning(a.status) && (allowEmptyInput || a.input.trim())) void onRun();
+      if (!isRunning(a.status) && (allowEmptyInput || a.input.trim()))
+        void onRun();
     }
   }
 
@@ -925,7 +1093,18 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
     a.focusTextarea();
   }
 
-  return { onRun, onReject, onSelectCandidate, onRegenerateAll, handleSkillSelect, handleSkillToggle, handleSkillScopeUpdate, onApply, handleKeyDown, handleNewChat };
+  return {
+    onRun,
+    onReject,
+    onSelectCandidate,
+    onRegenerateAll,
+    handleSkillSelect,
+    handleSkillToggle,
+    handleSkillScopeUpdate,
+    onApply,
+    handleKeyDown,
+    handleNewChat,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -971,9 +1150,9 @@ function AiPanelErrorDisplay(props: {
     return (
       <ErrorGuideCard
         testId="ai-error-guide-db"
-        title={t('ai.panel.dbErrorTitle')}
-        description={ec.dbGuideError?.message ?? t('ai.panel.dbErrorFallback')}
-        steps={[t('ai.panel.dbStep1'), t('ai.panel.dbStep2')]}
+        title={t("ai.panel.dbErrorTitle")}
+        description={ec.dbGuideError?.message ?? t("ai.panel.dbErrorFallback")}
+        steps={[t("ai.panel.dbStep1"), t("ai.panel.dbStep2")]}
         command={ec.dbGuideCommand}
         errorCode="DB_ERROR"
       />
@@ -984,11 +1163,15 @@ function AiPanelErrorDisplay(props: {
     return (
       <ErrorGuideCard
         testId="ai-error-guide-provider"
-        title={t('ai.panel.providerTitle')}
-        description={t('ai.panel.providerDescription')}
-        steps={[t('ai.panel.providerStep1'), t('ai.panel.providerStep2'), t('ai.panel.providerStep3')]}
+        title={t("ai.panel.providerTitle")}
+        description={t("ai.panel.providerDescription")}
+        steps={[
+          t("ai.panel.providerStep1"),
+          t("ai.panel.providerStep2"),
+          t("ai.panel.providerStep3"),
+        ]}
         errorCode={ec.providerGuideCode ?? "AI_NOT_CONFIGURED"}
-        actionLabel={t('ai.panel.openSettingsAi')}
+        actionLabel={t("ai.panel.openSettingsAi")}
         actionTestId="ai-error-guide-open-settings"
         onAction={() => props.openSettings("ai")}
       />
@@ -997,9 +1180,19 @@ function AiPanelErrorDisplay(props: {
 
   return (
     <>
-      {ec.skillsErrorConfig ? <AiErrorCard error={ec.skillsErrorConfig} showDismiss={false} /> : null}
-      {ec.modelsErrorConfig ? <AiErrorCard error={ec.modelsErrorConfig} showDismiss={false} /> : null}
-      {ec.runtimeErrorConfig ? <AiErrorCard error={ec.runtimeErrorConfig} errorCodeTestId="ai-error-code" onDismiss={props.clearError} /> : null}
+      {ec.skillsErrorConfig ? (
+        <AiErrorCard error={ec.skillsErrorConfig} showDismiss={false} />
+      ) : null}
+      {ec.modelsErrorConfig ? (
+        <AiErrorCard error={ec.modelsErrorConfig} showDismiss={false} />
+      ) : null}
+      {ec.runtimeErrorConfig ? (
+        <AiErrorCard
+          error={ec.runtimeErrorConfig}
+          errorCodeTestId="ai-error-code"
+          onDismiss={props.clearError}
+        />
+      ) : null}
     </>
   );
 }
@@ -1018,22 +1211,48 @@ function AiPanelProposalArea(props: {
   const { t } = useTranslation();
   return (
     <>
-      {!props.compareMode ? <DiffView diffText={props.diffText} testId="ai-panel-diff" /> : null}
+      {!props.compareMode ? (
+        <DiffView diffText={props.diffText} testId="ai-panel-diff" />
+      ) : null}
       <div className="flex gap-2">
-        <Button data-testid="ai-apply" variant="secondary" size="md" onClick={() => void props.onApply()} disabled={!props.canApply} className="flex-1">
-          {props.inlineDiffConfirmOpen ? t('ai.panel.applyArmed') : t('ai.panel.apply')}
+        <Button
+          data-testid="ai-apply"
+          variant="secondary"
+          size="md"
+          onClick={() => void props.onApply()}
+          disabled={!props.canApply}
+          className="flex-1"
+        >
+          {props.inlineDiffConfirmOpen
+            ? t("ai.panel.applyArmed")
+            : t("ai.panel.apply")}
         </Button>
         {props.inlineDiffConfirmOpen ? (
-          <Button data-testid="ai-apply-confirm" variant="secondary" size="md" onClick={() => void props.onApply()} disabled={!props.canApply} className="flex-1">
-            {t('ai.panel.confirmApply')}
+          <Button
+            data-testid="ai-apply-confirm"
+            variant="secondary"
+            size="md"
+            onClick={() => void props.onApply()}
+            disabled={!props.canApply}
+            className="flex-1"
+          >
+            {t("ai.panel.confirmApply")}
           </Button>
         ) : null}
         <Button
-          data-testid="ai-reject" variant="ghost" size="md"
-          onClick={props.inlineDiffConfirmOpen ? () => props.setInlineDiffConfirmOpen(false) : props.onReject}
+          data-testid="ai-reject"
+          variant="ghost"
+          size="md"
+          onClick={
+            props.inlineDiffConfirmOpen
+              ? () => props.setInlineDiffConfirmOpen(false)
+              : props.onReject
+          }
           disabled={props.applyStatus === "applying"}
         >
-          {props.inlineDiffConfirmOpen ? t('ai.panel.backToDiff') : t('ai.panel.reject')}
+          {props.inlineDiffConfirmOpen
+            ? t("ai.panel.backToDiff")
+            : t("ai.panel.reject")}
         </Button>
       </div>
     </>
@@ -1047,24 +1266,43 @@ function AiPanelChatArea(props: AiPanelChatAreaProps): JSX.Element {
     <div className="flex-1 overflow-y-auto p-3 space-y-4">
       {props.lastRequest && (
         <div className="w-full p-3 rounded-[var(--radius-md)] bg-[var(--color-bg-base)]">
-          <div className="text-[13px] text-[var(--color-fg-default)] whitespace-pre-wrap">{props.lastRequest}</div>
+          <div className="text-[13px] text-[var(--color-fg-default)] whitespace-pre-wrap">
+            {props.lastRequest}
+          </div>
         </div>
       )}
 
       {props.working && (
         <div className="flex items-center gap-2 text-[12px] text-[var(--color-fg-muted)]">
           <Spinner size="sm" />
-          <span>{props.status === "streaming" ? t('ai.panel.generating') : t('ai.panel.thinking')}</span>
-          {typeof props.queuePosition === "number" && props.queuePosition > 0 ? (
-            <span data-testid="ai-queue-status">{t('ai.panel.queueStatus', { position: props.queuePosition, count: props.queuedCount })}</span>
+          <span>
+            {props.status === "streaming"
+              ? t("ai.panel.generating")
+              : t("ai.panel.thinking")}
+          </span>
+          {typeof props.queuePosition === "number" &&
+          props.queuePosition > 0 ? (
+            <span data-testid="ai-queue-status">
+              {t("ai.panel.queueStatus", {
+                position: props.queuePosition,
+                count: props.queuedCount,
+              })}
+            </span>
           ) : null}
         </div>
       )}
 
-      <AiPanelErrorDisplay errorConfigs={props.errorConfigs} clearError={props.clearError} openSettings={props.openSettings} />
+      <AiPanelErrorDisplay
+        errorConfigs={props.errorConfigs}
+        clearError={props.clearError}
+        openSettings={props.openSettings}
+      />
 
       {props.lastCandidates.length > 0 ? (
-        <div data-testid="ai-candidate-list" className="w-full grid grid-cols-1 gap-2">
+        <div
+          data-testid="ai-candidate-list"
+          className="w-full grid grid-cols-1 gap-2"
+        >
           {props.lastCandidates.map((candidate, index) => {
             const isSelected = props.selectedCandidate?.id === candidate.id;
             return (
@@ -1080,12 +1318,22 @@ function AiPanelChatArea(props: AiPanelChatAreaProps): JSX.Element {
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[12px] font-semibold text-[var(--color-fg-default)]">{t("ai.candidate", { index: index + 1 })}</span>
+                  <span className="text-[12px] font-semibold text-[var(--color-fg-default)]">
+                    {t("ai.candidate", { index: index + 1 })}
+                  </span>
                   {isSelected ? (
-                    <span className="text-[11px] text-[var(--color-fg-accent)]">{t("ai.candidateSelected")}</span>
+                    <span className="text-[11px] text-[var(--color-fg-accent)]">
+                      {t("ai.candidateSelected")}
+                    </span>
                   ) : null}
                 </div>
-                <Text size="small" color="muted" className="mt-1 whitespace-pre-wrap">{candidate.summary}</Text>
+                <Text
+                  size="small"
+                  color="muted"
+                  className="mt-1 whitespace-pre-wrap"
+                >
+                  {candidate.summary}
+                </Text>
               </button>
             );
           })}
@@ -1094,63 +1342,127 @@ function AiPanelChatArea(props: AiPanelChatAreaProps): JSX.Element {
 
       {props.lastCandidates.length > 1 ? (
         <div className="w-full flex justify-end">
-          <Button data-testid="ai-candidate-regenerate" variant="ghost" size="sm" onClick={() => void props.onRegenerateAll()} disabled={props.working}>
+          <Button
+            data-testid="ai-candidate-regenerate"
+            variant="ghost"
+            size="sm"
+            onClick={() => void props.onRegenerateAll()}
+            disabled={props.working}
+          >
             {t("ai.regenerateAll")}
           </Button>
         </div>
       ) : null}
 
       {props.activeOutputText ? (
-        <div data-testid="ai-output" className="w-full" aria-live="polite" aria-atomic="false">
+        <div
+          data-testid="ai-output"
+          className="w-full"
+          aria-live="polite"
+          aria-atomic="false"
+        >
           <div className="text-[13px] leading-relaxed text-[var(--color-fg-default)] whitespace-pre-wrap">
             {props.activeOutputText}
             {props.status === "streaming" && <span className="typing-cursor" />}
           </div>
         </div>
       ) : (
-        !props.lastRequest && !props.working && (
-          <div data-testid="ai-output" aria-live="polite" aria-atomic="false" className="flex-1 flex items-center justify-center text-center py-12">
-            <Text size="small" color="muted">{t("ai.emptyHint")}</Text>
+        !props.lastRequest &&
+        !props.working && (
+          <div
+            data-testid="ai-output"
+            aria-live="polite"
+            aria-atomic="false"
+            className="flex-1 flex items-center justify-center text-center py-12"
+          >
+            <Text size="small" color="muted">
+              {t("ai.emptyHint")}
+            </Text>
           </div>
         )
       )}
 
       {props.judgeResult ? (
-        <div data-testid="ai-judge-result" className="w-full rounded-[var(--radius-md)] bg-[var(--color-bg-base)] px-3 py-2 space-y-1">
+        <div
+          data-testid="ai-judge-result"
+          className="w-full rounded-[var(--radius-md)] bg-[var(--color-bg-base)] px-3 py-2 space-y-1"
+        >
           <div className="flex items-center gap-2 flex-wrap">
-            <span data-testid="ai-judge-severity" className={`text-[11px] font-semibold uppercase tracking-wide ${judgeSeverityClass(props.judgeResult.severity)}`}>
+            <span
+              data-testid="ai-judge-severity"
+              className={`text-[11px] font-semibold uppercase tracking-wide ${judgeSeverityClass(props.judgeResult.severity)}`}
+            >
               {props.judgeResult.severity}
             </span>
             {props.judgeResult.labels.length === 0 ? (
-              <span data-testid="ai-judge-pass" className="text-[12px] text-[var(--color-fg-default)]">{t("ai.judgePass")}</span>
+              <span
+                data-testid="ai-judge-pass"
+                className="text-[12px] text-[var(--color-fg-default)]"
+              >
+                {t("ai.judgePass")}
+              </span>
             ) : (
               props.judgeResult.labels.map((label) => (
-                <span key={label} className="text-[12px] text-[var(--color-fg-default)]">{label}</span>
+                <span
+                  key={label}
+                  className="text-[12px] text-[var(--color-fg-default)]"
+                >
+                  {label}
+                </span>
               ))
             )}
           </div>
-          <Text data-testid="ai-judge-summary" size="small" color="muted">{props.judgeResult.summary}</Text>
+          <Text data-testid="ai-judge-summary" size="small" color="muted">
+            {props.judgeResult.summary}
+          </Text>
           {props.judgeResult.partialChecksSkipped ? (
-            <Text data-testid="ai-judge-partial" size="small" color="muted">{t("ai.judgePartialSkipped")}</Text>
+            <Text data-testid="ai-judge-partial" size="small" color="muted">
+              {t("ai.judgePartialSkipped")}
+            </Text>
           ) : null}
         </div>
       ) : null}
 
       {props.usageStats ? (
-        <div data-testid="ai-usage-stats" className="w-full rounded-[var(--radius-md)] bg-[var(--color-bg-base)] px-3 py-2">
+        <div
+          data-testid="ai-usage-stats"
+          className="w-full rounded-[var(--radius-md)] bg-[var(--color-bg-base)] px-3 py-2"
+        >
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[var(--color-fg-muted)]">
-            <span>{t('ai.panel.usagePrompt')}{" "}<span data-testid="ai-usage-prompt-tokens">{formatTokenValue(props.usageStats.promptTokens)}</span></span>
-            <span>{t("ai.usageOutput")}{" "}<span data-testid="ai-usage-completion-tokens">{formatTokenValue(props.usageStats.completionTokens)}</span></span>
-            <span>{t("ai.usageSessionTotal")}{" "}<span data-testid="ai-usage-session-total-tokens">{formatTokenValue(props.usageStats.sessionTotalTokens)}</span></span>
+            <span>
+              {t("ai.panel.usagePrompt")}{" "}
+              <span data-testid="ai-usage-prompt-tokens">
+                {formatTokenValue(props.usageStats.promptTokens)}
+              </span>
+            </span>
+            <span>
+              {t("ai.usageOutput")}{" "}
+              <span data-testid="ai-usage-completion-tokens">
+                {formatTokenValue(props.usageStats.completionTokens)}
+              </span>
+            </span>
+            <span>
+              {t("ai.usageSessionTotal")}{" "}
+              <span data-testid="ai-usage-session-total-tokens">
+                {formatTokenValue(props.usageStats.sessionTotalTokens)}
+              </span>
+            </span>
             {typeof props.usageStats.estimatedCostUsd === "number" ? (
-              <span>{t("ai.usageCostEstimate")}{" "}<span data-testid="ai-usage-estimated-cost">{formatUsd(props.usageStats.estimatedCostUsd)}</span></span>
+              <span>
+                {t("ai.usageCostEstimate")}{" "}
+                <span data-testid="ai-usage-estimated-cost">
+                  {formatUsd(props.usageStats.estimatedCostUsd)}
+                </span>
+              </span>
             ) : null}
           </div>
         </div>
       ) : null}
 
       {props.applyStatus === "applied" && (
-        <Text data-testid="ai-apply-status" size="small" color="muted">{t("ai.appliedSaved")}</Text>
+        <Text data-testid="ai-apply-status" size="small" color="muted">
+          {t("ai.appliedSaved")}
+        </Text>
       )}
 
       {props.proposal && (
@@ -1195,13 +1507,17 @@ type AiPanelInputAreaProps = {
   modelsStatus: string;
   selectedModel: AiModel;
   setSelectedModel: (model: AiModel) => void;
-  skillsStatus: string;  availableModels: AiModelOption[];
+  skillsStatus: string;
+  availableModels: AiModelOption[];
   recentModelIds: string[];
   selectedSkillId: string;
   skills: SkillListItem[];
   handleSkillSelect: (skillId: string) => void;
   handleSkillToggle: (args: { skillId: string; enabled: boolean }) => void;
-  handleSkillScopeUpdate: (args: { id: string; scope: "global" | "project" }) => void;
+  handleSkillScopeUpdate: (args: {
+    id: string;
+    scope: "global" | "project";
+  }) => void;
   openSettings: (section?: SettingsTab) => void;
   skillManagerOpen: boolean;
   setSkillManagerOpen: (open: boolean) => void;
@@ -1210,20 +1526,40 @@ type AiPanelInputAreaProps = {
   refreshSkills: () => Promise<void>;
 };
 
-const AiPanelInputArea = React.forwardRef<HTMLTextAreaElement, AiPanelInputAreaProps>(function AiPanelInputArea(props, ref) {
+const AiPanelInputArea = React.forwardRef<
+  HTMLTextAreaElement,
+  AiPanelInputAreaProps
+>(function AiPanelInputArea(props, ref) {
   const { t } = useTranslation();
   return (
     <div className="shrink-0 px-1.5 pb-1.5 pt-2 border-t border-[var(--color-separator)]">
       <div className="relative border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] focus-within:border-[var(--color-border-focus)]">
         {props.hasSelectionReference ? (
-          <div data-testid="ai-selection-reference-card" className="mx-2 mt-2 mb-1 rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] px-2 py-1.5">
+          <div
+            data-testid="ai-selection-reference-card"
+            className="mx-2 mt-2 mb-1 rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] px-2 py-1.5"
+          >
             <div className="flex items-start gap-2">
               <div className="min-w-0 flex-1">
-                <div className="text-[10px] uppercase tracking-wide text-[var(--color-fg-muted)]">{t('ai.panel.selectionFromEditor')}</div>
-                <div data-testid="ai-selection-reference-preview" className="text-[12px] text-[var(--color-fg-default)] whitespace-pre-wrap break-words">{props.selectionPreview}</div>
+                <div className="text-[10px] uppercase tracking-wide text-[var(--color-fg-muted)]">
+                  {t("ai.panel.selectionFromEditor")}
+                </div>
+                <div
+                  data-testid="ai-selection-reference-preview"
+                  className="text-[12px] text-[var(--color-fg-default)] whitespace-pre-wrap break-words"
+                >
+                  {props.selectionPreview}
+                </div>
               </div>
-              <Tooltip content={t('ai.panel.dismissSelection')}>
-                <button type="button" data-testid="ai-selection-reference-close" className="focus-ring h-5 w-5 shrink-0 rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]" onClick={() => props.setSelectionSnapshot(null)}>×</button>
+              <Tooltip content={t("ai.panel.dismissSelection")}>
+                <button
+                  type="button"
+                  data-testid="ai-selection-reference-close"
+                  className="focus-ring h-5 w-5 shrink-0 rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                  onClick={() => props.setSelectionSnapshot(null)}
+                >
+                  ×
+                </button>
               </Tooltip>
             </div>
           </div>
@@ -1234,41 +1570,104 @@ const AiPanelInputArea = React.forwardRef<HTMLTextAreaElement, AiPanelInputAreaP
           value={props.input}
           onChange={(e) => props.setInput(e.target.value)}
           onKeyDown={props.handleKeyDown}
-          placeholder={t('ai.panel.inputPlaceholder')}
+          placeholder={t("ai.panel.inputPlaceholder")}
           className="w-full min-h-[60px] max-h-[160px] px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
         />
         <div className="flex items-center justify-between px-2 pb-2">
           <div className="flex items-center gap-1">
-            <ToolButton active={props.modeOpen} onClick={() => { props.setModeOpen((v) => !v); props.setModelOpen(false); props.setSkillsOpen(false); }}>
+            <ToolButton
+              active={props.modeOpen}
+              onClick={() => {
+                props.setModeOpen((v) => !v);
+                props.setModelOpen(false);
+                props.setSkillsOpen(false);
+              }}
+            >
               {getModeName(props.selectedMode, t)}
             </ToolButton>
-            <ToolButton active={props.modelOpen} onClick={() => { props.setModelOpen((v) => !v); props.setModeOpen(false); props.setSkillsOpen(false); }}>
-              {props.modelsStatus === "loading" ? t('ai.panel.loading') : getModelName(props.selectedModel, props.availableModels)}
+            <ToolButton
+              active={props.modelOpen}
+              onClick={() => {
+                props.setModelOpen((v) => !v);
+                props.setModeOpen(false);
+                props.setSkillsOpen(false);
+              }}
+            >
+              {props.modelsStatus === "loading"
+                ? t("ai.panel.loading")
+                : getModelName(props.selectedModel, props.availableModels)}
             </ToolButton>
-            <ToolButton active={props.skillsOpen} testId="ai-skills-toggle" onClick={() => { props.setSkillsOpen((v) => !v); props.setModeOpen(false); props.setModelOpen(false); }}>
-              {props.skillsStatus === "loading" ? t('ai.panel.loading') : t('ai.panel.skill')}
+            <ToolButton
+              active={props.skillsOpen}
+              testId="ai-skills-toggle"
+              onClick={() => {
+                props.setSkillsOpen((v) => !v);
+                props.setModeOpen(false);
+                props.setModelOpen(false);
+              }}
+            >
+              {props.skillsStatus === "loading"
+                ? t("ai.panel.loading")
+                : t("ai.panel.skill")}
             </ToolButton>
           </div>
-          <SendStopButton isWorking={props.working} disabled={!props.working && !props.input.trim()} onSend={() => void props.onRun()} onStop={() => void props.cancel()} />
+          <SendStopButton
+            isWorking={props.working}
+            disabled={!props.working && !props.input.trim()}
+            onSend={() => void props.onRun()}
+            onStop={() => void props.cancel()}
+          />
         </div>
-        <ModePicker open={props.modeOpen} selectedMode={props.selectedMode} onOpenChange={props.setModeOpen} onSelectMode={(mode) => { props.setSelectedMode(mode); props.setModeOpen(false); }} />
-        <ModelPicker open={props.modelOpen} models={props.availableModels} recentModelIds={props.recentModelIds} selectedModel={props.selectedModel} onOpenChange={props.setModelOpen} onSelectModel={(model) => { props.setSelectedModel(model); props.setModelOpen(false); }} />
+        <ModePicker
+          open={props.modeOpen}
+          selectedMode={props.selectedMode}
+          onOpenChange={props.setModeOpen}
+          onSelectMode={(mode) => {
+            props.setSelectedMode(mode);
+            props.setModeOpen(false);
+          }}
+        />
+        <ModelPicker
+          open={props.modelOpen}
+          models={props.availableModels}
+          recentModelIds={props.recentModelIds}
+          selectedModel={props.selectedModel}
+          onOpenChange={props.setModelOpen}
+          onSelectModel={(model) => {
+            props.setSelectedModel(model);
+            props.setModelOpen(false);
+          }}
+        />
         <SkillPicker
           open={props.skillsOpen}
           items={props.skills}
           selectedSkillId={props.selectedSkillId}
           onOpenChange={props.setSkillsOpen}
-          onSelectSkillId={(skillId) => { void props.handleSkillSelect(skillId); }}
-          onOpenSettings={() => { props.setSkillsOpen(false); props.openSettings(); }}
-          onCreateSkill={() => { props.setSkillsOpen(false); props.setSkillManagerOpen(true); }}
-          onToggleSkill={(skillId, enabled) => { void props.handleSkillToggle({ skillId, enabled }); }}
-          onUpdateScope={(id, scope) => { void props.handleSkillScopeUpdate({ id, scope }); }}
+          onSelectSkillId={(skillId) => {
+            void props.handleSkillSelect(skillId);
+          }}
+          onOpenSettings={() => {
+            props.setSkillsOpen(false);
+            props.openSettings();
+          }}
+          onCreateSkill={() => {
+            props.setSkillsOpen(false);
+            props.setSkillManagerOpen(true);
+          }}
+          onToggleSkill={(skillId, enabled) => {
+            void props.handleSkillToggle({ skillId, enabled });
+          }}
+          onUpdateScope={(id, scope) => {
+            void props.handleSkillScopeUpdate({ id, scope });
+          }}
         />
         <SkillManagerDialog
           open={props.skillManagerOpen}
           onOpenChange={props.setSkillManagerOpen}
           projectId={props.currentProject?.projectId ?? props.projectId ?? null}
-          onSaved={async () => { await props.refreshSkills(); }}
+          onSaved={async () => {
+            await props.refreshSkills();
+          }}
         />
       </div>
     </div>
@@ -1432,20 +1831,46 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   const setPendingSelectionSnapshot = React.useCallback(
     (v: { selectionRef: SelectionRef; selectionText: string } | null) => {
       pendingSelectionSnapshotRef.current = v;
-    }, [],
+    },
+    [],
   );
 
   useAiPanelEffects({
-    refreshSkills, selectedModel, setModelsStatus, setModelsLastError,
-    setAvailableModels, setSelectedModel, setRecentModelIds, setCandidateCount,
-    candidateCount, editor, bootstrapStatus, setSelectionSnapshot, lastCandidates,
-    selectedCandidateId, setSelectedCandidateId, status, proposal,
-    activeRunId, activeOutputText, selectionRef, selectionText,
-    setProposal, setCompareMode, pendingSelectionSnapshotRef,
-    setInlineDiffConfirmOpen, lastRunId, projectId, outputText,
-    lastRequest, evaluatedRunIdRef, setJudgeResult,
-    handleNewChatRef, lastHandledNewChatSignalRef,
-    newChatSignal: props.newChatSignal, t,
+    refreshSkills,
+    selectedModel,
+    setModelsStatus,
+    setModelsLastError,
+    setAvailableModels,
+    setSelectedModel,
+    setRecentModelIds,
+    setCandidateCount,
+    candidateCount,
+    editor,
+    bootstrapStatus,
+    setSelectionSnapshot,
+    lastCandidates,
+    selectedCandidateId,
+    setSelectedCandidateId,
+    status,
+    proposal,
+    activeRunId,
+    activeOutputText,
+    selectionRef,
+    selectionText,
+    setProposal,
+    setCompareMode,
+    pendingSelectionSnapshotRef,
+    setInlineDiffConfirmOpen,
+    lastRunId,
+    projectId,
+    outputText,
+    lastRequest,
+    evaluatedRunIdRef,
+    setJudgeResult,
+    handleNewChatRef,
+    lastHandledNewChatSignalRef,
+    newChatSignal: props.newChatSignal,
+    t,
   });
 
   // createAiPanelActions receives callbacks that write to refs, which the React
@@ -1453,15 +1878,43 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   // are only invoked from event handlers, never during render. Suppressed.
   // eslint-disable-next-line react-hooks/refs
   const actions = createAiPanelActions({
-    input, selectedSkillId, selectionRef, selectionText, editor, bootstrapStatus,
-    status, projectId, documentId, selectedMode, selectedModel, candidateCount,
-    currentProject, proposal, inlineDiffConfirmOpen, applyStatus,
-    setInput, setSelectedSkillId, setSelectionSnapshot, setLastRequest,
-    setJudgeResult, setProposal, setCompareMode, setInlineDiffConfirmOpen,
-    setSelectedCandidateId, setError, clearError, setSkillsOpen,
-    run, regenerateWithStrongNegative, refreshSkills, persistAiApply,
+    input,
+    selectedSkillId,
+    selectionRef,
+    selectionText,
+    editor,
+    bootstrapStatus,
+    status,
+    projectId,
+    documentId,
+    selectedMode,
+    selectedModel,
+    candidateCount,
+    currentProject,
+    proposal,
+    inlineDiffConfirmOpen,
+    applyStatus,
+    setInput,
+    setSelectedSkillId,
+    setSelectionSnapshot,
+    setLastRequest,
+    setJudgeResult,
+    setProposal,
+    setCompareMode,
+    setInlineDiffConfirmOpen,
+    setSelectedCandidateId,
+    setError,
+    clearError,
+    setSkillsOpen,
+    run,
+    regenerateWithStrongNegative,
+    refreshSkills,
+    persistAiApply,
     logAiApplyConflict,
-    clearEvaluatedRunId, setPendingSelectionSnapshot, focusTextarea, t,
+    clearEvaluatedRunId,
+    setPendingSelectionSnapshot,
+    focusTextarea,
+    t,
   });
 
   // Sync the latest handleNewChat callback into a ref so effects can call it
@@ -1479,7 +1932,12 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   const selectionPreview = hasSelectionReference
     ? formatSelectionPreview(selectionText.trim())
     : "";
-  const errorConfigs = buildAiErrorConfigs({ skillsLastError, modelsLastError, lastError, t });
+  const errorConfigs = buildAiErrorConfigs({
+    skillsLastError,
+    modelsLastError,
+    lastError,
+    t,
+  });
   const diffText = proposal
     ? unifiedDiff({
         oldText: proposal.selectionText,
@@ -1496,71 +1954,75 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   return (
     <PanelContainer data-testid="ai-panel" title="AI">
       <div className="flex flex-col h-full min-h-0">
-      <div className="flex-1 flex flex-col min-h-0">
-        <AiPanelChatArea
-          lastRequest={lastRequest}
-          working={working}
-          status={status}
-          queuePosition={queuePosition}
-          queuedCount={queuedCount}
-          errorConfigs={errorConfigs}
-          lastCandidates={lastCandidates}
-          selectedCandidate={selectedCandidate}
-          activeOutputText={activeOutputText}
-          judgeResult={judgeResult}
-          usageStats={usageStats}
-          applyStatus={applyStatus}
-          proposal={proposal}
-          compareMode={compareMode}
-          diffText={diffText}
-          canApply={canApply}
-          inlineDiffConfirmOpen={inlineDiffConfirmOpen}
-          clearError={clearError}
-          openSettings={openSettings}
-          onSelectCandidate={actions.onSelectCandidate}
-          onRegenerateAll={() => void actions.onRegenerateAll()}
-          onApply={() => void actions.onApply()}
-          onReject={actions.onReject}
-          setInlineDiffConfirmOpen={setInlineDiffConfirmOpen}
-        />
-        <AiPanelInputArea
-          ref={textareaRef}
-          hasSelectionReference={hasSelectionReference}
-          selectionPreview={selectionPreview}
-          setSelectionSnapshot={() => setSelectionSnapshot(null)}
-          input={input}
-          setInput={setInput}
-          handleKeyDown={actions.handleKeyDown}
-          working={working}
-          onRun={() => void actions.onRun()}
-          cancel={cancel}
-          modeOpen={modeOpen}
-          modelOpen={modelOpen}
-          skillsOpen={skillsOpen}
-          setModeOpen={setModeOpen}
-          setModelOpen={setModelOpen}
-          setSkillsOpen={setSkillsOpen}
-          selectedMode={selectedMode}
-          setSelectedMode={setSelectedMode}
-          modelsStatus={modelsStatus}
-          selectedModel={selectedModel}
-          setSelectedModel={setSelectedModel}
-          skillsStatus={skillsStatus}
-          availableModels={availableModels}
-          recentModelIds={recentModelIds}
-          selectedSkillId={selectedSkillId}
-          skills={skills}
-          handleSkillSelect={(skillId) => void actions.handleSkillSelect(skillId)}
-          handleSkillToggle={(args) => void actions.handleSkillToggle(args)}
-          handleSkillScopeUpdate={(args) => void actions.handleSkillScopeUpdate(args)}
-          openSettings={openSettings}
-          skillManagerOpen={skillManagerOpen}
-          setSkillManagerOpen={setSkillManagerOpen}
-          currentProject={currentProject}
-          projectId={projectId}
-          refreshSkills={refreshSkills}
-        />
-      </div>
+        <div className="flex-1 flex flex-col min-h-0">
+          <AiPanelChatArea
+            lastRequest={lastRequest}
+            working={working}
+            status={status}
+            queuePosition={queuePosition}
+            queuedCount={queuedCount}
+            errorConfigs={errorConfigs}
+            lastCandidates={lastCandidates}
+            selectedCandidate={selectedCandidate}
+            activeOutputText={activeOutputText}
+            judgeResult={judgeResult}
+            usageStats={usageStats}
+            applyStatus={applyStatus}
+            proposal={proposal}
+            compareMode={compareMode}
+            diffText={diffText}
+            canApply={canApply}
+            inlineDiffConfirmOpen={inlineDiffConfirmOpen}
+            clearError={clearError}
+            openSettings={openSettings}
+            onSelectCandidate={actions.onSelectCandidate}
+            onRegenerateAll={() => void actions.onRegenerateAll()}
+            onApply={() => void actions.onApply()}
+            onReject={actions.onReject}
+            setInlineDiffConfirmOpen={setInlineDiffConfirmOpen}
+          />
+          <AiPanelInputArea
+            ref={textareaRef}
+            hasSelectionReference={hasSelectionReference}
+            selectionPreview={selectionPreview}
+            setSelectionSnapshot={() => setSelectionSnapshot(null)}
+            input={input}
+            setInput={setInput}
+            handleKeyDown={actions.handleKeyDown}
+            working={working}
+            onRun={() => void actions.onRun()}
+            cancel={cancel}
+            modeOpen={modeOpen}
+            modelOpen={modelOpen}
+            skillsOpen={skillsOpen}
+            setModeOpen={setModeOpen}
+            setModelOpen={setModelOpen}
+            setSkillsOpen={setSkillsOpen}
+            selectedMode={selectedMode}
+            setSelectedMode={setSelectedMode}
+            modelsStatus={modelsStatus}
+            selectedModel={selectedModel}
+            setSelectedModel={setSelectedModel}
+            skillsStatus={skillsStatus}
+            availableModels={availableModels}
+            recentModelIds={recentModelIds}
+            selectedSkillId={selectedSkillId}
+            skills={skills}
+            handleSkillSelect={(skillId) =>
+              void actions.handleSkillSelect(skillId)
+            }
+            handleSkillToggle={(args) => void actions.handleSkillToggle(args)}
+            handleSkillScopeUpdate={(args) =>
+              void actions.handleSkillScopeUpdate(args)
+            }
+            openSettings={openSettings}
+            skillManagerOpen={skillManagerOpen}
+            setSkillManagerOpen={setSkillManagerOpen}
+            currentProject={currentProject}
+            projectId={projectId}
+            refreshSkills={refreshSkills}
+          />
+        </div>
       </div>
     </PanelContainer>
   );

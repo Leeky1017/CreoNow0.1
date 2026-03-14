@@ -11,13 +11,11 @@ import { useTranslation } from "react-i18next";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { useDeferredLoading } from "../../lib/useDeferredLoading";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useKgStore } from "../../stores/kgStore";
 import { CharacterPanelContent } from "./CharacterPanel";
 import { CharacterPanelSkeleton } from "./CharacterPanelSkeleton";
-import {
-  kgToCharacters,
-  characterToMetadataJson,
-} from "./characterFromKg";
+import { kgToCharacters, characterToMetadataJson } from "./characterFromKg";
 import type { Character } from "./types";
 
 export interface CharacterPanelContainerProps {
@@ -74,7 +72,7 @@ export function CharacterPanelContainer(
    */
   const handleCreate = React.useCallback(async () => {
     const res = await entityCreate({
-      name: t('character.panelContainer.newCharacter'),
+      name: t("character.panelContainer.newCharacter"),
       type: "character",
       description: "",
     });
@@ -108,13 +106,14 @@ export function CharacterPanelContainer(
   const handleDelete = React.useCallback(
     async (characterId: string) => {
       const character = characters.find((c) => c.id === characterId);
-      const name = character?.name ?? t('character.panelContainer.thisCharacter');
+      const name =
+        character?.name ?? t("character.panelContainer.thisCharacter");
 
       const confirmed = await confirm({
-        title: t('character.panelContainer.deleteTitle'),
-        description: t('character.panelContainer.deleteDescription', { name }),
-        primaryLabel: t('character.panelContainer.deleteLabel'),
-        secondaryLabel: t('character.panelContainer.cancelLabel'),
+        title: t("character.panelContainer.deleteTitle"),
+        description: t("character.panelContainer.deleteDescription", { name }),
+        primaryLabel: t("character.panelContainer.deleteLabel"),
+        secondaryLabel: t("character.panelContainer.cancelLabel"),
       });
 
       if (!confirmed) {
@@ -149,14 +148,15 @@ export function CharacterPanelContainer(
   if (bootstrapStatus === "error" && lastError) {
     return (
       <div
+        role="alert"
         className="flex flex-col items-center justify-center h-full gap-2 p-4"
         data-testid="character-panel-error"
       >
         <span className="text-sm text-[var(--color-error-default)]">
-          {t('character.panelContainer.loadError')}
+          {t("character.panelContainer.loadError")}
         </span>
         <span className="text-xs text-[var(--color-fg-muted)]">
-          {lastError.code}: {lastError.message}
+          {getHumanErrorMessage(lastError)}
         </span>
       </div>
     );
@@ -172,10 +172,10 @@ export function CharacterPanelContainer(
         >
           <div className="text-center space-y-2">
             <p className="text-sm text-[var(--color-fg-muted)]">
-              {t('character.panelContainer.emptyTitle')}
+              {t("character.panelContainer.emptyTitle")}
             </p>
             <p className="text-xs text-[var(--color-fg-placeholder)]">
-              {t('character.panelContainer.emptyDescription')}
+              {t("character.panelContainer.emptyDescription")}
             </p>
           </div>
           <button
@@ -183,7 +183,7 @@ export function CharacterPanelContainer(
             onClick={() => void handleCreate()}
             className="focus-ring px-4 py-2 text-sm font-medium bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] rounded-[var(--radius-md)] hover:opacity-90 transition-opacity"
           >
-            {t('character.panelContainer.createCharacter')}
+            {t("character.panelContainer.createCharacter")}
           </button>
         </div>
         <SystemDialog {...dialogProps} />

@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { useEditorStore } from "../../stores/editorStore";
 import { invoke } from "../../lib/ipcClient";
 import { i18n } from "../../i18n";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 
 export type CompareState = {
   status: "idle" | "loading" | "ready" | "error";
@@ -63,7 +64,7 @@ export function useVersionCompare() {
           setCompareState({
             status: "error",
             diffText: "",
-            error: `${res.error.code}: ${res.error.message}`,
+            error: getHumanErrorMessage(res.error),
           });
           return;
         }

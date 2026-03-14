@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import type { IpcChannelSpec } from "@shared/types/ipc-generated";
 import { invoke } from "../../lib/ipcClient";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { runFireAndForget } from "../../lib/fireAndForget";
 import { Button, Heading, Text } from "../../components/primitives";
 import { useJudgeEnsure } from "../../hooks/useJudgeEnsure";
@@ -15,7 +16,7 @@ type JudgeModelState =
  */
 function formatState(state: JudgeModelState): string {
   if (state.status === "error") {
-    return `error (${state.error.code})`;
+    return `error (${getHumanErrorMessage(state.error)})`;
   }
   return state.status;
 }
@@ -51,7 +52,7 @@ export function JudgeSection(): JSX.Element {
           clearError();
           return;
         }
-        setErrorText(`${res.error.code}: ${res.error.message}`);
+        setErrorText(getHumanErrorMessage(res.error));
       },
       (error) => {
         if (canceled) {
@@ -59,7 +60,7 @@ export function JudgeSection(): JSX.Element {
         }
         const message =
           error instanceof Error ? error.message : String(error ?? "unknown");
-        setErrorText(`INTERNAL: ${message}`);
+        setErrorText(message);
       },
     );
     return () => {
@@ -79,7 +80,7 @@ export function JudgeSection(): JSX.Element {
       return;
     }
 
-    setErrorText(`${result.error.code}: ${result.error.message}`);
+    setErrorText(getHumanErrorMessage(result.error));
     setState({
       status: "error",
       error: { code: result.error.code, message: result.error.message },
@@ -90,7 +91,7 @@ export function JudgeSection(): JSX.Element {
     ? { status: "downloading" }
     : state;
   const displayError = ensureError
-    ? `${ensureError.code}: ${ensureError.message}`
+    ? getHumanErrorMessage(ensureError)
     : errorText;
 
   return (
@@ -99,12 +100,12 @@ export function JudgeSection(): JSX.Element {
       className="p-3 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)]"
     >
       <Heading level="h4" className="mb-1.5 font-bold">
-        {t('settings.judge.title')}
+        {t("settings.judge.title")}
       </Heading>
       <Text size="small" color="muted" as="div" className="mb-2.5">
-        {t('settings.judge.status')}{" "}
+        {t("settings.judge.status")}{" "}
         <Text data-testid="judge-status" size="small" color="default" as="span">
-          {viewState ? formatState(viewState) : t('settings.judge.loading')}
+          {viewState ? formatState(viewState) : t("settings.judge.loading")}
         </Text>
       </Text>
 
@@ -118,7 +119,7 @@ export function JudgeSection(): JSX.Element {
           loading={ensureBusy}
           className="bg-[var(--color-bg-selected)]"
         >
-          {t('settings.judge.ensure')}
+          {t("settings.judge.ensure")}
         </Button>
 
         {displayError ? (

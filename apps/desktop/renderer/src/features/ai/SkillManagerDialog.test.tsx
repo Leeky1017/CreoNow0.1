@@ -198,7 +198,7 @@ describe("SkillManagerDialog", () => {
     await waitFor(() => {
       expect(
         screen.getByTestId("skill-form-error-promptTemplate"),
-      ).toHaveTextContent("promptTemplate 不能为空");
+      ).toHaveTextContent("Request parameters are invalid.");
     });
   });
 
@@ -260,7 +260,9 @@ describe("SkillManagerDialog", () => {
     await user.click(screen.getByTestId("skill-item-delete-skill-1"));
 
     await waitFor(() => {
-      expect(screen.getByText("This action cannot be undone")).toBeInTheDocument();
+      expect(
+        screen.getByText("This action cannot be undone"),
+      ).toBeInTheDocument();
     });
 
     const dialog = screen.getByRole("dialog");

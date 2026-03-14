@@ -7,6 +7,7 @@ import { Dialog, Text } from "../../components/primitives";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { i18n } from "../../i18n";
 import { invoke } from "../../lib/ipcClient";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 
 export type CustomSkillListItem =
   IpcResponseData<"skill:custom:list">["items"][number];
@@ -40,7 +41,8 @@ function buildSkillDraftFromDescription(
   "name" | "description" | "promptTemplate" | "inputType" | "contextRulesText"
 > {
   const normalized = description.trim();
-  const shortName = normalized.slice(0, 16) || i18n.t("ai.skillManager.aiGeneratedSkill");
+  const shortName =
+    normalized.slice(0, 16) || i18n.t("ai.skillManager.aiGeneratedSkill");
 
   return {
     name: shortName,
@@ -63,11 +65,17 @@ function parseContextRulesText(
       parsed === null ||
       Array.isArray(parsed)
     ) {
-      return { ok: false, message: i18n.t("ai.skillManager.contextRulesMustBeObject") };
+      return {
+        ok: false,
+        message: i18n.t("ai.skillManager.contextRulesMustBeObject"),
+      };
     }
     return { ok: true, data: parsed as CustomSkillContextRules };
   } catch {
-    return { ok: false, message: i18n.t("ai.skillManager.contextRulesInvalidJson") };
+    return {
+      ok: false,
+      message: i18n.t("ai.skillManager.contextRulesInvalidJson"),
+    };
   }
 }
 
@@ -105,12 +113,16 @@ function SkillFormFields(props: {
         {t("ai.skillManager.fieldName")}
         <input
           value={props.form.name}
-          onChange={(e) => props.onFormChange((prev) => ({ ...prev, name: e.target.value }))}
+          onChange={(e) =>
+            props.onFormChange((prev) => ({ ...prev, name: e.target.value }))
+          }
           className="mt-1 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
           data-testid="skill-form-name"
         />
         {props.fieldErrors.name && (
-          <span className="mt-1 block text-xs text-[var(--color-error)]">{props.fieldErrors.name}</span>
+          <span className="mt-1 block text-xs text-[var(--color-error)]">
+            {props.fieldErrors.name}
+          </span>
         )}
       </label>
 
@@ -118,12 +130,19 @@ function SkillFormFields(props: {
         {t("ai.skillManager.fieldDescription")}
         <input
           value={props.form.description}
-          onChange={(e) => props.onFormChange((prev) => ({ ...prev, description: e.target.value }))}
+          onChange={(e) =>
+            props.onFormChange((prev) => ({
+              ...prev,
+              description: e.target.value,
+            }))
+          }
           className="mt-1 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
           data-testid="skill-form-description"
         />
         {props.fieldErrors.description && (
-          <span className="mt-1 block text-xs text-[var(--color-error)]">{props.fieldErrors.description}</span>
+          <span className="mt-1 block text-xs text-[var(--color-error)]">
+            {props.fieldErrors.description}
+          </span>
         )}
       </label>
 
@@ -131,13 +150,21 @@ function SkillFormFields(props: {
         {t("ai.skillManager.fieldPromptTemplate")}
         <textarea
           value={props.form.promptTemplate}
-          onChange={(e) => props.onFormChange((prev) => ({ ...prev, promptTemplate: e.target.value }))}
+          onChange={(e) =>
+            props.onFormChange((prev) => ({
+              ...prev,
+              promptTemplate: e.target.value,
+            }))
+          }
           placeholder={t("ai.skillManager.promptPlaceholder")}
           className="mt-1 w-full min-h-20 rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
           data-testid="skill-form-prompt-template"
         />
         {props.fieldErrors.promptTemplate && (
-          <span className="mt-1 block text-xs text-[var(--color-error)]" data-testid="skill-form-error-promptTemplate">
+          <span
+            className="mt-1 block text-xs text-[var(--color-error)]"
+            data-testid="skill-form-error-promptTemplate"
+          >
             {props.fieldErrors.promptTemplate}
           </span>
         )}
@@ -148,12 +175,21 @@ function SkillFormFields(props: {
           {t("ai.skillManager.fieldInputType")}
           <select
             value={props.form.inputType}
-            onChange={(e) => props.onFormChange((prev) => ({ ...prev, inputType: e.target.value as "selection" | "document" }))}
+            onChange={(e) =>
+              props.onFormChange((prev) => ({
+                ...prev,
+                inputType: e.target.value as "selection" | "document",
+              }))
+            }
             className="mt-1 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
             data-testid="skill-form-input-type"
           >
-            <option value="selection">{t("ai.skillManager.inputTypeSelection")}</option>
-            <option value="document">{t("ai.skillManager.inputTypeDocument")}</option>
+            <option value="selection">
+              {t("ai.skillManager.inputTypeSelection")}
+            </option>
+            <option value="document">
+              {t("ai.skillManager.inputTypeDocument")}
+            </option>
           </select>
         </label>
 
@@ -161,7 +197,12 @@ function SkillFormFields(props: {
           {t("ai.skillManager.fieldScope")}
           <select
             value={props.form.scope}
-            onChange={(e) => props.onFormChange((prev) => ({ ...prev, scope: e.target.value as "global" | "project" }))}
+            onChange={(e) =>
+              props.onFormChange((prev) => ({
+                ...prev,
+                scope: e.target.value as "global" | "project",
+              }))
+            }
             className="mt-1 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
             data-testid="skill-form-scope"
           >
@@ -175,12 +216,19 @@ function SkillFormFields(props: {
         {t("ai.skillManager.fieldContextRules")}
         <textarea
           value={props.form.contextRulesText}
-          onChange={(e) => props.onFormChange((prev) => ({ ...prev, contextRulesText: e.target.value }))}
+          onChange={(e) =>
+            props.onFormChange((prev) => ({
+              ...prev,
+              contextRulesText: e.target.value,
+            }))
+          }
           className="mt-1 w-full min-h-16 rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
           data-testid="skill-form-context-rules"
         />
         {props.fieldErrors.contextRules && (
-          <span className="mt-1 block text-xs text-[var(--color-error)]">{props.fieldErrors.contextRules}</span>
+          <span className="mt-1 block text-xs text-[var(--color-error)]">
+            {props.fieldErrors.contextRules}
+          </span>
         )}
       </label>
 
@@ -188,7 +236,12 @@ function SkillFormFields(props: {
         <input
           type="checkbox"
           checked={props.form.enabled}
-          onChange={(e) => props.onFormChange((prev) => ({ ...prev, enabled: e.target.checked }))}
+          onChange={(e) =>
+            props.onFormChange((prev) => ({
+              ...prev,
+              enabled: e.target.checked,
+            }))
+          }
           data-testid="skill-form-enabled"
         />
         {t("ai.skillManager.enableSkill")}
@@ -214,18 +267,30 @@ function SkillItemList(props: {
         {t("ai.skillManager.customSkillList")}
       </Text>
       {props.loading ? (
-        <Text size="small" color="muted">{t("ai.skillManager.loading")}</Text>
+        <Text size="small" color="muted">
+          {t("ai.skillManager.loading")}
+        </Text>
       ) : props.items.length === 0 ? (
-        <Text size="small" color="muted">{t("ai.skillManager.noCustomSkills")}</Text>
+        <Text size="small" color="muted">
+          {t("ai.skillManager.noCustomSkills")}
+        </Text>
       ) : (
         <div className="space-y-2" data-testid="skill-manager-list">
           {props.items.map((item) => (
-            <div key={item.id} className="rounded border border-[var(--color-border-default)] p-2">
+            <div
+              key={item.id}
+              className="rounded border border-[var(--color-border-default)] p-2"
+            >
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <Text size="small" weight="semibold">{item.name}</Text>
+                  <Text size="small" weight="semibold">
+                    {item.name}
+                  </Text>
                   <Text size="tiny" color="muted">
-                    {item.scope === "project" ? t("ai.skillManager.scopeProject") : t("ai.skillManager.scopeGlobal")} · {item.inputType}
+                    {item.scope === "project"
+                      ? t("ai.skillManager.scopeProject")
+                      : t("ai.skillManager.scopeGlobal")}{" "}
+                    · {item.inputType}
                   </Text>
                 </div>
                 <div className="flex items-center gap-2">
@@ -284,7 +349,10 @@ export function SkillManagerDialog(props: {
   const { t } = useTranslation();
 
   const title = useMemo(
-    () => (editingId ? t("ai.skillManager.editTitle") : t("ai.skillManager.createTitle")),
+    () =>
+      editingId
+        ? t("ai.skillManager.editTitle")
+        : t("ai.skillManager.createTitle"),
     [editingId, t],
   );
 
@@ -292,7 +360,7 @@ export function SkillManagerDialog(props: {
     setLoading(true);
     const listed = await invoke("skill:custom:list", {});
     if (!listed.ok) {
-      setFormError(listed.error.message);
+      setFormError(getHumanErrorMessage(listed.error));
       setLoading(false);
       return;
     }
@@ -331,7 +399,7 @@ export function SkillManagerDialog(props: {
       projectId: props.projectId ?? "skill-manager",
     });
     if (!generated.ok) {
-      setFormError(generated.error.message);
+      setFormError(getHumanErrorMessage(generated.error));
       return;
     }
 
@@ -357,7 +425,7 @@ export function SkillManagerDialog(props: {
 
     const deleted = await invoke("skill:custom:delete", { id: item.id });
     if (!deleted.ok) {
-      setFormError(deleted.error.message);
+      setFormError(getHumanErrorMessage(deleted.error));
       return;
     }
 
@@ -410,9 +478,9 @@ export function SkillManagerDialog(props: {
       if (!updated.ok) {
         const fieldName = readFieldName(updated.error);
         if (fieldName) {
-          setFieldErrors({ [fieldName]: updated.error.message });
+          setFieldErrors({ [fieldName]: getHumanErrorMessage(updated.error) });
         } else {
-          setFormError(updated.error.message);
+          setFormError(getHumanErrorMessage(updated.error));
         }
         setSubmitting(false);
         return;
@@ -430,9 +498,9 @@ export function SkillManagerDialog(props: {
       if (!created.ok) {
         const fieldName = readFieldName(created.error);
         if (fieldName) {
-          setFieldErrors({ [fieldName]: created.error.message });
+          setFieldErrors({ [fieldName]: getHumanErrorMessage(created.error) });
         } else {
-          setFormError(created.error.message);
+          setFormError(getHumanErrorMessage(created.error));
         }
         setSubmitting(false);
         return;
@@ -474,7 +542,11 @@ export function SkillManagerDialog(props: {
               disabled={submitting}
               data-testid="skill-manager-save"
             >
-              {submitting ? t("ai.skillManager.saving") : editingId ? t("ai.skillManager.saveChanges") : t("ai.skillManager.createSkill")}
+              {submitting
+                ? t("ai.skillManager.saving")
+                : editingId
+                  ? t("ai.skillManager.saveChanges")
+                  : t("ai.skillManager.createSkill")}
             </button>
           </>
         }

@@ -11,6 +11,7 @@ import {
 import { CharacterDetailDialog } from "./CharacterDetailDialog";
 import { characterToMetadataJson, kgToCharacters } from "./characterFromKg";
 import type { Character } from "./types";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 
 export interface CharacterCardListContainerProps {
   projectId: string;
@@ -23,27 +24,31 @@ function toSummary(
   const keyAttributes: string[] = [];
 
   if (typeof character.age === "number") {
-    keyAttributes.push(t('character.container.age', { value: character.age }));
+    keyAttributes.push(t("character.container.age", { value: character.age }));
   }
   if (character.role) {
-    keyAttributes.push(t('character.container.role', { value: character.role }));
+    keyAttributes.push(
+      t("character.container.role", { value: character.role }),
+    );
   }
   if (character.traits.length > 0) {
     keyAttributes.push(
-      t('character.container.traits', { value: character.traits.slice(0, 2).join(" / ") }),
+      t("character.container.traits", {
+        value: character.traits.slice(0, 2).join(" / "),
+      }),
     );
   }
   if (keyAttributes.length === 0) {
-    keyAttributes.push(t('character.container.noKeyAttributes'));
+    keyAttributes.push(t("character.container.noKeyAttributes"));
   }
 
   return {
     id: character.id,
     name: character.name,
-    typeLabel: t('character.container.typeLabel'),
+    typeLabel: t("character.container.typeLabel"),
     avatarUrl: character.avatarUrl,
     keyAttributes: keyAttributes.slice(0, 3),
-    relationSummary: t('character.container.relationSummary', {
+    relationSummary: t("character.container.relationSummary", {
       count: character.relationships.length,
     }),
   };
@@ -92,7 +97,7 @@ export function CharacterCardListContainer({
 
   const handleCreateCharacter = React.useCallback(async () => {
     const created = await entityCreate({
-      name: t('character.container.newCharacter'),
+      name: t("character.container.newCharacter"),
       type: "character",
       description: "",
     });
@@ -122,12 +127,14 @@ export function CharacterCardListContainer({
       const target = characters.find(
         (character) => character.id === characterId,
       );
-      const label = target?.name ?? t('character.container.thisCharacter');
+      const label = target?.name ?? t("character.container.thisCharacter");
       const confirmed = await confirm({
-        title: t('character.container.deleteTitle'),
-        description: t('character.container.deleteDescription', { name: label }),
-        primaryLabel: t('character.container.delete'),
-        secondaryLabel: t('character.container.cancel'),
+        title: t("character.container.deleteTitle"),
+        description: t("character.container.deleteDescription", {
+          name: label,
+        }),
+        primaryLabel: t("character.container.delete"),
+        secondaryLabel: t("character.container.cancel"),
       });
       if (!confirmed) {
         return;
@@ -151,12 +158,15 @@ export function CharacterCardListContainer({
 
   if (bootstrapStatus === "error" && lastError) {
     return (
-      <div className="h-full flex flex-col items-center justify-center gap-2 p-4">
+      <div
+        role="alert"
+        className="h-full flex flex-col items-center justify-center gap-2 p-4"
+      >
         <span className="text-sm text-[var(--color-error-default)]">
-          {t('character.panelContainer.loadError')}
+          {t("character.panelContainer.loadError")}
         </span>
         <span className="text-xs text-[var(--color-fg-muted)]">
-          {lastError.code}: {lastError.message}
+          {getHumanErrorMessage(lastError)}
         </span>
       </div>
     );

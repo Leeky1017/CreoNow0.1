@@ -7,6 +7,7 @@ import { Card } from "../../components/primitives/Card";
 import { Input } from "../../components/primitives/Input";
 import { Text } from "../../components/primitives/Text";
 import { invoke } from "../../lib/ipcClient";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { emitAiModelCatalogUpdated } from "../ai/modelCatalogEvents";
 
 type AiSettings = IpcResponseData<"ai:config:get">;
@@ -39,7 +40,7 @@ export function AiSettingsSection(): JSX.Element {
     const res = await invoke("ai:config:get", {});
     if (!res.ok) {
       setStatus("idle");
-      setErrorText(`${res.error.code}: ${res.error.message}`);
+      setErrorText(getHumanErrorMessage(res.error));
       return;
     }
 
@@ -62,15 +63,21 @@ export function AiSettingsSection(): JSX.Element {
 
   function resolveApiKeyPlaceholder(): string {
     if (!settings) {
-      return t('settings.ai.notConfigured');
+      return t("settings.ai.notConfigured");
     }
     if (providerMode === "anthropic-byok") {
-      return settings.anthropicByokApiKeyConfigured ? t('settings.ai.configured') : t('settings.ai.notConfigured');
+      return settings.anthropicByokApiKeyConfigured
+        ? t("settings.ai.configured")
+        : t("settings.ai.notConfigured");
     }
     if (providerMode === "openai-byok") {
-      return settings.openAiByokApiKeyConfigured ? t('settings.ai.configured') : t('settings.ai.notConfigured');
+      return settings.openAiByokApiKeyConfigured
+        ? t("settings.ai.configured")
+        : t("settings.ai.notConfigured");
     }
-    return settings.openAiCompatibleApiKeyConfigured ? t('settings.ai.configured') : t('settings.ai.notConfigured');
+    return settings.openAiCompatibleApiKeyConfigured
+      ? t("settings.ai.configured")
+      : t("settings.ai.notConfigured");
   }
 
   async function onSave(): Promise<void> {
@@ -101,7 +108,7 @@ export function AiSettingsSection(): JSX.Element {
 
     const res = await invoke("ai:config:update", { patch });
     if (!res.ok) {
-      setErrorText(`${res.error.code}: ${res.error.message}`);
+      setErrorText(getHumanErrorMessage(res.error));
       return;
     }
 
@@ -118,12 +125,14 @@ export function AiSettingsSection(): JSX.Element {
 
     const res = await invoke("ai:config:test", {});
     if (!res.ok) {
-      setErrorText(`${res.error.code}: ${res.error.message}`);
+      setErrorText(getHumanErrorMessage(res.error));
       return;
     }
 
     if (res.data.ok) {
-      setTestResult(t('settings.ai.connectionSuccess', { latency: res.data.latencyMs }));
+      setTestResult(
+        t("settings.ai.connectionSuccess", { latency: res.data.latencyMs }),
+      );
       return;
     }
 
@@ -139,12 +148,12 @@ export function AiSettingsSection(): JSX.Element {
       className="flex flex-col gap-2.5 p-3 rounded-[var(--radius-lg)]"
     >
       <Text size="body" weight="bold">
-        {t('settings.ai.title')}
+        {t("settings.ai.title")}
       </Text>
 
       <div className="flex flex-col gap-1.5">
         <Text size="small" color="muted">
-          {t('settings.aiSection.provider')}
+          {t("settings.aiSection.provider")}
         </Text>
         <select
           data-testid="ai-provider-mode"
@@ -159,15 +168,21 @@ export function AiSettingsSection(): JSX.Element {
           }
           className="h-10 w-full px-3 bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] text-[13px] text-[var(--color-fg-default)]"
         >
-          <option value="openai-compatible">{t('settings.aiSection.providerOpenAiProxy')}</option>
-          <option value="openai-byok">{t('settings.aiSection.providerOpenAiByok')}</option>
-          <option value="anthropic-byok">{t('settings.aiSection.providerAnthropicByok')}</option>
+          <option value="openai-compatible">
+            {t("settings.aiSection.providerOpenAiProxy")}
+          </option>
+          <option value="openai-byok">
+            {t("settings.aiSection.providerOpenAiByok")}
+          </option>
+          <option value="anthropic-byok">
+            {t("settings.aiSection.providerAnthropicByok")}
+          </option>
         </select>
       </div>
 
       <div className="flex flex-col gap-1.5">
         <Text size="small" color="muted">
-          {t('settings.aiSection.baseUrl')}
+          {t("settings.aiSection.baseUrl")}
         </Text>
         <Input
           data-testid="ai-base-url"
@@ -180,7 +195,7 @@ export function AiSettingsSection(): JSX.Element {
 
       <div className="flex flex-col gap-1.5">
         <Text size="small" color="muted">
-          {t('settings.aiSection.apiKey')}
+          {t("settings.aiSection.apiKey")}
         </Text>
         <Input
           data-testid="ai-api-key"
@@ -212,7 +227,7 @@ export function AiSettingsSection(): JSX.Element {
           onClick={() => void onSave()}
           disabled={status === "loading"}
         >
-          {t('settings.ai.save')}
+          {t("settings.ai.save")}
         </Button>
         <Button
           data-testid="ai-test-btn"
@@ -221,7 +236,7 @@ export function AiSettingsSection(): JSX.Element {
           onClick={() => void onTest()}
           disabled={status === "loading"}
         >
-          {t('settings.ai.testConnection')}
+          {t("settings.ai.testConnection")}
         </Button>
       </div>
     </Card>

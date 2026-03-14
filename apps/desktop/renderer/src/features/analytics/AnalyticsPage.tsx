@@ -8,6 +8,7 @@ import { Dialog } from "../../components/primitives/Dialog";
 import { Heading } from "../../components/primitives/Heading";
 import { Text } from "../../components/primitives/Text";
 import { invoke } from "../../lib/ipcClient";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 
 type StatsSummary = {
   wordsWritten: number;
@@ -86,7 +87,7 @@ export function AnalyticsPage(props: {
     <Dialog
       open={props.open}
       onOpenChange={props.onOpenChange}
-      title={t('analytics.title')}
+      title={t("analytics.title")}
     >
       <AnalyticsPageContent />
     </Dialog>
@@ -134,7 +135,7 @@ export function AnalyticsPageContent(): JSX.Element {
     <div data-testid="analytics-page" className="flex flex-col gap-3.5">
       <header className="flex items-baseline gap-2.5">
         <Heading level="h3" className="font-extrabold">
-          {t('analytics.statistics')}
+          {t("analytics.statistics")}
         </Heading>
         <Button
           variant="secondary"
@@ -142,44 +143,53 @@ export function AnalyticsPageContent(): JSX.Element {
           onClick={() => void refresh()}
           className="ml-auto"
         >
-          {t('analytics.refresh')}
+          {t("analytics.refresh")}
         </Button>
       </header>
 
       {error ? (
-        <Text data-testid="analytics-error" size="small" color="muted">
-          {error.code}: {error.message}
+        <Text
+          data-testid="analytics-error"
+          size="small"
+          color="muted"
+          role="alert"
+        >
+          {getHumanErrorMessage(error)}
         </Text>
       ) : null}
 
       <section className="grid grid-cols-4 gap-2.5">
         <StatCard
-          label={t('analytics.todayWords')}
+          label={t("analytics.todayWords")}
           value={today ? today.summary.wordsWritten : 0}
           testId="analytics-today-words"
         />
         <StatCard
-          label={t('analytics.todayTime')}
+          label={t("analytics.todayTime")}
           value={today ? formatSeconds(today.summary.writingSeconds) : "0s"}
         />
         <StatCard
-          label={t('analytics.todaySkills')}
+          label={t("analytics.todaySkills")}
           value={today ? today.summary.skillsUsed : 0}
           testId="analytics-today-skills"
         />
         <StatCard
-          label={t('analytics.todayDocs')}
+          label={t("analytics.todayDocs")}
           value={today ? today.summary.documentsCreated : 0}
         />
       </section>
 
       <Card className="p-3 rounded-[var(--radius-md)]">
         <Text size="small" color="muted">
-          {t('analytics.rangeLast7d')}
+          {t("analytics.rangeLast7d")}
         </Text>
         <div className="flex gap-3 mt-1.5">
-          <Text size="small">{t('analytics.words')}: {rangeSummary?.wordsWritten ?? 0}</Text>
-          <Text size="small">{t('analytics.skills')}: {rangeSummary?.skillsUsed ?? 0}</Text>
+          <Text size="small">
+            {t("analytics.words")}: {rangeSummary?.wordsWritten ?? 0}
+          </Text>
+          <Text size="small">
+            {t("analytics.skills")}: {rangeSummary?.skillsUsed ?? 0}
+          </Text>
         </div>
       </Card>
     </div>

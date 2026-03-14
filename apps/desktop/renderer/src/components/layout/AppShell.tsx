@@ -73,6 +73,7 @@ import {
 } from "../../lib/diff/unifiedDiff";
 import { runFireAndForget } from "../../lib/fireAndForget";
 import { invoke } from "../../lib/ipcClient";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { extractZenModeContent, getModKey } from "./appShellLayoutHelpers";
 import "../../i18n";
 
@@ -786,7 +787,7 @@ function useAppShellController() {
       onCreateDocument: async () => {
         if (!currentProjectId) throw new Error("No project selected");
         const res = await createDocument({ projectId: currentProjectId });
-        if (!res.ok) throw new Error(`${res.error.code}: ${res.error.message}`);
+        if (!res.ok) throw new Error(getHumanErrorMessage(res.error));
       },
     }),
     [createDocument, currentProjectId],
