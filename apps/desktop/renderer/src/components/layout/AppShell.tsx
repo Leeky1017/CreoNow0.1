@@ -587,11 +587,13 @@ function useGlobalSearchFocusController(args: {
 }) {
   const { setSpotlightOpen } = args;
   const [searchFocusNonce, setSearchFocusNonce] = React.useState(0);
-  const [searchRestoreTarget, setSearchRestoreTarget] = React.useState<HTMLElement | null>(null);
+  const [searchRestoreTarget, setSearchRestoreTarget] =
+    React.useState<HTMLElement | null>(null);
 
   const openGlobalSearch = React.useCallback(() => {
     const activeElement =
-      typeof document !== "undefined" && document.activeElement instanceof HTMLElement
+      typeof document !== "undefined" &&
+      document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null;
     setSearchRestoreTarget(activeElement);
