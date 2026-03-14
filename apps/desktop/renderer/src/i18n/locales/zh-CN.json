@@ -832,7 +832,7 @@
       "light": "浅色"
     },
     "judge": {
-      "title": "评判模型",
+      "title": "质量检查",
       "status": "状态：",
       "loading": "加载中",
       "ensure": "确认"
@@ -904,12 +904,12 @@
       "navGeneral": "通用",
       "navAppearance": "外观",
       "navAi": "AI",
-      "navJudge": "评判",
+      "navJudge": "质量",
       "navAnalytics": "数据分析",
       "navAccount": "账户",
       "title": "设置",
       "close": "关闭",
-      "description": "配置应用设置，包括外观、AI、评判和数据分析。"
+      "description": "配置应用设置，包括外观、AI、质量检查和数据分析。"
     },
     "export": {
       "formatPdf": "PDF",
@@ -1284,9 +1284,9 @@
       "downloading": "下载中...",
       "notReady": "未就绪",
       "errorWithCode": "错误 ({{code}})",
-      "loadingJudgeStatus": "加载评判状态...",
-      "judgeStatusUnavailable": "评判状态不可用",
-      "judgeModelLabel": "评判模型：",
+      "loadingJudgeStatus": "加载质量检查状态...",
+      "judgeStatusUnavailable": "质量检查不可用",
+      "judgeModelLabel": "质量检查：",
       "initialize": "初始化",
       "retry": "重试",
       "loadingConstraints": "加载约束条件...",
@@ -1295,8 +1295,8 @@
       "rulesCount_other": "{{count}} 条规则",
       "moreCount": "+{{count}} 条",
       "systemGroup": "系统",
-      "judgeModelCheck": "评判模型",
-      "judgeModelDescription": "用于质量评估的本地 AI 模型",
+      "judgeModelCheck": "质量检查",
+      "judgeModelDescription": "基于规则的写作质量检查",
       "available": "可用",
       "writingConstraints": "写作约束",
       "activeConstraints": "活跃约束",
@@ -1305,7 +1305,7 @@
       "rulesDefinedCount_other": "已定义 {{count}} 条规则",
       "panelTitle": "质量",
       "noProjectSelected": "未选择项目",
-      "judgeModelHeading": "评判模型",
+      "judgeModelHeading": "质量检查",
       "projectConstraints": "项目约束"
     }
   },

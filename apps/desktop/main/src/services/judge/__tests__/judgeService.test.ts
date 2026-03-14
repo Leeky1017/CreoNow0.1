@@ -39,7 +39,7 @@ async function runTests(): Promise<void> {
     assert.equal(svc.getState().status, "ready");
   }
 
-  // ── S3: ensure in non-E2E mode → returns MODEL_NOT_READY ──
+  // ── S3: ensure in non-E2E (rule-engine) mode → transitions to ready ──
   {
     const svc = createJudgeService({
       logger: createLogger(),
@@ -48,9 +48,10 @@ async function runTests(): Promise<void> {
 
     const result = await svc.ensure();
 
-    assert.equal(result.ok, false);
-    if (result.ok) throw new Error("unreachable");
-    assert.equal(result.error.code, "MODEL_NOT_READY");
+    assert.equal(result.ok, true);
+    if (!result.ok) throw new Error("unreachable");
+    assert.equal(result.data.status, "ready");
+    assert.equal(svc.getState().status, "ready");
   }
 
   console.log("judgeService.test.ts: all assertions passed");

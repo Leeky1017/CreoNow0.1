@@ -100,20 +100,22 @@ export function createJudgeService(deps: {
   }
 
   /**
-   * Ensure the judge model is available (real or degraded for E2E).
+   * Ensure the judge quality engine is available.
+   *
+   * Why: v0.1 uses a rule-based quality engine that is always ready.
+   * No model download needed — baseline rules (perspective mismatch,
+   * repetition detection) run deterministically in-process.
    */
   async function runEnsure(timeoutMs: number): Promise<ServiceResult<true>> {
-    if (!deps.isE2E) {
-      return ipcError(
-        "MODEL_NOT_READY",
-        "Judge model ensure is not implemented (non-E2E build)",
-      );
+    if (deps.isE2E) {
+      return await withTimeout(async () => {
+        await sleep(25);
+        return true as const;
+      }, timeoutMs);
     }
 
-    return await withTimeout(async () => {
-      await sleep(25);
-      return true as const;
-    }, timeoutMs);
+    // Rule engine is always ready — no model download required.
+    return { ok: true, data: true as const };
   }
 
   return {
