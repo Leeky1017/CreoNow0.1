@@ -12,10 +12,7 @@ import {
   useEditorStore,
   type EntityCompletionSession,
 } from "../../stores/editorStore";
-<<<<<<< HEAD
-=======
 import { useOptionalLayoutStore } from "../../stores/layoutStore";
->>>>>>> 14c499b9 (feat(zen-mode): A0-01 禅模式真实可编辑 (#986))
 import { useVersionStore } from "../../stores/versionStore";
 import { useAutosave } from "./useAutosave";
 import { useHotkey } from "../../lib/hotkeys/useHotkey";
