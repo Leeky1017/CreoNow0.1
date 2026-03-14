@@ -112,6 +112,9 @@ export const EDITOR_SHORTCUTS = {
 
   // Save
   save: defineShortcut("save", "Save", "mod+S"),
+
+  // Inline AI
+  inlineAi: defineShortcut("inlineAi", "Inline AI", "mod+K"),
 } as const;
 
 // =============================================================================

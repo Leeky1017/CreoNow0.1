@@ -7,7 +7,10 @@ import Link from "@tiptap/extension-link";
 import BubbleMenuExtension from "@tiptap/extension-bubble-menu";
 import type { IpcResponseData } from "@shared/types/ipc-generated";
 
-import { useOptionalAiStore } from "../../stores/aiStore";
+import {
+  useOptionalAiStore,
+  useOptionalAiStoreApi,
+} from "../../stores/aiStore";
 import {
   useEditorStore,
   type EntityCompletionSession,
@@ -42,6 +45,14 @@ import {
 } from "./typography";
 import { buildAiStreamUndoCheckpoint, undoAiStream } from "./aiStreamUndo";
 import type { AiStreamCheckpoint } from "./aiStreamUndo";
+import {
+  createInlineAiStore,
+  type SelectionRef as InlineAiSelectionRef,
+  type UseInlineAiStore,
+} from "./inlineAiStore";
+import { InlineAiInput } from "./InlineAiInput";
+import { InlineAiDiffPreview } from "./InlineAiDiffPreview";
+import { applySelection, captureSelectionRef } from "../ai/applySelection";
 
 const IS_VITEST_RUNTIME =
   typeof process !== "undefined" && Boolean(process.env.VITEST);
@@ -1086,9 +1097,17 @@ function useEditorPaneCore(projectId: string) {
     suppressRef: suppressAutosaveRef,
   });
 
+  // --- Inline AI store ---
+  const inlineAiStoreRef = React.useRef<UseInlineAiStore | null>(null);
+  if (!inlineAiStoreRef.current) {
+    inlineAiStoreRef.current = createInlineAiStore();
+  }
+  const inlineAiStore = inlineAiStoreRef.current;
+
   return {
     t,
     bootstrapStatus,
+    projectId,
     documentId,
     documentStatus,
     contentReady,
@@ -1111,7 +1130,195 @@ function useEditorPaneCore(projectId: string) {
     aiStatus,
     onWriteClick,
     zenMode,
+    inlineAiStore,
   };
+}
+
+function buildInlineAiRequestInput(
+  selectionText: string,
+  instruction: string,
+): string {
+  return `Selection context:
+${selectionText}
+
+${instruction}`.trim();
+}
+
+async function runInlineAiRequest(args: {
+  inlineAiStore: UseInlineAiStore;
+  selectionRef: InlineAiSelectionRef | null;
+  instruction: string;
+  projectId: string | null;
+  documentId: string | null;
+  aiRun:
+    | ((args?: {
+        inputOverride?: string;
+        context?: { projectId?: string; documentId?: string };
+        streamOverride?: boolean;
+      }) => Promise<void>)
+    | null;
+  aiSetSelectedSkillId: ((skillId: string) => void) | null;
+  aiStoreApi: ReturnType<typeof useOptionalAiStoreApi>;
+}): Promise<void> {
+  const {
+    inlineAiStore,
+    selectionRef,
+    instruction,
+    projectId,
+    documentId,
+    aiRun,
+    aiSetSelectedSkillId,
+    aiStoreApi,
+  } = args;
+  if (
+    !selectionRef ||
+    !projectId ||
+    !documentId ||
+    !aiRun ||
+    !aiSetSelectedSkillId ||
+    !aiStoreApi
+  ) {
+    inlineAiStore.getState().setError();
+    return;
+  }
+
+  inlineAiStore.getState().submitInstruction(instruction);
+  aiSetSelectedSkillId("builtin:rewrite");
+  await aiRun({
+    inputOverride: buildInlineAiRequestInput(selectionRef.text, instruction),
+    context: { projectId, documentId },
+    streamOverride: false,
+  });
+
+  const aiState = aiStoreApi.getState();
+  if (aiState.status === "error" || aiState.lastError) {
+    inlineAiStore.getState().setError();
+    return;
+  }
+
+  if (aiState.outputText.trim().length === 0) {
+    inlineAiStore.getState().setError();
+    return;
+  }
+
+  inlineAiStore.getState().setReady(aiState.outputText);
+}
+
+export function InlineAiOverlay(props: {
+  inlineAiStore: UseInlineAiStore;
+  editor: ReturnType<typeof useEditor>;
+  projectId: string | null;
+  documentId: string | null;
+}): JSX.Element | null {
+  const { inlineAiStore, editor, projectId, documentId } = props;
+  const aiStoreApi = useOptionalAiStoreApi();
+  const aiRun = useOptionalAiStore((s) => s.run);
+  const aiSetSelectedSkillId = useOptionalAiStore((s) => s.setSelectedSkillId);
+  const aiPersistApply = useOptionalAiStore((s) => s.persistAiApply);
+  const aiCancel = useOptionalAiStore((s) => s.cancel);
+  const aiLastRunId = useOptionalAiStore((s) => s.lastRunId);
+  const phase = inlineAiStore((s) => s.phase);
+  const selectionRef = inlineAiStore((s) => s.selectionRef);
+  const result = inlineAiStore((s) => s.result);
+  const instruction = inlineAiStore((s) => s.instruction);
+
+  if (phase === "input") {
+    return (
+      <div className="absolute inset-x-0 bottom-0 flex justify-center">
+        <InlineAiInput
+          onSubmit={(nextInstruction) => {
+            void runInlineAiRequest({
+              inlineAiStore,
+              selectionRef,
+              instruction: nextInstruction,
+              projectId,
+              documentId,
+              aiRun,
+              aiSetSelectedSkillId,
+              aiStoreApi,
+            });
+          }}
+          onDismiss={() => {
+            inlineAiStore.getState().dismiss();
+          }}
+        />
+      </div>
+    );
+  }
+
+  if ((phase === "streaming" || phase === "ready") && selectionRef) {
+    return (
+      <div className="absolute inset-x-4 top-4">
+        <InlineAiDiffPreview
+          phase={phase}
+          originalText={selectionRef.text}
+          suggestedText={result ?? ""}
+          onAccept={() => {
+            if (
+              !editor ||
+              !selectionRef ||
+              !result ||
+              !projectId ||
+              !documentId ||
+              !aiPersistApply ||
+              !aiStoreApi
+            ) {
+              inlineAiStore.getState().setError();
+              return;
+            }
+            const applied = applySelection({
+              editor,
+              selectionRef: {
+                range: { from: selectionRef.from, to: selectionRef.to },
+                selectionTextHash: selectionRef.selectionTextHash,
+              },
+              replacementText: result,
+            });
+            if (!applied.ok) {
+              inlineAiStore.getState().setError();
+              return;
+            }
+            void aiPersistApply({
+              projectId,
+              documentId,
+              contentJson: JSON.stringify(editor.getJSON()),
+              runId: aiLastRunId ?? "inline-ai",
+            }).then(() => {
+              if (aiStoreApi.getState().applyStatus === "applied") {
+                inlineAiStore.getState().accept();
+                return;
+              }
+              inlineAiStore.getState().setError();
+            });
+          }}
+          onReject={() => {
+            if (phase === "streaming" && aiCancel) {
+              void aiCancel();
+            }
+            inlineAiStore.getState().reject();
+          }}
+          onRegenerate={() => {
+            if (!instruction) {
+              inlineAiStore.getState().setError();
+              return;
+            }
+            void runInlineAiRequest({
+              inlineAiStore,
+              selectionRef,
+              instruction,
+              projectId,
+              documentId,
+              aiRun,
+              aiSetSelectedSkillId,
+              aiStoreApi,
+            });
+          }}
+        />
+      </div>
+    );
+  }
+
+  return null;
 }
 
 /**
@@ -1120,6 +1327,30 @@ function useEditorPaneCore(projectId: string) {
 export function EditorPane(props: { projectId: string }): JSX.Element {
   const core = useEditorPaneCore(props.projectId);
   const zenMode = core.zenMode;
+  const inlineAiPhase = core.inlineAiStore((s) => s.phase);
+
+  // Cmd/Ctrl+K: Inline AI — only when text is selected, not in zen mode
+  useHotkey(
+    "editor:inline-ai",
+    { key: "k", modKey: true },
+    React.useCallback(() => {
+      if (zenMode) return;
+      if (!core.editor) return;
+      const captured = captureSelectionRef(core.editor);
+      if (!captured.ok) return;
+      const selectedText = captured.data.selectionText.trim();
+      if (selectedText.length === 0) return;
+      if (inlineAiPhase !== "idle") return;
+      core.inlineAiStore.getState().openInput({
+        from: captured.data.selectionRef.range.from,
+        to: captured.data.selectionRef.range.to,
+        text: selectedText,
+        selectionTextHash: captured.data.selectionRef.selectionTextHash,
+      });
+    }, [zenMode, core.editor, inlineAiPhase, core.inlineAiStore]),
+    "editor",
+    10,
+  );
 
   if (core.bootstrapStatus !== "ready") {
     return (
@@ -1269,6 +1500,12 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
           }
           running={isAiRunning(core.aiStatus)}
           onClick={() => void core.onWriteClick()}
+        />
+        <InlineAiOverlay
+          inlineAiStore={core.inlineAiStore}
+          editor={core.editor}
+          projectId={core.projectId}
+          documentId={core.documentId}
         />
       </div>
     </div>

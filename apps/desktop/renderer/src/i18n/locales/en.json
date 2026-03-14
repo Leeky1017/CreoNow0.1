@@ -118,6 +118,14 @@
       "close": "Close"
     }
   },
+  "inlineAi": {
+    "placeholder": "Ask AI to edit...",
+    "accept": "Accept",
+    "reject": "Reject",
+    "regenerate": "Regenerate",
+    "loading": "AI is thinking...",
+    "submitHint": "Enter ↵"
+  },
   "editor": {
     "contextMenu": {
       "copy": "Copy",

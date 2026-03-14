@@ -33,6 +33,7 @@ import {
 } from "../../stores/aiStore";
 import {
   EditorPane,
+  InlineAiOverlay,
   EDITOR_DOCUMENT_CHARACTER_LIMIT,
   LARGE_PASTE_THRESHOLD_CHARS,
   chunkLargePasteText,
@@ -41,6 +42,8 @@ import {
   shouldConfirmOverflowPaste,
   shouldWarnDocumentCapacity,
 } from "./EditorPane";
+import { createInlineAiStore } from "./inlineAiStore";
+import { captureSelectionRef } from "../ai/applySelection";
 
 function createReadyEditorStore(args: {
   onSave: (payload: {
@@ -147,6 +150,8 @@ function createPreferenceStub(
 
 function createAiStoreForEditorPaneTests(args: {
   onSkillRun?: (payload: IpcRequest<"ai:skill:run">) => void;
+  onPersistAiApply?: (payload: IpcRequest<"file:document:save">) => void;
+  outputText?: string;
 }) {
   const invoke: IpcInvoke = async <C extends IpcChannel>(
     channel: C,
@@ -159,7 +164,18 @@ function createAiStoreForEditorPaneTests(args: {
         data: {
           executionId: "run-s2-bubble-ai",
           runId: "run-s2-bubble-ai",
-          outputText: "mock-output",
+          outputText: args.outputText ?? "mock-output",
+        },
+      } as IpcInvokeResult<C>;
+    }
+
+    if (channel === "file:document:save") {
+      args.onPersistAiApply?.(payload as IpcRequest<"file:document:save">);
+      return {
+        ok: true,
+        data: {
+          contentHash: "hash-ai-apply",
+          updatedAt: 202,
         },
       } as IpcInvokeResult<C>;
     }
@@ -388,6 +404,103 @@ describe("EditorPane", () => {
       ).not.toBeInTheDocument();
     });
     expect(screen.queryByTestId("bubble-ai-polish")).not.toBeInTheDocument();
+  });
+
+  it("A0-12 should run inline ai via aiStore and persist AI apply on accept", async () => {
+    const skillRuns: IpcRequest<"ai:skill:run">[] = [];
+    const aiApplySaves: IpcRequest<"file:document:save">[] = [];
+    const store = createReadyEditorStore({ onSave: () => {} });
+    const versionStore = createVersionStoreForEditorPaneTests();
+    const aiStore = createAiStoreForEditorPaneTests({
+      onSkillRun: (payload) => {
+        skillRuns.push(payload);
+      },
+      onPersistAiApply: (payload) => {
+        aiApplySaves.push(payload);
+      },
+      outputText: "Inline rewrite result",
+    });
+
+    render(
+      <AiStoreProvider store={aiStore}>
+        <VersionStoreProvider store={versionStore}>
+          <EditorStoreProvider store={store}>
+            <EditorPane projectId="project-1" />
+          </EditorStoreProvider>
+        </VersionStoreProvider>
+      </AiStoreProvider>,
+    );
+
+    await screen.findByTestId("editor-pane");
+    await screen.findByTestId("tiptap-editor");
+
+    const editor = await waitForEditorInstance(store);
+    const inlineStore = createInlineAiStore();
+
+    let capturedSelection: ReturnType<typeof captureSelectionRef> | null = null;
+    act(() => {
+      editor.commands.focus("start");
+      editor.commands.setTextSelection({ from: 1, to: 8 });
+      capturedSelection = captureSelectionRef(editor);
+      if (!capturedSelection.ok) {
+        throw new Error("expected non-empty selection");
+      }
+      inlineStore.getState().openInput({
+        from: capturedSelection.data.selectionRef.range.from,
+        to: capturedSelection.data.selectionRef.range.to,
+        text: capturedSelection.data.selectionText,
+        selectionTextHash:
+          capturedSelection.data.selectionRef.selectionTextHash,
+      });
+    });
+
+    render(
+      <AiStoreProvider store={aiStore}>
+        <InlineAiOverlay
+          inlineAiStore={inlineStore}
+          editor={editor}
+          projectId="project-1"
+          documentId="doc-1"
+        />
+      </AiStoreProvider>,
+    );
+
+    const input = await screen.findByTestId("inline-ai-instruction-input");
+    fireEvent.change(input, { target: { value: "Rewrite formally" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    await waitFor(() => {
+      expect(skillRuns).toHaveLength(1);
+    });
+
+    expect(skillRuns[0]).toMatchObject({
+      skillId: "builtin:rewrite",
+      context: {
+        projectId: "project-1",
+        documentId: "doc-1",
+      },
+    });
+    expect(skillRuns[0]?.input).toContain(`Selection context:
+Initial`);
+    expect(skillRuns[0]?.input).toContain("Rewrite formally");
+
+    await waitFor(() => {
+      expect(screen.getByTestId("inline-ai-accept-btn")).toBeEnabled();
+    });
+
+    fireEvent.click(screen.getByTestId("inline-ai-accept-btn"));
+
+    await waitFor(() => {
+      expect(aiApplySaves).toHaveLength(1);
+    });
+
+    expect(aiApplySaves[0]).toMatchObject({
+      actor: "ai",
+      reason: "ai-accept",
+      projectId: "project-1",
+      documentId: "doc-1",
+    });
+    expect(editor.getText()).toBe("Inline rewrite result");
   });
 
   it("S2-BA-2 should trigger mapped skill with selection text and selection reference when clicking Bubble AI item", async () => {

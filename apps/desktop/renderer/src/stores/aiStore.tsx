@@ -1,10 +1,7 @@
 ﻿import React from "react";
 import { create } from "zustand";
 
-import type {
-  IpcError,
-  IpcResponseData,
-} from "@shared/types/ipc-generated";
+import type { IpcError, IpcResponseData } from "@shared/types/ipc-generated";
 import type { AiStreamEvent } from "@shared/types/ai";
 import type { IpcInvoke } from "../lib/ipcTypes";
 
@@ -178,9 +175,7 @@ function normalizeCandidateCount(raw: number | undefined): number {
 }
 
 type AiStoreSetter = (
-  partial:
-    | Partial<AiStore>
-    | ((state: AiStore) => Partial<AiStore>),
+  partial: Partial<AiStore> | ((state: AiStore) => Partial<AiStore>),
 ) => void;
 type AiStoreGetter = () => AiStore;
 
@@ -251,7 +246,14 @@ function createAiStoreRunActions(
   deps: { invoke: IpcInvoke },
   set: AiStoreSetter,
   get: AiStoreGetter,
-): Pick<AiActions, "run" | "regenerateWithStrongNegative" | "cancel" | "persistAiApply" | "logAiApplyConflict"> {
+): Pick<
+  AiActions,
+  | "run"
+  | "regenerateWithStrongNegative"
+  | "cancel"
+  | "persistAiApply"
+  | "logAiApplyConflict"
+> {
   return {
     persistAiApply: async (args) => {
       set({ applyStatus: "applying", lastError: null });
@@ -709,4 +711,16 @@ export function useOptionalAiStore<T>(
     return null;
   }
   return store(selector);
+}
+
+export function useAiStoreApi(): UseAiStore {
+  const store = React.useContext(AiStoreContext);
+  if (!store) {
+    throw new Error("AiStoreProvider is missing");
+  }
+  return store;
+}
+
+export function useOptionalAiStoreApi(): UseAiStore | null {
+  return React.useContext(AiStoreContext);
 }

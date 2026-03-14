@@ -118,6 +118,14 @@
       "close": "关闭"
     }
   },
+  "inlineAi": {
+    "placeholder": "让 AI 编辑…",
+    "accept": "接受",
+    "reject": "拒绝",
+    "regenerate": "重新生成",
+    "loading": "AI 思考中…",
+    "submitHint": "Enter ↵"
+  },
   "editor": {
     "contextMenu": {
       "copy": "复制",
