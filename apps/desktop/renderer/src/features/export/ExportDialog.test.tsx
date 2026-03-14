@@ -1,11 +1,7 @@
 import { afterEach, beforeAll, describe, it, expect, vi } from "vitest";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type {
-  ButtonHTMLAttributes,
-  HTMLAttributes,
-  ReactNode,
-} from "react";
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from "react";
 
 import type { IpcError } from "@shared/types/ipc-generated";
 import { AppToastProvider } from "../../components/providers/AppToastProvider";
@@ -29,10 +25,14 @@ vi.mock("@radix-ui/react-dialog", async (importOriginal) => {
     Title: ({ children, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
       <h2 {...props}>{children}</h2>
     ),
-    Description: ({ children, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
-      <p {...props}>{children}</p>
-    ),
-    Close: ({ children, ...props }: ButtonHTMLAttributes<HTMLButtonElement>) => (
+    Description: ({
+      children,
+      ...props
+    }: HTMLAttributes<HTMLParagraphElement>) => <p {...props}>{children}</p>,
+    Close: ({
+      children,
+      ...props
+    }: ButtonHTMLAttributes<HTMLButtonElement>) => (
       <button type="button" {...props}>
         {children}
       </button>
@@ -185,7 +185,7 @@ describe("ExportDialog", () => {
     );
 
     expect(screen.getByTestId("export-submit")).toBeDisabled();
-    expect(screen.getByText(/NO_PROJECT:/)).toBeInTheDocument();
+    expect(screen.getByText("Please open a project first")).toBeInTheDocument();
   });
 
   it("renders controlled progress view", () => {
@@ -291,7 +291,9 @@ describe("ExportDialog", () => {
     });
 
     it("shows Chinese structured hints after switching to zh-CN locale", async () => {
-      await act(async () => { await i18n.changeLanguage("zh-CN"); });
+      await act(async () => {
+        await i18n.changeLanguage("zh-CN");
+      });
       renderWithToastProvider(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
@@ -300,15 +302,21 @@ describe("ExportDialog", () => {
       expect(pdfCard).toHaveTextContent("结构化分页 · 保留标题、列表、图片");
 
       const docxCard = screen.getByTestId("export-format-docx");
-      expect(docxCard).toHaveTextContent("结构化 Word 导出 · 保留标题、链接、图片");
+      expect(docxCard).toHaveTextContent(
+        "结构化 Word 导出 · 保留标题、链接、图片",
+      );
 
       const markdownCard = screen.getByTestId("export-format-markdown");
-      expect(markdownCard).toHaveTextContent("结构化 Markdown · 保留标题、列表、链接");
+      expect(markdownCard).toHaveTextContent(
+        "结构化 Markdown · 保留标题、列表、链接",
+      );
 
       const txtCard = screen.getByTestId("export-format-txt");
       expect(txtCard).toHaveTextContent("纯文本导出 · 自动移除格式");
 
-      await act(async () => { await i18n.changeLanguage("en"); });
+      await act(async () => {
+        await i18n.changeLanguage("en");
+      });
     });
 
     it("does not show the old plain-text-only copy for PDF or DOCX", () => {
@@ -382,4 +390,3 @@ describe("ExportDialog", () => {
     );
   });
 });
-

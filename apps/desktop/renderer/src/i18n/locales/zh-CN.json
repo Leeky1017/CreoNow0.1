@@ -27,6 +27,16 @@
         "command": "命令",
         "file": "文件",
         "recent": "最近使用"
+      },
+      "errors": {
+        "settingsUnavailable": "当前无法打开设置对话框。",
+        "exportUnavailable": "当前无法打开导出对话框。",
+        "layoutUnavailable": "当前无法执行布局操作。",
+        "noProject": "请先打开一个项目。",
+        "createDocumentFailed": "新建文档失败，请重试。",
+        "documentUnavailable": "当前无法执行文档操作。",
+        "versionHistoryUnavailable": "当前无法打开版本历史。",
+        "createProjectUnavailable": "当前无法打开新建项目对话框。"
       }
     },
     "statusBar": {
@@ -1175,7 +1185,7 @@
     },
     "defaultDocumentTitle": "未命名文档",
     "error": {
-      "noProject": "NO_PROJECT: 请先打开一个项目",
+      "noProject": "请先打开一个项目",
       "unsupportedStructure": "当前导出格式暂不支持写出：{{details}}",
       "unknown": "由于未知错误导出失败"
     }
@@ -1337,7 +1347,7 @@
       "ready": "就绪",
       "downloading": "下载中...",
       "notReady": "未就绪",
-      "errorWithCode": "错误 ({{code}})",
+      "errorWithCode": "质量检测遇到问题",
       "loadingJudgeStatus": "加载质量检查状态...",
       "judgeStatusUnavailable": "质量检查不可用",
       "judgeModelLabel": "质量检查：",

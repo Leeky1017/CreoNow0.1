@@ -27,6 +27,16 @@
         "command": "Command",
         "file": "File",
         "recent": "Recent"
+      },
+      "errors": {
+        "settingsUnavailable": "Settings dialog is unavailable right now.",
+        "exportUnavailable": "Export dialog is unavailable right now.",
+        "layoutUnavailable": "Layout actions are unavailable right now.",
+        "noProject": "Please open a project first.",
+        "createDocumentFailed": "Failed to create a new document. Please try again.",
+        "documentUnavailable": "Document actions are unavailable right now.",
+        "versionHistoryUnavailable": "Version history is unavailable right now.",
+        "createProjectUnavailable": "Create Project dialog is unavailable right now."
       }
     },
     "statusBar": {
@@ -1175,7 +1185,7 @@
     },
     "defaultDocumentTitle": "Untitled Document",
     "error": {
-      "noProject": "NO_PROJECT: Please open a project first",
+      "noProject": "Please open a project first",
       "unsupportedStructure": "This export format cannot write: {{details}}",
       "unknown": "Export failed due to unknown error"
     }
@@ -1337,7 +1347,7 @@
       "ready": "Ready",
       "downloading": "Downloading...",
       "notReady": "Not ready",
-      "errorWithCode": "Error ({{code}})",
+      "errorWithCode": "Quality check encountered an issue",
       "loadingJudgeStatus": "Loading quality check status...",
       "judgeStatusUnavailable": "Quality check unavailable",
       "judgeModelLabel": "Quality Check:",
