@@ -1,8 +1,9 @@
 # A0-08 备份能力真伪核查 — 决策文档
 
 > **Issue**: #1035
-> **核查日期**: 2026-03-08
+> **核查日期**: 2026-03-12（第二轮复核；首次核查 2026-03-08）
 > **核查结论**: 备份功能为 **100% 假功能（Phantom Feature）**——仅有 UI 壳，零后端实现。
+> **HEAD**: 基于 `main` HEAD `c915d165`
 
 ---
 
@@ -13,6 +14,7 @@
 **结论**: ✅ 有，但仅为视觉展示。
 
 **证据**:
+
 - `apps/desktop/renderer/src/features/settings-dialog/SettingsGeneral.tsx` L188-195：
   在「Data & Storage」分区下渲染了一个 `<Select>` 下拉框，标签为「备份间隔」（Backup Interval），提供三个选项：
   ```tsx
@@ -31,10 +33,11 @@
 **结论**: ❌ 没有被持久化，值只停留在对话框本地状态中。
 
 **证据**:
+
 - `SettingsGeneral.tsx` L194：`onValueChange={(value) => updateSetting("backupInterval", value)}`
 - `updateSetting` 定义于 L110-113：仅调用 `onSettingsChange({ ...settings, [key]: value })`
-- `SettingsDialog.tsx` L171-172：`onSettingsChange={setGeneralSettings}` — 这是 React `useState` 的 setter
-- `SettingsDialog.tsx` L167：`const [generalSettings, setGeneralSettings] = React.useState<GeneralSettings>(defaultGeneralSettings)`
+- `SettingsDialog.tsx` L181：`setGeneralSettings(settings)` — 通过 `handleSettingsChange` 回调，本质就是 React `useState` 的 setter
+- `SettingsDialog.tsx` L171-172：`const [generalSettings, setGeneralSettings] = React.useState<GeneralSettings>(defaultGeneralSettings)`
 - **数据流终点**：值仅存于组件本地状态，对话框关闭即丢失。无 PreferenceStore 写入、无 localStorage 持久化、无 IPC 保存链路。
 - `packages/shared/` 和 `apps/desktop/preload/` 中均无 "backup" 相关代码。
 
@@ -45,6 +48,7 @@
 **结论**: ❌ 完全没有。
 
 **证据**:
+
 - `apps/desktop/main/src/services/` 下搜索 `backupService|BackupService|backup.*Service` 无命中。
 - 后端 `main/src/services/ai/` 中出现的 "backup" 全部指代 **AI Provider 故障转移机制**（备用 AI 服务商），与文档备份功能完全无关。
 
@@ -55,6 +59,7 @@
 **结论**: ❌ 完全没有。
 
 **证据**:
+
 - `apps/desktop/main/src/ipc/` 目录下无任何文件包含 "backup" 字符串（搜索结果为空）。
 - `packages/shared/` 中无 backup 相关 IPC channel 定义。
 - `apps/desktop/preload/` 中无 backup 相关 bridge 暴露。
@@ -66,6 +71,7 @@
 **结论**: ❌ 完全没有。
 
 **证据**:
+
 - `apps/desktop/main/src/` 中搜索 `setInterval.*backup|backup.*schedule|backup.*cron|backup.*timer` 无命中。
 - 无任何调度器、定时任务或后台轮询与备份相关。
 
@@ -76,6 +82,7 @@
 **结论**: ❌ 未定义，无任何写盘逻辑。
 
 **证据**:
+
 - `apps/desktop/main/src/` 中搜索 `backup.*write|backup.*save|backup.*path|backup.*dir` 无命中（排除 AI failover 测试文件后）。
 - 无任何代码创建备份目录、生成备份文件或写入 SQLite 备份表。
 
@@ -86,6 +93,7 @@
 **结论**: ❌ 完全没有。
 
 **证据**:
+
 - 搜索 `backup.*restore|restore.*backup`：在源码中无任何命中。
 - 无恢复 UI，无恢复 IPC handler。
 
@@ -96,6 +104,7 @@
 **结论**: ❌ 为硬编码假数据，不是真实时间戳。
 
 **证据**:
+
 - 帮助文案 `backupIntervalHelp` 为**硬编码假数据**：
   - en: `"Last backup: 2 minutes ago"` (`en.json` L852)
   - zh-CN: `"上次备份：2 分钟前"` (`zh-CN.json` L852)
@@ -108,6 +117,7 @@
 **结论**: ⚠️ 共 2 条备份相关 key，且内容暗示备份已在正常运行。
 
 **证据**:
+
 - `en.json:851`：`"backupInterval": "Backup Interval"` — 暗示用户可配置备份间隔
 - `en.json:852`：`"backupIntervalHelp": "Last backup: 2 minutes ago"` — 暗示备份正在运行，且有真实时间戳
 - `zh-CN.json:851`：`"backupInterval": "备份间隔"`
@@ -122,6 +132,7 @@
 **结论**: ❌ Spec 未定义备份行为。
 
 **证据**:
+
 - `openspec/specs/document-management/spec.md` 中搜索 `backup`、`备份`、`restore`、`恢复` 均无命中。
 - 备份功能既无 Spec 定义，也无 Scenario 覆盖。
 
@@ -129,16 +140,16 @@
 
 ## 二、能力差距矩阵
 
-| 环节 | UI 文案承诺 | Spec 定义 | 代码实现状态 | 差距 |
-|------|-----------|----------|------------|------|
-| UI 设置入口 | 「备份间隔」下拉框，可选 5min/15min/1hour | ❌ 无 | ✅ Select 组件存在且可交互 | ⚠️ UI 存在但承诺无法兑现 |
-| 值持久化 | 暗示值会被保存并生效 | ❌ 无 | ❌ 仅 React useState，关闭即丢 | ❌ 完全缺失 |
-| 定时调度 | 暗示按选定间隔执行备份 | ❌ 无 | ❌ 无任何定时逻辑 | ❌ 完全缺失 |
-| 写盘服务 | 暗示数据被安全备份 | ❌ 无 | ❌ 无 BackupService、无文件操作 | ❌ 完全缺失 |
-| 恢复入口 | 无 | ❌ 无 | ❌ 无 | ❌ 完全缺失 |
-| 备份时间展示 | 「上次备份：2 分钟前」 | ❌ 无 | ❌ 硬编码假数据，非真实时间戳 | ❌ **欺骗性展示** |
-| IPC 通道 | — | ❌ 无 | ❌ 无 backup 相关 channel | ❌ 完全缺失 |
-| Preload 桥接 | — | ❌ 无 | ❌ 无 | ❌ 完全缺失 |
+| 环节         | UI 文案承诺                               | Spec 定义 | 代码实现状态                    | 差距                     |
+| ------------ | ----------------------------------------- | --------- | ------------------------------- | ------------------------ |
+| UI 设置入口  | 「备份间隔」下拉框，可选 5min/15min/1hour | ❌ 无     | ✅ Select 组件存在且可交互      | ⚠️ UI 存在但承诺无法兑现 |
+| 值持久化     | 暗示值会被保存并生效                      | ❌ 无     | ❌ 仅 React useState，关闭即丢  | ❌ 完全缺失              |
+| 定时调度     | 暗示按选定间隔执行备份                    | ❌ 无     | ❌ 无任何定时逻辑               | ❌ 完全缺失              |
+| 写盘服务     | 暗示数据被安全备份                        | ❌ 无     | ❌ 无 BackupService、无文件操作 | ❌ 完全缺失              |
+| 恢复入口     | 无                                        | ❌ 无     | ❌ 无                           | ❌ 完全缺失              |
+| 备份时间展示 | 「上次备份：2 分钟前」                    | ❌ 无     | ❌ 硬编码假数据，非真实时间戳   | ❌ **欺骗性展示**        |
+| IPC 通道     | —                                         | ❌ 无     | ❌ 无 backup 相关 channel       | ❌ 完全缺失              |
+| Preload 桥接 | —                                         | ❌ 无     | ❌ 无                           | ❌ 完全缺失              |
 
 **总结**: 从 UI 到后端的完整备份链路中，仅有 UI 壳（Select 组件 + i18n 文案）存在。后端实现为 **零**。帮助文案「上次备份：2 分钟前」为硬编码假数据，对用户构成欺骗。
 
@@ -150,13 +161,13 @@
 
 **描述**: 移除 `SettingsGeneral.tsx` 中备份间隔 Select 及相关 i18n key。
 
-| 维度 | 评估 |
-|------|------|
-| **用户感知** | 用户不再看到备份设置，消除误导。无功能丧失（因本就无功能）。 |
-| **开发成本** | **极低（S 级）**。移除 ~10 行 JSX + 2-4 个 i18n key + `GeneralSettings` 接口中的 `backupInterval` 字段。 |
-| **风险** | 极低。移除的是纯展示代码，无后端依赖需处理。 |
-| **可逆性** | 高。通过 git revert 可完整恢复。 |
-| **Phase 0 对齐** | ✅ 高度对齐。P0 的核心目标之一是「能力诚实」— 不展示不存在的功能。隐藏假功能正是此目标的直接体现。 |
+| 维度             | 评估                                                                                                     |
+| ---------------- | -------------------------------------------------------------------------------------------------------- |
+| **用户感知**     | 用户不再看到备份设置，消除误导。无功能丧失（因本就无功能）。                                             |
+| **开发成本**     | **极低（S 级）**。移除 ~10 行 JSX + 2-4 个 i18n key + `GeneralSettings` 接口中的 `backupInterval` 字段。 |
+| **风险**         | 极低。移除的是纯展示代码，无后端依赖需处理。                                                             |
+| **可逆性**       | 高。通过 git revert 可完整恢复。                                                                         |
+| **Phase 0 对齐** | ✅ 高度对齐。P0 的核心目标之一是「能力诚实」— 不展示不存在的功能。隐藏假功能正是此目标的直接体现。       |
 
 ---
 
@@ -164,13 +175,13 @@
 
 **描述**: 实现一个最小备份功能——定时将当前文档导出为 JSON 文件到本地目录。
 
-| 维度 | 评估 |
-|------|------|
-| **用户感知** | 用户得到真实的备份功能。但 P0 阶段用户对此无明确需求信号。 |
-| **开发成本** | **高（L-XL 级）**。需新增：BackupService（定时调度 + 文件写入）、IPC channel 定义、Preload 桥接、Spec 定义、完整 TDD 测试、备份恢复 UI。估计 3-5 天工作量。 |
-| **风险** | 中-高。引入新的文件系统操作，需考虑：并发写入、磁盘空间、大文件性能、跨平台路径兼容。 |
-| **可逆性** | 低。一旦发布并有用户依赖备份数据，回退将导致数据丢失。 |
-| **Phase 0 对齐** | ❌ **不对齐**。P0 目标是修复破窗和能力诚实，不是新增功能。投入 L-XL 级工作量实现一个无用户需求信号的功能，偏离 P0 优先级。 |
+| 维度             | 评估                                                                                                                                                        |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **用户感知**     | 用户得到真实的备份功能。但 P0 阶段用户对此无明确需求信号。                                                                                                  |
+| **开发成本**     | **高（L-XL 级）**。需新增：BackupService（定时调度 + 文件写入）、IPC channel 定义、Preload 桥接、Spec 定义、完整 TDD 测试、备份恢复 UI。估计 3-5 天工作量。 |
+| **风险**         | 中-高。引入新的文件系统操作，需考虑：并发写入、磁盘空间、大文件性能、跨平台路径兼容。                                                                       |
+| **可逆性**       | 低。一旦发布并有用户依赖备份数据，回退将导致数据丢失。                                                                                                      |
+| **Phase 0 对齐** | ❌ **不对齐**。P0 目标是修复破窗和能力诚实，不是新增功能。投入 L-XL 级工作量实现一个无用户需求信号的功能，偏离 P0 优先级。                                  |
 
 ---
 
@@ -178,25 +189,25 @@
 
 **描述**: 保留备份入口但禁用交互，附加「Coming Soon」/「即将推出」提示。
 
-| 维度 | 评估 |
-|------|------|
-| **用户感知** | 用户知道备份是计划功能而非已有功能。消除欺骗，保留期望。 |
-| **开发成本** | **低（S 级）**。在 Select 上添加 `disabled`、tooltip、aria-disabled。参考 `SettingsAccount.tsx` L175 的现有 Coming Soon 模式。 |
-| **风险** | 低。但需注意：硬编码的「上次备份：2 分钟前」必须同步移除，否则 disabled Select + 假时间戳组合更加混乱。 |
-| **可逆性** | 高。CSS/属性变更，git revert 即可。 |
+| 维度             | 评估                                                                                                                                                                                                                        |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **用户感知**     | 用户知道备份是计划功能而非已有功能。消除欺骗，保留期望。                                                                                                                                                                    |
+| **开发成本**     | **低（S 级）**。在 Select 上添加 `disabled`、tooltip、aria-disabled。参考 `SettingsAccount.tsx` L175 的现有 Coming Soon 模式。                                                                                              |
+| **风险**         | 低。但需注意：硬编码的「上次备份：2 分钟前」必须同步移除，否则 disabled Select + 假时间戳组合更加混乱。                                                                                                                     |
+| **可逆性**       | 高。CSS/属性变更，git revert 即可。                                                                                                                                                                                         |
 | **Phase 0 对齐** | ⚠️ 部分对齐。消除了欺骗，但保留了一个无 Spec、无后端、无路线图的 UI 入口。与 A0-15 的 Coming Soon 模式形式一致，但 A0-15 的 Coming Soon 项均有明确的后续计划（如 Account 系统 #571），而备份功能无任何后续 Issue 或路线图。 |
 
 ---
 
 ### 五维度汇总对比
 
-| 维度 | S1 隐藏 | S2 最小闭环 | S3 Coming Soon |
-|------|--------|-----------|---------------|
-| 用户感知 | ✅ 干净 | ✅ 最优 | ⚠️ 可接受但有残留 |
-| 开发成本 | ✅ S 级 | ❌ L-XL 级 | ✅ S 级 |
-| 风险 | ✅ 极低 | ❌ 中-高 | ✅ 低（但需处理假时间戳） |
-| 可逆性 | ✅ 高 | ❌ 低 | ✅ 高 |
-| Phase 0 对齐 | ✅ 高度对齐 | ❌ 不对齐 | ⚠️ 部分对齐 |
+| 维度         | S1 隐藏     | S2 最小闭环 | S3 Coming Soon            |
+| ------------ | ----------- | ----------- | ------------------------- |
+| 用户感知     | ✅ 干净     | ✅ 最优     | ⚠️ 可接受但有残留         |
+| 开发成本     | ✅ S 级     | ❌ L-XL 级  | ✅ S 级                   |
+| 风险         | ✅ 极低     | ❌ 中-高    | ✅ 低（但需处理假时间戳） |
+| 可逆性       | ✅ 高       | ❌ 低       | ✅ 高                     |
+| Phase 0 对齐 | ✅ 高度对齐 | ❌ 不对齐   | ⚠️ 部分对齐               |
 
 ---
 
@@ -222,24 +233,65 @@
 
 ## 五、决策门槛自检
 
-| 门槛项 | 状态 | 说明 |
-|--------|------|------|
-| Q1-Q10 全部有明确结论和代码证据 | ✅ | 10 个问题均有文件路径 + 行号级证据 |
-| 三方案对比五维度完整 | ✅ | S1/S2/S3 × 5 维度全部填写 |
-| 与 A0-15 策略一致性已确认 | ✅ | 分析了 A0-15 Coming Soon 模式的适用条件差异 |
-| A0-17 可消费性 | ✅ | 推荐方案包含具体文件/行号/字段修改清单，A0-17 Agent 无需额外调研 |
+| 门槛项                          | 状态 | 说明                                                             |
+| ------------------------------- | ---- | ---------------------------------------------------------------- |
+| Q1-Q10 全部有明确结论和代码证据 | ✅   | 10 个问题均有文件路径 + 行号级证据                               |
+| 三方案对比五维度完整            | ✅   | S1/S2/S3 × 5 维度全部填写                                        |
+| 与 A0-15 策略一致性已确认       | ✅   | 分析了 A0-15 Coming Soon 模式的适用条件差异                      |
+| A0-17 可消费性                  | ✅   | 推荐方案包含具体文件/行号/字段修改清单，A0-17 Agent 无需额外调研 |
 
 ---
 
 ## 六、A0-17 执行清单（如选择 S1）
 
-| 序号 | 文件 | 操作 | 具体内容 |
-|------|------|------|---------|
-| 1 | `apps/desktop/renderer/src/features/settings-dialog/SettingsGeneral.tsx` | 移除 | L22: 从 `GeneralSettings` 接口移除 `backupInterval: string` |
-| 2 | 同上 | 移除 | L66-70: 移除 `backupIntervalOptions` 数组 |
-| 3 | 同上 | 移除 | L190-195: 移除 FormField + Select（备份间隔控件） |
-| 4 | 同上 | 移除 | L252: 从 `defaultGeneralSettings` 移除 `backupInterval: "5min"` |
-| 5 | `apps/desktop/renderer/src/i18n/locales/en.json` | 移除 | L851-852: 移除 `backupInterval` 和 `backupIntervalHelp` |
-| 6 | `apps/desktop/renderer/src/i18n/locales/zh-CN.json` | 移除 | L851-852: 移除 `backupInterval` 和 `backupIntervalHelp` |
-| 7 | `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.test.tsx` | 更新 | L14: 从 mock `defaultGeneralSettings` 移除 `backupInterval` |
-| 8 | `openspec/specs/document-management/spec.md` | 不变 | Spec 中本就无备份定义，无需更新 |
+| 序号 | 文件                                                                         | 操作 | 具体内容                                                        |
+| ---- | ---------------------------------------------------------------------------- | ---- | --------------------------------------------------------------- |
+| 1    | `apps/desktop/renderer/src/features/settings-dialog/SettingsGeneral.tsx`     | 移除 | L22: 从 `GeneralSettings` 接口移除 `backupInterval: string`     |
+| 2    | 同上                                                                         | 移除 | L66-70: 移除 `backupIntervalOptions` 数组                       |
+| 3    | 同上                                                                         | 移除 | L190-195: 移除 FormField + Select（备份间隔控件）               |
+| 4    | 同上                                                                         | 移除 | L252: 从 `defaultGeneralSettings` 移除 `backupInterval: "5min"` |
+| 5    | `apps/desktop/renderer/src/i18n/locales/en.json`                             | 移除 | L851-852: 移除 `backupInterval` 和 `backupIntervalHelp`         |
+| 6    | `apps/desktop/renderer/src/i18n/locales/zh-CN.json`                          | 移除 | L851-852: 移除 `backupInterval` 和 `backupIntervalHelp`         |
+| 7    | `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.test.tsx` | 更新 | L15: 从 mock `defaultGeneralSettings` 移除 `backupInterval`     |
+| 8    | `openspec/specs/document-management/spec.md`                                 | 不变 | Spec 中本就无备份定义，无需更新                                 |
+
+---
+
+## 七、复核记录
+
+**复核日期**: 2026-03-12
+**复核基线**: `main` HEAD `c915d165`
+
+### 复核验证命令及结果
+
+```bash
+# Q1/Q2: UI 层引用——行号全部吻合
+grep -rn "backupInterval" apps/desktop/renderer/src/
+# → SettingsGeneral.tsx:22,66,190,192,193,194,252  SettingsDialog.test.tsx:15  en.json:851-852  zh-CN.json:851-852
+
+# Q3: 后端 BackupService——仍无命中
+grep -rn "backupService\|BackupService\|backup.*Service" apps/desktop/main/src/
+# → (empty)
+
+# Q4: IPC handler——仍无命中
+grep -rn "backup" apps/desktop/main/src/ipc/
+# → (empty)
+
+# Q5: 定时调度——仍无命中
+grep -rn "setInterval.*backup\|backup.*schedule\|backup.*cron\|backup.*timer" apps/desktop/main/src/
+# → (empty)
+
+# Q6: 备份写盘——仍无命中
+grep -rn "backup.*write\|backup.*save\|backup.*path\|backup.*dir" apps/desktop/main/src/
+# → (empty, excluding AI failover)
+
+# Q7: 恢复入口——仍无命中
+grep -rn "backup.*restore\|restore.*backup" apps/desktop/
+# → (empty)
+
+# Q10: Spec 定义——仍无命中
+grep -n "backup\|备份" openspec/specs/document-management/spec.md
+# → (empty)
+```
+
+**复核结论**: 所有 Q1-Q10 代码证据与 2026-03-08 首次核查一致。行号已更新到当前 HEAD。决策文档有效，无需变更方案建议。
