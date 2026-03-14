@@ -1,20 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { EditorContent, type Editor } from "@tiptap/react";
 import { ZenModeStatus } from "./ZenModeStatus";
 import { useHotkey } from "../../lib/hotkeys/useHotkey";
 
 import { X } from "lucide-react";
-/**
- * ZenMode content with title and body text
- */
-export interface ZenModeContent {
-  /** Document title */
-  title: string;
-  /** Body content paragraphs */
-  paragraphs: string[];
-  /** Whether to show blinking cursor at the end */
-  showCursor?: boolean;
-}
 
 /**
  * ZenMode statistics for status bar
@@ -36,8 +26,12 @@ export interface ZenModeProps {
   open: boolean;
   /** Callback when zen mode should close */
   onExit: () => void;
-  /** Content to display */
-  content: ZenModeContent;
+  /** TipTap editor instance (same as normal mode) */
+  editor: Editor | null;
+  /** Document title */
+  title: string;
+  /** Whether the editor content is empty */
+  isEmpty: boolean;
   /** Statistics for status bar */
   stats: ZenModeStats;
   /** Current time (for display) */
@@ -45,39 +39,23 @@ export interface ZenModeProps {
 }
 
 /**
- * BlinkingCursor - Animated cursor that blinks at 1s intervals
- */
-function BlinkingCursor(): JSX.Element {
-  return (
-    <span
-      data-testid="zen-cursor"
-      className="inline-block w-[2px] h-[1.2em] align-text-bottom ml-[1px] animate-cursor-blink"
-      style={{ backgroundColor: "var(--color-info)" }}
-      aria-hidden="true"
-    />
-  );
-}
-
-/**
  * ZenMode - Fullscreen distraction-free writing mode
  *
- * Features:
- * - Fullscreen dark overlay (#050505)
- * - Centered content area (max-width 720px)
- * - Subtle radial gradient glow
- * - Exit button appears on hover at top
- * - Status bar appears on hover at bottom
- * - ESC key to exit
- * - Blinking cursor
+ * Renders the real TipTap editor instance so users can write directly.
+ * Edits persist when exiting zen mode because the same editor instance is used.
  */
 export function ZenMode({
   open,
   onExit,
-  content,
+  editor,
+  title,
+  isEmpty,
   stats,
   currentTime,
 }: ZenModeProps): JSX.Element | null {
   const { t } = useTranslation();
+  const editorContainerRef = React.useRef<HTMLDivElement>(null);
+
   // Handle ESC key to exit (via unified HotkeyManager)
   useHotkey(
     "zen:exit",
@@ -90,13 +68,29 @@ export function ZenMode({
     open,
   );
 
+  // Auto-focus editor when zen mode opens
+  React.useEffect(() => {
+    if (!open || !editor) {
+      return;
+    }
+    // Delay focus slightly to ensure the overlay is mounted
+    const timer = window.setTimeout(() => {
+      editor.commands.focus();
+    }, 50);
+    return () => window.clearTimeout(timer);
+  }, [open, editor]);
+
   // Don't render if not open
   if (!open) return null;
+
+  const displayTitle = isEmpty ? t("zenMode.untitledDocument") : title;
 
   return (
     <div
       data-testid="zen-mode"
       className="fixed inset-0"
+      role="dialog"
+      aria-label={t("zenMode.a11y.dialogLabel")}
       style={{
         backgroundColor: "var(--color-zen-bg)",
         zIndex: "var(--z-modal)",
@@ -127,7 +121,7 @@ export function ZenMode({
             className="text-[var(--zen-label-size)] tracking-wide opacity-60"
             style={{ color: "var(--color-fg-placeholder)" }}
           >
-            {t('zenMode.pressEscToExit')}
+            {t("zenMode.pressEscToExit")}
           </span>
           <button
             data-testid="zen-exit-button"
@@ -139,14 +133,13 @@ export function ZenMode({
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = "var(--color-fg-default)";
-              e.currentTarget.style.backgroundColor =
-                "var(--color-zen-hover)";
+              e.currentTarget.style.backgroundColor = "var(--color-zen-hover)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.color = "var(--color-fg-muted)";
               e.currentTarget.style.backgroundColor = "transparent";
             }}
-            aria-label={t('zenMode.exitAriaLabel')}
+            aria-label={t("zenMode.exitAriaLabel")}
           >
             <X size={20} strokeWidth={1.5} />
           </button>
@@ -162,7 +155,7 @@ export function ZenMode({
           className="text-[var(--zen-label-size)] tracking-wide opacity-40"
           style={{ color: "var(--color-fg-placeholder)" }}
         >
-          {t('zenMode.pressEscOrF11ToExit')}
+          {t("zenMode.pressEscOrF11ToExit")}
         </span>
       </div>
 
@@ -192,30 +185,30 @@ export function ZenMode({
               color: "var(--color-fg-default)",
             }}
           >
-            {content.title}
+            {displayTitle}
           </h1>
 
-          {/* Body paragraphs */}
+          {/* Real TipTap editor content */}
           <div
-            className="text-[var(--zen-body-size)] leading-[var(--zen-body-line-height)] space-y-8"
+            ref={editorContainerRef}
+            data-testid="zen-editor-content"
+            className="text-[var(--zen-body-size)] leading-[var(--zen-body-line-height)]"
             style={{
               fontFamily: "var(--font-family-body)",
               color: "var(--color-zen-text)",
             }}
           >
-            {content.paragraphs.map((paragraph, index) => (
-              <p key={index}>
-                {paragraph}
-                {/* Show cursor at end of last paragraph if enabled */}
-                {content.showCursor &&
-                  index === content.paragraphs.length - 1 && <BlinkingCursor />}
+            {isEmpty && (
+              <p
+                data-testid="zen-placeholder"
+                className="opacity-40"
+                style={{ color: "var(--color-fg-placeholder)" }}
+                aria-hidden="true"
+              >
+                {t("zenMode.startWriting")}
               </p>
-            ))}
-            {content.paragraphs.length === 0 && content.showCursor ? (
-              <p>
-                <BlinkingCursor />
-              </p>
-            ) : null}
+            )}
+            <EditorContent editor={editor} className="h-full" />
           </div>
         </div>
       </main>

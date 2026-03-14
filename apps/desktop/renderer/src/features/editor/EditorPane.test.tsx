@@ -22,6 +22,11 @@ import {
   type IpcInvoke as VersionIpcInvoke,
 } from "../../stores/versionStore";
 import {
+  LayoutStoreProvider,
+  createLayoutStore,
+} from "../../stores/layoutStore";
+import type { PreferenceKey, PreferenceStore } from "../../lib/preferences";
+import {
   AiStoreProvider,
   createAiStore,
   type IpcInvoke,
@@ -112,6 +117,32 @@ function createVersionStoreForEditorPaneTests() {
   return createVersionStore({
     invoke,
   });
+}
+
+function createPreferenceStub(
+  initial: Partial<Record<PreferenceKey, unknown>> = {},
+): PreferenceStore {
+  const values = new Map<PreferenceKey, unknown>(
+    Object.entries(initial).map(([key, value]) => [
+      key as PreferenceKey,
+      value,
+    ]),
+  );
+
+  return {
+    get<T>(key: PreferenceKey) {
+      return values.has(key) ? (values.get(key) as T) : null;
+    },
+    set<T>(key: PreferenceKey, value: T) {
+      values.set(key, value);
+    },
+    remove: (key: PreferenceKey) => {
+      values.delete(key);
+    },
+    clear: () => {
+      values.clear();
+    },
+  };
 }
 
 function createAiStoreForEditorPaneTests(args: {
@@ -565,7 +596,10 @@ describe("EditorPane — advanced", () => {
       previewContentJson: JSON.stringify({
         type: "doc",
         content: [
-          { type: "paragraph", content: [{ type: "text", text: "History版本" }] },
+          {
+            type: "paragraph",
+            content: [{ type: "text", text: "History版本" }],
+          },
         ],
       }),
       previewError: null,
@@ -609,6 +643,46 @@ describe("EditorPane — advanced", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("slash-command-panel")).toBeInTheDocument();
+    });
+  });
+
+  it("[SCN-SF-1b] should keep slash logic disabled after leaving zen mode if / was typed inside zen mode", async () => {
+    const store = createReadyEditorStore({ onSave: () => {} });
+    const versionStore = createVersionStoreForEditorPaneTests();
+    const layoutStore = createLayoutStore(createPreferenceStub());
+    layoutStore.setState({ zenMode: true });
+
+    render(
+      <LayoutStoreProvider store={layoutStore}>
+        <VersionStoreProvider store={versionStore}>
+          <EditorStoreProvider store={store}>
+            <EditorPane projectId="project-1" />
+          </EditorStoreProvider>
+        </VersionStoreProvider>
+      </LayoutStoreProvider>,
+    );
+
+    const editorRoot = await screen.findByTestId("tiptap-editor");
+    const editor = await waitForEditorInstance(store);
+    act(() => {
+      editor.commands.focus("end");
+    });
+    fireEvent.keyDown(editorRoot, { key: "/" });
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("slash-command-panel"),
+      ).not.toBeInTheDocument();
+    });
+
+    act(() => {
+      layoutStore.setState({ zenMode: false });
+    });
+
+    await waitFor(() => {
+      expect(
+        screen.queryByTestId("slash-command-panel"),
+      ).not.toBeInTheDocument();
     });
   });
 

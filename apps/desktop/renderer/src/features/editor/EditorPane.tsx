@@ -12,6 +12,7 @@ import {
   useEditorStore,
   type EntityCompletionSession,
 } from "../../stores/editorStore";
+import { useOptionalLayoutStore } from "../../stores/layoutStore";
 import { useVersionStore } from "../../stores/versionStore";
 import { useAutosave } from "./useAutosave";
 import { useHotkey } from "../../lib/hotkeys/useHotkey";
@@ -849,6 +850,7 @@ function useEditorPaneCore(projectId: string) {
   const aiStatus = useOptionalAiStore((s) => s.status) ?? "idle";
   const aiSetSelectedSkillId = useOptionalAiStore((s) => s.setSelectedSkillId);
   const aiRun = useOptionalAiStore((s) => s.run);
+  const zenMode = useOptionalLayoutStore((s) => s.zenMode) ?? false;
 
   const suppressAutosaveRef = React.useRef<boolean>(false);
   const [contentReady, setContentReady] = React.useState(false);
@@ -879,13 +881,22 @@ function useEditorPaneCore(projectId: string) {
   }, [isSlashPanelOpen]);
 
   const openSlashPanel = React.useCallback(() => {
+    if (zenMode) {
+      return;
+    }
     setIsSlashPanelOpen(true);
-  }, []);
+  }, [zenMode]);
 
   const closeSlashPanel = React.useCallback(() => {
     setIsSlashPanelOpen(false);
     setSlashSearchQuery("");
   }, []);
+
+  React.useEffect(() => {
+    if (zenMode && isSlashPanelOpen) {
+      closeSlashPanel();
+    }
+  }, [closeSlashPanel, isSlashPanelOpen, zenMode]);
 
   const editor = useEditor({
     extensions: [
@@ -1099,6 +1110,7 @@ function useEditorPaneCore(projectId: string) {
     aiRun,
     aiStatus,
     onWriteClick,
+    zenMode,
   };
 }
 
@@ -1107,6 +1119,7 @@ function useEditorPaneCore(projectId: string) {
  */
 export function EditorPane(props: { projectId: string }): JSX.Element {
   const core = useEditorPaneCore(props.projectId);
+  const zenMode = core.zenMode;
 
   if (core.bootstrapStatus !== "ready") {
     return (
@@ -1206,15 +1219,19 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
         </div>
       ) : null}
       <EditorBubbleMenu editor={core.editor} />
-      <EditorToolbar editor={core.editor} disabled={core.isPreviewMode} />
-      <SlashCommandPanel
-        open={core.isSlashPanelOpen}
-        query={core.slashSearchQuery}
-        candidates={getSlashCommandRegistry()}
-        onQueryChange={core.setSlashSearchQuery}
-        onSelectCommand={core.handleSlashCommandSelect}
-        onRequestClose={core.closeSlashPanel}
-      />
+      {!zenMode && (
+        <EditorToolbar editor={core.editor} disabled={core.isPreviewMode} />
+      )}
+      {!zenMode && (
+        <SlashCommandPanel
+          open={core.isSlashPanelOpen}
+          query={core.slashSearchQuery}
+          candidates={getSlashCommandRegistry()}
+          onQueryChange={core.setSlashSearchQuery}
+          onSelectCommand={core.handleSlashCommandSelect}
+          onRequestClose={core.closeSlashPanel}
+        />
+      )}
       <div
         data-testid="editor-content-region"
         className="relative flex-1 min-h-0 font-[var(--font-family-body)] text-[length:var(--editor-font-size)] leading-[var(--editor-line-height)]"
