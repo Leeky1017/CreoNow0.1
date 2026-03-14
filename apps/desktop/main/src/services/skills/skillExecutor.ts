@@ -215,10 +215,7 @@ function validateConstrainedSkillOutput(args: {
   const trimmed = args.outputText.trim();
   const length = Array.from(trimmed).length;
 
-  if (
-    args.output.minChars !== undefined &&
-    length < args.output.minChars
-  ) {
+  if (args.output.minChars !== undefined && length < args.output.minChars) {
     return ipcError(
       "INVALID_ARGUMENT",
       `skill output must be at least ${args.output.minChars} chars`,
@@ -226,10 +223,7 @@ function validateConstrainedSkillOutput(args: {
     );
   }
 
-  if (
-    args.output.maxChars !== undefined &&
-    length > args.output.maxChars
-  ) {
+  if (args.output.maxChars !== undefined && length > args.output.maxChars) {
     return ipcError(
       "INVALID_ARGUMENT",
       `skill output must be at most ${args.output.maxChars} chars`,
@@ -371,11 +365,17 @@ function validateCreativeSkillOutput(args: {
   }
 
   if (CODE_BLOCK_PATTERN.test(trimmed)) {
-    return ipcError("SKILL_OUTPUT_INVALID", "AI 输出包含代码块，不适用于创意写作");
+    return ipcError(
+      "SKILL_OUTPUT_INVALID",
+      "AI 输出包含代码块，不适用于创意写作",
+    );
   }
 
   if (HTML_TAG_PATTERN.test(trimmed)) {
-    return ipcError("SKILL_OUTPUT_INVALID", "AI 输出包含 HTML 标签，不适用于创意写作");
+    return ipcError(
+      "SKILL_OUTPUT_INVALID",
+      "AI 输出包含 HTML 标签，不适用于创意写作",
+    );
   }
 
   const inputLength = (args.inputText ?? "").trim().length;
@@ -401,18 +401,21 @@ function validateSkillRunOutput(args: {
   inputText?: string;
   output?: SkillOutputConstraints;
 }): ServiceResult<true> {
-  // V-EMPTY: undefined, null, or empty after trim → SKILL_OUTPUT_INVALID
-  if (typeof args.outputText !== "string" || args.outputText.trim().length === 0) {
-    return ipcError("SKILL_OUTPUT_INVALID", "AI 返回了空内容，请重试");
-  }
-
   const leaf = leafSkillId(args.skillId);
 
   if (leaf === "synopsis") {
     return validateSynopsisOutput({
-      outputText: args.outputText,
+      outputText: typeof args.outputText === "string" ? args.outputText : "",
       output: args.output,
     });
+  }
+
+  // V-EMPTY: undefined, null, or empty after trim → SKILL_OUTPUT_INVALID
+  if (
+    typeof args.outputText !== "string" ||
+    args.outputText.trim().length === 0
+  ) {
+    return ipcError("SKILL_OUTPUT_INVALID", "AI 返回了空内容，请重试");
   }
 
   if (CREATIVE_SKILLS_STRICT.has(leaf) || CREATIVE_SKILLS_LOOSE.has(leaf)) {
