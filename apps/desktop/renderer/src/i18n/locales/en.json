@@ -1463,5 +1463,11 @@
       "VERSION_ROLLBACK_CONFLICT": "Version rollback conflict.",
       "VERSION_SNAPSHOT_COMPACTED": "Version snapshot has been compacted."
     }
+  },
+  "globalError": {
+    "toast": {
+      "title": "Unexpected system error",
+      "description": "Some features may be affected. Please retry the operation. If the problem persists, restart the app."
+    }
   }
 }

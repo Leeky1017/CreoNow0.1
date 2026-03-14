@@ -2294,5 +2294,15 @@ export const ipcContract = {
       request: s.object({ documentId: s.string(), runId: s.string() }),
       response: s.object({ logged: s.literal(true) }),
     },
+    "app:renderer:logerror": {
+      request: s.object({
+        source: s.union(s.literal("unhandledrejection"), s.literal("error")),
+        name: s.string(),
+        message: s.string(),
+        stack: s.optional(s.string()),
+        timestamp: s.string(),
+      }),
+      response: s.object({ logged: s.literal(true) }),
+    },
   },
 } as const;

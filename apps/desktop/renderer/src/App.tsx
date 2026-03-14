@@ -32,6 +32,7 @@ import {
 import { WindowTitleBar } from "./components/window/WindowTitleBar";
 import { AppToastProvider } from "./components/providers/AppToastProvider";
 import { ToastIntegrationBridge } from "./components/providers/ToastIntegrationBridge";
+import { GlobalErrorToastBridge } from "./components/providers/GlobalErrorToastBridge";
 
 /**
  * AppRouter decides which screen to show based on onboarding status.
@@ -158,6 +159,7 @@ export function App(): JSX.Element {
                         <VersionStoreProvider store={versionStore}>
                           <LayoutStoreProvider store={layoutStore}>
                             <ToastIntegrationBridge />
+                            <GlobalErrorToastBridge />
                             <div className="flex h-full min-h-0 flex-col">
                               <WindowTitleBar />
                               <div className="min-h-0 flex-1">

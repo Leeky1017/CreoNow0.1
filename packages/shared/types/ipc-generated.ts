@@ -130,6 +130,7 @@ export const IPC_CHANNELS = [
   "ai:skill:cancel",
   "ai:skill:feedback",
   "ai:skill:run",
+  "app:renderer:logerror",
   "app:system:ping",
   "app:window:close",
   "app:window:getstate",
@@ -519,6 +520,18 @@ export type IpcChannelSpec = {
         promptTokens: number;
         sessionTotalTokens: number;
       };
+    };
+  };
+  "app:renderer:logerror": {
+    request: {
+      message: string;
+      name: string;
+      source: "unhandledrejection" | "error";
+      stack?: string;
+      timestamp: string;
+    };
+    response: {
+      logged: true;
     };
   };
   "app:system:ping": {

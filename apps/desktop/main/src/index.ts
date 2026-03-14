@@ -28,6 +28,7 @@ import { registerDbDebugIpcHandlers } from "./ipc/debugChannelGate";
 import { createValidatedIpcMain } from "./ipc/runtime-validation";
 import { registerVersionIpcHandlers } from "./ipc/version";
 import { registerWindowIpcHandlers } from "./ipc/window";
+import { registerRendererLogIpcHandlers } from "./ipc/rendererLog";
 import { createProjectSessionBindingRegistry } from "./ipc/projectSessionBinding";
 import { createMainLogger, type Logger } from "./logging/logger";
 import { createEmbeddingService } from "./services/embedding/embeddingService";
@@ -494,6 +495,12 @@ function registerIpcHandlers(deps: {
   registerVersionIpcHandlers({
     ipcMain: guardedIpcMain,
     db: deps.db,
+    logger: deps.logger,
+  });
+
+  registerRendererLogIpcHandlers({
+    ipcMain: guardedIpcMain,
+    userDataDir: deps.userDataDir,
     logger: deps.logger,
   });
 }
