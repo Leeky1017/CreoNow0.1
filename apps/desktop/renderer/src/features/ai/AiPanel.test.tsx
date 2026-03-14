@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { AiPanel } from "./AiPanel";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 import type { AiStore } from "../../stores/aiStore";
 
 // Mock stores
@@ -211,7 +212,15 @@ describe("AiPanel", () => {
       render(<AiPanel />);
 
       expect(screen.getByTestId("ai-error-code")).toBeInTheDocument();
-      expect(screen.getByText("TIMEOUT")).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          getHumanErrorMessage({
+            code: "TIMEOUT",
+            message: "Request timed out",
+          }),
+        ),
+      ).toBeInTheDocument();
+      expect(screen.queryByText("TIMEOUT")).not.toBeInTheDocument();
       expect(screen.getByText("Request timed out")).toBeInTheDocument();
     });
   });

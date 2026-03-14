@@ -15,6 +15,7 @@ import { PanelContainer } from "../../components/composites/PanelContainer";
 import { EmptyState } from "../../components/composites/EmptyState";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { useEditorStore } from "../../stores/editorStore";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 import {
   useFileStore,
   type DocumentListItem,
@@ -281,7 +282,6 @@ function buildReorderedDocumentIds(args: {
  * Why: P1 requires sortable tree hierarchy with keyboard/context interactions.
  */
 
-
 interface TreeKeyDownDeps {
   editing: EditingState;
   tree: TreeSnapshot;
@@ -300,108 +300,120 @@ function handleTreeKeyDown(
   event: React.KeyboardEvent<HTMLDivElement>,
   deps: TreeKeyDownDeps,
 ): void {
-  const { editing, tree, visibleNodes, focusedDocumentId, currentDocumentId, expandedFolderIds, toggleFolderExpanded, setEditing, setFocusedDocumentId, onDelete, onSelect } = deps;
-    if (editing.mode === "rename") {
-      return;
-    }
-
-    if (visibleNodes.length === 0) {
-      return;
-    }
-
-    const activeId =
-      focusedDocumentId ??
-      currentDocumentId ??
-      visibleNodes[0]?.node.documentId ??
-      null;
-    if (!activeId) {
-      return;
-    }
-
-    const currentIndex = visibleNodes.findIndex(
-      (entry) => entry.node.documentId === activeId,
-    );
-    if (currentIndex < 0) {
-      return;
-    }
-
-    const activeNode = visibleNodes[currentIndex]?.node;
-    if (!activeNode) {
-      return;
-    }
-
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      const next =
-        visibleNodes[Math.min(currentIndex + 1, visibleNodes.length - 1)];
-      if (next) {
-        setFocusedDocumentId(next.node.documentId);
-      }
-      return;
-    }
-
-    if (event.key === "ArrowUp") {
-      event.preventDefault();
-      const next = visibleNodes[Math.max(currentIndex - 1, 0)];
-      if (next) {
-        setFocusedDocumentId(next.node.documentId);
-      }
-      return;
-    }
-
-    if (event.key === "ArrowRight") {
-      event.preventDefault();
-      if (activeNode.children.length === 0) {
-        return;
-      }
-      if (!expandedFolderIds.has(activeNode.documentId)) {
-        toggleFolderExpanded(activeNode.documentId);
-        return;
-      }
-      const firstChild = activeNode.children[0];
-      if (firstChild) {
-        setFocusedDocumentId(firstChild.documentId);
-      }
-      return;
-    }
-
-    if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      if (
-        activeNode.children.length > 0 &&
-        expandedFolderIds.has(activeNode.documentId)
-      ) {
-        toggleFolderExpanded(activeNode.documentId);
-        return;
-      }
-      const parentId = tree.parentById.get(activeNode.documentId);
-      if (parentId) {
-        setFocusedDocumentId(parentId);
-      }
-      return;
-    }
-
-    if (event.key === "Enter") {
-      event.preventDefault();
-      void onSelect(activeNode.documentId);
-      return;
-    }
-
-    if (event.key === "F2") {
-      event.preventDefault();
-      setEditing({
-        mode: "rename",
-        documentId: activeNode.documentId,
-        title: activeNode.title,
-      });
-      return;
-    }
-
-    if (event.key === "Delete") {
-      event.preventDefault();
-      void onDelete(activeNode.documentId);
-    }
+  const {
+    editing,
+    tree,
+    visibleNodes,
+    focusedDocumentId,
+    currentDocumentId,
+    expandedFolderIds,
+    toggleFolderExpanded,
+    setEditing,
+    setFocusedDocumentId,
+    onDelete,
+    onSelect,
+  } = deps;
+  if (editing.mode === "rename") {
+    return;
   }
+
+  if (visibleNodes.length === 0) {
+    return;
+  }
+
+  const activeId =
+    focusedDocumentId ??
+    currentDocumentId ??
+    visibleNodes[0]?.node.documentId ??
+    null;
+  if (!activeId) {
+    return;
+  }
+
+  const currentIndex = visibleNodes.findIndex(
+    (entry) => entry.node.documentId === activeId,
+  );
+  if (currentIndex < 0) {
+    return;
+  }
+
+  const activeNode = visibleNodes[currentIndex]?.node;
+  if (!activeNode) {
+    return;
+  }
+
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    const next =
+      visibleNodes[Math.min(currentIndex + 1, visibleNodes.length - 1)];
+    if (next) {
+      setFocusedDocumentId(next.node.documentId);
+    }
+    return;
+  }
+
+  if (event.key === "ArrowUp") {
+    event.preventDefault();
+    const next = visibleNodes[Math.max(currentIndex - 1, 0)];
+    if (next) {
+      setFocusedDocumentId(next.node.documentId);
+    }
+    return;
+  }
+
+  if (event.key === "ArrowRight") {
+    event.preventDefault();
+    if (activeNode.children.length === 0) {
+      return;
+    }
+    if (!expandedFolderIds.has(activeNode.documentId)) {
+      toggleFolderExpanded(activeNode.documentId);
+      return;
+    }
+    const firstChild = activeNode.children[0];
+    if (firstChild) {
+      setFocusedDocumentId(firstChild.documentId);
+    }
+    return;
+  }
+
+  if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    if (
+      activeNode.children.length > 0 &&
+      expandedFolderIds.has(activeNode.documentId)
+    ) {
+      toggleFolderExpanded(activeNode.documentId);
+      return;
+    }
+    const parentId = tree.parentById.get(activeNode.documentId);
+    if (parentId) {
+      setFocusedDocumentId(parentId);
+    }
+    return;
+  }
+
+  if (event.key === "Enter") {
+    event.preventDefault();
+    void onSelect(activeNode.documentId);
+    return;
+  }
+
+  if (event.key === "F2") {
+    event.preventDefault();
+    setEditing({
+      mode: "rename",
+      documentId: activeNode.documentId,
+      title: activeNode.title,
+    });
+    return;
+  }
+
+  if (event.key === "Delete") {
+    event.preventDefault();
+    void onDelete(activeNode.documentId);
+  }
+}
 
 function buildNodeContextMenuItems(
   item: TreeNode,
@@ -411,8 +423,14 @@ function buildNodeContextMenuItems(
     setEditing: (state: EditingState) => void;
     onCopy: (item: TreeNode) => Promise<void>;
     onDelete: (documentId: string) => Promise<void>;
-    onToggleStatus: (args: { documentId: string; next: "draft" | "final" }) => Promise<void>;
-    onMoveDocumentToFolder: (args: { documentId: string; parentId: string }) => Promise<void>;
+    onToggleStatus: (args: {
+      documentId: string;
+      next: "draft" | "final";
+    }) => Promise<void>;
+    onMoveDocumentToFolder: (args: {
+      documentId: string;
+      parentId: string;
+    }) => Promise<void>;
     onOpenVersionHistory?: (documentId: string) => void;
   },
 ): ContextMenuItem[] {
@@ -420,7 +438,7 @@ function buildNodeContextMenuItems(
   return [
     {
       key: "rename",
-      label: deps.t('files.tree.rename'),
+      label: deps.t("files.tree.rename"),
       onSelect: () => {
         deps.setEditing({
           mode: "rename",
@@ -431,12 +449,12 @@ function buildNodeContextMenuItems(
     },
     {
       key: "copy",
-      label: deps.t('files.tree.copy'),
+      label: deps.t("files.tree.copy"),
       onSelect: () => void deps.onCopy(item),
     },
     {
       key: "move",
-      label: deps.t('files.tree.moveToFolder'),
+      label: deps.t("files.tree.moveToFolder"),
       disabled: moveToFolderDisabled,
       onSelect: () => {
         if (!moveTargetFolderId) {
@@ -450,13 +468,13 @@ function buildNodeContextMenuItems(
     },
     {
       key: "delete",
-      label: deps.t('files.tree.delete'),
+      label: deps.t("files.tree.delete"),
       onSelect: () => void deps.onDelete(item.documentId),
       destructive: true,
     },
     {
       key: "version-history",
-      label: deps.t('files.tree.versionHistory'),
+      label: deps.t("files.tree.versionHistory"),
       onSelect: () => {
         deps.onOpenVersionHistory?.(item.documentId);
       },
@@ -464,7 +482,9 @@ function buildNodeContextMenuItems(
     {
       key: "status",
       label:
-        item.status === "final" ? deps.t('files.tree.markAsDraft') : deps.t('files.tree.markAsFinal'),
+        item.status === "final"
+          ? deps.t("files.tree.markAsDraft")
+          : deps.t("files.tree.markAsFinal"),
       onSelect: () =>
         void deps.onToggleStatus({
           documentId: item.documentId,
@@ -474,14 +494,17 @@ function buildNodeContextMenuItems(
   ];
 }
 
-const FileTreeRenameRow = React.forwardRef<HTMLInputElement, {
-  item: TreeNode;
-  entry: VisibleTreeNode;
-  editing: { mode: "rename"; documentId: string; title: string };
-  dropBefore: boolean;
-  setEditing: (state: EditingState) => void;
-  onCommitRename: () => Promise<void>;
-}>(function FileTreeRenameRow(props, ref) {
+const FileTreeRenameRow = React.forwardRef<
+  HTMLInputElement,
+  {
+    item: TreeNode;
+    entry: VisibleTreeNode;
+    editing: { mode: "rename"; documentId: string; title: string };
+    dropBefore: boolean;
+    setEditing: (state: EditingState) => void;
+    onCommitRename: () => Promise<void>;
+  }
+>(function FileTreeRenameRow(props, ref) {
   const { t } = useTranslation();
   const { item, entry, editing, dropBefore, setEditing } = props;
   return (
@@ -534,7 +557,7 @@ const FileTreeRenameRow = React.forwardRef<HTMLInputElement, {
               void props.onCommitRename();
             }}
           >
-            {t('files.tree.ok')}
+            {t("files.tree.ok")}
           </Button>
           <Button
             variant="ghost"
@@ -544,7 +567,7 @@ const FileTreeRenameRow = React.forwardRef<HTMLInputElement, {
               setEditing({ mode: "idle" });
             }}
           >
-            {t('files.tree.closeSymbol')}
+            {t("files.tree.closeSymbol")}
           </Button>
         </div>
       </div>
@@ -557,16 +580,30 @@ interface DropOnDocumentDeps {
   dropTarget: DropTargetState | null;
   tree: TreeSnapshot;
   items: DocumentListItem[];
-  reorder: (args: { projectId: string; orderedDocumentIds: string[] }) => Promise<unknown>;
+  reorder: (args: {
+    projectId: string;
+    orderedDocumentIds: string[];
+  }) => Promise<unknown>;
   projectId: string;
-  onMoveDocumentToFolder: (args: { documentId: string; parentId: string }) => Promise<void>;
+  onMoveDocumentToFolder: (args: {
+    documentId: string;
+    parentId: string;
+  }) => Promise<void>;
 }
 
 async function performDropOnDocument(
   targetDocumentId: string,
   deps: DropOnDocumentDeps,
 ): Promise<void> {
-  const { draggingDocumentId, dropTarget, tree, items, reorder, projectId, onMoveDocumentToFolder } = deps;
+  const {
+    draggingDocumentId,
+    dropTarget,
+    tree,
+    items,
+    reorder,
+    projectId,
+    onMoveDocumentToFolder,
+  } = deps;
   if (!draggingDocumentId || draggingDocumentId === targetDocumentId) {
     return;
   }
@@ -602,6 +639,7 @@ async function performDropOnDocument(
   });
 }
 
+// eslint-disable-next-line max-lines-per-function
 function useFileTreeState(
   projectId: string,
   t: ReturnType<typeof useTranslation>["t"],
@@ -794,7 +832,7 @@ function useFileTreeState(
     const res = await createAndSetCurrent({
       projectId: projectId,
       type: item.type,
-      title: t('files.tree.copySuffix', { title: item.title }),
+      title: t("files.tree.copySuffix", { title: item.title }),
     });
     if (!res.ok) {
       return;
@@ -842,10 +880,10 @@ function useFileTreeState(
 
   async function onDelete(documentId: string): Promise<void> {
     const confirmed = await confirm({
-      title: t('files.tree.deleteTitle'),
-      description: t('files.tree.deleteDescription'),
-      primaryLabel: t('files.tree.deleteConfirm'),
-      secondaryLabel: t('files.tree.deleteCancel'),
+      title: t("files.tree.deleteTitle"),
+      description: t("files.tree.deleteDescription"),
+      primaryLabel: t("files.tree.deleteConfirm"),
+      secondaryLabel: t("files.tree.deleteCancel"),
     });
     if (!confirmed) {
       return;
@@ -919,55 +957,97 @@ function useFileTreeState(
 
   async function onDropOnDocument(targetDocumentId: string): Promise<void> {
     await performDropOnDocument(targetDocumentId, {
-      draggingDocumentId, dropTarget, tree, items, reorder, projectId, onMoveDocumentToFolder,
+      draggingDocumentId,
+      dropTarget,
+      tree,
+      items,
+      reorder,
+      projectId,
+      onMoveDocumentToFolder,
     });
   }
 
   function onTreeKeyDown(event: React.KeyboardEvent<HTMLDivElement>): void {
     handleTreeKeyDown(event, {
-      editing, tree, visibleNodes, focusedDocumentId, currentDocumentId,
-      expandedFolderIds, toggleFolderExpanded, setEditing, setFocusedDocumentId,
-      onDelete, onSelect,
+      editing,
+      tree,
+      visibleNodes,
+      focusedDocumentId,
+      currentDocumentId,
+      expandedFolderIds,
+      toggleFolderExpanded,
+      setEditing,
+      setFocusedDocumentId,
+      onDelete,
+      onSelect,
     });
   }
 
   return {
-    items, currentDocumentId, bootstrapStatus, lastError, clearError,
-    editing, setEditing, expandedFolderIds,
-    focusedDocumentId, setFocusedDocumentId,
-    draggingDocumentId, setDraggingDocumentId,
-    dropTarget, setDropTarget,
-    inputRef, tree, visibleNodes, dialogProps,
-    toggleFolderExpanded, resolveMoveTargetFolder,
-    onCreate, onCopy, onSelect, onCommitRename,
-    onDelete, onToggleStatus, onMoveDocumentToFolder,
-    onDropOnDocument, onTreeKeyDown,
+    items,
+    currentDocumentId,
+    bootstrapStatus,
+    lastError,
+    clearError,
+    editing,
+    setEditing,
+    expandedFolderIds,
+    focusedDocumentId,
+    setFocusedDocumentId,
+    draggingDocumentId,
+    setDraggingDocumentId,
+    dropTarget,
+    setDropTarget,
+    inputRef,
+    tree,
+    visibleNodes,
+    dialogProps,
+    toggleFolderExpanded,
+    resolveMoveTargetFolder,
+    onCreate,
+    onCopy,
+    onSelect,
+    onCommitRename,
+    onDelete,
+    onToggleStatus,
+    onMoveDocumentToFolder,
+    onDropOnDocument,
+    onTreeKeyDown,
   };
 }
 
-const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
-  entry: VisibleTreeNode;
-  focusedDocumentId: string | null;
-  currentDocumentId: string | null;
-  editing: EditingState;
-  setEditing: (state: EditingState) => void;
-  draggingDocumentId: string | null;
-  setDraggingDocumentId: (id: string | null) => void;
-  dropTarget: DropTargetState | null;
-  setDropTarget: (target: DropTargetState | null) => void;
-  setFocusedDocumentId: (id: string | null) => void;
-  expandedFolderIds: Set<string>;
-  toggleFolderExpanded: (id: string) => void;
-  resolveMoveTargetFolder: (documentId: string) => string | null;
-  onSelect: (documentId: string) => Promise<void>;
-  onCopy: (item: TreeNode) => Promise<void>;
-  onDelete: (documentId: string) => Promise<void>;
-  onCommitRename: () => Promise<void>;
-  onToggleStatus: (args: { documentId: string; next: "draft" | "final" }) => Promise<void>;
-  onDropOnDocument: (targetId: string) => Promise<void>;
-  onMoveDocumentToFolder: (args: { documentId: string; parentId: string }) => Promise<void>;
-  onOpenVersionHistory?: (documentId: string) => void;
-}>(function FileTreeNodeRow(props, ref) {
+const FileTreeNodeRow = React.forwardRef<
+  HTMLInputElement,
+  {
+    entry: VisibleTreeNode;
+    focusedDocumentId: string | null;
+    currentDocumentId: string | null;
+    editing: EditingState;
+    setEditing: (state: EditingState) => void;
+    draggingDocumentId: string | null;
+    setDraggingDocumentId: (id: string | null) => void;
+    dropTarget: DropTargetState | null;
+    setDropTarget: (target: DropTargetState | null) => void;
+    setFocusedDocumentId: (id: string | null) => void;
+    expandedFolderIds: Set<string>;
+    toggleFolderExpanded: (id: string) => void;
+    resolveMoveTargetFolder: (documentId: string) => string | null;
+    onSelect: (documentId: string) => Promise<void>;
+    onCopy: (item: TreeNode) => Promise<void>;
+    onDelete: (documentId: string) => Promise<void>;
+    onCommitRename: () => Promise<void>;
+    onToggleStatus: (args: {
+      documentId: string;
+      next: "draft" | "final";
+    }) => Promise<void>;
+    onDropOnDocument: (targetId: string) => Promise<void>;
+    onMoveDocumentToFolder: (args: {
+      documentId: string;
+      parentId: string;
+    }) => Promise<void>;
+    onOpenVersionHistory?: (documentId: string) => void;
+  }
+>(function FileTreeNodeRow(props, ref) {
   const { t } = useTranslation();
   const { entry, editing, setEditing } = props;
   const item = entry.node;
@@ -975,8 +1055,7 @@ const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
   const selected =
     item.documentId === (props.focusedDocumentId ?? props.currentDocumentId);
   const isRenaming =
-    editing.mode === "rename" &&
-    editing.documentId === item.documentId;
+    editing.mode === "rename" && editing.documentId === item.documentId;
   const isDragging = props.draggingDocumentId === item.documentId;
   const dropBefore =
     props.dropTarget?.documentId === item.documentId &&
@@ -985,19 +1064,18 @@ const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
     props.dropTarget?.documentId === item.documentId &&
     props.dropTarget?.mode === "into";
 
-  const moveTargetFolderId = props.resolveMoveTargetFolder(
-    item.documentId,
-  );
+  const moveTargetFolderId = props.resolveMoveTargetFolder(item.documentId);
   const moveToFolderDisabled = !moveTargetFolderId;
 
-  const contextMenuItems = buildNodeContextMenuItems(
-    item, moveTargetFolderId, {
-      t: t, setEditing, onCopy: props.onCopy,
-      onDelete: props.onDelete, onToggleStatus: props.onToggleStatus,
-      onMoveDocumentToFolder: props.onMoveDocumentToFolder,
-      onOpenVersionHistory: props.onOpenVersionHistory,
-    },
-  );
+  const contextMenuItems = buildNodeContextMenuItems(item, moveTargetFolderId, {
+    t: t,
+    setEditing,
+    onCopy: props.onCopy,
+    onDelete: props.onDelete,
+    onToggleStatus: props.onToggleStatus,
+    onMoveDocumentToFolder: props.onMoveDocumentToFolder,
+    onOpenVersionHistory: props.onOpenVersionHistory,
+  });
 
   if (isRenaming) {
     return (
@@ -1078,8 +1156,8 @@ const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
               className="shrink-0 w-4 text-[10px] text-[var(--color-fg-muted)]"
               aria-label={
                 props.expandedFolderIds.has(item.documentId)
-                  ? t('files.tree.collapse')
-                  : t('files.tree.expand')
+                  ? t("files.tree.collapse")
+                  : t("files.tree.expand")
               }
             >
               {props.expandedFolderIds.has(item.documentId) ? "▾" : "▸"}
@@ -1115,7 +1193,7 @@ const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
                 onClick={(e) => e.stopPropagation()}
                 className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity shrink-0 w-6 h-6 p-0"
               >
-                {t('files.tree.moreActions')}
+                {t("files.tree.moreActions")}
               </Button>
             }
             side="bottom"
@@ -1136,7 +1214,7 @@ const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
                   }}
                   className="justify-start w-full"
                 >
-                  {t('files.tree.rename')}
+                  {t("files.tree.rename")}
                 </Button>
               </PopoverClose>
               <PopoverClose asChild>
@@ -1147,7 +1225,7 @@ const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
                   onClick={() => void props.onCopy(item)}
                   className="justify-start w-full"
                 >
-                  {t('files.tree.copy')}
+                  {t("files.tree.copy")}
                 </Button>
               </PopoverClose>
               <PopoverClose asChild>
@@ -1167,7 +1245,7 @@ const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
                   }}
                   className="justify-start w-full"
                 >
-                  {t('files.tree.moveToFolder')}
+                  {t("files.tree.moveToFolder")}
                 </Button>
               </PopoverClose>
               <PopoverClose asChild>
@@ -1178,15 +1256,14 @@ const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
                   onClick={() =>
                     void props.onToggleStatus({
                       documentId: item.documentId,
-                      next:
-                        item.status === "final" ? "draft" : "final",
+                      next: item.status === "final" ? "draft" : "final",
                     })
                   }
                   className="justify-start w-full"
                 >
                   {item.status === "final"
-                    ? t('files.tree.markAsDraft')
-                    : t('files.tree.markAsFinal')}
+                    ? t("files.tree.markAsDraft")
+                    : t("files.tree.markAsFinal")}
                 </Button>
               </PopoverClose>
               <PopoverClose asChild>
@@ -1197,7 +1274,7 @@ const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
                   onClick={() => void props.onDelete(item.documentId)}
                   className="justify-start w-full text-[var(--color-error)]"
                 >
-                  {t('files.tree.delete')}
+                  {t("files.tree.delete")}
                 </Button>
               </PopoverClose>
             </div>
@@ -1210,12 +1287,16 @@ const FileTreeNodeRow = React.forwardRef<HTMLInputElement, {
 
 export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
   const { t } = useTranslation();
-  const state = useFileTreeState(props.projectId, t, props.initialRenameDocumentId);
+  const state = useFileTreeState(
+    props.projectId,
+    t,
+    props.initialRenameDocumentId,
+  );
 
   return (
     <PanelContainer
       data-testid="sidebar-files"
-      title={t('files.tree.panelTitle')}
+      title={t("files.tree.panelTitle")}
       actions={
         <>
           <Button
@@ -1224,7 +1305,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
             size="sm"
             onClick={() => void state.onCreate("chapter")}
           >
-            {t('files.tree.newButton')}
+            {t("files.tree.newButton")}
           </Button>
           <Button
             data-testid="file-create-note"
@@ -1232,22 +1313,25 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
             size="sm"
             onClick={() => void state.onCreate("note")}
           >
-            {t('files.tree.noteButton')}
+            {t("files.tree.noteButton")}
           </Button>
         </>
       }
     >
-
       {state.lastError ? (
         <div
           role="alert"
           className="p-3 border-b border-[var(--color-separator)]"
         >
           <Text size="small" className="mb-2 block">
-            {state.lastError.code}: {state.lastError.message}
+            {getHumanErrorMessage(state.lastError)}
           </Text>
-          <Button variant="secondary" size="sm" onClick={() => state.clearError()}>
-            {t('files.tree.dismiss')}
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => state.clearError()}
+          >
+            {t("files.tree.dismiss")}
           </Button>
         </div>
       ) : null}
@@ -1261,12 +1345,12 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
       >
         {state.bootstrapStatus !== "ready" ? (
           <Text size="small" color="muted" className="p-3 block">
-            {t('files.tree.loading')}
+            {t("files.tree.loading")}
           </Text>
         ) : state.items.length === 0 ? (
           <EmptyState
-            title={t('files.tree.emptyTitle')}
-            description={t('files.tree.emptyDescription')}
+            title={t("files.tree.emptyTitle")}
+            description={t("files.tree.emptyDescription")}
             action={
               <Button
                 data-testid="file-create-empty"
@@ -1274,39 +1358,39 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                 size="sm"
                 onClick={() => void state.onCreate("chapter")}
               >
-                {t('files.tree.newFile')}
+                {t("files.tree.newFile")}
               </Button>
             }
           />
         ) : (
           <div className="flex flex-col gap-1 p-2">
-          {state.visibleNodes.map((entry) => (
-            <FileTreeNodeRow
-              key={entry.node.documentId}
-              ref={state.inputRef}
-              entry={entry}
-              focusedDocumentId={state.focusedDocumentId}
-              currentDocumentId={state.currentDocumentId}
-              editing={state.editing}
-              setEditing={state.setEditing}
-              draggingDocumentId={state.draggingDocumentId}
-              setDraggingDocumentId={state.setDraggingDocumentId}
-              dropTarget={state.dropTarget}
-              setDropTarget={state.setDropTarget}
-              setFocusedDocumentId={state.setFocusedDocumentId}
-              expandedFolderIds={state.expandedFolderIds}
-              toggleFolderExpanded={state.toggleFolderExpanded}
-              resolveMoveTargetFolder={state.resolveMoveTargetFolder}
-              onSelect={state.onSelect}
-              onCopy={state.onCopy}
-              onDelete={state.onDelete}
-              onCommitRename={state.onCommitRename}
-              onToggleStatus={state.onToggleStatus}
-              onDropOnDocument={state.onDropOnDocument}
-              onMoveDocumentToFolder={state.onMoveDocumentToFolder}
-              onOpenVersionHistory={props.onOpenVersionHistory}
-            />
-          ))}
+            {state.visibleNodes.map((entry) => (
+              <FileTreeNodeRow
+                key={entry.node.documentId}
+                ref={state.inputRef}
+                entry={entry}
+                focusedDocumentId={state.focusedDocumentId}
+                currentDocumentId={state.currentDocumentId}
+                editing={state.editing}
+                setEditing={state.setEditing}
+                draggingDocumentId={state.draggingDocumentId}
+                setDraggingDocumentId={state.setDraggingDocumentId}
+                dropTarget={state.dropTarget}
+                setDropTarget={state.setDropTarget}
+                setFocusedDocumentId={state.setFocusedDocumentId}
+                expandedFolderIds={state.expandedFolderIds}
+                toggleFolderExpanded={state.toggleFolderExpanded}
+                resolveMoveTargetFolder={state.resolveMoveTargetFolder}
+                onSelect={state.onSelect}
+                onCopy={state.onCopy}
+                onDelete={state.onDelete}
+                onCommitRename={state.onCommitRename}
+                onToggleStatus={state.onToggleStatus}
+                onDropOnDocument={state.onDropOnDocument}
+                onMoveDocumentToFolder={state.onMoveDocumentToFolder}
+                onOpenVersionHistory={props.onOpenVersionHistory}
+              />
+            ))}
           </div>
         )}
       </div>

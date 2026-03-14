@@ -9,14 +9,16 @@ import { useOptionalAiStore } from "../stores/aiStore";
  * useAutoSaveToast — 监听 editorStore.autosaveStatus 变化，触发 Toast
  *
  * - "saved" → success toast
- * - "error" → error toast with retry action
+ * - "error" → error toast with retry action (deduped per documentId)
  */
 export function useAutoSaveToast(): void {
   const { t } = useTranslation();
   const { showToast } = useAppToast();
   const autosaveStatus = useEditorStore((s) => s.autosaveStatus);
+  const documentId = useEditorStore((s) => s.documentId);
   const retryLastAutosave = useEditorStore((s) => s.retryLastAutosave);
   const prevStatusRef = React.useRef(autosaveStatus);
+  const lastErrorDocIdRef = React.useRef<string | null>(null);
 
   React.useEffect(() => {
     const prev = prevStatusRef.current;
@@ -28,11 +30,26 @@ export function useAutoSaveToast(): void {
     }
 
     if (autosaveStatus === "saved") {
-      showToast({
-        title: t("toast.save.success.title"),
-        variant: "success",
-      });
+      // 如果之前是 error → saved，说明 retry 成功
+      if (prev === "error") {
+        lastErrorDocIdRef.current = null;
+        showToast({
+          title: t("toast.autosave.retrySuccess.title"),
+          variant: "success",
+        });
+      } else {
+        showToast({
+          title: t("toast.save.success.title"),
+          variant: "success",
+        });
+      }
     } else if (autosaveStatus === "error") {
+      // Dedup: 同一 documentId 连续失败只弹一次 toast
+      if (lastErrorDocIdRef.current === documentId) {
+        return;
+      }
+      lastErrorDocIdRef.current = documentId;
+
       showToast({
         title: t("toast.save.error.title"),
         description: t("toast.save.error.description"),
@@ -44,8 +61,45 @@ export function useAutoSaveToast(): void {
           },
         },
       });
+    } else {
+      // 非 error 状态时重置 dedup 标记
+      if (autosaveStatus !== "saving") {
+        lastErrorDocIdRef.current = null;
+      }
     }
-  }, [autosaveStatus, showToast, t, retryLastAutosave]);
+  }, [autosaveStatus, documentId, showToast, t, retryLastAutosave]);
+}
+
+/**
+ * useFlushErrorToast — 监听文档切换时 flush 失败，显示警告 toast
+ *
+ * 当 autosaveError 存在且 documentId 发生变化时触发
+ */
+export function useFlushErrorToast(): void {
+  const { t } = useTranslation();
+  const { showToast } = useAppToast();
+  const documentId = useEditorStore((s) => s.documentId);
+  const pendingFlushError = useEditorStore((s) => s.pendingFlushError);
+  const clearPendingFlushError = useEditorStore(
+    (s) => s.clearPendingFlushError,
+  );
+
+  React.useEffect(() => {
+    if (!pendingFlushError || !documentId) {
+      return;
+    }
+
+    if (documentId === pendingFlushError.documentId) {
+      return;
+    }
+
+    showToast({
+      title: t("toast.autosave.flushError.title"),
+      description: t("toast.autosave.flushError.description"),
+      variant: "warning",
+    });
+    clearPendingFlushError();
+  }, [clearPendingFlushError, documentId, pendingFlushError, showToast, t]);
 }
 
 /**

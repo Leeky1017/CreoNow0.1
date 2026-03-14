@@ -47,7 +47,8 @@
     "saveIndicator": {
       "saving": "Saving...",
       "saved": "Saved",
-      "error": "Save failed"
+      "error": "Save failed",
+      "retryLabel": "Retry save"
     },
     "infoPanel": {
       "openVersionHistory": "View Version History"
@@ -1424,6 +1425,15 @@
     "settings": {
       "success": {
         "title": "Settings saved"
+      }
+    },
+    "autosave": {
+      "retrySuccess": {
+        "title": "Document saved successfully"
+      },
+      "flushError": {
+        "title": "Unsaved changes",
+        "description": "Some changes could not be saved before switching documents."
       }
     }
   },

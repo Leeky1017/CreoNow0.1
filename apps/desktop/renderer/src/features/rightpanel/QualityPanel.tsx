@@ -7,6 +7,7 @@ import { Card } from "../../components/primitives/Card";
 import { Button } from "../../components/primitives/Button";
 import { Heading } from "../../components/primitives/Heading";
 import { Text } from "../../components/primitives/Text";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useJudgeEnsure } from "../../hooks/useJudgeEnsure";
 import { invoke } from "../../lib/ipcClient";
 import { useProjectStore } from "../../stores/projectStore";
@@ -115,9 +116,8 @@ function JudgeStatusSection(props: {
               color="muted"
             >
               <span data-testid="quality-panel-judge-error-code">
-                {error.code}
+                {getHumanErrorMessage(error)}
               </span>
-              : {error.message}
             </Text>
           </div>
         </div>
@@ -202,9 +202,8 @@ function ConstraintsSection(props: {
           color="muted"
         >
           <span data-testid="quality-panel-constraints-error-code">
-            {error.code}
+            {getHumanErrorMessage(error)}
           </span>
-          : {error.message}
         </Text>
       </Card>
     );

@@ -18,6 +18,8 @@ import {
 import { useProjectStore } from "../../stores/projectStore";
 import { useTemplateStore } from "../../stores/templateStore";
 import { CreateTemplateDialog } from "./CreateTemplateDialog";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
+import type { IpcErrorCode } from "@shared/types/ipc-generated";
 
 import { Plus } from "lucide-react";
 // =============================================================================
@@ -161,7 +163,15 @@ function FormContent({
         setSubmitting(false);
       }
     },
-    [coverImage, cropArea, description, initialType, name, onSubmit, templateId],
+    [
+      coverImage,
+      cropArea,
+      description,
+      initialType,
+      name,
+      onSubmit,
+      templateId,
+    ],
   );
 
   return (
@@ -175,7 +185,8 @@ function FormContent({
       <div>
         <label className="block mb-2">
           <Text size="small" color="muted">
-            {t('projects.create.projectNameLabel')} <span className="text-[var(--color-error)]">{'*'}</span>
+            {t("projects.create.projectNameLabel")}{" "}
+            <span className="text-[var(--color-error)]">{"*"}</span>
           </Text>
         </label>
         <Input
@@ -198,7 +209,7 @@ function FormContent({
             as="div"
             className="mt-1 text-[var(--color-error)]"
           >
-            {t('projects.create.nameRequired')}
+            {t("projects.create.nameRequired")}
           </Text>
         )}
       </div>
@@ -207,7 +218,7 @@ function FormContent({
       <div>
         <label className="block mb-2">
           <Text size="small" color="muted">
-            {t('projects.create.templateLabel')}
+            {t("projects.create.templateLabel")}
           </Text>
         </label>
 
@@ -230,7 +241,7 @@ function FormContent({
         {hasCustomTemplates && (
           <div className="mt-4">
             <Text size="small" color="muted" as="div" className="mb-2">
-              {t('projects.create.yourTemplates')}
+              {t("projects.create.yourTemplates")}
             </Text>
             <RadioGroupRoot
               value={templateId}
@@ -256,7 +267,7 @@ function FormContent({
             className="h-10 px-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[var(--color-border-default)] rounded-[var(--radius-sm)] text-sm text-[var(--color-fg-muted)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-fg-default)] transition-colors"
           >
             <Plus size={16} strokeWidth={1.5} />
-            {t('projects.create.createTemplateButton')}
+            {t("projects.create.createTemplateButton")}
           </button>
         </div>
       </div>
@@ -265,14 +276,17 @@ function FormContent({
       <div>
         <label className="block mb-2">
           <Text size="small" color="muted">
-            {t('projects.create.descriptionLabel')} <span className="opacity-50 text-xs">{t('projects.create.optionalHint')}</span>
+            {t("projects.create.descriptionLabel")}{" "}
+            <span className="opacity-50 text-xs">
+              {t("projects.create.optionalHint")}
+            </span>
           </Text>
         </label>
         <Textarea
           data-testid="create-project-description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder={t('projects.create.descriptionPlaceholder')}
+          placeholder={t("projects.create.descriptionPlaceholder")}
           fullWidth
           rows={2}
         />
@@ -282,21 +296,21 @@ function FormContent({
       <div>
         <label className="block mb-2">
           <Text size="small" color="muted">
-            {t('projects.create.coverImageLabel')} <span className="opacity-50 text-xs">{t('projects.create.optionalHint')}</span>
+            {t("projects.create.coverImageLabel")}{" "}
+            <span className="opacity-50 text-xs">
+              {t("projects.create.optionalHint")}
+            </span>
           </Text>
         </label>
         <ImageUpload
           value={coverImage}
           onChange={setCoverImage}
           onError={setImageError}
-          placeholder={t('projects.create.imagePlaceholder')}
+          placeholder={t("projects.create.imagePlaceholder")}
           hint="PNG, JPG up to 5MB"
         />
         {coverImage && (
-          <ImageCropper
-            file={coverImage}
-            onCropChange={setCropArea}
-          />
+          <ImageCropper file={coverImage} onCropChange={setCropArea} />
         )}
         {imageError && (
           <Text
@@ -316,15 +330,96 @@ function FormContent({
           size="small"
           color="muted"
           as="div"
-          className="text-[var(--color-error)]"
+          role="alert"
+          className="text-[var(--color-text-error)]"
         >
-          {lastError.code}: {lastError.message}
+          {getHumanErrorMessage(
+            lastError as { code: IpcErrorCode; message: string },
+          )}
         </Text>
       )}
 
       {/* Submit button state indicator (hidden, used by parent) */}
       <input type="hidden" data-submitting={submitting} />
     </form>
+  );
+}
+
+// =============================================================================
+// AI Assist Section
+// =============================================================================
+
+type AiDraft = {
+  name: string;
+  type: "novel" | "screenplay" | "media";
+  description: string;
+  chapterOutlines: string[];
+  characters: string[];
+};
+
+function AiAssistSection(props: {
+  aiPrompt: string;
+  setAiPrompt: (v: string) => void;
+  aiGenerating: boolean;
+  aiErrorMessage: string | null;
+  aiDraft: AiDraft | null;
+  onGenerate: () => void;
+  onUseDraft: () => void;
+}): JSX.Element {
+  const { t } = useTranslation();
+  return (
+    <div className="space-y-4">
+      <Textarea
+        data-testid="create-project-ai-prompt"
+        value={props.aiPrompt}
+        onChange={(e) => props.setAiPrompt(e.target.value)}
+        placeholder={t("projects.create.aiPlaceholder")}
+        rows={4}
+        fullWidth
+      />
+      <Button
+        data-testid="create-project-ai-generate"
+        variant="secondary"
+        size="sm"
+        loading={props.aiGenerating}
+        onClick={props.onGenerate}
+      >
+        {props.aiGenerating
+          ? t("projects.create.generating")
+          : t("projects.create.generateDraft")}
+      </Button>
+
+      {props.aiErrorMessage ? (
+        <Text
+          size="small"
+          color="muted"
+          as="div"
+          className="text-[var(--color-error)]"
+        >
+          {props.aiErrorMessage}
+        </Text>
+      ) : null}
+
+      {props.aiDraft ? (
+        <div className="space-y-2 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] p-3">
+          <Text size="small" color="default">
+            {t("projects.create.draftInfo", {
+              name: props.aiDraft.name,
+              type: props.aiDraft.type,
+            })}
+          </Text>
+          <Text size="small" color="muted">
+            {t("projects.create.draftStats", {
+              chapters: props.aiDraft.chapterOutlines.length,
+              characters: props.aiDraft.characters.length,
+            })}
+          </Text>
+          <Button size="sm" variant="ghost" onClick={props.onUseDraft}>
+            {t("projects.create.useDraft")}
+          </Button>
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -370,13 +465,7 @@ export function CreateProjectDialog({
   const [aiPrompt, setAiPrompt] = useState("");
   const [aiGenerating, setAiGenerating] = useState(false);
   const [aiErrorMessage, setAiErrorMessage] = useState<string | null>(null);
-  const [aiDraft, setAiDraft] = useState<{
-    name: string;
-    type: "novel" | "screenplay" | "media";
-    description: string;
-    chapterOutlines: string[];
-    characters: string[];
-  } | null>(null);
+  const [aiDraft, setAiDraft] = useState<AiDraft | null>(null);
 
   const formId = "create-project-form";
 
@@ -493,7 +582,7 @@ export function CreateProjectDialog({
         const message =
           error instanceof Error && error.message.length > 0
             ? error.message
-            : t('projects.create.createFailed');
+            : t("projects.create.createFailed");
         setSubmitError({ code, message });
         console.error("[CreateProjectDialog] createProject failed:", {
           operation: "createAndSetCurrent",
@@ -509,7 +598,7 @@ export function CreateProjectDialog({
 
   const handleAiGenerate = useCallback(async () => {
     if (aiPrompt.trim().length === 0) {
-      setAiErrorMessage(t('projects.create.enterIntentFirst'));
+      setAiErrorMessage(t("projects.create.enterIntentFirst"));
       return;
     }
 
@@ -518,7 +607,7 @@ export function CreateProjectDialog({
     try {
       const res = await createAiAssistDraft({ prompt: aiPrompt });
       if (!res.ok) {
-        setAiErrorMessage(t('projects.create.aiUnavailable'));
+        setAiErrorMessage(t("projects.create.aiUnavailable"));
         return;
       }
 
@@ -542,8 +631,8 @@ export function CreateProjectDialog({
       <Dialog
         open={open}
         onOpenChange={onOpenChange}
-        title={t('projects.create.dialogTitle')}
-        description={t('projects.create.dialogDescription')}
+        title={t("projects.create.dialogTitle")}
+        description={t("projects.create.dialogDescription")}
         footer={
           <>
             <Button
@@ -552,7 +641,7 @@ export function CreateProjectDialog({
               onClick={() => onOpenChange(false)}
               disabled={submitting}
             >
-              {t('projects.create.cancel')}
+              {t("projects.create.cancel")}
             </Button>
             <Button
               data-testid="create-project-submit"
@@ -569,7 +658,11 @@ export function CreateProjectDialog({
       >
         {open ? (
           <div className="space-y-4">
-            <div role="tablist" aria-label={t('projects.create.modeLabel')} className="flex gap-2">
+            <div
+              role="tablist"
+              aria-label={t("projects.create.modeLabel")}
+              className="flex gap-2"
+            >
               <button
                 type="button"
                 role="tab"
@@ -577,7 +670,7 @@ export function CreateProjectDialog({
                 onClick={() => setMode("manual")}
                 className="h-8 px-3 text-xs rounded-[var(--radius-sm)] border border-[var(--color-border-default)]"
               >
-                {t('projects.create.manualCreate')}
+                {t("projects.create.manualCreate")}
               </button>
               <button
                 type="button"
@@ -586,7 +679,7 @@ export function CreateProjectDialog({
                 onClick={() => setMode("ai-assist")}
                 className="h-8 px-3 text-xs rounded-[var(--radius-sm)] border border-[var(--color-border-default)]"
               >
-                {t('projects.create.aiAssisted')}
+                {t("projects.create.aiAssisted")}
               </button>
             </div>
 
@@ -605,54 +698,15 @@ export function CreateProjectDialog({
                 onOpenCreateTemplate={() => setCreateTemplateOpen(true)}
               />
             ) : (
-              <div className="space-y-4">
-                <Textarea
-                  data-testid="create-project-ai-prompt"
-                  value={aiPrompt}
-                  onChange={(e) => setAiPrompt(e.target.value)}
-                  placeholder={t('projects.create.aiPlaceholder')}
-                  rows={4}
-                  fullWidth
-                />
-                <Button
-                  data-testid="create-project-ai-generate"
-                  variant="secondary"
-                  size="sm"
-                  loading={aiGenerating}
-                  onClick={() => void handleAiGenerate()}
-                >
-                  {aiGenerating ? t('projects.create.generating') : t('projects.create.generateDraft')}
-                </Button>
-
-                {aiErrorMessage ? (
-                  <Text
-                    size="small"
-                    color="muted"
-                    as="div"
-                    className="text-[var(--color-error)]"
-                  >
-                    {aiErrorMessage}
-                  </Text>
-                ) : null}
-
-                {aiDraft ? (
-                  <div className="space-y-2 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] p-3">
-                    <Text size="small" color="default">
-                      {t('projects.create.draftInfo', { name: aiDraft.name, type: aiDraft.type })}
-                    </Text>
-                    <Text size="small" color="muted">
-                      {t('projects.create.draftStats', { chapters: aiDraft.chapterOutlines.length, characters: aiDraft.characters.length })}
-                    </Text>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setMode("manual")}
-                    >
-                      {t('projects.create.useDraft')}
-                    </Button>
-                  </div>
-                ) : null}
-              </div>
+              <AiAssistSection
+                aiPrompt={aiPrompt}
+                setAiPrompt={setAiPrompt}
+                aiGenerating={aiGenerating}
+                aiErrorMessage={aiErrorMessage}
+                aiDraft={aiDraft}
+                onGenerate={() => void handleAiGenerate()}
+                onUseDraft={() => setMode("manual")}
+              />
             )}
           </div>
         ) : null}

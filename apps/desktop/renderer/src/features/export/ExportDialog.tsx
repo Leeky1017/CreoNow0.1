@@ -7,6 +7,7 @@ import type { IpcError, IpcResponse } from "@shared/types/ipc-generated";
 import { Button, Checkbox, Select, Tooltip } from "../../components/primitives";
 import { useAppToast } from "../../components/providers/AppToastProvider";
 import { invoke } from "../../lib/ipcClient";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 
 import { Check, File, FileCode, FileOutput, FileText, X } from "lucide-react";
 /**
@@ -93,9 +94,9 @@ export const defaultExportOptions: ExportOptions = {
  */
 function getProgressSteps(t: TFunction): ProgressStep[] {
   return [
-    { label: t('export.progress.preparing'), threshold: 30 },
-    { label: t('export.progress.exporting'), threshold: 70 },
-    { label: t('export.progress.finalizing'), threshold: 100 },
+    { label: t("export.progress.preparing"), threshold: 30 },
+    { label: t("export.progress.exporting"), threshold: 70 },
+    { label: t("export.progress.finalizing"), threshold: 100 },
   ];
 }
 
@@ -129,25 +130,25 @@ function getFormatOptions(t: TFunction): FormatOption[] {
     {
       value: "pdf",
       label: "PDF",
-      description: t('export.format.pdfStructuredHint'),
+      description: t("export.format.pdfStructuredHint"),
       icon: <FileText size={20} strokeWidth={1.5} />,
     },
     {
       value: "markdown",
       label: "Markdown",
-      description: t('export.format.markdownStructuredHint'),
+      description: t("export.format.markdownStructuredHint"),
       icon: <FileCode size={20} strokeWidth={1.5} />,
     },
     {
       value: "docx",
       label: "Word",
-      description: t('export.format.docxStructuredHint'),
+      description: t("export.format.docxStructuredHint"),
       icon: <FileText size={20} strokeWidth={1.5} />,
     },
     {
       value: "txt",
-      label: t('export.format.plainText'),
-      description: t('export.format.txtBoundaryHint'),
+      label: t("export.format.plainText"),
+      description: t("export.format.txtBoundaryHint"),
       icon: <File size={20} strokeWidth={1.5} />,
     },
   ];
@@ -163,11 +164,21 @@ function formatExportError(t: TFunction, error: IpcError): IpcError {
     const details = error.message.slice(unsupportedPrefix.length).trim();
     return {
       code: "INVALID_ARGUMENT",
-      message: t('export.error.unsupportedStructure', { details }),
+      message: t("export.error.unsupportedStructure", { details }),
     };
   }
 
   return error;
+}
+
+/** Resolve the display message for an export error.
+ *  Domain-specific messages (unsupported-structure) take precedence;
+ *  all other codes are humanized via getHumanErrorMessage. */
+function formatExportErrorDisplay(t: TFunction, error: IpcError): string {
+  const formatted = formatExportError(t, error);
+  return formatted.message !== error.message
+    ? formatted.message
+    : getHumanErrorMessage(error);
 }
 
 /**
@@ -188,8 +199,8 @@ function getUnsupportedReason(format: ExportFormat): string | null {
 function getPageSizeOptions(t: TFunction) {
   return [
     { value: "a4", label: "A4" },
-    { value: "letter", label: t('export.pageSize.letter') },
-    { value: "legal", label: t('export.pageSize.legal') },
+    { value: "letter", label: t("export.pageSize.letter") },
+    { value: "legal", label: t("export.pageSize.legal") },
   ];
 }
 
@@ -320,7 +331,7 @@ function FormatCard({
     >
       {disabled ? (
         <div className="absolute top-3 left-3 text-[10px] px-1.5 py-0.5 rounded bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]">
-          {t('export.format.unsupported')}
+          {t("export.format.unsupported")}
         </div>
       ) : null}
 
@@ -384,7 +395,7 @@ function PreviewThumbnail({
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <span className={labelStyles}>{t('export.config.previewLabel')}</span>
+        <span className={labelStyles}>{t("export.config.previewLabel")}</span>
         <span className="text-[10px] text-[var(--color-fg-placeholder)] bg-[var(--color-bg-hover)] px-1.5 py-0.5 rounded">
           {formatLabel} • {pageSizeLabel}
         </span>
@@ -429,6 +440,9 @@ function ConfigView({
 }) {
   const { t } = useTranslation();
   const isPdfFormat = options.format === "pdf";
+  // Errors stored internally are pre-humanized (via getHumanErrorMessage / formatExportError).
+  // External errors arriving via props are humanized here at render time.
+  const errorDisplayMessage = error ? formatExportErrorDisplay(t, error) : null;
 
   return (
     <>
@@ -440,11 +454,10 @@ function ConfigView({
             className="p-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)]"
           >
             <div className="flex items-start gap-3">
-              <div className="flex-1 text-xs text-[var(--color-fg-muted)]">
-                <div data-testid="export-error-code" className="font-mono">
-                  {error.code}
+              <div className="flex-1 text-xs text-[var(--color-text-error)]">
+                <div data-testid="export-error-message">
+                  {errorDisplayMessage}
                 </div>
-                <div data-testid="export-error-message">{error.message}</div>
               </div>
               <Button
                 variant="ghost"
@@ -452,7 +465,7 @@ function ConfigView({
                 onClick={onDismissError}
                 className="shrink-0"
               >
-                {t('export.action.dismiss')}
+                {t("export.action.dismiss")}
               </Button>
             </div>
           </div>
@@ -460,7 +473,7 @@ function ConfigView({
 
         {/* Format Selection */}
         <div>
-          <span className={labelStyles}>{t('export.config.formatLabel')}</span>
+          <span className={labelStyles}>{t("export.config.formatLabel")}</span>
           <RadioGroupPrimitive.Root
             value={options.format}
             onValueChange={(value) =>
@@ -483,7 +496,9 @@ function ConfigView({
         <div className="grid grid-cols-2 gap-6">
           {/* Settings Column */}
           <div className="space-y-3">
-            <span className={labelStyles}>{t('export.config.settingsLabel')}</span>
+            <span className={labelStyles}>
+              {t("export.config.settingsLabel")}
+            </span>
 
             <Checkbox
               checked={options.includeMetadata}
@@ -493,7 +508,7 @@ function ConfigView({
                   includeMetadata: checked === true,
                 })
               }
-              label={t('export.config.includeMetadata')}
+              label={t("export.config.includeMetadata")}
             />
 
             <Checkbox
@@ -504,7 +519,7 @@ function ConfigView({
                   versionHistory: checked === true,
                 })
               }
-              label={t('export.config.versionHistory')}
+              label={t("export.config.versionHistory")}
             />
 
             <Checkbox
@@ -515,13 +530,15 @@ function ConfigView({
                   embedImages: checked === true,
                 })
               }
-              label={t('export.config.embedImages')}
+              label={t("export.config.embedImages")}
             />
           </div>
 
           {/* Page Size Column */}
           <div className="space-y-3">
-            <span className={labelStyles}>{t('export.config.pageSizeLabel')}</span>
+            <span className={labelStyles}>
+              {t("export.config.pageSizeLabel")}
+            </span>
             <Select
               value={options.pageSize}
               onValueChange={(value) =>
@@ -553,7 +570,7 @@ function ConfigView({
         <div className="flex-1" />
         <div className="flex gap-3">
           <Button variant="ghost" onClick={onCancel}>
-            {t('export.action.cancel')}
+            {t("export.action.cancel")}
           </Button>
           <Button
             variant="primary"
@@ -561,7 +578,7 @@ function ConfigView({
             data-testid="export-submit"
             disabled={exportDisabledReason !== null}
           >
-            {t('export.action.export')}
+            {t("export.action.export")}
           </Button>
         </div>
       </div>
@@ -596,10 +613,13 @@ function ProgressView({
       </div>
 
       <h3 className="text-xl font-medium text-[var(--color-fg-default)] mb-2">
-        {t('export.progress.title')}
+        {t("export.progress.title")}
       </h3>
       <p className="text-[var(--color-fg-muted)] text-sm mb-8">
-        {t('export.progress.converting', { title: documentTitle, format: formatLabel })}
+        {t("export.progress.converting", {
+          title: documentTitle,
+          format: formatLabel,
+        })}
       </p>
 
       {/* Progress bar */}
@@ -617,7 +637,7 @@ function ProgressView({
       </div>
 
       <Button variant="ghost" onClick={onCancel} className="mt-8">
-        {t('export.action.cancel')}
+        {t("export.action.cancel")}
       </Button>
     </div>
   );
@@ -642,19 +662,22 @@ function SuccessView(props: {
       </div>
 
       <h3 className="text-xl font-medium text-[var(--color-fg-default)] mb-2">
-        {t('export.success.title')}
+        {t("export.success.title")}
       </h3>
       <p className="text-[var(--color-fg-muted)] text-sm mb-8">
-        {t('export.success.description')}
+        {t("export.success.description")}
       </p>
 
       <div className="w-full max-w-sm mb-8 text-left">
         <div className="text-[10px] font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-[0.1em] mb-2">
-          {t('export.success.resultLabel')}
+          {t("export.success.resultLabel")}
         </div>
         <div className="p-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] space-y-1">
           <div className="text-xs text-[var(--color-fg-muted)]">
-            <span className="font-mono">{t('workbench.export.fieldRelativePath')}</span>:{" "}
+            <span className="font-mono">
+              {t("workbench.export.fieldRelativePath")}
+            </span>
+            :{" "}
             <span
               data-testid="export-success-relative-path"
               className="font-mono"
@@ -663,7 +686,10 @@ function SuccessView(props: {
             </span>
           </div>
           <div className="text-xs text-[var(--color-fg-muted)]">
-            <span className="font-mono">{t('workbench.export.fieldBytesWritten')}</span>:{" "}
+            <span className="font-mono">
+              {t("workbench.export.fieldBytesWritten")}
+            </span>
+            :{" "}
             <span
               data-testid="export-success-bytes-written"
               className="font-mono"
@@ -680,7 +706,7 @@ function SuccessView(props: {
         onClick={props.onDone}
         className="!bg-[var(--color-bg-base)] !text-[var(--color-fg-default)] hover:!bg-[var(--color-bg-hover)]"
       >
-        {t('export.action.done')}
+        {t("export.action.done")}
       </Button>
     </div>
   );
@@ -732,7 +758,7 @@ export function ExportDialog({
 }: ExportDialogProps): JSX.Element {
   const { t } = useTranslation();
   const { showToast } = useAppToast();
-  const displayTitle = documentTitle ?? t('export.defaultDocumentTitle');
+  const displayTitle = documentTitle ?? t("export.defaultDocumentTitle");
   // Internal state for uncontrolled mode
   const [internalView, setInternalView] = React.useState<ExportView>("config");
   const [internalProgress, setInternalProgress] = React.useState(0);
@@ -751,7 +777,8 @@ export function ExportDialog({
   const view = controlledView ?? internalView;
   const progress = controlledProgress ?? internalProgress;
   const steps = getProgressSteps(t);
-  const progressStep = controlledProgressStep ?? getProgressStepLabel(progress, steps);
+  const progressStep =
+    controlledProgressStep ?? getProgressStepLabel(progress, steps);
   const error = controlledError ?? lastError;
   const exportResult = controlledResult ?? result;
 
@@ -785,7 +812,7 @@ export function ExportDialog({
   const exportDisabledReason = React.useMemo(() => {
     const trimmedProjectId = projectId?.trim() ?? "";
     if (trimmedProjectId.length === 0) {
-      return t('export.error.noProject');
+      return t("export.error.noProject");
     }
     const unsupported = getUnsupportedReason(options.format);
     if (unsupported) {
@@ -836,13 +863,12 @@ export function ExportDialog({
         return;
       }
 
-      setLastError({
-        code: "IO_ERROR",
+      const ioError = {
+        code: "IO_ERROR" as const,
         message:
-          error instanceof Error
-            ? error.message
-            : t('export.error.unknown'),
-      });
+          error instanceof Error ? error.message : t("export.error.unknown"),
+      };
+      setLastError(ioError);
       setInternalView("config");
       setInternalProgress(0);
       return;
@@ -853,7 +879,7 @@ export function ExportDialog({
     }
 
     if (!res.ok) {
-      setLastError(formatExportError(t, res.error));
+      setLastError(res.error);
       setInternalView("config");
       setInternalProgress(0);
       return;
@@ -902,7 +928,7 @@ export function ExportDialog({
               <div className="flex items-start justify-between p-6 pb-4 border-b border-[var(--color-separator)]">
                 <div>
                   <DialogPrimitive.Title className="text-lg font-medium text-[var(--color-fg-default)] mb-1">
-                    {t('export.dialog.title')}
+                    {t("export.dialog.title")}
                   </DialogPrimitive.Title>
                   <DialogPrimitive.Description className="text-sm text-[var(--color-fg-muted)]">
                     {displayTitle}
@@ -910,7 +936,7 @@ export function ExportDialog({
                 </div>
                 <DialogPrimitive.Close
                   className={closeButtonStyles}
-                  aria-label={t('export.dialog.close')}
+                  aria-label={t("export.dialog.close")}
                 >
                   <X size={20} strokeWidth={1.5} aria-hidden="true" />
                 </DialogPrimitive.Close>
@@ -932,10 +958,10 @@ export function ExportDialog({
           {view === "progress" && (
             <>
               <DialogPrimitive.Title className="sr-only">
-                {t('export.progress.title')}
+                {t("export.progress.title")}
               </DialogPrimitive.Title>
               <DialogPrimitive.Description className="sr-only">
-                {t('export.progress.description')}
+                {t("export.progress.description")}
               </DialogPrimitive.Description>
               <ProgressView
                 documentTitle={displayTitle}
@@ -950,10 +976,10 @@ export function ExportDialog({
           {view === "success" && (
             <>
               <DialogPrimitive.Title className="sr-only">
-                {t('export.success.title')}
+                {t("export.success.title")}
               </DialogPrimitive.Title>
               <DialogPrimitive.Description className="sr-only">
-                {t('export.success.srDescription')}
+                {t("export.success.srDescription")}
               </DialogPrimitive.Description>
               {exportResult ? (
                 <SuccessView result={exportResult} onDone={handleDone} />

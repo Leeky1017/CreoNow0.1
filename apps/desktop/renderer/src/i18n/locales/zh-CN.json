@@ -47,7 +47,8 @@
     "saveIndicator": {
       "saving": "保存中...",
       "saved": "已保存",
-      "error": "保存失败"
+      "error": "保存失败",
+      "retryLabel": "重试保存"
     },
     "infoPanel": {
       "openVersionHistory": "查看版本历史"
@@ -1424,6 +1425,15 @@
     "settings": {
       "success": {
         "title": "设置已保存"
+      }
+    },
+    "autosave": {
+      "retrySuccess": {
+        "title": "文档保存成功"
+      },
+      "flushError": {
+        "title": "未保存的更改",
+        "description": "切换文档前部分更改未能保存。"
       }
     }
   },

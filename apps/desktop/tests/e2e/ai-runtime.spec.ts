@@ -120,7 +120,7 @@ test("ai runtime: timeout maps to SKILL_TIMEOUT", async () => {
   await runInput(page, "E2E_TIMEOUT");
 
   await expect(page.getByTestId("ai-error-code")).toContainText(
-    "SKILL_TIMEOUT",
+    /技能执行超时|Operation timed out/i,
   );
 
   await electronApp.close();
@@ -134,7 +134,7 @@ test("ai runtime: upstream error maps to LLM_API_ERROR", async () => {
   await runInput(page, "E2E_UPSTREAM_ERROR");
 
   await expect(page.getByTestId("ai-error-code")).toContainText(
-    "LLM_API_ERROR",
+    /AI 服务响应异常，请稍后重试|Upstream service error/i,
   );
 
   await electronApp.close();

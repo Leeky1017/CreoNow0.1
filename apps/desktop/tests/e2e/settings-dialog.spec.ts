@@ -48,7 +48,7 @@ test("settings-dialog: shortcut opens + theme persists + ai settings errors obse
   await first.page.keyboard.press("Control+,");
   await expect(first.page.getByTestId("settings-dialog")).toBeVisible();
 
-  // AI settings: invalid empty baseUrl should show INVALID_ARGUMENT (observable failure)
+  // AI settings: invalid empty baseUrl should show human-readable error (observable failure)
   await first.page.getByTestId("settings-nav-ai").click();
   await expect(first.page.getByTestId("ai-save-btn")).toBeVisible();
   await first.page
@@ -57,7 +57,7 @@ test("settings-dialog: shortcut opens + theme persists + ai settings errors obse
   await first.page.getByTestId("ai-base-url").fill("");
   await first.page.getByTestId("ai-save-btn").click();
   await expect(first.page.getByTestId("ai-error")).toContainText(
-    "INVALID_ARGUMENT",
+    /Invalid parameter format|参数格式不正确/,
   );
 
   // Theme: switch to light and persist across restart

@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 
 import { Button, Card, Input, Select, Text } from "../../components/primitives";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
@@ -10,7 +11,12 @@ import type {
   NodeType,
 } from "../../components/features/KnowledgeGraph/types";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
-import { useKgStore, type KgEntity, type KgRelation, type KgActions } from "../../stores/kgStore";
+import {
+  useKgStore,
+  type KgEntity,
+  type KgRelation,
+  type KgActions,
+} from "../../stores/kgStore";
 import { TimelineView, type TimelineEventItem } from "./TimelineView";
 import { buildForceDirectedGraph } from "./graphRenderAdapter";
 import {
@@ -139,9 +145,9 @@ function ViewModeToggle(props: {
 }): JSX.Element {
   const { t } = useTranslation();
   const entries: Array<{ mode: ViewMode; label: string }> = [
-    { mode: "graph", label: t('kg.panel.viewGraph') },
-    { mode: "timeline", label: t('kg.panel.viewTimeline') },
-    { mode: "list", label: t('kg.panel.viewList') },
+    { mode: "graph", label: t("kg.panel.viewGraph") },
+    { mode: "timeline", label: t("kg.panel.viewTimeline") },
+    { mode: "list", label: t("kg.panel.viewList") },
   ];
   return (
     <div className="flex items-center gap-1">
@@ -211,7 +217,11 @@ function createKgGraphActions(deps: KgGraphActionsDeps) {
         patch: { metadataJson: updatedMetadata },
       });
       if (!res.ok) {
-        console.warn("[KnowledgeGraphPanel] deps.entityUpdate failed:", nodeId, res);
+        console.warn(
+          "[KnowledgeGraphPanel] deps.entityUpdate failed:",
+          nodeId,
+          res,
+        );
         return;
       }
       saveKgViewPreferences(deps.projectId, { lastDraggedNodeId: nodeId });
@@ -301,7 +311,7 @@ function createKgGraphActions(deps: KgGraphActionsDeps) {
     const position = { x: 300, y: 200 };
 
     const res = await deps.entityCreate({
-      name: deps.t('kg.panel.newEntity'),
+      name: deps.t("kg.panel.newEntity"),
       type: nodeTypeToEntityType(nodeType),
       description: "",
     });
@@ -373,12 +383,21 @@ function createKgGraphActions(deps: KgGraphActionsDeps) {
     deps.setSelectedNodeId(null);
   }
 
-  return { onNodeMove, onTimelineOrderChange, onAddNode, onNodeSave, onNodeDeleteFromGraph };
+  return {
+    onNodeMove,
+    onTimelineOrderChange,
+    onAddNode,
+    onNodeSave,
+    onNodeDeleteFromGraph,
+  };
 }
 
 // --- State hook (extracted for max-lines-per-function) ---
 
-function useKgPanelState(projectId: string, t: ReturnType<typeof useTranslation>["t"]) {
+function useKgPanelState(
+  projectId: string,
+  t: ReturnType<typeof useTranslation>["t"],
+) {
   const bootstrapStatus = useKgStore((s) => s.bootstrapStatus);
   const entities = useKgStore((s) => s.entities);
   const relations = useKgStore((s) => s.relations);
@@ -419,9 +438,7 @@ function useKgPanelState(projectId: string, t: ReturnType<typeof useTranslation>
 
   const isReady = bootstrapStatus === "ready";
 
-
   React.useEffect(() => {
-
     void bootstrapForProject(projectId);
   }, [bootstrapForProject, projectId]);
 
@@ -463,10 +480,10 @@ function useKgPanelState(projectId: string, t: ReturnType<typeof useTranslation>
 
   async function onDeleteEntity(entityId: string): Promise<void> {
     const confirmed = await confirm({
-      title: t('kg.panel.deleteEntityTitle'),
-      description: t('kg.panel.deleteEntityDescription'),
-      primaryLabel: t('kg.panel.delete'),
-      secondaryLabel: t('kg.panel.cancel'),
+      title: t("kg.panel.deleteEntityTitle"),
+      description: t("kg.panel.deleteEntityDescription"),
+      primaryLabel: t("kg.panel.delete"),
+      secondaryLabel: t("kg.panel.cancel"),
     });
     if (!confirmed) {
       return;
@@ -484,10 +501,10 @@ function useKgPanelState(projectId: string, t: ReturnType<typeof useTranslation>
    */
   async function onDeleteRelation(relationId: string): Promise<void> {
     const confirmed = await confirm({
-      title: t('kg.panel.deleteRelationTitle'),
-      description: t('kg.panel.deleteRelationDescription'),
-      primaryLabel: t('kg.panel.delete'),
-      secondaryLabel: t('kg.panel.cancel'),
+      title: t("kg.panel.deleteRelationTitle"),
+      description: t("kg.panel.deleteRelationDescription"),
+      primaryLabel: t("kg.panel.delete"),
+      secondaryLabel: t("kg.panel.cancel"),
     });
     if (!confirmed) {
       return;
@@ -574,7 +591,6 @@ function useKgPanelState(projectId: string, t: ReturnType<typeof useTranslation>
     return e ? e.name : entityId;
   }
 
-
   const baseGraphData = React.useMemo(
     () => kgToGraph(entities, relations),
     [entities, relations],
@@ -624,19 +640,55 @@ function useKgPanelState(projectId: string, t: ReturnType<typeof useTranslation>
   }
 
   const graphActions = createKgGraphActions({
-    entities, entityCreate, entityUpdate,
-    onDeleteEntity, setSelectedNodeId, t, projectId,
+    entities,
+    entityCreate,
+    entityUpdate,
+    onDeleteEntity,
+    setSelectedNodeId,
+    t,
+    projectId,
   });
 
   return {
-    t, isReady, bootstrapStatus, entities, relations, lastError, clearError,
-    editing, setEditing, viewMode, setViewMode,
-    selectedNodeId, setSelectedNodeId, graphTransform, graphData, timelineEvents,
-    dialogProps, onGraphTransformChange, ...graphActions,
-    onCreateEntity, onDeleteEntity, onDeleteRelation, onSaveEdit, onCreateRelation,
-    getEntityName, createName, setCreateName, createType, setCreateType,
-    createDescription, setCreateDescription, createAliasesInput, setCreateAliasesInput,
-    relFromId, setRelFromId, relToId, setRelToId, relType, setRelType,
+    t,
+    isReady,
+    bootstrapStatus,
+    entities,
+    relations,
+    lastError,
+    clearError,
+    editing,
+    setEditing,
+    viewMode,
+    setViewMode,
+    selectedNodeId,
+    setSelectedNodeId,
+    graphTransform,
+    graphData,
+    timelineEvents,
+    dialogProps,
+    onGraphTransformChange,
+    ...graphActions,
+    onCreateEntity,
+    onDeleteEntity,
+    onDeleteRelation,
+    onSaveEdit,
+    onCreateRelation,
+    getEntityName,
+    createName,
+    setCreateName,
+    createType,
+    setCreateType,
+    createDescription,
+    setCreateDescription,
+    createAliasesInput,
+    setCreateAliasesInput,
+    relFromId,
+    setRelFromId,
+    relToId,
+    setRelToId,
+    relType,
+    setRelType,
   };
 }
 
@@ -650,7 +702,14 @@ function KgEntityCard(props: {
   onDeleteEntity: (entityId: string) => Promise<void>;
   t: ReturnType<typeof useTranslation>["t"];
 }): JSX.Element {
-  const { entity: e, editing, setEditing, onSaveEdit, onDeleteEntity, t } = props;
+  const {
+    entity: e,
+    editing,
+    setEditing,
+    onSaveEdit,
+    onDeleteEntity,
+    t,
+  } = props;
   const isEditing = editing.mode === "entity" && editing.id === e.id;
   return (
     <Card
@@ -700,7 +759,7 @@ function KgEntityCard(props: {
                 lastSeenState: evt.target.value,
               })
             }
-            placeholder={t('kg.panel.lastSeenStatePlaceholder')}
+            placeholder={t("kg.panel.lastSeenStatePlaceholder")}
             fullWidth
           />
           <Input
@@ -750,14 +809,14 @@ function KgEntityCard(props: {
               size="sm"
               onClick={() => void onSaveEdit()}
             >
-              {t('kg.panel.save')}
+              {t("kg.panel.save")}
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setEditing({ mode: "idle" })}
             >
-              {t('kg.panel.cancel')}
+              {t("kg.panel.cancel")}
             </Button>
           </>
         ) : (
@@ -778,7 +837,7 @@ function KgEntityCard(props: {
                 })
               }
             >
-              {t('kg.panel.edit')}
+              {t("kg.panel.edit")}
             </Button>
             <Button
               data-testid={`kg-entity-delete-${e.id}`}
@@ -786,7 +845,7 @@ function KgEntityCard(props: {
               size="sm"
               onClick={() => void onDeleteEntity(e.id)}
             >
-              {t('kg.panel.delete')}
+              {t("kg.panel.delete")}
             </Button>
           </>
         )}
@@ -806,7 +865,15 @@ function KgRelationCard(props: {
   getEntityName: (entityId: string) => string;
   t: ReturnType<typeof useTranslation>["t"];
 }): JSX.Element {
-  const { relation: r, editing, setEditing, onSaveEdit, onDeleteRelation, getEntityName, t } = props;
+  const {
+    relation: r,
+    editing,
+    setEditing,
+    onSaveEdit,
+    onDeleteRelation,
+    getEntityName,
+    t,
+  } = props;
   const isEditing = editing.mode === "relation" && editing.id === r.id;
   return (
     <Card
@@ -828,7 +895,11 @@ function KgRelationCard(props: {
         />
       ) : (
         <Text size="small">
-          {t('kg.panel.relationFormat', { source: getEntityName(r.sourceEntityId), type: r.relationType, target: getEntityName(r.targetEntityId) })}
+          {t("kg.panel.relationFormat", {
+            source: getEntityName(r.sourceEntityId),
+            type: r.relationType,
+            target: getEntityName(r.targetEntityId),
+          })}
         </Text>
       )}
 
@@ -840,14 +911,14 @@ function KgRelationCard(props: {
               size="sm"
               onClick={() => void onSaveEdit()}
             >
-              {t('kg.panel.save')}
+              {t("kg.panel.save")}
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setEditing({ mode: "idle" })}
             >
-              {t('kg.panel.cancel')}
+              {t("kg.panel.cancel")}
             </Button>
           </>
         ) : (
@@ -856,24 +927,22 @@ function KgRelationCard(props: {
               variant="ghost"
               size="sm"
               onClick={() =>
-              setEditing({
-                mode: "relation",
-                id: r.id,
-                relationType: r.relationType,
-              })
+                setEditing({
+                  mode: "relation",
+                  id: r.id,
+                  relationType: r.relationType,
+                })
               }
             >
-              {t('kg.panel.edit')}
+              {t("kg.panel.edit")}
             </Button>
             <Button
               data-testid={`kg-relation-delete-${r.id}`}
               variant="ghost"
               size="sm"
-              onClick={() =>
-                void onDeleteRelation(r.id)
-              }
+              onClick={() => void onDeleteRelation(r.id)}
             >
-              {t('kg.panel.delete')}
+              {t("kg.panel.delete")}
             </Button>
           </>
         )}
@@ -888,22 +957,44 @@ function KgListView(props: {
   state: ReturnType<typeof useKgPanelState>;
 }): JSX.Element {
   const {
-    t, isReady, entities, relations, lastError, clearError,
-    editing, setEditing, viewMode, setViewMode, dialogProps,
-    onCreateEntity, onDeleteEntity, onDeleteRelation,
-    onSaveEdit, onCreateRelation, getEntityName,
-    createName, setCreateName, createType, setCreateType,
-    createDescription, setCreateDescription,
-    createAliasesInput, setCreateAliasesInput,
-    relFromId, setRelFromId, relToId, setRelToId,
-    relType, setRelType,
+    t,
+    isReady,
+    entities,
+    relations,
+    lastError,
+    clearError,
+    editing,
+    setEditing,
+    viewMode,
+    setViewMode,
+    dialogProps,
+    onCreateEntity,
+    onDeleteEntity,
+    onDeleteRelation,
+    onSaveEdit,
+    onCreateRelation,
+    getEntityName,
+    createName,
+    setCreateName,
+    createType,
+    setCreateType,
+    createDescription,
+    setCreateDescription,
+    createAliasesInput,
+    setCreateAliasesInput,
+    relFromId,
+    setRelFromId,
+    relToId,
+    setRelToId,
+    relType,
+    setRelType,
   } = props.state;
 
   return (
     <section data-testid="sidebar-kg" className="flex flex-col gap-3 min-h-0">
       <div className="flex items-center justify-between p-3 border-b border-[var(--color-separator)]">
         <Text size="small" color="muted">
-          {t('kg.panel.title')}
+          {t("kg.panel.title")}
         </Text>
         <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
       </div>
@@ -915,7 +1006,7 @@ function KgListView(props: {
         >
           <div className="flex gap-2 items-center">
             <Text data-testid="kg-error-code" size="code" color="muted">
-              {lastError.code}
+              {getHumanErrorMessage(lastError)}
             </Text>
             <Button
               variant="secondary"
@@ -923,11 +1014,11 @@ function KgListView(props: {
               onClick={clearError}
               className="ml-auto"
             >
-              {t('kg.panel.dismiss')}
+              {t("kg.panel.dismiss")}
             </Button>
           </div>
           <Text size="small" className="mt-1.5 block">
-            {lastError.message}
+            {getHumanErrorMessage(lastError)}
           </Text>
         </div>
       ) : null}
@@ -935,32 +1026,32 @@ function KgListView(props: {
       <div className="flex-1 overflow-auto min-h-0">
         <div className="p-3">
           <Text size="small" color="muted">
-            {t('kg.panel.entities')}
+            {t("kg.panel.entities")}
           </Text>
 
           <div className="flex flex-col gap-2 mt-2 pb-3 border-b border-[var(--color-separator)]">
             <Input
               data-testid="kg-entity-name"
-              placeholder={t('kg.panel.namePlaceholder')}
+              placeholder={t("kg.panel.namePlaceholder")}
               value={createName}
               onChange={(e) => setCreateName(e.target.value)}
               fullWidth
             />
             <Input
-              placeholder={t('kg.panel.typePlaceholder')}
+              placeholder={t("kg.panel.typePlaceholder")}
               value={createType}
               onChange={(e) => setCreateType(e.target.value)}
               fullWidth
             />
             <Input
-              placeholder={t('kg.panel.descriptionPlaceholder')}
+              placeholder={t("kg.panel.descriptionPlaceholder")}
               value={createDescription}
               onChange={(e) => setCreateDescription(e.target.value)}
               fullWidth
             />
             <Input
               data-testid="kg-entity-aliases"
-              placeholder={t('kg.panel.aliasesPlaceholder')}
+              placeholder={t("kg.panel.aliasesPlaceholder")}
               value={createAliasesInput}
               onChange={(e) => setCreateAliasesInput(e.target.value)}
               fullWidth
@@ -973,13 +1064,13 @@ function KgListView(props: {
               disabled={!isReady}
               className="self-start"
             >
-              {t('kg.panel.createEntity')}
+              {t("kg.panel.createEntity")}
             </Button>
           </div>
 
           {entities.length === 0 ? (
             <Text size="small" color="muted" className="mt-3 block">
-              {t('kg.panel.noEntities')}
+              {t("kg.panel.noEntities")}
             </Text>
           ) : (
             <div className="mt-3 flex flex-col gap-2">
@@ -999,7 +1090,7 @@ function KgListView(props: {
 
           <div className="mt-4">
             <Text size="small" color="muted">
-              {t('kg.panel.relations')}
+              {t("kg.panel.relations")}
             </Text>
 
             <div className="mt-2 flex flex-col gap-2 pb-3 border-b border-[var(--color-separator)]">
@@ -1014,7 +1105,7 @@ function KgListView(props: {
                     type: e.type,
                   }),
                 }))}
-                placeholder={t('kg.panel.selectEntityPlaceholder')}
+                placeholder={t("kg.panel.selectEntityPlaceholder")}
                 fullWidth
               />
 
@@ -1029,13 +1120,13 @@ function KgListView(props: {
                     type: e.type,
                   }),
                 }))}
-                placeholder={t('kg.panel.selectEntityPlaceholder')}
+                placeholder={t("kg.panel.selectEntityPlaceholder")}
                 fullWidth
               />
 
               <Input
                 data-testid="kg-relation-type"
-                placeholder={t('kg.panel.relationTypePlaceholder')}
+                placeholder={t("kg.panel.relationTypePlaceholder")}
                 value={relType}
                 onChange={(e) => setRelType(e.target.value)}
                 disabled={!isReady}
@@ -1050,13 +1141,13 @@ function KgListView(props: {
                 disabled={!isReady}
                 className="self-start"
               >
-                {t('kg.panel.createRelation')}
+                {t("kg.panel.createRelation")}
               </Button>
             </div>
 
             {relations.length === 0 ? (
               <Text size="small" color="muted" className="mt-3 block">
-                {t('kg.panel.noRelations')}
+                {t("kg.panel.noRelations")}
               </Text>
             ) : (
               <div className="mt-3 flex flex-col gap-2">
@@ -1092,12 +1183,24 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
   const { t } = useTranslation();
   const state = useKgPanelState(props.projectId, t);
   const {
-    entities, lastError, clearError,
-    setEditing, viewMode, setViewMode,
-    selectedNodeId, setSelectedNodeId,
-    graphTransform, graphData, timelineEvents, dialogProps,
-    onGraphTransformChange, onNodeMove, onAddNode, onNodeSave,
-    onNodeDeleteFromGraph, onTimelineOrderChange,
+    entities,
+    lastError,
+    clearError,
+    setEditing,
+    viewMode,
+    setViewMode,
+    selectedNodeId,
+    setSelectedNodeId,
+    graphTransform,
+    graphData,
+    timelineEvents,
+    dialogProps,
+    onGraphTransformChange,
+    onNodeMove,
+    onAddNode,
+    onNodeSave,
+    onNodeDeleteFromGraph,
+    onTimelineOrderChange,
   } = state;
 
   // Render Graph view
@@ -1110,7 +1213,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
         {/* Header with view toggle */}
         <div className="flex items-center justify-between p-3 border-b border-[var(--color-separator)] shrink-0">
           <Text size="small" color="muted">
-            {t('kg.panel.title')}
+            {t("kg.panel.title")}
           </Text>
           <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
         </div>
@@ -1123,7 +1226,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
           >
             <div className="flex gap-2 items-center">
               <Text data-testid="kg-error-code" size="code" color="muted">
-                {lastError.code}
+                {getHumanErrorMessage(lastError)}
               </Text>
               <Button
                 variant="secondary"
@@ -1131,11 +1234,11 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
                 onClick={clearError}
                 className="ml-auto"
               >
-                {t('kg.panel.dismiss')}
+                {t("kg.panel.dismiss")}
               </Button>
             </div>
             <Text size="small" className="mt-1.5 block">
-              {lastError.message}
+              {getHumanErrorMessage(lastError)}
             </Text>
           </div>
         ) : null}
@@ -1169,7 +1272,7 @@ export function KnowledgeGraphPanel(props: { projectId: string }): JSX.Element {
       >
         <div className="flex items-center justify-between p-3 border-b border-[var(--color-separator)] shrink-0">
           <Text size="small" color="muted">
-            {t('kg.panel.title')}
+            {t("kg.panel.title")}
           </Text>
           <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
         </div>

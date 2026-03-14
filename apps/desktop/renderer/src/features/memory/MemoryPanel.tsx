@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import type { IpcError, IpcResponseData } from "@shared/types/ipc-generated";
 import { Button, Card, Text } from "../../components/primitives";
 import { invoke } from "../../lib/ipcClient";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useProjectStore } from "../../stores/projectStore";
 
 type PanelScope = "global" | "project";
@@ -24,7 +25,10 @@ const CATEGORY_GROUPS: CategoryGroup[] = [
   { category: "vocabulary", labelKey: "memory.panel.categoryVocabulary" },
 ];
 
-function normalizePanelLoadError(cause: unknown, fallbackMessage: string): IpcError {
+function normalizePanelLoadError(
+  cause: unknown,
+  fallbackMessage: string,
+): IpcError {
   if (
     typeof cause === "object" &&
     cause !== null &&
@@ -50,8 +54,10 @@ function formatUpdatedAt(ts: number | null): string {
   return new Date(ts).toLocaleString("zh-CN", { hour12: false });
 }
 
-
-function useMemoryState(projectId: string | null, t: (key: string, opts?: Record<string, unknown>) => string) {
+function useMemoryState(
+  projectId: string | null,
+  t: (key: string, opts?: Record<string, unknown>) => string,
+) {
   const [status, setStatus] = React.useState<
     "idle" | "loading" | "ready" | "error"
   >("idle");
@@ -109,7 +115,7 @@ function useMemoryState(projectId: string | null, t: (key: string, opts?: Record
       setStatus("ready");
     } catch (cause) {
       setStatus("error");
-      setError(normalizePanelLoadError(cause, t('memory.panel.loadError')));
+      setError(normalizePanelLoadError(cause, t("memory.panel.loadError")));
     }
   }, [projectId, t]);
 
@@ -197,7 +203,10 @@ function useMemoryState(projectId: string | null, t: (key: string, opts?: Record
 
     const normalized = editingText.trim();
     if (normalized.length === 0) {
-      setError({ code: "INVALID_ARGUMENT", message: t('memory.panel.ruleTextRequired') });
+      setError({
+        code: "INVALID_ARGUMENT",
+        message: t("memory.panel.ruleTextRequired"),
+      });
       return;
     }
 
@@ -227,7 +236,7 @@ function useMemoryState(projectId: string | null, t: (key: string, opts?: Record
       return;
     }
 
-    const confirmed = window.confirm(t('memory.panel.confirmDeleteRule'));
+    const confirmed = window.confirm(t("memory.panel.confirmDeleteRule"));
     if (!confirmed) {
       return;
     }
@@ -248,7 +257,10 @@ function useMemoryState(projectId: string | null, t: (key: string, opts?: Record
 
     const normalized = draftRule.trim();
     if (normalized.length === 0) {
-      setError({ code: "INVALID_ARGUMENT", message: t('memory.panel.ruleTextRequired') });
+      setError({
+        code: "INVALID_ARGUMENT",
+        message: t("memory.panel.ruleTextRequired"),
+      });
       return;
     }
 
@@ -345,7 +357,6 @@ function useMemoryState(projectId: string | null, t: (key: string, opts?: Record
   };
 }
 
-
 function MemoryComposer(props: {
   t: (key: string) => string;
   draftRule: string;
@@ -365,11 +376,11 @@ function MemoryComposer(props: {
           className="text-xs text-[var(--color-fg-muted)]"
           htmlFor="memory-rule-create-input"
         >
-          {props.t('memory.panel.addRule')}
+          {props.t("memory.panel.addRule")}
         </label>
         <textarea
           id="memory-rule-create-input"
-          aria-label={props.t('memory.panel.addRule')}
+          aria-label={props.t("memory.panel.addRule")}
           value={props.draftRule}
           onChange={(event) => props.setDraftRule(event.target.value)}
           className="min-h-[72px] rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 py-1.5 text-sm"
@@ -378,7 +389,7 @@ function MemoryComposer(props: {
           className="text-xs text-[var(--color-fg-muted)]"
           htmlFor="memory-rule-category"
         >
-          {props.t('memory.panel.category')}
+          {props.t("memory.panel.category")}
         </label>
         <select
           id="memory-rule-category"
@@ -396,14 +407,10 @@ function MemoryComposer(props: {
         </select>
         <div className="flex items-center gap-2">
           <Button size="sm" onClick={() => void props.handleCreateRule()}>
-            {props.t('memory.panel.saveRule')}
+            {props.t("memory.panel.saveRule")}
           </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={props.onClose}
-          >
-            {props.t('memory.panel.cancel')}
+          <Button size="sm" variant="ghost" onClick={props.onClose}>
+            {props.t("memory.panel.cancel")}
           </Button>
         </div>
       </div>
@@ -432,7 +439,7 @@ export function MemoryPanel(): JSX.Element {
     >
       <header className="shrink-0 flex items-center gap-2">
         <Text size="small" color="muted">
-          {t('memory.panel.title')}
+          {t("memory.panel.title")}
         </Text>
         <Text size="tiny" color="muted" className="ml-auto">
           {state.status}
@@ -450,7 +457,7 @@ export function MemoryPanel(): JSX.Element {
           }`}
           onClick={() => state.setActiveScope("global")}
         >
-          {t('memory.panel.globalTab')}
+          {t("memory.panel.globalTab")}
         </button>
         <button
           type="button"
@@ -463,7 +470,7 @@ export function MemoryPanel(): JSX.Element {
           } disabled:opacity-50 disabled:cursor-not-allowed`}
           onClick={() => state.setActiveScope("project")}
         >
-          {t('memory.panel.projectTab')}
+          {t("memory.panel.projectTab")}
         </button>
       </div>
 
@@ -474,7 +481,7 @@ export function MemoryPanel(): JSX.Element {
           className="shrink-0 px-2.5 py-2 border-[var(--color-warning)] text-[var(--color-warning)]"
         >
           <Text size="small" className="text-[var(--color-warning)]">
-            {t('memory.panel.learningPaused')}
+            {t("memory.panel.learningPaused")}
           </Text>
         </Card>
       ) : null}
@@ -486,7 +493,9 @@ export function MemoryPanel(): JSX.Element {
           className="shrink-0 px-2.5 py-2 border-[var(--color-warning)] text-[var(--color-warning)]"
         >
           <Text size="small" className="text-[var(--color-warning)]">
-            {t('memory.panel.conflictsDetected', { count: state.conflictCount })}
+            {t("memory.panel.conflictsDetected", {
+              count: state.conflictCount,
+            })}
           </Text>
         </Card>
       ) : null}
@@ -495,7 +504,7 @@ export function MemoryPanel(): JSX.Element {
         <Card noPadding className="shrink-0 p-2.5">
           <div className="flex items-center gap-2">
             <Text data-testid="memory-error-code" size="code" color="muted">
-              {state.error.code}
+              {getHumanErrorMessage(state.error)}
             </Text>
             <Button
               variant="ghost"
@@ -503,12 +512,9 @@ export function MemoryPanel(): JSX.Element {
               className="ml-auto"
               onClick={() => state.setError(null)}
             >
-              {t('memory.panel.dismissError')}
+              {t("memory.panel.dismissError")}
             </Button>
           </div>
-          <Text size="small" color="muted" className="mt-1.5 block">
-            {state.error.message}
-          </Text>
         </Card>
       ) : null}
 
@@ -519,19 +525,19 @@ export function MemoryPanel(): JSX.Element {
         {state.status === "loading" ? (
           <div className="h-full flex items-center justify-center">
             <Text size="small" color="muted">
-              {t('memory.panel.loading')}
+              {t("memory.panel.loading")}
             </Text>
           </div>
         ) : state.filteredRules.length === 0 ? (
           <div className="h-full min-h-[180px] flex flex-col items-center justify-center gap-3 text-center">
             <div className="w-9 h-9 rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] flex items-center justify-center text-[var(--color-fg-muted)]">
-              {t('memory.panel.emptyIcon')}
+              {t("memory.panel.emptyIcon")}
             </div>
             <Text size="small" color="muted">
-              {t('memory.panel.aiLearningHint')}
+              {t("memory.panel.aiLearningHint")}
             </Text>
             <Button size="sm" onClick={() => state.setComposerOpen(true)}>
-              {t('memory.panel.addRuleManually')}
+              {t("memory.panel.addRuleManually")}
             </Button>
           </div>
         ) : (
@@ -558,11 +564,11 @@ export function MemoryPanel(): JSX.Element {
                                 className="text-xs text-[var(--color-fg-muted)]"
                                 htmlFor={`memory-edit-${rule.id}`}
                               >
-                                {t('memory.panel.ruleText')}
+                                {t("memory.panel.ruleText")}
                               </label>
                               <textarea
                                 id={`memory-edit-${rule.id}`}
-                                aria-label={t('memory.panel.ruleText')}
+                                aria-label={t("memory.panel.ruleText")}
                                 value={state.editingText}
                                 onChange={(event) =>
                                   state.setEditingText(event.target.value)
@@ -572,9 +578,11 @@ export function MemoryPanel(): JSX.Element {
                               <div className="flex gap-2">
                                 <Button
                                   size="sm"
-                                  onClick={() => void state.handleSaveEdit(rule.id)}
+                                  onClick={() =>
+                                    void state.handleSaveEdit(rule.id)
+                                  }
                                 >
-                                  {t('memory.panel.saveChanges')}
+                                  {t("memory.panel.saveChanges")}
                                 </Button>
                                 <Button
                                   size="sm"
@@ -584,7 +592,7 @@ export function MemoryPanel(): JSX.Element {
                                     state.setEditingText("");
                                   }}
                                 >
-                                  {t('memory.panel.cancel')}
+                                  {t("memory.panel.cancel")}
                                 </Button>
                               </div>
                             </div>
@@ -598,12 +606,16 @@ export function MemoryPanel(): JSX.Element {
                               </Text>
                               <div className="mt-2 flex items-center gap-2 text-xs text-[var(--color-fg-muted)]">
                                 <span>
-                                  {t('memory.panel.confidence', { value: Math.round(rule.confidence * 100) })}
+                                  {t("memory.panel.confidence", {
+                                    value: Math.round(rule.confidence * 100),
+                                  })}
                                 </span>
                                 {rule.userConfirmed ? (
-                                  <span>{t('memory.panel.confirmed')}</span>
+                                  <span>{t("memory.panel.confirmed")}</span>
                                 ) : null}
-                                {rule.userModified ? <span>{t('memory.panel.modified')}</span> : null}
+                                {rule.userModified ? (
+                                  <span>{t("memory.panel.modified")}</span>
+                                ) : null}
                               </div>
                             </>
                           )}
@@ -615,23 +627,27 @@ export function MemoryPanel(): JSX.Element {
                               size="sm"
                               variant="secondary"
                               disabled={rule.userConfirmed}
-                              onClick={() => void state.handleConfirmRule(rule.id)}
+                              onClick={() =>
+                                void state.handleConfirmRule(rule.id)
+                              }
                             >
-                              {t('memory.panel.confirm')}
+                              {t("memory.panel.confirm")}
                             </Button>
                             <Button
                               size="sm"
                               variant="ghost"
                               onClick={() => state.startEdit(rule)}
                             >
-                              {t('memory.panel.modify')}
+                              {t("memory.panel.modify")}
                             </Button>
                             <Button
                               size="sm"
                               variant="danger"
-                              onClick={() => void state.handleDeleteRule(rule.id)}
+                              onClick={() =>
+                                void state.handleDeleteRule(rule.id)
+                              }
                             >
-                              {t('memory.panel.delete')}
+                              {t("memory.panel.delete")}
                             </Button>
                           </div>
                         ) : null}
@@ -650,14 +666,22 @@ export function MemoryPanel(): JSX.Element {
         className="shrink-0 p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
       >
         <div className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]">
-          <span>{t('memory.panel.interactionCount', { count: state.interactionCount })}</span>
-          <span>{t('memory.panel.lastUpdate', { time: formatUpdatedAt(state.latestUpdateAt) })}</span>
+          <span>
+            {t("memory.panel.interactionCount", {
+              count: state.interactionCount,
+            })}
+          </span>
+          <span>
+            {t("memory.panel.lastUpdate", {
+              time: formatUpdatedAt(state.latestUpdateAt),
+            })}
+          </span>
         </div>
       </Card>
 
       <div className="shrink-0 flex items-center gap-2">
         <Button size="sm" onClick={() => state.setComposerOpen(true)}>
-          {t('memory.panel.addRuleManually')}
+          {t("memory.panel.addRuleManually")}
         </Button>
         <Button
           size="sm"
@@ -665,7 +689,7 @@ export function MemoryPanel(): JSX.Element {
           loading={state.distilling}
           onClick={() => void state.handleDistill()}
         >
-          {t('memory.panel.updatePreferences')}
+          {t("memory.panel.updatePreferences")}
         </Button>
         <Button
           size="sm"
@@ -673,8 +697,8 @@ export function MemoryPanel(): JSX.Element {
           onClick={() => void state.handleLearningToggle()}
         >
           {state.settings?.preferenceLearningEnabled === false
-            ? t('memory.panel.resumeLearning')
-            : t('memory.panel.pauseLearning')}
+            ? t("memory.panel.resumeLearning")
+            : t("memory.panel.pauseLearning")}
         </Button>
       </div>
 

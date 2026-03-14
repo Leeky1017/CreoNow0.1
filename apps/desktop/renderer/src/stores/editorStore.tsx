@@ -7,10 +7,13 @@ import type {
   IpcInvokeResult,
   IpcRequest,
 } from "@shared/types/ipc-generated";
+import { createEditorSaveQueue } from "./editorSaveQueue";
 import {
-  createEditorSaveQueue,
-  type EditorSaveRequest,
-} from "./editorSaveQueue";
+  createFlushPendingAutosaveAction,
+  createRetryLastAutosaveAction,
+  createSaveQueueUnexpectedErrorHandler,
+  createSaveQueueExecuteSave,
+} from "./editorAutosaveHelpers";
 import type { IpcInvoke } from "../lib/ipcTypes";
 
 export type { IpcInvoke };
@@ -28,6 +31,11 @@ export type EntityCompletionCandidate = {
   id: string;
   name: string;
   type: IpcRequest<"knowledge:entity:create">["type"];
+};
+
+export type PendingFlushError = {
+  documentId: string;
+  error: IpcError;
 };
 
 export type EntityCompletionSession = {
@@ -55,6 +63,7 @@ export type EditorState = {
   capacityWarning: string | null;
   autosaveStatus: AutosaveStatus;
   autosaveError: IpcError | null;
+  pendingFlushError: PendingFlushError | null;
   entityCompletionSession: EntityCompletionSession;
   /** Whether compare mode is active (showing DiffView instead of Editor) */
   compareMode: boolean;
@@ -79,6 +88,7 @@ export type EditorActions = {
   }) => Promise<void>;
   retryLastAutosave: () => Promise<void>;
   flushPendingAutosave: () => Promise<void>;
+  clearPendingFlushError: () => void;
   setAutosaveStatus: (status: AutosaveStatus) => void;
   setDocumentCharacterCount: (count: number) => void;
   setCapacityWarning: (warning: string | null) => void;
@@ -117,31 +127,6 @@ function createInitialEntityCompletionSession(): EntityCompletionSession {
   };
 }
 
-function createSaveQueueUnexpectedErrorHandler(deps: {
-  get: () => EditorStore;
-  set: (patch: Partial<EditorStore>) => void;
-}) {
-  return ({ request, error }: { request: EditorSaveRequest; error: unknown }) => {
-    const stillCurrent =
-      deps.get().projectId === request.projectId &&
-      deps.get().documentId === request.documentId;
-    if (!stillCurrent) {
-      return;
-    }
-
-    deps.set({
-      autosaveStatus: "error",
-      autosaveError: {
-        code: "INTERNAL_ERROR",
-        message:
-          error instanceof Error
-            ? error.message
-            : "editor save queue failed unexpectedly",
-      },
-    });
-  };
-}
-
 /**
  * Create a zustand store for editor/document state.
  *
@@ -157,63 +142,11 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
         get,
         set: (patch) => set(patch),
       }),
-      executeSave: async (request: EditorSaveRequest) => {
-        const isCurrent =
-          get().projectId === request.projectId &&
-          get().documentId === request.documentId;
-        if (isCurrent) {
-          set({
-            autosaveStatus: "saving",
-            lastSavedOrQueuedJson: request.contentJson,
-          });
-        }
-
-        try {
-          const res = await deps.invoke("file:document:save", {
-            projectId: request.projectId,
-            documentId: request.documentId,
-            contentJson: request.contentJson,
-            actor: request.actor,
-            reason: request.reason,
-          });
-
-          if (!res.ok) {
-            const stillCurrent =
-              get().projectId === request.projectId &&
-              get().documentId === request.documentId;
-            if (stillCurrent) {
-              set({ autosaveStatus: "error", autosaveError: res.error });
-            }
-            return;
-          }
-
-          const stillCurrent =
-            get().projectId === request.projectId &&
-            get().documentId === request.documentId;
-          if (stillCurrent) {
-            set({
-              autosaveStatus: "saved",
-              autosaveError: null,
-            });
-          }
-        } catch (error) {
-          const stillCurrent =
-            get().projectId === request.projectId &&
-            get().documentId === request.documentId;
-          if (stillCurrent) {
-            set({
-              autosaveStatus: "error",
-              autosaveError: {
-                code: "INTERNAL_ERROR",
-                message:
-                  error instanceof Error
-                    ? error.message
-                    : "file:document:save threw unexpectedly",
-              },
-            });
-          }
-        }
-      },
+      executeSave: createSaveQueueExecuteSave({
+        get,
+        set: (patch) => set(patch),
+        invoke: deps.invoke,
+      }),
     });
 
     return {
@@ -228,6 +161,7 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
       capacityWarning: null,
       autosaveStatus: "idle",
       autosaveError: null,
+      pendingFlushError: null,
       entityCompletionSession: createInitialEntityCompletionSession(),
       compareMode: false,
       compareVersionId: null,
@@ -270,7 +204,9 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
         if (currentRes.ok) {
           documentId = currentRes.data.documentId;
         } else if (currentRes.error.code === "NOT_FOUND") {
-          const listRes = await deps.invoke("file:document:list", { projectId });
+          const listRes = await deps.invoke("file:document:list", {
+            projectId,
+          });
           if (!shouldCommit()) return;
           if (!listRes.ok) {
             set({ bootstrapStatus: "error" });
@@ -340,6 +276,15 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
       },
 
       openDocument: async ({ projectId, documentId }) => {
+        const current = get();
+        if (
+          current.projectId === projectId &&
+          current.documentId &&
+          current.documentId !== documentId
+        ) {
+          await current.flushPendingAutosave();
+        }
+
         set({
           bootstrapStatus: "loading",
           projectId,
@@ -429,45 +374,18 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
         return true;
       },
 
-      retryLastAutosave: async () => {
-        const state = get();
-        if (
-          !state.projectId ||
-          !state.documentId ||
-          !state.lastSavedOrQueuedJson ||
-          state.lastSavedOrQueuedJson.length === 0
-        ) {
-          return;
-        }
+      retryLastAutosave: createRetryLastAutosaveAction({
+        get,
+        set: (patch) => set(patch),
+      }),
 
-        set({ autosaveError: null });
-        await state.save({
-          projectId: state.projectId,
-          documentId: state.documentId,
-          contentJson: state.lastSavedOrQueuedJson,
-          actor: "auto",
-          reason: "autosave",
-        });
-      },
+      flushPendingAutosave: createFlushPendingAutosaveAction({
+        get,
+        set: (patch) => set(patch),
+      }),
 
-      flushPendingAutosave: async () => {
-        const state = get();
-        if (
-          !state.projectId ||
-          !state.documentId ||
-          !state.lastSavedOrQueuedJson ||
-          state.lastSavedOrQueuedJson.length === 0
-        ) {
-          return;
-        }
-
-        await state.save({
-          projectId: state.projectId,
-          documentId: state.documentId,
-          contentJson: state.lastSavedOrQueuedJson,
-          actor: "auto",
-          reason: "autosave",
-        });
+      clearPendingFlushError: () => {
+        set({ pendingFlushError: null });
       },
     };
   });

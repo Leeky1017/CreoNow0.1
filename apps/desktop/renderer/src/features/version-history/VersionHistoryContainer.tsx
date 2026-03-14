@@ -20,6 +20,7 @@ import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { RESTORE_VERSION_CONFIRM_COPY } from "./restoreConfirmCopy";
 import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore";
 import { i18n } from "../../i18n";
+import { getHumanErrorMessage } from "../../lib/errorMessages";
 
 /**
  * Map backend actor to UI author type.
@@ -678,8 +679,8 @@ export function VersionHistoryContainer(
           </div>
         ) : null}
         {branchMergeStatus === "error" && branchMergeError ? (
-          <div className="text-[11px] text-[var(--color-error)]">
-            {branchMergeError.code}: {branchMergeError.message}
+          <div role="alert" className="text-[11px] text-[var(--color-error)]">
+            {getHumanErrorMessage(branchMergeError)}
           </div>
         ) : null}
       </div>
@@ -730,9 +731,12 @@ export function VersionHistoryContainer(
         </div>
       ) : null}
       {previewStatus === "error" && previewError ? (
-        <div className="px-3 py-2 text-xs text-[var(--color-error)]">
+        <div
+          role="alert"
+          className="px-3 py-2 text-xs text-[var(--color-error)]"
+        >
           <span data-testid="version-preview-error">
-            {previewError.code}: {previewError.message}
+            {getHumanErrorMessage(previewError)}
           </span>
         </div>
       ) : null}
