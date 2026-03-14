@@ -35,59 +35,229 @@ const P0_PATTERNS = [
   /features\/diff\//u,
 ];
 
-const DATE_TIME_STYLE_VALUES = new Set(["2-digit", "numeric", "short", "long", "narrow"]);
-const CSS_FUNCTION_PATTERN = /^(?:calc|color-mix|radial-gradient|linear-gradient|blur)\(/u;
-const CSS_ANIMATION_SHORTHAND_PATTERN = /^[a-z][\w-]*(?:\s+-?\d*\.?\d+(?:ms|s))(?:\s+(?:linear|ease|ease-in|ease-out|ease-in-out|step-start|step-end|infinite|normal|none|forwards|backwards|both|paused|running|alternate|reverse|alternate-reverse))*$/u;
+const DATE_TIME_STYLE_VALUES = new Set([
+  "2-digit",
+  "numeric",
+  "short",
+  "long",
+  "narrow",
+]);
+const CSS_FUNCTION_PATTERN =
+  /^(?:calc|color-mix|radial-gradient|linear-gradient|blur)\(/u;
+const CSS_ANIMATION_SHORTHAND_PATTERN =
+  /^[a-z][\w-]*(?:\s+-?\d*\.?\d+(?:ms|s))(?:\s+(?:linear|ease|ease-in|ease-out|ease-in-out|step-start|step-end|infinite|normal|none|forwards|backwards|both|paused|running|alternate|reverse|alternate-reverse))*$/u;
 const CSS_TIME_PATTERN = /^-?\d*\.?\d+(?:ms|s)$/u;
-const CSS_DIMENSION_PATTERN = /^(?:-?\d*\.?\d+(?:px|em|rem|vh|vw|%))(?:\s+-?\d*\.?\d+(?:px|em|rem|vh|vw|%))*$/u;
-const CSS_BORDER_SHORTHAND_PATTERN = /^(?:-?\d*\.?\d+(?:px|em|rem))\s+(?:solid|dashed|dotted|double|none)\s+(?:var\(--[^)]+\)|#[0-9a-fA-F]{3,8}|[a-z-]+)$/u;
+const CSS_DIMENSION_PATTERN =
+  /^(?:-?\d*\.?\d+(?:px|em|rem|vh|vw|%))(?:\s+-?\d*\.?\d+(?:px|em|rem|vh|vw|%))*$/u;
+const CSS_BORDER_SHORTHAND_PATTERN =
+  /^(?:-?\d*\.?\d+(?:px|em|rem))\s+(?:solid|dashed|dotted|double|none)\s+(?:var\(--[^)]+\)|#[0-9a-fA-F]{3,8}|[a-z-]+)$/u;
 const RELATIVE_PATH_PATTERN = /^(?:\.\.?(?:\/|$))+[\w./-]+$/u;
 const SVG_URL_PATTERN = /^url\(#[\w-]+\)$/u;
 const I18N_KEY_PATTERN = /^[a-z][\w-]*(?:\.[\w-]+){1,}$/u;
 const URL_LIKE_PATTERN = /^(?:https?:\/\/|mailto:|file:\/\/)/u;
 const SHELL_COMMAND_PATTERN = /^(?:pnpm|npm|yarn|git|node|tsx|bash)\b/u;
 const BARE_TW_TOKENS = new Set([
-  "absolute", "relative", "fixed", "sticky", "static", "block", "inline", "inline-block",
-  "inline-flex", "flex", "grid", "hidden", "table", "border", "truncate", "underline",
-  "line-through", "sr-only", "not-sr-only", "contents", "isolate", "visible", "invisible",
+  "absolute",
+  "relative",
+  "fixed",
+  "sticky",
+  "static",
+  "block",
+  "inline",
+  "inline-block",
+  "inline-flex",
+  "flex",
+  "grid",
+  "hidden",
+  "table",
+  "border",
+  "truncate",
+  "underline",
+  "line-through",
+  "sr-only",
+  "not-sr-only",
+  "contents",
+  "isolate",
+  "visible",
+  "invisible",
 ]);
 const USER_FACING_LOWERCASE_WORDS = new Set(["code"]);
 const SHORT_USER_FACING = new Set(["AI", "OK", "NO", "ON", "GO"]);
 const USER_FACING_PASCAL_WORDS = new Set([
-  "You", "Auto", "Today", "Yesterday", "Earlier", "Loading",
-  "Restore", "Compare", "Preview", "Settings", "Save", "Cancel",
-  "Export", "Delete", "Edit", "Close", "Open", "Search",
-  "Back", "Next", "Previous", "Done", "Error", "Warning",
-  "Info", "Success", "Failed", "Pass", "Fail", "Score",
-  "Version", "Current", "Draft", "Final",
-  "Apply", "Reject", "Accept", "Dismiss", "Retry",
-  "Add", "Remove", "Create", "Update", "Rename",
-  "Copy", "Paste", "Cut", "Undo", "Redo",
-  "Bold", "Italic", "Underline", "Markdown",
-  "General", "Appearance", "Advanced",
+  "You",
+  "Auto",
+  "Today",
+  "Yesterday",
+  "Earlier",
+  "Loading",
+  "Restore",
+  "Compare",
+  "Preview",
+  "Settings",
+  "Save",
+  "Cancel",
+  "Export",
+  "Delete",
+  "Edit",
+  "Close",
+  "Open",
+  "Search",
+  "Back",
+  "Next",
+  "Previous",
+  "Done",
+  "Error",
+  "Warning",
+  "Info",
+  "Success",
+  "Failed",
+  "Pass",
+  "Fail",
+  "Score",
+  "Version",
+  "Current",
+  "Draft",
+  "Final",
+  "Apply",
+  "Reject",
+  "Accept",
+  "Dismiss",
+  "Retry",
+  "Add",
+  "Remove",
+  "Create",
+  "Update",
+  "Rename",
+  "Copy",
+  "Paste",
+  "Cut",
+  "Undo",
+  "Redo",
+  "Bold",
+  "Italic",
+  "Underline",
+  "Markdown",
+  "General",
+  "Appearance",
+  "Advanced",
 ]);
 const HTML_TAGS = new Set([
-  "div", "span", "p", "br", "strong", "b", "em", "i", "u", "s", "code",
-  "pre", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li",
-  "blockquote", "hr", "a", "img", "table", "tr", "td", "th", "thead",
-  "tbody", "button", "input", "textarea", "select", "option", "form",
-  "label", "section", "article", "header", "footer", "nav", "main",
-  "aside", "dialog", "details", "summary", "strike",
+  "div",
+  "span",
+  "p",
+  "br",
+  "strong",
+  "b",
+  "em",
+  "i",
+  "u",
+  "s",
+  "code",
+  "pre",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "ul",
+  "ol",
+  "li",
+  "blockquote",
+  "hr",
+  "a",
+  "img",
+  "table",
+  "tr",
+  "td",
+  "th",
+  "thead",
+  "tbody",
+  "button",
+  "input",
+  "textarea",
+  "select",
+  "option",
+  "form",
+  "label",
+  "section",
+  "article",
+  "header",
+  "footer",
+  "nav",
+  "main",
+  "aside",
+  "dialog",
+  "details",
+  "summary",
+  "strike",
 ]);
 const ARIA_ROLES = new Set([
-  "alert", "alertdialog", "button", "checkbox", "dialog", "grid",
-  "link", "listbox", "menu", "menubar", "menuitem", "option",
-  "progressbar", "radio", "radiogroup", "scrollbar", "searchbox",
-  "slider", "spinbutton", "status", "tab", "tablist", "tabpanel",
-  "textbox", "timer", "toolbar", "tooltip", "tree", "treeitem",
-  "presentation", "none", "group", "region", "log", "marquee",
+  "alert",
+  "alertdialog",
+  "button",
+  "checkbox",
+  "dialog",
+  "grid",
+  "link",
+  "listbox",
+  "menu",
+  "menubar",
+  "menuitem",
+  "option",
+  "progressbar",
+  "radio",
+  "radiogroup",
+  "scrollbar",
+  "searchbox",
+  "slider",
+  "spinbutton",
+  "status",
+  "tab",
+  "tablist",
+  "tabpanel",
+  "textbox",
+  "timer",
+  "toolbar",
+  "tooltip",
+  "tree",
+  "treeitem",
+  "presentation",
+  "none",
+  "group",
+  "region",
+  "log",
+  "marquee",
 ]);
 const TS_TYPES = new Set([
-  "Promise", "Partial", "Record", "Map", "Set", "Array", "Readonly",
-  "Required", "Pick", "Omit", "Exclude", "Extract", "NonNullable",
-  "ReturnType", "Parameters", "InstanceType", "ConstructorParameters",
-  "Awaited", "Uppercase", "Lowercase", "Capitalize", "Uncapitalize",
-  "HTMLElement", "Element", "ReactNode", "JSX", "React", "Event",
+  "Promise",
+  "Partial",
+  "Record",
+  "Map",
+  "Set",
+  "Array",
+  "Readonly",
+  "Required",
+  "Pick",
+  "Omit",
+  "Exclude",
+  "Extract",
+  "NonNullable",
+  "ReturnType",
+  "Parameters",
+  "InstanceType",
+  "ConstructorParameters",
+  "Awaited",
+  "Uppercase",
+  "Lowercase",
+  "Capitalize",
+  "Uncapitalize",
+  "HTMLElement",
+  "Element",
+  "ReactNode",
+  "JSX",
+  "React",
+  "Event",
 ]);
 const DIRECT_TECHNICAL_PATTERNS = [
   /^\\u[0-9a-fA-F]{4}$/u,
@@ -152,11 +322,19 @@ function isShortUpperConstant(str: string): boolean {
 }
 
 function isShortIdentifierLike(str: string): boolean {
-  return /^[a-z][a-zA-Z0-9]*$/u.test(str) && str.length < 30 && !USER_FACING_LOWERCASE_WORDS.has(str);
+  return (
+    /^[a-z][a-zA-Z0-9]*$/u.test(str) &&
+    str.length < 30 &&
+    !USER_FACING_LOWERCASE_WORDS.has(str)
+  );
 }
 
 function isPascalCaseTechnicalIdentifier(str: string): boolean {
-  if (!/^[A-Z][a-zA-Z0-9]*$/u.test(str) || str.length >= 30 || /\s/u.test(str)) {
+  if (
+    !/^[A-Z][a-zA-Z0-9]*$/u.test(str) ||
+    str.length >= 30 ||
+    /\s/u.test(str)
+  ) {
     return false;
   }
 
@@ -182,7 +360,10 @@ export function classifyModule(relPath: string): string {
     return "workbench";
   }
 
-  return MODULE_RULES.find((rule) => rule.pattern.test(relPath))?.module ?? "workbench";
+  return (
+    MODULE_RULES.find((rule) => rule.pattern.test(relPath))?.module ??
+    "workbench"
+  );
 }
 
 export function classifyPriority(relPath: string): "P0" | "P1" {
@@ -229,7 +410,9 @@ export function isImportLine(line: string): boolean {
 /** Check if the line is a type/interface definition */
 export function isTypeDefinition(line: string): boolean {
   const trimmed = line.trim();
-  return /^(?:type|interface|export\s+type|export\s+interface)\s/u.test(trimmed);
+  return /^(?:type|interface|export\s+type|export\s+interface)\s/u.test(
+    trimmed,
+  );
 }
 
 /** Check if the string is wrapped in t() on this line */
@@ -240,24 +423,94 @@ export function isI18nWrapped(line: string, str: string): boolean {
 
 /** Non-visible JSX props that should never be flagged */
 export const NON_VISIBLE_JSX_ATTRS = new Set([
-  "className", "class", "key", "id", "data-testid", "testId",
-  "role", "type", "name", "htmlFor", "method", "action",
-  "href", "src", "rel", "target", "encType", "accept",
-  "autoComplete", "inputMode", "pattern", "spellCheck",
-  "tabIndex", "dir", "lang", "slot", "is",
-  "aria-live", "aria-atomic", "aria-relevant", "aria-busy",
-  "aria-hidden", "aria-expanded", "aria-selected", "aria-disabled",
-  "aria-controls", "aria-haspopup", "aria-owns", "aria-flowto",
-  "aria-describedby", "aria-labelledby", "aria-activedescendant",
-  "aria-orientation", "aria-valuenow", "aria-valuemin", "aria-valuemax",
-  "aria-valuetext", "aria-sort", "aria-level", "aria-setsize",
-  "aria-posinset", "aria-colcount", "aria-colindex", "aria-colspan",
-  "aria-rowcount", "aria-rowindex", "aria-rowspan",
-  "data-state", "data-side", "data-align", "data-orientation",
-  "variant", "size", "color", "weight", "asChild", "as",
-  "strokeWidth", "viewBox", "fill", "stroke", "d", "xmlns",
-  "width", "height", "cx", "cy", "r", "rx", "ry",
-  "x", "y", "x1", "y1", "x2", "y2", "points", "transform",
+  "className",
+  "class",
+  "key",
+  "id",
+  "data-testid",
+  "testId",
+  "role",
+  "type",
+  "name",
+  "htmlFor",
+  "method",
+  "action",
+  "href",
+  "src",
+  "rel",
+  "target",
+  "encType",
+  "accept",
+  "autoComplete",
+  "inputMode",
+  "pattern",
+  "spellCheck",
+  "tabIndex",
+  "dir",
+  "lang",
+  "slot",
+  "is",
+  "aria-live",
+  "aria-atomic",
+  "aria-relevant",
+  "aria-busy",
+  "aria-hidden",
+  "aria-expanded",
+  "aria-selected",
+  "aria-disabled",
+  "aria-controls",
+  "aria-haspopup",
+  "aria-owns",
+  "aria-flowto",
+  "aria-describedby",
+  "aria-labelledby",
+  "aria-activedescendant",
+  "aria-orientation",
+  "aria-valuenow",
+  "aria-valuemin",
+  "aria-valuemax",
+  "aria-valuetext",
+  "aria-sort",
+  "aria-level",
+  "aria-setsize",
+  "aria-posinset",
+  "aria-colcount",
+  "aria-colindex",
+  "aria-colspan",
+  "aria-rowcount",
+  "aria-rowindex",
+  "aria-rowspan",
+  "data-state",
+  "data-side",
+  "data-align",
+  "data-orientation",
+  "variant",
+  "size",
+  "color",
+  "weight",
+  "asChild",
+  "as",
+  "strokeWidth",
+  "viewBox",
+  "fill",
+  "stroke",
+  "d",
+  "xmlns",
+  "width",
+  "height",
+  "cx",
+  "cy",
+  "r",
+  "rx",
+  "ry",
+  "x",
+  "y",
+  "x1",
+  "y1",
+  "x2",
+  "y2",
+  "points",
+  "transform",
 ]);
 
 /** Strings that look like CSS / Tailwind class lists */
@@ -272,11 +525,13 @@ export function isCssClassName(str: string): boolean {
   const tokens = trimmed.split(/\s+/u);
 
   if (tokens.length === 1) {
-    if (isTailwindLikeToken(tokens[0], twPrefixes, singleTwPattern)) return true;
+    if (isTailwindLikeToken(tokens[0], twPrefixes, singleTwPattern))
+      return true;
     if (/^-[a-z]+-/u.test(tokens[0])) return true;
   }
 
-  const cssValues = /^(?:center|left|right|top|bottom|none|auto|inherit|initial|unset|normal|nowrap|wrap|visible|collapse|separate|contain|cover|fill|stretch)(?:\s+(?:center|left|right|top|bottom|none|auto))*$/u;
+  const cssValues =
+    /^(?:center|left|right|top|bottom|none|auto|inherit|initial|unset|normal|nowrap|wrap|visible|collapse|separate|contain|cover|fill|stretch)(?:\s+(?:center|left|right|top|bottom|none|auto))*$/u;
   if (cssValues.test(trimmed)) return true;
   if (CSS_TIME_PATTERN.test(trimmed)) return true;
   if (CSS_DIMENSION_PATTERN.test(trimmed)) return true;
@@ -284,7 +539,9 @@ export function isCssClassName(str: string): boolean {
   if (SVG_URL_PATTERN.test(trimmed)) return true;
 
   if (tokens.length >= 2) {
-    const cssLikeCount = tokens.filter((token) => isTailwindLikeToken(token, twPrefixes, singleTwPattern)).length;
+    const cssLikeCount = tokens.filter((token) =>
+      isTailwindLikeToken(token, twPrefixes, singleTwPattern),
+    ).length;
     if (cssLikeCount >= tokens.length * 0.6) return true;
   }
 

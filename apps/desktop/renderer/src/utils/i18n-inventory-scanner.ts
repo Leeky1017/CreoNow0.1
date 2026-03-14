@@ -48,13 +48,16 @@ export interface ScanOptions {
   basePath?: string;
 }
 
-const STRING_PATTERN = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'/gu;
+const STRING_PATTERN =
+  /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'/gu;
 const JSX_TEXT_PATTERN = />\s*([^<>{}\n]+?)\s*</gu;
 const LETTER_PATTERN = /[a-zA-Z\u4e00-\u9fff]/u;
 const JSX_FREE_LINE_PATTERN = /<[/a-zA-Z]/u;
 const NON_STATEMENT_PATTERN = /^[a-z]+\s*[=(]/u;
-const CONTROL_FLOW_PATTERN = /^(const|let|var|return|if|else|for|while|switch|case|break|default|throw|try|catch|finally|function|class|export|import)\b/u;
-const USER_FACING_CONTEXT_PATTERN = /(?:label|description|message|text|title|placeholder|content|error|diffText|status|reason)\s*:/u;
+const CONTROL_FLOW_PATTERN =
+  /^(const|let|var|return|if|else|for|while|switch|case|break|default|throw|try|catch|finally|function|class|export|import)\b/u;
+const USER_FACING_CONTEXT_PATTERN =
+  /(?:label|description|message|text|title|placeholder|content|error|diffText|status|reason)\s*:/u;
 const ATTR_NAME_PATTERN = /(\w[\w-]*)\s*=\s*\{?\s*$/u;
 const COMMON_PROP_PATTERN = /^(?:on[A-Z]|ref|style|css)/u;
 const SHORT_MEANINGFUL_STRINGS = new Set(["AI", "OK", "No"]);
@@ -130,7 +133,12 @@ function shouldSkipStringLiteral(
   beforeMatch: string,
   isTsx: boolean,
 ): boolean {
-  if (isTrivialString(str) || isI18nWrapped(line, str) || isCssClassName(str) || isTechnicalConstant(str)) {
+  if (
+    isTrivialString(str) ||
+    isI18nWrapped(line, str) ||
+    isCssClassName(str) ||
+    isTechnicalConstant(str)
+  ) {
     return true;
   }
 
@@ -166,7 +174,10 @@ function collectQuotedStringMatches(
   relFilePath: string,
   isTsx: boolean,
 ): Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[] {
-  const results: Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[] = [];
+  const results: Omit<
+    NakedStringEntry,
+    "module" | "suggestedKey" | "priority"
+  >[] = [];
   let match: RegExpExecArray | null;
 
   STRING_PATTERN.lastIndex = 0;
@@ -190,13 +201,21 @@ function isStandaloneJsxTextLine(
 ): boolean {
   if (JSX_FREE_LINE_PATTERN.test(trimmed)) return false;
   if (/^\{/u.test(trimmed) || /^\/\//u.test(trimmed)) return false;
-  if (NON_STATEMENT_PATTERN.test(trimmed) || CONTROL_FLOW_PATTERN.test(trimmed)) return false;
+  if (NON_STATEMENT_PATTERN.test(trimmed) || CONTROL_FLOW_PATTERN.test(trimmed))
+    return false;
   if (!LETTER_PATTERN.test(trimmed)) return false;
-  if (isTrivialString(trimmed) || isCssClassName(trimmed) || isTechnicalConstant(trimmed)) {
+  if (
+    isTrivialString(trimmed) ||
+    isCssClassName(trimmed) ||
+    isTechnicalConstant(trimmed)
+  ) {
     return false;
   }
 
-  return (/>$/u.test(prevLine) || /className=/u.test(prevLine)) && /<\//u.test(nextLine);
+  return (
+    (/>$/u.test(prevLine) || /className=/u.test(prevLine)) &&
+    /<\//u.test(nextLine)
+  );
 }
 
 function collectJsxTextMatches(
@@ -207,7 +226,10 @@ function collectJsxTextMatches(
   nextLine: string,
   existing: Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[],
 ): Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[] {
-  const results: Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[] = [];
+  const results: Omit<
+    NakedStringEntry,
+    "module" | "suggestedKey" | "priority"
+  >[] = [];
   const trimmed = line.trim();
 
   if (/^<\w/u.test(trimmed) && !/>.*[a-zA-Z\u4e00-\u9fff].*</u.test(trimmed)) {
@@ -219,17 +241,34 @@ function collectJsxTextMatches(
   while ((jsxMatch = JSX_TEXT_PATTERN.exec(line)) !== null) {
     const text = jsxMatch[1].trim();
     if (isTrivialString(text) || !LETTER_PATTERN.test(text)) continue;
-    if (isCssClassName(text) || isTechnicalConstant(text) || isLikelyCodeFragment(text)) continue;
-    if (existing.some((entry) => entry.line === lineNum && entry.rawString === text)) continue;
+    if (
+      isCssClassName(text) ||
+      isTechnicalConstant(text) ||
+      isLikelyCodeFragment(text)
+    )
+      continue;
+    if (
+      existing.some(
+        (entry) => entry.line === lineNum && entry.rawString === text,
+      )
+    )
+      continue;
     if (/^\{?t\(/u.test(text) || /^\{/u.test(text)) continue;
-    if (/^[)]:?\s/u.test(text) || /[({]$/u.test(text) || /^\)\s*:\s*\w/u.test(text)) {
+    if (
+      /^[)]:?\s/u.test(text) ||
+      /[({]$/u.test(text) ||
+      /^\)\s*:\s*\w/u.test(text)
+    ) {
       continue;
     }
 
     results.push({ filePath: relFilePath, line: lineNum, rawString: text });
   }
 
-  if (isStandaloneJsxTextLine(trimmed, prevLine, nextLine) && !isLikelyCodeFragment(trimmed)) {
+  if (
+    isStandaloneJsxTextLine(trimmed, prevLine, nextLine) &&
+    !isLikelyCodeFragment(trimmed)
+  ) {
     const text = trimmed;
     const alreadyTracked = [...existing, ...results].some(
       (entry) => entry.line === lineNum && entry.rawString === text,
@@ -253,7 +292,10 @@ export function scanFileContent(
   content: string,
   relFilePath: string,
 ): Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[] {
-  const results: Omit<NakedStringEntry, "module" | "suggestedKey" | "priority">[] = [];
+  const results: Omit<
+    NakedStringEntry,
+    "module" | "suggestedKey" | "priority"
+  >[] = [];
   const lines = content.split("\n");
   const isTsx = relFilePath.endsWith(".tsx");
 
@@ -275,14 +317,23 @@ export function scanFileContent(
 
     if (shouldSkipLine(line)) continue;
 
-    results.push(...collectQuotedStringMatches(line, lineNum, relFilePath, isTsx));
+    results.push(
+      ...collectQuotedStringMatches(line, lineNum, relFilePath, isTsx),
+    );
 
     if (!isTsx) continue;
 
     const prevLine = i > 0 ? lines[i - 1].trim() : "";
     const nextLine = i < lines.length - 1 ? lines[i + 1].trim() : "";
     results.push(
-      ...collectJsxTextMatches(line, lineNum, relFilePath, prevLine, nextLine, results),
+      ...collectJsxTextMatches(
+        line,
+        lineNum,
+        relFilePath,
+        prevLine,
+        nextLine,
+        results,
+      ),
     );
   }
 
@@ -359,14 +410,17 @@ export function generateChecklist(entries: NakedStringEntry[]): string {
     const moduleEntries = byModule.get(mod)!;
     moduleEntries.sort((a, b) => {
       if (a.priority !== b.priority) return a.priority === "P0" ? -1 : 1;
-      if (a.filePath !== b.filePath) return a.filePath.localeCompare(b.filePath);
+      if (a.filePath !== b.filePath)
+        return a.filePath.localeCompare(b.filePath);
       return a.line - b.line;
     });
 
     const p0Count = moduleEntries.filter((e) => e.priority === "P0").length;
     const p1Count = moduleEntries.filter((e) => e.priority === "P1").length;
 
-    lines.push(`## ${mod} (${moduleEntries.length} items, P0: ${p0Count}, P1: ${p1Count})`);
+    lines.push(
+      `## ${mod} (${moduleEntries.length} items, P0: ${p0Count}, P1: ${p1Count})`,
+    );
     lines.push("");
     lines.push("| Module | File | Line | Content | Suggested Key | Priority |");
     lines.push("|--------|------|------|---------|---------------|----------|");
