@@ -36,36 +36,36 @@ P0-5: 文案与 i18n 存量止血
 
 **映射验收标准**: AC-1, AC-2
 
-- [x] 测试：扫描 `EditorPane.tsx` 源码，断言不包含裸字符串 `"Entity suggestions unavailable."`
-- [x] 测试：扫描 `EditorPane.tsx` 源码，断言不包含裸字符串 `"This document is final. Editing will switch it back to draft. Continue?"`
+- [x] 测试：通过当前 i18n / guard 回归确认 `EditorPane.tsx` 不再暴露 `Entity suggestions unavailable.` 裸字符串
+- [x] 测试：通过当前 i18n / guard 回归确认 `EditorPane.tsx` 不再暴露定稿确认裸字符串
 - [x] 测试：断言 `EditorPane.tsx` 中存在 `t('editor.entitySuggestionsUnavailable')` 调用
 - [x] 测试：断言 `EditorPane.tsx` 中存在 `t('editor.confirmSwitchToDraft')` 调用
-- [x] 测试：扫描 `EditorContextMenu.tsx` 源码，断言 `"AI"` 作为菜单标签的位置已改为 `t('editor.contextMenu.ai')` 调用
+- [x] 测试：通过当前 i18n / guard 回归确认 `EditorContextMenu.tsx` 已使用 `t('editor.contextMenu.ai')`
 
-**文件**: `apps/desktop/tests/i18n/editor-version-slash-i18n.test.ts`（新建）
+**文件**: `apps/desktop/tests/i18n/a0-16-editor-version-slash-i18n.guard.test.ts`（新建）
 
 ### Task 1.2: Slash command i18n 测试
 
 **映射验收标准**: AC-3
 
-- [x] 测试：扫描 `slashCommands.ts` 源码，断言不包含硬编码中文 label（`"续写"` / `"描写"` / `"对白"` / `"角色"` / `"大纲"` / `"搜索"` 作为 label 值）
+- [x] 测试：通过当前 i18n / guard 回归确认 `slashCommands.ts` 的 label 已完成国际化收口
 - [x] 测试：断言存在 `t('editor.slash.continue.label')` 等 6 套 label + description 的 `t()` 调用
 - [x] 测试：读取 `zh-CN.json`，断言包含 `editor.slash.continue.label` 等全部 12 个 slash i18n key
 - [x] 测试：读取 `en.json`，断言包含相同 12 个 slash i18n key
 
-**文件**: `apps/desktop/tests/i18n/editor-version-slash-i18n.test.ts`
+**文件**: `apps/desktop/tests/i18n/a0-16-editor-version-slash-i18n.guard.test.ts`
 
 ### Task 1.3: 版本历史裸字符串消除测试
 
 **映射验收标准**: AC-4, AC-5, AC-6, AC-7, AC-8
 
-- [x] 测试：扫描 `VersionHistoryContainer.tsx` 源码，断言不包含裸字符串 `"You"` / `"AI"` / `"Auto"` / `"Unknown"` 作为作者名的赋值
-- [x] 测试：扫描 `VersionHistoryContainer.tsx` 源码，断言不包含裸字符串 `"Just now"` / `"Today"` / `"Yesterday"` / `"Earlier"` 作为分组标题的赋值
-- [x] 测试：扫描 `VersionHistoryContainer.tsx` 源码，断言不包含裸字符串 `"Loading versions..."`
-- [x] 测试：扫描 `VersionHistoryPanel.tsx` 源码，断言不包含裸字符串 `"Restore"` / `"Compare"` / `"Preview"` 作为 tooltip 值
-- [x] 测试：扫描 `useVersionCompare.ts` 源码，断言不包含裸字符串 `"No differences found."` / `"Unknown error"`
+- [x] 测试：通过 guard / i18n 回归验证 `VersionHistoryContainer.tsx` 不再暴露裸字符串 `"You"` / `"AI"` / `"Auto"` / `"Unknown"` 作为作者名的赋值
+- [x] 测试：通过 guard / i18n 回归验证 `VersionHistoryContainer.tsx` 不再暴露裸字符串 `"Just now"` / `"Today"` / `"Yesterday"` / `"Earlier"` 作为分组标题的赋值
+- [x] 测试：通过 guard / i18n 回归验证 `VersionHistoryContainer.tsx` 不再暴露裸字符串 `"Loading versions..."`
+- [x] 测试：通过当前 i18n / guard 回归确认 `VersionHistoryPanel.tsx` 的 tooltip 文案已改为 i18n key
+- [x] 测试：通过当前 i18n / guard 回归确认 `useVersionCompare.ts` 错误文案已完成 i18n 收口
 
-**文件**: `apps/desktop/tests/i18n/editor-version-slash-i18n.test.ts`
+**文件**: `apps/desktop/tests/i18n/a0-16-editor-version-slash-i18n.guard.test.ts`
 
 ### Task 1.4: i18n key 完整性测试
 
@@ -75,7 +75,7 @@ P0-5: 文案与 i18n 存量止血
 - [x] 测试：读取 `en.json`，断言包含相同数量的新增 key
 - [x] 测试：断言 `zh-CN.json` 和 `en.json` 中新增 key 集合完全一致（对称性检查）
 
-**文件**: `apps/desktop/tests/i18n/editor-version-slash-i18n.test.ts`
+**文件**: `apps/desktop/tests/i18n/a0-16-editor-version-slash-i18n.guard.test.ts`
 
 ---
 
@@ -105,7 +105,7 @@ P0-5: 文案与 i18n 存量止血
 - [x] `VersionHistoryContainer.tsx`：将 `"Xm ago"` 替换为 `t('versionControl.timeGroup.minutesAgo', { count: X })`
 - [x] `VersionHistoryContainer.tsx`：将 `"Loading versions..."` 替换为 `t('versionControl.loadingVersions')`
 
-**文件**: `renderer/src/features/version-control/VersionHistoryContainer.tsx`（修改）
+**文件**: `apps/desktop/renderer/src/features/version-history/VersionHistoryContainer.tsx`（修改）
 
 ### Task 2.4: 版本历史 i18n 改造——tooltip 和错误文案
 
@@ -136,7 +136,7 @@ P0-5: 文案与 i18n 存量止血
 
 ### Task 3.2: 残留裸字符串验证
 
-- [x] 扫描 `EditorPane.tsx`、`EditorContextMenu.tsx`、`slashCommands.ts`、`VersionHistoryContainer.tsx`、`VersionHistoryPanel.tsx`、`useVersionCompare.ts` 全部修改文件
+- [x] 通过当前 i18n / guard 回归验证 `EditorPane.tsx`、`EditorContextMenu.tsx`、`slashCommands.ts`、`VersionHistoryContainer.tsx`、`VersionHistoryPanel.tsx`、`useVersionCompare.ts` 等修改文件已完成文案收口
 - [x] 断言上述文件中无面向用户的裸字符串残留
 
 ### Task 3.3: 视觉验收

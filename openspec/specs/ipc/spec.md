@@ -1,6 +1,5 @@
 # IPC Specification
 
-
 ## Purpose
 
 定义 Electron 渲染进程与主进程之间的通信契约，包括通道命名、消息类型、参数校验和错误格式。包含自动化契约生成与校验。
@@ -291,27 +290,34 @@ interface IPCError {
   details?: unknown; // 可选的错误详情（如 Zod 校验细节、堆栈信息等）
 }
 
-type IPCResponse<T> =
-  | { ok: true; data: T }
-  | { ok: false; error: IPCError };
+type IPCResponse<T> = { ok: true; data: T } | { ok: false; error: IPCError };
 ```
 
 预定义错误码：
 
-| 错误码               | 含义             | HTTP 类比 |
-| -------------------- | ---------------- | --------- |
-| `VALIDATION_ERROR`   | 请求数据校验失败 | 400       |
-| `NOT_FOUND`          | 资源不存在       | 404       |
-| `CONFLICT`           | 资源冲突         | 409       |
-| `INTERNAL_ERROR`     | 主进程内部错误   | 500       |
-| `IPC_TIMEOUT`        | 请求超时         | 504       |
-| `AI_NOT_CONFIGURED`  | AI 服务未配置    | 503       |
-| `LLM_API_ERROR`      | LLM API 调用失败 | 502       |
-| `EXPORT_WRITE_ERROR` | 导出写入失败     | 500       |
-| `SKILL_INPUT_EMPTY`  | 技能输入为空     | 400       |
-| `DB_ERROR`           | 数据库操作失败   | 500       |
+| 错误码                   | 含义                 | HTTP 类比 |
+| ------------------------ | -------------------- | --------- |
+| `VALIDATION_ERROR`       | 请求数据校验失败     | 400       |
+| `NOT_FOUND`              | 资源不存在           | 404       |
+| `CONFLICT`               | 资源冲突             | 409       |
+| `INTERNAL_ERROR`         | 主进程内部错误       | 500       |
+| `IPC_TIMEOUT`            | 请求超时             | 504       |
+| `AI_NOT_CONFIGURED`      | AI 服务未配置        | 503       |
+| `LLM_API_ERROR`          | LLM API 调用失败     | 502       |
+| `EXPORT_WRITE_ERROR`     | 导出写入失败         | 500       |
+| `SKILL_INPUT_EMPTY`      | 技能输入为空         | 400       |
+| `SKILL_OUTPUT_INVALID`   | 技能输出无效         | 400       |
+| `DOCUMENT_SIZE_EXCEEDED` | 文档体积超过保存上限 | 413       |
+| `DB_ERROR`               | 数据库操作失败       | 500       |
 
 主进程**禁止**将原始异常（Error stack）泄露到渲染进程——**必须**转换为结构化的 `IPCError` 后返回。原始异常记录到主进程日志。
+
+渲染进程在展示 IPC 错误时**必须**遵循以下人话化规则：
+
+- `renderer/src/lib/errorMessages.ts` **必须**以 `Record<IpcErrorCode, ErrorMessageResolver>` 维护完整映射，保证每个稳定错误码都有对应的用户友好文案
+- `getHumanErrorMessage(error)` **必须**优先根据 `error.code` 返回本地化文案；未知码回退到 `error.generic`
+- 渲染进程**不得**直接向用户透传后端原始 `error.message`；原始消息仅用于日志、诊断或极少数受控解析（如 `IPC_TIMEOUT` 时长细节）
+- `DOCUMENT_SIZE_EXCEEDED` 与 `SKILL_OUTPUT_INVALID` 作为稳定契约错误码，**必须**可被渲染进程识别并转换为自然语言提示
 
 #### Scenario: 主进程内部错误——安全返回
 
@@ -327,6 +333,20 @@ type IPCResponse<T> =
 - **当** 收到 `{ ok: false, error: { code: "VALIDATION_ERROR", ... } }`
 - **则** 渲染进程根据 `error.code` 展示对应的用户友好提示
 - **并且** 表单字段显示内联错误（如有 `details`）
+
+#### Scenario: 渲染进程用错误码映射替代原始 message
+
+- **假设** 渲染进程收到 `{ ok: false, error: { code: "DB_ERROR", message: "SQLITE_CONSTRAINT ..." } }`
+- **当** 组件调用 `getHumanErrorMessage(error)`
+- **则** 用户看到的是本地化的人话提示
+- **并且** 不直接看到 `SQLITE_CONSTRAINT` 等后端技术术语
+
+#### Scenario: 未知错误码回退到通用文案
+
+- **假设** 渲染进程收到一个未被当前映射表识别的未来错误码
+- **当** 调用 `getHumanErrorMessage(error)`
+- **则** 返回 `error.generic` 对应的通用提示
+- **并且** 不直接透传后端原始 `error.message`
 
 ---
 

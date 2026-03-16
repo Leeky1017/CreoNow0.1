@@ -40,11 +40,11 @@ A0-09 核查清单中编辑器、版本历史、slash menu 三大模块的裸字
 
 ### 4. 证据来源
 
-| 文档                                              | 章节              | 内容                                                                  |
-| ------------------------------------------------- | ----------------- | --------------------------------------------------------------------- |
-| `docs/audit/amp/07-ui-ux-design-audit.md`         | §三 i18n 遗漏清单 | 编辑器区域、版本历史、slash menu 裸字符串逐条列表（含文件路径和行号） |
-| `docs/audit/amp/11-frontend-static-code-audit.md` | 全文              | 前端代码审计确认 i18n 缺漏                                            |
-| `openspec/changes/a0-09-i18n-inventory-audit/`    | 清理清单输出      | A0-09 全量核查产出的结构化清单                                        |
+| 文档                                                   | 章节              | 内容                                                                  |
+| ------------------------------------------------------ | ----------------- | --------------------------------------------------------------------- |
+| `docs/audit/amp/07-ui-ux-design-audit.md`              | §三 i18n 遗漏清单 | 编辑器区域、版本历史、slash menu 裸字符串逐条列表（含文件路径和行号） |
+| `docs/audit/amp/11-frontend-static-code-audit.md`      | 全文              | 前端代码审计确认 i18n 缺漏                                            |
+| `openspec/changes/archive/a0-09-i18n-inventory-audit/` | 清理清单输出      | A0-09 全量核查产出的结构化清单                                        |
 
 ---
 
@@ -64,7 +64,7 @@ A0-09 核查清单中编辑器、版本历史、slash menu 三大模块的裸字
   - `renderer/src/features/editor/EditorPane.tsx` — 硬编码提示和 confirm 对话框
   - `renderer/src/features/editor/EditorContextMenu.tsx` — 右键菜单 "AI" 标签
   - `renderer/src/features/editor/slashCommands.ts` — slash command label 和 description
-  - `renderer/src/features/version-control/VersionHistoryContainer.tsx` — 作者名、时间分组、加载提示
+  - `apps/desktop/renderer/src/features/version-history/VersionHistoryContainer.tsx` — 作者名、时间分组、加载提示
   - `renderer/src/features/rightpanel/VersionHistoryPanel.tsx` — hover tooltip
   - `renderer/src/features/version-control/useVersionCompare.ts` — 错误文案
   - `renderer/src/i18n/locales/zh-CN.json` — 新增 i18n key

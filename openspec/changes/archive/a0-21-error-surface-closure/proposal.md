@@ -46,7 +46,7 @@ CreoNow 中 15+ 处组件直接将后端错误对象的 `code` 和 `message` 渲
 1. **收口 JSX 直接渲染泄露**：将 `ExportDialog`、`QualityPanel`、`VersionPreviewDialog`、`InfoPanel`、`MemoryPanel`、`AnalyticsPage`、`CreateProjectDialog`、`KnowledgeGraphPanel`、`VersionHistoryContainer` 中直接渲染 `{error.code}` / `{error.message}` 的位置，统一替换为调用 `getHumanErrorMessage(error)` 获取用户友好文案
 2. **收口模板字符串拼接泄露**：将 `JudgeSection`、`AiSettingsSection`、`DashboardPage` 中 `` `${res.error.code}: ${res.error.message}` `` 拼接模式，替换为 `getHumanErrorMessage(res.error)`
 3. **收口 AiErrorCard 错误码展示**：`AiErrorCard` 在 `service_error` 状态展示 `{error.errorCode}` 的位置，改为调用 `getHumanErrorMessage()` 获取友好文案
-4. **收口 CommandPalette 硬编码**：将 `CommandPalette` 中 `"ACTION_FAILED: ..."` / `"NO_PROJECT: ..."` 等硬编码错误字符串，替换为 i18n key 调用 `t("commandPalette.error.<场景>")`，并在 `zh-CN.json` / `en.json` 中注册对应翻译
+4. **收口 CommandPalette 硬编码**：将 `CommandPalette` 中 `"ACTION_FAILED: ..."` / `"NO_PROJECT: ..."` 等硬编码错误字符串，替换为 i18n key 调用 `t("workbench.commandPalette.errors.<场景>")`，并在 `zh-CN.json` / `en.json` 中注册对应翻译
 5. **错误展示样式统一**：所有错误文案展示位置**必须**使用语义化 Design Token `--color-text-error`（文字色）和 `--color-bg-error`（背景色），不得使用 Tailwind 原始色值
 
 ---

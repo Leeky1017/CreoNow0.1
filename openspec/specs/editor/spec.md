@@ -369,6 +369,85 @@ The system SHALL display AI modification results directly within the editor area
 
 ---
 
+### Requirement: Inline AI 快捷协作
+
+系统**必须**提供以选中文本为中心的 Inline AI 协作入口，使用户在不离开编辑器的前提下完成「提出改写指令 → 预览建议 → 接受/拒绝」闭环。当前实现由 `EditorPane`、`inlineAiStore`、`InlineAiInput`、`InlineAiDiffPreview` 与 `applySelection()` 共同构成。
+
+触发与前置条件：
+
+- 当编辑器存在**非空文本选区**时，`Cmd/Ctrl+K`（`mod+K`）**必须**打开 Inline AI 输入层；无选区、纯空白选区或当前会话非 `idle` 时**不得**触发
+- 禅模式激活时 Inline AI **不得**打开，避免打断纯写作态
+- Inline AI 会话状态机**必须**使用 `inlineAiStore.phase`：`idle → input → streaming → ready → idle`
+- `InlineAiInput` **必须**在打开时自动聚焦；`Escape` 或点击输入层外部区域**必须**关闭输入层
+
+请求与执行链路：
+
+- 提交指令后，系统**必须**复用现有 AI / Skill 执行链路，而不是创建独立模型通道
+- 当前实现**必须**将目标技能固定为 `builtin:rewrite`，并通过 `aiStore.run({ inputOverride, context, streamOverride: false })` 发起请求
+- 发给模型的输入**必须**包含用户选中文本与指令，格式等效于：`Selection context:
+  <selected text>
+
+<instruction>`
+
+- 请求处理中，Inline AI 预览层**必须**进入 `streaming` 阶段并展示 loading 态；完成后切换到 `ready`
+
+预览与交互：
+
+- `InlineAiDiffPreview` **必须**同时展示原文与建议文本：原文以删除态样式展示，建议文本以新增态样式展示
+- 预览层**必须**提供 `Accept`、`Reject`、`Regenerate` 三个动作；`streaming` 阶段下 `Accept` 与 `Regenerate` **必须**禁用
+- `Escape` **必须**作为 Reject 快捷键；`Enter` 在 `ready` 阶段**必须**作为 Accept 快捷键
+- `Regenerate` **必须**复用同一条指令重新执行，而不是丢失当前 selection context
+
+接受与冲突保护：
+
+- `Accept` 前**必须**使用 `applySelection()` 校验 `selectionTextHash`，若选中内容已变化则**不得**覆盖当前文档
+- 通过校验后，系统**必须**将建议文本写回原选区，并调用 `persistAiApply()` 持久化为 `file:document:save`，其中 `actor: "ai"`、`reason: "ai-accept"`
+- 若应用或持久化失败，Inline AI 会话**必须**进入错误收口路径并停止继续覆盖文档
+- `Reject` **必须**丢弃当前建议；若请求仍在进行且 `aiCancel` 可用，则同时发起取消
+
+#### Scenario: 选中文本后按下 Cmd/Ctrl+K 打开输入层
+
+- **假设** 编辑器已加载文档，用户选中一段非空文本，当前不在禅模式
+- **当** 用户按下 `Cmd/Ctrl+K`
+- **则** `inlineAiStore.phase` 变为 `input`
+- **并且** `InlineAiInput` 显示在编辑区上方并自动聚焦
+- **并且** 选区引用（起止位置 + `selectionTextHash`）被保存在 `inlineAiStore.selectionRef`
+
+#### Scenario: 禅模式或空选区下 Inline AI 不触发
+
+- **假设** 用户未选中文本，或当前 `layoutStore.zenMode === true`
+- **当** 用户按下 `Cmd/Ctrl+K`
+- **则** Inline AI 输入层不显示
+- **并且** 当前编辑流保持不变
+
+#### Scenario: 提交指令后展示 loading 并进入预览态
+
+- **假设** `InlineAiInput` 已打开，用户输入一条改写指令并按下 Enter
+- **当** `aiStore.run()` 被触发
+- **则** `inlineAiStore.phase` 先进入 `streaming`
+- **并且** 预览层显示 loading 指示与禁用中的 `Accept` / `Regenerate`
+- **当** AI 返回建议文本
+- **则** `inlineAiStore.phase` 切换为 `ready`
+- **并且** 预览层展示原文 / 建议文本对照与三个动作按钮
+
+#### Scenario: 接受建议时按 selection hash 校验并以 ai-accept 持久化
+
+- **假设** Inline AI 已进入 `ready` 阶段，建议文本可见
+- **当** 用户点击 `Accept`
+- **则** 系统先校验当前选区内容与 `selectionTextHash` 一致
+- **并且** 校验通过后仅替换原选区文本
+- **并且** 通过 `file:document:save` 以 `actor: "ai"`、`reason: "ai-accept"` 持久化结果
+
+#### Scenario: 选区已变化时拒绝覆盖原文
+
+- **假设** Inline AI 生成建议后，用户又修改了同一选区内容
+- **当** 用户尝试 `Accept`
+- **则** `applySelection()` 返回冲突错误
+- **并且** 当前文档内容保持不变
+- **并且** Inline AI 会话进入错误收口路径，等待用户重新发起请求
+
+---
+
 ### Requirement: Diff 对比模式（多版本）
 
 The system SHALL support comparing document versions in a dedicated diff view, with up to 4 versions displayed simultaneously.
@@ -407,50 +486,59 @@ The system SHALL support comparing document versions in a dedicated diff view, w
 
 ### Requirement: 禅模式（Zen Mode）
 
-The system SHALL provide a fullscreen (application-internal, not OS-level) distraction-free writing mode called 禅模式 (Zen Mode). In Zen Mode:
+系统**必须**提供应用内全屏的沉浸式写作模式。禅模式当前不是静态展示层，而是复用正常编辑态的 TipTap 编辑器实例，让用户在沉浸视图中继续真实写作。
 
-- ALL UI elements SHALL be hidden: sidebar, right panel, toolbar, status bar
-- The writing area SHALL be centered with a max-width of 720px and generous padding (120px vertical, 80px horizontal)
-- The background SHALL be a near-black color (`#050505`) with a subtle radial gradient glow
-- The document title SHALL be displayed at 48px font size using `--font-family-body`
-- Body text SHALL use 18px font size with 1.8 line height using `--font-family-body`
-- A blinking cursor SHALL be displayed at the end of the last paragraph when `showCursor` is enabled
-- NO AI assistance is available in Zen Mode — the purpose is pure manual writing immersion
+禅模式行为：
 
-**Entry/Exit:**
+- 禅模式**必须**渲染与普通编辑态相同的 `editor` 实例（`EditorContent editor={editor}`），而不是只读段落快照
+- 禅模式激活时，工具栏、Bubble Menu、Slash Command 面板、侧栏、右侧面板和主状态栏**必须**隐藏
+- 内容容器**必须**使用语义化 token 控制版式：`--zen-content-max-width`、`--zen-content-padding-x`、`--zen-content-padding-y`、`--zen-title-size`、`--zen-body-size`、`--zen-body-line-height`
+- 禅模式文案**必须**走 i18n：空文档标题为 `t("zenMode.untitledDocument")`，正文占位为 `t("zenMode.startWriting")`
+- 覆盖层**必须**具有 `role="dialog"` 与 `aria-label={t("zenMode.a11y.dialogLabel")}`
+- 打开禅模式后，系统**必须**自动将焦点移入编辑器（`editor.commands.focus()`）
+- 禅模式下**不得**打开 Inline AI；其目标是纯写作沉浸感，而非同时叠加额外协作浮层
 
-- The user SHALL enter Zen Mode by pressing **F11** (as defined in `DESIGN_DECISIONS.md` §1.3)
-- The user SHALL exit Zen Mode by pressing **Escape** or **F11** again
-- A subtle exit hint ("Press Esc or F11 to exit") SHALL always be visible at the top-right
-- On hover at the top area, a more prominent exit button SHALL appear with a close icon
+进入与退出：
 
-**Status bar:**
+- 用户**必须**能够通过 `F11` 进入禅模式
+- 用户**必须**能够通过 `Escape`、再次触发 `F11` 或点击右上角退出按钮离开禅模式
+- 右上角**必须**持续显示轻量退出提示 `t("zenMode.pressEscOrF11ToExit")`
+- 顶部 hover 区域**必须**显示更明确的退出按钮与 `t("zenMode.pressEscToExit")` 提示
 
-- A bottom hover-triggered status bar SHALL display: word count, save status, read time (minutes), and current time
+状态信息：
 
-#### Scenario: User enters and exits Zen Mode
+- 禅模式底部 hover 状态条**必须**显示字数、保存状态、预计阅读时长与当前时间（若提供）
+- 状态条文案**必须**复用 `ZenModeStatus` 的 i18n key，而不是硬编码静态字符串
 
-- **GIVEN** the user is editing a document in normal mode
-- **WHEN** the user presses F11
-- **THEN** a fullscreen overlay renders at `z-index: var(--z-modal)` covering the entire application
-- **AND** only the document title and body text are visible, centered on screen
-- **AND** pressing Escape closes the overlay and returns to normal editing mode
+#### Scenario: 用户进入禅模式后继续使用真实编辑器
 
-#### Scenario: Zen Mode hides all distractions
+- **假设** 用户正在普通编辑态中编辑文档
+- **当** 用户按下 `F11`
+- **则** 系统显示覆盖整个应用窗口的禅模式层
+- **并且** 主编辑区渲染 `EditorContent`，用户可继续输入、删除、撤销与修改文本
+- **并且** 退出禅模式后，文档内容与编辑历史保持连续
 
-- **GIVEN** Zen Mode is active
-- **WHEN** the user looks at the screen
-- **THEN** the sidebar, right panel (AI/Info), editor toolbar, and main status bar are not visible
-- **AND** hovering over the bottom edge reveals word count, save status, and read time
-- **AND** hovering over the top edge reveals the exit button
+#### Scenario: 禅模式隐藏工具栏与浮层交互
 
-#### Scenario: Zen Mode with empty document
+- **假设** 禅模式已激活
+- **当** 用户在正文中移动光标或选中文本
+- **则** `EditorToolbar`、`EditorBubbleMenu` 与 `SlashCommandPanel` 均不显示
+- **并且** Inline AI 快捷键不会打开输入层
 
-- **GIVEN** the current document has no content (empty paragraphs)
-- **WHEN** the user enters Zen Mode
-- **THEN** the title is displayed (or a placeholder if no title)
-- **AND** the body area is empty with a blinking cursor
-- **AND** the word count shows 0
+#### Scenario: 空文档进入禅模式时显示占位标题与正文提示
+
+- **假设** 当前文档为空
+- **当** 用户进入禅模式
+- **则** 标题区域显示 `t("zenMode.untitledDocument")`
+- **并且** 正文区域显示 `t("zenMode.startWriting")`
+- **并且** 字数统计显示 0
+
+#### Scenario: 打开禅模式时自动聚焦编辑器
+
+- **假设** 禅模式由关闭状态切换为开启状态
+- **当** 覆盖层完成挂载
+- **则** 系统调用 `editor.commands.focus()` 将焦点移入正文编辑区
+- **并且** 用户可直接开始输入，无需额外点击
 
 ---
 
@@ -533,6 +621,7 @@ The system SHALL support the following keyboard shortcuts in the editor, consist
 | Redo          | `Cmd+Shift+Z` | `Ctrl+Y`       |
 | Save          | `Cmd+S`       | `Ctrl+S`       |
 | Find in doc   | `Cmd+F`       | `Ctrl+F`       |
+| Inline AI     | `Cmd+K`       | `Ctrl+K`       |
 | Zen Mode      | `F11`         | `F11`          |
 
 `Cmd/Ctrl+B` SHALL be reserved for Bold — sidebar toggle uses `Cmd/Ctrl+\` to avoid conflict.

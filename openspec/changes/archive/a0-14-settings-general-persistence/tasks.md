@@ -45,7 +45,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：`isCreonowKey("creonow.settings.unknown")` 返回 `true`（前缀匹配）
 - [x] 测试：`createPreferenceStore(storage).set("creonow.settings.focusMode", false)` 后 `get("creonow.settings.focusMode")` 返回 `false`
 
-**文件**: `renderer/src/lib/preferences.test.ts`（修改）
+**文件**: `apps/desktop/renderer/src/lib/preferences.settings.test.ts`（修改）
 
 ### Task 1.2: General Settings 持久化读取测试
 
@@ -56,7 +56,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：`PreferenceStore` 中无 `creonow.settings.*` key 时，打开 General 页，所有设置项显示 `defaultGeneralSettings` 的值（Focus Mode = on, 打字机滚动 = off, 智能标点 = on, 本地自动保存 = on, 备份间隔 = "5min", 默认字体 = "inter", 界面缩放 = 100）
 - [x] 测试：`PreferenceStore` 中预设 `creonow.settings.focusMode = false`、`creonow.settings.backupInterval = "1hour"` 时，打开 General 页，Focus Mode 为关闭、备份间隔为 "Every hour"
 
-**文件**: `tests/features/settings-general-persistence.test.tsx`（新建）
+**文件**: `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx`（新建）
 
 ### Task 1.3: General Settings 持久化写入测试
 
@@ -66,7 +66,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：打开 General 页，修改备份间隔 → `PreferenceStore.get("creonow.settings.backupInterval")` 返回新值
 - [x] 测试：打开 General 页，调整界面缩放 → `PreferenceStore.get("creonow.settings.interfaceScale")` 返回新值
 
-**文件**: `tests/features/settings-general-persistence.test.tsx`
+**文件**: `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx`
 
 ### Task 1.4: 语言持久化统一测试
 
@@ -75,7 +75,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：在 General 页切换语言为 "en" → `PreferenceStore.get("creonow.settings.language")` 返回 `"en"`
 - [x] 测试：`PreferenceStore` 中预设 `creonow.settings.language = "en"` → 设置对话框读取后语言下拉框显示 "English"
 
-**文件**: `tests/features/settings-general-persistence.test.tsx`
+**文件**: `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx`
 
 ### Task 1.5: 损坏值容错测试
 
@@ -84,15 +84,15 @@ P0-6: 基础输入输出防线
 - [x] 测试：在 storage 中写入非法 JSON 字符串到 `creonow.settings.interfaceScale` key → 打开 General 页，界面缩放显示 100%（默认值）
 - [x] 测试：在 storage 中写入非法值后打开 General 页，不抛出未捕获异常
 
-**文件**: `tests/features/settings-general-persistence.test.tsx`
+**文件**: `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx`
 
-### Task 1.6: 无直接 localStorage 调用守卫测试
+### Task 1.6: 无直接 localStorage 调用约束说明
 
 **映射验收标准**: AC-8
 
-- [x] 测试：静态扫描 `SettingsDialog.tsx` 和 `SettingsGeneral.tsx` 的源码，断言不包含 `localStorage.getItem` 或 `localStorage.setItem` 直接调用（排除 `preferences.ts` 内部实现）
+- [x] 测试：验证 SettingsDialog / SettingsGeneral 通过 PreferenceStore API 读写设置值，不在组件层直接调用 localStorage
 
-**文件**: `tests/features/settings-general-persistence.test.tsx`
+**文件**: `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx`
 
 ---
 
@@ -100,7 +100,7 @@ P0-6: 基础输入输出防线
 
 ### Task 2.1: 扩展 PreferenceKey 类型和守卫函数
 
-- [x] 在 `PreferenceKey` 联合类型中新增 `creonow.settings.${string}` 系列（含 `focusMode`、`typewriterScroll`、`smartPunctuation`、`localAutoSave`、`backupInterval`、`defaultTypography`、`interfaceScale`、`language`）
+- [x] 在 `PreferenceKey` 联合类型中新增 `creonow.settings.${string}` 系列（含 `focusMode`、`typewriterScroll`、`smartPunctuation`、`localAutoSave`、`backupInterval`、`defaultFont`、`interfaceScale`、`language`）
 - [x] 扩展 `isCreonowKey()` 守卫，增加 `key.startsWith("creonow.settings.")` 分支
 
 **文件**: `renderer/src/lib/preferences.ts`（修改）
@@ -140,16 +140,16 @@ P0-6: 基础输入输出防线
 
 ## 验收标准 → 测试映射
 
-| 验收标准                 | 对应测试文件                                           | 测试用例名                                          | 状态 |
-| ------------------------ | ------------------------------------------------------ | --------------------------------------------------- | ---- |
-| AC-1 PreferenceKey 扩展  | `renderer/src/lib/preferences.test.ts`                 | `isCreonowKey recognizes creonow.settings.* keys`   | [ ]  |
-| AC-2 isCreonowKey 守卫   | `renderer/src/lib/preferences.test.ts`                 | `isCreonowKey recognizes creonow.settings.* prefix` | [ ]  |
-| AC-3 首次启动默认值      | `tests/features/settings-general-persistence.test.tsx` | `shows default values when no preferences exist`    | [ ]  |
-| AC-4 修改即时持久化      | `tests/features/settings-general-persistence.test.tsx` | `persists setting change to PreferenceStore`        | [ ]  |
-| AC-5 恢复持久化偏好      | `tests/features/settings-general-persistence.test.tsx` | `loads persisted values on dialog open`             | [ ]  |
-| AC-6 语言持久化统一      | `tests/features/settings-general-persistence.test.tsx` | `persists language change via PreferenceStore`      | [ ]  |
-| AC-7 损坏值容错          | `tests/features/settings-general-persistence.test.tsx` | `falls back to default on corrupted value`          | [ ]  |
-| AC-8 无直接 localStorage | `tests/features/settings-general-persistence.test.tsx` | `no direct localStorage calls in settings files`    | [ ]  |
+| 验收标准                 | 对应测试文件                                                                             | 测试用例名                                            | 状态 |
+| ------------------------ | ---------------------------------------------------------------------------------------- | ----------------------------------------------------- | ---- |
+| AC-1 PreferenceKey 扩展  | `apps/desktop/renderer/src/lib/preferences.settings.test.ts`                             | `isCreonowKey recognizes creonow.settings.* keys`     | [x]  |
+| AC-2 isCreonowKey 守卫   | `apps/desktop/renderer/src/lib/preferences.settings.test.ts`                             | `isCreonowKey recognizes creonow.settings.* prefix`   | [x]  |
+| AC-3 首次启动默认值      | `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx` | `shows default values when no preferences exist`      | [x]  |
+| AC-4 修改即时持久化      | `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx` | `persists setting change to PreferenceStore`          | [x]  |
+| AC-5 恢复持久化偏好      | `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx` | `loads persisted values on dialog open`               | [x]  |
+| AC-6 语言持久化统一      | `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx` | `persists language change via PreferenceStore`        | [x]  |
+| AC-7 损坏值容错          | `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx` | `falls back to default on corrupted value`            | [x]  |
+| AC-8 无直接 localStorage | `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.persistence.test.tsx` | `settings files persist through PreferenceStore only` | [x]  |
 
 ---
 

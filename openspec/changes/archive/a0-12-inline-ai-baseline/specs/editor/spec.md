@@ -116,7 +116,7 @@ Skill 执行开始后，系统**必须**在选区位置渲染 `InlineAiDiffPrevi
 
 #### 流式渲染
 
-- Skill 执行开始时，组件进入 `streaming` 状态，显示加载指示器（spinner + `t("inlineAi.generating")`）
+- Skill 执行开始时，组件进入 `streaming` 状态，显示加载指示器（spinner + `t("inlineAi.loading")`）
 - 每收到一个 `skill:stream:chunk`，实时更新 diff 展示
 - 收到 `skill:stream:done` 后，组件进入 `ready` 状态，加载指示器消失，操作按钮完全可用
 
@@ -242,7 +242,7 @@ ready → (Regenerate) → streaming
 | `inlineAi.accept`                | 接受                                        | Accept                                                    |
 | `inlineAi.reject`                | 拒绝                                        | Reject                                                    |
 | `inlineAi.regenerate`            | 重新生成                                    | Regenerate                                                |
-| `inlineAi.generating`            | AI 正在生成…                                | AI is generating…                                         |
+| `inlineAi.loading`               | AI 正在生成…                                | AI is generating…                                         |
 | `inlineAi.conflictError`         | 文本已被修改，无法应用 AI 结果              | Text has been modified, cannot apply AI result            |
 | `inlineAi.executionError`        | AI 执行失败，请重试                         | AI execution failed, please retry                         |
 | `inlineAi.shortcut.polish`       | 润色                                        | Polish                                                    |
@@ -290,7 +290,7 @@ ready → (Regenerate) → streaming
 - **WHEN** 用户按下 `Enter`
 - **THEN** `InlineAiInput` 消失
 - **AND** 系统通过 `skill:execute` IPC 发送请求，payload 包含选中文本、用户指令和 `source: "inline"`
-- **AND** `InlineAiDiffPreview` 在选区位置渲染，显示加载指示器和 `t("inlineAi.generating")`
+- **AND** `InlineAiDiffPreview` 在选区位置渲染，显示加载指示器和 `t("inlineAi.loading")`
 - **AND** `editorStore.inlineAiState` 变为 `"streaming"`
 - **AND** 随着 `skill:stream:chunk` 到达，diff 预览实时更新（删除内容 `--color-diff-removed-bg` + `line-through`，新增内容 `--color-diff-added-bg`）
 - **AND** 收到 `skill:stream:done` 后，加载指示器消失，Accept/Reject/Regenerate 按钮完全可用

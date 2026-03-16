@@ -30,12 +30,12 @@ A0-08 事实核查的结论为 v0.1 的 Backup 处置提供了明确的事实基
 
 ### 4. 证据来源
 
-| 文档                                                 | 章节               | 内容                                                         |
-| ---------------------------------------------------- | ------------------ | ------------------------------------------------------------ |
-| `docs/audit/amp/08-backend-module-health-audit.md`   | §四 Backup Service | 功能完全缺失：搜索 `backupService` / `backup` handler 无结果 |
-| `openspec/changes/a0-08-backup-capability-decision/` | 事实核查产出       | A0-08 核查结论（本任务的强前置依赖）                         |
-| `docs/audit/amp/07-ui-ux-design-audit.md`            | §二 假 UI 清单     | 备份：设置页有 `backupInterval` 选项，无后端闭环             |
-| `docs/audit/amp/05-implementation-backlog.md`        | 依赖矩阵           | A0-08 → A0-17：Backup 决策以事实核查为前提                   |
+| 文档                                                         | 章节               | 内容                                                         |
+| ------------------------------------------------------------ | ------------------ | ------------------------------------------------------------ |
+| `docs/audit/amp/08-backend-module-health-audit.md`           | §四 Backup Service | 功能完全缺失：搜索 `backupService` / `backup` handler 无结果 |
+| `openspec/changes/archive/a0-08-backup-capability-decision/` | 事实核查产出       | A0-08 核查结论（本任务的强前置依赖）                         |
+| `docs/audit/amp/07-ui-ux-design-audit.md`                    | §二 假 UI 清单     | 备份：设置页有 `backupInterval` 选项，无后端闭环             |
+| `docs/audit/amp/05-implementation-backlog.md`                | 依赖矩阵           | A0-08 → A0-17：Backup 决策以事实核查为前提                   |
 
 ---
 

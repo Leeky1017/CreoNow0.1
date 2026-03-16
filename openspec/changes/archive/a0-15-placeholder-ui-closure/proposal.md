@@ -55,7 +55,7 @@
   - `renderer/src/features/settings-dialog/SettingsAccount.tsx` — Account 页按钮
   - `renderer/src/features/search/` — Search 面板的 "View More" / "Search All Projects"
   - `renderer/src/features/rightpanel/` — ChatHistory 交互
-  - `renderer/src/features/` — 版本恢复 Restore 按钮（具体文件需搜索确认）
+  - `renderer/src/features/version-history/VersionHistoryPanel.tsx` — 版本恢复 Restore 按钮
 - **所属任务簇**: P0-3（能力诚实分级与假功能处置）
 - **前置依赖**: 无
 - **下游影响**: A0-17（Backup 决策）的"标注 Coming Soon"方案需与本任务策略一致

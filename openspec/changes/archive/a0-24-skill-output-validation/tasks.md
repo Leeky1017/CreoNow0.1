@@ -137,7 +137,7 @@ P0-6: 基础输入输出防线
 
 - [x] 在 `errorMessages.ts` 中为 `SKILL_OUTPUT_INVALID` 添加人话映射：「AI 输出异常，请重新尝试」
 
-**文件**: `apps/desktop/renderer/src/utils/errorMessages.ts`（修改）
+**文件**: `apps/desktop/renderer/src/lib/errorMessages.ts`（修改）
 
 ---
 
@@ -159,17 +159,17 @@ P0-6: 基础输入输出防线
 
 ## 验收标准 → 测试映射
 
-| 验收标准                  | 对应测试文件                    | 测试用例名                                  | 状态 |
-| ------------------------- | ------------------------------- | ------------------------------------------- | ---- |
-| AC-1: 正常输出通过        | `skillOutputValidation.test.ts` | polish/rewrite/continue/expand 正常输出通过 | [ ]  |
-| AC-2: 空输出拦截          | `skillOutputValidation.test.ts` | 空字符串/空白/undefined 被拦截              | [ ]  |
-| AC-3: 代码块拦截          | `skillOutputValidation.test.ts` | 三反引号代码块被拦截                        | [ ]  |
-| AC-4: HTML 拦截           | `skillOutputValidation.test.ts` | div/script/p 标签被拦截                     | [ ]  |
-| AC-5: strict 膨胀拦截     | `skillOutputValidation.test.ts` | polish 12.5 倍被拦截、9 倍通过              | [ ]  |
-| AC-6: loose 膨胀通过/拦截 | `skillOutputValidation.test.ts` | continue 13.3 倍通过、23.3 倍拦截           | [ ]  |
-| AC-7: synopsis 不变       | `skillOutputValidation.test.ts` | synopsis 走 validateSynopsisOutput          | [ ]  |
-| AC-8: 无基准跳过膨胀      | `skillOutputValidation.test.ts` | inputText 空时跳过膨胀检测                  | [ ]  |
-| AC-9: 错误码注册          | TypeScript 编译                 | IpcErrorCode 包含 SKILL_OUTPUT_INVALID      | [ ]  |
+| 验收标准                  | 对应测试文件                                                                    | 测试用例名                                  | 状态 |
+| ------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------- | ---- |
+| AC-1: 正常输出通过        | `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts` | polish/rewrite/continue/expand 正常输出通过 | [x]  |
+| AC-2: 空输出拦截          | `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts` | 空字符串/空白/undefined 被拦截              | [x]  |
+| AC-3: 代码块拦截          | `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts` | 三反引号代码块被拦截                        | [x]  |
+| AC-4: HTML 拦截           | `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts` | div/script/p 标签被拦截                     | [x]  |
+| AC-5: strict 膨胀拦截     | `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts` | polish 12.5 倍被拦截、9 倍通过              | [x]  |
+| AC-6: loose 膨胀通过/拦截 | `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts` | continue 13.3 倍通过、23.3 倍拦截           | [x]  |
+| AC-7: synopsis 不变       | `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts` | synopsis 走 validateSynopsisOutput          | [x]  |
+| AC-8: 无基准跳过膨胀      | `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts` | inputText 空时跳过膨胀检测                  | [x]  |
+| AC-9: 错误码注册          | TypeScript 编译                                                                 | IpcErrorCode 包含 SKILL_OUTPUT_INVALID      | [x]  |
 
 ---
 

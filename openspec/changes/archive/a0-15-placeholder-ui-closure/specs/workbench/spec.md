@@ -55,12 +55,12 @@
 
 新增以下 i18n key，`zh-CN.json` 和 `en.json` **必须**同步：
 
-| Key                                  | zh-CN                  | en                                  |
-| ------------------------------------ | ---------------------- | ----------------------------------- |
-| `common.comingSoon`                  | 即将推出               | Coming Soon                         |
-| `common.featureInDevelopment`        | 此功能正在开发中       | This feature is in development      |
-| `settings.account.comingSoonTooltip` | 账户功能正在开发中     | Account features are in development |
-| `versionControl.restoreComingSoon`   | 版本恢复功能正在开发中 | Version restore is in development   |
+| Key                                        | zh-CN                  | en                                  |
+| ------------------------------------------ | ---------------------- | ----------------------------------- |
+| `common.comingSoon`                        | 即将推出               | Coming Soon                         |
+| `common.featureInDevelopment`              | 此功能正在开发中       | This feature is in development      |
+| `settingsDialog.account.comingSoonTooltip` | 账户功能正在开发中     | Account features are in development |
+| `versionControl.restoreComingSoon`         | 版本恢复功能正在开发中 | Version restore is in development   |
 
 ### Design Token 引用
 
@@ -84,7 +84,7 @@
 - **假设** 用户打开 Settings → Account 页
 - **当** 用户查看页面上的操作按钮（如 登录/注册 等）
 - **则** 所有按钮处于 disabled 状态
-- **并且** 每个 disabled 按钮附有 tooltip，显示 `t('settings.account.comingSoonTooltip')`（"账户功能正在开发中"）
+- **并且** 每个 disabled 按钮附有 tooltip，显示 `t('settingsDialog.account.comingSoonTooltip')`（"账户功能正在开发中"）
 - **并且** 按钮无 click 响应
 
 ### Scenario: Search 面板隐藏无功能链接

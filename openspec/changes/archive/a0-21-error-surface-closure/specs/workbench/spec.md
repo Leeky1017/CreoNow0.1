@@ -40,7 +40,7 @@
 ### i18n 要求
 
 - 所有用户可见的错误文案**必须**通过 `t()` 函数获取（包括 `getHumanErrorMessage()` 内部和 CommandPalette 硬编码替换）
-- CommandPalette 新增的 i18n key **必须**遵循 `commandPalette.error.<场景>` 命名空间
+- CommandPalette 新增的 i18n key **必须**遵循 `workbench.commandPalette.errors.<场景>` 命名空间
 - `zh-CN.json` 和 `en.json` **必须**同步新增所有 CommandPalette 错误文案的翻译条目
 
 ---
@@ -89,7 +89,7 @@
 
 - **假设** 用户在 CommandPalette 中触发了一个操作，但对应的对话框不可用
 - **当** CommandPalette 需要展示错误信息
-- **则** 展示 `t("commandPalette.error.settingsUnavailable")` 等 i18n 翻译值，不展示 `"ACTION_FAILED: Settings dialog not available"`
+- **则** 展示 `t("workbench.commandPalette.errors.settingsUnavailable")` 等 i18n 翻译值，不展示 `"ACTION_FAILED: Settings dialog not available"`
 - **并且** 切换到英文 locale 后，错误文案同步切换为英文
 
 ### Scenario 4: AiErrorCard 不展示原始错误码

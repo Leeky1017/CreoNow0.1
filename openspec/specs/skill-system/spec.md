@@ -1,6 +1,5 @@
 # Skill System Specification
 
-
 ## Purpose
 
 将 AI 能力抽象为可组合的「技能」（续写、改写、扩写、缩写、风格迁移等），每个技能有独立的 `context_rules` 和执行逻辑，支持 builtin → global → project 三级作用域。
@@ -209,6 +208,14 @@
 
 当 LLM 调用失败或超时时，系统**必须**返回结构化错误并在 AI 面板中展示错误信息，不可静默失败。
 
+执行结果在进入渲染进程前**必须**经过输出校验：
+
+- `validateSkillRunOutput()` **必须**在 LLM 输出落地前运行，负责阻断明显无效的生成结果
+- `synopsis` 保持专属校验路径；其余技能至少**必须**拒绝空输出
+- 对 `polish`、`rewrite`、`continue`、`expand` 四个高频创作技能，系统**必须**额外拦截代码块污染、HTML 标签污染与异常膨胀输出
+- `polish` / `rewrite` 的膨胀阈值为输入长度的 10 倍；`continue` / `expand` 的膨胀阈值为 20 倍
+- 校验失败时**必须**返回 `SKILL_OUTPUT_INVALID`，并通过既有失败事件链路反馈到 AI 面板
+
 #### Scenario: 技能流式执行正常完成
 
 - **假设** 用户触发了「续写」技能
@@ -233,6 +240,42 @@
 - **则** 主进程通过 `skill:stream:done` 推送错误状态 `{ success: false, error: { code: "LLM_API_ERROR", message: "API 调用失败，请稍后重试" } }`
 - **并且** AI 面板展示错误提示（Toast 通知，类型 `error`）
 - **并且** 用户可点击「重试」按钮重新执行
+
+---
+
+### Requirement: 高频 Skill 输出校验
+
+系统**必须**对高频创作技能的输出执行基础质量闸门，防止空内容、格式污染或异常膨胀的结果直接进入编辑链路。当前实现位于 `SkillExecutor` 的 `validateSkillRunOutput()` 与 `validateCreativeSkillOutput()`。
+
+- `polish`、`rewrite`、`continue`、`expand` **必须**在输出进入 renderer 前完成校验
+- `V-EMPTY`：`outputText` 缺失或 trim 后为空时，**必须**返回 `SKILL_OUTPUT_INVALID`
+- `V-CODEBLOCK`：输出包含三个连续反引号时，**必须**判为无效
+- `V-HTML`：输出匹配 HTML 开标签模式时，**必须**判为无效
+- `V-INFLATE-STRICT`：`polish` / `rewrite` 的输出长度大于输入长度 10 倍时，**必须**判为无效
+- `V-INFLATE-LOOSE`：`continue` / `expand` 的输出长度大于输入长度 20 倍时，**必须**判为无效
+- `continue` 的膨胀基准**必须**优先取文档上下文（`contextPrompt` / 文档上下文），其余创作技能取用户输入文本
+- `synopsis` 继续沿用独立校验逻辑；其他未列入本 Requirement 的技能不增加额外格式闸门
+
+#### Scenario: 高频创作 skill 的正常输出通过校验
+
+- **假设** 用户触发 `polish`、`rewrite`、`continue` 或 `expand`，且模型返回自然语言文本
+- **当** 输出不为空、不含代码块 / HTML 且未超过各自膨胀阈值
+- **则** `validateSkillRunOutput()` 返回成功
+- **并且** 输出继续沿既有链路发送到渲染进程
+
+#### Scenario: 输出为空时返回 SKILL_OUTPUT_INVALID
+
+- **假设** 任一技能返回空字符串或仅含空白字符
+- **当** 执行输出校验
+- **则** 返回 `{ code: "SKILL_OUTPUT_INVALID" }`
+- **并且** 该结果不会继续注入 AI 面板或编辑器应用链路
+
+#### Scenario: continue 使用宽松膨胀阈值，polish 使用严格阈值
+
+- **假设** `continue` 的上下文输入较短，而模型返回了较长的续写内容
+- **当** 输出长度未超过输入基准的 20 倍
+- **则** 结果可以通过校验
+- **并且** 同等体量下，若 `polish` / `rewrite` 超过 10 倍阈值则必须被拦截
 
 ---
 
@@ -418,7 +461,7 @@ function inferSkillFromInput(args: {
 
 1. 显式技能覆盖（`explicitSkillId` 非空时直接返回）
 2. 选中文本上下文启发式（有选中 + 无输入 → `builtin:polish`；有选中 + 短改写指令 → `builtin:rewrite`）
-3. 关键词匹配规则：
+3. 关键词匹配规则（命中前**必须**通过否定语境守卫）：
 
 | 关键词                            | 目标技能 ID          |
 | --------------------------------- | -------------------- |
@@ -431,6 +474,15 @@ function inferSkillFromInput(args: {
 | "缩写"/"精简"                     | `builtin:condense`   |
 
 4. 默认 → `builtin:chat`
+
+否定语境守卫：
+
+- 路由器**必须**提供 `isNegated(input, keywordIndex, keyword)` 辅助函数，检测关键词前方窗口内是否存在否定语境
+- 中文否定词至少覆盖：`不要`、`别`、`不想`、`不用`、`不需要`、`停止`、`取消`、`禁止`、`不必`、`无需`
+- 英文否定词至少覆盖：`don't`、`do not`、`stop`、`no`、`never`、`cancel`、`not`、`without`
+- 当关键词命中但处于否定语境时，关键词规则**不得**触发对应技能；所有关键词均被否定时回退到 `builtin:chat`
+- 双重否定（如 `不是不想续写`、`not that I don't want to continue writing`）**必须**恢复为正向意图
+- 否定守卫**不得**影响显式技能覆盖路径
 
 REQ-ID: `REQ-SKL-ROUTE`
 
@@ -475,3 +527,22 @@ REQ-ID: `REQ-SKL-ROUTE`
 - **假设** `args = { input: "改写", hasSelection: true }`
 - **当** 调用 `inferSkillFromInput(args)`
 - **则** 返回值 === `"builtin:rewrite"`
+
+#### Scenario: S8 否定语境阻止关键词路由
+
+- **假设** `args = { input: "不要续写，我想自己写", hasSelection: false }`
+- **当** 调用 `inferSkillFromInput(args)`
+- **则** 返回值 === `"builtin:chat"`
+- **并且** `builtin:continue` 不会因否定语境中的关键词被触发
+
+#### Scenario: S9 双重否定恢复为正向意图
+
+- **假设** `args = { input: "不是不想续写，请帮我续写后面的内容", hasSelection: false }`
+- **当** 调用 `inferSkillFromInput(args)`
+- **则** 返回值 === `"builtin:continue"`
+
+#### Scenario: S10 显式技能覆盖不受否定守卫影响
+
+- **假设** `args = { input: "不要续写", hasSelection: false, explicitSkillId: "builtin:continue" }`
+- **当** 调用 `inferSkillFromInput(args)`
+- **则** 返回值 === `"builtin:continue"`

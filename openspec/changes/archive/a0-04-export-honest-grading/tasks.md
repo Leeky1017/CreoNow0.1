@@ -102,12 +102,12 @@
 
 | 条目                   | 检查项                                             | 状态 |
 | ---------------------- | -------------------------------------------------- | ---- |
-| AC-1 Markdown 结构保真 | fixture 中的 heading/emphasis/list/link/image 仍在 | [ ]  |
-| AC-2 PDF 非纯文本路径  | 不再直接从 `contentText` 渲染正文                  | [ ]  |
-| AC-3 DOCX 结构可断言   | heading/run/list/image 语义存在                    | [ ]  |
-| AC-4 显式失败          | 不支持结构时失败且不落残缺文件                     | [ ]  |
-| AC-5 Spec 校准         | 主 spec 已改为真实结构化导出承诺                   | [ ]  |
-| AC-6 Fixture 可重复    | 测试夹具稳定、断言明确                             | [ ]  |
+| AC-1 Markdown 结构保真 | fixture 中的 heading/emphasis/list/link/image 仍在 | [x]  |
+| AC-2 PDF 非纯文本路径  | 不再直接从 `contentText` 渲染正文                  | [x]  |
+| AC-3 DOCX 结构可断言   | heading/run/list/image 语义存在                    | [x]  |
+| AC-4 显式失败          | 不支持结构时失败且不落残缺文件                     | [x]  |
+| AC-5 Spec 校准         | 主 spec 已改为真实结构化导出承诺                   | [x]  |
+| AC-6 Fixture 可重复    | 测试夹具稳定、断言明确                             | [x]  |
 
 ---
 

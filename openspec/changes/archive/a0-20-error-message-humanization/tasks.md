@@ -154,14 +154,14 @@
 
 | 验收标准                   | 对应测试文件                             | 测试用例名                                      | 状态 |
 | -------------------------- | ---------------------------------------- | ----------------------------------------------- | ---- |
-| AC-1 全量映射覆盖          | `renderer/src/lib/errorMessages.test.ts` | 遍历 IpcErrorCode 全部成员返回非原始 message    | [ ]  |
-| AC-2 兜底不透传            | `renderer/src/lib/errorMessages.test.ts` | 虚构错误码返回 error.generic 翻译值             | [ ]  |
-| AC-3 IPC_TIMEOUT 参数化    | `renderer/src/lib/errorMessages.test.ts` | 超时时长提取与无时长回退                        | [ ]  |
-| AC-4 i18n 语言切换         | `renderer/src/lib/errorMessages.test.ts` | 中英文 locale 切换返回对应翻译                  | [ ]  |
-| AC-5 localizeIpcError 兼容 | `renderer/src/lib/errorMessages.test.ts` | localizeIpcError 结构不变 + message 人话化      | [ ]  |
-| AC-6 类型完整性            | `renderer/src/lib/errorMessages.test.ts` | Record 类型断言 + key 数量等于联合成员数        | [ ]  |
-| AC-7 i18n key 完整         | `renderer/src/lib/errorMessages.test.ts` | zh-CN/en error.code.\* 数量与 IpcErrorCode 对齐 | [ ]  |
-| AC-8 文案无技术术语        | `renderer/src/lib/errorMessages.test.ts` | 文案禁止模式正则检测                            | [ ]  |
+| AC-1 全量映射覆盖          | `renderer/src/lib/errorMessages.test.ts` | 遍历 IpcErrorCode 全部成员返回非原始 message    | [x]  |
+| AC-2 兜底不透传            | `renderer/src/lib/errorMessages.test.ts` | 虚构错误码返回 error.generic 翻译值             | [x]  |
+| AC-3 IPC_TIMEOUT 参数化    | `renderer/src/lib/errorMessages.test.ts` | 超时时长提取与无时长回退                        | [x]  |
+| AC-4 i18n 语言切换         | `renderer/src/lib/errorMessages.test.ts` | 中英文 locale 切换返回对应翻译                  | [x]  |
+| AC-5 localizeIpcError 兼容 | `renderer/src/lib/errorMessages.test.ts` | localizeIpcError 结构不变 + message 人话化      | [x]  |
+| AC-6 类型完整性            | `renderer/src/lib/errorMessages.test.ts` | Record 类型断言 + key 数量等于联合成员数        | [x]  |
+| AC-7 i18n key 完整         | `renderer/src/lib/errorMessages.test.ts` | zh-CN/en error.code.\* 数量与 IpcErrorCode 对齐 | [x]  |
+| AC-8 文案无技术术语        | `renderer/src/lib/errorMessages.test.ts` | 文案禁止模式正则检测                            | [x]  |
 
 ---
 

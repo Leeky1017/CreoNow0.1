@@ -129,9 +129,9 @@ P0-5: 文案与 i18n 存量止血
 - [x] 对 `renderer/src/` 执行完整扫描
 - [x] 输出 Markdown 格式清理清单，按模块分组、按文件路径 + 行号升序排列
 - [x] P0 条目排在每组前面
-- [x] 将清理清单保存为 `openspec/changes/a0-09-i18n-inventory-audit/i18n-inventory-checklist.md`
+- [x] 将清理清单保存为 `openspec/changes/archive/a0-09-i18n-inventory-audit/i18n-inventory-checklist.md`
 
-**文件**: `openspec/changes/a0-09-i18n-inventory-audit/i18n-inventory-checklist.md`（新建）
+**文件**: `openspec/changes/archive/a0-09-i18n-inventory-audit/i18n-inventory-checklist.md`（归档后保留）
 
 ### Task 2.5: 对照 `07` §三验证覆盖率
 

@@ -140,12 +140,12 @@ run_tier_s() {
   if command -v pnpm &>/dev/null; then
     if (( has_renderer > 0 )); then
       run_step "vitest run renderer（前端测试）" \
-        pnpm -C apps/desktop vitest run --reporter=verbose renderer/
+        pnpm -C apps/desktop exec vitest run --reporter=verbose renderer/
     fi
 
     if (( has_main > 0 )); then
       run_step "vitest run main（后端测试）" \
-        pnpm -C apps/desktop vitest run --reporter=verbose main/
+        pnpm -C apps/desktop exec vitest run --reporter=verbose main/
     fi
 
     # 前端变更追加 Storybook 构建验证
@@ -170,7 +170,7 @@ run_tier_d() {
   if command -v pnpm &>/dev/null; then
     # 全量测试
     run_step "vitest run（全量测试）" \
-      pnpm -C apps/desktop vitest run
+      pnpm -C apps/desktop exec vitest run
 
     # ESLint
     run_step "pnpm lint（代码规范）" \
@@ -179,13 +179,13 @@ run_tier_d() {
     # 架构健康门禁
     if [[ -f "scripts/architecture-health-gate.ts" ]]; then
       run_step "architecture-health-gate（架构健康）" \
-        pnpm -C apps/desktop tsx ../../scripts/architecture-health-gate.ts
+        node --import tsx scripts/architecture-health-gate.ts
     fi
 
     # cross-module contract 检查
     if [[ -f "scripts/cross-module-contract-gate.ts" ]]; then
       run_step "cross-module-contract-gate（跨模块 contract）" \
-        pnpm -C apps/desktop tsx ../../scripts/cross-module-contract-gate.ts
+        node --import tsx scripts/cross-module-contract-gate.ts
     fi
 
     # IPC 验收门禁
@@ -193,7 +193,7 @@ run_tier_d() {
     has_ipc=$(git diff --name-only "$BASE_REF" | grep -cE '(ipc|preload|shared)' || true)
     if (( has_ipc > 0 )) && [[ -f "scripts/ipc-acceptance-gate.ts" ]]; then
       run_step "ipc-acceptance-gate（IPC 验收）" \
-        pnpm -C apps/desktop tsx ../../scripts/ipc-acceptance-gate.ts
+        node --import tsx scripts/ipc-acceptance-gate.ts
     fi
   else
     skip_step "Tier D 质量门禁" "pnpm not found in PATH"
