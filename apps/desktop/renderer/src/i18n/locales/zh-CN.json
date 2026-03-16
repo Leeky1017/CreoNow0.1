@@ -486,7 +486,9 @@
       "ariaLabel": "聊天历史",
       "searchPlaceholder": "搜索...",
       "emptyTitle": "暂无对话记录。",
-      "emptyDescription": "聊天持久化功能上线后，历史记录将显示在此处。"
+      "emptyDescription": "开始对话后，记录将显示在此处。",
+      "untitledSession": "未命名对话",
+      "deleteSession": "删除对话"
     },
     "modePicker": {
       "modeAgent": "智能体",
