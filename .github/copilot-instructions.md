@@ -30,5 +30,17 @@
 ## Recommended specialized entrypoints
 
 - Use `creonow-delivery` for end-to-end Issue / PR handoff.
-- Use `creonow-audit` when the task is review-only and you must publish `PRE-AUDIT`, `RE-AUDIT`, and `FINAL-VERDICT`.
+- Use `creonow-audit` when the task is review-only and you must publish tiered audit comments (`PRE-AUDIT`, `RE-AUDIT`, `FINAL-VERDICT`) per the adaptive audit protocol in `AGENTS.md` §六.
 - Use `creonow-fix-ci` when the task is to repair failing CI on an existing Issue / PR chain without breaking audit continuity.
+
+## Audit system
+
+审计体系采用分层自适应审计（Tiered Adaptive Audit）。审计 Agent 必须：
+
+1. 先运行变更分类（`docs/delivery-skill.md` §8.0），判定 WHERE / RISK / SCOPE
+2. 根据分类选择审计层级：`scripts/review-audit.sh L|S|D`
+3. 加载 `docs/references/audit-playbooks/` 下对应 Playbook 执行专项检查
+4. 涉及行为变更时，执行功能性验证（`functional-verification.md`），确认功能真的生效
+5. 评论模型按层级自适应（L=单条，S=双条，D=三条+）
+
+详见 `AGENTS.md` §六、`docs/delivery-skill.md` §八。

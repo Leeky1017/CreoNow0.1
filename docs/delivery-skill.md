@@ -119,9 +119,82 @@ openspec/             .github/workflows/
 ---
 
 
-## 八、独立审计协议（Reviewer SOP）
+## 八、独立审计协议（Reviewer SOP）— 分层自适应审计
 
 适用对象：被指派为 reviewer 或执行独立审计的 Agent。
+
+> 「明者因时而变，知者随事而制。」——桓宽《盐铁论》
+> 审计不是一成不变的流水线，而是因任务类型、风险等级、影响面而自适应的质量守护。
+
+### 8.0 变更分类（审计第一步）
+
+审计 Agent 在一切检查之前，必须先分析 PR diff，判定以下三个维度：
+
+**变更层（WHERE）**：
+
+| 标签 | 路径模式 |
+|------|---------|
+| `backend` | `apps/desktop/main/**` |
+| `frontend` | `apps/desktop/renderer/**` |
+| `preload` | `apps/desktop/preload/**` |
+| `shared` | `packages/shared/**` |
+| `infra` | `scripts/**`, `.github/**`, `*.config.*` |
+| `docs` | `docs/**`, `openspec/**`, `*.md`（非代码目录） |
+
+**风险等级（RISK）**：
+
+| 等级 | 判定依据 |
+|------|---------|
+| `critical` | 涉及数据持久化 / 安全 / IPC / 主进程生命周期 |
+| `high` | 涉及核心编辑器 / AI Service / Memory / Knowledge Graph |
+| `medium` | 涉及 UI 组件 / 状态管理 / 导出 |
+| `low` | 仅样式 / 文档 / 测试补充 |
+| `minimal` | 纯注释 / 格式 / typo |
+
+**影响面（SCOPE）**：
+
+| 等级 | 判定依据 |
+|------|---------|
+| `cross-module` | 变更跨 3+ 模块或跨进程 |
+| `single-module` | 变更限于单一模块内 |
+| `isolated` | 独立文件级别 |
+
+分类结果决定审计层级和 Playbook 选择。
+
+### 8.0.1 审计层级（Tiered Audit Protocol）
+
+| 层级 | 适用条件 | 评论模型 | 入口命令 |
+|------|---------|---------|---------|
+| **Tier L** | `risk=low\|minimal` 且 `scope=isolated` | 单条 FINAL-VERDICT | `scripts/review-audit.sh L` |
+| **Tier S** | `risk=medium` 且 `scope=single-module` | PRE-AUDIT + FINAL-VERDICT（有 BLOCKER 时插入 RE-AUDIT） | `scripts/review-audit.sh S` |
+| **Tier D** | `risk=critical\|high` 或 `scope=cross-module` | PRE → RE（可多轮）→ FINAL | `scripts/review-audit.sh D` |
+
+**层级选择不可降级**：高风险 PR 不得以 Tier L 审计。不确定时，选择更高层级。
+
+### 8.0.2 审计 Playbook 加载
+
+根据变更层，加载 `docs/references/audit-playbooks/` 下对应文件执行专项检查：
+
+| 变更层 | Playbook 文件 |
+|--------|-------------|
+| `backend` | `backend-service.md` |
+| `frontend` | `frontend-component.md` |
+| `preload` / IPC | `ipc-channel.md` |
+| `infra` | `ci-infra.md` |
+| `docs` | `docs-only.md` |
+| 安全相关（Tier D 追加） | `security-electron.md` |
+| 性能相关（Tier D 追加） | `performance.md` |
+| 行为变更（Tier S+ 必做） | `functional-verification.md` |
+
+多层变更时，加载所有涉及层的 Playbook。功能性验证是横切关注点，补充而非替代各变更层的专项 Playbook。
+
+### 8.0.3 审计四律
+
+1. **CI 能查的，信任 CI；CI 不能查的，才是审计 Agent 的主战场。**
+   你的核心价值：语义正确性、spec 对齐、架构合理性、安全性、测试质量。
+2. **每条结论必须有证据。没有 diff 引用或命令输出，不要开口。**
+3. **问自己：如果这个 PR 合并了，最有可能出什么问题？** 然后去验证那个场景。
+4. **代码写了不等于功能生效。** 必须验证：用户操作路径是否连通？Spec Scenario 的预期行为是否真的出现？
 
 ### 8.1 "不能做"清单（违反任一项 → 审计结论必须 REJECT）
 
@@ -136,6 +209,19 @@ openspec/             .github/workflows/
 7. **不能**在 required checks 未通过时给出可合并结论
 8. **不能**用"后续再看"替代当前阻断问题
 
+### 8.1.1 "必须做"白名单（审计质量底线）
+
+审计 Agent 至少必须完成以下动作，否则审计无效：
+
+1. **必须**实际读取 PR 变更的每一个文件（不可只看 commit message 或 PR 标题）
+2. **必须**运行 `scripts/review-audit.sh <TIER>`（分层审计命令入口）
+3. **必须**在 PRE-AUDIT / FINAL-VERDICT 评论中声明审计层级和变更分类结果
+4. **必须**声明实际执行了哪些验证命令（附输出）
+5. **必须**加载并执行对应 Playbook 的每一条检查项（标注 ✅/❌/N/A）
+6. **必须**验证新增 public 行为是否有对应测试（Tier S/D）
+7. **必须**验证测试是否测了行为而非实现（Tier S/D，涉及测试变更时）
+8. **必须**执行功能性验证（Tier S/D，涉及行为变更时）——加载 `functional-verification.md`，验证 Spec Scenario 与实现的行为对照，确认功能真的生效
+
 ### 8.2 根因排查格式（每条问题必须包含）
 
 1. **现象（Symptom）**
@@ -147,29 +233,55 @@ openspec/             .github/workflows/
 
 ### 8.3 审计步骤
 
-1. **读 PR diff**：`gh pr diff <PR_NUMBER>` 或在 GitHub UI 查看全部变更文件
-2. **读关联 spec**：`openspec/specs/<module>/spec.md` + `openspec/changes/<change>/` 下的 delta spec
-3. **跑验证命令**：至少执行 typecheck (`pnpm typecheck`) + 相关测试 (`pnpm -C apps/desktop test:run <path>`)；命令选择、测试层级和写法约束遵循 `docs/references/testing/README.md`
-4. **跑审计必跑命令**（见 8.6）
-5. **识别问题并分级**：逐文件审查，每个问题必须引用具体文件路径和行号，附上问题代码片段与修复建议
-   - BLOCKER：违反核心原则、安全漏洞、数据丢失风险 → 必须修复后才能合并
-   - SIGNIFICANT：超出 spec 范围、类型重复、死路径、测试缺失 → 应修复，可协商
+1. **变更分类**：分析 `git diff --name-only origin/main`，确定 WHERE / RISK / SCOPE（见 8.0）
+2. **选择层级**：根据分类结果选择 Tier L / S / D（见 8.0.1）
+3. **加载 Playbook**：根据变更层加载 `docs/references/audit-playbooks/` 对应文件（见 8.0.2）
+4. **读 PR diff**：`gh pr diff <PR_NUMBER>` 或在 GitHub UI 查看全部变更文件
+5. **读关联 spec**：`openspec/specs/<module>/spec.md` + `openspec/changes/<change>/` 下的 delta spec
+6. **跑分层审计命令**：`scripts/review-audit.sh <TIER> [<base-ref>]`
+7. **跑 Playbook 检查**：逐条执行 Playbook 中的检查项，标注 ✅/❌/N/A
+8. **识别问题并分级**：逐文件审查，每个问题必须引用具体文件路径和行号，附上问题代码片段与修复建议
+   - BLOCKER：违反核心原则、安全漏洞、数据丢失风险、spec 行为不符 → 必须修复后才能合并
+   - SIGNIFICANT：超出 spec 范围、类型重复、死路径、测试缺失、性能退化 → 应修复，可协商
    - MINOR：措辞、格式、可读性 → 不阻塞合并，记录即可
-6. **在 PR 下发 PRE-AUDIT 评论**
-7. **等待修复并发 RE-AUDIT 评论**
-8. **发 FINAL-VERDICT 评论**
+9. **发布评论**（按层级适配，见 8.4）
 
-### 8.4 PR 评论强制要求（缺一不可）
+### 8.4 PR 评论强制要求（按层级自适应）
 
-审计 Agent 在同一 PR 必须发布 3 条评论：
+评论模型根据审计层级自适应，不再一律要求三条评论：
 
-#### PRE-AUDIT 评论
+| Tier | 评论模型 | 说明 |
+|------|---------|------|
+| **Tier L** | 单条 FINAL-VERDICT | 低风险 PR 直接给结论 |
+| **Tier S** | PRE-AUDIT + FINAL-VERDICT | 有 BLOCKER 时插入 RE-AUDIT |
+| **Tier D** | PRE → RE（可多轮，最多 5 轮）→ FINAL | 架构性 PR 允许深度迭代 |
+
+所有评论必须包含结构化元数据头（`<!-- audit-meta ... -->`）。
+
+#### PRE-AUDIT 评论（Tier S/D）
 
 ```
 ## PRE-AUDIT：Issue #<N>
 
+<!-- audit-meta
+tier: S|D
+change_type: <WHERE 标签>
+risk: <RISK 等级>
+scope: <SCOPE 等级>
+files_reviewed: <已审/总数>
+commands_executed: [review-audit.sh, ...]
+playbooks_loaded: [<playbook 文件名>, ...]
+-->
+
 **审计人：** <独立审计 Agent 名称>
 **审计 HEAD：** `<commit SHA 前 8 位>`
+**审计层级：** Tier <L|S|D>
+**变更分类：** <WHERE> / <RISK> / <SCOPE>
+
+### Playbook 检查结果
+| # | 检查项 | 结果 | 证据 |
+|---|--------|------|------|
+| 1 | ... | ✅ / ❌ BLOCKER / N/A | ... |
 
 ### 不能做清单命中项
 - [ ] CRLF/LF 噪音检查
@@ -203,10 +315,17 @@ openspec/             .github/workflows/
 ### 复审结论：ACCEPT / REJECT
 ```
 
-#### FINAL-VERDICT 评论
+#### FINAL-VERDICT 评论（所有 Tier）
 
 ```
 ## FINAL-VERDICT：Issue #<N>
+
+<!-- audit-meta
+tier: <L|S|D>
+verdict: ACCEPT|REJECT
+files_reviewed: <已审/总数>
+commands_executed: [...]
+-->
 
 ### 最终判定：ACCEPT / REJECT
 
@@ -222,16 +341,17 @@ openspec/             .github/workflows/
 - **ACCEPT**：无 BLOCKER；SIGNIFICANT 全部已解决或已记录跟进 Issue
 - **REJECT**：存在 BLOCKER 或未解决的 SIGNIFICANT → 等修复后复审
 
-### 8.6 审计必跑命令（结果需进 PR 评论）
+### 8.6 审计命令（分层执行）
+
+审计命令已整合为分层入口脚本：
 
 ```bash
-git diff --numstat
-git diff --check
-git diff --ignore-cr-at-eol --name-status
-bash -n scripts/agent_pr_automerge_and_sync.sh
-pytest -q scripts/tests
-test -x scripts/agent_pr_automerge_and_sync.sh && echo EXEC_OK
+scripts/review-audit.sh L [<base-ref>]   # Tier L：CRLF + diff 概览
+scripts/review-audit.sh S [<base-ref>]   # Tier S：+ typecheck + 相关测试 + Storybook + 脚本检查
+scripts/review-audit.sh D [<base-ref>]   # Tier D：+ 全量测试 + lint + 架构门禁 + contract
 ```
+
+各层级包含的具体命令详见 `scripts/review-audit.sh` 内部注释。
 
 ### 8.7 不可省略
 
