@@ -1515,8 +1515,13 @@ export const ipcContract = {
             aiContextLevel: s.optional(KG_AI_CONTEXT_LEVEL_SCHEMA),
           }),
         ),
+        limit: s.optional(s.number()),
+        offset: s.optional(s.number()),
       }),
-      response: s.object({ items: s.array(KG_ENTITY_SCHEMA) }),
+      response: s.object({
+        items: s.array(KG_ENTITY_SCHEMA),
+        totalCount: s.number(),
+      }),
     },
     "knowledge:entity:update": {
       request: s.object({
@@ -1556,8 +1561,15 @@ export const ipcContract = {
       response: KG_RELATION_SCHEMA,
     },
     "knowledge:relation:list": {
-      request: s.object({ projectId: s.string() }),
-      response: s.object({ items: s.array(KG_RELATION_SCHEMA) }),
+      request: s.object({
+        projectId: s.string(),
+        limit: s.optional(s.number()),
+        offset: s.optional(s.number()),
+      }),
+      response: s.object({
+        items: s.array(KG_RELATION_SCHEMA),
+        totalCount: s.number(),
+      }),
     },
     "knowledge:relation:update": {
       request: s.object({

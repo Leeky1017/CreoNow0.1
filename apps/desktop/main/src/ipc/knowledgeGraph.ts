@@ -46,6 +46,8 @@ type EntityListPayload = {
   filter?: {
     aiContextLevel?: AiContextLevel;
   };
+  limit?: number;
+  offset?: number;
 };
 
 type EntityUpdatePayload = {
@@ -78,6 +80,8 @@ type RelationCreatePayload = {
 
 type RelationListPayload = {
   projectId: string;
+  limit?: number;
+  offset?: number;
 };
 
 type RelationUpdatePayload = {
@@ -542,14 +546,16 @@ function registerKgEntityHandlers(
     async (
       _event,
       payload: EntityListPayload,
-    ): Promise<IpcResponse<{ items: KnowledgeEntity[] }>> => {
+    ): Promise<
+      IpcResponse<{ items: KnowledgeEntity[]; totalCount: number }>
+    > => {
       if (!deps.db) {
-        return notReady<{ items: KnowledgeEntity[] }>();
+        return notReady<{ items: KnowledgeEntity[]; totalCount: number }>();
       }
 
       const service = createService();
       if (!service) {
-        return notReady<{ items: KnowledgeEntity[] }>();
+        return notReady<{ items: KnowledgeEntity[]; totalCount: number }>();
       }
       const res = service.entityList(payload);
       return res.ok
@@ -634,14 +640,16 @@ function registerKgRelationHandlers(
     async (
       _event,
       payload: RelationListPayload,
-    ): Promise<IpcResponse<{ items: KnowledgeRelation[] }>> => {
+    ): Promise<
+      IpcResponse<{ items: KnowledgeRelation[]; totalCount: number }>
+    > => {
       if (!deps.db) {
-        return notReady<{ items: KnowledgeRelation[] }>();
+        return notReady<{ items: KnowledgeRelation[]; totalCount: number }>();
       }
 
       const service = createService();
       if (!service) {
-        return notReady<{ items: KnowledgeRelation[] }>();
+        return notReady<{ items: KnowledgeRelation[]; totalCount: number }>();
       }
       const res = service.relationList(payload);
       return res.ok
