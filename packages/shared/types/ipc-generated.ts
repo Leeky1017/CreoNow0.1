@@ -61,6 +61,10 @@ export type IpcErrorCode =
   | "MODEL_NOT_READY"
   | "NOT_FOUND"
   | "PERMISSION_DENIED"
+  | "PREFLIGHT_INVALID_API_KEY_FORMAT"
+  | "PREFLIGHT_MISSING_API_KEY"
+  | "PREFLIGHT_MISSING_MODEL"
+  | "PREFLIGHT_MODEL_PROVIDER_MISMATCH"
   | "PROJECT_CAPACITY_EXCEEDED"
   | "PROJECT_DELETE_REQUIRES_ARCHIVE"
   | "PROJECT_IPC_SCHEMA_INVALID"
@@ -410,7 +414,11 @@ export type IpcChannelSpec = {
           | "CONTEXT_BUDGET_INVALID_MINIMUM"
           | "CONTEXT_BUDGET_CONFLICT"
           | "CONTEXT_TOKENIZER_MISMATCH"
-          | "DOCUMENT_SIZE_EXCEEDED";
+          | "DOCUMENT_SIZE_EXCEEDED"
+          | "PREFLIGHT_MISSING_API_KEY"
+          | "PREFLIGHT_INVALID_API_KEY_FORMAT"
+          | "PREFLIGHT_MISSING_MODEL"
+          | "PREFLIGHT_MODEL_PROVIDER_MISMATCH";
         message: string;
       };
       latencyMs: number;
@@ -1263,7 +1271,11 @@ export type IpcChannelSpec = {
                 | "CONTEXT_BUDGET_INVALID_MINIMUM"
                 | "CONTEXT_BUDGET_CONFLICT"
                 | "CONTEXT_TOKENIZER_MISMATCH"
-                | "DOCUMENT_SIZE_EXCEEDED";
+                | "DOCUMENT_SIZE_EXCEEDED"
+                | "PREFLIGHT_MISSING_API_KEY"
+                | "PREFLIGHT_INVALID_API_KEY_FORMAT"
+                | "PREFLIGHT_MISSING_MODEL"
+                | "PREFLIGHT_MODEL_PROVIDER_MISMATCH";
               message: string;
             };
             status: "error";
@@ -1370,7 +1382,11 @@ export type IpcChannelSpec = {
                 | "CONTEXT_BUDGET_INVALID_MINIMUM"
                 | "CONTEXT_BUDGET_CONFLICT"
                 | "CONTEXT_TOKENIZER_MISMATCH"
-                | "DOCUMENT_SIZE_EXCEEDED";
+                | "DOCUMENT_SIZE_EXCEEDED"
+                | "PREFLIGHT_MISSING_API_KEY"
+                | "PREFLIGHT_INVALID_API_KEY_FORMAT"
+                | "PREFLIGHT_MISSING_MODEL"
+                | "PREFLIGHT_MODEL_PROVIDER_MISMATCH";
               message: string;
             };
             status: "error";
@@ -1874,7 +1890,11 @@ export type IpcChannelSpec = {
         | "CONTEXT_BUDGET_INVALID_MINIMUM"
         | "CONTEXT_BUDGET_CONFLICT"
         | "CONTEXT_TOKENIZER_MISMATCH"
-        | "DOCUMENT_SIZE_EXCEEDED";
+        | "DOCUMENT_SIZE_EXCEEDED"
+        | "PREFLIGHT_MISSING_API_KEY"
+        | "PREFLIGHT_INVALID_API_KEY_FORMAT"
+        | "PREFLIGHT_MISSING_MODEL"
+        | "PREFLIGHT_MODEL_PROVIDER_MISMATCH";
       message?: string;
       progress: number;
       projectId: string;
@@ -1974,7 +1994,11 @@ export type IpcChannelSpec = {
         | "CONTEXT_BUDGET_INVALID_MINIMUM"
         | "CONTEXT_BUDGET_CONFLICT"
         | "CONTEXT_TOKENIZER_MISMATCH"
-        | "DOCUMENT_SIZE_EXCEEDED";
+        | "DOCUMENT_SIZE_EXCEEDED"
+        | "PREFLIGHT_MISSING_API_KEY"
+        | "PREFLIGHT_INVALID_API_KEY_FORMAT"
+        | "PREFLIGHT_MISSING_MODEL"
+        | "PREFLIGHT_MODEL_PROVIDER_MISMATCH";
       message?: string;
       progress: number;
       projectId: string;
@@ -2939,7 +2963,11 @@ export type IpcChannelSpec = {
           | "CONTEXT_BUDGET_INVALID_MINIMUM"
           | "CONTEXT_BUDGET_CONFLICT"
           | "CONTEXT_TOKENIZER_MISMATCH"
-          | "DOCUMENT_SIZE_EXCEEDED";
+          | "DOCUMENT_SIZE_EXCEEDED"
+          | "PREFLIGHT_MISSING_API_KEY"
+          | "PREFLIGHT_INVALID_API_KEY_FORMAT"
+          | "PREFLIGHT_MISSING_MODEL"
+          | "PREFLIGHT_MODEL_PROVIDER_MISMATCH";
         error_message?: string;
         id: string;
         name: string;
