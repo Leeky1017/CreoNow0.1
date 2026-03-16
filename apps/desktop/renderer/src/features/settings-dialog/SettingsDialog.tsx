@@ -17,6 +17,12 @@ import {
   defaultAccountSettings,
   type AccountSettings,
 } from "./SettingsAccount";
+import {
+  SettingsExport,
+  defaultExportSettings,
+  type ExportSettings,
+} from "./SettingsExport";
+import { ShortcutsPanel } from "../shortcuts/ShortcutsPanel";
 import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore";
 import { useAppToast } from "../../components/providers/AppToastProvider";
 import { usePreferences } from "../../contexts/PreferencesContext";
@@ -32,7 +38,9 @@ export type SettingsTab =
   | "ai"
   | "judge"
   | "analytics"
-  | "account";
+  | "account"
+  | "export"
+  | "shortcuts";
 
 /**
  * SettingsDialog props.
@@ -61,6 +69,8 @@ function getNavItems(
     { value: "judge", label: t("settingsDialog.dialog.navJudge") },
     { value: "analytics", label: t("settingsDialog.dialog.navAnalytics") },
     { value: "account", label: t("settingsDialog.dialog.navAccount") },
+    { value: "export", label: t("settingsDialog.dialog.navExport") },
+    { value: "shortcuts", label: t("settingsDialog.dialog.navShortcuts") },
   ];
 }
 
@@ -224,6 +234,9 @@ export function SettingsDialog({
   const [accountSettings] = React.useState<AccountSettings>(
     defaultAccountSettings,
   );
+  const [exportSettings, setExportSettings] = React.useState<ExportSettings>(
+    defaultExportSettings,
+  );
   const showAiMarks = useVersionPreferencesStore((s) => s.showAiMarks);
   const setShowAiMarks = useVersionPreferencesStore((s) => s.setShowAiMarks);
 
@@ -286,6 +299,15 @@ export function SettingsDialog({
             }}
           />
         );
+      case "export":
+        return (
+          <SettingsExport
+            settings={exportSettings}
+            onSettingsChange={setExportSettings}
+          />
+        );
+      case "shortcuts":
+        return <ShortcutsPanel />;
       default: {
         const _exhaustive: never = activeTab;
         return _exhaustive;

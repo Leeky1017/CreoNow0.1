@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Toggle } from "../../components/primitives/Toggle";
-import { Text } from "../../components/primitives";
+import { Button, Text } from "../../components/primitives";
 
 import { File, FileCode, FileText } from "lucide-react";
 /**
@@ -123,9 +123,9 @@ export function SettingsExport({
           {formats.map(({ value, label, sublabel }) => {
             const isSelected = settings.defaultFormat === value;
             return (
-              <button
+              <Button
                 key={value}
-                type="button"
+                variant="ghost"
                 onClick={() => updateSetting("defaultFormat", value)}
                 className={`${formatCardBaseStyles} ${
                   isSelected
@@ -146,7 +146,7 @@ export function SettingsExport({
                     {sublabel}
                   </Text>
                 </div>
-              </button>
+              </Button>
             );
           })}
         </div>

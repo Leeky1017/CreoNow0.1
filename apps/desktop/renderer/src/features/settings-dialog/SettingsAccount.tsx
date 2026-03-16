@@ -64,21 +64,21 @@ const cardStyles = [
 /**
  * Plan badge component
  */
-function PlanBadge({ plan }: { plan: SubscriptionPlan }): JSX.Element {
+function PlanBadge({ plan, t }: { plan: SubscriptionPlan; t: (key: string) => string }): JSX.Element {
   const planConfig: Record<
     SubscriptionPlan,
     { label: string; className: string }
   > = {
     free: {
-      label: "Free",
+      label: t("settingsDialog.account.planFree"),
       className: "bg-[var(--color-bg-surface)] text-[var(--color-fg-muted)]",
     },
     pro: {
-      label: "Pro",
+      label: t("settingsDialog.account.planPro"),
       className: "bg-[var(--color-info-subtle)] text-[var(--color-info)]",
     },
     team: {
-      label: "Team",
+      label: t("settingsDialog.account.planTeam"),
       className: "bg-[var(--color-success-subtle)] text-[var(--color-success)]",
     },
   };
@@ -159,16 +159,16 @@ export function SettingsAccount({
               <Text size="body" weight="medium" color="default">
                 {t("settingsDialog.account.currentPlan")}
               </Text>
-              <PlanBadge plan={account.plan} />
+              <PlanBadge plan={account.plan} t={t} />
             </div>
           </div>
 
           <Text size="small" color="muted" className="mb-4" as="p">
             {account.plan === "free"
-              ? "Upgrade to Pro for unlimited AI assistance, priority support, and advanced export options."
+              ? t("settingsDialog.account.freeDescription")
               : account.plan === "pro"
-                ? "You have access to all Pro features including unlimited AI assistance and priority support."
-                : "Team plan includes collaboration features, shared workspaces, and admin controls."}
+                ? t("settingsDialog.account.proDescription")
+                : t("settingsDialog.account.teamDescription")}
           </Text>
 
           <div className="flex gap-3">

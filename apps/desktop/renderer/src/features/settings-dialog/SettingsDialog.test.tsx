@@ -51,6 +51,19 @@ vi.mock("../analytics/AnalyticsPage", () => ({
   ),
 }));
 
+vi.mock("./SettingsExport", () => ({
+  SettingsExport: () => <div data-testid="mock-export-section">Export</div>,
+  defaultExportSettings: {
+    defaultFormat: "pdf",
+    includeMetadata: true,
+    autoGenerateFilename: true,
+  },
+}));
+
+vi.mock("../shortcuts/ShortcutsPanel", () => ({
+  ShortcutsPanel: () => <div data-testid="mock-shortcuts-section">Shortcuts</div>,
+}));
+
 function createMockStorage(): Storage {
   const store = new Map<string, string>();
   return {
@@ -93,6 +106,8 @@ describe("SettingsDialog", () => {
     expect(screen.getByTestId("settings-nav-judge")).toBeInTheDocument();
     expect(screen.getByTestId("settings-nav-analytics")).toBeInTheDocument();
     expect(screen.getByTestId("settings-nav-account")).toBeInTheDocument();
+    expect(screen.getByTestId("settings-nav-export")).toBeInTheDocument();
+    expect(screen.getByTestId("settings-nav-shortcuts")).toBeInTheDocument();
   });
 
   it("does not render when open is false", () => {
@@ -129,6 +144,12 @@ describe("SettingsDialog", () => {
 
     await user.click(screen.getByTestId("settings-nav-account"));
     expect(screen.getByTestId("mock-account-section")).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("settings-nav-export"));
+    expect(screen.getByTestId("mock-export-section")).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("settings-nav-shortcuts"));
+    expect(screen.getByTestId("mock-shortcuts-section")).toBeInTheDocument();
   });
 
   it("respects defaultTab prop", () => {
