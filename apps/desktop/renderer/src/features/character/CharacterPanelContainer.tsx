@@ -13,6 +13,7 @@ import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { useDeferredLoading } from "../../lib/useDeferredLoading";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useKgStore } from "../../stores/kgStore";
+import { useEditorStore } from "../../stores/editorStore";
 import { CharacterPanelContent } from "./CharacterPanel";
 import { CharacterPanelSkeleton } from "./CharacterPanelSkeleton";
 import { kgToCharacters, characterToMetadataJson } from "./characterFromKg";
@@ -49,6 +50,9 @@ export function CharacterPanelContainer(
   const entityCreate = useKgStore((s) => s.entityCreate);
   const entityUpdate = useKgStore((s) => s.entityUpdate);
   const entityDelete = useKgStore((s) => s.entityDelete);
+
+  // Editor store for document navigation
+  const openDocument = useEditorStore((s) => s.openDocument);
 
   // Confirm dialog for delete
   const { confirm, dialogProps } = useConfirmDialog();
@@ -137,6 +141,13 @@ export function CharacterPanelContainer(
     setSelectedId(characterId);
   }, []);
 
+  const handleNavigateToChapter = React.useCallback(
+    (chapterId: string) => {
+      void openDocument({ projectId, documentId: chapterId });
+    },
+    [openDocument, projectId],
+  );
+
   const showLoading = useDeferredLoading(bootstrapStatus === "loading");
 
   // Loading state
@@ -200,6 +211,7 @@ export function CharacterPanelContainer(
         onCreate={() => void handleCreate()}
         onUpdate={(char) => void handleUpdate(char)}
         onDelete={(id) => void handleDelete(id)}
+        onNavigateToChapter={handleNavigateToChapter}
       />
       <SystemDialog {...dialogProps} />
     </>

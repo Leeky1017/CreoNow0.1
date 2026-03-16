@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { useKgStore } from "../../stores/kgStore";
+import { useEditorStore } from "../../stores/editorStore";
 import {
   CharacterCardList,
   type CharacterCardSummary,
@@ -70,6 +71,8 @@ export function CharacterCardListContainer({
   const entityCreate = useKgStore((state) => state.entityCreate);
   const entityUpdate = useKgStore((state) => state.entityUpdate);
   const entityDelete = useKgStore((state) => state.entityDelete);
+
+  const openDocument = useEditorStore((s) => s.openDocument);
 
   const { confirm, dialogProps } = useConfirmDialog();
 
@@ -148,6 +151,13 @@ export function CharacterCardListContainer({
     [characters, confirm, entityDelete, selectedId, t],
   );
 
+  const handleNavigateToChapter = React.useCallback(
+    (chapterId: string) => {
+      void openDocument({ projectId, documentId: chapterId });
+    },
+    [openDocument, projectId],
+  );
+
   if (bootstrapStatus === "loading") {
     return (
       <div className="h-full flex items-center justify-center">
@@ -189,6 +199,7 @@ export function CharacterCardListContainer({
         character={selectedCharacter}
         onSave={(character) => void handleSaveCharacter(character)}
         onDelete={(characterId) => void handleDeleteCharacter(characterId)}
+        onNavigateToChapter={handleNavigateToChapter}
         availableCharacters={characters}
       />
 

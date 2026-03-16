@@ -16,13 +16,20 @@ import {
   type ServiceResult,
 } from "./kgService";
 
+type RecognitionEvidence = {
+  source: "pattern" | "quoted" | "context";
+  matchedText: string;
+};
+
 type RecognitionCandidate = {
   name: string;
   type: KnowledgeEntityType;
+  evidence?: RecognitionEvidence;
 };
 
 type RecognitionResult = {
   candidates: RecognitionCandidate[];
+  degraded: boolean;
 };
 
 type RecognitionTask = {
@@ -142,15 +149,23 @@ function normalizeSuggestionKey(args: {
 }
 
 function inferSuggestionType(name: string): KnowledgeEntityType {
-  if (/(仓库|城|镇|村|山|馆|楼)$/u.test(name)) {
+  if (/(仓库|城|镇|村|山|馆|楼|谷|岛|洞|林|峰|崖|寺|庙|殿|府|庄|堡)$/u.test(name)) {
     return "location";
+  }
+  if (EVENT_SUFFIXES.test(name)) {
+    return "event";
+  }
+  if (ITEM_SUFFIXES.test(name)) {
+    return "item";
   }
   return "character";
 }
 
 function normalizeCharacterName(rawName: string): string {
   const trimmed = rawName.trim();
-  const stopCharIndex = trimmed.search(/[的在了和与并第]/u);
+  const stopCharIndex = trimmed.search(
+    /[的在了和与并第提说道问看走来去回到把被让给向从上下用打拿做是有也都就又还但等却正站坐跑起出入叫喊想要能会将则已不可]/u,
+  );
   if (stopCharIndex <= 0) {
     return trimmed;
   }
@@ -167,10 +182,57 @@ async function sleep(ms: number): Promise<void> {
 }
 
 /**
+ * Common Chinese surname list for character name detection.
+ */
+const COMMON_SURNAMES = [
+  "赵", "钱", "孙", "李", "周", "吴", "郑", "王",
+  "冯", "陈", "褚", "卫", "蒋", "沈", "韩", "杨",
+  "朱", "秦", "尤", "许", "何", "吕", "施", "张",
+  "孔", "曹", "严", "华", "金", "魏", "陶", "姜",
+  "戚", "谢", "邹", "喻", "柏", "水", "窦", "章",
+  "苏", "潘", "葛", "奚", "范", "彭", "郎", "鲁",
+  "韦", "昌", "马", "苗", "凤", "花", "方", "俞",
+  "任", "袁", "柳", "丰", "鲍", "史", "唐", "费",
+  "廉", "岑", "薛", "雷", "贺", "倪", "汤", "滕",
+  "殷", "罗", "毕", "郝", "邬", "安", "常", "乐",
+  "于", "时", "傅", "皮", "卞", "齐", "康", "伍",
+  "余", "元", "卜", "顾", "孟", "黄", "穆", "萧",
+  "尹", "姚", "邵", "湛", "汪", "祁", "毛", "禹",
+  "狄", "贝", "明", "臧", "计", "伏", "成", "戴",
+  "谈", "宋", "茅", "庞", "熊", "纪", "舒", "屈",
+  "项", "祝", "董", "梁", "杜", "阮", "蓝", "闽",
+  "席", "季", "麻", "强", "贾", "路", "娄", "危",
+  "林", "刘", "徐", "高", "夏", "田", "胡", "郭",
+  "程", "叶", "宫", "温", "白", "崔", "吉", "钮",
+  "龚", "黎", "段", "武", "江", "颜", "侯", "邢",
+  "钟", "付", "丁", "石", "肖", "谷", "邓", "曾",
+  "欧阳", "司马", "上官", "诸葛", "公孙", "令狐",
+  "慕容", "司徒", "皇甫", "东方", "西门", "南宫",
+  "独孤", "长孙", "宇文",
+] as const;
+
+const SURNAME_PATTERN = new RegExp(
+  `(${COMMON_SURNAMES.join("|")})[\\u4e00-\\u9fa5]{1,3}`,
+  "gu",
+);
+
+/**
+ * Event-related keyword patterns for recognizing events.
+ */
+const EVENT_SUFFIXES = /(大会|之战|盟约|仪式|庆典|比武|论道|祭祀|会议|大典|风波|事变|之乱|叛乱|起义)$/u;
+
+/**
+ * Item/artifact keyword patterns for recognizing items.
+ */
+const ITEM_SUFFIXES = /(之剑|之刃|神剑|宝剑|法杖|令牌|秘籍|宝典|圣物|神器|法宝|灵石|丹药|卷轴|古籍)$/u;
+
+/**
  * Create a deterministic mock recognizer for KG suggestions.
  *
  * Why: tests must avoid real LLM calls while still exercising async recognition
  * and failure/degrade paths.
+ *
+ * Enhanced with broader Chinese name pattern matching and evidence chain.
  */
 function createMockRecognizer(): Recognizer {
   return {
@@ -190,8 +252,10 @@ function createMockRecognizer(): Recognizer {
         await sleep(delayMs);
       }
 
+      let degraded = false;
       const candidates = new Map<string, RecognitionCandidate>();
 
+      // Pattern 1: Quoted entity names 「...」
       const quotedPattern = /「([^」]{2,32})」/gu;
       for (const match of contentText.matchAll(quotedPattern)) {
         const rawName = match[1]?.trim() ?? "";
@@ -202,24 +266,35 @@ function createMockRecognizer(): Recognizer {
         candidates.set(normalizeSuggestionKey({ name: rawName, type }), {
           name: rawName,
           type,
+          evidence: { source: "quoted", matchedText: match[0] },
         });
       }
 
-      const characterPattern = /林[\u4e00-\u9fa5]{1,3}/gu;
-      for (const match of contentText.matchAll(characterPattern)) {
-        const rawName = match[0]?.trim() ?? "";
-        const normalizedName = normalizeCharacterName(rawName);
-        if (normalizedName.length < 2) {
-          continue;
+      // Pattern 2: Common Chinese surname + given name (1-3 chars)
+      try {
+        for (const match of contentText.matchAll(SURNAME_PATTERN)) {
+          const rawName = match[0]?.trim() ?? "";
+          const normalizedName = normalizeCharacterName(rawName);
+          if (normalizedName.length < 2) {
+            continue;
+          }
+          const type: KnowledgeEntityType = "character";
+          candidates.set(
+            normalizeSuggestionKey({ name: normalizedName, type }),
+            {
+              name: normalizedName,
+              type,
+              evidence: { source: "pattern", matchedText: match[0] },
+            },
+          );
         }
-        const type: KnowledgeEntityType = "character";
-        candidates.set(normalizeSuggestionKey({ name: normalizedName, type }), {
-          name: normalizedName,
-          type,
-        });
+      } catch {
+        degraded = true;
       }
 
-      const locationPattern = /[\u4e00-\u9fa5]{1,16}(仓库|城|镇|村|山|馆|楼)/gu;
+      // Pattern 3: Location suffixes (prefix 1-2 chars to avoid greedy over-match)
+      const locationPattern =
+        /[\u4e00-\u9fa5]{1,2}(仓库|城|镇|村|山|馆|楼|谷|岛|洞|林|峰|崖|寺|庙|殿|府|庄|堡)/gu;
       for (const match of contentText.matchAll(locationPattern)) {
         const rawName = match[0]?.trim() ?? "";
         if (rawName.length === 0) {
@@ -229,6 +304,37 @@ function createMockRecognizer(): Recognizer {
         candidates.set(normalizeSuggestionKey({ name: rawName, type }), {
           name: rawName,
           type,
+          evidence: { source: "pattern", matchedText: match[0] },
+        });
+      }
+
+      // Pattern 4: Event recognition (prefix 2 chars to avoid greedy over-match)
+      const eventPattern = /[\u4e00-\u9fa5]{2,2}(大会|之战|盟约|仪式|庆典|比武|论道|祭祀|会议|大典|风波|事变|之乱|叛乱|起义)/gu;
+      for (const match of contentText.matchAll(eventPattern)) {
+        const rawName = match[0]?.trim() ?? "";
+        if (rawName.length === 0) {
+          continue;
+        }
+        const type: KnowledgeEntityType = "event";
+        candidates.set(normalizeSuggestionKey({ name: rawName, type }), {
+          name: rawName,
+          type,
+          evidence: { source: "pattern", matchedText: match[0] },
+        });
+      }
+
+      // Pattern 5: Item recognition (prefix 2 chars to avoid greedy over-match)
+      const itemPattern = /[\u4e00-\u9fa5]{2,2}(之剑|之刃|神剑|宝剑|法杖|令牌|秘籍|宝典|圣物|神器|法宝|灵石|丹药|卷轴|古籍)/gu;
+      for (const match of contentText.matchAll(itemPattern)) {
+        const rawName = match[0]?.trim() ?? "";
+        if (rawName.length === 0) {
+          continue;
+        }
+        const type: KnowledgeEntityType = "item";
+        candidates.set(normalizeSuggestionKey({ name: rawName, type }), {
+          name: rawName,
+          type,
+          evidence: { source: "pattern", matchedText: match[0] },
         });
       }
 
@@ -243,6 +349,7 @@ function createMockRecognizer(): Recognizer {
         ok: true,
         data: {
           candidates: orderedCandidates,
+          degraded,
         },
       };
     },
@@ -494,6 +601,16 @@ export function createKgRecognitionRuntime(args: {
         task_id: task.taskId,
       });
       return "failed";
+    }
+
+    if (recognitionRes.data.degraded) {
+      args.logger.error("kg_recognition_degraded", {
+        code: "KG_RECOGNITION_DEGRADED",
+        project_id: task.projectId,
+        document_id: task.documentId,
+        session_id: task.sessionId,
+        trace_id: task.traceId,
+      });
     }
 
     const existingKeys = new Set(
