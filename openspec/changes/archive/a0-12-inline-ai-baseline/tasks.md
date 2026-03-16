@@ -39,7 +39,7 @@
 - [x] 测试：macOS 下 `EDITOR_SHORTCUTS.inlineAi.display()` 返回 `"⌘K"`
 - [x] 测试：非 macOS 下 `EDITOR_SHORTCUTS.inlineAi.display()` 返回 `"Ctrl+K"`
 
-**文件**: `renderer/src/config/__tests__/apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`（新建或追加）
+**文件**: `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`（当前已合并覆盖快捷键断言）
 
 ### Task 1.2: InlineAiInput 触发与守卫测试
 
@@ -248,7 +248,7 @@
 - [x] FlippedPosition：从上方渲染（模拟选区在底部时的翻转）
 - [x] 确认 `pnpm -C apps/desktop storybook:build` 可构建
 
-**文件**: `Storybook build（当前以 editor 组件整体构建为准）`（新建）
+**文件 / 证据**: `apps/desktop/renderer/src/features/editor/InlineAiInput.tsx`（当前不单列 story 文件，视觉验收以整体 Storybook build 为准）
 
 ### Task 3.3: InlineAiDiffPreview Storybook Story
 
@@ -257,7 +257,7 @@
 - [x] LongContent：长文本 diff 滚动展示
 - [x] 确认 `pnpm -C apps/desktop storybook:build` 可构建
 
-**文件**: `Storybook build（当前以 editor 组件整体构建为准）`（新建）
+**文件 / 证据**: `apps/desktop/renderer/src/features/editor/InlineAiDiffPreview.tsx`（当前不单列 story 文件，视觉验收以整体 Storybook build 为准）
 
 ### Task 3.4: 清理与类型安全
 
@@ -271,23 +271,23 @@
 
 ## 验收核查表
 
-| AC    | 对应测试文件                                                                                                                  | 核心断言                                                       | 状态 |
-| ----- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ---- |
-| AC-1  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | `EDITOR_SHORTCUTS.inlineAi.keys === "mod+K"`                   | [x]  |
-| AC-2  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | 有选区 + Cmd+K → InlineAiInput 渲染                            | [x]  |
-| AC-3  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | 无选区 + Cmd+K → 不触发                                        | [x]  |
-| AC-4  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | 禅模式 + Cmd+K → 不触发                                        | [x]  |
-| AC-5  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | Inline AI 复用当前 AI/Skill 执行链路并返回建议结果             | [x]  |
-| AC-6  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | Accept → 文本替换 + undo 历史                                  | [x]  |
-| AC-7  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | Reject → 原文不变 + 组件移除                                   | [x]  |
-| AC-8  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | Regenerate → `streaming` 状态 + 重新执行                       | [x]  |
-| AC-9  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | 错误 → Toast + 状态 idle                                       | [x]  |
-| AC-10 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` + `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | `role` + `aria-label` 断言                                     | [x]  |
-| AC-11 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | 全部 17 个 key 存在于 zh-CN / en                               | [x]  |
-| AC-12 | Storybook build                                                                                                               | `pnpm -C apps/desktop storybook:build` 成功                    | [x]  |
-| AC-13 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | loading / ready 切换时动作禁用与恢复正确                       | [x]  |
-| AC-14 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | hash 不一致 → 中止 + Toast                                     | [x]  |
-| AC-15 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                                                 | InlineAi.test.tsx 覆盖当前 `idle/input/loading/ready` 关键状态 | [x]  |
+| AC    | 对应测试文件                                                  | 核心断言                                                       | 状态 |
+| ----- | ------------------------------------------------------------- | -------------------------------------------------------------- | ---- |
+| AC-1  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | `EDITOR_SHORTCUTS.inlineAi.keys === "mod+K"`                   | [x]  |
+| AC-2  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | 有选区 + Cmd+K → InlineAiInput 渲染                            | [x]  |
+| AC-3  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | 无选区 + Cmd+K → 不触发                                        | [x]  |
+| AC-4  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | 禅模式 + Cmd+K → 不触发                                        | [x]  |
+| AC-5  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | Inline AI 复用当前 AI/Skill 执行链路并返回建议结果             | [x]  |
+| AC-6  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | Accept → 文本替换 + undo 历史                                  | [x]  |
+| AC-7  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | Reject → 原文不变 + 组件移除                                   | [x]  |
+| AC-8  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | Regenerate → `streaming` 状态 + 重新执行                       | [x]  |
+| AC-9  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | 错误 → Toast + 状态 idle                                       | [x]  |
+| AC-10 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | `role` + `aria-label` 断言                                     | [x]  |
+| AC-11 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | 全部 17 个 key 存在于 zh-CN / en                               | [x]  |
+| AC-12 | Storybook build                                               | `pnpm -C apps/desktop storybook:build` 成功                    | [x]  |
+| AC-13 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | loading / ready 切换时动作禁用与恢复正确                       | [x]  |
+| AC-14 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | hash 不一致 → 中止 + Toast                                     | [x]  |
+| AC-15 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | InlineAi.test.tsx 覆盖当前 `idle/input/loading/ready` 关键状态 | [x]  |
 
 ---
 

@@ -40,7 +40,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：`continue` skill，输入上下文 200 字、输出 1,500 字纯文本，断言校验通过
 - [x] 测试：`expand` skill，输入 100 字、输出 800 字纯文本，断言校验通过
 
-**文件**: `apps/desktop/main/src/services/skills/__tests__/apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`（新建）
+**文件**: `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`（新建）
 
 ### Task 1.2: 空输出检测测试
 
@@ -50,7 +50,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：输出为仅含空白 `"   \n  \t  "`，断言同样被拦截
 - [x] 测试：输出为 `undefined`，断言被拦截
 
-**文件**: `apps/desktop/main/src/services/skills/__tests__/apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
+**文件**: `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
 
 ### Task 1.3: 代码块污染检测测试
 
@@ -60,7 +60,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：输出包含 ` ``` ` 但无语言标识（裸代码块），断言同样被拦截
 - [x] 测试：输出包含单个反引号（`inline code`）而非三个，断言通过（不误伤 inline code）
 
-**文件**: `apps/desktop/main/src/services/skills/__tests__/apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
+**文件**: `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
 
 ### Task 1.4: HTML 标签污染检测测试
 
@@ -71,7 +71,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：输出包含 `<p class="x">段落</p>`，断言被拦截
 - [x] 测试：输出包含中文书名号 `《红楼梦》` 或数学不等式 `a < b`，断言通过（不误伤非 HTML 尖括号）
 
-**文件**: `apps/desktop/main/src/services/skills/__tests__/apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
+**文件**: `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
 
 ### Task 1.5: 膨胀检测测试
 
@@ -84,7 +84,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：`continue`，输入 300 字，输出 7,000 字（23.3 倍），断言被拦截
 - [x] 测试：`expand`，输入 100 字，输出 2,100 字（21 倍），断言被拦截
 
-**文件**: `apps/desktop/main/src/services/skills/__tests__/apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
+**文件**: `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
 
 ### Task 1.6: synopsis 回归测试
 
@@ -93,7 +93,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：`synopsis` skill 的输出仍走 `validateSynopsisOutput()` 函数，断言行为与变更前一致
 - [x] 测试：确认 `validateSkillRunOutput()` 对 `synopsis` 的分支逻辑未改变
 
-**文件**: `apps/desktop/main/src/services/skills/__tests__/apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
+**文件**: `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
 
 ### Task 1.7: 无输入基准跳过膨胀检测测试
 
@@ -102,7 +102,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：`polish`，`inputText` 为空字符串，输出 5,000 字，断言跳过膨胀检测，仅执行格式校验，最终通过
 - [x] 测试：`polish`，`inputText` 为 `undefined`，输出 5,000 字，断言同上
 
-**文件**: `apps/desktop/main/src/services/skills/__tests__/apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
+**文件**: `apps/desktop/main/src/services/skills/__tests__/skillOutputValidation.test.ts`
 
 ---
 

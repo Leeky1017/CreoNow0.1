@@ -37,7 +37,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：构造 7.3 MB 大小的 `contentJson`，调用 `file:document:save` 处理函数，断言返回 `{ ok: false, error: { code: "DOCUMENT_SIZE_EXCEEDED" } }`
 - [x] 测试：断言返回的 error.message 中包含当前文档大小信息（如 `"7.3 MB"`）
 
-**文件**: `apps/desktop/main/src/apps/desktop/main/src/ipc/__tests__/file-save-size-limit.test.ts`（新建）
+**文件**: `apps/desktop/main/src/ipc/__tests__/file-save-size-limit.test.ts`（新建）
 
 ### Task 1.2: 边界值测试
 
@@ -46,7 +46,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：构造恰好 5,242,880 字节的 `contentJson`，断言保存成功（`{ ok: true }`）
 - [x] 测试：构造 5,242,881 字节的 `contentJson`，断言保存被拦截（`{ ok: false, error: { code: "DOCUMENT_SIZE_EXCEEDED" } }`）
 
-**文件**: `apps/desktop/main/src/apps/desktop/main/src/ipc/__tests__/file-save-size-limit.test.ts`
+**文件**: `apps/desktop/main/src/ipc/__tests__/file-save-size-limit.test.ts`
 
 ### Task 1.3: 自动保存场景测试
 
@@ -55,7 +55,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：构造 6 MB 大小的 `contentJson`，`reason` 设为 `'autosave'`，调用保存处理函数，断言返回 `{ ok: false, error: { code: "DOCUMENT_SIZE_EXCEEDED" } }`
 - [x] 测试：确认自动保存请求与手动保存请求使用相同的体积校验逻辑
 
-**文件**: `apps/desktop/main/src/apps/desktop/main/src/ipc/__tests__/file-save-size-limit.test.ts`
+**文件**: `apps/desktop/main/src/ipc/__tests__/file-save-size-limit.test.ts`
 
 ### Task 1.4: Service 层独立校验测试
 
@@ -64,7 +64,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：直接调用 `documentCoreService.save()` 传入 6 MB 的 `contentJson`，断言返回体积超限错误
 - [x] 测试：直接调用 `documentCoreService.save()` 传入 2 MB 的 `contentJson`，断言正常保存
 
-**文件**: `apps/desktop/main/src/services/apps/desktop/main/src/services/documents/__tests__/documentCoreService-size-limit.test.ts`（新建）
+**文件**: `apps/desktop/main/src/services/documents/__tests__/documentCoreService-size-limit.test.ts`（新建）
 
 ### Task 1.5: 多字节字符体积计算测试
 
@@ -73,7 +73,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：构造纯中文字符组成的 `contentJson`（中文字符 UTF-8 编码每字 3 字节），验证体积计算使用字节而非字符数——例如 1,747,627 个中文字符（约 5 MB UTF-8）应被拦截，即使 `string.length` 仅约 1.7M
 - [x] 测试：构造相同字符数的纯 ASCII 字符 `contentJson`，验证 ASCII 场景下 `string.length` 与字节数一致时仍走 `Buffer.byteLength` 逻辑
 
-**文件**: `apps/desktop/main/src/apps/desktop/main/src/ipc/__tests__/file-save-size-limit.test.ts`
+**文件**: `apps/desktop/main/src/ipc/__tests__/file-save-size-limit.test.ts`
 
 ---
 

@@ -67,7 +67,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：模拟按下 `Cmd/Ctrl+Shift+F` → 断言搜索输入框获得焦点（`document.activeElement` 为搜索输入框）
 - [x] 测试：设置左侧边栏为折叠状态，模拟按下 `Cmd/Ctrl+Shift+F` → 断言边栏展开且 SearchPanel 可见
 
-**文件**: `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx / SearchPanel.visibility.test.tsx / SearchPanel.close.test.tsx`（新建）
+**文件**: `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx`（配合 SearchPanel.visibility / close 回归）
 
 ### Task 1.4: 快捷键重复按下行为测试
 
@@ -75,7 +75,7 @@ P0-6: 基础输入输出防线
 
 - [x] 测试：SearchPanel 已打开但焦点在编辑器中，模拟按下 `Cmd/Ctrl+Shift+F` → 断言 SearchPanel 保持可见且搜索输入框重新获得焦点
 
-**文件**: `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx / SearchPanel.visibility.test.tsx / SearchPanel.close.test.tsx`
+**文件**: `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx`（相关关闭/可见性场景由同目录测试补充）
 
 ### Task 1.5: Escape 键退出测试
 
@@ -84,7 +84,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：SearchPanel 打开，搜索输入框为空，模拟按下 `Escape` → 断言 SearchPanel 关闭
 - [x] 测试：SearchPanel 打开，搜索输入框有文本，模拟按下 `Escape` → 断言输入框文本清空、SearchPanel 保持打开
 
-**文件**: `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx / SearchPanel.visibility.test.tsx / SearchPanel.close.test.tsx`
+**文件**: `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx`（相关关闭/可见性场景由同目录测试补充）
 
 ### Task 1.6: 搜索结果点击跳转测试
 
@@ -93,7 +93,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：mock FTS 返回包含 `documentId` 和 `offset` 的结果 → 点击结果项 → 断言编辑器加载了对应文档（通过 editorStore 或 documentStore 的 mock 验证）
 - [x] 测试：目标文档已在编辑器中打开 → 点击结果项 → 断言文档未被重新加载（load 函数未再次调用），仅触发滚动
 
-**文件**: `apps/desktop/tests/integration/search/fts-result-jump.test.ts / apps/desktop/renderer/src/features/search/__tests__/search-panel-navigation.test.tsx`（新建）
+**文件**: `apps/desktop/tests/integration/search/fts-result-jump.test.ts`（键盘导航由 `search-panel-navigation.test.tsx` 补充）
 
 ### Task 1.7: 搜索结果键盘导航测试
 
@@ -102,7 +102,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：搜索结果列表有 3 项，焦点在输入框 → 按 Arrow Down → 断言第一项被选中（`aria-selected="true"` 或等效）
 - [x] 测试：第一项被选中 → 按 Enter → 断言触发了跳转行为
 
-**文件**: `apps/desktop/tests/integration/search/fts-result-jump.test.ts / apps/desktop/renderer/src/features/search/__tests__/search-panel-navigation.test.tsx`
+**文件**: `apps/desktop/tests/integration/search/fts-result-jump.test.ts`（键盘导航由 `search-panel-navigation.test.tsx` 补充）
 
 ### Task 1.8: 搜索无结果展示测试
 
@@ -120,7 +120,7 @@ P0-6: 基础输入输出防线
 - [x] 测试：搜索输入框具有 `role="searchbox"`
 - [x] 测试：搜索输入框具有 `aria-label` 属性，值不为空
 
-**文件**: `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx / SearchPanel.visibility.test.tsx / SearchPanel.close.test.tsx`
+**文件**: `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx`（相关关闭/可见性场景由同目录测试补充）
 
 ### Task 1.10: i18n key 覆盖验证测试
 
@@ -154,7 +154,7 @@ P0-6: 基础输入输出防线
 - [x] 若左侧边栏已折叠，先展开再切换
 - [x] 切换后使用 `ref` 或 `setTimeout` 聚焦搜索输入框
 
-**文件**: apps/desktop/renderer/src/components/layout/AppShell.tsx / apps/desktop/renderer/src/components/layout/**tests**/app-shell-global-search-command.test.tsx
+**文件**: `apps/desktop/renderer/src/components/layout/AppShell.tsx`（命令发现性由 `app-shell-global-search-command.test.tsx` 验证）
 
 ### Task 2.4: SearchPanel 搜索输入框自动聚焦
 
@@ -220,22 +220,22 @@ P0-6: 基础输入输出防线
 
 ## 验收标准 → 测试映射
 
-| 验收标准                     | 对应测试文件                                                                                                                                           | 测试用例名                                         | 状态 |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------- | ---- |
-| AC-1: 快捷键打开 SearchPanel | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx / SearchPanel.visibility.test.tsx / SearchPanel.close.test.tsx`                  | 模拟 Cmd/Ctrl+Shift+F 打开 SearchPanel             | [x]  |
-| AC-2: 输入框自动聚焦         | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx / SearchPanel.visibility.test.tsx / SearchPanel.close.test.tsx`                  | 打开后搜索输入框获得焦点                           | [x]  |
-| AC-3: 重复按键聚焦           | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx / SearchPanel.visibility.test.tsx / SearchPanel.close.test.tsx`                  | 已打开时再按快捷键输入框重新聚焦                   | [x]  |
-| AC-4: 折叠边栏展开           | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx / SearchPanel.visibility.test.tsx / SearchPanel.close.test.tsx`                  | 折叠状态按快捷键后边栏展开                         | [x]  |
-| AC-5: 结果点击跳转           | `apps/desktop/tests/integration/search/fts-result-jump.test.ts / apps/desktop/renderer/src/features/search/__tests__/search-panel-navigation.test.tsx` | 点击结果加载文档并滚动                             | [x]  |
-| AC-6: 跳转后高亮闪烁         | `apps/desktop/tests/integration/search/fts-result-jump.test.ts / apps/desktop/renderer/src/features/search/__tests__/search-panel-navigation.test.tsx` | 跳转后匹配位置高亮闪烁                             | [x]  |
-| AC-7: 已打开文档不重载       | `apps/desktop/tests/integration/search/fts-result-jump.test.ts / apps/desktop/renderer/src/features/search/__tests__/search-panel-navigation.test.tsx` | 已打开文档仅滚动不重载                             | [x]  |
-| AC-8: 无结果状态             | `apps/desktop/renderer/src/features/search/__tests__/search-panel-empty.test.tsx`                                                                      | 空结果渲染无结果提示                               | [x]  |
-| AC-9: 键盘导航               | `apps/desktop/tests/integration/search/fts-result-jump.test.ts / apps/desktop/renderer/src/features/search/__tests__/search-panel-navigation.test.tsx` | Arrow Down 选中 + Enter 激活                       | [x]  |
-| AC-10: Escape 退出           | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx / SearchPanel.visibility.test.tsx / SearchPanel.close.test.tsx`                  | Escape 清空或关闭                                  | [x]  |
-| AC-11: 无障碍属性            | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx / SearchPanel.visibility.test.tsx / SearchPanel.close.test.tsx`                  | 搜索输入框 role 和 aria-label                      | [x]  |
-| AC-12: shortcuts.ts 条目     | `apps/desktop/renderer/src/components/layout/__tests__/app-shell-global-search-command.test.tsx`                                                       | LAYOUT_SHORTCUTS 包含 globalSearch                 | [x]  |
-| AC-13: surfaceRegistry 入口  | `apps/desktop/renderer/src/surfaces/openSurface.test.ts`                                                                                               | searchPanel entryPoints 包含 shortcut              | [x]  |
-| AC-14: i18n key 覆盖         | `apps/desktop/renderer/src/features/search/SearchPanel.i18n-guard.test.ts`                                                                             | SearchPanel i18n guard 覆盖当前 search.\* 文案入口 | [x]  |
+| 验收标准                     | 对应测试文件                                                                                     | 测试用例名                                         | 状态 |
+| ---------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------- | ---- |
+| AC-1: 快捷键打开 SearchPanel | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx`                           | 模拟 Cmd/Ctrl+Shift+F 打开 SearchPanel             | [x]  |
+| AC-2: 输入框自动聚焦         | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx`                           | 打开后搜索输入框获得焦点                           | [x]  |
+| AC-3: 重复按键聚焦           | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx`                           | 已打开时再按快捷键输入框重新聚焦                   | [x]  |
+| AC-4: 折叠边栏展开           | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx`                           | 折叠状态按快捷键后边栏展开                         | [x]  |
+| AC-5: 结果点击跳转           | `apps/desktop/tests/integration/search/fts-result-jump.test.ts`                                  | 点击结果加载文档并滚动                             | [x]  |
+| AC-6: 跳转后高亮闪烁         | `apps/desktop/tests/integration/search/fts-result-jump.test.ts`                                  | 跳转后匹配位置高亮闪烁                             | [x]  |
+| AC-7: 已打开文档不重载       | `apps/desktop/tests/integration/search/fts-result-jump.test.ts`                                  | 已打开文档仅滚动不重载                             | [x]  |
+| AC-8: 无结果状态             | `apps/desktop/renderer/src/features/search/__tests__/search-panel-empty.test.tsx`                | 空结果渲染无结果提示                               | [x]  |
+| AC-9: 键盘导航               | `apps/desktop/tests/integration/search/fts-result-jump.test.ts`                                  | Arrow Down 选中 + Enter 激活                       | [x]  |
+| AC-10: Escape 退出           | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx`                           | Escape 清空或关闭                                  | [x]  |
+| AC-11: 无障碍属性            | `apps/desktop/renderer/src/features/search/SearchPanel.focus.test.tsx`                           | 搜索输入框 role 和 aria-label                      | [x]  |
+| AC-12: shortcuts.ts 条目     | `apps/desktop/renderer/src/components/layout/__tests__/app-shell-global-search-command.test.tsx` | LAYOUT_SHORTCUTS 包含 globalSearch                 | [x]  |
+| AC-13: surfaceRegistry 入口  | `apps/desktop/renderer/src/surfaces/openSurface.test.ts`                                         | searchPanel entryPoints 包含 shortcut              | [x]  |
+| AC-14: i18n key 覆盖         | `apps/desktop/renderer/src/features/search/SearchPanel.i18n-guard.test.ts`                       | SearchPanel i18n guard 覆盖当前 search.\* 文案入口 | [x]  |
 
 ---
 
