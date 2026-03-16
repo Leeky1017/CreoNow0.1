@@ -15,17 +15,17 @@ P0-3: 能力诚实分级与假功能处置
 
 ## 验收标准
 
-| ID   | 标准                                                                                                                                                        | 对应 Scenario                                |
-| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| ID   | 标准                                                                                                                                                              | 对应 Scenario                                |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
 | AC-1 | Settings Account 页所有 disabled 按钮附有 tooltip，显示 `t('settingsDialog.account.comingSoonTooltip')`                                                           | Settings Account 页按钮显示 Coming Soon 标注 |
-| AC-2 | Search 面板中 "View More" 链接不渲染                                                                                                                        | Search 面板隐藏无功能链接                    |
-| AC-3 | Search 面板中 "Search All Projects" 链接不渲染                                                                                                              | Search 面板隐藏无功能链接                    |
-| AC-4 | RightPanel ChatHistory 条目点击不执行操作，不输出 `console.info`，显示 Coming Soon tooltip                                                                  | ChatHistory 条目点击显示 Coming Soon 提示    |
-| AC-5 | 版本恢复 Restore 按钮 disabled + tooltip `t('versionControl.restoreComingSoon')`                                                                            | 版本恢复 Restore 按钮显示 Coming Soon 提示   |
+| AC-2 | Search 面板中 "View More" 链接不渲染                                                                                                                              | Search 面板隐藏无功能链接                    |
+| AC-3 | Search 面板中 "Search All Projects" 链接不渲染                                                                                                                    | Search 面板隐藏无功能链接                    |
+| AC-4 | RightPanel ChatHistory 条目点击不执行操作，不输出 `console.info`，显示 Coming Soon tooltip                                                                        | ChatHistory 条目点击显示 Coming Soon 提示    |
+| AC-5 | 版本恢复 Restore 按钮 disabled + tooltip `t('versionControl.restoreComingSoon')`                                                                                  | 版本恢复 Restore 按钮显示 Coming Soon 提示   |
 | AC-6 | `zh-CN.json` 和 `en.json` 包含 `common.comingSoon`、`common.featureInDevelopment`、`settingsDialog.account.comingSoonTooltip`、`versionControl.restoreComingSoon` | i18n 切换后 Coming Soon 文案跟随             |
-| AC-7 | 切换界面语言后 Coming Soon 文案跟随语言变化                                                                                                                 | i18n 切换后 Coming Soon 文案跟随             |
-| AC-8 | 所有新增文案通过 `t()` 函数获取，无裸字符串字面量                                                                                                           | 全部 Scenario                                |
-| AC-9 | disabled 按钮设置 `aria-disabled="true"`，tooltip 通过 `aria-describedby` 关联                                                                              | 可访问性                                     |
+| AC-7 | 切换界面语言后 Coming Soon 文案跟随语言变化                                                                                                                       | i18n 切换后 Coming Soon 文案跟随             |
+| AC-8 | 所有新增文案通过 `t()` 函数获取，无裸字符串字面量                                                                                                                 | 全部 Scenario                                |
+| AC-9 | disabled 按钮设置 `aria-disabled="true"`，tooltip 通过 `aria-describedby` 关联                                                                                    | 可访问性                                     |
 
 ---
 

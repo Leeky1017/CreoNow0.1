@@ -55,12 +55,12 @@
 
 新增以下 i18n key，`zh-CN.json` 和 `en.json` **必须**同步：
 
-| Key                                  | zh-CN                  | en                                  |
-| ------------------------------------ | ---------------------- | ----------------------------------- |
-| `common.comingSoon`                  | 即将推出               | Coming Soon                         |
-| `common.featureInDevelopment`        | 此功能正在开发中       | This feature is in development      |
+| Key                                        | zh-CN                  | en                                  |
+| ------------------------------------------ | ---------------------- | ----------------------------------- |
+| `common.comingSoon`                        | 即将推出               | Coming Soon                         |
+| `common.featureInDevelopment`              | 此功能正在开发中       | This feature is in development      |
 | `settingsDialog.account.comingSoonTooltip` | 账户功能正在开发中     | Account features are in development |
-| `versionControl.restoreComingSoon`   | 版本恢复功能正在开发中 | Version restore is in development   |
+| `versionControl.restoreComingSoon`         | 版本恢复功能正在开发中 | Version restore is in development   |
 
 ### Design Token 引用
 

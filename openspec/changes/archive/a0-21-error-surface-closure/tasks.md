@@ -215,16 +215,16 @@
 
 ## 验收标准 → 测试映射
 
-| 验收标准                     | 对应测试文件                                                | 测试用例名                            | 状态 |
-| ---------------------------- | ----------------------------------------------------------- | ------------------------------------- | ---- |
-| AC-1 全组件调用映射函数      | `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts` + 各组件测试                | 无直接渲染模式 + 各组件不展示技术码   | [x]  |
-| AC-2 CommandPalette 无硬编码 | `CommandPalette.test.tsx` + `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts` | 无 ACTION_FAILED/NO_PROJECT 硬编码    | [x]  |
-| AC-3 Design Token 使用       | 各组件测试                                                  | 错误文本使用 --color-text-error       | [x]  |
-| AC-4 无障碍属性              | 各组件测试                                                  | 错误区域 role="alert"                 | [x]  |
-| AC-5 i18n key 完整           | `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts`                        | zh-CN/en workbench.commandPalette.errors.\* 覆盖 | [x]  |
-| AC-6 i18n 语言切换           | `ExportDialog.test.tsx`                                     | 切换 locale 后错误文案跟随            | [x]  |
-| AC-7 全局无泄露              | `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts`                             | renderer 目录无直接渲染模式           | [x]  |
-| AC-8 文案无技术术语          | 各组件测试                                                  | DOM 不包含大写蛇形标识符/技术术语     | [x]  |
+| 验收标准                     | 对应测试文件                                                                                              | 测试用例名                                       | 状态 |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ---- |
+| AC-1 全组件调用映射函数      | `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts` + 各组件测试                | 无直接渲染模式 + 各组件不展示技术码              | [x]  |
+| AC-2 CommandPalette 无硬编码 | `CommandPalette.test.tsx` + `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts` | 无 ACTION_FAILED/NO_PROJECT 硬编码               | [x]  |
+| AC-3 Design Token 使用       | 各组件测试                                                                                                | 错误文本使用 --color-text-error                  | [x]  |
+| AC-4 无障碍属性              | 各组件测试                                                                                                | 错误区域 role="alert"                            | [x]  |
+| AC-5 i18n key 完整           | `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts`                             | zh-CN/en workbench.commandPalette.errors.\* 覆盖 | [x]  |
+| AC-6 i18n 语言切换           | `ExportDialog.test.tsx`                                                                                   | 切换 locale 后错误文案跟随                       | [x]  |
+| AC-7 全局无泄露              | `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts`                             | renderer 目录无直接渲染模式                      | [x]  |
+| AC-8 文案无技术术语          | 各组件测试                                                                                                | DOM 不包含大写蛇形标识符/技术术语                | [x]  |
 
 ---
 

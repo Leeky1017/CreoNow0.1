@@ -242,7 +242,7 @@ ready → (Regenerate) → streaming
 | `inlineAi.accept`                | 接受                                        | Accept                                                    |
 | `inlineAi.reject`                | 拒绝                                        | Reject                                                    |
 | `inlineAi.regenerate`            | 重新生成                                    | Regenerate                                                |
-| `inlineAi.loading`            | AI 正在生成…                                | AI is generating…                                         |
+| `inlineAi.loading`               | AI 正在生成…                                | AI is generating…                                         |
 | `inlineAi.conflictError`         | 文本已被修改，无法应用 AI 结果              | Text has been modified, cannot apply AI result            |
 | `inlineAi.executionError`        | AI 执行失败，请重试                         | AI execution failed, please retry                         |
 | `inlineAi.shortcut.polish`       | 润色                                        | Polish                                                    |

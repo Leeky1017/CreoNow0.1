@@ -1,6 +1,5 @@
 # Skill System Specification
 
-
 ## Purpose
 
 将 AI 能力抽象为可组合的「技能」（续写、改写、扩写、缩写、风格迁移等），每个技能有独立的 `context_rules` 和执行逻辑，支持 builtin → global → project 三级作用域。
@@ -279,6 +278,7 @@
 - **并且** 同等体量下，若 `polish` / `rewrite` 超过 10 倍阈值则必须被拦截
 
 ---
+
 ### Requirement: 多技能并发调度、超时与依赖管理
 
 技能系统必须提供可预测的调度器，处理并发执行、执行超时、技能依赖缺失。
@@ -474,7 +474,6 @@ function inferSkillFromInput(args: {
 | "缩写"/"精简"                     | `builtin:condense`   |
 
 4. 默认 → `builtin:chat`
-
 
 否定语境守卫：
 

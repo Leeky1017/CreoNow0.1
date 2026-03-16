@@ -1,6 +1,5 @@
 # IPC Specification
 
-
 ## Purpose
 
 定义 Electron 渲染进程与主进程之间的通信契约，包括通道命名、消息类型、参数校验和错误格式。包含自动化契约生成与校验。
@@ -291,22 +290,20 @@ interface IPCError {
   details?: unknown; // 可选的错误详情（如 Zod 校验细节、堆栈信息等）
 }
 
-type IPCResponse<T> =
-  | { ok: true; data: T }
-  | { ok: false; error: IPCError };
+type IPCResponse<T> = { ok: true; data: T } | { ok: false; error: IPCError };
 ```
 
 预定义错误码：
 
-| 错误码               | 含义             | HTTP 类比 |
-| -------------------- | ---------------- | --------- |
-| `VALIDATION_ERROR`   | 请求数据校验失败 | 400       |
-| `NOT_FOUND`          | 资源不存在       | 404       |
-| `CONFLICT`           | 资源冲突         | 409       |
-| `INTERNAL_ERROR`     | 主进程内部错误   | 500       |
-| `IPC_TIMEOUT`        | 请求超时         | 504       |
-| `AI_NOT_CONFIGURED`  | AI 服务未配置    | 503       |
-| `LLM_API_ERROR`      | LLM API 调用失败 | 502       |
+| 错误码                   | 含义                 | HTTP 类比 |
+| ------------------------ | -------------------- | --------- |
+| `VALIDATION_ERROR`       | 请求数据校验失败     | 400       |
+| `NOT_FOUND`              | 资源不存在           | 404       |
+| `CONFLICT`               | 资源冲突             | 409       |
+| `INTERNAL_ERROR`         | 主进程内部错误       | 500       |
+| `IPC_TIMEOUT`            | 请求超时             | 504       |
+| `AI_NOT_CONFIGURED`      | AI 服务未配置        | 503       |
+| `LLM_API_ERROR`          | LLM API 调用失败     | 502       |
 | `EXPORT_WRITE_ERROR`     | 导出写入失败         | 500       |
 | `SKILL_INPUT_EMPTY`      | 技能输入为空         | 400       |
 | `SKILL_OUTPUT_INVALID`   | 技能输出无效         | 400       |

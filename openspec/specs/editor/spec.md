@@ -385,9 +385,10 @@ The system SHALL display AI modification results directly within the editor area
 - 提交指令后，系统**必须**复用现有 AI / Skill 执行链路，而不是创建独立模型通道
 - 当前实现**必须**将目标技能固定为 `builtin:rewrite`，并通过 `aiStore.run({ inputOverride, context, streamOverride: false })` 发起请求
 - 发给模型的输入**必须**包含用户选中文本与指令，格式等效于：`Selection context:
-<selected text>
+  <selected text>
 
 <instruction>`
+
 - 请求处理中，Inline AI 预览层**必须**进入 `streaming` 阶段并展示 loading 态；完成后切换到 `ready`
 
 预览与交互：
@@ -446,6 +447,7 @@ The system SHALL display AI modification results directly within the editor area
 - **并且** Inline AI 会话进入错误收口路径，等待用户重新发起请求
 
 ---
+
 ### Requirement: Diff 对比模式（多版本）
 
 The system SHALL support comparing document versions in a dedicated diff view, with up to 4 versions displayed simultaneously.
@@ -539,6 +541,7 @@ The system SHALL support comparing document versions in a dedicated diff view, w
 - **并且** 用户可直接开始输入，无需额外点击
 
 ---
+
 ### Requirement: 大纲视图（Outline View）
 
 The system SHALL provide an outline view as an accessory feature of the editor (not a standalone module). The outline SHALL be derived from headings in the current document.
