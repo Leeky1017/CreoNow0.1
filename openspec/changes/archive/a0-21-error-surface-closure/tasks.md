@@ -101,9 +101,9 @@
 
 **映射验收标准**: AC-5
 
-- [x] 测试：`zh-CN.json` 中包含 `commandPalette.error.*` 下全部错误场景的 key（至少覆盖 settings、export、layout、noProject）
+- [x] 测试：`zh-CN.json` 中包含 `workbench.commandPalette.errors.*` 下全部错误场景的 key（至少覆盖 settings、export、layout、noProject）
 - [x] 测试：`en.json` 中包含相同结构的 key，数量与 `zh-CN.json` 一致
-- [x] 测试：所有 `commandPalette.error.*` 值不包含 `ACTION_FAILED` 或 `NO_PROJECT` 等硬编码前缀
+- [x] 测试：所有 `workbench.commandPalette.errors.*` 值不包含 `ACTION_FAILED` 或 `NO_PROJECT` 等硬编码前缀
 
 **文件**: `apps/desktop/tests/i18n/command-palette-error-keys.test.ts`
 
@@ -139,7 +139,7 @@
 - [x] `VersionHistoryContainer.tsx` L675-676, L727-728：替换合并错误和预览错误两处渲染
 - [x] 确认三个组件使用正确的 Design Token 和 `role="alert"`
 
-**文件**: `features/projects/CreateProjectDialog.tsx`、`features/kg/KnowledgeGraphPanel.tsx`、`features/version-history/VersionHistoryContainer.tsx`（修改）
+**文件**: `features/projects/CreateProjectDialog.tsx`、`features/kg/KnowledgeGraphPanel.tsx`、`apps/desktop/renderer/src/features/version-history/VersionHistoryContainer.tsx`（修改）
 
 ### Task 2.4: 收口模板字符串拼接组件
 
@@ -160,19 +160,20 @@
 
 ### Task 2.6: 收口 CommandPalette 硬编码 + 新增 i18n key
 
-- [x] 在 `zh-CN.json` 中新增 `commandPalette.error.*` 命名空间，注册以下 key：
-  - `commandPalette.error.settingsUnavailable`：设置对话框暂不可用
-  - `commandPalette.error.exportUnavailable`：导出对话框暂不可用
-  - `commandPalette.error.layoutActionFailed`：布局操作失败
-  - `commandPalette.error.noProject`：请先打开一个项目
-  - `commandPalette.error.actionFailed`：操作失败，请稍后重试
-- [x] 在 `en.json` 中新增相同结构的英文翻译
-- [x] 将 `CommandPalette.tsx` 中全部硬编码错误字符串替换为 `t("commandPalette.error.<场景>")` 调用
-  - L324：`"ACTION_FAILED: Settings dialog not available"` → `t("commandPalette.error.settingsUnavailable")`
-  - L341：`"ACTION_FAILED: Export dialog not available"` → `t("commandPalette.error.exportUnavailable")`
-  - L358, L375, L392：Layout 相关 → `t("commandPalette.error.layoutActionFailed")`
-  - L406：`"NO_PROJECT: Please open a project first"` → `t("commandPalette.error.noProject")`
-  - L414, L417, L432, L449：其他 → `t("commandPalette.error.actionFailed")`
+- [x] 在 `zh-CN.json` / `en.json` 中维护当前 `workbench.commandPalette.errors.*` 命名空间，至少覆盖：
+  - `workbench.commandPalette.errors.settingsUnavailable`
+  - `workbench.commandPalette.errors.exportUnavailable`
+  - `workbench.commandPalette.errors.layoutUnavailable`
+  - `workbench.commandPalette.errors.noProject`
+  - `workbench.commandPalette.errors.createDocumentFailed`
+  - `workbench.commandPalette.errors.documentUnavailable`
+  - `workbench.commandPalette.errors.versionHistoryUnavailable`
+  - `workbench.commandPalette.errors.createProjectUnavailable`
+- [x] 将 `CommandPalette.tsx` 中历史上的硬编码错误字符串收口为 `t("workbench.commandPalette.errors.<场景>")` 调用
+  - settings / export 对话框不可用 → `settingsUnavailable` / `exportUnavailable`
+  - layout 相关不可用 → `layoutUnavailable`
+  - 无项目上下文 → `noProject`
+  - 创建文档、文档打开、版本历史、创建项目失败 → 对应 current error key
 
 **文件**: `features/commandPalette/CommandPalette.tsx`（修改）、`renderer/src/i18n/locales/zh-CN.json`（修改）、`renderer/src/i18n/locales/en.json`（修改）
 
@@ -216,14 +217,14 @@
 
 | 验收标准                     | 对应测试文件                                                | 测试用例名                            | 状态 |
 | ---------------------------- | ----------------------------------------------------------- | ------------------------------------- | ---- |
-| AC-1 全组件调用映射函数      | `error-surface-closure.test.ts` + 各组件测试                | 无直接渲染模式 + 各组件不展示技术码   | [ ]  |
-| AC-2 CommandPalette 无硬编码 | `CommandPalette.test.tsx` + `error-surface-closure.test.ts` | 无 ACTION_FAILED/NO_PROJECT 硬编码    | [ ]  |
-| AC-3 Design Token 使用       | 各组件测试                                                  | 错误文本使用 --color-text-error       | [ ]  |
-| AC-4 无障碍属性              | 各组件测试                                                  | 错误区域 role="alert"                 | [ ]  |
-| AC-5 i18n key 完整           | `command-palette-error-keys.test.ts`                        | zh-CN/en commandPalette.error.\* 覆盖 | [ ]  |
-| AC-6 i18n 语言切换           | `ExportDialog.test.tsx`                                     | 切换 locale 后错误文案跟随            | [ ]  |
-| AC-7 全局无泄露              | `error-surface-closure.test.ts`                             | renderer 目录无直接渲染模式           | [ ]  |
-| AC-8 文案无技术术语          | 各组件测试                                                  | DOM 不包含大写蛇形标识符/技术术语     | [ ]  |
+| AC-1 全组件调用映射函数      | `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts` + 各组件测试                | 无直接渲染模式 + 各组件不展示技术码   | [x]  |
+| AC-2 CommandPalette 无硬编码 | `CommandPalette.test.tsx` + `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts` | 无 ACTION_FAILED/NO_PROJECT 硬编码    | [x]  |
+| AC-3 Design Token 使用       | 各组件测试                                                  | 错误文本使用 --color-text-error       | [x]  |
+| AC-4 无障碍属性              | 各组件测试                                                  | 错误区域 role="alert"                 | [x]  |
+| AC-5 i18n key 完整           | `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts`                        | zh-CN/en workbench.commandPalette.errors.\* 覆盖 | [x]  |
+| AC-6 i18n 语言切换           | `ExportDialog.test.tsx`                                     | 切换 locale 后错误文案跟随            | [x]  |
+| AC-7 全局无泄露              | `apps/desktop/renderer/src/lib/__tests__/error-surface-closure.guard.test.ts`                             | renderer 目录无直接渲染模式           | [x]  |
+| AC-8 文案无技术术语          | 各组件测试                                                  | DOM 不包含大写蛇形标识符/技术术语     | [x]  |
 
 ---
 
@@ -232,7 +233,7 @@
 - [x] 所有 Scenario 有对应测试且通过
 - [x] 14 个泄露组件全部收口完成——无一处直接渲染 `error.code` 或 `error.message`
 - [x] CommandPalette 全部硬编码错误字符串替换为 i18n 调用
-- [x] `zh-CN.json` 和 `en.json` 包含 `commandPalette.error.*` 全量条目
+- [x] `zh-CN.json` 和 `en.json` 包含 `workbench.commandPalette.errors.*` 全量条目
 - [x] 所有错误展示使用语义化 Design Token
 - [x] 所有错误区域有正确的无障碍属性
 - [x] Storybook 构建通过

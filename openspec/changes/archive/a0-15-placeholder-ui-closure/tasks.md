@@ -17,12 +17,12 @@ P0-3: 能力诚实分级与假功能处置
 
 | ID   | 标准                                                                                                                                                        | 对应 Scenario                                |
 | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| AC-1 | Settings Account 页所有 disabled 按钮附有 tooltip，显示 `t('settings.account.comingSoonTooltip')`                                                           | Settings Account 页按钮显示 Coming Soon 标注 |
+| AC-1 | Settings Account 页所有 disabled 按钮附有 tooltip，显示 `t('settingsDialog.account.comingSoonTooltip')`                                                           | Settings Account 页按钮显示 Coming Soon 标注 |
 | AC-2 | Search 面板中 "View More" 链接不渲染                                                                                                                        | Search 面板隐藏无功能链接                    |
 | AC-3 | Search 面板中 "Search All Projects" 链接不渲染                                                                                                              | Search 面板隐藏无功能链接                    |
 | AC-4 | RightPanel ChatHistory 条目点击不执行操作，不输出 `console.info`，显示 Coming Soon tooltip                                                                  | ChatHistory 条目点击显示 Coming Soon 提示    |
 | AC-5 | 版本恢复 Restore 按钮 disabled + tooltip `t('versionControl.restoreComingSoon')`                                                                            | 版本恢复 Restore 按钮显示 Coming Soon 提示   |
-| AC-6 | `zh-CN.json` 和 `en.json` 包含 `common.comingSoon`、`common.featureInDevelopment`、`settings.account.comingSoonTooltip`、`versionControl.restoreComingSoon` | i18n 切换后 Coming Soon 文案跟随             |
+| AC-6 | `zh-CN.json` 和 `en.json` 包含 `common.comingSoon`、`common.featureInDevelopment`、`settingsDialog.account.comingSoonTooltip`、`versionControl.restoreComingSoon` | i18n 切换后 Coming Soon 文案跟随             |
 | AC-7 | 切换界面语言后 Coming Soon 文案跟随语言变化                                                                                                                 | i18n 切换后 Coming Soon 文案跟随             |
 | AC-8 | 所有新增文案通过 `t()` 函数获取，无裸字符串字面量                                                                                                           | 全部 Scenario                                |
 | AC-9 | disabled 按钮设置 `aria-disabled="true"`，tooltip 通过 `aria-describedby` 关联                                                                              | 可访问性                                     |
@@ -38,7 +38,7 @@ P0-3: 能力诚实分级与假功能处置
 编写 SettingsAccount 页 disabled 按钮标注的单元测试：
 
 - [x] 测试：渲染 SettingsAccount 页，断言所有操作按钮处于 disabled 状态
-- [x] 测试：hover disabled 按钮，断言 tooltip 文本匹配 `t('settings.account.comingSoonTooltip')` 的值
+- [x] 测试：hover disabled 按钮，断言 tooltip 文本匹配 `t('settingsDialog.account.comingSoonTooltip')` 的值
 - [x] 测试：点击 disabled 按钮，断言无事件触发
 
 **文件**: `apps/desktop/renderer/src/features/settings-dialog/SettingsAccount.test.tsx`（新建或扩展）
@@ -61,7 +61,7 @@ P0-3: 能力诚实分级与假功能处置
 - [x] 测试：渲染 ChatHistory 列表，点击某条历史记录，断言 `console.info` 未被调用
 - [x] 测试：hover 历史记录条目，断言 tooltip 文本匹配 `t('common.comingSoon')` 的值
 
-**文件**: `apps/desktop/renderer/src/features/rightpanel/ChatHistory.test.tsx`（新建或扩展）
+**文件**: `apps/desktop/renderer/src/features/placeholder-ui-closure.test.tsx`（新建或扩展）
 
 ### Task 1.4: 版本恢复 Restore 按钮测试
 
@@ -70,17 +70,17 @@ P0-3: 能力诚实分级与假功能处置
 - [x] 测试：渲染版本历史面板，断言 Restore 按钮处于 disabled 状态
 - [x] 测试：hover Restore 按钮，断言 tooltip 文本匹配 `t('versionControl.restoreComingSoon')` 的值
 
-**文件**: 需搜索确认版本历史面板组件位置
+**文件**: `apps/desktop/renderer/src/features/version-history/VersionHistoryPanel.tsx`（现行版本恢复入口）
 
 ### Task 1.5: i18n key 完整性测试
 
 **映射验收标准**: AC-6
 
-- [x] 测试：`zh-CN.json` 包含 `common.comingSoon`、`common.featureInDevelopment`、`settings.account.comingSoonTooltip`、`versionControl.restoreComingSoon` 四个 key
+- [x] 测试：`zh-CN.json` 包含 `common.comingSoon`、`common.featureInDevelopment`、`settingsDialog.account.comingSoonTooltip`、`versionControl.restoreComingSoon` 四个 key
 - [x] 测试：`en.json` 包含相同的四个 key
 - [x] 测试：中英文文件中新增 key 的数量一致
 
-**文件**: `apps/desktop/tests/i18n/placeholder-ui-keys.test.ts`（新建）
+**文件**: `apps/desktop/renderer/src/features/placeholder-ui-closure.test.tsx`（新建）
 
 ---
 
@@ -88,7 +88,7 @@ P0-3: 能力诚实分级与假功能处置
 
 ### Task 2.1: Settings Account 按钮添加 tooltip
 
-- [x] 修改 `SettingsAccount.tsx`，为每个 disabled 按钮添加 Radix UI `Tooltip`，文案为 `t('settings.account.comingSoonTooltip')`
+- [x] 修改 `SettingsAccount.tsx`，为每个 disabled 按钮添加 Radix UI `Tooltip`，文案为 `t('settingsDialog.account.comingSoonTooltip')`
 - [x] 确认 `aria-disabled="true"` 已设置
 - [x] 确认 tooltip 通过 `aria-describedby` 关联
 
@@ -101,7 +101,7 @@ P0-3: 能力诚实分级与假功能处置
 - [x] 确认搜索结果列表不受影响
 - [x] 在被移除的 JSX 代码位置添加注释 `// placeholder: hidden in v0.1, restore when search expansion is implemented`
 
-**文件**: Search 面板组件（需搜索确认具体文件）
+**文件**: `apps/desktop/renderer/src/features/search/SearchPanel.tsx`
 
 ### Task 2.3: ChatHistory 交互降级
 
@@ -116,19 +116,19 @@ P0-3: 能力诚实分级与假功能处置
 - [x] 为 Restore 按钮的 disabled 状态添加 tooltip `t('versionControl.restoreComingSoon')`
 - [x] 确认 `aria-disabled="true"` 已设置
 
-**文件**: 需搜索确认具体文件
+**文件**: `apps/desktop/renderer/src/features/version-history/VersionHistoryPanel.tsx`
 
 ### Task 2.5: 新增 i18n key
 
 - [x] 在 `zh-CN.json` 新增：
   - `"common.comingSoon": "即将推出"`
   - `"common.featureInDevelopment": "此功能正在开发中"`
-  - `"settings.account.comingSoonTooltip": "账户功能正在开发中"`
+  - `"settingsDialog.account.comingSoonTooltip": "账户功能正在开发中"`
   - `"versionControl.restoreComingSoon": "版本恢复功能正在开发中"`
 - [x] 在 `en.json` 新增：
   - `"common.comingSoon": "Coming Soon"`
   - `"common.featureInDevelopment": "This feature is in development"`
-  - `"settings.account.comingSoonTooltip": "Account features are in development"`
+  - `"settingsDialog.account.comingSoonTooltip": "Account features are in development"`
   - `"versionControl.restoreComingSoon": "Version restore is in development"`
 
 **文件**: `apps/desktop/renderer/src/i18n/locales/zh-CN.json`、`apps/desktop/renderer/src/i18n/locales/en.json`
@@ -154,17 +154,17 @@ P0-3: 能力诚实分级与假功能处置
 
 | 条目                          | 检查项                           | 状态 |
 | ----------------------------- | -------------------------------- | ---- |
-| AC-1 Account tooltip          | disabled 按钮附 tooltip          | [ ]  |
-| AC-2 View More 隐藏           | 链接不渲染                       | [ ]  |
-| AC-3 Search All Projects 隐藏 | 链接不渲染                       | [ ]  |
-| AC-4 ChatHistory 降级         | 无 console.info，有 tooltip      | [ ]  |
-| AC-5 Restore tooltip          | disabled + tooltip               | [ ]  |
-| AC-6 i18n key                 | 两个 locale 文件均含新增 key     | [ ]  |
-| AC-7 i18n 跟随                | 切换语言后文案跟随               | [ ]  |
-| AC-8 禁止裸字符串             | 无新增裸字符串字面量             | [ ]  |
-| AC-9 可访问性                 | aria-disabled + aria-describedby | [ ]  |
-| 禁止原始色值                  | 无新增 Tailwind 原始色值         | [ ]  |
-| Storybook 可构建              | `storybook:build` 通过           | [ ]  |
+| AC-1 Account tooltip          | disabled 按钮附 tooltip          | [x]  |
+| AC-2 View More 隐藏           | 链接不渲染                       | [x]  |
+| AC-3 Search All Projects 隐藏 | 链接不渲染                       | [x]  |
+| AC-4 ChatHistory 降级         | 无 console.info，有 tooltip      | [x]  |
+| AC-5 Restore tooltip          | disabled + tooltip               | [x]  |
+| AC-6 i18n key                 | 两个 locale 文件均含新增 key     | [x]  |
+| AC-7 i18n 跟随                | 切换语言后文案跟随               | [x]  |
+| AC-8 禁止裸字符串             | 无新增裸字符串字面量             | [x]  |
+| AC-9 可访问性                 | aria-disabled + aria-describedby | [x]  |
+| 禁止原始色值                  | 无新增 Tailwind 原始色值         | [x]  |
+| Storybook 可构建              | `storybook:build` 通过           | [x]  |
 
 ---
 

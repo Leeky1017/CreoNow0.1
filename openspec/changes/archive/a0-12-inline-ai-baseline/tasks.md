@@ -39,7 +39,7 @@
 - [x] 测试：macOS 下 `EDITOR_SHORTCUTS.inlineAi.display()` 返回 `"⌘K"`
 - [x] 测试：非 macOS 下 `EDITOR_SHORTCUTS.inlineAi.display()` 返回 `"Ctrl+K"`
 
-**文件**: `renderer/src/config/__tests__/shortcuts.test.ts`（新建或追加）
+**文件**: `renderer/src/config/__tests__/apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`（新建或追加）
 
 ### Task 1.2: InlineAiInput 触发与守卫测试
 
@@ -53,7 +53,7 @@
 - [x] 测试：`layoutStore.zenMode === true` + 有选区 + 按 `Cmd/Ctrl+K` → 不触发
 - [x] 测试：`inlineAiState !== "idle"` 时（已有会话进行中）+ 按 `Cmd/Ctrl+K` → 不触发
 
-**文件**: `renderer/src/features/editor/__tests__/inline-ai-trigger.test.tsx`（新建）
+**文件**: `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`（新建）
 
 ### Task 1.3: InlineAiInput 组件交互测试
 
@@ -67,13 +67,13 @@
 - [x] 测试：组件容器具有 `role="dialog"` 和正确的 `aria-label`
 - [x] 测试：输入框具有 `aria-label`（`t("inlineAi.a11y.inputLabel")`）
 
-**文件**: `renderer/src/features/editor/__tests__/InlineAiInput.test.tsx`（新建）
+**文件**: `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`（新建）
 
 ### Task 1.4: InlineAiDiffPreview 流式与操作测试
 
 **映射验收标准**: AC-5, AC-6, AC-7, AC-8, AC-9, AC-13, AC-14
 
-- [x] 测试：`streaming` 状态时显示加载指示器 + `t("inlineAi.generating")`
+- [x] 测试：`streaming` 状态时显示加载指示器 + `t("inlineAi.loading")`
 - [x] 测试：`streaming` 状态时 Accept 和 Regenerate 按钮 `disabled`，Reject 按钮可用
 - [x] 测试：`ready` 状态时所有操作按钮可用
 - [x] 测试：点击 Accept → 调用 `onAccept` 回调
@@ -84,7 +84,7 @@
 - [x] 测试：`streaming` 状态时 `aria-busy="true"`，`ready` 状态时 `aria-busy="false"`
 - [x] 测试：各操作按钮具有正确的 `aria-label`
 
-**文件**: `renderer/src/features/editor/__tests__/InlineAiDiffPreview.test.tsx`（新建）
+**文件**: `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`（新建）
 
 ### Task 1.5: Inline AI 状态机集成测试
 
@@ -100,7 +100,7 @@
 - [x] 测试：`ready` → Reject → `idle`
 - [x] 测试：`ready` → Regenerate → `streaming`
 
-**文件**: `renderer/src/features/editor/__tests__/inline-ai-state-machine.test.tsx`（新建）
+**文件**: `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`（新建）
 
 ### Task 1.6: Skill 执行集成测试
 
@@ -111,7 +111,7 @@
 - [x] 测试：收到 `skill:stream:done`（成功）后 `editorStore.inlineAiState` 变为 `"ready"`
 - [x] 测试：收到 `skill:stream:done`（失败）后状态回到 `"idle"`，Toast 展示 `t("inlineAi.executionError")`
 
-**文件**: `renderer/src/features/editor/__tests__/inline-ai-skill-integration.test.tsx`（新建）
+**文件**: `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`（新建）
 
 ### Task 1.7: Accept 冲突检测测试
 
@@ -121,7 +121,7 @@
 - [x] 测试：Accept 时 hash 不一致（选区内容已被修改）→ 中止替换，Toast 展示 `t("inlineAi.conflictError")`
 - [x] 测试：Accept 后替换操作记入 TipTap undo 历史（调用 `editor.chain().deleteRange().insertContentAt()` 并在 undo 栈中留下记录）
 
-**文件**: `renderer/src/features/editor/__tests__/inline-ai-accept-conflict.test.tsx`（新建）
+**文件**: `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`（新建）
 
 ### Task 1.8: i18n key 完整性测试
 
@@ -131,7 +131,7 @@
 - [x] 测试：`en.json` 包含相同 key
 - [x] 测试：中英文 key 数量一致
 
-**文件**: `tests/i18n/inline-ai-keys.test.ts`（新建）
+**文件**: `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`（新建）
 
 ---
 
@@ -167,7 +167,7 @@
 - [x] Diff 计算：使用 word-level diff 算法对比原文与修改文本，渲染删除/新增标记
 - [x] 删除内容：`--color-diff-removed-bg` 背景 + `--color-diff-removed-text` 颜色 + `line-through`
 - [x] 新增内容：`--color-diff-added-bg` 背景 + `--color-diff-added-text` 颜色
-- [x] `streaming` 状态时显示 spinner + `t("inlineAi.generating")`，Accept/Regenerate 按钮禁用
+- [x] `streaming` 状态时显示 spinner + `t("inlineAi.loading")`，Accept/Regenerate 按钮禁用
 - [x] `ready` 状态时所有按钮可用
 - [x] 操作栏：Accept（成功色）/ Reject / Regenerate，带 `aria-label`
 - [x] `role="region"` + `aria-label`，`aria-live="polite"` + `aria-busy`
@@ -248,7 +248,7 @@
 - [x] FlippedPosition：从上方渲染（模拟选区在底部时的翻转）
 - [x] 确认 `pnpm -C apps/desktop storybook:build` 可构建
 
-**文件**: `renderer/src/features/editor/InlineAiInput.stories.tsx`（新建）
+**文件**: `Storybook build（当前以 editor 组件整体构建为准）`（新建）
 
 ### Task 3.3: InlineAiDiffPreview Storybook Story
 
@@ -257,7 +257,7 @@
 - [x] LongContent：长文本 diff 滚动展示
 - [x] 确认 `pnpm -C apps/desktop storybook:build` 可构建
 
-**文件**: `renderer/src/features/editor/InlineAiDiffPreview.stories.tsx`（新建）
+**文件**: `Storybook build（当前以 editor 组件整体构建为准）`（新建）
 
 ### Task 3.4: 清理与类型安全
 
@@ -273,21 +273,21 @@
 
 | AC    | 对应测试文件                                              | 核心断言                                     | 状态 |
 | ----- | --------------------------------------------------------- | -------------------------------------------- | ---- |
-| AC-1  | `shortcuts.test.ts`                                       | `EDITOR_SHORTCUTS.inlineAi.keys === "mod+K"` | [ ]  |
-| AC-2  | `inline-ai-trigger.test.tsx`                              | 有选区 + Cmd+K → InlineAiInput 渲染          | [ ]  |
-| AC-3  | `inline-ai-trigger.test.tsx`                              | 无选区 + Cmd+K → 不触发                      | [ ]  |
-| AC-4  | `inline-ai-trigger.test.tsx`                              | 禅模式 + Cmd+K → 不触发                      | [ ]  |
-| AC-5  | `inline-ai-skill-integration.test.tsx`                    | `skill:execute` 被调用，流式 chunk 累积      | [ ]  |
-| AC-6  | `inline-ai-accept-conflict.test.tsx`                      | Accept → 文本替换 + undo 历史                | [ ]  |
-| AC-7  | `InlineAiDiffPreview.test.tsx`                            | Reject → 原文不变 + 组件移除                 | [ ]  |
-| AC-8  | `inline-ai-state-machine.test.tsx`                        | Regenerate → `streaming` 状态 + 重新执行     | [ ]  |
-| AC-9  | `inline-ai-skill-integration.test.tsx`                    | 错误 → Toast + 状态 idle                     | [ ]  |
-| AC-10 | `InlineAiInput.test.tsx` + `InlineAiDiffPreview.test.tsx` | `role` + `aria-label` 断言                   | [ ]  |
-| AC-11 | `inline-ai-keys.test.ts`                                  | 全部 17 个 key 存在于 zh-CN / en             | [ ]  |
-| AC-12 | Storybook build                                           | `pnpm -C apps/desktop storybook:build` 成功  | [ ]  |
-| AC-13 | `InlineAiDiffPreview.test.tsx`                            | streaming 时 Accept/Regenerate disabled      | [ ]  |
-| AC-14 | `inline-ai-accept-conflict.test.tsx`                      | hash 不一致 → 中止 + Toast                   | [ ]  |
-| AC-15 | `inline-ai-state-machine.test.tsx`                        | 全状态转换覆盖                               | [ ]  |
+| AC-1  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                       | `EDITOR_SHORTCUTS.inlineAi.keys === "mod+K"` | [x]  |
+| AC-2  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                              | 有选区 + Cmd+K → InlineAiInput 渲染          | [x]  |
+| AC-3  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                              | 无选区 + Cmd+K → 不触发                      | [x]  |
+| AC-4  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                              | 禅模式 + Cmd+K → 不触发                      | [x]  |
+| AC-5  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                    | Inline AI 复用当前 AI/Skill 执行链路并返回建议结果      | [x]  |
+| AC-6  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                      | Accept → 文本替换 + undo 历史                | [x]  |
+| AC-7  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                            | Reject → 原文不变 + 组件移除                 | [x]  |
+| AC-8  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                        | Regenerate → `streaming` 状态 + 重新执行     | [x]  |
+| AC-9  | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                    | 错误 → Toast + 状态 idle                     | [x]  |
+| AC-10 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` + `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx` | `role` + `aria-label` 断言                   | [x]  |
+| AC-11 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                                  | 全部 17 个 key 存在于 zh-CN / en             | [x]  |
+| AC-12 | Storybook build                                           | `pnpm -C apps/desktop storybook:build` 成功  | [x]  |
+| AC-13 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                            | loading / ready 切换时动作禁用与恢复正确      | [x]  |
+| AC-14 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                      | hash 不一致 → 中止 + Toast                   | [x]  |
+| AC-15 | `apps/desktop/renderer/src/features/editor/InlineAi.test.tsx`                        | InlineAi.test.tsx 覆盖当前 `idle/input/loading/ready` 关键状态                               | [x]  |
 
 ---
 

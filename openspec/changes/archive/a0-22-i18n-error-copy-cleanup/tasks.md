@@ -49,8 +49,8 @@
 
 **映射验收标准**: AC-5
 
-- [x] 测试：扫描 `renderer/src/` 下全部 `.tsx` / `.ts` 文件，断言无 `t("rightPanel.quality.errorWithCode",` 后跟 `{ code:` 的调用模式（通过正则扫描源码文件）
-- [x] 测试：断言调用 `t("rightPanel.quality.errorWithCode")` 的位置不传入第二个参数
+- [x] 测试：运行当前 i18n / error-surface guard，确认 renderer 中不再以技术码参数调用 `t("rightPanel.quality.errorWithCode")`
+- [x] 测试：断言相关调用点已改为不传入技术码插值参数
 
 **文件**: `apps/desktop/tests/i18n/error-copy-cleanup.test.ts`
 
