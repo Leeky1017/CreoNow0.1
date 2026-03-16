@@ -212,6 +212,11 @@
         "label": "/搜索",
         "description": "检索项目中的相关信息。"
       }
+    },
+    "link": {
+      "placeholder": "输入链接地址",
+      "apply": "应用链接",
+      "remove": "移除链接"
     }
   },
   "dashboard": {

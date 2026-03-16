@@ -150,12 +150,48 @@ export function EditorBubbleMenu(props: {
   const shouldShowBubble = visible && editor.isEditable && !zenMode;
   const inlineDisabled = !editor.isEditable || editor.isActive("codeBlock");
 
-  const toggleLink = () => {
-    if (editor.isActive("link")) {
+  const [linkInputOpen, setLinkInputOpen] = React.useState(false);
+  const [linkUrl, setLinkUrl] = React.useState("");
+  const linkInputRef = React.useRef<HTMLInputElement>(null);
+
+  const openLinkInput = () => {
+    const existingHref = editor.getAttributes("link").href as string | undefined;
+    setLinkUrl(existingHref ?? "");
+    setLinkInputOpen(true);
+    requestAnimationFrame(() => linkInputRef.current?.focus());
+  };
+
+  const applyLink = () => {
+    const trimmed = linkUrl.trim();
+    if (trimmed.length === 0) {
       editor.chain().focus().unsetLink().run();
-      return;
+    } else {
+      editor
+        .chain()
+        .focus()
+        .setLink({ href: trimmed })
+        .run();
     }
-    editor.chain().focus().setLink({ href: "https://example.com" }).run();
+    setLinkInputOpen(false);
+    setLinkUrl("");
+  };
+
+  const removeLink = () => {
+    editor.chain().focus().unsetLink().run();
+    setLinkInputOpen(false);
+    setLinkUrl("");
+  };
+
+  const handleLinkKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      applyLink();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      setLinkInputOpen(false);
+      setLinkUrl("");
+      editor.commands.focus();
+    }
   };
 
   const aiDisabled =
@@ -257,10 +293,47 @@ export function EditorBubbleMenu(props: {
         label={t("editor.bubbleMenu.link")}
         isActive={editor.isActive("link")}
         disabled={inlineDisabled}
-        onClick={toggleLink}
+        onClick={openLinkInput}
       >
         {icons.link}
       </InlineFormatButton>
+      {linkInputOpen && (
+        <div
+          className="flex items-center gap-1 px-1"
+          data-testid="link-input-container"
+        >
+          <input
+            ref={linkInputRef}
+            type="url"
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+            onKeyDown={handleLinkKeyDown}
+            placeholder={t("editor.link.placeholder")}
+            aria-label={t("editor.link.placeholder")}
+            className="h-6 w-40 px-2 text-[11px] rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] border border-[var(--color-border-default)] focus-visible:border-[var(--color-border-focus)] focus-visible:outline-none"
+          />
+          <button
+            type="button"
+            data-testid="link-apply"
+            onClick={applyLink}
+            aria-label={t("editor.link.apply")}
+            className="focus-ring p-1 rounded-[var(--radius-sm)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-overlay)]"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </button>
+          {editor.isActive("link") && (
+            <button
+              type="button"
+              data-testid="link-remove"
+              onClick={removeLink}
+              aria-label={t("editor.link.remove")}
+              className="focus-ring p-1 rounded-[var(--radius-sm)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-danger)] hover:bg-[var(--color-bg-overlay)]"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          )}
+        </div>
+      )}
       <div className="mx-1 h-5 w-px bg-[var(--color-border-default)]" />
       <div className="flex items-center gap-1">
         {BUBBLE_AI_SKILLS.map((skill) => (
