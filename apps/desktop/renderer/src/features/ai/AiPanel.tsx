@@ -19,6 +19,7 @@ import {
   useAiStore,
   type AiApplyStatus,
   type AiCandidate,
+  type ChatMessageItem,
   type AiProposal,
   type AiStatus,
   type AiUsageStats,
@@ -1112,6 +1113,7 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
 // ---------------------------------------------------------------------------
 
 type AiPanelChatAreaProps = {
+  historyMessages: ChatMessageItem[];
   lastRequest: string | null;
   working: boolean;
   status: AiStatus;
@@ -1261,16 +1263,35 @@ function AiPanelProposalArea(props: {
 
 function AiPanelChatArea(props: AiPanelChatAreaProps): JSX.Element {
   const { t } = useTranslation();
+  const hasHistoryReplay = props.historyMessages.length > 0;
 
   return (
     <div className="flex-1 overflow-y-auto p-3 space-y-4">
-      {props.lastRequest && (
+      {hasHistoryReplay ? (
+        <div data-testid="ai-history-replay-list" className="w-full space-y-2">
+          {props.historyMessages.map((message) => (
+            <div
+              key={message.messageId}
+              data-testid={`ai-history-message-${message.role}`}
+              className={`w-full rounded-[var(--radius-md)] p-3 text-[13px] whitespace-pre-wrap ${
+                message.role === "user"
+                  ? "bg-[var(--color-bg-base)] text-[var(--color-fg-default)]"
+                  : "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]"
+              }`}
+            >
+              {message.content}
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {!hasHistoryReplay && props.lastRequest ? (
         <div className="w-full p-3 rounded-[var(--radius-md)] bg-[var(--color-bg-base)]">
           <div className="text-[13px] text-[var(--color-fg-default)] whitespace-pre-wrap">
             {props.lastRequest}
           </div>
         </div>
-      )}
+      ) : null}
 
       {props.working && (
         <div className="flex items-center gap-2 text-[12px] text-[var(--color-fg-muted)]">
@@ -1354,7 +1375,7 @@ function AiPanelChatArea(props: AiPanelChatAreaProps): JSX.Element {
         </div>
       ) : null}
 
-      {props.activeOutputText ? (
+      {!hasHistoryReplay && props.activeOutputText ? (
         <div
           data-testid="ai-output"
           className="w-full"
@@ -1366,7 +1387,7 @@ function AiPanelChatArea(props: AiPanelChatAreaProps): JSX.Element {
             {props.status === "streaming" && <span className="typing-cursor" />}
           </div>
         </div>
-      ) : (
+      ) : !hasHistoryReplay ? (
         !props.lastRequest &&
         !props.working && (
           <div
@@ -1380,7 +1401,7 @@ function AiPanelChatArea(props: AiPanelChatAreaProps): JSX.Element {
             </Text>
           </div>
         )
-      )}
+      ) : null}
 
       {props.judgeResult ? (
         <div
@@ -1726,6 +1747,8 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   const usageStats = useAiStore((s) => s.usageStats);
   const queuePosition = useAiStore((s) => s.queuePosition);
   const queuedCount = useAiStore((s) => s.queuedCount);
+  const activeChatSessionId = useAiStore((s) => s.activeChatSessionId);
+  const activeChatMessages = useAiStore((s) => s.activeChatMessages);
 
   const selectedCandidateId = useAiStore((s) => s.selectedCandidateId);
 
@@ -1816,6 +1839,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
     lastCandidates[0] ??
     null;
   const activeOutputText = selectedCandidate?.text ?? outputText;
+  const historyMessages = activeChatSessionId ? activeChatMessages : [];
   const activeRunId = selectedCandidate?.runId ?? lastRunId;
 
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -1956,6 +1980,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
       <div className="flex flex-col h-full min-h-0">
         <div className="flex-1 flex flex-col min-h-0">
           <AiPanelChatArea
+            historyMessages={historyMessages}
             lastRequest={lastRequest}
             working={working}
             status={status}
