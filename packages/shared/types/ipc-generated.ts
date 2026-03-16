@@ -1468,6 +1468,8 @@ export type IpcChannelSpec = {
       filter?: {
         aiContextLevel?: "always" | "when_detected" | "manual_only" | "never";
       };
+      limit?: number;
+      offset?: number;
       projectId: string;
     };
     response: {
@@ -1485,6 +1487,7 @@ export type IpcChannelSpec = {
         updatedAt: string;
         version: number;
       }>;
+      totalCount: number;
     };
   };
   "knowledge:entity:read": {
@@ -1710,6 +1713,8 @@ export type IpcChannelSpec = {
   };
   "knowledge:relation:list": {
     request: {
+      limit?: number;
+      offset?: number;
       projectId: string;
     };
     response: {
@@ -1722,6 +1727,7 @@ export type IpcChannelSpec = {
         sourceEntityId: string;
         targetEntityId: string;
       }>;
+      totalCount: number;
     };
   };
   "knowledge:relation:update": {
