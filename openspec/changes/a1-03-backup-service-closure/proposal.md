@@ -1,6 +1,6 @@
 # 应用级备份闭环
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1126（child issue；umbrella #1122）
 - **所属 umbrella**: `a1-capability-closure-program`
 - **涉及模块**: document-management
 - **前端验收**: 是

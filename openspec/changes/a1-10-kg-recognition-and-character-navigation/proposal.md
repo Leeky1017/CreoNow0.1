@@ -1,6 +1,6 @@
 # 知识图谱识别与角色导航收口
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1136（child issue；umbrella #1122）
 - **所属 umbrella**: `a1-capability-closure-program`
 - **涉及模块**: knowledge-graph
 - **前端验收**: 是

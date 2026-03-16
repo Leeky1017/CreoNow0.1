@@ -1,6 +1,6 @@
 # Skill 输出校验扩面
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1134（child issue；umbrella #1122）
 - **所属 umbrella**: `a1-capability-closure-program`
 - **涉及模块**: skill-system
 - **前端验收**: 否

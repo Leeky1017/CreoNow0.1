@@ -1,6 +1,6 @@
 # 编辑器链接与 BubbleMenu 收口
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1130（child issue；umbrella #1122）
 - **所属 umbrella**: `a1-capability-closure-program`
 - **涉及模块**: editor
 - **前端验收**: 是

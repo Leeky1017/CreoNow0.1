@@ -1,6 +1,6 @@
 # Tasks: 记忆语义能力与冲突处理升级
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1138（child issue；umbrella #1122）
 - **分支**: 待创建（从 umbrella child issue 派生）
 - **Delta Spec**: `specs/memory-system/spec.md`
 - **前置依赖**: `a1-capability-closure-program` 已建立并登记到 EO

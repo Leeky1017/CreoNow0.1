@@ -1,6 +1,6 @@
 # 发布可观测性与键盘兼容收口
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1128（child issue；umbrella #1122）
 - **所属 umbrella**: `a1-capability-closure-program`
 - **涉及模块**: workbench
 - **前端验收**: 是

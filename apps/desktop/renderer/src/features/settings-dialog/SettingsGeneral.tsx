@@ -200,7 +200,7 @@ export function SettingsGeneral({
             }
           />
 
-          {/* A0-17: Backup interval hidden — no backend in v0.1 (see openspec/changes/a0-17-backup-entry-resolution/) */}
+          {/* A0-17: Backup interval hidden — no backend in v0.1 (see openspec/changes/archive/a0-17-backup-entry-resolution/decision.md) */}
         </div>
       </div>
 

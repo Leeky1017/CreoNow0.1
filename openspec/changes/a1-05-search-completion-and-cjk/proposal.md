@@ -1,6 +1,6 @@
 # 搜索能力补完与 CJK 收敛
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1132（child issue；umbrella #1122）
 - **所属 umbrella**: `a1-capability-closure-program`
 - **涉及模块**: search-and-retrieval
 - **前端验收**: 是

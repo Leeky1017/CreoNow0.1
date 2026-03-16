@@ -1,6 +1,6 @@
 # 版本恢复能力接通
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1129（child issue；umbrella #1122）
 - **所属 umbrella**: `a1-capability-closure-program`
 - **涉及模块**: version-control
 - **前端验收**: 是

@@ -1,6 +1,6 @@
 # Tasks: 知识图谱识别与角色导航收口
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1136（child issue；umbrella #1122）
 - **分支**: 待创建（从 umbrella child issue 派生）
 - **Delta Spec**: `specs/knowledge-graph/spec.md`
 - **前置依赖**: `a1-capability-closure-program` 已建立并登记到 EO

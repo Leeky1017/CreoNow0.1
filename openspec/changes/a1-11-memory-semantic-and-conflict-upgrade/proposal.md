@@ -1,6 +1,6 @@
 # 记忆语义能力与冲突处理升级
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1138（child issue；umbrella #1122）
 - **所属 umbrella**: `a1-capability-closure-program`
 - **涉及模块**: memory-system
 - **前端验收**: 是

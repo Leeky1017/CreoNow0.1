@@ -1,6 +1,6 @@
 # Tasks: 应用级备份闭环
 
-- **GitHub Issue**: 待创建（child issue；umbrella #1122）
+- **GitHub Issue**: #1126（child issue；umbrella #1122）
 - **分支**: 待创建（从 umbrella child issue 派生）
 - **Delta Spec**: `specs/document-management/spec.md`
 - **前置依赖**: `a1-capability-closure-program` 已建立并登记到 EO

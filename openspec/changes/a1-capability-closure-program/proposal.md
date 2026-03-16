@@ -21,7 +21,7 @@
 
 ## What：本 umbrella 做什么
 
-1. 为当前明确未实现与受限未完全实现的能力建立 **11 个子 change**
+1. 为当前明确未实现与受限未完全实现的能力建立 **15 个子 change**
 2. 为每个子 change 提供最小可执行文档：
    - `proposal.md`
    - `tasks.md`
@@ -49,6 +49,10 @@
 | 9    | `a1-09-skill-output-validation-expansion`         | Skill 输出校验从局部扩到矩阵             |
 | 10   | `a1-10-kg-recognition-and-character-navigation`   | KG 识别升级与角色导航                    |
 | 11   | `a1-11-memory-semantic-and-conflict-upgrade`      | Memory 语义底座与冲突处理                |
+| 12   | `a1-12-provider-preflight-validation`             | Provider 配置前置校验与模型有效性提示    |
+| 13   | `a1-13-kg-scale-and-query-safety`                 | KG 分页、路径查询安全与大规模可用性      |
+| 14   | `a1-14-skill-routing-and-discoverability`         | Skill 路由发现性与关键词覆盖收口         |
+| 15   | `a1-15-inline-diff-activation`                    | InlineDiff 注册、展示与应用闭环          |
 
 ---
 
@@ -56,7 +60,7 @@
 
 1. **不在本 PR 内直接落工程实现**
 2. 不绕开 OpenSpec / GitHub 流程去“先修后补文档”
-3. 不把 11 个能力硬塞成一个超大 PR
+3. 不把 15 个能力硬塞成一个超大 PR
 4. 不修改 Linux 平台支持范围（不在本轮规划内）
 
 ---
