@@ -75,9 +75,9 @@ describe("isNegated — 英文否定模式", () => {
     );
   });
 
-  it("cancel + outline → 否定", () => {
-    const input = "cancel outline";
-    expect(isNegated(input, input.indexOf("outline"), "outline")).toBe(true);
+  it("cancel + synopsis → 否定", () => {
+    const input = "cancel synopsis";
+    expect(isNegated(input, input.indexOf("synopsis"), "synopsis")).toBe(true);
   });
 });
 
@@ -215,6 +215,58 @@ describe("inferSkillFromInput — 否定场景", () => {
         hasSelection: false,
       }),
     ).toBe("builtin:continue");
+  });
+});
+
+// ── 新增 skill 否定场景 ─────────────────────────────────────────
+
+describe("inferSkillFromInput — 新增 skill 否定场景", () => {
+  it("不要写大纲 → builtin:chat (synopsis 否定)", () => {
+    expect(
+      inferSkillFromInput({ input: "不要写大纲", hasSelection: false }),
+    ).toBe("builtin:chat");
+  });
+
+  it("不用缩短 → builtin:chat (shrink 否定)", () => {
+    expect(
+      inferSkillFromInput({ input: "不用缩短", hasSelection: false }),
+    ).toBe("builtin:chat");
+  });
+
+  it("别点评 → builtin:chat (critique 否定)", () => {
+    expect(
+      inferSkillFromInput({ input: "别点评了", hasSelection: false }),
+    ).toBe("builtin:chat");
+  });
+
+  it("不想描写 → builtin:chat (describe 否定)", () => {
+    expect(
+      inferSkillFromInput({ input: "不想描写这个场景", hasSelection: false }),
+    ).toBe("builtin:chat");
+  });
+
+  it("不要对话 → builtin:chat (dialogue 否定)", () => {
+    expect(
+      inferSkillFromInput({ input: "不要写对话", hasSelection: false }),
+    ).toBe("builtin:chat");
+  });
+
+  it("不用扮演 → builtin:chat (roleplay 否定)", () => {
+    expect(
+      inferSkillFromInput({ input: "不用扮演了", hasSelection: false }),
+    ).toBe("builtin:chat");
+  });
+
+  it("不要风格转换 → builtin:chat (style-transfer 否定)", () => {
+    expect(
+      inferSkillFromInput({ input: "不要风格转换", hasSelection: false }),
+    ).toBe("builtin:chat");
+  });
+
+  it("don't write → builtin:chat (write EN 否定)", () => {
+    expect(
+      inferSkillFromInput({ input: "don't write anything", hasSelection: false }),
+    ).toBe("builtin:chat");
   });
 });
 
