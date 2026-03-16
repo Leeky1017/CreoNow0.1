@@ -1,74 +1,74 @@
-# Phase 0 — Archived Changes Execution Order
+# Capability Closure — Active Changes Execution Order
 
-> "事了拂衣去，深藏功与名。"——Phase 0 的门禁、止血与审计补丁已全部并入 `main`，现仅保留存量迁移总控继续推进。
+> “举纲而张目，振领而群毛顺。”——先立总纲，再分波次实施，方能使 change、EO、事实表与 GitHub 交付链路同向而行。
 
 ## 一、当前真相
 
-- 当前活跃 change 数量：**1**
-- 当前唯一活跃 change：`t-mig-test-structure-migration`
-- Phase 0 实施 change：**24 个 A0 + 6 个 G0.5** 已全部合并并归档到 `openspec/changes/archive/`
-- Wave 0 门禁基础设施（G0-01 ~ G0-06）此前已归档；本文件不再把已完成 Phase 0 change 记作活跃执行项
+- 当前活跃 change 数量：**13**
+- 能力收口 umbrella：`a1-capability-closure-program`
+- 能力收口 child changes：**11 个**
+- 既有活跃 change：`t-mig-test-structure-migration`
+- Phase 0 的 A0 / G0 / G0.5 仍保持已归档状态，不在本文件中复活
 
-## 二、当前唯一执行顺序
+## 二、执行顺序（总览）
 
-| 顺位 | Change                           | GitHub Issue          | 说明                                                             |
-| ---- | -------------------------------- | --------------------- | ---------------------------------------------------------------- |
-| 1    | `t-mig-test-structure-migration` | 待创建 umbrella issue | 存量测试结构迁移总控；Phase 0 完成后继续作为唯一活跃 change 推进 |
+### 2.1 总控层
 
-## 三、Phase 0 归档台账
+| 顺位 | Change                          | GitHub Issue | 说明                                                |
+| ---- | ------------------------------- | ------------ | --------------------------------------------------- |
+| 0    | `a1-capability-closure-program` | #1122        | 本轮能力收口总控；负责建立 child changes 与 EO 排程 |
 
-### 3.1 Wave 0.5 审计补丁（本次一并归档）
+### 2.2 Wave 1：先补用户可见入口与可信度
 
-| Change                              | Issue | PR    | 结果           |
-| ----------------------------------- | ----- | ----- | -------------- |
-| `g05-01-require-describe-in-tests`  | #1072 | #1078 | 已合并，已归档 |
-| `g05-02-backend-coverage-threshold` | #1073 | #1079 | 已合并，已归档 |
-| `g05-03-format-check-ci`            | #1074 | #1080 | 已合并，已归档 |
-| `g05-04-review-audit-script`        | #1075 | #1081 | 已合并，已归档 |
-| `g05-05-e2e-path-mapping`           | #1076 | #1082 | 已合并，已归档 |
-| `g05-06-visual-regression-testing`  | #1077 | #1083 | 已合并，已归档 |
+| 顺位 | Change                                            | GitHub Issue | 说明                                     |
+| ---- | ------------------------------------------------- | ------------ | ---------------------------------------- |
+| 1    | `a1-01-chat-history-persistence`                  | 待创建       | AI 对话连续性与历史恢复                  |
+| 2    | `a1-02-settings-surface-completion`               | 待创建       | Settings 内未接通页面与 Account 状态收口 |
+| 3    | `a1-03-backup-service-closure`                    | 待创建       | 把 backupInterval 从偏好键升级为真实闭环 |
+| 4    | `a1-04-release-observability-and-keyboard-compat` | 待创建       | crash reporting + Windows 键盘兼容证据   |
+| 5    | `a1-06-version-restore-activation`                | 待创建       | 版本恢复真正可用                         |
+| 6    | `a1-07-editor-link-and-bubblemenu-closure`        | 待创建       | BubbleMenu 链接编辑收口                  |
 
-### 3.2 A0 止血实现（24/24 全部完成）
+### 2.3 Wave 2：再补“能用但不够真”的中层能力
 
-| Change                                  | Issue | PR    | 结果           |
-| --------------------------------------- | ----- | ----- | -------------- |
-| `a0-01-zen-mode-editable`               | #986  | #1111 | 已合并，已归档 |
-| `a0-02-autosave-visible-failure`        | #992  | #1106 | 已合并，已归档 |
-| `a0-03-renderer-global-error-fallback`  | #993  | #1102 | 已合并，已归档 |
-| `a0-04-export-honest-grading`           | #1002 | #1048 | 已合并，已归档 |
-| `a0-05-skill-router-negation-guard`     | #987  | #1100 | 已合并，已归档 |
-| `a0-06-release-fact-sheet`              | #999  | #1097 | 已合并，已归档 |
-| `a0-07-windows-release-boundary-audit`  | #1000 | #1098 | 已合并，已归档 |
-| `a0-08-backup-capability-decision`      | #1035 | #1095 | 已合并，已归档 |
-| `a0-09-i18n-inventory-audit`            | #990  | #1101 | 已合并，已归档 |
-| `a0-10-search-mvp`                      | #1003 | #1103 | 已合并，已归档 |
-| `a0-11-data-safety-boundary-statement`  | #1001 | #1099 | 已合并，已归档 |
-| `a0-12-inline-ai-baseline`              | #1004 | #1113 | 已合并，已归档 |
-| `a0-13-toast-app-integration`           | #981  | #1092 | 已合并，已归档 |
-| `a0-14-settings-general-persistence`    | #994  | #1104 | 已合并，已归档 |
-| `a0-15-placeholder-ui-closure`          | #995  | #1105 | 已合并，已归档 |
-| `a0-16-editor-version-slash-i18n`       | #991  | #1109 | 已合并，已归档 |
-| `a0-17-backup-entry-resolution`         | #996  | #1110 | 已合并，已归档 |
-| `a0-18-judge-capability-resolution`     | #997  | #1096 | 已合并，已归档 |
-| `a0-19-export-plain-text-labeling`      | #998  | #1112 | 已合并，已归档 |
-| `a0-20-error-message-humanization`      | #983  | #1093 | 已合并，已归档 |
-| `a0-21-error-surface-closure`           | #988  | #1107 | 已合并，已归档 |
-| `a0-22-i18n-error-copy-cleanup`         | #989  | #1108 | 已合并，已归档 |
-| `a0-23-document-size-limit-enforcement` | #984  | #1065 | 已合并，已归档 |
-| `a0-24-skill-output-validation`         | #985  | #1094 | 已合并，已归档 |
+| 顺位 | Change                                          | GitHub Issue | 说明                            |
+| ---- | ----------------------------------------------- | ------------ | ------------------------------- |
+| 7    | `a1-05-search-completion-and-cjk`               | 待创建       | 搜索扩展入口、跨项目与 CJK 质量 |
+| 8    | `a1-08-judge-advanced-evaluation`               | 待创建       | Judge 高级语义评估              |
+| 9    | `a1-09-skill-output-validation-expansion`       | 待创建       | Skill 输出校验扩面              |
+| 10   | `a1-10-kg-recognition-and-character-navigation` | 待创建       | KG 识别升级与角色导航           |
 
-## 四、依赖关系的终局说明
+### 2.4 Wave 3：最后补语义底座
 
-- `A0-20 -> A0-21 / A0-22`：已按顺序落地并归档
-- `A0-01 -> A0-12`：已先合并禅模式真实编辑，再合并 Inline AI
-- `A0-08 -> A0-17`：已先完成事实核查，再完成入口决策
-- `A0-04 -> A0-19`：已先校正导出能力分级，再落地纯文本诚实标注
-- `A0-15` 与后续 placeholder / i18n / error-surface 基线漂移：已在串行合并过程中吸收并统一收口
+| 顺位 | Change                                       | GitHub Issue | 说明                                       |
+| ---- | -------------------------------------------- | ------------ | ------------------------------------------ |
+| 11   | `a1-11-memory-semantic-and-conflict-upgrade` | 待创建       | 负反馈学习、真 embedding、真蒸馏、冲突处理 |
 
-## 五、控制面说明
+### 2.5 并行保留项
 
-- `openspec/changes/` 根目录现在只保留：
-  - `archive/`
-  - `t-mig-test-structure-migration/`
-- 若后续继续推进测试结构迁移，必须以 `t-mig-test-structure-migration` 作为唯一活跃 change 继续拆分与交付
-- 若后续新增 Phase 1 / Phase 2 change，需新建独立 change，不得复活已归档的 Phase 0 目录
+| 顺位 | Change                           | GitHub Issue          | 说明                                                                       |
+| ---- | -------------------------------- | --------------------- | -------------------------------------------------------------------------- |
+| 12   | `t-mig-test-structure-migration` | 待创建 umbrella issue | 测试结构存量迁移；与 capability closure 并行存在，但优先级低于 Wave 1 收口 |
+
+## 三、依赖关系说明
+
+- `a1-02-settings-surface-completion` 与 `a1-03-backup-service-closure` 强相关：前者负责入口与说明，后者负责真实能力闭环
+- `a1-04-release-observability-and-keyboard-compat` 产物会回写 factsheet / release boundary，对后续 child changes 的平台口径有约束作用
+- `a1-08-judge-advanced-evaluation` 依赖 AI provider / fallback 链路保持稳定
+- `a1-10-kg-recognition-and-character-navigation` 与 `a1-05-search-completion-and-cjk` 在导航与检索层面存在耦合，应共享命名与跳转契约
+- `a1-11-memory-semantic-and-conflict-upgrade` 放在最后，是为了避免在上层入口尚未稳定时过早更换语义底座
+
+## 四、当前 PR 的职责边界
+
+本轮 PR **只做文档立项**：
+
+- 建立 umbrella + child changes
+- 为每个 change 写 proposal / tasks / 最小 delta spec
+- 同步 EO
+
+**不直接进入工程实现**。后续每个 child change 必须：
+
+1. 创建独立 Issue
+2. 从最新 `origin/main` 建立 task worktree
+3. 按 spec-first + TDD 落地
+4. 经独立审计 ACCEPT 后合并
