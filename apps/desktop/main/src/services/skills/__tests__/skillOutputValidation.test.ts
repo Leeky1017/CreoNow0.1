@@ -543,3 +543,215 @@ describe("skillOutputValidation stream mode", () => {
     }
   });
 });
+
+
+describe("skillOutputValidation expanded coverage", () => {
+  it("AC-10: strict 类技能正常输出通过校验 (condense/shrink/summarize/translate/style-transfer)", async () => {
+    for (const skillId of ["condense", "shrink", "summarize", "translate", "style-transfer"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        repeat("甲", 480),
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 500)));
+      assert.equal(result.ok, true, `${skillId} 正常输出应通过`);
+    }
+  });
+
+  it("AC-11: strict 类技能膨胀超过 10x 被拦截", async () => {
+    for (const skillId of ["condense", "shrink", "summarize", "translate", "style-transfer"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        repeat("甲", 2500),
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 200)));
+      assert.equal(result.ok, false, `${skillId} 12.5 倍膨胀应被拦截`);
+      if (!result.ok) {
+        assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+        assert.ok(result.error.message.includes("10"));
+      }
+    }
+  });
+
+  it("AC-12: loose 类技能正常输出通过校验 (brainstorm/critique/describe/dialogue/roleplay/write)", async () => {
+    for (const skillId of ["brainstorm", "critique", "describe", "dialogue", "roleplay", "write"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        repeat("甲", 3000),
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 200)));
+      assert.equal(result.ok, true, `${skillId} 15 倍应通过（loose 允许 20x）`);
+    }
+  });
+
+  it("AC-13: loose 类技能膨胀超过 20x 被拦截", async () => {
+    for (const skillId of ["brainstorm", "critique", "describe", "dialogue", "roleplay", "write"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        repeat("甲", 4200),
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 200)));
+      assert.equal(result.ok, false, `${skillId} 21 倍膨胀应被拦截`);
+      if (!result.ok) {
+        assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+        assert.ok(result.error.message.includes("20"));
+      }
+    }
+  });
+
+  it("AC-14: 新增技能空输出被拦截", async () => {
+    for (const skillId of ["brainstorm", "condense", "chat"]) {
+      const result = await buildExecutor(`builtin:${skillId}`, "").execute(
+        buildRunArgs(`builtin:${skillId}`, repeat("乙", 100)),
+      );
+      assert.equal(result.ok, false, `${skillId} 空输出应被拦截`);
+      if (!result.ok) {
+        assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+      }
+    }
+  });
+
+  it("AC-15: 新增技能代码块污染被拦截", async () => {
+    for (const skillId of ["brainstorm", "condense", "chat"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        "正常文本\n```python\nprint('hello')\n```\n结束",
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 100)));
+      assert.equal(result.ok, false, `${skillId} 代码块应被拦截`);
+      if (!result.ok) {
+        assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+      }
+    }
+  });
+
+  it("AC-16: 新增技能 HTML 标签被拦截", async () => {
+    for (const skillId of ["brainstorm", "condense", "chat"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        "这是<div>一段</div>文字",
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 100)));
+      assert.equal(result.ok, false, `${skillId} HTML 标签应被拦截`);
+      if (!result.ok) {
+        assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+      }
+    }
+  });
+
+  it("AC-17: chat 不做膨胀检测，大输出应通过", async () => {
+    // chat 输入 100 字，输出 5000 字（50 倍）→ 仍应通过（chat 不受 inflation 限制）
+    const result = await buildExecutor(
+      "builtin:chat",
+      repeat("甲", 5000),
+    ).execute(buildRunArgs("builtin:chat", repeat("乙", 100)));
+    assert.equal(result.ok, true, "chat 不受膨胀限制，50 倍仍应通过");
+  });
+
+  it("AC-18: chat 正常纯文本输出通过", async () => {
+    const result = await buildExecutor(
+      "builtin:chat",
+      "这是一段正常的 AI 对话回复，没有代码块也没有 HTML 标签。",
+    ).execute(buildRunArgs("builtin:chat", "你好"));
+    assert.equal(result.ok, true, "chat 正常输出应通过");
+  });
+});
+
+
+describe("skillOutputValidation expanded coverage", () => {
+  it("AC-10: strict 类技能正常输出通过校验 (condense/shrink/summarize/translate/style-transfer)", async () => {
+    for (const skillId of ["condense", "shrink", "summarize", "translate", "style-transfer"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        repeat("甲", 480),
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 500)));
+      assert.equal(result.ok, true, `${skillId} 正常输出应通过`);
+    }
+  });
+
+  it("AC-11: strict 类技能膨胀超过 10x 被拦截", async () => {
+    for (const skillId of ["condense", "shrink", "summarize", "translate", "style-transfer"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        repeat("甲", 2500),
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 200)));
+      assert.equal(result.ok, false, `${skillId} 12.5 倍膨胀应被拦截`);
+      if (!result.ok) {
+        assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+        assert.ok(result.error.message.includes("10"));
+      }
+    }
+  });
+
+  it("AC-12: loose 类技能正常输出通过校验 (brainstorm/critique/describe/dialogue/roleplay/write)", async () => {
+    for (const skillId of ["brainstorm", "critique", "describe", "dialogue", "roleplay", "write"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        repeat("甲", 3000),
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 200)));
+      assert.equal(result.ok, true, `${skillId} 15 倍应通过（loose 允许 20x）`);
+    }
+  });
+
+  it("AC-13: loose 类技能膨胀超过 20x 被拦截", async () => {
+    for (const skillId of ["brainstorm", "critique", "describe", "dialogue", "roleplay", "write"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        repeat("甲", 4200),
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 200)));
+      assert.equal(result.ok, false, `${skillId} 21 倍膨胀应被拦截`);
+      if (!result.ok) {
+        assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+        assert.ok(result.error.message.includes("20"));
+      }
+    }
+  });
+
+  it("AC-14: 新增技能空输出被拦截", async () => {
+    for (const skillId of ["brainstorm", "condense", "chat"]) {
+      const result = await buildExecutor(`builtin:${skillId}`, "").execute(
+        buildRunArgs(`builtin:${skillId}`, repeat("乙", 100)),
+      );
+      assert.equal(result.ok, false, `${skillId} 空输出应被拦截`);
+      if (!result.ok) {
+        assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+      }
+    }
+  });
+
+  it("AC-15: 新增技能代码块污染被拦截", async () => {
+    for (const skillId of ["brainstorm", "condense", "chat"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        "正常文本\n```python\nprint('hello')\n```\n结束",
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 100)));
+      assert.equal(result.ok, false, `${skillId} 代码块应被拦截`);
+      if (!result.ok) {
+        assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+      }
+    }
+  });
+
+  it("AC-16: 新增技能 HTML 标签被拦截", async () => {
+    for (const skillId of ["brainstorm", "condense", "chat"]) {
+      const result = await buildExecutor(
+        `builtin:${skillId}`,
+        "这是<div>一段</div>文字",
+      ).execute(buildRunArgs(`builtin:${skillId}`, repeat("乙", 100)));
+      assert.equal(result.ok, false, `${skillId} HTML 标签应被拦截`);
+      if (!result.ok) {
+        assert.equal(result.error.code, "SKILL_OUTPUT_INVALID");
+      }
+    }
+  });
+
+  it("AC-17: chat 不做膨胀检测，大输出应通过", async () => {
+    // chat 输入 100 字，输出 5000 字（50 倍）→ 仍应通过（chat 不受 inflation 限制）
+    const result = await buildExecutor(
+      "builtin:chat",
+      repeat("甲", 5000),
+    ).execute(buildRunArgs("builtin:chat", repeat("乙", 100)));
+    assert.equal(result.ok, true, "chat 不受膨胀限制，50 倍仍应通过");
+  });
+
+  it("AC-18: chat 正常纯文本输出通过", async () => {
+    const result = await buildExecutor(
+      "builtin:chat",
+      "这是一段正常的 AI 对话回复，没有代码块也没有 HTML 标签。",
+    ).execute(buildRunArgs("builtin:chat", "你好"));
+    assert.equal(result.ok, true, "chat 正常输出应通过");
+  });
+});
