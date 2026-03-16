@@ -42,7 +42,7 @@ P0-5: 文案与 i18n 存量止血
 - [x] 测试：断言 `EditorPane.tsx` 中存在 `t('editor.confirmSwitchToDraft')` 调用
 - [x] 测试：通过当前 i18n / guard 回归确认 `EditorContextMenu.tsx` 已使用 `t('editor.contextMenu.ai')`
 
-**文件**: `apps/desktop/tests/i18n/editor-version-slash-i18n.test.ts`（新建）
+**文件**: `apps/desktop/tests/i18n/a0-16-editor-version-slash-i18n.guard.test.ts`（新建）
 
 ### Task 1.2: Slash command i18n 测试
 
@@ -53,7 +53,7 @@ P0-5: 文案与 i18n 存量止血
 - [x] 测试：读取 `zh-CN.json`，断言包含 `editor.slash.continue.label` 等全部 12 个 slash i18n key
 - [x] 测试：读取 `en.json`，断言包含相同 12 个 slash i18n key
 
-**文件**: `apps/desktop/tests/i18n/editor-version-slash-i18n.test.ts`
+**文件**: `apps/desktop/tests/i18n/a0-16-editor-version-slash-i18n.guard.test.ts`
 
 ### Task 1.3: 版本历史裸字符串消除测试
 
@@ -65,7 +65,7 @@ P0-5: 文案与 i18n 存量止血
 - [x] 测试：通过当前 i18n / guard 回归确认 `VersionHistoryPanel.tsx` 的 tooltip 文案已改为 i18n key
 - [x] 测试：通过当前 i18n / guard 回归确认 `useVersionCompare.ts` 错误文案已完成 i18n 收口
 
-**文件**: `apps/desktop/tests/i18n/editor-version-slash-i18n.test.ts`
+**文件**: `apps/desktop/tests/i18n/a0-16-editor-version-slash-i18n.guard.test.ts`
 
 ### Task 1.4: i18n key 完整性测试
 
@@ -75,7 +75,7 @@ P0-5: 文案与 i18n 存量止血
 - [x] 测试：读取 `en.json`，断言包含相同数量的新增 key
 - [x] 测试：断言 `zh-CN.json` 和 `en.json` 中新增 key 集合完全一致（对称性检查）
 
-**文件**: `apps/desktop/tests/i18n/editor-version-slash-i18n.test.ts`
+**文件**: `apps/desktop/tests/i18n/a0-16-editor-version-slash-i18n.guard.test.ts`
 
 ---
 

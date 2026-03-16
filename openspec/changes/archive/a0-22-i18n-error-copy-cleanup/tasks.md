@@ -32,7 +32,7 @@
 - [x] 测试：读取 `en.json` 中 `export.error.noProject` 的值，断言等于 `"Please open a project first"`
 - [x] 测试：断言该值不匹配 `/^[A-Z][A-Z_]+:/`
 
-**文件**: `apps/desktop/tests/i18n/error-copy-cleanup.test.ts`（新建）
+**文件**: `apps/desktop/renderer/src/i18n/__tests__/i18n-error-copy-cleanup.guard.test.ts`（新建）
 
 ### Task 1.2: rightPanel.quality.errorWithCode 文案测试
 
@@ -43,7 +43,7 @@
 - [x] 测试：读取 `en.json` 中 `rightPanel.quality.errorWithCode` 的值，断言等于 `"Quality check encountered an issue"`
 - [x] 测试：断言该值不包含 `{{code}}` 或 `{{errorCode}}`
 
-**文件**: `apps/desktop/tests/i18n/error-copy-cleanup.test.ts`
+**文件**: `apps/desktop/renderer/src/i18n/__tests__/i18n-error-copy-cleanup.guard.test.ts`
 
 ### Task 1.3: 调用点参数移除测试
 
@@ -52,7 +52,7 @@
 - [x] 测试：运行当前 i18n / error-surface guard，确认 renderer 中不再以技术码参数调用 `t("rightPanel.quality.errorWithCode")`
 - [x] 测试：断言相关调用点已改为不传入技术码插值参数
 
-**文件**: `apps/desktop/tests/i18n/error-copy-cleanup.test.ts`
+**文件**: `apps/desktop/renderer/src/i18n/__tests__/i18n-error-copy-cleanup.guard.test.ts`
 
 ### Task 1.4: locale 文件全量扫描测试
 
@@ -63,7 +63,7 @@
 - [x] 测试：遍历 `en.json` 全部 key-value 对，断言无任何 value 匹配 `/^[A-Z][A-Z_]{2,}:\s/`
 - [x] 测试：遍历 `en.json` 全部 key-value 对，断言无任何 value 包含 `{{code}}` 或 `{{errorCode}}`
 
-**文件**: `apps/desktop/tests/i18n/error-copy-cleanup.test.ts`
+**文件**: `apps/desktop/renderer/src/i18n/__tests__/i18n-error-copy-cleanup.guard.test.ts`
 
 ---
 
