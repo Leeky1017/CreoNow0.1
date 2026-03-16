@@ -57,7 +57,7 @@ test("CE-S2-FA-S1 injects always entities into rules context chunks", async () =
               description: "本世界的超能力体系",
             }),
           ],
-            totalCount: 2,
+          totalCount: 2,
         },
       };
     },
@@ -98,7 +98,7 @@ test("CE-S2-FA-S2 does not inject chunks when no always entities exist", async (
             aiContextLevel: "when_detected",
           }),
         ],
-          totalCount: 1,
+        totalCount: 1,
       },
     }),
   };

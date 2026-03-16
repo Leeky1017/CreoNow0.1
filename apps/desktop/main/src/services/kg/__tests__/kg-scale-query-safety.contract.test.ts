@@ -556,4 +556,6 @@ function insertRelation(args: {
   }
 }
 
-console.log("✅ kg-scale-query-safety.contract.test.ts — all assertions passed");
+console.log(
+  "✅ kg-scale-query-safety.contract.test.ts — all assertions passed",
+);

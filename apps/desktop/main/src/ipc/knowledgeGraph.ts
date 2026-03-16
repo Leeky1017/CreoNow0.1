@@ -160,9 +160,9 @@ type QueryByIdsPayload = {
   entityIds: string[];
 };
 
-function normalizeQueryByIdsPayload(payload: unknown):
-  | { ok: true; payload: QueryByIdsPayload }
-  | { ok: false; message: string } {
+function normalizeQueryByIdsPayload(
+  payload: unknown,
+): { ok: true; payload: QueryByIdsPayload } | { ok: false; message: string } {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     return { ok: false, message: "payload must be an object" };
   }
@@ -172,7 +172,10 @@ function normalizeQueryByIdsPayload(payload: unknown):
     entityIds?: unknown;
   };
 
-  if (typeof candidate.projectId !== "string" || candidate.projectId.length === 0) {
+  if (
+    typeof candidate.projectId !== "string" ||
+    candidate.projectId.length === 0
+  ) {
     return { ok: false, message: "projectId is required" };
   }
 

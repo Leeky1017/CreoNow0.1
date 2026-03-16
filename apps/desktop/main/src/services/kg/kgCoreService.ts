@@ -201,6 +201,22 @@ function validateProjectId(projectId: string): Err | null {
   return null;
 }
 
+function validatePaginationArgs(
+  limit: number | undefined,
+  offset: number | undefined,
+): Err | null {
+  if (limit !== undefined && (!Number.isInteger(limit) || limit <= 0)) {
+    return ipcError("INVALID_ARGUMENT", "limit must be a positive integer");
+  }
+  if (offset !== undefined && (!Number.isInteger(offset) || offset < 0)) {
+    return ipcError(
+      "INVALID_ARGUMENT",
+      "offset must be a non-negative integer",
+    );
+  }
+  return null;
+}
+
 function validateEntityName(name: string): Err | null {
   const normalized = normalizeText(name);
   if (normalized.length === 0) {
@@ -586,9 +602,7 @@ function countProjectEntities(
       .prepare<
         [string, AiContextLevel],
         { count: number }
-      >(
-        "SELECT COUNT(1) as count FROM kg_entities WHERE project_id = ? AND ai_context_level = ?",
-      )
+      >("SELECT COUNT(1) as count FROM kg_entities WHERE project_id = ? AND ai_context_level = ?")
       .get(projectId, filter.aiContextLevel);
     return row?.count ?? 0;
   }
@@ -779,14 +793,14 @@ function queryPathWithinAdjacency(args: {
 
     expansions += 1;
     if (expansions > args.maxExpansions) {
-        return {
-          ok: true,
-          data: {
-            pathEntityIds: [],
-            expansions,
-            degraded: true,
-          },
-        };
+      return {
+        ok: true,
+        data: {
+          pathEntityIds: [],
+          expansions,
+          degraded: true,
+        },
+      };
     }
 
     if (nodeId === args.targetEntityId) {
@@ -833,7 +847,7 @@ function queryPathWithinAdjacency(args: {
       data: {
         pathEntityIds: [],
         expansions,
-          degraded: false,
+        degraded: false,
       },
     };
   }
@@ -892,9 +906,7 @@ function validateEntityPatchFields(
   }
 
   if (typeof patch.description === "string") {
-    const invalidDescription = validateDescription(
-      patch.description.trim(),
-    );
+    const invalidDescription = validateDescription(patch.description.trim());
     if (invalidDescription) {
       return invalidDescription;
     }
@@ -906,9 +918,7 @@ function validateEntityPatchFields(
     if (invalidLastSeenState) {
       return invalidLastSeenState;
     }
-    normalizedPatchLastSeenState = normalizeLastSeenState(
-      patch.lastSeenState,
-    );
+    normalizedPatchLastSeenState = normalizeLastSeenState(patch.lastSeenState);
   }
 
   if (typeof patch.type === "string") {
@@ -920,9 +930,7 @@ function validateEntityPatchFields(
 
   let normalizedPatchAiContextLevel: AiContextLevel | undefined;
   if (patch.aiContextLevel !== undefined) {
-    const parsedAiContextLevel = normalizeAiContextLevel(
-      patch.aiContextLevel,
-    );
+    const parsedAiContextLevel = normalizeAiContextLevel(patch.aiContextLevel);
     if (!parsedAiContextLevel) {
       return ipcError(
         "VALIDATION_ERROR",
@@ -936,8 +944,7 @@ function validateEntityPatchFields(
     normalizedPatchAiContextLevel = parsedAiContextLevel;
   }
 
-  let normalizedAttributes: ServiceResult<Record<string, string>> | null =
-    null;
+  let normalizedAttributes: ServiceResult<Record<string, string>> | null = null;
   if (patch.attributes) {
     normalizedAttributes = validateAndNormalizeAttributes({
       attributes: patch.attributes,
@@ -964,7 +971,9 @@ function validateEntityPatchFields(
     data: {
       normalizedPatchLastSeenState,
       normalizedPatchAiContextLevel,
-      normalizedAttributes: normalizedAttributes?.ok ? normalizedAttributes.data : null,
+      normalizedAttributes: normalizedAttributes?.ok
+        ? normalizedAttributes.data
+        : null,
       normalizedAliases: normalizedAliases?.ok ? normalizedAliases.data : null,
     },
   };
@@ -1159,16 +1168,10 @@ function createEntityOps(
         return invalidProjectId;
       }
 
-      if (
-        limit !== undefined &&
-        (!Number.isInteger(limit) || limit <= 0)
-      ) {
+      if (limit !== undefined && (!Number.isInteger(limit) || limit <= 0)) {
         return ipcError("INVALID_ARGUMENT", "limit must be a positive integer");
       }
-      if (
-        offset !== undefined &&
-        (!Number.isInteger(offset) || offset < 0)
-      ) {
+      if (offset !== undefined && (!Number.isInteger(offset) || offset < 0)) {
         return ipcError(
           "INVALID_ARGUMENT",
           "offset must be a non-negative integer",
@@ -1203,15 +1206,20 @@ function createEntityOps(
         return {
           ok: true,
           data: {
-            items: listProjectEntities(args.db, normalizedProjectId, {
-              aiContextLevel: normalizedFilterAiContextLevel,
-              }, {
+            items: listProjectEntities(
+              args.db,
+              normalizedProjectId,
+              {
+                aiContextLevel: normalizedFilterAiContextLevel,
+              },
+              {
                 limit,
                 offset,
-              }),
-              totalCount: countProjectEntities(args.db, normalizedProjectId, {
-                aiContextLevel: normalizedFilterAiContextLevel,
-              }),
+              },
+            ),
+            totalCount: countProjectEntities(args.db, normalizedProjectId, {
+              aiContextLevel: normalizedFilterAiContextLevel,
+            }),
           },
         };
       } catch (error) {
@@ -1274,10 +1282,7 @@ function createEntityOps(
 
 function createEntityUpdateOps(
   ctx: KgCoreCtx,
-): Pick<
-  KnowledgeGraphService,
-  "entityUpdate"
-> {
+): Pick<KnowledgeGraphService, "entityUpdate"> {
   const args = ctx;
   const limits = ctx.limits;
 
@@ -1432,12 +1437,10 @@ function createRelationOps(
       if (invalidProjectId) {
         return invalidProjectId;
       }
-
       const normalizedSource = sourceEntityId.trim();
       const normalizedTarget = targetEntityId.trim();
       const normalizedType = relationType.trim();
       const normalizedDescription = normalizeText(description ?? "");
-
       if (normalizedSource.length === 0) {
         return ipcError("INVALID_ARGUMENT", "sourceEntityId is required");
       }
@@ -1460,22 +1463,18 @@ function createRelationOps(
       if (invalidDescription) {
         return invalidDescription;
       }
-
       const normalizedProjectId = projectId.trim();
-
       try {
         const projectExists = ensureProjectExists(args.db, normalizedProjectId);
         if (projectExists) {
           return projectExists;
         }
-
         if (countRelations(args.db, normalizedProjectId) >= limits.edgeLimit) {
           return ipcError("KG_CAPACITY_EXCEEDED", "edge capacity exceeded", {
             kind: "edge",
             limit: limits.edgeLimit,
           });
         }
-
         const sourceEntity = ensureEntityInProject(args.db, {
           projectId: normalizedProjectId,
           entityId: normalizedSource,
@@ -1546,20 +1545,9 @@ function createRelationOps(
         return invalidProjectId;
       }
 
-      if (
-        limit !== undefined &&
-        (!Number.isInteger(limit) || limit <= 0)
-      ) {
-        return ipcError("INVALID_ARGUMENT", "limit must be a positive integer");
-      }
-      if (
-        offset !== undefined &&
-        (!Number.isInteger(offset) || offset < 0)
-      ) {
-        return ipcError(
-          "INVALID_ARGUMENT",
-          "offset must be a non-negative integer",
-        );
+      const invalidPagination = validatePaginationArgs(limit, offset);
+      if (invalidPagination) {
+        return invalidPagination;
       }
 
       const normalizedProjectId = projectId.trim();
@@ -1572,13 +1560,13 @@ function createRelationOps(
 
         return {
           ok: true,
-            data: {
-              items: listProjectRelations(args.db, normalizedProjectId, {
-                limit,
-                offset,
-              }),
-              totalCount: countRelations(args.db, normalizedProjectId),
-            },
+          data: {
+            items: listProjectRelations(args.db, normalizedProjectId, {
+              limit,
+              offset,
+            }),
+            totalCount: countRelations(args.db, normalizedProjectId),
+          },
         };
       } catch (error) {
         args.logger.error("kg_relation_list_failed", {
@@ -1758,10 +1746,7 @@ function createRelationOps(
 
 function createQueryGraphOps(
   ctx: KgCoreCtx,
-): Pick<
-  KnowledgeGraphService,
-  "querySubgraph" | "queryPath" | "queryByIds"
-> {
+): Pick<KnowledgeGraphService, "querySubgraph" | "queryPath" | "queryByIds"> {
   const args = ctx;
   const limits = ctx.limits;
 
@@ -1946,7 +1931,7 @@ function createQueryGraphOps(
           data: {
             pathEntityIds: queried.data.pathEntityIds,
             expansions: queried.data.expansions,
-              degraded: queried.data.degraded,
+            degraded: queried.data.degraded,
             queryCostMs: Date.now() - startedAt,
           },
         };
@@ -2019,10 +2004,7 @@ function createQueryGraphOps(
 
 function createQueryValidateOps(
   ctx: KgCoreCtx,
-): Pick<
-  KnowledgeGraphService,
-  "queryValidate"
-> {
+): Pick<KnowledgeGraphService, "queryValidate"> {
   const args = ctx;
   const limits = ctx.limits;
 
@@ -2177,10 +2159,7 @@ function createQueryValidateOps(
 
 function createQueryTextOps(
   ctx: KgCoreCtx,
-): Pick<
-  KnowledgeGraphService,
-  "queryRelevant" | "buildRulesInjection"
-> {
+): Pick<KnowledgeGraphService, "queryRelevant" | "buildRulesInjection"> {
   const args = ctx;
 
   return {
@@ -2470,5 +2449,4 @@ export function createKnowledgeGraphCoreService(args: {
     ...createQueryValidateOps(ctx),
     ...createQueryTextOps(ctx),
   };
-
 }

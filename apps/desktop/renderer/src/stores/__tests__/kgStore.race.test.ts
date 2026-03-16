@@ -106,9 +106,7 @@ describe("kgStore race scenarios", () => {
 
     const state = store.getState();
     expect(state.projectId).toBe("project-b");
-    expect(state.entities.map((entity) => entity.id)).toEqual([
-      "entity-b",
-    ]);
+    expect(state.entities.map((entity) => entity.id)).toEqual(["entity-b"]);
     expect(state.bootstrapStatus).toBe("ready");
     expect(state.lastError).toBeNull();
   });

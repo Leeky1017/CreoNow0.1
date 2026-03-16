@@ -250,14 +250,14 @@ function insertRelation(args: {
       maxExpansions: 1,
     });
 
-      assert.equal(queried.ok, true);
-      if (!queried.ok) {
-        assert.fail("expected degraded queryPath result");
+    assert.equal(queried.ok, true);
+    if (!queried.ok) {
+      assert.fail("expected degraded queryPath result");
     }
 
-      assert.equal(queried.data.degraded, true);
-      assert.equal(queried.data.pathEntityIds.length, 0);
-      assert.equal(queried.data.expansions, 2);
+    assert.equal(queried.data.degraded, true);
+    assert.equal(queried.data.pathEntityIds.length, 0);
+    assert.equal(queried.data.expansions, 2);
   } finally {
     harness.close();
   }

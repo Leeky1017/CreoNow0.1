@@ -59,7 +59,9 @@ const BASE_REQUEST = {
   assert.deepEqual(result.chunks, []);
   assert.deepEqual(result.warnings, ["KG_UNAVAILABLE: 知识图谱数据未注入"]);
 
-  const warn = warnLogs.find((entry) => entry.event === "context_fetcher_degradation");
+  const warn = warnLogs.find(
+    (entry) => entry.event === "context_fetcher_degradation",
+  );
   assert.ok(warn, "AUD-C3-S1: expected context_fetcher_degradation warn log");
   assert.equal(warn?.data?.fetcher, "rulesFetcher");
   assert.equal(warn?.data?.module, "context-engine");
@@ -117,7 +119,7 @@ const BASE_REQUEST = {
           ok: true,
           data: {
             items: [],
-              totalCount: 0,
+            totalCount: 0,
           },
         };
       }
