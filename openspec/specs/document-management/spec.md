@@ -193,6 +193,30 @@ draft（草稿）──────► final（定稿）
 
 ---
 
+### Requirement: v0.1 备份能力边界
+
+v0.1 的文档管理**必须**明确区分「偏好项已存在」与「应用级备份闭环已交付」。当前实现允许设置页持久化 `backupInterval` 偏好，但这**不等于**应用已经提供自动备份服务。
+
+- `SettingsDialog` / `PreferenceStore` **必须**持久化 `creonow.settings.backupInterval`，以保留用户的备份间隔偏好
+- v0.1 **不得**将该偏好解释为已存在的备份调度器、独立备份写盘服务、恢复 IPC 或恢复入口
+- 当前版本的数据安全边界**必须**依赖手动备份与操作系统级保护；应用级备份能力以 release 边界文档中的诚实声明为准
+- 后续版本若要交付真正的备份闭环，**必须**在本模块新增明确的备份写盘、恢复入口与错误处理规范，而不是仅复用偏好字段
+
+#### Scenario: 用户修改 backupInterval 时只持久化偏好
+
+- **假设** 用户在设置对话框中将备份间隔改为新的选项值
+- **当** 设置写入 `PreferenceStore`
+- **则** `creonow.settings.backupInterval` 被持久化
+- **并且** 不会因此自动创建后台备份任务或恢复入口
+
+#### Scenario: v0.1 对外声明不把 backupInterval 视为已交付备份功能
+
+- **假设** 发布事实表或边界审计需要判断备份能力
+- **当** 审阅当前实现与 release 工件
+- **则** 只能确认「备份间隔偏好存在且可持久化」
+- **并且** 不得将 v0.1 标记为已提供应用级备份 / 恢复闭环
+
+---
 ### Requirement: 文档导出
 
 系统**必须**支持将文档导出为以下格式，并以 TipTap JSON 的结构语义作为 PDF / DOCX / Markdown 的真实输入源：
@@ -307,6 +331,10 @@ draft（草稿）──────► final（定稿）
 边界定义：
 
 - 单文档正文大小上限：5 MB（TipTap JSON 序列化后）
+- 保存链路体积校验**必须**同时存在于 `file:document:save` IPC 入口与 `documentCoreService.save()`，并共享常量 `MAX_DOCUMENT_SIZE_BYTES = 5 * 1024 * 1024`
+- 体积计算**必须**使用 `Buffer.byteLength(contentJson, "utf-8")`，不得使用 `string.length` 近似
+- 当 `contentJson` 字节长度 `> MAX_DOCUMENT_SIZE_BYTES` 时，保存**必须**返回 `DOCUMENT_SIZE_EXCEEDED`；恰好等于 5 MB 时允许保存
+- `reason: "autosave"` 的自动保存请求**必须**与手动保存使用同一体积限制，禁止绕过限制静默写入
 - 导出输入最大体积：20 MB
 - 支持编码：UTF-8（主）、UTF-16（导入自动转 UTF-8）
 - 不支持编码需返回 `DOCUMENT_ENCODING_UNSUPPORTED`
@@ -325,6 +353,21 @@ draft（草稿）──────► final（定稿）
 - **并且** 在 p95 30s 内完成
 - **并且** UI 保持可交互
 
+#### Scenario: 5 MB + 1 byte 的文档在保存链路被拦截
+
+- **假设** 某次 `file:document:save` 请求的 `contentJson` 字节长度为 `5,242,881`
+- **当** IPC 层或 Service 层执行体积校验
+- **则** 返回 `{ code: "DOCUMENT_SIZE_EXCEEDED" }`
+- **并且** 文档内容不会写入数据库
+
+#### Scenario: 自动保存同样受 5 MB 限制约束
+
+- **假设** 自动保存触发时文档字节长度已超过 5 MB
+- **当** `actor: "auto"`、`reason: "autosave"` 的保存请求进入保存链路
+- **则** 体积校验同样返回 `DOCUMENT_SIZE_EXCEEDED`
+- **并且** 渲染进程通过既有保存失败反馈路径向用户提示错误
+
+---
 #### Scenario: 并发保存冲突
 
 - **假设** 两个窗口同时编辑同一文档

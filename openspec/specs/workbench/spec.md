@@ -413,6 +413,104 @@ V1 阶段仅交付深色主题为完整状态，浅色主题为可选。
 
 ---
 
+### Requirement: 全局 Toast 通知基础设施
+
+系统**必须**在应用根级挂载全局 Toast 基础设施，使任意工作台组件都能触发一致的即时通知反馈。当前实现由 `AppToastProvider`、`useAppToast()`、`ToastIntegrationBridge` 与 `GlobalErrorToastBridge` 组成。
+
+- `App.tsx` **必须**在主题 Provider 之内挂载 `AppToastProvider`，并将主应用树包裹在其中
+- `useAppToast()` **必须**暴露 `showToast({ title, description?, variant?, duration?, action? })`
+- `ToastViewport` **必须**固定在窗口右下角；同一时刻多条 Toast **必须**按触发顺序堆叠显示
+- 默认停留时间为 5000ms；`error` variant 未显式指定 `duration` 时**必须**使用 8000ms
+- `ToastIntegrationBridge` **必须**监听 autosave 成功 / 失败、flush warning 与 AI 错误等状态变化并触发 Toast
+- `GlobalErrorToastBridge` **必须**消费全局错误事件并统一展示 `globalError.toast.*` 文案的 error Toast
+
+#### Scenario: 组件通过 useAppToast 触发全局通知
+
+- **假设** 应用已正常挂载 `AppToastProvider`
+- **当** 任意组件调用 `showToast({ title, variant: "success" })`
+- **则** 右下角出现对应样式的 Toast
+- **并且** `error` variant 使用 `aria-live="assertive"`，其余 variant 使用 `aria-live="polite"`
+
+#### Scenario: 自动保存失败触发带重试动作的 Toast
+
+- **假设** 编辑器 autosave 状态变为 `error`
+- **当** `useAutoSaveToast()` 观察到状态切换
+- **则** 系统展示 error Toast
+- **并且** Toast action 调用 `retryLastAutosave()` 以重试最近一次自动保存
+
+---
+
+### Requirement: 渲染进程全局异常兜底
+
+渲染进程**必须**在 React 挂载前安装全局异常兜底，覆盖 `ErrorBoundary` 之外的未处理 Promise rejection 与非 React render 阶段错误。当前实现入口为 `main.tsx` 中的 `installGlobalErrorHandlers()`。
+
+- `installGlobalErrorHandlers()` **必须**在 `ReactDOM.createRoot(...).render(...)` 之前调用
+- 兜底范围至少包括：`window.unhandledrejection` 与 `window.error`
+- 异常条目**必须**标准化为 `GlobalErrorEntry { source, name, message, stack, timestamp }`
+- 日志链路**必须**通过 `invoke("app:renderer:logerror", entry)` 写入主进程日志；日志失败时仅 `console.error`，不得触发递归提示
+- Toast 提示**必须**按 `name + message` 在 1000ms 窗口内去重；日志记录**不得**去重
+- 全局错误提示**必须**通过 `cn:global-error-toast` 事件桥接到统一 Toast，而不是在任意组件中散落处理
+
+#### Scenario: 未处理 rejection 被记录并提示用户
+
+- **假设** 一个未被业务代码捕获的 Promise rejection 发生在 renderer 中
+- **当** 全局错误处理器接收到事件
+- **则** 生成 `source: "unhandledrejection"` 的 `GlobalErrorEntry`
+- **并且** 通过 `app:renderer:logerror` 发送到主进程
+- **并且** 用户收到一条通用的 error Toast，而不是仅在控制台看到异常
+
+#### Scenario: 短时间重复异常只提示一次但日志完整保留
+
+- **假设** 相同的 `name + message` 在 1000ms 内重复触发多次
+- **当** 全局错误处理器执行去重逻辑
+- **则** 用户侧 Toast 仅显示一次
+- **并且** 每次异常仍分别写入日志
+
+---
+
+### Requirement: 错误展示与 i18n 文案收口
+
+Workbench 范围内所有用户可见的错误展示**必须**走统一的人话化与 i18n 管线，禁止直接泄露技术错误码、后端原文或硬编码技术前缀。
+
+- 组件在 JSX 或状态文本中展示 IPC 错误时，**必须**调用 `getHumanErrorMessage(error)`，而不是直接渲染 `error.code` / `error.message`
+- `CommandPalette` 的本地错误文案**必须**使用 `workbench.commandPalette.errors.*` i18n key
+- locale 文件中的错误文案**必须**为自然语言，不得包含 `NO_PROJECT:`、`ACTION_FAILED:`、`{{code}}` 等技术泄露模式
+- `QualityPanel`、`InfoPanel`、版本历史预览、命令面板等工作台 surface **必须**共享这一收口规则
+
+#### Scenario: CommandPalette 无法打开对话框时显示 i18n 错误
+
+- **假设** CommandPalette 触发设置或导出动作，但对应 dialog action 不可用
+- **当** 面板需要反馈失败原因
+- **则** 界面展示 `workbench.commandPalette.errors.*` 对应的本地化文案
+- **并且** 不显示 `ACTION_FAILED`、`NO_PROJECT` 或其他技术前缀
+
+#### Scenario: 工作台错误展示不泄露后端术语
+
+- **假设** 某个右侧面板收到 `{ code: "DB_ERROR", message: "SQLITE_CONSTRAINT ..." }`
+- **当** 组件渲染错误状态
+- **则** 用户只看到 `getHumanErrorMessage()` 映射后的自然语言提示
+- **并且** DOM 中不出现 `DB_ERROR`、`SQLITE`、HTTP 状态码或上游 API 名称
+
+---
+
+### Requirement: 发布边界与 i18n 审计工件
+
+Workbench 相关的发布事实**必须**沉淀为可复核的工件，供事实表、审计和后续收口任务直接引用。
+
+- Windows 首发边界**必须**维护结构化工件 `docs/release/v0.1-windows-boundary.md`，覆盖代码签名、自动更新、备份能力与崩溃可观测性四个维度
+- 数据安全边界**必须**维护结构化工件 `docs/release/v0.1-data-safety-boundary.md`，覆盖项目文件、KG、Memory、敏感凭证与临时缓存的存储方式与保护边界
+- renderer i18n 裸字符串治理**必须**拥有可重复执行的扫描入口（`scripts/i18n-inventory-scan.ts`）与自动化验证（`apps/desktop/tests/i18n/i18n-inventory-audit.test.ts`），用于维护按模块分组的清理清单
+- 上述工件的结论**必须**忠于当前代码现场，不得以“计划中能力”冒充已交付能力
+
+#### Scenario: 发布事实表引用发布边界工件时不需二次猜测
+
+- **假设** 事实表或审计报告需要判断 Windows 首发能力或数据安全边界
+- **当** 读取对应 release 工件
+- **则** 可以直接获得结构化的当前状态、证据与处置建议
+- **并且** 这些结论与当前代码现场保持一致
+
+---
+
 ### Requirement: 模块级可验收标准（适用于本模块全部 Requirement）
 
 - 量化阈值：
