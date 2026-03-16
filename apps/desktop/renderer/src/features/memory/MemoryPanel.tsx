@@ -9,7 +9,8 @@ import { useProjectStore } from "../../stores/projectStore";
 
 type PanelScope = "global" | "project";
 type SemanticRule = IpcResponseData<"memory:semantic:list">["items"][number];
-type SemanticConflict = IpcResponseData<"memory:semantic:list">["conflictQueue"][number];
+type SemanticConflict =
+  IpcResponseData<"memory:semantic:list">["conflictQueue"][number];
 type SemanticCategory = SemanticRule["category"];
 type MemorySettings = IpcResponseData<"memory:settings:get">;
 
@@ -53,6 +54,25 @@ function formatUpdatedAt(ts: number | null): string {
     return "--";
   }
   return new Date(ts).toLocaleString("zh-CN", { hour12: false });
+}
+
+function useScopeSync(args: {
+  activeScope: PanelScope;
+  projectId: string | null;
+  setActiveScope: React.Dispatch<React.SetStateAction<PanelScope>>;
+}): void {
+  React.useEffect(() => {
+    if (args.projectId && args.activeScope === "global") {
+      return;
+    }
+    if (!args.projectId && args.activeScope !== "global") {
+      args.setActiveScope("global");
+      return;
+    }
+    if (args.projectId && args.activeScope !== "project") {
+      args.setActiveScope("project");
+    }
+  }, [args.activeScope, args.projectId, args.setActiveScope]);
 }
 
 function useMemoryState(
@@ -133,18 +153,7 @@ function useMemoryState(
     void loadPanelData();
   }, [loadPanelData]);
 
-  React.useEffect(() => {
-    if (projectId && activeScope === "global") {
-      return;
-    }
-    if (!projectId && activeScope !== "global") {
-      setActiveScope("global");
-      return;
-    }
-    if (projectId && activeScope !== "project") {
-      setActiveScope("project");
-    }
-  }, [activeScope, projectId]);
+  useScopeSync({ activeScope, projectId, setActiveScope });
 
   const filteredRules = React.useMemo(
     () => rules.filter((rule) => rule.scope === activeScope),
@@ -365,9 +374,7 @@ function useMemoryState(
       return replaced.filter((rule) => !removedRuleIds.includes(rule.id));
     });
     setConflictQueue((prev) =>
-      prev.map((item) =>
-        item.id === res.data.item.id ? res.data.item : item,
-      ),
+      prev.map((item) => (item.id === res.data.item.id ? res.data.item : item)),
     );
     setConflictCount((prev) => Math.max(0, prev - 1));
   }
@@ -413,6 +420,340 @@ function useMemoryState(
     handleLearningToggle,
     handleResolveConflict,
   };
+}
+
+type MemoryPanelState = ReturnType<typeof useMemoryState>;
+
+function MemoryScopeTabs(props: {
+  t: (key: string) => string;
+  activeScope: PanelScope;
+  setActiveScope: (scope: PanelScope) => void;
+  hasProject: boolean;
+}): JSX.Element {
+  return (
+    <div className="shrink-0 flex gap-1">
+      <button
+        type="button"
+        data-testid="memory-scope-global"
+        className={`text-xs px-2 py-1 rounded-[var(--radius-sm)] border ${
+          props.activeScope === "global"
+            ? "border-[var(--color-border-focus)] bg-[var(--color-bg-raised)]"
+            : "border-[var(--color-border-default)]"
+        }`}
+        onClick={() => props.setActiveScope("global")}
+      >
+        {props.t("memory.panel.globalTab")}
+      </button>
+      <button
+        type="button"
+        data-testid="memory-scope-project"
+        disabled={!props.hasProject}
+        className={`text-xs px-2 py-1 rounded-[var(--radius-sm)] border ${
+          props.activeScope === "project"
+            ? "border-[var(--color-border-focus)] bg-[var(--color-bg-raised)]"
+            : "border-[var(--color-border-default)]"
+        } disabled:opacity-50 disabled:cursor-not-allowed`}
+        onClick={() => props.setActiveScope("project")}
+      >
+        {props.t("memory.panel.projectTab")}
+      </button>
+    </div>
+  );
+}
+
+function MemoryConflictSection(props: {
+  t: (key: string, opts?: Record<string, unknown>) => string;
+  state: MemoryPanelState;
+}): JSX.Element | null {
+  if (props.state.conflictCount <= 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <Card
+        noPadding
+        data-testid="memory-conflict-notice"
+        className="shrink-0 px-2.5 py-2 border-[var(--color-warning)] text-[var(--color-warning)]"
+      >
+        <div className="flex items-center gap-2">
+          <Text size="small" className="text-[var(--color-warning)]">
+            {props.t("memory.panel.conflictsDetected", {
+              count: props.state.conflictCount,
+            })}
+          </Text>
+          <Button
+            size="sm"
+            variant="secondary"
+            data-testid="memory-open-conflict-resolution"
+            className="ml-auto"
+            onClick={() => props.state.setConflictPanelOpen((open) => !open)}
+          >
+            {props.state.conflictPanelOpen
+              ? props.t("memory.panel.hideConflictResolver")
+              : props.t("memory.panel.openConflictResolver")}
+          </Button>
+        </div>
+      </Card>
+
+      {props.state.conflictPanelOpen &&
+      props.state.pendingConflicts.length > 0 ? (
+        <Card
+          noPadding
+          data-testid="memory-conflict-resolution-panel"
+          className="shrink-0 p-2.5 border-[var(--color-warning)]"
+        >
+          <div className="flex flex-col gap-2">
+            <Text size="small" color="muted">
+              {props.t("memory.panel.conflictResolverTitle")}
+            </Text>
+            {props.state.pendingConflicts.map((conflict) => {
+              const options = conflict.ruleIds
+                .map((ruleId) =>
+                  props.state.filteredRules.find((rule) => rule.id === ruleId),
+                )
+                .filter((rule): rule is SemanticRule => Boolean(rule));
+              return (
+                <div
+                  key={conflict.id}
+                  className="rounded-[var(--radius-sm)] border border-[var(--color-border-default)] p-2"
+                  data-testid={`memory-conflict-${conflict.id}`}
+                >
+                  <Text size="tiny" color="muted">
+                    {props.t("memory.panel.conflictResolverHint")}
+                  </Text>
+                  <div className="mt-2 flex flex-col gap-2">
+                    {options.map((option) => (
+                      <div
+                        key={option.id}
+                        className="rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] p-2"
+                      >
+                        <Text size="small">{option.rule}</Text>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="mt-2"
+                          data-testid={`memory-resolve-${conflict.id}-${option.id}`}
+                          onClick={() =>
+                            void props.state.handleResolveConflict(
+                              conflict.id,
+                              option.id,
+                            )
+                          }
+                        >
+                          {props.t("memory.panel.keepThisRule")}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+      ) : null}
+    </>
+  );
+}
+
+function MemoryRulesCard(props: {
+  t: (key: string, opts?: Record<string, unknown>) => string;
+  state: MemoryPanelState;
+}): JSX.Element {
+  return (
+    <Card
+      noPadding
+      className="flex-1 min-h-0 overflow-auto p-2.5 bg-[var(--color-bg-surface)]"
+    >
+      {props.state.status === "loading" ? (
+        <div className="h-full flex items-center justify-center">
+          <Text size="small" color="muted">
+            {props.t("memory.panel.loading")}
+          </Text>
+        </div>
+      ) : props.state.filteredRules.length === 0 ? (
+        <div className="h-full min-h-[180px] flex flex-col items-center justify-center gap-3 text-center">
+          <div className="w-9 h-9 rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] flex items-center justify-center text-[var(--color-fg-muted)]">
+            {props.t("memory.panel.emptyIcon")}
+          </div>
+          <Text size="small" color="muted">
+            {props.t("memory.panel.aiLearningHint")}
+          </Text>
+          <Button size="sm" onClick={() => props.state.setComposerOpen(true)}>
+            {props.t("memory.panel.addRuleManually")}
+          </Button>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {props.state.groupedRules.map((group) => (
+            <div key={group.category} className="flex flex-col gap-2">
+              <Text size="small" color="muted">
+                {props.t(group.labelKey)}
+              </Text>
+              {group.items.map((rule) => {
+                const isEditing = props.state.editingRuleId === rule.id;
+                return (
+                  <Card
+                    key={rule.id}
+                    data-testid={`memory-rule-${rule.id}`}
+                    noPadding
+                    className="p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
+                  >
+                    <div className="flex items-start gap-2">
+                      <div className="flex-1 min-w-0">
+                        {isEditing ? (
+                          <div className="flex flex-col gap-2">
+                            <label
+                              className="text-xs text-[var(--color-fg-muted)]"
+                              htmlFor={`memory-edit-${rule.id}`}
+                            >
+                              {props.t("memory.panel.ruleText")}
+                            </label>
+                            <textarea
+                              id={`memory-edit-${rule.id}`}
+                              aria-label={props.t("memory.panel.ruleText")}
+                              value={props.state.editingText}
+                              onChange={(event) =>
+                                props.state.setEditingText(event.target.value)
+                              }
+                              className="min-h-[70px] rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 py-1.5 text-sm"
+                            />
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                onClick={() =>
+                                  void props.state.handleSaveEdit(rule.id)
+                                }
+                              >
+                                {props.t("memory.panel.saveChanges")}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => {
+                                  props.state.setEditingRuleId(null);
+                                  props.state.setEditingText("");
+                                }}
+                              >
+                                {props.t("memory.panel.cancel")}
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <Text
+                              size="small"
+                              className="whitespace-pre-wrap break-words"
+                            >
+                              {rule.rule}
+                            </Text>
+                            <div className="mt-2 flex items-center gap-2 text-xs text-[var(--color-fg-muted)]">
+                              <span>
+                                {props.t("memory.panel.confidence", {
+                                  value: Math.round(rule.confidence * 100),
+                                })}
+                              </span>
+                              {rule.userConfirmed ? (
+                                <span>{props.t("memory.panel.confirmed")}</span>
+                              ) : null}
+                              {rule.userModified ? (
+                                <span>{props.t("memory.panel.modified")}</span>
+                              ) : null}
+                            </div>
+                          </>
+                        )}
+                      </div>
+
+                      {!isEditing ? (
+                        <div className="shrink-0 flex flex-col gap-1">
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            disabled={rule.userConfirmed}
+                            onClick={() =>
+                              void props.state.handleConfirmRule(rule.id)
+                            }
+                          >
+                            {props.t("memory.panel.confirm")}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => props.state.startEdit(rule)}
+                          >
+                            {props.t("memory.panel.modify")}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="danger"
+                            onClick={() =>
+                              void props.state.handleDeleteRule(rule.id)
+                            }
+                          >
+                            {props.t("memory.panel.delete")}
+                          </Button>
+                        </div>
+                      ) : null}
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      )}
+    </Card>
+  );
+}
+
+function MemoryPanelFooter(props: {
+  t: (key: string, opts?: Record<string, unknown>) => string;
+  state: MemoryPanelState;
+}): JSX.Element {
+  return (
+    <>
+      <Card
+        noPadding
+        className="shrink-0 p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
+      >
+        <div className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]">
+          <span>
+            {props.t("memory.panel.interactionCount", {
+              count: props.state.interactionCount,
+            })}
+          </span>
+          <span>
+            {props.t("memory.panel.lastUpdate", {
+              time: formatUpdatedAt(props.state.latestUpdateAt),
+            })}
+          </span>
+        </div>
+      </Card>
+
+      <div className="shrink-0 flex items-center gap-2">
+        <Button size="sm" onClick={() => props.state.setComposerOpen(true)}>
+          {props.t("memory.panel.addRuleManually")}
+        </Button>
+        <Button
+          size="sm"
+          variant="secondary"
+          loading={props.state.distilling}
+          onClick={() => void props.state.handleDistill()}
+        >
+          {props.t("memory.panel.updatePreferences")}
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => void props.state.handleLearningToggle()}
+        >
+          {props.state.settings?.preferenceLearningEnabled === false
+            ? props.t("memory.panel.resumeLearning")
+            : props.t("memory.panel.pauseLearning")}
+        </Button>
+      </div>
+    </>
+  );
 }
 
 function MemoryComposer(props: {
@@ -504,33 +845,12 @@ export function MemoryPanel(): JSX.Element {
         </Text>
       </header>
 
-      <div className="shrink-0 flex gap-1">
-        <button
-          type="button"
-          data-testid="memory-scope-global"
-          className={`text-xs px-2 py-1 rounded-[var(--radius-sm)] border ${
-            state.activeScope === "global"
-              ? "border-[var(--color-border-focus)] bg-[var(--color-bg-raised)]"
-              : "border-[var(--color-border-default)]"
-          }`}
-          onClick={() => state.setActiveScope("global")}
-        >
-          {t("memory.panel.globalTab")}
-        </button>
-        <button
-          type="button"
-          data-testid="memory-scope-project"
-          disabled={!projectId}
-          className={`text-xs px-2 py-1 rounded-[var(--radius-sm)] border ${
-            state.activeScope === "project"
-              ? "border-[var(--color-border-focus)] bg-[var(--color-bg-raised)]"
-              : "border-[var(--color-border-default)]"
-          } disabled:opacity-50 disabled:cursor-not-allowed`}
-          onClick={() => state.setActiveScope("project")}
-        >
-          {t("memory.panel.projectTab")}
-        </button>
-      </div>
+      <MemoryScopeTabs
+        t={t}
+        activeScope={state.activeScope}
+        setActiveScope={state.setActiveScope}
+        hasProject={Boolean(projectId)}
+      />
 
       {!state.settings?.preferenceLearningEnabled ? (
         <Card
@@ -544,83 +864,7 @@ export function MemoryPanel(): JSX.Element {
         </Card>
       ) : null}
 
-      {state.conflictCount > 0 ? (
-        <Card
-          noPadding
-          data-testid="memory-conflict-notice"
-          className="shrink-0 px-2.5 py-2 border-[var(--color-warning)] text-[var(--color-warning)]"
-        >
-          <div className="flex items-center gap-2">
-            <Text size="small" className="text-[var(--color-warning)]">
-              {t("memory.panel.conflictsDetected", {
-                count: state.conflictCount,
-              })}
-            </Text>
-            <Button
-              size="sm"
-              variant="secondary"
-              data-testid="memory-open-conflict-resolution"
-              className="ml-auto"
-              onClick={() => state.setConflictPanelOpen((open) => !open)}
-            >
-              {state.conflictPanelOpen
-                ? t("memory.panel.hideConflictResolver")
-                : t("memory.panel.openConflictResolver")}
-            </Button>
-          </div>
-        </Card>
-      ) : null}
-
-      {state.conflictPanelOpen && state.pendingConflicts.length > 0 ? (
-        <Card
-          noPadding
-          data-testid="memory-conflict-resolution-panel"
-          className="shrink-0 p-2.5 border-[var(--color-warning)]"
-        >
-          <div className="flex flex-col gap-2">
-            <Text size="small" color="muted">
-              {t("memory.panel.conflictResolverTitle")}
-            </Text>
-            {state.pendingConflicts.map((conflict) => {
-              const options = conflict.ruleIds
-                .map((ruleId) => state.filteredRules.find((rule) => rule.id === ruleId))
-                .filter((rule): rule is SemanticRule => Boolean(rule));
-              return (
-                <div
-                  key={conflict.id}
-                  className="rounded-[var(--radius-sm)] border border-[var(--color-border-default)] p-2"
-                  data-testid={`memory-conflict-${conflict.id}`}
-                >
-                  <Text size="tiny" color="muted">
-                    {t("memory.panel.conflictResolverHint")}
-                  </Text>
-                  <div className="mt-2 flex flex-col gap-2">
-                    {options.map((option) => (
-                      <div
-                        key={option.id}
-                        className="rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] p-2"
-                      >
-                        <Text size="small">{option.rule}</Text>
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          className="mt-2"
-                          data-testid={`memory-resolve-${conflict.id}-${option.id}`}
-                          onClick={() =>
-                            void state.handleResolveConflict(conflict.id, option.id)
-                          }
-                        >
-                          {t("memory.panel.keepThisRule")}
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      ) : null}
+      <MemoryConflictSection t={t} state={state} />
 
       {state.error ? (
         <Card noPadding className="shrink-0 p-2.5">
@@ -640,189 +884,9 @@ export function MemoryPanel(): JSX.Element {
         </Card>
       ) : null}
 
-      <Card
-        noPadding
-        className="flex-1 min-h-0 overflow-auto p-2.5 bg-[var(--color-bg-surface)]"
-      >
-        {state.status === "loading" ? (
-          <div className="h-full flex items-center justify-center">
-            <Text size="small" color="muted">
-              {t("memory.panel.loading")}
-            </Text>
-          </div>
-        ) : state.filteredRules.length === 0 ? (
-          <div className="h-full min-h-[180px] flex flex-col items-center justify-center gap-3 text-center">
-            <div className="w-9 h-9 rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] flex items-center justify-center text-[var(--color-fg-muted)]">
-              {t("memory.panel.emptyIcon")}
-            </div>
-            <Text size="small" color="muted">
-              {t("memory.panel.aiLearningHint")}
-            </Text>
-            <Button size="sm" onClick={() => state.setComposerOpen(true)}>
-              {t("memory.panel.addRuleManually")}
-            </Button>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-3">
-            {state.groupedRules.map((group) => (
-              <div key={group.category} className="flex flex-col gap-2">
-                <Text size="small" color="muted">
-                  {t(group.labelKey)}
-                </Text>
-                {group.items.map((rule) => {
-                  const isEditing = state.editingRuleId === rule.id;
-                  return (
-                    <Card
-                      key={rule.id}
-                      data-testid={`memory-rule-${rule.id}`}
-                      noPadding
-                      className="p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
-                    >
-                      <div className="flex items-start gap-2">
-                        <div className="flex-1 min-w-0">
-                          {isEditing ? (
-                            <div className="flex flex-col gap-2">
-                              <label
-                                className="text-xs text-[var(--color-fg-muted)]"
-                                htmlFor={`memory-edit-${rule.id}`}
-                              >
-                                {t("memory.panel.ruleText")}
-                              </label>
-                              <textarea
-                                id={`memory-edit-${rule.id}`}
-                                aria-label={t("memory.panel.ruleText")}
-                                value={state.editingText}
-                                onChange={(event) =>
-                                  state.setEditingText(event.target.value)
-                                }
-                                className="min-h-[70px] rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 py-1.5 text-sm"
-                              />
-                              <div className="flex gap-2">
-                                <Button
-                                  size="sm"
-                                  onClick={() =>
-                                    void state.handleSaveEdit(rule.id)
-                                  }
-                                >
-                                  {t("memory.panel.saveChanges")}
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => {
-                                    state.setEditingRuleId(null);
-                                    state.setEditingText("");
-                                  }}
-                                >
-                                  {t("memory.panel.cancel")}
-                                </Button>
-                              </div>
-                            </div>
-                          ) : (
-                            <>
-                              <Text
-                                size="small"
-                                className="whitespace-pre-wrap break-words"
-                              >
-                                {rule.rule}
-                              </Text>
-                              <div className="mt-2 flex items-center gap-2 text-xs text-[var(--color-fg-muted)]">
-                                <span>
-                                  {t("memory.panel.confidence", {
-                                    value: Math.round(rule.confidence * 100),
-                                  })}
-                                </span>
-                                {rule.userConfirmed ? (
-                                  <span>{t("memory.panel.confirmed")}</span>
-                                ) : null}
-                                {rule.userModified ? (
-                                  <span>{t("memory.panel.modified")}</span>
-                                ) : null}
-                              </div>
-                            </>
-                          )}
-                        </div>
+      <MemoryRulesCard t={t} state={state} />
 
-                        {!isEditing ? (
-                          <div className="shrink-0 flex flex-col gap-1">
-                            <Button
-                              size="sm"
-                              variant="secondary"
-                              disabled={rule.userConfirmed}
-                              onClick={() =>
-                                void state.handleConfirmRule(rule.id)
-                              }
-                            >
-                              {t("memory.panel.confirm")}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => state.startEdit(rule)}
-                            >
-                              {t("memory.panel.modify")}
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="danger"
-                              onClick={() =>
-                                void state.handleDeleteRule(rule.id)
-                              }
-                            >
-                              {t("memory.panel.delete")}
-                            </Button>
-                          </div>
-                        ) : null}
-                      </div>
-                    </Card>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-        )}
-      </Card>
-
-      <Card
-        noPadding
-        className="shrink-0 p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
-      >
-        <div className="flex items-center justify-between text-xs text-[var(--color-fg-muted)]">
-          <span>
-            {t("memory.panel.interactionCount", {
-              count: state.interactionCount,
-            })}
-          </span>
-          <span>
-            {t("memory.panel.lastUpdate", {
-              time: formatUpdatedAt(state.latestUpdateAt),
-            })}
-          </span>
-        </div>
-      </Card>
-
-      <div className="shrink-0 flex items-center gap-2">
-        <Button size="sm" onClick={() => state.setComposerOpen(true)}>
-          {t("memory.panel.addRuleManually")}
-        </Button>
-        <Button
-          size="sm"
-          variant="secondary"
-          loading={state.distilling}
-          onClick={() => void state.handleDistill()}
-        >
-          {t("memory.panel.updatePreferences")}
-        </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => void state.handleLearningToggle()}
-        >
-          {state.settings?.preferenceLearningEnabled === false
-            ? t("memory.panel.resumeLearning")
-            : t("memory.panel.pauseLearning")}
-        </Button>
-      </div>
+      <MemoryPanelFooter t={t} state={state} />
 
       {state.composerOpen ? (
         <MemoryComposer
