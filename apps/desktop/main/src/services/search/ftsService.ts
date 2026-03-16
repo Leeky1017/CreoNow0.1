@@ -41,6 +41,7 @@ export type FtsService = {
     query: string;
     limit?: number;
     offset?: number;
+    scope?: "current" | "all";
   }) => ServiceResult<{
     results: FtsSearchResult[];
     total: number;
@@ -68,6 +69,46 @@ const DEFAULT_OFFSET = 0;
  *
  * Why: empty/overlong queries must fail deterministically with INVALID_ARGUMENT.
  */
+/**
+ * Detect whether a string contains CJK ideographs.
+ *
+ * Why: CJK text lacks whitespace word boundaries, so FTS5 unicode61 tokenizer
+ * cannot split terms effectively without additional preprocessing.
+ */
+const CJK_RANGE =
+  /[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF\u{20000}-\u{2A6DF}\u{2A700}-\u{2B73F}]/u;
+
+export function containsCjk(text: string): boolean {
+  return CJK_RANGE.test(text);
+}
+
+/**
+ * Rewrite CJK portions of a query into individual character tokens joined by OR.
+ *
+ * Why: FTS5 default unicode61 tokenizer treats CJK runs as single tokens.
+ * Splitting into per-character tokens enables substring matching.
+ * Mixed queries (e.g. "react 组件") split only the CJK portion.
+ */
+export function expandCjkQuery(query: string): string {
+  const CJK_CHAR =
+    /[\u4E00-\u9FFF\u3400-\u4DBF\uF900-\uFAFF\u{20000}-\u{2A6DF}\u{2A700}-\u{2B73F}]/gu;
+  const cjkChars = query.match(CJK_CHAR);
+  if (!cjkChars || cjkChars.length === 0) return query;
+
+  // Remove CJK characters from query to get non-CJK tokens
+  const nonCjk = query.replace(CJK_CHAR, " ").trim();
+  const nonCjkTokens = nonCjk
+    .split(/\s+/)
+    .filter((t) => t.length > 0);
+
+  // Build OR-joined CJK character tokens
+  const cjkTokens = cjkChars.map((c) => `"${c}"`);
+
+  // Combine: non-CJK tokens AND each CJK char OR'd
+  const parts = [...nonCjkTokens, ...cjkTokens];
+  return parts.join(" OR ");
+}
+
 function normalizeQuery(query: string): ServiceResult<string> {
   const trimmed = query.trim();
   if (trimmed.length === 0) {
@@ -78,7 +119,8 @@ function normalizeQuery(query: string): ServiceResult<string> {
       maxLength: MAX_QUERY_LENGTH,
     });
   }
-  return { ok: true, data: trimmed };
+  const normalized = containsCjk(trimmed) ? expandCjkQuery(trimmed) : trimmed;
+  return { ok: true, data: normalized };
 }
 
 /**
@@ -258,6 +300,7 @@ export function createFtsService(deps: {
     query: string;
     limit?: number;
     offset?: number;
+    scope?: "current" | "all";
   }): ServiceResult<{
     results: FtsSearchResult[];
     total: number;
@@ -286,49 +329,79 @@ export function createFtsService(deps: {
     const limit = limitRes.data;
     const offset = offsetRes.data;
 
+    const isAllScope = args.scope === "all";
+
     try {
-      const rows = deps.db
-        .prepare<[string, string, number, number], FulltextRow>(
-          `SELECT
-            d.project_id as projectId,
-            d.document_id as documentId,
-            d.title as documentTitle,
-            COALESCE(d.type, 'chapter') as documentType,
-            snippet(documents_fts, -1, '', '', '…', 24) as snippet,
-            (-bm25(documents_fts)) as score,
-            d.updated_at as updatedAt
-          FROM documents_fts
-          JOIN documents d ON d.rowid = documents_fts.rowid
-          WHERE documents_fts.project_id = ? AND documents_fts MATCH ?
-          ORDER BY bm25(documents_fts)
-          LIMIT ? OFFSET ?`,
-        )
-        .all(projectId, query, limit, offset);
+      const rows = isAllScope
+        ? deps.db
+            .prepare<[string, number, number], FulltextRow>(
+              `SELECT
+                d.project_id as projectId,
+                d.document_id as documentId,
+                d.title as documentTitle,
+                COALESCE(d.type, 'chapter') as documentType,
+                snippet(documents_fts, -1, '', '', '…', 24) as snippet,
+                (-bm25(documents_fts)) as score,
+                d.updated_at as updatedAt
+              FROM documents_fts
+              JOIN documents d ON d.rowid = documents_fts.rowid
+              WHERE documents_fts MATCH ?
+              ORDER BY bm25(documents_fts)
+              LIMIT ? OFFSET ?`,
+            )
+            .all(query, limit, offset)
+        : deps.db
+            .prepare<[string, string, number, number], FulltextRow>(
+              `SELECT
+                d.project_id as projectId,
+                d.document_id as documentId,
+                d.title as documentTitle,
+                COALESCE(d.type, 'chapter') as documentType,
+                snippet(documents_fts, -1, '', '', '…', 24) as snippet,
+                (-bm25(documents_fts)) as score,
+                d.updated_at as updatedAt
+              FROM documents_fts
+              JOIN documents d ON d.rowid = documents_fts.rowid
+              WHERE documents_fts.project_id = ? AND documents_fts MATCH ?
+              ORDER BY bm25(documents_fts)
+              LIMIT ? OFFSET ?`,
+            )
+            .all(projectId, query, limit, offset);
 
-      const count = deps.db
-        .prepare<[string, string], CountRow>(
-          `SELECT COUNT(*) as total
-           FROM documents_fts
-           WHERE project_id = ? AND documents_fts MATCH ?`,
-        )
-        .get(projectId, query);
+      const count = isAllScope
+        ? deps.db
+            .prepare<[string], CountRow>(
+              `SELECT COUNT(*) as total
+               FROM documents_fts
+               WHERE documents_fts MATCH ?`,
+            )
+            .get(query)
+        : deps.db
+            .prepare<[string, string], CountRow>(
+              `SELECT COUNT(*) as total
+               FROM documents_fts
+               WHERE project_id = ? AND documents_fts MATCH ?`,
+            )
+            .get(projectId, query);
 
-      const crossProjectRow = rows.find((row) => row.projectId !== projectId);
-      if (crossProjectRow) {
-        deps.logger.error("search_project_forbidden_audit", {
-          operation: "search:fts:query",
-          requestedProjectId: projectId,
-          rowProjectId: crossProjectRow.projectId,
-          documentId: crossProjectRow.documentId,
-        });
-        return ipcError(
-          "SEARCH_PROJECT_FORBIDDEN",
-          "Cross-project search query is forbidden",
-          {
+      if (!isAllScope) {
+        const crossProjectRow = rows.find((row) => row.projectId !== projectId);
+        if (crossProjectRow) {
+          deps.logger.error("search_project_forbidden_audit", {
+            operation: "search:fts:query",
             requestedProjectId: projectId,
             rowProjectId: crossProjectRow.projectId,
-          },
-        );
+            documentId: crossProjectRow.documentId,
+          });
+          return ipcError(
+            "SEARCH_PROJECT_FORBIDDEN",
+            "Cross-project search query is forbidden",
+            {
+              requestedProjectId: projectId,
+              rowProjectId: crossProjectRow.projectId,
+            },
+          );
+        }
       }
 
       const highlightTerm = extractHighlightTerm(query);

@@ -124,6 +124,7 @@ describe("SearchPanel", () => {
       vi.mocked(useSearchStore).mockImplementation((selector) => {
         const state = {
           query: "",
+            scope: "current" as const,
           items: [],
           status: "loading" as const,
           indexState: "ready" as const,
@@ -131,6 +132,7 @@ describe("SearchPanel", () => {
           hasMore: false,
           lastError: null,
           setQuery: vi.fn(),
+            setScope: vi.fn(),
           runFulltext: vi.fn(),
           clearResults: vi.fn(),
           clearError: vi.fn(),

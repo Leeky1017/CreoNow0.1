@@ -25,6 +25,7 @@ function makeSearchItem(overrides: Partial<SearchItem> = {}): SearchItem {
 function createSearchState(overrides: Partial<SearchStore> = {}): SearchStore {
   return {
     query: "target",
+    scope: "current" as const,
     items: [],
     status: "ready",
     indexState: "ready",
@@ -32,6 +33,7 @@ function createSearchState(overrides: Partial<SearchStore> = {}): SearchStore {
     hasMore: false,
     lastError: null,
     setQuery: vi.fn(),
+    setScope: vi.fn(),
     runFulltext: vi.fn().mockResolvedValue(undefined),
     clearResults: vi.fn(),
     clearError: vi.fn(),

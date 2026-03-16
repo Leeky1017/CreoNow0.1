@@ -206,6 +206,7 @@ function registerFtsHandlers(args: {
         query: string;
         limit?: number;
         offset?: number;
+        scope?: "current" | "all";
       };
       const queryLength =
         typeof safePayload.query === "string"
@@ -218,6 +219,7 @@ function registerFtsHandlers(args: {
           query: safePayload.query,
           limit: safePayload.limit,
           offset: safePayload.offset,
+          scope: safePayload.scope,
         });
         if (!res) {
           return {

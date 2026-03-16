@@ -14,8 +14,11 @@ export type SearchItem = IpcResponseData<"search:fts:query">["results"][number];
 export type SearchStatus = "idle" | "loading" | "ready" | "error";
 export type SearchIndexState = "ready" | "rebuilding";
 
+export type SearchScope = "current" | "all";
+
 export type SearchState = {
   query: string;
+  scope: SearchScope;
   items: SearchItem[];
   status: SearchStatus;
   indexState: SearchIndexState;
@@ -26,6 +29,7 @@ export type SearchState = {
 
 export type SearchActions = {
   setQuery: (query: string) => void;
+  setScope: (scope: SearchScope) => void;
   runFulltext: (args: { projectId: string; limit?: number }) => Promise<void>;
   clearResults: () => void;
   clearError: () => void;
@@ -49,6 +53,7 @@ export function createSearchStore(deps: { invoke: IpcInvoke }) {
 
   return create<SearchStore>((set, get) => ({
     query: "",
+    scope: "current" as SearchScope,
     items: [],
     status: "idle",
     indexState: "ready",
@@ -57,6 +62,7 @@ export function createSearchStore(deps: { invoke: IpcInvoke }) {
     lastError: null,
 
     setQuery: (query) => set({ query }),
+    setScope: (scope) => set({ scope }),
 
     clearResults: () => {
       latestSearchRequestId += 1;

@@ -8,7 +8,7 @@ import { ListItem } from "../../components/primitives/ListItem";
 import { Spinner } from "../../components/primitives/Spinner";
 import { Toggle } from "../../components/primitives/Toggle";
 import { useFileStore } from "../../stores/fileStore";
-import { useSearchStore, type SearchStatus } from "../../stores/searchStore";
+import { useSearchStore, type SearchScope, type SearchStatus } from "../../stores/searchStore";
 
 import {
   ArrowRight,
@@ -259,7 +259,6 @@ function MemoryResultItem(props: {
 
   return (
     <ListItem
-      disabled
       className="group w-full text-left mx-2 mt-1 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3"
     >
       {/* Icon */}
@@ -276,9 +275,6 @@ function MemoryResultItem(props: {
           <div className="flex items-center gap-2 shrink-0">
             <span className="text-[10px] font-mono text-[var(--color-success)] bg-[var(--color-success-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-success-subtle)] opacity-0 group-hover:opacity-100 transition-opacity">
               {t("search.resultTypes.highRelevance")}
-            </span>
-            <span className="text-[10px] font-medium text-[var(--color-fg-muted)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] px-1.5 py-0.5 rounded">
-              {t("common.comingSoon")}
             </span>
           </div>
         </div>
@@ -314,7 +310,6 @@ function KnowledgeResultItem(props: {
 
   return (
     <ListItem
-      disabled
       className="group w-full text-left mx-2 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3"
     >
       {/* Icon */}
@@ -330,9 +325,6 @@ function KnowledgeResultItem(props: {
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-[var(--color-fg-placeholder)] border border-[var(--color-separator)] px-1.5 py-0.5 rounded">
             {t("search.resultTypes.entity")}
-          </span>
-          <span className="text-[10px] font-medium text-[var(--color-fg-muted)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] px-1.5 py-0.5 rounded">
-            {t("common.comingSoon")}
           </span>
           {item.meta ? (
             <span className="text-[10px] text-[var(--color-fg-placeholder)]">
@@ -581,10 +573,16 @@ function SearchResultsArea(props: {
 function SearchFilterBar(props: {
   semanticSearch: boolean;
   includeArchived: boolean;
+  scope: SearchScope;
   onSemanticChange: (v: boolean) => void;
   onArchivedChange: (v: boolean) => void;
+  onScopeChange: (scope: SearchScope) => void;
 }): JSX.Element {
   const { t } = useTranslation();
+  const scopeLabel =
+    props.scope === "all"
+      ? t("search.filters.allProjects")
+      : t("search.filters.currentProject");
   return (
     <div className="px-4 py-3 border-t border-[var(--color-separator)] flex items-center justify-between bg-[var(--color-bg-raised)]">
       <div className="flex items-center gap-6">
@@ -610,8 +608,11 @@ function SearchFilterBar(props: {
           variant="ghost"
           size="sm"
           className="!flex !items-center !gap-1.5 !px-2 !py-1 !h-auto !rounded !bg-[var(--color-separator)] !border !border-[var(--color-separator)] !text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-fg-default)] hover:!border-[var(--color-bg-overlay)]"
+          onClick={() =>
+            props.onScopeChange(props.scope === "all" ? "current" : "all")
+          }
         >
-          <span>{t("search.filters.currentProject")}</span>
+          <span>{scopeLabel}</span>
           <ChevronDown className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
         </Button>
       </div>
@@ -719,6 +720,8 @@ export function SearchPanel(props: {
   const [category, setCategory] = React.useState<SearchCategory>("all");
   const [semanticSearch, setSemanticSearch] = React.useState(false);
   const [includeArchived, setIncludeArchived] = React.useState(false);
+  const searchScope = useSearchStore((s) => s.scope);
+  const setSearchScope = useSearchStore((s) => s.setScope);
   const [activeIndex, setActiveIndex] = React.useState(0);
   const [flashKey, setFlashKey] = React.useState<string | null>(null);
 
@@ -929,8 +932,10 @@ export function SearchPanel(props: {
           <SearchFilterBar
             semanticSearch={semanticSearch}
             includeArchived={includeArchived}
+            scope={searchScope}
             onSemanticChange={setSemanticSearch}
             onArchivedChange={setIncludeArchived}
+            onScopeChange={setSearchScope}
           />
         </div>
 
