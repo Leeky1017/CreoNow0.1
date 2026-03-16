@@ -266,7 +266,11 @@ export function recordSkillFeedbackAndLearn(args: {
   const threshold = args.settings.preferenceLearningThreshold;
   const signalCount = countSignalsByAction(args.db, "accept", normalized.value);
   const rejectCount = countSignalsByAction(args.db, "reject", normalized.value);
-  const partialCount = countSignalsByAction(args.db, "partial", normalized.value);
+  const partialCount = countSignalsByAction(
+    args.db,
+    "partial",
+    normalized.value,
+  );
   const weightedScore =
     signalCount * FEEDBACK_WEIGHT.accept +
     rejectCount * FEEDBACK_WEIGHT.reject +

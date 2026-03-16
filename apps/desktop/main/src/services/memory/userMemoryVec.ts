@@ -331,7 +331,10 @@ function rankInMemory(args: {
   effectiveK: number;
 }): UserMemoryVecMatch[] {
   const ranked = args.sources.map((src, idx) => {
-    const similarity = cosineSimilarity(args.queryVector, args.sourceVectors[idx] ?? []);
+    const similarity = cosineSimilarity(
+      args.queryVector,
+      args.sourceVectors[idx] ?? [],
+    );
     const clamped = Number.isFinite(similarity)
       ? Math.max(-1, Math.min(1, similarity))
       : 0;
@@ -390,9 +393,12 @@ export function createUserMemoryVecService(deps: {
         return embedded;
       }
 
-      const queryVec = embedded.data.vectors[0] ?? embedText(queryText, dimension);
+      const queryVec =
+        embedded.data.vectors[0] ?? embedText(queryText, dimension);
       const sourceVectors = sources.map((src, index) => {
-        return embedded.data.vectors[index + 1] ?? embedText(src.content, dimension);
+        return (
+          embedded.data.vectors[index + 1] ?? embedText(src.content, dimension)
+        );
       });
 
       const ensure = ensureSchema({
@@ -433,10 +439,14 @@ export function createUserMemoryVecService(deps: {
             a.memoryId.localeCompare(b.memoryId),
           );
           for (const src of ordered) {
-            const idx = sources.findIndex((item) => item.memoryId === src.memoryId);
+            const idx = sources.findIndex(
+              (item) => item.memoryId === src.memoryId,
+            );
             insert.run(
               src.memoryId,
-              JSON.stringify(sourceVectors[idx] ?? embedText(src.content, dimension)),
+              JSON.stringify(
+                sourceVectors[idx] ?? embedText(src.content, dimension),
+              ),
             );
           }
         })();

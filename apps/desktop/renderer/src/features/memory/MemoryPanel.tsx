@@ -61,18 +61,20 @@ function useScopeSync(args: {
   projectId: string | null;
   setActiveScope: React.Dispatch<React.SetStateAction<PanelScope>>;
 }): void {
+  const { activeScope, projectId, setActiveScope } = args;
+
   React.useEffect(() => {
-    if (args.projectId && args.activeScope === "global") {
+    if (projectId && activeScope === "global") {
       return;
     }
-    if (!args.projectId && args.activeScope !== "global") {
-      args.setActiveScope("global");
+    if (!projectId && activeScope !== "global") {
+      setActiveScope("global");
       return;
     }
-    if (args.projectId && args.activeScope !== "project") {
-      args.setActiveScope("project");
+    if (projectId && activeScope !== "project") {
+      setActiveScope("project");
     }
-  }, [args.activeScope, args.projectId, args.setActiveScope]);
+  }, [activeScope, projectId, setActiveScope]);
 }
 
 function useMemoryState(

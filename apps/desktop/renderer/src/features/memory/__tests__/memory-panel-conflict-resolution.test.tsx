@@ -11,7 +11,9 @@ vi.mock("../../../lib/ipcClient", () => ({
 }));
 
 vi.mock("../../../stores/projectStore", () => ({
-  useProjectStore: vi.fn((selector) => selector({ current: { projectId: "proj-1" } })),
+  useProjectStore: vi.fn((selector) =>
+    selector({ current: { projectId: "proj-1" } }),
+  ),
 }));
 
 describe("memory conflict resolution flow", () => {
@@ -117,7 +119,9 @@ describe("memory conflict resolution flow", () => {
     const user = userEvent.setup();
     render(<MemoryPanel />);
 
-    const openButton = await screen.findByTestId("memory-open-conflict-resolution");
+    const openButton = await screen.findByTestId(
+      "memory-open-conflict-resolution",
+    );
     await user.click(openButton);
 
     expect(
@@ -129,16 +133,17 @@ describe("memory conflict resolution flow", () => {
     const user = userEvent.setup();
     render(<MemoryPanel />);
 
-    await user.click(await screen.findByTestId("memory-open-conflict-resolution"));
-    await user.click(await screen.findByTestId("memory-resolve-conflict-1-rule-b"));
-
-    expect(invokeMock).toHaveBeenCalledWith(
-      "memory:conflict:resolve",
-      {
-        projectId: "proj-1",
-        conflictId: "conflict-1",
-        chosenRuleId: "rule-b",
-      },
+    await user.click(
+      await screen.findByTestId("memory-open-conflict-resolution"),
     );
+    await user.click(
+      await screen.findByTestId("memory-resolve-conflict-1-rule-b"),
+    );
+
+    expect(invokeMock).toHaveBeenCalledWith("memory:conflict:resolve", {
+      projectId: "proj-1",
+      conflictId: "conflict-1",
+      chosenRuleId: "rule-b",
+    });
   });
 });

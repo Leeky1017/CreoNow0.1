@@ -80,7 +80,11 @@ import type { IpcMain } from "electron";
     { projectId: "proj-1" },
   )) as IpcResponse<{
     items: Array<{ id: string; rule: string }>;
-    conflictQueue: Array<{ id: string; ruleIds: string[]; status: "pending" | "resolved" }>;
+    conflictQueue: Array<{
+      id: string;
+      ruleIds: string[];
+      status: "pending" | "resolved";
+    }>;
   }>;
   assert.equal(listedBefore.ok, true);
   if (!listedBefore.ok) {
@@ -115,7 +119,11 @@ import type { IpcMain } from "electron";
     { projectId: "proj-1" },
   )) as IpcResponse<{
     items: Array<{ id: string; rule: string }>;
-    conflictQueue: Array<{ id: string; ruleIds: string[]; status: "pending" | "resolved" }>;
+    conflictQueue: Array<{
+      id: string;
+      ruleIds: string[];
+      status: "pending" | "resolved";
+    }>;
   }>;
   assert.equal(listedAfter.ok, true);
   if (!listedAfter.ok) {
@@ -123,6 +131,9 @@ import type { IpcMain } from "electron";
   }
 
   assert.equal(listedAfter.data.conflictQueue[0]!.status, "resolved");
-  assert.equal(listedAfter.data.items.some((item) => item.id === chosenRuleId), true);
+  assert.equal(
+    listedAfter.data.items.some((item) => item.id === chosenRuleId),
+    true,
+  );
   assert.equal(listedAfter.data.items.length, 1);
 }

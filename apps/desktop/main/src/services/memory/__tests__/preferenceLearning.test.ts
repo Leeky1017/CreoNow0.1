@@ -18,9 +18,7 @@ function createLogger(): Logger {
   };
 }
 
-function defaultSettings(
-  overrides?: Partial<MemorySettings>,
-): MemorySettings {
+function defaultSettings(overrides?: Partial<MemorySettings>): MemorySettings {
   return {
     memoryEnabled: true,
     preferenceLearningEnabled: true,
@@ -81,8 +79,7 @@ function createDbStub(args?: {
         sql.includes("source_ref")
       ) {
         return {
-          get: () =>
-            existingId ? { memoryId: existingId } : undefined,
+          get: () => (existingId ? { memoryId: existingId } : undefined),
         };
       }
 
@@ -293,7 +290,11 @@ function ok(
 
   const row = inserted[0]!;
   assert.equal(row[2], "reject"); // action preserved
-  assert.equal(row[3], "avoid-passive-voice", "evidenceRef retained for learning");
+  assert.equal(
+    row[3],
+    "avoid-passive-voice",
+    "evidenceRef retained for learning",
+  );
   assert.equal(row[4], 0, "ignored = 0");
 }
 
@@ -320,13 +321,21 @@ function ok(
   const outcome = ok(result);
   assert.equal(outcome.recorded, true);
   assert.equal(outcome.ignored, false);
-  assert.equal(outcome.learned, false, "partial should reduce weighted score below threshold");
+  assert.equal(
+    outcome.learned,
+    false,
+    "partial should reduce weighted score below threshold",
+  );
   assert.equal(outcome.signalCount, 3);
   assert.equal(outcome.rejectCount, 0);
   assert.equal(outcome.partialCount, 2);
   assert.equal(outcome.weightedScore, 2);
   assert.equal(inserted.length, 1);
-  assert.equal(insertedMemories.length, 0, "no learned memory upsert when weighted score is insufficient");
+  assert.equal(
+    insertedMemories.length,
+    0,
+    "no learned memory upsert when weighted score is insufficient",
+  );
 }
 
 console.log("preferenceLearning.test.ts: all assertions passed");

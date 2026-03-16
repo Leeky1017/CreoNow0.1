@@ -100,7 +100,9 @@ function cosine(a: readonly number[], b: readonly number[]): number {
       ...item,
       score: cosine(queryOld, oldEmbed(item.text, 64)),
     }))
-    .sort((a, b) => (a.score === b.score ? a.id.localeCompare(b.id) : b.score - a.score))[0]?.id;
+    .sort((a, b) =>
+      a.score === b.score ? a.id.localeCompare(b.id) : b.score - a.score,
+    )[0]?.id;
 
   const queryNew = embedTextSemanticDeterministic(query, 64);
   const newTop = [...candidates]
@@ -108,10 +110,20 @@ function cosine(a: readonly number[], b: readonly number[]): number {
       ...item,
       score: cosine(queryNew, embedTextSemanticDeterministic(item.text, 64)),
     }))
-    .sort((a, b) => (a.score === b.score ? a.id.localeCompare(b.id) : b.score - a.score))[0]?.id;
+    .sort((a, b) =>
+      a.score === b.score ? a.id.localeCompare(b.id) : b.score - a.score,
+    )[0]?.id;
 
-  assert.notEqual(oldTop, "z-semantic", "old hash approximation should not reliably rank synonym match first");
-  assert.equal(newTop, "z-semantic", "semantic deterministic embedding should rank synonym match first");
+  assert.notEqual(
+    oldTop,
+    "z-semantic",
+    "old hash approximation should not reliably rank synonym match first",
+  );
+  assert.equal(
+    newTop,
+    "z-semantic",
+    "semantic deterministic embedding should rank synonym match first",
+  );
 }
 
 // Scenario: topK should fallback to in-memory semantic ranking when sqlite-vec is unavailable
@@ -135,7 +147,10 @@ function cosine(a: readonly number[], b: readonly number[]): number {
   if (result.ok) {
     assert.equal(result.data.matches.length, 2);
     assert.equal(result.data.matches[0]?.memoryId, "m-1");
-    assert.equal(result.data.matches[0]!.score > result.data.matches[1]!.score, true);
+    assert.equal(
+      result.data.matches[0]!.score > result.data.matches[1]!.score,
+      true,
+    );
   }
 }
 
