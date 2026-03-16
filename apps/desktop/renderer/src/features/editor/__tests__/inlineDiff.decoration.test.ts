@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import {
   createInlineDiffDecorations,
   InlineDiffExtension,
+  resolveInlineDiffText,
 } from "../extensions/inlineDiff";
 
 /* ------------------------------------------------------------------ */
@@ -157,6 +158,88 @@ describe("VC-FE-DIFF-S4: decoration uses semantic token classes for insert/delet
 
     // We expect at least removed since doc text matches removedLines
     expect(hasAdded || hasRemoved).toBe(true);
+
+    editor.destroy();
+  });
+});
+
+
+/* ------------------------------------------------------------------ */
+/*  VC-FE-DIFF-S5 — accept/reject resolves diff text correctly        */
+/* ------------------------------------------------------------------ */
+
+describe("VC-FE-DIFF-S5: accept/reject resolves InlineDiff text correctly", () => {
+  it("accepting all hunks produces the suggested text", () => {
+    const original = "Hello world\nFoo bar";
+    const suggested = "Hello universe\nFoo baz";
+
+    const decorations = createInlineDiffDecorations({
+      originalText: original,
+      suggestedText: suggested,
+    });
+
+
+    const decisions = decorations.map(() => "accepted" as const);
+    const result = resolveInlineDiffText({
+      originalText: original,
+      suggestedText: suggested,
+      decisions,
+    });
+
+    expect(result).toBe(suggested);
+  });
+
+  it("rejecting all hunks preserves the original text", () => {
+    const original = "Hello world\nFoo bar";
+    const suggested = "Hello universe\nFoo baz";
+
+    const decorations = createInlineDiffDecorations({
+      originalText: original,
+      suggestedText: suggested,
+    });
+
+
+    const decisions = decorations.map(() => "rejected" as const);
+    const result = resolveInlineDiffText({
+      originalText: original,
+      suggestedText: suggested,
+      decisions,
+    });
+
+    expect(result).toBe(original);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  VC-FE-DIFF-S6 — extension registered in editor produces diffs     */
+/*  on apply-arm and clears on dismiss                                 */
+/* ------------------------------------------------------------------ */
+
+describe("VC-FE-DIFF-S6: InlineDiff lifecycle — show on arm, clear on dismiss", () => {
+  it("shows decorations when diff data is set and clears when emptied", () => {
+    const editor = new Editor({
+      extensions: [StarterKit, InlineDiffExtension],
+      content: "<p>Hello world</p>",
+    });
+
+    // Arm: inject diffs
+    const diffs = createInlineDiffDecorations({
+      originalText: "Hello world",
+      suggestedText: "Hello universe",
+    });
+    editor.storage.inlineDiff.diffs = diffs;
+    editor.view.dispatch(editor.state.tr.setMeta("inlineDiffUpdate", true));
+
+    const plugin = editor.state.plugins.find(
+      (p) => (p as unknown as { key: string }).key === "inlineDiff$",
+    );
+    expect(plugin).toBeDefined();
+    expect(plugin!.getState(editor.state).find().length).toBeGreaterThan(0);
+
+    // Dismiss: clear diffs
+    editor.storage.inlineDiff.diffs = [];
+    editor.view.dispatch(editor.state.tr.setMeta("inlineDiffUpdate", true));
+    expect(plugin!.getState(editor.state).find().length).toBe(0);
 
     editor.destroy();
   });
