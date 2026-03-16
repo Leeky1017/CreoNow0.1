@@ -5,7 +5,10 @@ import { inferSkillFromInput } from "../skillRouter";
 // --- S1: default to chat for free text ---
 
 assert.equal(
-  inferSkillFromInput({ input: "帮我想一个悬疑小说的开头", hasSelection: false }),
+  inferSkillFromInput({
+    input: "帮我想一个悬疑小说的开头",
+    hasSelection: false,
+  }),
   "builtin:chat",
   "free text without keywords → chat",
 );
@@ -88,7 +91,8 @@ assert.notEqual(
 );
 
 assert.ok(
-  rewriteWithoutSelection === "builtin:rewrite" || rewriteWithoutSelection === "builtin:chat",
+  rewriteWithoutSelection === "builtin:rewrite" ||
+    rewriteWithoutSelection === "builtin:chat",
   "no selection + rewrite should route to rewrite or chat",
 );
 
@@ -195,7 +199,10 @@ assert.equal(
 );
 
 assert.equal(
-  inferSkillFromInput({ input: "write dialogue for this scene", hasSelection: false }),
+  inferSkillFromInput({
+    input: "write dialogue for this scene",
+    hasSelection: false,
+  }),
   "builtin:dialogue",
   "dialogue (EN) → dialogue",
 );
@@ -215,7 +222,10 @@ assert.equal(
 );
 
 assert.equal(
-  inferSkillFromInput({ input: "roleplay as a detective", hasSelection: false }),
+  inferSkillFromInput({
+    input: "roleplay as a detective",
+    hasSelection: false,
+  }),
   "builtin:roleplay",
   "roleplay (EN) → roleplay",
 );
@@ -235,7 +245,10 @@ assert.equal(
 );
 
 assert.equal(
-  inferSkillFromInput({ input: "style transfer to formal", hasSelection: false }),
+  inferSkillFromInput({
+    input: "style transfer to formal",
+    hasSelection: false,
+  }),
   "builtin:style-transfer",
   "style transfer (EN) → style-transfer",
 );
@@ -263,7 +276,11 @@ assert.equal(
 // --- Explicit skill override takes precedence ---
 
 assert.equal(
-  inferSkillFromInput({ input: "续写", hasSelection: false, explicitSkillId: "builtin:polish" }),
+  inferSkillFromInput({
+    input: "续写",
+    hasSelection: false,
+    explicitSkillId: "builtin:polish",
+  }),
   "builtin:polish",
   "explicit skill overrides keyword detection",
 );

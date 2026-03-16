@@ -265,7 +265,10 @@ describe("inferSkillFromInput — 新增 skill 否定场景", () => {
 
   it("don't write → builtin:chat (write EN 否定)", () => {
     expect(
-      inferSkillFromInput({ input: "don't write anything", hasSelection: false }),
+      inferSkillFromInput({
+        input: "don't write anything",
+        hasSelection: false,
+      }),
     ).toBe("builtin:chat");
   });
 });
