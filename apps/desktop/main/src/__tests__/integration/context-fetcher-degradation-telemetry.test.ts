@@ -117,6 +117,7 @@ const BASE_REQUEST = {
           ok: true,
           data: {
             items: [],
+              totalCount: 0,
           },
         };
       }

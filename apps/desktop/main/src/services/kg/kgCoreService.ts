@@ -525,34 +525,74 @@ function listProjectEntities(
   filter?: {
     aiContextLevel?: AiContextLevel;
   },
+  pagination?: {
+    limit?: number;
+    offset?: number;
+  },
 ): KnowledgeEntity[] {
-  const rows = filter?.aiContextLevel
-    ? db
-        .prepare<
-          [string, AiContextLevel],
-          EntityRow
-        >("SELECT id, project_id as projectId, type, name, description, attributes_json as attributesJson, last_seen_state as lastSeenState, ai_context_level as aiContextLevel, aliases as aliasesJson, version, created_at as createdAt, updated_at as updatedAt FROM kg_entities WHERE project_id = ? AND ai_context_level = ? ORDER BY updated_at DESC, id ASC")
-        .all(projectId, filter.aiContextLevel)
-    : db
-        .prepare<
-          [string],
-          EntityRow
-        >("SELECT id, project_id as projectId, type, name, description, attributes_json as attributesJson, last_seen_state as lastSeenState, ai_context_level as aiContextLevel, aliases as aliasesJson, version, created_at as createdAt, updated_at as updatedAt FROM kg_entities WHERE project_id = ? ORDER BY updated_at DESC, id ASC")
-        .all(projectId);
+  const whereSql = filter?.aiContextLevel
+    ? "WHERE project_id = ? AND ai_context_level = ?"
+    : "WHERE project_id = ?";
+  const params: Array<string | number> = filter?.aiContextLevel
+    ? [projectId, filter.aiContextLevel]
+    : [projectId];
+
+  let paginationSql = "";
+  if (typeof pagination?.limit === "number") {
+    paginationSql = " LIMIT ? OFFSET ?";
+    params.push(pagination.limit, pagination.offset ?? 0);
+  }
+
+  const rows = db
+    .prepare(
+      `SELECT id, project_id as projectId, type, name, description, attributes_json as attributesJson, last_seen_state as lastSeenState, ai_context_level as aiContextLevel, aliases as aliasesJson, version, created_at as createdAt, updated_at as updatedAt FROM kg_entities ${whereSql} ORDER BY updated_at DESC, id ASC${paginationSql}`,
+    )
+    .all(...params) as EntityRow[];
   return rows.map(rowToEntity);
 }
 
 function listProjectRelations(
   db: Database.Database,
   projectId: string,
+  pagination?: {
+    limit?: number;
+    offset?: number;
+  },
 ): KnowledgeRelation[] {
+  const params: Array<string | number> = [projectId];
+  let paginationSql = "";
+  if (typeof pagination?.limit === "number") {
+    paginationSql = " LIMIT ? OFFSET ?";
+    params.push(pagination.limit, pagination.offset ?? 0);
+  }
+
   const rows = db
-    .prepare<
-      [string],
-      RelationRow
-    >("SELECT id, project_id as projectId, source_entity_id as sourceEntityId, target_entity_id as targetEntityId, relation_type as relationType, description, created_at as createdAt FROM kg_relations WHERE project_id = ? ORDER BY created_at DESC, id ASC")
-    .all(projectId);
+    .prepare(
+      `SELECT id, project_id as projectId, source_entity_id as sourceEntityId, target_entity_id as targetEntityId, relation_type as relationType, description, created_at as createdAt FROM kg_relations WHERE project_id = ? ORDER BY created_at DESC, id ASC${paginationSql}`,
+    )
+    .all(...params) as RelationRow[];
   return rows.map(rowToRelation);
+}
+
+function countProjectEntities(
+  db: Database.Database,
+  projectId: string,
+  filter?: {
+    aiContextLevel?: AiContextLevel;
+  },
+): number {
+  if (filter?.aiContextLevel) {
+    const row = db
+      .prepare<
+        [string, AiContextLevel],
+        { count: number }
+      >(
+        "SELECT COUNT(1) as count FROM kg_entities WHERE project_id = ? AND ai_context_level = ?",
+      )
+      .get(projectId, filter.aiContextLevel);
+    return row?.count ?? 0;
+  }
+  return countEntities(db, projectId);
 }
 
 function listEntitiesByIds(
@@ -642,6 +682,7 @@ type QueryPathValidationResult = {
 type QueryPathSearchResult = {
   pathEntityIds: string[];
   expansions: number;
+  degraded: boolean;
 };
 
 function validateAndNormalizeQueryPathArgs(args: {
@@ -738,12 +779,14 @@ function queryPathWithinAdjacency(args: {
 
     expansions += 1;
     if (expansions > args.maxExpansions) {
-      return ipcError("KG_QUERY_TIMEOUT", "query timeout", {
-        reason: "MAX_EXPANSIONS_EXCEEDED",
-        expansions,
-        maxExpansions: args.maxExpansions,
-        suggestion: "reduce graph scope or use keyword filtering",
-      });
+        return {
+          ok: true,
+          data: {
+            pathEntityIds: [],
+            expansions,
+            degraded: true,
+          },
+        };
     }
 
     if (nodeId === args.targetEntityId) {
@@ -790,6 +833,7 @@ function queryPathWithinAdjacency(args: {
       data: {
         pathEntityIds: [],
         expansions,
+          degraded: false,
       },
     };
   }
@@ -807,6 +851,7 @@ function queryPathWithinAdjacency(args: {
     data: {
       pathEntityIds: path,
       expansions,
+      degraded: false,
     },
   };
 }
@@ -1108,10 +1153,26 @@ function createEntityOps(
       }
     },
 
-    entityList: ({ projectId, filter }) => {
+    entityList: ({ projectId, filter, limit, offset }) => {
       const invalidProjectId = validateProjectId(projectId);
       if (invalidProjectId) {
         return invalidProjectId;
+      }
+
+      if (
+        limit !== undefined &&
+        (!Number.isInteger(limit) || limit <= 0)
+      ) {
+        return ipcError("INVALID_ARGUMENT", "limit must be a positive integer");
+      }
+      if (
+        offset !== undefined &&
+        (!Number.isInteger(offset) || offset < 0)
+      ) {
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "offset must be a non-negative integer",
+        );
       }
 
       const normalizedProjectId = projectId.trim();
@@ -1144,7 +1205,13 @@ function createEntityOps(
           data: {
             items: listProjectEntities(args.db, normalizedProjectId, {
               aiContextLevel: normalizedFilterAiContextLevel,
-            }),
+              }, {
+                limit,
+                offset,
+              }),
+              totalCount: countProjectEntities(args.db, normalizedProjectId, {
+                aiContextLevel: normalizedFilterAiContextLevel,
+              }),
           },
         };
       } catch (error) {
@@ -1473,10 +1540,26 @@ function createRelationOps(
       }
     },
 
-    relationList: ({ projectId }) => {
+    relationList: ({ projectId, limit, offset }) => {
       const invalidProjectId = validateProjectId(projectId);
       if (invalidProjectId) {
         return invalidProjectId;
+      }
+
+      if (
+        limit !== undefined &&
+        (!Number.isInteger(limit) || limit <= 0)
+      ) {
+        return ipcError("INVALID_ARGUMENT", "limit must be a positive integer");
+      }
+      if (
+        offset !== undefined &&
+        (!Number.isInteger(offset) || offset < 0)
+      ) {
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "offset must be a non-negative integer",
+        );
       }
 
       const normalizedProjectId = projectId.trim();
@@ -1489,7 +1572,13 @@ function createRelationOps(
 
         return {
           ok: true,
-          data: { items: listProjectRelations(args.db, normalizedProjectId) },
+            data: {
+              items: listProjectRelations(args.db, normalizedProjectId, {
+                limit,
+                offset,
+              }),
+              totalCount: countRelations(args.db, normalizedProjectId),
+            },
         };
       } catch (error) {
         args.logger.error("kg_relation_list_failed", {
@@ -1857,7 +1946,7 @@ function createQueryGraphOps(
           data: {
             pathEntityIds: queried.data.pathEntityIds,
             expansions: queried.data.expansions,
-            degraded: false,
+              degraded: queried.data.degraded,
             queryCostMs: Date.now() - startedAt,
           },
         };

@@ -250,22 +250,14 @@ function insertRelation(args: {
       maxExpansions: 1,
     });
 
-    assert.equal(queried.ok, false);
-    if (queried.ok) {
-      assert.fail("expected maxExpansions violation");
+      assert.equal(queried.ok, true);
+      if (!queried.ok) {
+        assert.fail("expected degraded queryPath result");
     }
 
-    assert.equal(queried.error.code, "KG_QUERY_TIMEOUT");
-    const details = queried.error.details as
-      | {
-          reason?: string;
-          maxExpansions?: number;
-          expansions?: number;
-        }
-      | undefined;
-    assert.equal(details?.reason, "MAX_EXPANSIONS_EXCEEDED");
-    assert.equal(details?.maxExpansions, 1);
-    assert.equal(details?.expansions, 2);
+      assert.equal(queried.data.degraded, true);
+      assert.equal(queried.data.pathEntityIds.length, 0);
+      assert.equal(queried.data.expansions, 2);
   } finally {
     harness.close();
   }
