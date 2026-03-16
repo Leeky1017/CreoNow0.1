@@ -374,13 +374,11 @@ function HoverActions({
         "duration-[var(--duration-fast)]",
       ].join(" ")}
     >
-      <Tooltip content={t("versionControl.restoreComingSoon")}>
+      <Tooltip content={t("versionHistory.panel.restore")}>
         <button
           type="button"
           onClick={() => onRestore?.(versionId)}
-          disabled
-          aria-disabled="true"
-          className="focus-ring p-1.5 rounded-md hover:bg-[var(--color-bg-overlay)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="focus-ring p-1.5 rounded-md hover:bg-[var(--color-bg-overlay)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
         >
           <RestoreIcon />
         </button>
@@ -472,13 +470,11 @@ function VersionCard({
 
         {/* Action buttons */}
         <div className="grid grid-cols-3 gap-2 mt-3">
-          <Tooltip content={t("versionControl.restoreComingSoon")}>
+          <Tooltip content={t("versionHistory.panel.restore")}>
             <Button
               variant="secondary"
               size="sm"
               onClick={() => onRestore?.(version.id)}
-              disabled
-              aria-disabled="true"
               className="!h-7 !text-[10px] !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
             >
               {t("versionHistory.panel.restore")}

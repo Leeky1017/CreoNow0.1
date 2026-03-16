@@ -194,7 +194,7 @@ describe("VersionHistoryPanel", () => {
     expect(previewButtons.length).toBeGreaterThanOrEqual(1);
   });
 
-  it("does not call onRestore because Restore button is disabled (coming soon)", () => {
+  it("calls onRestore when clicking enabled Restore button", () => {
     const onRestore = vi.fn();
     render(
       <VersionHistoryPanel
@@ -205,13 +205,11 @@ describe("VersionHistoryPanel", () => {
       />,
     );
 
-    // Get the button with text "Restore" (not just title)
     const restoreButtons = screen.getAllByRole("button", { name: /Restore/i });
-    // Restore button should be disabled — clicking does nothing
-    expect(restoreButtons[0]).toBeDisabled();
+    expect(restoreButtons[0]).toBeEnabled();
     fireEvent.click(restoreButtons[0]);
 
-    expect(onRestore).not.toHaveBeenCalled();
+    expect(onRestore).toHaveBeenCalledWith("v-1042");
   });
 
   it("calls onCompare when clicking Compare button", () => {
