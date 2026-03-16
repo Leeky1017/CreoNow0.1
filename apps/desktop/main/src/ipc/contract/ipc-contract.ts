@@ -849,6 +849,18 @@ const APP_WINDOW_STATE_SCHEMA = s.object({
   platform: s.string(),
 });
 
+
+/**
+ * Backup snapshot schema.
+ */
+const BACKUP_SNAPSHOT_SCHEMA = s.object({
+  id: s.string(),
+  projectId: s.string(),
+  createdAt: s.string(),
+  sizeBytes: s.number(),
+  label: s.optional(s.string()),
+});
+
 export const ipcContract = {
   version: 1,
   errorCodes: IPC_ERROR_CODES,
@@ -922,6 +934,33 @@ export const ipcContract = {
         projectId: s.string(),
       }),
       response: EXPORT_RESULT_SCHEMA,
+    },
+    "backup:snapshot:create": {
+      request: s.object({
+        projectId: s.string(),
+        label: s.optional(s.string()),
+      }),
+      response: BACKUP_SNAPSHOT_SCHEMA,
+    },
+    "backup:snapshot:list": {
+      request: s.object({
+        projectId: s.string(),
+      }),
+      response: s.array(BACKUP_SNAPSHOT_SCHEMA),
+    },
+    "backup:snapshot:restore": {
+      request: s.object({
+        backupId: s.string(),
+      }),
+      response: BACKUP_SNAPSHOT_SCHEMA,
+    },
+    "backup:snapshot:delete": {
+      request: s.object({
+        backupId: s.string(),
+      }),
+      response: s.object({
+        deleted: s.boolean(),
+      }),
     },
     "ai:chat:send": {
       request: s.object({

@@ -61,13 +61,9 @@ const dividerStyles = [
 ].join(" ");
 
 /**
- * Backup interval options — retained for v0.2 (A0-17: hidden in v0.1)
+ * Backup interval option values.
  */
-// const backupIntervalOptions = [
-//   { value: "5min", label: "Every 5 minutes" },
-//   { value: "15min", label: "Every 15 minutes" },
-//   { value: "1hour", label: "Every hour" },
-// ];
+const BACKUP_INTERVAL_VALUES = ["5min", "15min", "1hour"] as const;
 
 /**
  * Typography options
@@ -200,7 +196,23 @@ export function SettingsGeneral({
             }
           />
 
-          {/* A0-17: Backup interval hidden — no backend in v0.1 (see openspec/changes/archive/a0-17-backup-entry-resolution/decision.md) */}
+          <FormField
+              label={t("settings.general.backupInterval")}
+              htmlFor="backup-interval"
+              help={t("settings.general.backupIntervalHelp")}
+            >
+              <Select
+                options={BACKUP_INTERVAL_VALUES.map((v) => ({
+                  value: v,
+                  label: t(`settings.general.backupOption_${v}`),
+                }))}
+                value={settings.backupInterval}
+                onValueChange={(value) =>
+                  updateSetting("backupInterval", value)
+                }
+                fullWidth
+              />
+            </FormField>
         </div>
       </div>
 

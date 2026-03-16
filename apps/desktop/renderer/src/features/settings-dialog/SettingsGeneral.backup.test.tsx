@@ -26,55 +26,50 @@ function renderSettingsGeneral() {
   );
 }
 
-describe("SettingsGeneral backup entry hidden (A0-17)", () => {
-  it("does not render backup interval selector", () => {
+describe("SettingsGeneral backup interval visible", () => {
+  it("renders backup interval label", () => {
     renderSettingsGeneral();
 
-    expect(screen.queryByLabelText(/backup interval/i)).not.toBeInTheDocument();
-    expect(screen.queryByLabelText(/备份间隔/i)).not.toBeInTheDocument();
+    expect(screen.getByText("Backup Interval")).toBeInTheDocument();
   });
 
-  it("does not render backup-related text in the DOM", () => {
-    renderSettingsGeneral();
-
-    expect(screen.queryByText(/backup interval/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/备份间隔/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/last backup/i)).not.toBeInTheDocument();
-  });
-
-  it("does not render a select with backup interval options", () => {
-    renderSettingsGeneral();
-
-    expect(screen.queryByText("Every 5 minutes")).not.toBeInTheDocument();
-    expect(screen.queryByText("Every 15 minutes")).not.toBeInTheDocument();
-    expect(screen.queryByText("Every hour")).not.toBeInTheDocument();
-  });
-
-  it("still renders Data & Storage section (auto-save remains)", () => {
+  it("renders Data & Storage section", () => {
     renderSettingsGeneral();
 
     expect(screen.getByText("Data & Storage")).toBeInTheDocument();
   });
 });
 
-describe("i18n backup keys preserved for future use", () => {
-  it("en locale retains backupInterval key", () => {
+describe("i18n backup keys", () => {
+  it("en locale has backupInterval key", () => {
     expect(enLocale.settings.general.backupInterval).toBe("Backup Interval");
   });
 
-  it("en locale retains backupIntervalHelp key", () => {
+  it("en locale has backupIntervalHelp key", () => {
     expect(enLocale.settings.general.backupIntervalHelp).toBe(
       "Last backup: 2 minutes ago",
     );
   });
 
-  it("zh-CN locale retains backupInterval key", () => {
+  it("en locale has backup option keys", () => {
+    expect(enLocale.settings.general.backupOption_5min).toBe("Every 5 minutes");
+    expect(enLocale.settings.general.backupOption_15min).toBe("Every 15 minutes");
+    expect(enLocale.settings.general.backupOption_1hour).toBe("Every hour");
+  });
+
+  it("zh-CN locale has backupInterval key", () => {
     expect(zhCNLocale.settings.general.backupInterval).toBe("备份间隔");
   });
 
-  it("zh-CN locale retains backupIntervalHelp key", () => {
+  it("zh-CN locale has backupIntervalHelp key", () => {
     expect(zhCNLocale.settings.general.backupIntervalHelp).toBe(
       "上次备份：2 分钟前",
     );
+  });
+
+  it("zh-CN locale has backup option keys", () => {
+    expect(zhCNLocale.settings.general.backupOption_5min).toBe("每 5 分钟");
+    expect(zhCNLocale.settings.general.backupOption_15min).toBe("每 15 分钟");
+    expect(zhCNLocale.settings.general.backupOption_1hour).toBe("每小时");
   });
 });

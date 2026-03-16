@@ -926,6 +926,9 @@
       "localAutoSaveDescription": "Automatically save changes to your browser's local storage.",
       "backupInterval": "Backup Interval",
       "backupIntervalHelp": "Last backup: 2 minutes ago",
+      "backupOption_5min": "Every 5 minutes",
+      "backupOption_15min": "Every 15 minutes",
+      "backupOption_1hour": "Every hour",
       "differentiateAiEdits": "Differentiate AI edits",
       "defaultTypography": "Default Typography",
       "interfaceScale": "Interface Scale"

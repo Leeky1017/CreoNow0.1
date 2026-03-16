@@ -926,6 +926,9 @@
       "localAutoSaveDescription": "自动将更改保存到浏览器的本地存储。",
       "backupInterval": "备份间隔",
       "backupIntervalHelp": "上次备份：2 分钟前",
+      "backupOption_5min": "每 5 分钟",
+      "backupOption_15min": "每 15 分钟",
+      "backupOption_1hour": "每小时",
       "differentiateAiEdits": "区分 AI 编辑",
       "defaultTypography": "默认排版",
       "interfaceScale": "界面缩放"
