@@ -38,6 +38,8 @@ export interface CharacterDetailDialogProps {
   onDelete?: (characterId: string) => void;
   /** Callback when navigating to a chapter */
   onNavigateToChapter?: (chapterId: string) => void;
+  /** User-visible warning shown when chapter navigation degrades or fails */
+  navigationWarning?: string | null;
   /** Available characters for adding relationships */
   availableCharacters?: Character[];
   /**
@@ -631,6 +633,7 @@ function CharacterRelationshipsSection(props: {
 function CharacterAppearancesSection(props: {
   appearances: ChapterAppearance[];
   onNavigateToChapter?: (chapterId: string) => void;
+  navigationWarning?: string | null;
 }): JSX.Element {
   const { t } = useTranslation();
 
@@ -642,6 +645,15 @@ function CharacterAppearancesSection(props: {
           {props.appearances.length} {t('character.detail.chapters')}
         </span>
       </div>
+      {props.navigationWarning ? (
+        <div
+          role="alert"
+          data-testid="character-navigation-warning"
+          className="rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-3 py-2 text-xs text-[var(--color-warning-default)]"
+        >
+          {props.navigationWarning}
+        </div>
+      ) : null}
       {props.appearances.length > 0 ? (
         <div className="flex flex-col gap-1">
           {props.appearances.map((appearance) => (
@@ -653,9 +665,14 @@ function CharacterAppearancesSection(props: {
           ))}
         </div>
       ) : (
-        <div className="text-xs text-[var(--color-fg-placeholder)] py-4 text-center border border-dashed border-[var(--color-border-default)] rounded-lg">
-          {t('character.detail.noAppearances')}
-        </div>
+        <>
+          <div className="text-xs text-[var(--color-fg-placeholder)] py-4 text-center border border-dashed border-[var(--color-border-default)] rounded-lg">
+            {t('character.detail.noAppearances')}
+          </div>
+          <p className="text-[11px] text-[var(--color-fg-placeholder)]">
+            {t('character.detail.noAppearancesFallbackHint')}
+          </p>
+        </>
       )}
     </div>
   );
@@ -675,6 +692,7 @@ export function CharacterDetailDialog({
   onSave,
   onDelete,
   onNavigateToChapter,
+  navigationWarning,
   availableCharacters,
   container,
 }: CharacterDetailDialogProps): JSX.Element | null {
@@ -922,6 +940,7 @@ export function CharacterDetailDialog({
             <CharacterAppearancesSection
               appearances={editedCharacter.appearances}
               onNavigateToChapter={onNavigateToChapter}
+              navigationWarning={navigationWarning}
             />
           </div>
 

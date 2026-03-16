@@ -53,12 +53,25 @@ export function CharacterPanelContainer(
 
   // Editor store for document navigation
   const openDocument = useEditorStore((s) => s.openDocument);
+  const editorDocumentId = useEditorStore((s) => s.documentId);
+  const editorBootstrapStatus = useEditorStore((s) => s.bootstrapStatus);
 
   // Confirm dialog for delete
   const { confirm, dialogProps } = useConfirmDialog();
 
   // Local state
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const [navigationWarning, setNavigationWarning] = React.useState<string | null>(null);
+  const latestEditorDocumentIdRef = React.useRef<string | null>(editorDocumentId);
+  const latestEditorBootstrapStatusRef = React.useRef(editorBootstrapStatus);
+
+  React.useEffect(() => {
+    latestEditorDocumentIdRef.current = editorDocumentId;
+  }, [editorDocumentId]);
+
+  React.useEffect(() => {
+    latestEditorBootstrapStatusRef.current = editorBootstrapStatus;
+  }, [editorBootstrapStatus]);
 
   // Bootstrap KG on mount
   React.useEffect(() => {
@@ -142,10 +155,17 @@ export function CharacterPanelContainer(
   }, []);
 
   const handleNavigateToChapter = React.useCallback(
-    (chapterId: string) => {
-      void openDocument({ projectId, documentId: chapterId });
+    async (chapterId: string) => {
+      setNavigationWarning(null);
+      await openDocument({ projectId, documentId: chapterId });
+      const navigationFailed =
+        latestEditorBootstrapStatusRef.current === "error" ||
+        latestEditorDocumentIdRef.current !== chapterId;
+      if (navigationFailed) {
+        setNavigationWarning(t("character.detail.navigationDegraded"));
+      }
     },
-    [openDocument, projectId],
+    [openDocument, projectId, t],
   );
 
   const showLoading = useDeferredLoading(bootstrapStatus === "loading");
@@ -212,6 +232,7 @@ export function CharacterPanelContainer(
         onUpdate={(char) => void handleUpdate(char)}
         onDelete={(id) => void handleDelete(id)}
         onNavigateToChapter={handleNavigateToChapter}
+        navigationWarning={navigationWarning}
       />
       <SystemDialog {...dialogProps} />
     </>

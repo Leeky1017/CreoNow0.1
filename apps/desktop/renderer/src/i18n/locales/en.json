@@ -601,6 +601,8 @@
       "appearances": "Appearances",
       "chapters": "Chapters",
       "noAppearances": "Character hasn't appeared in any chapters yet",
+      "noAppearancesFallbackHint": "If KG recognition is degraded, you can still navigate manually from the file tree.",
+      "navigationDegraded": "Chapter navigation is temporarily unavailable. You can continue from the file tree as a fallback.",
       "delete": "Delete",
       "cancel": "Cancel",
       "saveChanges": "Save Changes",

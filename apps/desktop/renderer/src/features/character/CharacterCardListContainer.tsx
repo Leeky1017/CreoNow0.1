@@ -73,11 +73,24 @@ export function CharacterCardListContainer({
   const entityDelete = useKgStore((state) => state.entityDelete);
 
   const openDocument = useEditorStore((s) => s.openDocument);
+  const editorDocumentId = useEditorStore((s) => s.documentId);
+  const editorBootstrapStatus = useEditorStore((s) => s.bootstrapStatus);
 
   const { confirm, dialogProps } = useConfirmDialog();
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const [navigationWarning, setNavigationWarning] = React.useState<string | null>(null);
+  const latestEditorDocumentIdRef = React.useRef<string | null>(editorDocumentId);
+  const latestEditorBootstrapStatusRef = React.useRef(editorBootstrapStatus);
+
+  React.useEffect(() => {
+    latestEditorDocumentIdRef.current = editorDocumentId;
+  }, [editorDocumentId]);
+
+  React.useEffect(() => {
+    latestEditorBootstrapStatusRef.current = editorBootstrapStatus;
+  }, [editorBootstrapStatus]);
 
   React.useEffect(() => {
     void bootstrapForProject(projectId);
@@ -152,10 +165,17 @@ export function CharacterCardListContainer({
   );
 
   const handleNavigateToChapter = React.useCallback(
-    (chapterId: string) => {
-      void openDocument({ projectId, documentId: chapterId });
+    async (chapterId: string) => {
+      setNavigationWarning(null);
+      await openDocument({ projectId, documentId: chapterId });
+      const navigationFailed =
+        latestEditorBootstrapStatusRef.current === "error" ||
+        latestEditorDocumentIdRef.current !== chapterId;
+      if (navigationFailed) {
+        setNavigationWarning(t("character.detail.navigationDegraded"));
+      }
     },
-    [openDocument, projectId],
+    [openDocument, projectId, t],
   );
 
   if (bootstrapStatus === "loading") {
@@ -200,6 +220,7 @@ export function CharacterCardListContainer({
         onSave={(character) => void handleSaveCharacter(character)}
         onDelete={(characterId) => void handleDeleteCharacter(characterId)}
         onNavigateToChapter={handleNavigateToChapter}
+        navigationWarning={navigationWarning}
         availableCharacters={characters}
       />
 

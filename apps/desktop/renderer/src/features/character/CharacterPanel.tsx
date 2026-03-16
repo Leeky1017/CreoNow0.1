@@ -172,6 +172,8 @@ export interface CharacterPanelContentProps {
   onDelete?: (characterId: string) => void;
   /** Callback when navigating to a chapter */
   onNavigateToChapter?: (chapterId: string) => void;
+  /** User-visible warning for navigation degradation */
+  navigationWarning?: string | null;
 }
 
 /**
@@ -206,6 +208,7 @@ export function CharacterPanelContent({
   onUpdate,
   onDelete,
   onNavigateToChapter,
+  navigationWarning,
 }: CharacterPanelContentProps): JSX.Element {
   const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -309,6 +312,7 @@ export function CharacterPanelContent({
         onSave={onUpdate}
         onDelete={onDelete}
         onNavigateToChapter={onNavigateToChapter}
+        navigationWarning={navigationWarning}
         availableCharacters={characters}
       />
     </>

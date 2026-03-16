@@ -26,6 +26,16 @@ describe("CharacterDetailDialog chapter navigation", () => {
     ],
   };
 
+  const characterWithoutAppearances: Character = {
+    id: "char-2",
+    name: "Mu Qing",
+    role: "ally",
+    group: "supporting",
+    traits: [],
+    relationships: [],
+    appearances: [],
+  };
+
   it("invokes onNavigateToChapter with chapterId when chapter link clicked", async () => {
     const user = userEvent.setup();
     const navigateSpy = vi.fn();
@@ -92,5 +102,38 @@ describe("CharacterDetailDialog chapter navigation", () => {
 
     // Should not throw
     await user.click(chapterButtons[0]!);
+  });
+
+  it("renders a visible warning when navigation degrades", () => {
+    render(
+      <CharacterDetailDialog
+        open
+        onOpenChange={vi.fn()}
+        character={characterWithAppearances}
+        navigationWarning="Chapter navigation is temporarily unavailable."
+        availableCharacters={[characterWithAppearances]}
+      />,
+    );
+
+    expect(
+      screen.getByTestId("character-navigation-warning"),
+    ).toHaveTextContent("Chapter navigation is temporarily unavailable.");
+  });
+
+  it("shows fallback hint when no chapter appearances are available", () => {
+    render(
+      <CharacterDetailDialog
+        open
+        onOpenChange={vi.fn()}
+        character={characterWithoutAppearances}
+        availableCharacters={[characterWithoutAppearances]}
+      />,
+    );
+
+    expect(
+      screen.getByText(
+        "If KG recognition is degraded, you can still navigate manually from the file tree.",
+      ),
+    ).toBeInTheDocument();
   });
 });

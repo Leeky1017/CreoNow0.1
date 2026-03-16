@@ -601,6 +601,8 @@
       "appearances": "出场",
       "chapters": "章节",
       "noAppearances": "该角色尚未出现在任何章节中",
+      "noAppearancesFallbackHint": "若 KG 识别降级，你仍可在文件树中手动定位章节。",
+      "navigationDegraded": "章节跳转暂时不可用。你可以先通过文件树继续写作。",
       "delete": "删除",
       "cancel": "取消",
       "saveChanges": "保存更改",
