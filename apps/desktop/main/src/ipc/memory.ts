@@ -281,6 +281,7 @@ function registerMemoryEntryHandlers(ctx: {
   );
 }
 
+// eslint-disable-next-line max-lines-per-function -- Handler registration groups related memory IPC channels in one place.
 function registerMemoryEpisodicAndTraceHandlers(ctx: {
   episodicService: EpisodicMemoryService | null;
   traceService: MemoryTraceService;

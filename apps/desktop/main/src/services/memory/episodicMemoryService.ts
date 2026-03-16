@@ -1365,6 +1365,7 @@ function createEpisodicSmallHelpers(
   };
 }
 
+// eslint-disable-next-line max-lines-per-function -- Keep episodic execution helpers co-located for transactional consistency.
 function createEpisodicExecHelpers(
   args: EpisodicServiceArgs,
   state: EpisodicState,

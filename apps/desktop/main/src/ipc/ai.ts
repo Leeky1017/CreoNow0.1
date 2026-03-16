@@ -417,9 +417,7 @@ function rememberRunInRegistry(
   }
 }
 
-function resolveUsageContextKey(
-  context?: SkillRunPayload["context"],
-): string {
+function resolveUsageContextKey(context?: SkillRunPayload["context"]): string {
   const projectId = context?.projectId?.trim() ?? "";
   if (projectId.length > 0) {
     return `project:${projectId}`;
@@ -733,7 +731,10 @@ function registerAiSkillRunHandler(ctx: AiIpcContext): void {
         });
       };
 
-      const stats = createStatsService({ db: ctx.deps.db, logger: ctx.deps.logger });
+      const stats = createStatsService({
+        db: ctx.deps.db,
+        logger: ctx.deps.logger,
+      });
       const inc = stats.increment({
         ts: nowTs(),
         delta: { skillsUsed: 1 },
@@ -761,7 +762,10 @@ function registerAiSkillRunHandler(ctx: AiIpcContext): void {
             return { ok: false, error: res.error };
           }
 
-          rememberRunInRegistry(ctx, { runId: res.data.runId, context: payload.context });
+          rememberRunInRegistry(ctx, {
+            runId: res.data.runId,
+            context: payload.context,
+          });
 
           const outputText = res.data.outputText;
           if (typeof outputText === "string") {
@@ -823,7 +827,10 @@ function registerAiSkillRunHandler(ctx: AiIpcContext): void {
           if (!res.ok) {
             return { ok: false, error: res.error };
           }
-          rememberRunInRegistry(ctx, { runId: res.data.runId, context: payload.context });
+          rememberRunInRegistry(ctx, {
+            runId: res.data.runId,
+            context: payload.context,
+          });
           runs.push({
             executionId: res.data.executionId,
             runId: res.data.runId,
@@ -1045,8 +1052,11 @@ function registerAiChatHandlers(ctx: AiIpcContext): void {
       }
 
       const timestamp = nowTs();
-      const projectMessages = ctx.chatHistoryByProject.get(projectId.data) ?? [];
-      if (projectMessages.length >= ctx.runtimeGovernance.ai.chatMessageCapacity) {
+      const projectMessages =
+        ctx.chatHistoryByProject.get(projectId.data) ?? [];
+      if (
+        projectMessages.length >= ctx.runtimeGovernance.ai.chatMessageCapacity
+      ) {
         return {
           ok: false,
           error: {
