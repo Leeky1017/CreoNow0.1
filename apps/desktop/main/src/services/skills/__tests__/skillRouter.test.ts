@@ -70,6 +70,28 @@ assert.equal(
   "hasSelection + 重写 → rewrite",
 );
 
+assert.equal(
+  inferSkillFromInput({ input: "rewrite this", hasSelection: true }),
+  "builtin:rewrite",
+  "hasSelection + rewrite (EN) → rewrite",
+);
+
+const rewriteWithoutSelection = inferSkillFromInput({
+  input: "rewrite this paragraph",
+  hasSelection: false,
+});
+
+assert.notEqual(
+  rewriteWithoutSelection,
+  "builtin:write",
+  "no selection + rewrite should not route to write",
+);
+
+assert.ok(
+  rewriteWithoutSelection === "builtin:rewrite" || rewriteWithoutSelection === "builtin:chat",
+  "no selection + rewrite should route to rewrite or chat",
+);
+
 // --- Context-based: selection + no input → polish ---
 
 assert.equal(

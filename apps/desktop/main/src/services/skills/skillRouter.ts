@@ -175,9 +175,26 @@ export function isNegated(
 }
 
 function keywordMatchesWithoutNegation(input: string, kw: string): boolean {
-  const idx = input.indexOf(kw);
-  if (idx < 0) return false;
-  return !isNegated(input, idx, kw);
+  const hasChinese = /[\u4e00-\u9fff]/.test(kw);
+
+  if (hasChinese) {
+    const idx = input.indexOf(kw);
+    if (idx < 0) return false;
+    return !isNegated(input, idx, kw);
+  }
+
+  const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(`\\b${escaped}\\b`, "g");
+  let match = pattern.exec(input);
+
+  while (match) {
+    if (!isNegated(input, match.index, kw)) {
+      return true;
+    }
+    match = pattern.exec(input);
+  }
+
+  return false;
 }
 
 // ── 路由主函数 ───────────────────────────────────────────────────
