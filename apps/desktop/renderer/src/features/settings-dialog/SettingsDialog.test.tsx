@@ -61,7 +61,9 @@ vi.mock("./SettingsExport", () => ({
 }));
 
 vi.mock("../shortcuts/ShortcutsPanel", () => ({
-  ShortcutsPanel: () => <div data-testid="mock-shortcuts-section">Shortcuts</div>,
+  ShortcutsPanel: () => (
+    <div data-testid="mock-shortcuts-section">Shortcuts</div>
+  ),
 }));
 
 function createMockStorage(): Storage {

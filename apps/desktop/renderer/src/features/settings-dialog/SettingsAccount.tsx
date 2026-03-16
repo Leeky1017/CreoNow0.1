@@ -64,7 +64,13 @@ const cardStyles = [
 /**
  * Plan badge component
  */
-function PlanBadge({ plan, t }: { plan: SubscriptionPlan; t: (key: string) => string }): JSX.Element {
+function PlanBadge({
+  plan,
+  t,
+}: {
+  plan: SubscriptionPlan;
+  t: (key: string) => string;
+}): JSX.Element {
   const planConfig: Record<
     SubscriptionPlan,
     { label: string; className: string }
