@@ -841,6 +841,14 @@ const AI_CHAT_HISTORY_ITEM_SCHEMA = s.object({
   traceId: s.string(),
 });
 
+const AI_CHAT_SESSION_SCHEMA = s.object({
+  sessionId: s.string(),
+  projectId: s.string(),
+  title: s.string(),
+  createdAt: s.number(),
+  updatedAt: s.number(),
+});
+
 const APP_WINDOW_STATE_SCHEMA = s.object({
   controlsEnabled: s.boolean(),
   isMaximized: s.boolean(),
@@ -927,17 +935,20 @@ export const ipcContract = {
       request: s.object({
         message: s.string(),
         projectId: s.string(),
+        sessionId: s.optional(s.string()),
         documentId: s.optional(s.string()),
       }),
       response: s.object({
         accepted: s.literal(true),
         messageId: s.string(),
+        sessionId: s.string(),
         echoed: s.string(),
       }),
     },
     "ai:chat:list": {
       request: s.object({
         projectId: s.string(),
+        sessionId: s.optional(s.string()),
       }),
       response: s.object({
         items: s.array(AI_CHAT_HISTORY_ITEM_SCHEMA),
@@ -946,10 +957,29 @@ export const ipcContract = {
     "ai:chat:clear": {
       request: s.object({
         projectId: s.string(),
+        sessionId: s.optional(s.string()),
       }),
       response: s.object({
         cleared: s.literal(true),
         removed: s.number(),
+      }),
+    },
+    "ai:chat:sessions": {
+      request: s.object({
+        projectId: s.string(),
+        query: s.optional(s.string()),
+      }),
+      response: s.object({
+        sessions: s.array(AI_CHAT_SESSION_SCHEMA),
+      }),
+    },
+    "ai:chatsession:delete": {
+      request: s.object({
+        projectId: s.string(),
+        sessionId: s.string(),
+      }),
+      response: s.object({
+        deleted: s.literal(true),
       }),
     },
     "ai:skill:run": {
