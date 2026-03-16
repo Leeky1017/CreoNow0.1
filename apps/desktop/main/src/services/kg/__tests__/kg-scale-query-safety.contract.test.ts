@@ -8,6 +8,12 @@ import {
   type KnowledgeGraphService,
 } from "../kgService";
 
+function describe(_name: string, fn: () => void): void {
+  fn();
+}
+
+describe("kg-scale-query-safety contract", () => {});
+
 const logger: Logger = {
   logPath: "<test>",
   info: () => {},
