@@ -197,22 +197,20 @@ export function SettingsGeneral({
           />
 
           <FormField
-              label={t("settings.general.backupInterval")}
-              htmlFor="backup-interval"
-              help={t("settings.general.backupIntervalHelp")}
-            >
-              <Select
-                options={BACKUP_INTERVAL_VALUES.map((v) => ({
-                  value: v,
-                  label: t(`settings.general.backupOption_${v}`),
-                }))}
-                value={settings.backupInterval}
-                onValueChange={(value) =>
-                  updateSetting("backupInterval", value)
-                }
-                fullWidth
-              />
-            </FormField>
+            label={t("settings.general.backupInterval")}
+            htmlFor="backup-interval"
+            help={t("settings.general.backupIntervalHelp")}
+          >
+            <Select
+              options={BACKUP_INTERVAL_VALUES.map((v) => ({
+                value: v,
+                label: t(`settings.general.backupOption_${v}`),
+              }))}
+              value={settings.backupInterval}
+              onValueChange={(value) => updateSetting("backupInterval", value)}
+              fullWidth
+            />
+          </FormField>
         </div>
       </div>
 

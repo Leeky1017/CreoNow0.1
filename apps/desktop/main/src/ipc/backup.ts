@@ -76,10 +76,7 @@ export function registerBackupIpcHandlers(deps: {
 }): void {
   deps.ipcMain.handle(
     "backup:snapshot:create",
-    async (
-      _e,
-      payload: unknown,
-    ): Promise<IpcResponse<BackupSnapshot>> => {
+    async (_e, payload: unknown): Promise<IpcResponse<BackupSnapshot>> => {
       if (!deps.db) {
         return {
           ok: false,
@@ -109,10 +106,7 @@ export function registerBackupIpcHandlers(deps: {
 
   deps.ipcMain.handle(
     "backup:snapshot:list",
-    async (
-      _e,
-      payload: unknown,
-    ): Promise<IpcResponse<BackupSnapshot[]>> => {
+    async (_e, payload: unknown): Promise<IpcResponse<BackupSnapshot[]>> => {
       if (!deps.db) {
         return {
           ok: false,
@@ -140,10 +134,7 @@ export function registerBackupIpcHandlers(deps: {
 
   deps.ipcMain.handle(
     "backup:snapshot:restore",
-    async (
-      _e,
-      payload: unknown,
-    ): Promise<IpcResponse<BackupSnapshot>> => {
+    async (_e, payload: unknown): Promise<IpcResponse<BackupSnapshot>> => {
       if (!deps.db) {
         return {
           ok: false,

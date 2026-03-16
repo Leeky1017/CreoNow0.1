@@ -849,7 +849,6 @@ const APP_WINDOW_STATE_SCHEMA = s.object({
   platform: s.string(),
 });
 
-
 /**
  * Backup snapshot schema.
  */

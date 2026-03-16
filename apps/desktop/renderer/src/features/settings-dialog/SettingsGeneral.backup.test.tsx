@@ -53,7 +53,9 @@ describe("i18n backup keys", () => {
 
   it("en locale has backup option keys", () => {
     expect(enLocale.settings.general.backupOption_5min).toBe("Every 5 minutes");
-    expect(enLocale.settings.general.backupOption_15min).toBe("Every 15 minutes");
+    expect(enLocale.settings.general.backupOption_15min).toBe(
+      "Every 15 minutes",
+    );
     expect(enLocale.settings.general.backupOption_1hour).toBe("Every hour");
   });
 

@@ -182,9 +182,7 @@ describe("BackupService", () => {
     });
 
     it("throws BACKUP_INVALID_ID for empty id", () => {
-      expect(() => deleteBackupSnapshot(deps, "")).toThrow(
-        "BACKUP_INVALID_ID",
-      );
+      expect(() => deleteBackupSnapshot(deps, "")).toThrow("BACKUP_INVALID_ID");
     });
   });
 });

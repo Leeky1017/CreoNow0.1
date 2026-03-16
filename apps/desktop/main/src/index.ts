@@ -435,7 +435,6 @@ function registerIpcHandlers(deps: {
     userDataDir: deps.userDataDir,
   });
 
-
   registerBackupIpcHandlers({
     ipcMain: guardedIpcMain,
     db: deps.db,
