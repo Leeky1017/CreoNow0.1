@@ -1,35 +1,34 @@
 # Scripts
 
-
 自动化脚本，供 Agent 在交付流程中调用。交付规则见 `docs/delivery-skill.md`，测试规范主源见 `docs/references/testing/README.md`。
 
 ## 脚本清单
 
-| 脚本                                 | 职责                                            | 调用时机             |
-| ------------------------------------ | ----------------------------------------------- | -------------------- |
-| `agent_controlplane_sync.sh`         | 同步控制面的 main 到最新                        | 阶段 3 前 + 阶段 6   |
-| `agent_git_hooks_install.sh`         | 为当前 repo/worktree 安装 repo-managed git hooks | 阶段 3：环境隔离     |
-| `agent_task_begin.sh`                | gh-only fail-closed 任务入口：capabilities + sync + worktree + hook 安装 | 阶段 3：环境隔离 |
-| `agent_worktree_setup.sh`            | 创建 worktree 隔离环境                          | 阶段 3：环境隔离     |
-| `agent_pr_preflight.sh`              | 提交前 / PR 前的预检查                          | 阶段 5：提交前       |
-| `agent_pr_automerge_and_sync.sh`   | 创建 PR；默认不开 auto-merge，显式开启时需审计通过（仅 gh 通道） | 阶段 5：提交与合并 |
-| `agent_github_delivery.py`        | GitHub 能力探测、PR/评论模板、gh/MCP 通道选择   | 阶段 5：提交与合并 |
-| `review-audit.sh`                   | 分层自适应审计命令入口（Tier L/S/D），AGENTS.md §6.4 | 审计：分类后执行 |
-| `agent_worktree_cleanup.sh`          | 清理 worktree                                   | 阶段 6：收口         |
-| `ipc-acceptance-gate.ts`             | IPC acceptance SLO 门禁                         | 阶段 4：实现与测试   |
-| `test-discovery-consistency-gate.ts` | 测试发现与执行计划一致性校验                    | 阶段 4：实现与测试   |
-| `contract-generate.ts`               | 生成 IPC 契约类型定义                           | CI / 手动            |
-| `cross-module-contract-gate.ts`      | cross-module 契约对齐门禁（含 skill-output / api-key-format 维度）| CI / preflight       |
-| `cross-module-contract-autofix.ts`   | cross-module 失败分类与安全自动修复（开发分支） | 开发分支手动触发     |
-| `resource-size-gate.ts`              | 资源文件大小门禁（baseline ratchet）            | CI / preflight       |
-| `bundle-size-budget.ts`              | 构建产物体积预算门禁                            | CI / preflight       |
-| `ipc-handler-validation-gate.ts`     | IPC handler schema 校验覆盖门禁                 | CI / preflight       |
-| `service-stub-detector-gate.ts`      | Service 桩方法检测门禁                          | CI / preflight       |
-| `error-boundary-coverage-gate.ts`    | ErrorBoundary 覆盖门禁                          | CI / preflight       |
-| `architecture-health-gate.ts`        | 架构健康度门禁                                  | CI / preflight       |
-| `spec-test-mapping-gate.ts`          | Spec Scenario→测试映射门禁                      | CI / preflight       |
-| `ai-rate-limit-coverage-gate.ts`      | AI 请求限流 + scheduler / queue coverage gate        | CI / preflight       |
-| `lint-ratchet.ts`                    | ESLint warning budget ratchet                   | CI / preflight       |
+| 脚本                                 | 职责                                                                     | 调用时机           |
+| ------------------------------------ | ------------------------------------------------------------------------ | ------------------ |
+| `agent_controlplane_sync.sh`         | 同步控制面的 main 到最新                                                 | 阶段 3 前 + 阶段 6 |
+| `agent_git_hooks_install.sh`         | 为当前 repo/worktree 安装 repo-managed git hooks                         | 阶段 3：环境隔离   |
+| `agent_task_begin.sh`                | gh-only fail-closed 任务入口：capabilities + sync + worktree + hook 安装 | 阶段 3：环境隔离   |
+| `agent_worktree_setup.sh`            | 创建 worktree 隔离环境                                                   | 阶段 3：环境隔离   |
+| `agent_pr_preflight.sh`              | 提交前 / PR 前的预检查                                                   | 阶段 5：提交前     |
+| `agent_pr_automerge_and_sync.sh`     | 创建 PR；默认不开 auto-merge，显式开启时需审计通过（仅 gh 通道）         | 阶段 5：提交与合并 |
+| `agent_github_delivery.py`           | GitHub 能力探测、PR/评论模板、gh/MCP 通道选择                            | 阶段 5：提交与合并 |
+| `review-audit.sh`                    | 分层自适应审计命令入口（Tier L/S/D），AGENTS.md §6.4                     | 审计：分类后执行   |
+| `agent_worktree_cleanup.sh`          | 清理 worktree                                                            | 阶段 6：收口       |
+| `ipc-acceptance-gate.ts`             | IPC acceptance SLO 门禁                                                  | 阶段 4：实现与测试 |
+| `test-discovery-consistency-gate.ts` | 测试发现与执行计划一致性校验                                             | 阶段 4：实现与测试 |
+| `contract-generate.ts`               | 生成 IPC 契约类型定义                                                    | CI / 手动          |
+| `cross-module-contract-gate.ts`      | cross-module 契约对齐门禁（含 skill-output / api-key-format 维度）       | CI / preflight     |
+| `cross-module-contract-autofix.ts`   | cross-module 失败分类与安全自动修复（开发分支）                          | 开发分支手动触发   |
+| `resource-size-gate.ts`              | 资源文件大小门禁（baseline ratchet）                                     | CI / preflight     |
+| `bundle-size-budget.ts`              | 构建产物体积预算门禁                                                     | CI / preflight     |
+| `ipc-handler-validation-gate.ts`     | IPC handler schema 校验覆盖门禁                                          | CI / preflight     |
+| `service-stub-detector-gate.ts`      | Service 桩方法检测门禁                                                   | CI / preflight     |
+| `error-boundary-coverage-gate.ts`    | ErrorBoundary 覆盖门禁                                                   | CI / preflight     |
+| `architecture-health-gate.ts`        | 架构健康度门禁                                                           | CI / preflight     |
+| `spec-test-mapping-gate.ts`          | Spec Scenario→测试映射门禁                                               | CI / preflight     |
+| `ai-rate-limit-coverage-gate.ts`     | AI 请求限流 + scheduler / queue coverage gate                            | CI / preflight     |
+| `lint-ratchet.ts`                    | ESLint warning budget ratchet                                            | CI / preflight     |
 
 ## 使用约定
 

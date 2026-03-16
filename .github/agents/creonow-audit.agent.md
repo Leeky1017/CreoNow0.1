@@ -45,44 +45,44 @@ target: "vscode"
 
 ## 变更层（WHERE）
 
-| 标签 | 路径模式 |
-|------|---------|
-| `backend` | `apps/desktop/main/**` |
-| `frontend` | `apps/desktop/renderer/**` |
-| `preload` | `apps/desktop/preload/**` |
-| `shared` | `packages/shared/**` |
-| `infra` | `scripts/**`, `.github/**`, `*.config.*` |
-| `docs` | `docs/**`, `openspec/**`, `*.md`（非代码目录） |
+| 标签       | 路径模式                                       |
+| ---------- | ---------------------------------------------- |
+| `backend`  | `apps/desktop/main/**`                         |
+| `frontend` | `apps/desktop/renderer/**`                     |
+| `preload`  | `apps/desktop/preload/**`                      |
+| `shared`   | `packages/shared/**`                           |
+| `infra`    | `scripts/**`, `.github/**`, `*.config.*`       |
+| `docs`     | `docs/**`, `openspec/**`, `*.md`（非代码目录） |
 
 ## 变更性质（WHAT）
 
-| 标签 | 判定依据 |
-|------|---------|
+| 标签          | 判定依据                                 |
+| ------------- | ---------------------------------------- |
 | `new-feature` | 新增文件 + 关联 spec / Issue 描述为 feat |
-| `bug-fix` | commit message 含 `fix` / Issue 为 bug |
-| `refactor` | 结构变更、无行为变化 |
-| `style-only` | 仅样式 / UI 调整 |
-| `test-only` | 仅测试补充 |
-| `ci-fix` | 仅 CI 修复 |
-| `docs-only` | 仅文档变更 |
+| `bug-fix`     | commit message 含 `fix` / Issue 为 bug   |
+| `refactor`    | 结构变更、无行为变化                     |
+| `style-only`  | 仅样式 / UI 调整                         |
+| `test-only`   | 仅测试补充                               |
+| `ci-fix`      | 仅 CI 修复                               |
+| `docs-only`   | 仅文档变更                               |
 
 ## 风险等级（RISK）
 
-| 等级 | 判定依据 |
-|------|---------|
-| `critical` | 涉及数据持久化 / 安全 / IPC / 主进程生命周期 |
-| `high` | 涉及核心编辑器 / AI Service / Memory / Knowledge Graph |
-| `medium` | 涉及 UI 组件 / 状态管理 / 导出 |
-| `low` | 仅样式 / 文档 / 测试补充 |
-| `minimal` | 纯注释 / 格式 / typo |
+| 等级       | 判定依据                                               |
+| ---------- | ------------------------------------------------------ |
+| `critical` | 涉及数据持久化 / 安全 / IPC / 主进程生命周期           |
+| `high`     | 涉及核心编辑器 / AI Service / Memory / Knowledge Graph |
+| `medium`   | 涉及 UI 组件 / 状态管理 / 导出                         |
+| `low`      | 仅样式 / 文档 / 测试补充                               |
+| `minimal`  | 纯注释 / 格式 / typo                                   |
 
 ## 影响面（SCOPE）
 
-| 等级 | 判定依据 |
-|------|---------|
-| `cross-module` | 变更跨 3+ 模块或跨进程（main ↔ preload ↔ renderer） |
-| `single-module` | 变更限于单一模块内 |
-| `isolated` | 变更限于独立文件级别 |
+| 等级            | 判定依据                                            |
+| --------------- | --------------------------------------------------- |
+| `cross-module`  | 变更跨 3+ 模块或跨进程（main ↔ preload ↔ renderer） |
+| `single-module` | 变更限于单一模块内                                  |
+| `isolated`      | 变更限于独立文件级别                                |
 
 ---
 
@@ -95,6 +95,7 @@ target: "vscode"
 **适用条件**：`risk=low|minimal` 且 `scope=isolated` 且不涉及安全或数据
 
 **必跑**：
+
 1. `scripts/review-audit.sh L`（CRLF 检查 + diff 概览）
 2. 确认 CI 全绿
 3. 快速 diff review（语义正确性）
@@ -107,6 +108,7 @@ target: "vscode"
 **适用条件**：`risk=medium` 且 `scope=single-module`
 
 **必跑**：
+
 1. `scripts/review-audit.sh S`（完整 diff 检查 + typecheck + 相关测试 + Storybook）
 2. 逐文件 diff review + spec 对齐检查
 3. 测试质量验证（新增行为是否有对应测试？测试是否测了行为？）
@@ -120,6 +122,7 @@ target: "vscode"
 **适用条件**：`risk=critical|high` 或 `scope=cross-module`
 
 **必跑**：
+
 1. `scripts/review-audit.sh D`（一切 Tier S 的内容 + 全量测试 + 架构门禁 + contract 检查）
 2. **架构影响分析**：变更是否破坏模块边界？是否引入循环依赖？
 3. **安全审查**：输入验证、权限检查、IPC 暴露面（加载 `docs/references/audit-playbooks/security-electron.md`）
@@ -164,16 +167,16 @@ target: "vscode"
 
 根据变更分类的 **WHERE** 标签，加载 `docs/references/audit-playbooks/` 下对应文件：
 
-| 变更层 | Playbook |
-|--------|----------|
-| `backend` | `backend-service.md` |
-| `frontend` | `frontend-component.md` |
-| `preload` / IPC 涉及 | `ipc-channel.md` |
-| `infra` | `ci-infra.md` |
-| `docs` | `docs-only.md` |
-| 涉及安全 | `security-electron.md`（Tier D 追加） |
-| 涉及性能 | `performance.md`（Tier D 追加） |
-| 行为变更 | `functional-verification.md`（Tier S+ 必做，横切所有变更层） |
+| 变更层               | Playbook                                                     |
+| -------------------- | ------------------------------------------------------------ |
+| `backend`            | `backend-service.md`                                         |
+| `frontend`           | `frontend-component.md`                                      |
+| `preload` / IPC 涉及 | `ipc-channel.md`                                             |
+| `infra`              | `ci-infra.md`                                                |
+| `docs`               | `docs-only.md`                                               |
+| 涉及安全             | `security-electron.md`（Tier D 追加）                        |
+| 涉及性能             | `performance.md`（Tier D 追加）                              |
+| 行为变更             | `functional-verification.md`（Tier S+ 必做，横切所有变更层） |
 
 多层变更时，加载所有涉及层的 Playbook 并执行每个清单项。
 
@@ -212,15 +215,18 @@ commands_executed: [typecheck, vitest, storybook-build, review-audit.sh]
 **变更分类：** <WHERE> / <RISK> / <SCOPE>
 
 ### Playbook 检查结果
-| # | 检查项 | 结果 | 证据 |
-|---|--------|------|------|
-| 1 | ... | ✅ / ❌ BLOCKER | ... |
+
+| #   | 检查项 | 结果            | 证据 |
+| --- | ------ | --------------- | ---- |
+| 1   | ...    | ✅ / ❌ BLOCKER | ...  |
 
 ### 初始阻断结论：ACCEPT / REJECT
+
 ...
 ```
 
 FINAL-VERDICT 模板保持现有格式，额外须含：
+
 - `<!-- audit-meta tier: ... verdict: ACCEPT|REJECT -->`
 - 逐条回应 Tier 3 产品行为验证问题（见 `docs/delivery-skill.md` §8.8）
 

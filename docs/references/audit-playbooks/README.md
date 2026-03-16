@@ -7,16 +7,16 @@
 
 ## Playbook 索引
 
-| 文件 | 适用场景 | 加载条件 |
-|------|---------|---------|
-| `backend-service.md` | 后端 Service / 主进程逻辑 | WHERE=`backend` |
-| `frontend-component.md` | 前端组件 / 渲染进程 | WHERE=`frontend` |
-| `ipc-channel.md` | IPC 通道 / Preload 层 | WHERE=`preload` 或变更涉及 IPC |
-| `ci-infra.md` | CI / 脚本 / 基础设施 | WHERE=`infra` |
-| `docs-only.md` | 纯文档变更 | WHERE=`docs` |
-| `security-electron.md` | Electron 安全审计 | Tier D 追加，涉及安全场景 |
-| `performance.md` | 性能审计 | Tier D 追加，涉及性能场景 |
-| `functional-verification.md` | 功能性验证 | 所有行为变更 PR（Tier S+ 必做，Tier L 非 docs/style 时推荐） |
+| 文件                         | 适用场景                  | 加载条件                                                     |
+| ---------------------------- | ------------------------- | ------------------------------------------------------------ |
+| `backend-service.md`         | 后端 Service / 主进程逻辑 | WHERE=`backend`                                              |
+| `frontend-component.md`      | 前端组件 / 渲染进程       | WHERE=`frontend`                                             |
+| `ipc-channel.md`             | IPC 通道 / Preload 层     | WHERE=`preload` 或变更涉及 IPC                               |
+| `ci-infra.md`                | CI / 脚本 / 基础设施      | WHERE=`infra`                                                |
+| `docs-only.md`               | 纯文档变更                | WHERE=`docs`                                                 |
+| `security-electron.md`       | Electron 安全审计         | Tier D 追加，涉及安全场景                                    |
+| `performance.md`             | 性能审计                  | Tier D 追加，涉及性能场景                                    |
+| `functional-verification.md` | 功能性验证                | 所有行为变更 PR（Tier S+ 必做，Tier L 非 docs/style 时推荐） |
 
 ## 使用方式
 
