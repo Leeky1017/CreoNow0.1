@@ -20,6 +20,14 @@ export type UserMemoryVecMatch = {
   distance: number;
 };
 
+export type UserMemoryEmbeddingProvider = {
+  name: string;
+  embedBatch: (args: {
+    texts: readonly string[];
+    dimension: number;
+  }) => ServiceResult<{ vectors: number[][] }>;
+};
+
 export type UserMemoryVecService = {
   /**
    * Return topK semantic matches for the given queryText.
@@ -39,6 +47,18 @@ const DIMENSION_KEY = "creonow.user_memory_vec.dimension" as const;
 
 const DEFAULT_DIMENSION = 64;
 const DEFAULT_TOPK = 8;
+
+const SEMANTIC_ALIAS_MAP: Record<string, string> = {
+  开心: "高兴",
+  愉快: "高兴",
+  快乐: "高兴",
+  难过: "悲伤",
+  忧伤: "悲伤",
+  对话: "对白",
+  台词: "对白",
+  打斗: "动作",
+  战斗: "动作",
+};
 
 const LOADED_DBS = new WeakSet<Database.Database>();
 
@@ -183,21 +203,51 @@ function fnv1a32(text: string): number {
   return hash >>> 0;
 }
 
+function normalizeSemanticText(text: string): string {
+  let normalized = text.toLowerCase();
+  for (const [from, to] of Object.entries(SEMANTIC_ALIAS_MAP)) {
+    normalized = normalized.replaceAll(from, to);
+  }
+  return normalized;
+}
+
 function tokenize(text: string): string[] {
   return text
-    .toLowerCase()
     .split(/[^\p{L}\p{N}]+/u)
     .map((t) => t.trim())
     .filter((t) => t.length > 0);
 }
 
-function embedText(text: string, dimension: number): number[] {
+function collectCjkNgrams(text: string): string[] {
+  const compact = text.replace(/\s+/g, "").trim();
+  const chars = [...compact].filter((ch) => /[\p{Script=Han}]/u.test(ch));
+  const grams: string[] = [];
+  for (let i = 0; i < chars.length; i += 1) {
+    grams.push(chars[i]!);
+    if (i + 1 < chars.length) {
+      grams.push(`${chars[i]}${chars[i + 1]}`);
+    }
+  }
+  return grams;
+}
+
+function signedHash(token: string): number {
+  return (fnv1a32(token) & 1) === 0 ? 1 : -1;
+}
+
+export function embedTextSemanticDeterministic(
+  text: string,
+  dimension: number,
+): number[] {
   const dim = Math.max(1, Math.floor(dimension));
   const v = new Array<number>(dim).fill(0);
-  const tokens = tokenize(text);
-  for (const token of tokens) {
+
+  const normalized = normalizeSemanticText(text);
+  const features = [...tokenize(normalized), ...collectCjkNgrams(normalized)];
+  for (const token of features) {
     const idx = fnv1a32(token) % dim;
-    v[idx] = (v[idx] ?? 0) + 1;
+    const weight = token.length >= 2 ? 1 : 0.5;
+    v[idx] = (v[idx] ?? 0) + signedHash(token) * weight;
   }
 
   let norm = 0;
@@ -213,6 +263,100 @@ function embedText(text: string, dimension: number): number[] {
   return v.map((x) => x / norm);
 }
 
+function embedText(text: string, dimension: number): number[] {
+  return embedTextSemanticDeterministic(text, dimension);
+}
+
+function embedWithProvider(args: {
+  provider?: UserMemoryEmbeddingProvider;
+  texts: readonly string[];
+  dimension: number;
+}): ServiceResult<{ vectors: number[][]; mode: "provider" | "deterministic" }> {
+  if (!args.provider) {
+    return {
+      ok: true,
+      data: {
+        vectors: args.texts.map((text) => embedText(text, args.dimension)),
+        mode: "deterministic",
+      },
+    };
+  }
+
+  const embedded = args.provider.embedBatch({
+    texts: args.texts,
+    dimension: args.dimension,
+  });
+  if (!embedded.ok) {
+    return embedded;
+  }
+
+  if (embedded.data.vectors.length !== args.texts.length) {
+    return ipcError(
+      "MODEL_NOT_READY",
+      "embedding provider returned mismatched vector count",
+    );
+  }
+
+  return {
+    ok: true,
+    data: {
+      vectors: embedded.data.vectors,
+      mode: "provider",
+    },
+  };
+}
+
+function cosineSimilarity(a: readonly number[], b: readonly number[]): number {
+  const n = Math.min(a.length, b.length);
+  let dot = 0;
+  let na = 0;
+  let nb = 0;
+  for (let i = 0; i < n; i += 1) {
+    const av = a[i] ?? 0;
+    const bv = b[i] ?? 0;
+    dot += av * bv;
+    na += av * av;
+    nb += bv * bv;
+  }
+  if (na <= 0 || nb <= 0) {
+    return 0;
+  }
+  return dot / Math.sqrt(na * nb);
+}
+
+function rankInMemory(args: {
+  sources: readonly UserMemoryVecSource[];
+  sourceVectors: readonly number[][];
+  queryVector: readonly number[];
+  effectiveK: number;
+}): UserMemoryVecMatch[] {
+  const ranked = args.sources.map((src, idx) => {
+    const similarity = cosineSimilarity(args.queryVector, args.sourceVectors[idx] ?? []);
+    const clamped = Number.isFinite(similarity)
+      ? Math.max(-1, Math.min(1, similarity))
+      : 0;
+    const distance = 1 - clamped;
+    return {
+      memoryId: src.memoryId,
+      distance,
+      score: distanceToScore(distance),
+    };
+  });
+
+  ranked.sort((a, b) => {
+    if (a.distance !== b.distance) {
+      return a.distance - b.distance;
+    }
+    return a.memoryId.localeCompare(b.memoryId);
+  });
+
+  return ranked.slice(0, args.effectiveK);
+}
+
+function isModelUnavailableError(err: { code: string }): boolean {
+  return err.code === "MODEL_NOT_READY";
+}
+
 function distanceToScore(distance: number): number {
   const d = Number.isFinite(distance) ? Math.max(0, distance) : 0;
   return 1 / (1 + d);
@@ -224,20 +368,11 @@ function distanceToScore(distance: number): number {
 export function createUserMemoryVecService(deps: {
   db: Database.Database;
   logger: Logger;
+  embeddingProvider?: UserMemoryEmbeddingProvider;
 }): UserMemoryVecService {
   return {
     topK: ({ sources, queryText, k, ts }) => {
       const dimension = DEFAULT_DIMENSION;
-      const ensure = ensureSchema({
-        db: deps.db,
-        logger: deps.logger,
-        dimension,
-        ts,
-      });
-      if (!ensure.ok) {
-        return ensure;
-      }
-
       const effectiveK = Math.max(
         1,
         Math.min(
@@ -246,7 +381,46 @@ export function createUserMemoryVecService(deps: {
         ),
       );
 
-      const queryVec = embedText(queryText, dimension);
+      const embedded = embedWithProvider({
+        provider: deps.embeddingProvider,
+        texts: [queryText, ...sources.map((src) => src.content)],
+        dimension,
+      });
+      if (!embedded.ok) {
+        return embedded;
+      }
+
+      const queryVec = embedded.data.vectors[0] ?? embedText(queryText, dimension);
+      const sourceVectors = sources.map((src, index) => {
+        return embedded.data.vectors[index + 1] ?? embedText(src.content, dimension);
+      });
+
+      const ensure = ensureSchema({
+        db: deps.db,
+        logger: deps.logger,
+        dimension,
+        ts,
+      });
+      if (!ensure.ok && !isModelUnavailableError(ensure.error)) {
+        return ensure;
+      }
+
+      if (!ensure.ok && isModelUnavailableError(ensure.error)) {
+        const matches = rankInMemory({
+          sources,
+          sourceVectors,
+          queryVector: queryVec,
+          effectiveK,
+        });
+        deps.logger.info("memory_semantic_recall", {
+          mode: "in_memory_semantic",
+          provider: deps.embeddingProvider?.name ?? "deterministic",
+          topK: effectiveK,
+          count: matches.length,
+          ts: ts ?? nowTs(),
+        });
+        return { ok: true, data: { matches, dimension } };
+      }
 
       try {
         deps.db.transaction(() => {
@@ -259,9 +433,10 @@ export function createUserMemoryVecService(deps: {
             a.memoryId.localeCompare(b.memoryId),
           );
           for (const src of ordered) {
+            const idx = sources.findIndex((item) => item.memoryId === src.memoryId);
             insert.run(
               src.memoryId,
-              JSON.stringify(embedText(src.content, dimension)),
+              JSON.stringify(sourceVectors[idx] ?? embedText(src.content, dimension)),
             );
           }
         })();
@@ -281,6 +456,7 @@ export function createUserMemoryVecService(deps: {
 
         deps.logger.info("memory_semantic_recall", {
           mode: "semantic",
+          provider: deps.embeddingProvider?.name ?? "deterministic",
           topK: effectiveK,
           count: matches.length,
           ts: ts ?? nowTs(),
@@ -288,11 +464,18 @@ export function createUserMemoryVecService(deps: {
 
         return { ok: true, data: { matches, dimension } };
       } catch (error) {
-        deps.logger.error("memory_semantic_recall_failed", {
-          code: "DB_ERROR",
+        deps.logger.info("memory_semantic_recall_vec_fallback", {
           message: error instanceof Error ? error.message : String(error),
+          provider: deps.embeddingProvider?.name ?? "deterministic",
         });
-        return ipcError("DB_ERROR", "Failed to run semantic recall");
+
+        const matches = rankInMemory({
+          sources,
+          sourceVectors,
+          queryVector: queryVec,
+          effectiveK,
+        });
+        return { ok: true, data: { matches, dimension } };
       }
     },
   };

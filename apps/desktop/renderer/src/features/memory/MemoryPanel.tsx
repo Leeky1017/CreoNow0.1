@@ -9,6 +9,7 @@ import { useProjectStore } from "../../stores/projectStore";
 
 type PanelScope = "global" | "project";
 type SemanticRule = IpcResponseData<"memory:semantic:list">["items"][number];
+type SemanticConflict = IpcResponseData<"memory:semantic:list">["conflictQueue"][number];
 type SemanticCategory = SemanticRule["category"];
 type MemorySettings = IpcResponseData<"memory:settings:get">;
 
@@ -63,7 +64,11 @@ function useMemoryState(
   >("idle");
   const [error, setError] = React.useState<IpcError | null>(null);
   const [rules, setRules] = React.useState<SemanticRule[]>([]);
+  const [conflictQueue, setConflictQueue] = React.useState<SemanticConflict[]>(
+    [],
+  );
   const [conflictCount, setConflictCount] = React.useState(0);
+  const [conflictPanelOpen, setConflictPanelOpen] = React.useState(false);
   const [settings, setSettings] = React.useState<MemorySettings | null>(null);
   const [activeScope, setActiveScope] = React.useState<PanelScope>("project");
 
@@ -80,6 +85,7 @@ function useMemoryState(
   const loadPanelData = React.useCallback(async () => {
     if (!projectId) {
       setRules([]);
+      setConflictQueue([]);
       setConflictCount(0);
       setSettings(null);
       setStatus("ready");
@@ -110,7 +116,11 @@ function useMemoryState(
       }
 
       setRules(listRes.data.items);
-      setConflictCount(listRes.data.conflictQueue.length);
+      setConflictQueue(listRes.data.conflictQueue);
+      setConflictCount(
+        listRes.data.conflictQueue.filter((item) => item.status === "pending")
+          .length,
+      );
       setSettings(settingsRes.data);
       setStatus("ready");
     } catch (cause) {
@@ -324,6 +334,49 @@ function useMemoryState(
     setSettings(res.data);
   }
 
+  async function handleResolveConflict(
+    conflictId: string,
+    chosenRuleId: string,
+  ): Promise<void> {
+    if (!projectId) {
+      return;
+    }
+
+    const conflict = conflictQueue.find((item) => item.id === conflictId);
+    if (!conflict) {
+      return;
+    }
+
+    const res = await invoke("memory:conflict:resolve", {
+      projectId,
+      conflictId,
+      chosenRuleId,
+    });
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
+
+    const removedRuleIds = conflict.ruleIds.filter((id) => id !== chosenRuleId);
+    setRules((prev) => {
+      const replaced = prev.map((rule) =>
+        rule.id === res.data.keptRule.id ? res.data.keptRule : rule,
+      );
+      return replaced.filter((rule) => !removedRuleIds.includes(rule.id));
+    });
+    setConflictQueue((prev) =>
+      prev.map((item) =>
+        item.id === res.data.item.id ? res.data.item : item,
+      ),
+    );
+    setConflictCount((prev) => Math.max(0, prev - 1));
+  }
+
+  const pendingConflicts = React.useMemo(
+    () => conflictQueue.filter((item) => item.status === "pending"),
+    [conflictQueue],
+  );
+
   return {
     status,
     error,
@@ -334,6 +387,10 @@ function useMemoryState(
     composerOpen,
     setComposerOpen,
     conflictCount,
+    conflictQueue,
+    pendingConflicts,
+    conflictPanelOpen,
+    setConflictPanelOpen,
     groupedRules,
     filteredRules,
     editingRuleId,
@@ -354,6 +411,7 @@ function useMemoryState(
     handleCreateRule,
     handleDistill,
     handleLearningToggle,
+    handleResolveConflict,
   };
 }
 
@@ -492,11 +550,75 @@ export function MemoryPanel(): JSX.Element {
           data-testid="memory-conflict-notice"
           className="shrink-0 px-2.5 py-2 border-[var(--color-warning)] text-[var(--color-warning)]"
         >
-          <Text size="small" className="text-[var(--color-warning)]">
-            {t("memory.panel.conflictsDetected", {
-              count: state.conflictCount,
+          <div className="flex items-center gap-2">
+            <Text size="small" className="text-[var(--color-warning)]">
+              {t("memory.panel.conflictsDetected", {
+                count: state.conflictCount,
+              })}
+            </Text>
+            <Button
+              size="sm"
+              variant="secondary"
+              data-testid="memory-open-conflict-resolution"
+              className="ml-auto"
+              onClick={() => state.setConflictPanelOpen((open) => !open)}
+            >
+              {state.conflictPanelOpen
+                ? t("memory.panel.hideConflictResolver")
+                : t("memory.panel.openConflictResolver")}
+            </Button>
+          </div>
+        </Card>
+      ) : null}
+
+      {state.conflictPanelOpen && state.pendingConflicts.length > 0 ? (
+        <Card
+          noPadding
+          data-testid="memory-conflict-resolution-panel"
+          className="shrink-0 p-2.5 border-[var(--color-warning)]"
+        >
+          <div className="flex flex-col gap-2">
+            <Text size="small" color="muted">
+              {t("memory.panel.conflictResolverTitle")}
+            </Text>
+            {state.pendingConflicts.map((conflict) => {
+              const options = conflict.ruleIds
+                .map((ruleId) => state.filteredRules.find((rule) => rule.id === ruleId))
+                .filter((rule): rule is SemanticRule => Boolean(rule));
+              return (
+                <div
+                  key={conflict.id}
+                  className="rounded-[var(--radius-sm)] border border-[var(--color-border-default)] p-2"
+                  data-testid={`memory-conflict-${conflict.id}`}
+                >
+                  <Text size="tiny" color="muted">
+                    {t("memory.panel.conflictResolverHint")}
+                  </Text>
+                  <div className="mt-2 flex flex-col gap-2">
+                    {options.map((option) => (
+                      <div
+                        key={option.id}
+                        className="rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] p-2"
+                      >
+                        <Text size="small">{option.rule}</Text>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="mt-2"
+                          data-testid={`memory-resolve-${conflict.id}-${option.id}`}
+                          onClick={() =>
+                            void state.handleResolveConflict(conflict.id, option.id)
+                          }
+                        >
+                          {t("memory.panel.keepThisRule")}
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
             })}
-          </Text>
+          </div>
         </Card>
       ) : null}
 

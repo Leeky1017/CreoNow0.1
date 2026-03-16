@@ -1235,6 +1235,21 @@ export const ipcContract = {
         item: MEMORY_SEMANTIC_RULE_SCHEMA,
       }),
     },
+    "memory:conflict:resolve": {
+      request: s.object({
+        projectId: s.string(),
+        conflictId: s.string(),
+        chosenRuleId: s.string(),
+      }),
+      response: s.object({
+        item: s.object({
+          id: s.string(),
+          ruleIds: s.array(s.string()),
+          status: s.union(s.literal("pending"), s.literal("resolved")),
+        }),
+        keptRule: MEMORY_SEMANTIC_RULE_SCHEMA,
+      }),
+    },
     "memory:semantic:delete": {
       request: s.object({
         projectId: s.string(),

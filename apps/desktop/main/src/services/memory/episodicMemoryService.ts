@@ -346,6 +346,11 @@ export type EpisodicMemoryService = {
   listConflictQueue: (args: {
     projectId: string;
   }) => ServiceResult<{ items: SemanticConflictQueueItem[] }>;
+  resolveSemanticConflict: (args: {
+    projectId: string;
+    conflictId: string;
+    chosenRuleId: string;
+  }) => ServiceResult<{ item: SemanticConflictQueueItem; keptRule: SemanticMemoryRule }>;
 };
 
 export type InMemoryEpisodeRepository = EpisodeRepository & {
@@ -1932,7 +1937,7 @@ function createEpisodicSemanticOps(
   ctx: EpisodicCtx,
 ): Pick<
   EpisodicMemoryService,
-  "listSemanticMemory" | "addSemanticMemory" | "updateSemanticMemory" | "deleteSemanticMemory" | "promoteSemanticMemory"
+  "listSemanticMemory" | "addSemanticMemory" | "updateSemanticMemory" | "deleteSemanticMemory" | "promoteSemanticMemory" | "resolveSemanticConflict"
 > {
   const args = ctx;
   const { knownProjectIds, getSemanticRules, cloneSemanticRule, getConflictQueue, cloneConflict, normalizeRuleText, isConfidenceInRange, upsertSemanticRule, now, semanticRulesByProject, invalidateSemanticCache } = ctx;
@@ -2076,6 +2081,73 @@ function createEpisodicSemanticOps(
       };
       const item = upsertSemanticRule(projectId, promoted);
       return { ok: true, data: { item } };
+    },
+
+    resolveSemanticConflict: ({ projectId, conflictId, chosenRuleId }) => {
+      if (projectId.trim().length === 0) {
+        return ipcError("INVALID_ARGUMENT", "projectId is required");
+      }
+      if (conflictId.trim().length === 0) {
+        return ipcError("INVALID_ARGUMENT", "conflictId is required");
+      }
+      if (chosenRuleId.trim().length === 0) {
+        return ipcError("INVALID_ARGUMENT", "chosenRuleId is required");
+      }
+
+      const queue = getConflictQueue(projectId);
+      const conflict = queue.find((item) => item.id === conflictId);
+      if (!conflict) {
+        return ipcError("NOT_FOUND", "Conflict item not found", {
+          conflictId,
+        });
+      }
+      if (conflict.status === "resolved") {
+        return ipcError("CONFLICT", "Conflict has already been resolved", {
+          conflictId,
+        });
+      }
+      if (!conflict.ruleIds.includes(chosenRuleId)) {
+        return ipcError("INVALID_ARGUMENT", "chosenRuleId is not in conflict", {
+          conflictId,
+          chosenRuleId,
+        });
+      }
+
+      const rules = getSemanticRules(projectId);
+      const kept = rules.find((rule) => rule.id === chosenRuleId);
+      if (!kept) {
+        return ipcError("NOT_FOUND", "Chosen rule not found", {
+          chosenRuleId,
+        });
+      }
+
+      const removedRuleIds = conflict.ruleIds.filter((id) => id !== chosenRuleId);
+      const nextRules = rules.filter((rule) => !removedRuleIds.includes(rule.id));
+      semanticRulesByProject.set(projectId, nextRules);
+      for (const ruleId of removedRuleIds) {
+        args.repository.deleteSemanticPlaceholder({
+          projectId,
+          ruleId,
+        });
+      }
+
+      const nextKept: SemanticMemoryRule = {
+        ...kept,
+        conflictMarked: false,
+        userModified: true,
+        updatedAt: now(),
+      };
+      const keptRule = upsertSemanticRule(projectId, nextKept);
+
+      conflict.status = "resolved";
+      conflict.updatedAt = now();
+      return {
+        ok: true,
+        data: {
+          item: cloneConflict(conflict),
+          keptRule,
+        },
+      };
     },
 
   };
