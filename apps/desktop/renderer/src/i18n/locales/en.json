@@ -491,7 +491,9 @@
       "ariaLabel": "Chat History",
       "searchPlaceholder": "Search...",
       "emptyTitle": "No conversation history yet.",
-      "emptyDescription": "Chat history will appear here once chat persistence is available."
+      "emptyDescription": "Start a conversation to see it here.",
+      "untitledSession": "Untitled conversation",
+      "deleteSession": "Delete conversation"
     },
     "modePicker": {
       "modeAgent": "Agent",
@@ -672,6 +674,11 @@
       "projectTab": "This Project",
       "learningPaused": "Learning paused: new episodes are still recorded, but distillation updates will not be triggered",
       "conflictsDetected": "{{count}} preference conflicts detected — please resolve them first.",
+      "openConflictResolver": "Resolve conflicts",
+      "hideConflictResolver": "Hide resolver",
+      "conflictResolverTitle": "Conflict Resolution",
+      "conflictResolverHint": "Choose the rule to keep. Other conflicting rules will be archived.",
+      "keepThisRule": "Keep this rule",
       "loading": "Loading...",
       "aiLearningHint": "AI is learning your writing preferences — the more you use it, the more accurate it becomes",
       "addRuleManually": "Add Rule Manually",

@@ -13,6 +13,8 @@ import {
   type OpenSettingsTarget,
 } from "../../contexts/OpenSettingsContext";
 import { ScrollArea } from "../primitives";
+import { useProjectStore } from "../../stores/projectStore";
+import { useAiStore } from "../../stores/aiStore";
 
 export { useOpenSettings } from "../../contexts/OpenSettingsContext";
 
@@ -91,6 +93,9 @@ export function RightPanel(props: {
   const setActiveRightPanel = useLayoutStore((s) => s.setActiveRightPanel);
   const [aiHistoryOpen, setAiHistoryOpen] = React.useState(false);
   const [aiNewChatSignal, setAiNewChatSignal] = React.useState(0);
+  const currentProjectId = useProjectStore((s) => s.current?.projectId ?? "");
+  const selectChatSession = useAiStore((s) => s.selectChatSession);
+  const clearActiveChatSession = useAiStore((s) => s.clearActiveChatSession);
 
   React.useEffect(() => {
     if (activeRightPanel !== "ai") {
@@ -188,7 +193,10 @@ export function RightPanel(props: {
               <button
                 type="button"
                 data-testid="right-panel-ai-new-chat-action"
-                onClick={() => setAiNewChatSignal((prev) => prev + 1)}
+                onClick={() => {
+                  setAiNewChatSignal((prev) => prev + 1);
+                  clearActiveChatSession();
+                }}
                 title={t("workbench.rightPanel.newChatTitle")}
                 className="w-6 h-6 flex items-center justify-center rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
               >
@@ -207,8 +215,15 @@ export function RightPanel(props: {
               <ChatHistory
                 open={aiHistoryOpen}
                 onOpenChange={setAiHistoryOpen}
-                onSelectChat={() => {
+                projectId={currentProjectId}
+                onSelectChat={(sessionId) => {
                   setAiHistoryOpen(false);
+                  if (currentProjectId) {
+                    void selectChatSession({
+                      projectId: currentProjectId,
+                      sessionId,
+                    });
+                  }
                 }}
               />
             </div>

@@ -115,6 +115,7 @@ describe("entity completion trigger", () => {
         ok: true,
         data: {
           items: [createEntity("e-1", "Alice"), createEntity("e-2", "Aline")],
+          totalCount: 2,
         },
       },
     });

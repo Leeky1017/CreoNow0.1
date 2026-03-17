@@ -67,7 +67,7 @@ describe("kgStore race scenarios", () => {
         return await pending.promise;
       }
       if (channel === "knowledge:relation:list") {
-        return ok(channel, { items: [] });
+        return ok(channel, { items: [], totalCount: 0 });
       }
       throw new Error(`Unexpected channel: ${channel}`);
     };
@@ -87,6 +87,7 @@ describe("kgStore race scenarios", () => {
     pendingByProject.get("project-b")!.resolve(
       ok("knowledge:entity:list", {
         items: [createEntity("project-b", "entity-b")],
+        totalCount: 1,
       }),
     );
     await secondBootstrap;
@@ -98,15 +99,14 @@ describe("kgStore race scenarios", () => {
     pendingByProject.get("project-a")!.resolve(
       ok("knowledge:entity:list", {
         items: [createEntity("project-a", "entity-a")],
+        totalCount: 1,
       }),
     );
     await firstBootstrap;
 
     const state = store.getState();
     expect(state.projectId).toBe("project-b");
-    expect(state.entities.map((entity) => entity.id)).toEqual([
-      "entity-b",
-    ]);
+    expect(state.entities.map((entity) => entity.id)).toEqual(["entity-b"]);
     expect(state.bootstrapStatus).toBe("ready");
     expect(state.lastError).toBeNull();
   });

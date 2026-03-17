@@ -491,7 +491,9 @@
       "ariaLabel": "聊天历史",
       "searchPlaceholder": "搜索...",
       "emptyTitle": "暂无对话记录。",
-      "emptyDescription": "聊天持久化功能上线后，历史记录将显示在此处。"
+      "emptyDescription": "开始对话后，记录将显示在此处。",
+      "untitledSession": "未命名对话",
+      "deleteSession": "删除对话"
     },
     "modePicker": {
       "modeAgent": "智能体",
@@ -672,6 +674,11 @@
       "projectTab": "本项目",
       "learningPaused": "学习已暂停：新情景仍记录，但不会触发蒸馏更新",
       "conflictsDetected": "检测到 {{count}} 条偏好冲突，请优先处理。",
+      "openConflictResolver": "处理冲突",
+      "hideConflictResolver": "收起处理面板",
+      "conflictResolverTitle": "冲突处理",
+      "conflictResolverHint": "请选择保留规则，其他冲突规则将被移除。",
+      "keepThisRule": "保留这条规则",
       "loading": "加载中...",
       "aiLearningHint": "AI 正在学习你的写作偏好，使用越多越精准",
       "addRuleManually": "手动添加规则",
