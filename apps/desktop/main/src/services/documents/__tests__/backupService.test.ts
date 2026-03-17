@@ -186,6 +186,12 @@ describe("BackupService", () => {
   describe("restoreBackupSnapshot", () => {
     it("returns snapshot on valid restore", () => {
       seedProject(db, "proj-1");
+      insertDocument({
+        db,
+        documentId: "doc-restore-1",
+        projectId: "proj-1",
+        contentText: "restore-content",
+      });
       const created = createBackupSnapshot(deps, "proj-1", "restore-me");
       const restored = restoreBackupSnapshot(deps, created.id);
 
