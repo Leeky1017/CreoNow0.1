@@ -45,7 +45,7 @@ async function launchApp(args: { userDataDir: string }) {
       CREONOW_E2E: "1",
       CREONOW_OPEN_DEVTOOLS: "0",
       CREONOW_USER_DATA_DIR: args.userDataDir,
-      CREONOW_AI_PROVIDER: "anthropic",
+      CREONOW_AI_PROVIDER: "openai",
     },
   });
 
@@ -101,7 +101,9 @@ test("skills: list + toggle disables run + command palette opens", async () => {
 
   await page.getByTestId("ai-skills-toggle").click();
   await page.getByTestId(`ai-skill-toggle-${firstEnabledValid.id}`).click();
-  await expect(page.getByTestId(`ai-skill-${firstEnabledValid.id}`)).toBeDisabled();
+  await expect(
+    page.getByTestId(`ai-skill-${firstEnabledValid.id}`),
+  ).toBeDisabled();
   await page.locator('[role="presentation"]').click();
 
   const disabledRun = await page.evaluate(async (skillId) => {

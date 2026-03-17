@@ -42,6 +42,7 @@ import {
   extractOpenAiText,
   providerDisplayName,
 } from "./aiPayloadParsers";
+import { validateProviderPreflight } from "./providerPreflight";
 import type { TraceStore } from "./traceStore";
 import { createAiWriteTransaction } from "./aiWriteTransaction";
 import { logWarn } from "../shared/degradationCounter";
@@ -213,8 +214,7 @@ async function* readSse(args: {
       }
 
       const useLfSeparator =
-        hasLfSeparator &&
-        (!hasCrlfSeparator || lfSeparator < crlfSeparator);
+        hasLfSeparator && (!hasCrlfSeparator || lfSeparator < crlfSeparator);
       const sepIndex = useLfSeparator ? lfSeparator : crlfSeparator;
       const sepLength = useLfSeparator ? 2 : 4;
 
@@ -280,15 +280,19 @@ type AiInternalState = {
   getFakeServer: () => Promise<FakeAiServer>;
 };
 
-type AiHelpers = ReturnType<typeof createAiSessionHelpers>
-  & ReturnType<typeof createAiEmitHelpers>
-  & ReturnType<typeof createAiNonStreamHelpers>
-  & ReturnType<typeof createAiStreamHelpers>;
+type AiHelpers = ReturnType<typeof createAiSessionHelpers> &
+  ReturnType<typeof createAiEmitHelpers> &
+  ReturnType<typeof createAiNonStreamHelpers> &
+  ReturnType<typeof createAiStreamHelpers>;
 
-function createAiSessionHelpers(
-  state: AiInternalState,
-) {
-  const { requestTimestamps, now, rateLimitPerMinute, chatHistoryTokenBudget, sessionChatMessagesByKey } = state;
+function createAiSessionHelpers(state: AiInternalState) {
+  const {
+    requestTimestamps,
+    now,
+    rateLimitPerMinute,
+    chatHistoryTokenBudget,
+    sessionChatMessagesByKey,
+  } = state;
 
   /**
    * Build a stable session key used for queueing and token-budget accounting.
@@ -397,13 +401,17 @@ function createAiSessionHelpers(
     return null;
   }
 
-  return { resolveSessionKey, getChatMessageManager, buildRuntimeMessages, isProviderAvailabilityError, buildProviderUnavailableError, consumeRateLimitToken };
+  return {
+    resolveSessionKey,
+    getChatMessageManager,
+    buildRuntimeMessages,
+    isProviderAvailabilityError,
+    buildProviderUnavailableError,
+    consumeRateLimitToken,
+  };
 }
 
-function createAiEmitHelpers(
-  deps: AiServiceDeps,
-  state: AiInternalState,
-) {
+function createAiEmitHelpers(deps: AiServiceDeps, state: AiInternalState) {
   const { runs, maxSkillOutputChars } = state;
 
   /**
@@ -677,7 +685,21 @@ function createAiEmitHelpers(
     );
   }
 
-  return { emitIfActive, clearChunkFlushTimer, clearChunkBuffer, flushChunkBuffer, emitChunk, emitDone, resolveSchedulerTerminal, setTerminal, cleanupRun, normalizeSkillError, buildSkillOutputTooLargeError, resetForFullPromptReplay, isReplayableStreamDisconnect };
+  return {
+    emitIfActive,
+    clearChunkFlushTimer,
+    clearChunkBuffer,
+    flushChunkBuffer,
+    emitChunk,
+    emitDone,
+    resolveSchedulerTerminal,
+    setTerminal,
+    cleanupRun,
+    normalizeSkillError,
+    buildSkillOutputTooLargeError,
+    resetForFullPromptReplay,
+    isReplayableStreamDisconnect,
+  };
 }
 
 function createAiNonStreamHelpers(
@@ -686,7 +708,11 @@ function createAiNonStreamHelpers(
   sessionHelpers: ReturnType<typeof createAiSessionHelpers>,
 ) {
   const { now, sleep, retryBackoffMs, providerResolver } = state;
-  const { buildProviderUnavailableError, consumeRateLimitToken, isProviderAvailabilityError } = sessionHelpers;
+  const {
+    buildProviderUnavailableError,
+    consumeRateLimitToken,
+    isProviderAvailabilityError,
+  } = sessionHelpers;
 
   /**
    * Fetch with P0 network retry and rate-limit baseline.
@@ -970,7 +996,13 @@ function createAiNonStreamHelpers(
     return backupRes;
   }
 
-  return { fetchWithPolicy, runOpenAiNonStream, runAnthropicNonStream, runNonStreamWithProvider, runNonStreamWithFailover };
+  return {
+    fetchWithPolicy,
+    runOpenAiNonStream,
+    runAnthropicNonStream,
+    runNonStreamWithProvider,
+    runNonStreamWithFailover,
+  };
 }
 
 function createAiStreamHelpers(
@@ -1214,17 +1246,30 @@ function createAiStreamHelpers(
   return { runOpenAiStream, runAnthropicStream };
 }
 
+// eslint-disable-next-line max-lines-per-function
 function createAiRunPipelineHelpers(
   deps: AiServiceDeps,
   state: AiInternalState,
   helpers: AiHelpers,
 ) {
-  const { sessionTokenTotalsByKey, maxSkillOutputChars, retryBackoffMs, sleep } = state;
   const {
-    setTerminal, normalizeSkillError, buildSkillOutputTooLargeError,
-    runNonStreamWithFailover, cleanupRun, runAnthropicStream, runOpenAiStream,
-    isReplayableStreamDisconnect, resetForFullPromptReplay,
-    clearChunkFlushTimer, flushChunkBuffer,
+    sessionTokenTotalsByKey,
+    maxSkillOutputChars,
+    retryBackoffMs,
+    sleep,
+  } = state;
+  const {
+    setTerminal,
+    normalizeSkillError,
+    buildSkillOutputTooLargeError,
+    runNonStreamWithFailover,
+    cleanupRun,
+    runAnthropicStream,
+    runOpenAiStream,
+    isReplayableStreamDisconnect,
+    resetForFullPromptReplay,
+    clearChunkFlushTimer,
+    flushChunkBuffer,
   } = helpers;
 
   async function executeNonStreamImpl(runCtx: {
@@ -1241,7 +1286,9 @@ function createAiRunPipelineHelpers(
     controller: AbortController;
     consumeSessionTokenBudget: () => Err | null;
     persistSuccessfulTurn: (output: string) => void;
-    persistTraceAndGetDegradation: (output: string) => TracePersistenceDegradation | undefined;
+    persistTraceAndGetDegradation: (
+      output: string,
+    ) => TracePersistenceDegradation | undefined;
   }): Promise<
     ServiceResult<{
       executionId: string;
@@ -1252,9 +1299,20 @@ function createAiRunPipelineHelpers(
     }>
   > {
     const {
-      entry, primaryCfg, backupCfg, runtimeMessages, model, sessionKey,
-      executionId, runId, traceId, promptTokens, controller,
-      consumeSessionTokenBudget, persistSuccessfulTurn, persistTraceAndGetDegradation,
+      entry,
+      primaryCfg,
+      backupCfg,
+      runtimeMessages,
+      model,
+      sessionKey,
+      executionId,
+      runId,
+      traceId,
+      promptTokens,
+      controller,
+      consumeSessionTokenBudget,
+      persistSuccessfulTurn,
+      persistTraceAndGetDegradation,
     } = runCtx;
     try {
       const budgetExceeded = consumeSessionTokenBudget();
@@ -1372,12 +1430,23 @@ function createAiRunPipelineHelpers(
     promptTokens: number;
     controller: AbortController;
     persistSuccessfulTurn: (output: string) => void;
-    persistTraceAndGetDegradation: (output: string) => TracePersistenceDegradation | undefined;
+    persistTraceAndGetDegradation: (
+      output: string,
+    ) => TracePersistenceDegradation | undefined;
   }): Promise<void> {
     const {
-      entry, primaryCfg, runtimeMessages, model, runId, executionId,
-      traceId, sessionKey, promptTokens, controller,
-      persistSuccessfulTurn, persistTraceAndGetDegradation,
+      entry,
+      primaryCfg,
+      runtimeMessages,
+      model,
+      runId,
+      executionId,
+      traceId,
+      sessionKey,
+      promptTokens,
+      controller,
+      persistSuccessfulTurn,
+      persistTraceAndGetDegradation,
     } = runCtx;
     try {
       let replayAttempts = 0;
@@ -1413,9 +1482,7 @@ function createAiRunPipelineHelpers(
           setTerminal({
             entry,
             terminal:
-              normalizedError.code === "CANCELED"
-                ? "cancelled"
-                : "error",
+              normalizedError.code === "CANCELED" ? "cancelled" : "error",
             error: normalizedError,
             logEvent:
               normalizedError.code === "SKILL_TIMEOUT"
@@ -1471,8 +1538,7 @@ function createAiRunPipelineHelpers(
             return;
           }
 
-          const currentTotal =
-            sessionTokenTotalsByKey.get(sessionKey) ?? 0;
+          const currentTotal = sessionTokenTotalsByKey.get(sessionKey) ?? 0;
           const completionTokens = estimateTokenCount(entry.outputText);
           sessionTokenTotalsByKey.set(
             sessionKey,
@@ -1511,8 +1577,7 @@ function createAiRunPipelineHelpers(
           code: "INTERNAL",
           message: "AI request failed",
           details: {
-            message:
-              error instanceof Error ? error.message : String(error),
+            message: error instanceof Error ? error.message : String(error),
           },
         },
         logEvent: "ai_run_failed",
@@ -1524,6 +1589,7 @@ function createAiRunPipelineHelpers(
   return { executeNonStreamImpl, executeStreamImpl };
 }
 
+// eslint-disable-next-line max-lines-per-function
 function createAiRunSkillOp(
   deps: AiServiceDeps,
   state: AiInternalState,
@@ -1531,15 +1597,26 @@ function createAiRunSkillOp(
   pipeline: ReturnType<typeof createAiRunPipelineHelpers>,
 ): Pick<AiService, "runSkill"> {
   const {
-    providerResolver, runtimeGovernance, getFakeServer, runs, now,
-    sessionTokenBudget, sessionTokenTotalsByKey, skillScheduler,
+    providerResolver,
+    runtimeGovernance,
+    getFakeServer,
+    runs,
+    now,
+    sessionTokenBudget,
+    sessionTokenTotalsByKey,
+    skillScheduler,
   } = state;
   const {
-    resolveSessionKey, getChatMessageManager, buildRuntimeMessages,
-    setTerminal, resolveSchedulerTerminal, cleanupRun,
+    resolveSessionKey,
+    getChatMessageManager,
+    buildRuntimeMessages,
+    setTerminal,
+    resolveSchedulerTerminal,
+    cleanupRun,
   } = helpers;
   const { executeNonStreamImpl, executeStreamImpl } = pipeline;
 
+  // eslint-disable-next-line max-lines-per-function
   const runSkill: AiService["runSkill"] = async (args) => {
     const cfgRes = await providerResolver.resolveProviderConfig({
       env: deps.env,
@@ -1552,6 +1629,19 @@ function createAiRunSkillOp(
     }
     const primaryCfg = cfgRes.data.primary;
     const backupCfg = cfgRes.data.backup;
+
+    const preflight = validateProviderPreflight({
+      provider: primaryCfg.provider,
+      model: args.model,
+      apiKey: primaryCfg.apiKey,
+      allowMissingApiKey: deps.env.CREONOW_E2E === "1",
+    });
+    if (!preflight.ok) {
+      return ipcError(preflight.error.code, preflight.error.message, {
+        provider: primaryCfg.provider,
+        model: args.model,
+      });
+    }
 
     const runId = randomUUID();
     const executionId = runId;
@@ -1760,7 +1850,6 @@ function createAiRunSkillOp(
       }, skillTimeoutMs);
     }
 
-
     const scheduled = await skillScheduler.schedule({
       sessionKey,
       executionId,
@@ -1806,11 +1895,19 @@ function createAiRunSkillOp(
           }
 
           void executeStreamImpl({
-            entry, primaryCfg, runtimeMessages, model: args.model,
-            runId, executionId, traceId, sessionKey, promptTokens,
-            controller, persistSuccessfulTurn, persistTraceAndGetDegradation,
+            entry,
+            primaryCfg,
+            runtimeMessages,
+            model: args.model,
+            runId,
+            executionId,
+            traceId,
+            sessionKey,
+            promptTokens,
+            controller,
+            persistSuccessfulTurn,
+            persistTraceAndGetDegradation,
           });
-
 
           return {
             response: Promise.resolve({
@@ -1823,9 +1920,20 @@ function createAiRunSkillOp(
 
         return {
           response: executeNonStreamImpl({
-            entry, primaryCfg, backupCfg, runtimeMessages, model: args.model,
-            sessionKey, executionId, runId, traceId, promptTokens, controller,
-            consumeSessionTokenBudget, persistSuccessfulTurn, persistTraceAndGetDegradation,
+            entry,
+            primaryCfg,
+            backupCfg,
+            runtimeMessages,
+            model: args.model,
+            sessionKey,
+            executionId,
+            runId,
+            traceId,
+            promptTokens,
+            controller,
+            consumeSessionTokenBudget,
+            persistSuccessfulTurn,
+            persistTraceAndGetDegradation,
           }),
           completion: completionPromise,
         };
@@ -2023,22 +2131,49 @@ export function createAiService(deps: AiServiceDeps): AiService {
   };
 
   const state: AiInternalState = {
-    runs, requestTimestamps, now, runtimeGovernance, sleep,
-    rateLimitPerMinute, retryBackoffMs, sessionTokenBudget,
-    maxSkillOutputChars, chatHistoryTokenBudget,
-    sessionTokenTotalsByKey, sessionChatMessagesByKey,
-    skillScheduler, providerResolver, getFakeServer,
+    runs,
+    requestTimestamps,
+    now,
+    runtimeGovernance,
+    sleep,
+    rateLimitPerMinute,
+    retryBackoffMs,
+    sessionTokenBudget,
+    maxSkillOutputChars,
+    chatHistoryTokenBudget,
+    sessionTokenTotalsByKey,
+    sessionChatMessagesByKey,
+    skillScheduler,
+    providerResolver,
+    getFakeServer,
   };
 
   const sessionHelpers = createAiSessionHelpers(state);
   const emitHelpers = createAiEmitHelpers(deps, state);
-  const nonStreamHelpers = createAiNonStreamHelpers(deps, state, sessionHelpers);
-  const streamHelpers = createAiStreamHelpers(deps, emitHelpers, nonStreamHelpers);
-  const helpers: AiHelpers = { ...sessionHelpers, ...emitHelpers, ...nonStreamHelpers, ...streamHelpers };
+  const nonStreamHelpers = createAiNonStreamHelpers(
+    deps,
+    state,
+    sessionHelpers,
+  );
+  const streamHelpers = createAiStreamHelpers(
+    deps,
+    emitHelpers,
+    nonStreamHelpers,
+  );
+  const helpers: AiHelpers = {
+    ...sessionHelpers,
+    ...emitHelpers,
+    ...nonStreamHelpers,
+    ...streamHelpers,
+  };
   const pipeline = createAiRunPipelineHelpers(deps, state, helpers);
 
   const { runSkill } = createAiRunSkillOp(deps, state, helpers, pipeline);
-  const { listModels, cancel, feedback } = createAiMethodOps(deps, state, helpers);
+  const { listModels, cancel, feedback } = createAiMethodOps(
+    deps,
+    state,
+    helpers,
+  );
 
   return { runSkill, listModels, cancel, feedback };
 }

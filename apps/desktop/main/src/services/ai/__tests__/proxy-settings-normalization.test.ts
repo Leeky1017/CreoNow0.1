@@ -100,7 +100,7 @@ function createServiceWithRows(rows: Array<{ key: string; value: unknown }>) {
     },
     {
       key: "creonow.ai.provider.openaiCompatible.apiKey",
-      value: encryptedValue("sk-compat"),
+      value: encryptedValue("sk-compat-01"),
     },
     {
       key: "creonow.ai.provider.openaiByok.baseUrl",
@@ -108,7 +108,7 @@ function createServiceWithRows(rows: Array<{ key: string; value: unknown }>) {
     },
     {
       key: "creonow.ai.provider.openaiByok.apiKey",
-      value: encryptedValue("sk-byok"),
+      value: encryptedValue("sk-byok-01"),
     },
     {
       key: "creonow.ai.provider.anthropicByok.baseUrl",
@@ -116,7 +116,7 @@ function createServiceWithRows(rows: Array<{ key: string; value: unknown }>) {
     },
     {
       key: "creonow.ai.provider.anthropicByok.apiKey",
-      value: encryptedValue("sk-anthropic"),
+      value: encryptedValue("sk-anthropic-01"),
     },
   ]);
 
@@ -128,11 +128,11 @@ function createServiceWithRows(rows: Array<{ key: string; value: unknown }>) {
 
   const raw = rawResult.data;
   assert.equal(raw.openAiCompatible.baseUrl, "https://proxy.example");
-  assert.equal(raw.openAiCompatible.apiKey, "sk-compat");
+  assert.equal(raw.openAiCompatible.apiKey, "sk-compat-01");
   assert.equal(raw.openAiByok.baseUrl, "https://api.openai.com");
-  assert.equal(raw.openAiByok.apiKey, "sk-byok");
+  assert.equal(raw.openAiByok.apiKey, "sk-byok-01");
   assert.equal(raw.anthropicByok.baseUrl, "https://api.anthropic.com");
-  assert.equal(raw.anthropicByok.apiKey, "sk-anthropic");
+  assert.equal(raw.anthropicByok.apiKey, "sk-anthropic-01");
 }
 
 // AUD-C7-S5: missing fields don't crash, fill safe defaults

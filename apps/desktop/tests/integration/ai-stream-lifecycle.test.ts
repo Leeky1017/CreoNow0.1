@@ -156,7 +156,7 @@ async function withOpenAiStreamingServer(args: {
         env: {
           CREONOW_AI_PROVIDER: "openai",
           CREONOW_AI_BASE_URL: baseUrl,
-          CREONOW_AI_API_KEY: "test-key",
+          CREONOW_AI_API_KEY: "sk-test-key-0001",
         },
       });
 
@@ -245,7 +245,7 @@ async function withOpenAiStreamingServer(args: {
         env: {
           CREONOW_AI_PROVIDER: "openai",
           CREONOW_AI_BASE_URL: baseUrl,
-          CREONOW_AI_API_KEY: "test-key",
+          CREONOW_AI_API_KEY: "sk-test-key-0001",
         },
       });
 
@@ -304,7 +304,7 @@ async function withOpenAiStreamingServer(args: {
         env: {
           CREONOW_AI_PROVIDER: "openai",
           CREONOW_AI_BASE_URL: baseUrl,
-          CREONOW_AI_API_KEY: "test-key",
+          CREONOW_AI_API_KEY: "sk-test-key-0001",
         },
         sleep: async () => {},
         rateLimitPerMinute: 1_000,

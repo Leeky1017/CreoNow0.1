@@ -44,7 +44,7 @@ async function launchApp(args: { userDataDir: string }) {
       CREONOW_E2E: "1",
       CREONOW_OPEN_DEVTOOLS: "0",
       CREONOW_USER_DATA_DIR: args.userDataDir,
-      CREONOW_AI_PROVIDER: "anthropic",
+      CREONOW_AI_PROVIDER: "openai",
     },
   });
 
@@ -71,9 +71,7 @@ async function switchKgToListMode(page: Page): Promise<void> {
     "leftpanel-dialog-knowledgeGraph",
   );
   await expect(knowledgeGraphDialog).toBeVisible();
-  await expect(
-    knowledgeGraphDialog.getByTestId("kg-view-graph"),
-  ).toBeVisible();
+  await expect(knowledgeGraphDialog.getByTestId("kg-view-graph")).toBeVisible();
   await knowledgeGraphDialog.getByTestId("kg-view-list").click();
   await expect(page.getByTestId("kg-entity-create")).toBeEnabled();
 }
@@ -99,7 +97,9 @@ test("knowledge graph: sidebar CRUD + context viewer injection (skill gated)", a
   const projectId = project.data.projectId;
 
   await page.getByTestId("icon-bar-knowledge-graph").click();
-  await expect(page.getByTestId("leftpanel-dialog-knowledgeGraph")).toBeVisible();
+  await expect(
+    page.getByTestId("leftpanel-dialog-knowledgeGraph"),
+  ).toBeVisible();
   await switchKgToListMode(page);
 
   await page.getByTestId("kg-entity-name").fill("Alice");

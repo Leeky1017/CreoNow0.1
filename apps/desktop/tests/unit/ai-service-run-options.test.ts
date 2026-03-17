@@ -135,7 +135,7 @@ function createEmitCollector(): {
         env: {
           CREONOW_AI_PROVIDER: "openai",
           CREONOW_AI_BASE_URL: baseUrl,
-          CREONOW_AI_API_KEY: "test-key",
+          CREONOW_AI_API_KEY: "sk-test-key",
         },
       });
 
@@ -146,13 +146,13 @@ function createEmitCollector(): {
         stream: false,
         ts: Date.now(),
         emitEvent: stream.emitEvent,
-        model: "deepseek",
+        model: "gpt-5.2",
         mode: "ask",
       });
 
       assert.equal(result.ok, true);
       assert.equal(captured.length, 1);
-      assert.equal(captured[0]?.model, "deepseek");
+      assert.equal(captured[0]?.model, "gpt-5.2");
     },
   });
 }
@@ -183,7 +183,7 @@ function createEmitCollector(): {
         env: {
           CREONOW_AI_PROVIDER: "openai",
           CREONOW_AI_BASE_URL: baseUrl,
-          CREONOW_AI_API_KEY: "test-key",
+          CREONOW_AI_API_KEY: "sk-test-key",
         },
       });
 
@@ -194,7 +194,7 @@ function createEmitCollector(): {
         stream: false,
         ts: Date.now(),
         emitEvent: stream.emitEvent,
-        model: "claude-sonnet-4-5-20250929",
+        model: "gpt-5.2",
         mode: "ask",
       });
 
@@ -215,7 +215,7 @@ function createEmitCollector(): {
         env: {
           CREONOW_AI_PROVIDER: "openai",
           CREONOW_AI_BASE_URL: baseUrl,
-          CREONOW_AI_API_KEY: "test-key",
+          CREONOW_AI_API_KEY: "sk-test-key",
         },
       });
 
@@ -256,7 +256,7 @@ function createEmitCollector(): {
         env: {
           CREONOW_AI_PROVIDER: "openai",
           CREONOW_AI_BASE_URL: `${baseUrl}/api/v1`,
-          CREONOW_AI_API_KEY: "test-key",
+          CREONOW_AI_API_KEY: "sk-test-key",
         },
       });
 
@@ -290,7 +290,7 @@ function createEmitCollector(): {
         env: {
           CREONOW_AI_PROVIDER: "openai",
           CREONOW_AI_BASE_URL: baseUrl,
-          CREONOW_AI_API_KEY: "test-key",
+          CREONOW_AI_API_KEY: "sk-test-key",
         },
       });
 
