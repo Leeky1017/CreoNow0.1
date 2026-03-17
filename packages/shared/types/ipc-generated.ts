@@ -201,6 +201,7 @@ export const IPC_CHANNELS = [
   "knowledge:suggestion:dismiss",
   "memory:clear:all",
   "memory:clear:project",
+  "memory:conflict:resolve",
   "memory:distill:progress",
   "memory:entry:create",
   "memory:entry:delete",
@@ -1821,6 +1822,37 @@ export type IpcChannelSpec = {
       deletedEpisodes: number;
       deletedRules: number;
       ok: true;
+    };
+  };
+  "memory:conflict:resolve": {
+    request: {
+      chosenRuleId: string;
+      conflictId: string;
+      projectId: string;
+    };
+    response: {
+      item: {
+        id: string;
+        ruleIds: Array<string>;
+        status: "pending" | "resolved";
+      };
+      keptRule: {
+        category: "style" | "structure" | "character" | "pacing" | "vocabulary";
+        confidence: number;
+        conflictMarked?: boolean;
+        contradictingEpisodes: Array<string>;
+        createdAt: number;
+        id: string;
+        projectId: string;
+        recentlyUpdated?: boolean;
+        rule: string;
+        scope: "global" | "project";
+        supportingEpisodes: Array<string>;
+        updatedAt: number;
+        userConfirmed: boolean;
+        userModified: boolean;
+        version: 1;
+      };
     };
   };
   "memory:distill:progress": {
