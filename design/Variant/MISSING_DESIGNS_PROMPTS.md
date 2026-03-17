@@ -20,8 +20,8 @@ All designs must adhere to these foundational specifications:
 - Primary text: #ffffff
 - Secondary text: #888888
 - Tertiary text: #444444
-- Accent purple: #5D3FD3
-- Accent blue: #3b82f6
+- Accent: #ffffff (dark theme) / #1a1a1a (light theme)
+- Info blue: #3b82f6
 - Error: #ef4444
 - Success: #22c55e
 - Warning: #f59e0b
@@ -46,7 +46,7 @@ All designs must adhere to these foundational specifications:
 **Visual Effects**
 
 - Glass panels: backdrop-filter blur 12px with semi-transparent background
-- Gradient glow: subtle purple/indigo radial gradients in background
+- Gradient glow: subtle white/cool-gray radial gradients in background
 - Noise texture overlay at 5% opacity
 - Shadows: rgba(0,0,0,0.5) with varying blur radius
 
@@ -83,7 +83,7 @@ Memory List:
   - Memory text content (truncated to 2 lines)
   - Timestamp in tertiary text
   - Three-dot menu button on hover for edit/delete
-- Selected memory has left border accent line (2px purple)
+- Selected memory has left border accent line (2px white, using --color-accent)
 - Hover state with background color shift
 
 Empty State:
@@ -254,7 +254,7 @@ Timeline List:
 - Chronological list of versions, newest first
 - Each version entry:
   - Timestamp (relative: 2 hours ago, or absolute for older)
-  - Actor badge: User (white), Auto (gray), AI (purple)
+  - Actor badge: User (white), Auto (gray), AI (accent)
   - Preview text: first 50 chars of changes
   - Word count delta: +24 words or -12 words
 
