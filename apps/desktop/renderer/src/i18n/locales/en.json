@@ -486,7 +486,9 @@
       "ariaLabel": "Chat History",
       "searchPlaceholder": "Search...",
       "emptyTitle": "No conversation history yet.",
-      "emptyDescription": "Chat history will appear here once chat persistence is available."
+      "emptyDescription": "Start a conversation to see it here.",
+      "untitledSession": "Untitled conversation",
+      "deleteSession": "Delete conversation"
     },
     "modePicker": {
       "modeAgent": "Agent",
