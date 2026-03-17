@@ -1,3 +1,4 @@
+/* eslint-disable creonow/require-describe-in-tests -- This file is executed directly via tsx and relies on top-level async scenarios. */
 import assert from "node:assert/strict";
 
 import { KG_SUGGESTION_CHANNEL } from "@shared/types/kg";
