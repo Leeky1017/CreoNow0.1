@@ -153,7 +153,7 @@ export function SplitDiffView(props: SplitDiffViewProps): JSX.Element {
   if (props.lines.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center text-[var(--color-fg-muted)] text-sm">
-        {t('diff.split.noChanges')}
+        {t("diff.split.noChanges")}
       </div>
     );
   }
@@ -164,7 +164,7 @@ export function SplitDiffView(props: SplitDiffViewProps): JSX.Element {
       <div className="w-1/2 flex flex-col border-r border-[var(--color-separator)]">
         {/* Pane header */}
         <div className="h-8 flex items-center px-4 bg-[var(--color-bg-hover)] border-b border-[var(--color-separator)] text-[10px] text-[var(--color-fg-muted)] font-medium tracking-wide uppercase">
-          {t('diff.split.before')}
+          {t("diff.split.before")}
         </div>
         {/* Content */}
         <div
@@ -204,7 +204,7 @@ export function SplitDiffView(props: SplitDiffViewProps): JSX.Element {
       <div className="w-1/2 flex flex-col bg-[var(--color-bg-base)]">
         {/* Pane header */}
         <div className="h-8 flex items-center px-4 bg-[var(--color-bg-hover)] border-b border-[var(--color-separator)] text-[10px] text-[var(--color-fg-muted)] font-medium tracking-wide uppercase">
-          {t('diff.split.after')}
+          {t("diff.split.after")}
         </div>
         {/* Content */}
         <div

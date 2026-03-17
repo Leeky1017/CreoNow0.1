@@ -1,4 +1,3 @@
-
 import type { Logger } from "../../logging/logger";
 import type { FakeAiServer } from "./fakeAiServer";
 import { ipcError, type ServiceResult } from "../shared/ipcResult";
@@ -69,7 +68,8 @@ function resolveSettingsProviderCredentials(args: {
   provider: AiProvider;
   credentials: ProviderCredentials;
 } {
-  const openAiCompatible: ProviderCredentials = args.settings.openAiCompatible ?? {
+  const openAiCompatible: ProviderCredentials = args.settings
+    .openAiCompatible ?? {
     baseUrl: null,
     apiKey: null,
   };
@@ -142,7 +142,8 @@ function resolveSettingsBackupProvider(args: {
   timeoutMs: number;
   env: NodeJS.ProcessEnv;
 }): ProviderConfig | null {
-  const openAiCompatible: ProviderCredentials = args.settings.openAiCompatible ?? {
+  const openAiCompatible: ProviderCredentials = args.settings
+    .openAiCompatible ?? {
     baseUrl: null,
     apiKey: null,
   };

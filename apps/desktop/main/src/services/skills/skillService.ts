@@ -867,10 +867,7 @@ async function executeSkillWrite(
       ? loaded.data.roots.projectSkillsDir
       : loaded.data.roots.globalSkillsDir;
   if (targetRoot === null) {
-    return ipcError(
-      "NOT_FOUND",
-      "No current project for project skill write",
-    );
+    return ipcError("NOT_FOUND", "No current project for project skill write");
   }
 
   const srcRoot =
@@ -1060,8 +1057,7 @@ function applyExistingCustomUpdate(
   }
 
   const nextEnabled = patch.enabled ?? current.enabled;
-  const projectId =
-    validScope.data === "project" ? currentProjectId : null;
+  const projectId = validScope.data === "project" ? currentProjectId : null;
   if (validScope.data === "project" && !projectId) {
     return ipcError("NOT_FOUND", "Project scope is unavailable");
   }
@@ -1148,7 +1144,15 @@ async function executeUpdateCustom(
       ctx.db,
       custom.data,
       loaded.data.currentProjectId,
-      { scope, name, description, promptTemplate, inputType, contextRules, enabled },
+      {
+        scope,
+        name,
+        description,
+        promptTemplate,
+        inputType,
+        contextRules,
+        enabled,
+      },
     );
   }
 

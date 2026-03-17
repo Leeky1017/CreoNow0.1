@@ -5,8 +5,6 @@ import { ROLE_DISPLAY } from "./types";
 
 import { Pencil, Trash2 } from "lucide-react";
 
-/* eslint-disable creonow/no-native-html-element -- CharacterCard uses specialized overlay edit/delete action buttons */
-
 export interface CharacterCardProps {
   /** Character data */
   character: Character;
@@ -173,7 +171,9 @@ export function CharacterCard({
             "mt-1.5",
             "truncate",
             "transition-colors",
-            selected ? roleColorClass : "text-[var(--color-fg-subtle)] group-hover:text-[var(--color-fg-muted)]",
+            selected
+              ? roleColorClass
+              : "text-[var(--color-fg-subtle)] group-hover:text-[var(--color-fg-muted)]",
           ].join(" ")}
         >
           {roleLabel}
@@ -196,6 +196,7 @@ export function CharacterCard({
         ].join(" ")}
       >
         {onEdit && (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
           <button
             type="button"
             onClick={handleEditClick}
@@ -214,6 +215,7 @@ export function CharacterCard({
           </button>
         )}
         {onDelete && (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
           <button
             type="button"
             onClick={handleDeleteClick}

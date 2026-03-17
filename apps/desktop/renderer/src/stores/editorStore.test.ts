@@ -323,5 +323,4 @@ describe("editorStore bootstrap and autosave scenarios", () => {
     expect(state.documentId).toBe("doc-b");
     expect(state.bootstrapStatus).toBe("ready");
   });
-
 });

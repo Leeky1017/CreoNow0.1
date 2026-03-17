@@ -107,9 +107,7 @@ export function Slider({
   className = "",
 }: SliderProps): JSX.Element {
   // Internal state for uncontrolled usage
-  const [internalValue, setInternalValue] = React.useState(
-    defaultValue ?? min,
-  );
+  const [internalValue, setInternalValue] = React.useState(defaultValue ?? min);
 
   // Use controlled value if provided, otherwise use internal state
   const currentValue = value !== undefined ? value : internalValue;

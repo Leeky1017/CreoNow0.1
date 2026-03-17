@@ -67,7 +67,11 @@ function createDbStub(args?: {
         };
       }
 
-      return { run: () => ({ changes: 0 }), get: () => undefined, all: () => [] };
+      return {
+        run: () => ({ changes: 0 }),
+        get: () => undefined,
+        all: () => [],
+      };
     },
   } as unknown as Database.Database;
 }
@@ -131,8 +135,20 @@ function createDbStub(args?: {
 // ── S4: getRange returns aggregated summary across multiple days ──
 {
   const rows: StatsRow[] = [
-    { date: "2025-06-14", wordsWritten: 100, writingSeconds: 600, skillsUsed: 2, documentsCreated: 1 },
-    { date: "2025-06-15", wordsWritten: 200, writingSeconds: 900, skillsUsed: 3, documentsCreated: 0 },
+    {
+      date: "2025-06-14",
+      wordsWritten: 100,
+      writingSeconds: 600,
+      skillsUsed: 2,
+      documentsCreated: 1,
+    },
+    {
+      date: "2025-06-15",
+      wordsWritten: 200,
+      writingSeconds: 900,
+      skillsUsed: 3,
+      documentsCreated: 0,
+    },
   ];
 
   const svc = createStatsService({

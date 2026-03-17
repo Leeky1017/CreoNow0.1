@@ -7,10 +7,7 @@ const STYLES_DIR = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
 );
-const MAIN_CSS = fs.readFileSync(
-  path.join(STYLES_DIR, "main.css"),
-  "utf-8",
-);
+const MAIN_CSS = fs.readFileSync(path.join(STYLES_DIR, "main.css"), "utf-8");
 
 describe("WB-FE-THEME-S1: main.css defines theme transition on root element", () => {
   it("html rule includes transition with background-color and color", () => {

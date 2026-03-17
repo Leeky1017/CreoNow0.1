@@ -34,10 +34,7 @@ describe("WB-FE-TOKEN-S2 z-index token escape guard", () => {
       (f) => !Z_INDEX_WHITELIST.some((w) => f.endsWith(w)),
     );
 
-    const violations = collectPatternViolations(
-      files,
-      Z_INDEX_ESCAPE_PATTERNS,
-    );
+    const violations = collectPatternViolations(files, Z_INDEX_ESCAPE_PATTERNS);
 
     if (violations.length > 0) {
       const summary = violations

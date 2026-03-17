@@ -57,7 +57,8 @@ export function ImageUpload({
   hint,
 }: ImageUploadProps): JSX.Element {
   const { t } = useTranslation();
-  const resolvedPlaceholder = placeholder ?? t("primitives.imageUpload.placeholder");
+  const resolvedPlaceholder =
+    placeholder ?? t("primitives.imageUpload.placeholder");
   const resolvedHint = hint ?? t("primitives.imageUpload.hint");
   const [isDragging, setIsDragging] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -242,10 +243,7 @@ export function ImageUpload({
         "opacity-50",
       ]
     : isDragging
-      ? [
-          "border-[var(--color-accent)]",
-          "bg-[var(--color-accent-subtle)]",
-        ]
+      ? ["border-[var(--color-accent)]", "bg-[var(--color-accent-subtle)]"]
       : [
           "border-[var(--color-border-default)]",
           "hover:border-[var(--color-border-hover)]",

@@ -90,7 +90,7 @@ export function InlineDiffControls(
     >
       {decorations.length === 0 ? (
         <Text size="small" color="muted">
-          {t('editor.inlineDiff.noChanges')}
+          {t("editor.inlineDiff.noChanges")}
         </Text>
       ) : null}
 
@@ -133,7 +133,7 @@ export function InlineDiffControls(
                   size="sm"
                   onClick={() => onAcceptHunk(item.hunkIndex)}
                 >
-                  {t('editor.inlineDiff.accept')}
+                  {t("editor.inlineDiff.accept")}
                 </Button>
                 <Button
                   data-testid={`inline-diff-reject-${item.hunkIndex}`}
@@ -141,7 +141,7 @@ export function InlineDiffControls(
                   size="sm"
                   onClick={() => onRejectHunk(item.hunkIndex)}
                 >
-                  {t('editor.inlineDiff.reject')}
+                  {t("editor.inlineDiff.reject")}
                 </Button>
               </div>
             ) : null}

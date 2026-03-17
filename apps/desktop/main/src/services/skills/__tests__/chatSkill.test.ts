@@ -15,14 +15,23 @@ const skillPath = resolve(
 const content = readFileSync(skillPath, "utf-8");
 
 // Must have YAML frontmatter
-assert.ok(content.startsWith("---"), "SKILL.md must start with YAML frontmatter");
+assert.ok(
+  content.startsWith("---"),
+  "SKILL.md must start with YAML frontmatter",
+);
 const endFrontmatter = content.indexOf("---", 3);
-assert.ok(endFrontmatter > 3, "SKILL.md must have closing frontmatter delimiter");
+assert.ok(
+  endFrontmatter > 3,
+  "SKILL.md must have closing frontmatter delimiter",
+);
 
 const frontmatter = content.slice(3, endFrontmatter).trim();
 
 // Must have required fields
-assert.ok(frontmatter.includes("id: builtin:chat"), "must have id: builtin:chat");
+assert.ok(
+  frontmatter.includes("id: builtin:chat"),
+  "must have id: builtin:chat",
+);
 assert.ok(frontmatter.includes("name:"), "must have name field");
 assert.ok(frontmatter.includes("description:"), "must have description field");
 assert.ok(frontmatter.includes("scope: builtin"), "must have scope: builtin");

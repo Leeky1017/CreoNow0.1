@@ -183,8 +183,7 @@ module.exports = {
           {
             selector:
               "CallExpression[callee.type='MemberExpression'][callee.object.name='React'][callee.property.name='createElement']",
-            message:
-              "Use JSX syntax instead of React.createElement in stores.",
+            message: "Use JSX syntax instead of React.createElement in stores.",
           },
         ],
       },

@@ -4,8 +4,6 @@ import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
 import type { SystemDialogProps, SystemDialogType } from "./types";
 
-/* eslint-disable creonow/no-native-html-element -- SystemDialog uses specialized action buttons (cancel/delete/save/discard/done) per dialog type variant */
-
 /**
  * Dialog action state
  */
@@ -81,9 +79,7 @@ const Spinner = ({ className = "" }: { className?: string }) => (
 /**
  * Default content for each dialog type
  */
-function getDefaultContent(
-  t: TFunction,
-): Record<
+function getDefaultContent(t: TFunction): Record<
   SystemDialogType,
   {
     title: string;
@@ -95,23 +91,23 @@ function getDefaultContent(
 > {
   return {
     delete: {
-      title: t('systemDialog.delete.title'),
-      description: t('systemDialog.delete.description'),
-      primaryLabel: t('systemDialog.delete.primaryLabel'),
-      secondaryLabel: t('systemDialog.delete.secondaryLabel'),
+      title: t("systemDialog.delete.title"),
+      description: t("systemDialog.delete.description"),
+      primaryLabel: t("systemDialog.delete.primaryLabel"),
+      secondaryLabel: t("systemDialog.delete.secondaryLabel"),
     },
     unsaved_changes: {
-      title: t('systemDialog.unsavedChanges.title'),
-      description: t('systemDialog.unsavedChanges.description'),
-      primaryLabel: t('systemDialog.unsavedChanges.primaryLabel'),
-      secondaryLabel: t('systemDialog.unsavedChanges.secondaryLabel'),
-      tertiaryLabel: t('systemDialog.unsavedChanges.tertiaryLabel'),
+      title: t("systemDialog.unsavedChanges.title"),
+      description: t("systemDialog.unsavedChanges.description"),
+      primaryLabel: t("systemDialog.unsavedChanges.primaryLabel"),
+      secondaryLabel: t("systemDialog.unsavedChanges.secondaryLabel"),
+      tertiaryLabel: t("systemDialog.unsavedChanges.tertiaryLabel"),
     },
     export_complete: {
-      title: t('systemDialog.exportComplete.title'),
-      description: t('systemDialog.exportComplete.description'),
-      primaryLabel: t('systemDialog.exportComplete.primaryLabel'),
-      secondaryLabel: t('systemDialog.exportComplete.secondaryLabel'),
+      title: t("systemDialog.exportComplete.title"),
+      description: t("systemDialog.exportComplete.description"),
+      primaryLabel: t("systemDialog.exportComplete.primaryLabel"),
+      secondaryLabel: t("systemDialog.exportComplete.secondaryLabel"),
     },
   };
 }
@@ -492,12 +488,12 @@ export function SystemDialog({
       return (
         <>
           <Spinner />
-          <span>{t('systemDialog.processing')}</span>
+          <span>{t("systemDialog.processing")}</span>
         </>
       );
     }
     if (actionState === "success") {
-      return <span>{t('systemDialog.done')}</span>;
+      return <span>{t("systemDialog.done")}</span>;
     }
     return <span>{displayPrimaryLabel}</span>;
   };
@@ -533,6 +529,7 @@ export function SystemDialog({
             {/* Delete dialog */}
             {type === "delete" && (
               <>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   type="button"
                   data-testid="system-dialog-secondary"
@@ -542,6 +539,7 @@ export function SystemDialog({
                 >
                   {displaySecondaryLabel}
                 </button>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   ref={primaryButtonRef}
                   type="button"
@@ -558,6 +556,7 @@ export function SystemDialog({
             {/* Unsaved changes dialog */}
             {type === "unsaved_changes" && (
               <>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   type="button"
                   className={discardButtonStyles}
@@ -567,6 +566,7 @@ export function SystemDialog({
                   {displayTertiaryLabel}
                 </button>
                 <div className="flex-1" />
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   type="button"
                   className={cancelButtonStyles}
@@ -575,6 +575,7 @@ export function SystemDialog({
                 >
                   {displaySecondaryLabel}
                 </button>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   ref={primaryButtonRef}
                   type="button"
@@ -590,6 +591,7 @@ export function SystemDialog({
             {/* Export complete dialog */}
             {type === "export_complete" && (
               <>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   type="button"
                   className={doneButtonStyles}
@@ -598,6 +600,7 @@ export function SystemDialog({
                 >
                   {displaySecondaryLabel}
                 </button>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   ref={primaryButtonRef}
                   type="button"
@@ -615,10 +618,16 @@ export function SystemDialog({
           {showKeyboardHints && (
             <div className={keyboardHintStyles}>
               <span>
-                <kbd className={kbdStyles}>{t('systemDialog.keyboard.enterKey')}</kbd> {t('systemDialog.keyboard.toConfirm')}
+                <kbd className={kbdStyles}>
+                  {t("systemDialog.keyboard.enterKey")}
+                </kbd>{" "}
+                {t("systemDialog.keyboard.toConfirm")}
               </span>
               <span>
-                <kbd className={kbdStyles}>{t('systemDialog.keyboard.escKey')}</kbd> {t('systemDialog.keyboard.toCancel')}
+                <kbd className={kbdStyles}>
+                  {t("systemDialog.keyboard.escKey")}
+                </kbd>{" "}
+                {t("systemDialog.keyboard.toCancel")}
               </span>
             </div>
           )}

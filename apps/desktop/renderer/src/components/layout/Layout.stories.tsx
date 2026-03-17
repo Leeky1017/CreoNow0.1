@@ -101,7 +101,9 @@ function LayoutWrapper({
               <AiStoreProvider store={aiStore}>
                 <MemoryStoreProvider store={memoryStore}>
                   <SearchStoreProvider store={searchStore}>
-                    <KgStoreProvider store={kgStore}>{children}</KgStoreProvider>
+                    <KgStoreProvider store={kgStore}>
+                      {children}
+                    </KgStoreProvider>
                   </SearchStoreProvider>
                 </MemoryStoreProvider>
               </AiStoreProvider>

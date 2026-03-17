@@ -137,11 +137,7 @@ async function main(): Promise<void> {
       1,
       "duplicate switch should run unbind exactly once",
     );
-    assert.equal(
-      bindCount,
-      1,
-      "duplicate switch should run bind exactly once",
-    );
+    assert.equal(bindCount, 1, "duplicate switch should run bind exactly once");
     assert.equal(
       persistCount,
       1,
@@ -149,7 +145,9 @@ async function main(): Promise<void> {
     );
   }
 
-  console.log("project-lifecycle-switch-lock.stress.test.ts: all assertions passed");
+  console.log(
+    "project-lifecycle-switch-lock.stress.test.ts: all assertions passed",
+  );
 }
 
 await main();

@@ -81,11 +81,7 @@ export function ConfirmDialog({
       closeOnOverlayClick
       footer={
         <>
-          <Button
-            variant="ghost"
-            size="md"
-            onClick={onCancel}
-          >
+          <Button variant="ghost" size="md" onClick={onCancel}>
             {cancelLabel}
           </Button>
           <Button

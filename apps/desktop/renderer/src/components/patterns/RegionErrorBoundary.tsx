@@ -22,7 +22,9 @@ export class RegionErrorBoundary extends React.Component<
     this.state = { hasError: false, resetKey: 0, errorMessage: "" };
   }
 
-  static getDerivedStateFromError(error: Error): Partial<RegionErrorBoundaryState> {
+  static getDerivedStateFromError(
+    error: Error,
+  ): Partial<RegionErrorBoundaryState> {
     return { hasError: true, errorMessage: error.message };
   }
 
@@ -35,7 +37,11 @@ export class RegionErrorBoundary extends React.Component<
   }
 
   private readonly handleRetry = (): void => {
-    this.setState((prev) => ({ hasError: false, resetKey: prev.resetKey + 1, errorMessage: "" }));
+    this.setState((prev) => ({
+      hasError: false,
+      resetKey: prev.resetKey + 1,
+      errorMessage: "",
+    }));
   };
 
   render(): JSX.Element {

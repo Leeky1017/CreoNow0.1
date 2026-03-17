@@ -16,7 +16,13 @@ const nodeColorVars: Record<NodeType, string> = {
 /**
  * Node type icons with explicit colors
  */
-function NodeIcon({ type, color }: { type: NodeType; color: string }): JSX.Element {
+function NodeIcon({
+  type,
+  color,
+}: {
+  type: NodeType;
+  color: string;
+}): JSX.Element {
   const iconClass = "w-5 h-5";
 
   switch (type) {
@@ -127,8 +133,7 @@ const labelBaseStyles = [
 const labelHoverStyles =
   "opacity-100 border border-[var(--color-border-default)]";
 
-const labelBgBase =
-  "color-mix(in srgb, var(--color-bg-base) 80%, transparent)";
+const labelBgBase = "color-mix(in srgb, var(--color-bg-base) 80%, transparent)";
 const labelBgHover =
   "color-mix(in srgb, var(--color-bg-base) 92%, transparent)";
 
@@ -193,7 +198,9 @@ export function GraphNode({
       onMouseDown={onDragStart}
     >
       {/* Node content */}
-      <div className={`flex items-center justify-center ${isEventType ? "-rotate-45" : ""}`}>
+      <div
+        className={`flex items-center justify-center ${isEventType ? "-rotate-45" : ""}`}
+      >
         {type === "character" || type === "faction" ? (
           avatar ? (
             <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
@@ -229,7 +236,7 @@ export function GraphNode({
           className="absolute -right-2 -top-2 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-[var(--color-fg-on-accent)] rounded"
           style={{ backgroundColor: color }}
         >
-          {t('kg.graph.dragging')}
+          {t("kg.graph.dragging")}
         </span>
       )}
     </div>

@@ -4,9 +4,17 @@ import { ScrollArea } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 import { SearchInput } from "../../components/composites/SearchInput";
 
-import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Dot, File, FileText, Pencil, Trash2 } from "lucide-react";
-
-/* eslint-disable creonow/no-native-html-element -- outline tree item buttons and inline editing input */
+import {
+  ChevronDown,
+  ChevronRight,
+  ChevronsDownUp,
+  ChevronsUpDown,
+  Dot,
+  File,
+  FileText,
+  Pencil,
+  Trash2,
+} from "lucide-react";
 
 // ============================================================================
 // Types
@@ -79,11 +87,24 @@ function ChevronDownIcon() {
 }
 
 function DocumentIcon() {
-  return <FileText className="w-3.5 h-3.5 mr-2 opacity-70 shrink-0" size={16} strokeWidth={1.5} />;
+  return (
+    <FileText
+      className="w-3.5 h-3.5 mr-2 opacity-70 shrink-0"
+      size={16}
+      strokeWidth={1.5}
+    />
+  );
 }
 
 function DotIcon({ opacity = 0.5 }: { opacity?: number }) {
-  return <Dot className="w-3.5 h-3.5 mr-2 shrink-0" style={{ opacity }} size={16} strokeWidth={1.5} />;
+  return (
+    <Dot
+      className="w-3.5 h-3.5 mr-2 shrink-0"
+      style={{ opacity }}
+      size={16}
+      strokeWidth={1.5}
+    />
+  );
 }
 
 function EditIcon() {
@@ -102,9 +123,14 @@ function CollapseAllIcon() {
   return <ChevronsUpDown size={16} strokeWidth={1.5} className="rotate-180" />;
 }
 
-
 function EmptyDocumentIcon() {
-  return <File className="w-6 h-6 text-[var(--color-fg-placeholder)] mb-2" size={24} strokeWidth={1.5} />;
+  return (
+    <File
+      className="w-6 h-6 text-[var(--color-fg-placeholder)] mb-2"
+      size={24}
+      strokeWidth={1.5}
+    />
+  );
 }
 
 // ============================================================================
@@ -236,6 +262,7 @@ function CollapseToggle({
 }) {
   const { t } = useTranslation();
   return (
+    // eslint-disable-next-line creonow/no-native-html-element -- specialized button
     <button
       type="button"
       onClick={(e) => {
@@ -243,7 +270,7 @@ function CollapseToggle({
         onToggle();
       }}
       className="w-4 h-4 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors shrink-0 mr-0.5"
-      aria-label={isCollapsed ? t('outline.expand') : t('outline.collapse')}
+      aria-label={isCollapsed ? t("outline.expand") : t("outline.collapse")}
     >
       {isCollapsed ? <ChevronRightIcon /> : <ChevronDownIcon />}
     </button>
@@ -263,7 +290,8 @@ function HoverActions({
   const { t } = useTranslation();
   return (
     <div className="ml-auto flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-fast)] shrink-0">
-      <Tooltip content={t('outline.editShortcut')}>
+      <Tooltip content={t("outline.editShortcut")}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           onClick={(e) => {
@@ -271,12 +299,13 @@ function HoverActions({
             onEdit();
           }}
           className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-          aria-label={t('outline.edit')}
+          aria-label={t("outline.edit")}
         >
           <EditIcon />
         </button>
       </Tooltip>
-      <Tooltip content={t('outline.deleteShortcut')}>
+      <Tooltip content={t("outline.deleteShortcut")}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           onClick={(e) => {
@@ -284,7 +313,7 @@ function HoverActions({
             onDelete();
           }}
           className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-          aria-label={t('outline.delete')}
+          aria-label={t("outline.delete")}
         >
           <DeleteIcon />
         </button>
@@ -432,6 +461,7 @@ function OutlineItemRow({
         <Icon opacity={iconOpacity} />
 
         {isEditing ? (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized input
           <input
             ref={inputRef}
             type="text"
@@ -461,7 +491,7 @@ function OutlineItemRow({
 
         {isDragging && (
           <div className="ml-auto mr-2 text-xs text-[var(--color-info)] font-mono tracking-tighter shrink-0">
-            {t('outline.dragging')}
+            {t("outline.dragging")}
           </div>
         )}
 
@@ -485,9 +515,9 @@ function EmptyState() {
     >
       <EmptyDocumentIcon />
       <p className="text-[11px] text-[var(--color-fg-subtle)] leading-tight px-2">
-        {t('outline.emptyTitle')}
+        {t("outline.emptyTitle")}
         <br />
-        {t('outline.emptyDescription')}
+        {t("outline.emptyDescription")}
       </p>
     </div>
   );
@@ -501,7 +531,7 @@ function NoResultsState({ query }: { query: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-6 text-center mx-3">
       <p className="text-[11px] text-[var(--color-fg-subtle)] leading-tight">
-        {t('outline.noResults', { query })}
+        {t("outline.noResults", { query })}
       </p>
     </div>
   );
@@ -512,7 +542,9 @@ function NoResultsState({ query }: { query: string }) {
 function useDragReorder(onReorder: OutlinePanelProps["onReorder"]) {
   const [draggingId, setDraggingId] = React.useState<string | null>(null);
   const [dragOverId, setDragOverId] = React.useState<string | null>(null);
-  const [dropPosition, setDropPosition] = React.useState<DropPosition | null>(null);
+  const [dropPosition, setDropPosition] = React.useState<DropPosition | null>(
+    null,
+  );
 
   const handleDragStart = (e: React.DragEvent, itemId: string) => {
     e.dataTransfer.setData("text/plain", itemId);
@@ -591,7 +623,10 @@ function handleOutlineArrowNav(
     visibleItems: OutlineItem[];
     setFocusedIndex: (idx: number) => void;
     onNavigate: ((id: string) => void) | undefined;
-    toggleSelect: (id: string, e: React.KeyboardEvent | React.MouseEvent) => void;
+    toggleSelect: (
+      id: string,
+      e: React.KeyboardEvent | React.MouseEvent,
+    ) => void;
   },
   nextIdx: number,
 ): void {
@@ -615,7 +650,10 @@ function handleOutlineKeyDown(
     selectedIds: Set<string>;
     setFocusedIndex: (idx: number) => void;
     onNavigate: ((id: string) => void) | undefined;
-    toggleSelect: (id: string, e: React.KeyboardEvent | React.MouseEvent) => void;
+    toggleSelect: (
+      id: string,
+      e: React.KeyboardEvent | React.MouseEvent,
+    ) => void;
     toggleCollapse: (id: string) => void;
     startEditing: (item: OutlineItem) => void;
     handleDelete: (id: string) => void;
@@ -700,7 +738,6 @@ function handleOutlineKeyDown(
   }
 }
 
-
 // ============================================================================
 // Main Component
 // ============================================================================
@@ -762,7 +799,6 @@ export function OutlinePanel({
   // Editing state
   const [editingId, setEditingId] = React.useState<string | null>(null);
   const [editValue, setEditValue] = React.useState("");
-
 
   // Focused item for keyboard navigation
   const [focusedIndex, setFocusedIndex] = React.useState<number>(-1);
@@ -882,7 +918,6 @@ export function OutlinePanel({
     setEditValue("");
   };
 
-
   // Delete handler (supports multi-select)
   const handleDelete = (itemId: string) => {
     if (selectedIds.size > 0 && selectedIds.has(itemId)) {
@@ -923,32 +958,34 @@ export function OutlinePanel({
       className="flex flex-col h-full bg-[var(--color-bg-surface)]"
       data-testid="outline-panel"
       role="tree"
-      aria-label={t('outline.ariaLabel')}
+      aria-label={t("outline.ariaLabel")}
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
       {/* Header */}
       <div className="h-12 border-b border-[var(--color-separator)] flex items-center justify-between px-4 shrink-0">
         <span className="text-[10px] font-medium tracking-wider text-[var(--color-fg-muted)] uppercase">
-          {t('outline.title')}
+          {t("outline.title")}
         </span>
         <div className="flex gap-2">
-          <Tooltip content={t('outline.expandAll')}>
+          <Tooltip content={t("outline.expandAll")}>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               type="button"
               onClick={expandAll}
               className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
-              aria-label={t('outline.expandAllAria')}
+              aria-label={t("outline.expandAllAria")}
             >
               <ExpandAllIcon />
             </button>
           </Tooltip>
-          <Tooltip content={t('outline.collapseAll')}>
+          <Tooltip content={t("outline.collapseAll")}>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               type="button"
               onClick={collapseAll}
               className="text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
-              aria-label={t('outline.collapseAllAria')}
+              aria-label={t("outline.collapseAllAria")}
             >
               <CollapseAllIcon />
             </button>
@@ -962,7 +999,7 @@ export function OutlinePanel({
           value={searchQuery}
           onChange={setSearchQuery}
           onClear={() => setSearchQuery("")}
-          placeholder={t('outline.filterPlaceholder')}
+          placeholder={t("outline.filterPlaceholder")}
           data-testid="outline-search-input"
         />
       </div>
@@ -971,22 +1008,24 @@ export function OutlinePanel({
       {selectedIds.size > 0 && (
         <div className="px-3 py-1.5 bg-[var(--color-bg-selected)] border-b border-[var(--color-separator)] flex items-center justify-between">
           <span className="text-[10px] text-[var(--color-fg-muted)]">
-            {t('outline.selectedCount', { count: selectedIds.size })}
+            {t("outline.selectedCount", { count: selectedIds.size })}
           </span>
           <div className="flex gap-2">
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               type="button"
               onClick={() => onDelete?.([...selectedIds])}
               className="text-[10px] text-[var(--color-error)] hover:underline"
             >
-              {t('outline.delete')}
+              {t("outline.delete")}
             </button>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               type="button"
               onClick={clearSelection}
               className="text-[10px] text-[var(--color-fg-muted)] hover:underline"
             >
-              {t('outline.clearSelection')}
+              {t("outline.clearSelection")}
             </button>
           </div>
         </div>
@@ -1046,7 +1085,7 @@ export function OutlinePanel({
         <div className="px-3 py-1.5 border-t border-[var(--color-separator)] flex items-center gap-2">
           <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)]" />
           <span className="text-[10px] text-[var(--color-fg-muted)]">
-            {t('outline.syncWithEditor')}
+            {t("outline.syncWithEditor")}
           </span>
         </div>
       )}

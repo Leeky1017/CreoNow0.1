@@ -16,7 +16,10 @@ async function main(): Promise<void> {
       distModeRoot,
       "dist/main/services/projects/templateService.js",
     );
-    const distModeFallbackPath = path.join(distModeRoot, "main/templates/project");
+    const distModeFallbackPath = path.join(
+      distModeRoot,
+      "main/templates/project",
+    );
 
     await fs.mkdir(path.dirname(distModeModulePath), { recursive: true });
     await fs.writeFile(distModeModulePath, "// stub");

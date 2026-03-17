@@ -52,7 +52,7 @@ function createEvent(webContentsId: number): { sender: { id: number } } {
   const denied = (await snapshotCreate!(createEvent(71), {
     projectId: "project-other",
     documentId: "doc-1",
-    contentJson: "{\"type\":\"doc\",\"content\":[]}",
+    contentJson: '{"type":"doc","content":[]}',
     actor: "user",
     reason: "manual-save",
   })) as {
@@ -82,7 +82,7 @@ function createEvent(webContentsId: number): { sender: { id: number } } {
   const denied = (await snapshotCreate!(createEvent(999), {
     projectId: "project-guess",
     documentId: "doc-1",
-    contentJson: "{\"type\":\"doc\",\"content\":[]}",
+    contentJson: '{"type":"doc","content":[]}',
     actor: "user",
     reason: "manual-save",
   })) as {

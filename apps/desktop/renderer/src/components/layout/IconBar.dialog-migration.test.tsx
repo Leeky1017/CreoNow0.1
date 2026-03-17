@@ -1,19 +1,44 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor, act, within } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+  within,
+} from "@testing-library/react";
 import React from "react";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { AppShell } from "./AppShell";
 import { AppToastProvider } from "../providers/AppToastProvider";
-import { LayoutStoreProvider, createLayoutStore } from "../../stores/layoutStore";
-import { ProjectStoreProvider, createProjectStore } from "../../stores/projectStore";
+import {
+  LayoutStoreProvider,
+  createLayoutStore,
+} from "../../stores/layoutStore";
+import {
+  ProjectStoreProvider,
+  createProjectStore,
+} from "../../stores/projectStore";
 import { FileStoreProvider, createFileStore } from "../../stores/fileStore";
-import { EditorStoreProvider, createEditorStore } from "../../stores/editorStore";
-import { VersionStoreProvider, createVersionStore } from "../../stores/versionStore";
+import {
+  EditorStoreProvider,
+  createEditorStore,
+} from "../../stores/editorStore";
+import {
+  VersionStoreProvider,
+  createVersionStore,
+} from "../../stores/versionStore";
 import { AiStoreProvider, createAiStore } from "../../stores/aiStore";
-import { MemoryStoreProvider, createMemoryStore } from "../../stores/memoryStore";
-import { SearchStoreProvider, createSearchStore } from "../../stores/searchStore";
+import {
+  MemoryStoreProvider,
+  createMemoryStore,
+} from "../../stores/memoryStore";
+import {
+  SearchStoreProvider,
+  createSearchStore,
+} from "../../stores/searchStore";
 import { KgStoreProvider, createKgStore } from "../../stores/kgStore";
 import { ThemeStoreProvider, createThemeStore } from "../../stores/themeStore";
 
@@ -62,11 +87,17 @@ function createMockIpc() {
   };
 }
 
-function AppShellTestWrapper(props: { children: React.ReactNode }): JSX.Element {
+function AppShellTestWrapper(props: {
+  children: React.ReactNode;
+}): JSX.Element {
   const mockIpc = React.useMemo(() => createMockIpc(), []);
-  const layoutStore = React.useMemo(() => createLayoutStore(mockPreferences), []);
+  const layoutStore = React.useMemo(
+    () => createLayoutStore(mockPreferences),
+    [],
+  );
   const projectStore = React.useMemo(
-    () => createProjectStore(mockIpc as Parameters<typeof createProjectStore>[0]),
+    () =>
+      createProjectStore(mockIpc as Parameters<typeof createProjectStore>[0]),
     [mockIpc],
   );
   const fileStore = React.useMemo(
@@ -78,7 +109,8 @@ function AppShellTestWrapper(props: { children: React.ReactNode }): JSX.Element 
     [mockIpc],
   );
   const versionStore = React.useMemo(
-    () => createVersionStore(mockIpc as Parameters<typeof createVersionStore>[0]),
+    () =>
+      createVersionStore(mockIpc as Parameters<typeof createVersionStore>[0]),
     [mockIpc],
   );
   const aiStore = React.useMemo(
@@ -186,10 +218,14 @@ describe("IconBar dialog migration", () => {
     fireEvent.click(screen.getByTestId("icon-bar-memory"));
 
     const memoryDialog = await screen.findByTestId("leftpanel-dialog-memory");
-    fireEvent.click(within(memoryDialog).getByRole("button", { name: "Close" }));
+    fireEvent.click(
+      within(memoryDialog).getByRole("button", { name: "Close" }),
+    );
 
     await waitFor(() => {
-      expect(screen.queryByTestId("leftpanel-dialog-memory")).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId("leftpanel-dialog-memory"),
+      ).not.toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByTestId("icon-bar-memory"));
@@ -199,7 +235,9 @@ describe("IconBar dialog migration", () => {
       fireEvent.keyDown(document, { key: "Escape" });
     });
     await waitFor(() => {
-      expect(screen.queryByTestId("leftpanel-dialog-memory")).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId("leftpanel-dialog-memory"),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -218,7 +256,9 @@ describe("IconBar dialog migration", () => {
     fireEvent.click(screen.getByTestId("icon-bar-characters"));
     await screen.findByTestId("leftpanel-dialog-characters");
 
-    expect(screen.queryByTestId("leftpanel-dialog-memory")).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("leftpanel-dialog-memory"),
+    ).not.toBeInTheDocument();
   });
 
   it("search icon opens spotlight and closes on escape (WB-FE-S3-S3)", async () => {
@@ -233,7 +273,9 @@ describe("IconBar dialog migration", () => {
     fireEvent.click(screen.getByTestId("icon-bar-search"));
 
     await waitFor(() => {
-      expect(screen.getByTestId("leftpanel-spotlight-search")).toBeInTheDocument();
+      expect(
+        screen.getByTestId("leftpanel-spotlight-search"),
+      ).toBeInTheDocument();
     });
 
     await act(async () => {
@@ -241,7 +283,9 @@ describe("IconBar dialog migration", () => {
     });
 
     await waitFor(() => {
-      expect(screen.queryByTestId("leftpanel-spotlight-search")).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId("leftpanel-spotlight-search"),
+      ).not.toBeInTheDocument();
     });
   });
 });

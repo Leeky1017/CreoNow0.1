@@ -1,9 +1,6 @@
 import assert from "node:assert/strict";
 
-import {
-  buildLLMMessages,
-  estimateMessageTokens,
-} from "../buildLLMMessages";
+import { buildLLMMessages, estimateMessageTokens } from "../buildLLMMessages";
 
 // --- S1: includes history messages in order ---
 
@@ -89,7 +86,9 @@ import {
   assert.equal(last.content, "now");
 
   // the long message should have been trimmed
-  const hasLongMsg = result.some((m: { content: string }) => m.content === longContent);
+  const hasLongMsg = result.some(
+    (m: { content: string }) => m.content === longContent,
+  );
   assert.equal(hasLongMsg, false, "long message should be trimmed");
 }
 
@@ -98,9 +97,7 @@ import {
 {
   const result = buildLLMMessages({
     systemPrompt: "IMPORTANT_SYSTEM",
-    history: [
-      { role: "user", content: "x".repeat(40000) },
-    ],
+    history: [{ role: "user", content: "x".repeat(40000) }],
     currentUserMessage: "current",
     maxTokenBudget: 100,
   });

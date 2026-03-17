@@ -33,7 +33,9 @@ function isReadWithinScope(args: {
   scope: "rules" | "settings";
   p: unknown;
 }): boolean {
-  return typeof args.p === "string" && args.p.startsWith(`.creonow/${args.scope}/`);
+  return (
+    typeof args.p === "string" && args.p.startsWith(`.creonow/${args.scope}/`)
+  );
 }
 
 function isNonEmptyString(value: unknown): value is string {
@@ -614,7 +616,10 @@ function registerContextFsReadHandlers(
 }
 
 export function registerContextFsHandlers(deps: ContextFsRegistrarDeps): void {
-  const handleWithProjectAccess: HandleWithProjectAccess = (channel, listener) => {
+  const handleWithProjectAccess: HandleWithProjectAccess = (
+    channel,
+    listener,
+  ) => {
     deps.ipcMain.handle(channel, async (event, payload) => {
       const guarded = guardAndNormalizeProjectAccess({
         event,

@@ -44,7 +44,7 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
         {/* Added */}
         <div className="flex items-center gap-1.5">
           <span className="text-[var(--color-success)]">
-            {t('diff.footer.addedLines', { count: props.stats.addedLines })}
+            {t("diff.footer.addedLines", { count: props.stats.addedLines })}
           </span>
         </div>
 
@@ -54,7 +54,7 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
         {/* Removed */}
         <div className="flex items-center gap-1.5">
           <span className="text-[var(--color-error)]">
-            {t('diff.footer.removedLines', { count: props.stats.removedLines })}
+            {t("diff.footer.removedLines", { count: props.stats.removedLines })}
           </span>
         </div>
 
@@ -63,7 +63,7 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
 
         {/* Hunks */}
         <div className="text-[var(--color-fg-muted)]">
-          {t('diff.footer.changeCount', { count: props.stats.changedHunks })}
+          {t("diff.footer.changeCount", { count: props.stats.changedHunks })}
         </div>
       </div>
 
@@ -72,7 +72,10 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
         <div className="flex items-center gap-2">
           {hasCurrentHunk ? (
             <span className="text-[11px] text-[var(--color-fg-muted)]">
-              {t('diff.footer.hunkLabel', { current: currentHunkLabel, total: props.totalChanges })}{" "}
+              {t("diff.footer.hunkLabel", {
+                current: currentHunkLabel,
+                total: props.totalChanges,
+              })}{" "}
               {props.currentHunkDecision &&
               props.currentHunkDecision !== "pending"
                 ? `(${t(`diff.footer.decision.${props.currentHunkDecision}`)})`
@@ -87,7 +90,7 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
               onClick={props.onRejectHunk}
               disabled={!hasCurrentHunk}
             >
-              {t('diff.footer.rejectHunk')}
+              {t("diff.footer.rejectHunk")}
             </Button>
           ) : null}
 
@@ -98,19 +101,29 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
               onClick={props.onAcceptHunk}
               disabled={!hasCurrentHunk}
             >
-              {t('diff.footer.acceptHunk')}
+              {t("diff.footer.acceptHunk")}
             </Button>
           ) : null}
 
           {props.onRejectAll ? (
-            <Button data-testid="ai-reject-all" variant="ghost" size="sm" onClick={props.onRejectAll}>
-              {t('diff.footer.rejectAll')}
+            <Button
+              data-testid="ai-reject-all"
+              variant="ghost"
+              size="sm"
+              onClick={props.onRejectAll}
+            >
+              {t("diff.footer.rejectAll")}
             </Button>
           ) : null}
 
           {props.onAcceptAll ? (
-            <Button data-testid="ai-accept-all" variant="secondary" size="sm" onClick={props.onAcceptAll}>
-              {t('diff.footer.acceptAll')}
+            <Button
+              data-testid="ai-accept-all"
+              variant="secondary"
+              size="sm"
+              onClick={props.onAcceptAll}
+            >
+              {t("diff.footer.acceptAll")}
             </Button>
           ) : null}
         </div>
@@ -121,7 +134,9 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
           onClick={props.onRestore}
           disabled={props.restoreInProgress}
         >
-          {props.restoreInProgress ? t('diff.footer.restoring') : t('diff.footer.restore')}
+          {props.restoreInProgress
+            ? t("diff.footer.restoring")
+            : t("diff.footer.restore")}
         </Button>
       )}
     </footer>

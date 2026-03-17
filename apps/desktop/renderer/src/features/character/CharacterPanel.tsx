@@ -6,8 +6,6 @@ import type { Character, CharacterGroup } from "./types";
 
 import { Plus } from "lucide-react";
 
-/* eslint-disable creonow/no-native-html-element -- CharacterPanel uses specialized empty-state and add-character buttons */
-
 export interface CharacterPanelProps {
   /** List of characters */
   characters: Character[];
@@ -73,6 +71,7 @@ function EmptyGroupState({ onClick }: { onClick?: () => void }) {
   const { t } = useTranslation();
 
   return (
+    // eslint-disable-next-line creonow/no-native-html-element -- specialized button
     <button
       type="button"
       onClick={onClick}
@@ -254,6 +253,7 @@ export function CharacterPanelContent({
           <span className="font-medium text-sm tracking-wide text-[var(--color-fg-default)]">
             {t("character.panel.title")}
           </span>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             onClick={onCreate}

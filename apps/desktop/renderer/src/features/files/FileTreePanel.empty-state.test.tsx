@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 
 import { FileTreePanel } from "./FileTreePanel";
 
@@ -77,9 +83,7 @@ describe("FileTreePanel empty state", () => {
   it("should render empty state message and new file entry action when no documents exist", async () => {
     await renderFileTreePanel("proj-empty");
 
-    expect(
-      screen.getByText("No Files"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("No Files")).toBeInTheDocument();
     expect(
       screen.getByText("Start by creating your first file"),
     ).toBeInTheDocument();

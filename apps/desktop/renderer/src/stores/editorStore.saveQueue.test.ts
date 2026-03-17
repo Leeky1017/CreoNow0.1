@@ -1,15 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { enqueueMock, createEditorSaveQueueMock } = vi.hoisted(() => {
-  const enqueue = vi.fn<
-    (request: {
-      projectId: string;
-      documentId: string;
-      contentJson: string;
-      actor: "user" | "auto";
-      reason: "manual-save" | "autosave";
-    }) => Promise<void>
-  >();
+  const enqueue =
+    vi.fn<
+      (request: {
+        projectId: string;
+        documentId: string;
+        contentJson: string;
+        actor: "user" | "auto";
+        reason: "manual-save" | "autosave";
+      }) => Promise<void>
+    >();
 
   const createQueue = vi.fn(() => ({
     enqueue,

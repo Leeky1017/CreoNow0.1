@@ -5,7 +5,11 @@ import { InfoBar } from "./InfoBar";
 describe("InfoBar", () => {
   it("renders message with correct variant style", () => {
     render(
-      <InfoBar variant="warning" message="Disk space low" data-testid="infobar" />,
+      <InfoBar
+        variant="warning"
+        message="Disk space low"
+        data-testid="infobar"
+      />,
     );
     expect(screen.getByText("Disk space low")).toBeInTheDocument();
     const bar = screen.getByTestId("infobar");

@@ -18,9 +18,15 @@ export const Default: Story = {
   args: {
     children: (
       <>
-        <Button size="sm" variant="ghost"><Bold size={16} /></Button>
-        <Button size="sm" variant="ghost"><Italic size={16} /></Button>
-        <Button size="sm" variant="ghost"><Underline size={16} /></Button>
+        <Button size="sm" variant="ghost">
+          <Bold size={16} />
+        </Button>
+        <Button size="sm" variant="ghost">
+          <Italic size={16} />
+        </Button>
+        <Button size="sm" variant="ghost">
+          <Underline size={16} />
+        </Button>
       </>
     ),
   },
@@ -31,9 +37,15 @@ export const WithSeparator: Story = {
     separator: true,
     children: (
       <>
-        <Button size="sm" variant="ghost"><Bold size={16} /></Button>
-        <Button size="sm" variant="ghost"><Italic size={16} /></Button>
-        <Button size="sm" variant="ghost"><Strikethrough size={16} /></Button>
+        <Button size="sm" variant="ghost">
+          <Bold size={16} />
+        </Button>
+        <Button size="sm" variant="ghost">
+          <Italic size={16} />
+        </Button>
+        <Button size="sm" variant="ghost">
+          <Strikethrough size={16} />
+        </Button>
       </>
     ),
   },
@@ -43,12 +55,20 @@ export const ToolbarLayout: Story = {
   render: () => (
     <div className="flex items-center gap-1 rounded border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-1">
       <ToolbarGroup separator>
-        <Button size="sm" variant="ghost"><Bold size={16} /></Button>
-        <Button size="sm" variant="ghost"><Italic size={16} /></Button>
-        <Button size="sm" variant="ghost"><Underline size={16} /></Button>
+        <Button size="sm" variant="ghost">
+          <Bold size={16} />
+        </Button>
+        <Button size="sm" variant="ghost">
+          <Italic size={16} />
+        </Button>
+        <Button size="sm" variant="ghost">
+          <Underline size={16} />
+        </Button>
       </ToolbarGroup>
       <ToolbarGroup>
-        <Button size="sm" variant="ghost"><Strikethrough size={16} /></Button>
+        <Button size="sm" variant="ghost">
+          <Strikethrough size={16} />
+        </Button>
       </ToolbarGroup>
     </div>
   ),

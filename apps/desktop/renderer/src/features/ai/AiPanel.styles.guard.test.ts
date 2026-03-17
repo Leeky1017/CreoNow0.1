@@ -7,7 +7,10 @@ describe("AiPanel styles guard", () => {
   it("WB-FE-STYLE-S1 does not inject inline <style> in AiPanel", () => {
     const sourcePathCandidates = [
       resolve(process.cwd(), "renderer/src/features/ai/AiPanel.tsx"),
-      resolve(process.cwd(), "apps/desktop/renderer/src/features/ai/AiPanel.tsx"),
+      resolve(
+        process.cwd(),
+        "apps/desktop/renderer/src/features/ai/AiPanel.tsx",
+      ),
     ];
     const sourcePath = sourcePathCandidates.find((path) => existsSync(path));
     if (!sourcePath) {

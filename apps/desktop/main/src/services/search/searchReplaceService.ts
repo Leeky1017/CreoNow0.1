@@ -426,10 +426,10 @@ function loadPreviewRows(args: {
   return { ok: true, data: [row] };
 }
 
-function collectPreviewItems(args: {
-  rows: DocumentRow[];
-  matcher: RegExp;
-}): { items: SearchReplacePreviewItem[]; totalMatches: number } {
+function collectPreviewItems(args: { rows: DocumentRow[]; matcher: RegExp }): {
+  items: SearchReplacePreviewItem[];
+  totalMatches: number;
+} {
   const items: SearchReplacePreviewItem[] = [];
   let totalMatches = 0;
 

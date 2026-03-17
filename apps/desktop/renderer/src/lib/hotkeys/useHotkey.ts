@@ -50,5 +50,17 @@ export function useHotkey(
     return () => {
       hotkeyManager.unregister(id);
     };
-  }, [id, key, ctrlKey, shiftKey, altKey, metaKey, modKey, handler, scope, priority, enabled]);
+  }, [
+    id,
+    key,
+    ctrlKey,
+    shiftKey,
+    altKey,
+    metaKey,
+    modKey,
+    handler,
+    scope,
+    priority,
+    enabled,
+  ]);
 }

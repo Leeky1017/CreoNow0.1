@@ -42,7 +42,7 @@ export function RenameProjectDialog(
       e.preventDefault();
       const trimmed = name.trim();
       if (!trimmed) {
-        setNameError(t('dashboard.rename.nameRequired'));
+        setNameError(t("dashboard.rename.nameRequired"));
         return;
       }
       setNameError(null);
@@ -55,8 +55,8 @@ export function RenameProjectDialog(
     <Dialog
       open={props.open}
       onOpenChange={props.onOpenChange}
-      title={t('dashboard.rename.title')}
-      description={t('dashboard.rename.description')}
+      title={t("dashboard.rename.title")}
+      description={t("dashboard.rename.description")}
       footer={
         <>
           <Button
@@ -66,7 +66,7 @@ export function RenameProjectDialog(
             onClick={() => props.onOpenChange(false)}
             disabled={props.submitting}
           >
-            {t('dashboard.rename.cancel')}
+            {t("dashboard.rename.cancel")}
           </Button>
           <Button
             data-testid="rename-project-submit"
@@ -76,7 +76,9 @@ export function RenameProjectDialog(
             size="sm"
             disabled={props.submitting}
           >
-            {props.submitting ? t('dashboard.rename.renaming') : t('dashboard.rename.rename')}
+            {props.submitting
+              ? t("dashboard.rename.renaming")
+              : t("dashboard.rename.rename")}
           </Button>
         </>
       }
@@ -89,7 +91,7 @@ export function RenameProjectDialog(
       >
         <div>
           <Text size="small" color="muted" as="div" className="mb-2">
-            {t('dashboard.rename.projectName')}
+            {t("dashboard.rename.projectName")}
           </Text>
           <Input
             data-testid="rename-project-name"

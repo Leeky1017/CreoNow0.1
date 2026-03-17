@@ -139,20 +139,18 @@ describe("kg async validation", () => {
   });
 
   it("KG-S0-AV-S3 batch entityUpdate partial failure reports errors", async () => {
-    mockKgState.entityUpdate = vi.fn(
-      async ({ id }: { id: string }) => {
-        if (id === "ev-2") {
-          return {
-            ok: false,
-            error: { code: "INTERNAL_ERROR", message: "first failed" },
-          };
-        }
-        if (id === "ev-3") {
-          throw new Error("second failed");
-        }
-        return { ok: true };
-      },
-    );
+    mockKgState.entityUpdate = vi.fn(async ({ id }: { id: string }) => {
+      if (id === "ev-2") {
+        return {
+          ok: false,
+          error: { code: "INTERNAL_ERROR", message: "first failed" },
+        };
+      }
+      if (id === "ev-3") {
+        throw new Error("second failed");
+      }
+      return { ok: true };
+    });
 
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 

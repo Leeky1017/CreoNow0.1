@@ -1,5 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 
 import { FileTreePanel } from "./FileTreePanel";
 
@@ -153,7 +159,9 @@ describe("FileTreePanel context menu actions", () => {
       fireEvent.contextMenu(screen.getByTestId("file-row-doc-1"));
     });
 
-    fireEvent.click(await screen.findByRole("menuitem", { name: "Move to Folder" }));
+    fireEvent.click(
+      await screen.findByRole("menuitem", { name: "Move to Folder" }),
+    );
     await flushFileTreeAsyncUpdates();
 
     expect(moveToFolder).toHaveBeenCalledWith({

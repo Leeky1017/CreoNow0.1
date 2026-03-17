@@ -1,8 +1,16 @@
-import { ChevronDown, CircleCheck, CircleX, Loader2, MapPin, Play, Settings, TriangleAlert, X } from "lucide-react";
+import {
+  ChevronDown,
+  CircleCheck,
+  CircleX,
+  Loader2,
+  MapPin,
+  Play,
+  Settings,
+  TriangleAlert,
+  X,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../components/primitives";
-
-/* eslint-disable creonow/no-native-html-element -- gate category labels, filter controls, and action buttons */
 
 // ============================================================================
 // Types
@@ -240,22 +248,22 @@ function PanelStatusIndicator({
   const statusConfig = {
     "all-passed": {
       color: "bg-[var(--color-success)]",
-      text: t('qualityGates.statusAllPassed'),
+      text: t("qualityGates.statusAllPassed"),
       textColor: "text-[var(--color-success)]",
     },
     "issues-found": {
       color: "bg-[var(--color-warning)]",
-      text: t('qualityGates.statusIssuesFound', { count: issuesCount ?? 0 }),
+      text: t("qualityGates.statusIssuesFound", { count: issuesCount ?? 0 }),
       textColor: "text-[var(--color-warning)]",
     },
     errors: {
       color: "bg-[var(--color-error)]",
-      text: t('qualityGates.statusErrors', { count: issuesCount ?? 0 }),
+      text: t("qualityGates.statusErrors", { count: issuesCount ?? 0 }),
       textColor: "text-[var(--color-error)]",
     },
     running: {
       color: "bg-[var(--color-info)]",
-      text: t('qualityGates.statusRunning'),
+      text: t("qualityGates.statusRunning"),
       textColor: "text-[var(--color-info)]",
     },
   };
@@ -328,12 +336,14 @@ function SettingsToggle({
 }) {
   return (
     <div className="flex items-center justify-between">
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
       <label
         htmlFor={id}
         className={`text-[13px] text-[var(--color-fg-default)] select-none cursor-pointer ${disabled ? "opacity-50" : ""}`}
       >
         {label}
       </label>
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
       <button
         type="button"
         id={id}
@@ -386,7 +396,7 @@ function IssueCard({
           {issue.description}
         </p>
         <span className="text-[10px] text-[var(--color-fg-placeholder)] mt-1 inline-block">
-          {t('qualityGates.ignored')}
+          {t("qualityGates.ignored")}
         </span>
       </div>
     );
@@ -407,6 +417,7 @@ function IssueCard({
       {issue.location && (
         <div className="flex items-center gap-1 mt-2 text-[10px] text-[var(--color-fg-muted)]">
           <LocationIcon />
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             onClick={() => onViewInEditor?.(checkId, issue.id)}
@@ -424,7 +435,7 @@ function IssueCard({
           loading={isFixing}
           className="!h-6 !text-[10px] !px-2"
         >
-          {t('qualityGates.fixIssue')}
+          {t("qualityGates.fixIssue")}
         </Button>
         <Button
           variant="ghost"
@@ -432,7 +443,7 @@ function IssueCard({
           onClick={() => onIgnore?.(checkId, issue.id)}
           className="!h-6 !text-[10px] !px-2"
         >
-          {t('qualityGates.ignore')}
+          {t("qualityGates.ignore")}
         </Button>
         <Button
           variant="ghost"
@@ -440,7 +451,7 @@ function IssueCard({
           onClick={() => onViewInEditor?.(checkId, issue.id)}
           className="!h-6 !text-[10px] !px-2"
         >
-          {t('qualityGates.viewInEditor')}
+          {t("qualityGates.viewInEditor")}
         </Button>
       </div>
     </div>
@@ -477,6 +488,7 @@ function CheckItemRow({
       className="border-b border-[var(--color-separator)] last:border-b-0"
       data-testid={`check-item-${check.id}`}
     >
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
       <button
         type="button"
         onClick={() => hasIssues && onToggle?.(check.id)}
@@ -508,7 +520,7 @@ function CheckItemRow({
             )}
             {check.ignoredCount && check.ignoredCount > 0 && (
               <span className="text-[10px] text-[var(--color-fg-placeholder)]">
-                {t('qualityGates.ignoredCount', { count: check.ignoredCount })}
+                {t("qualityGates.ignoredCount", { count: check.ignoredCount })}
               </span>
             )}
           </div>
@@ -583,7 +595,10 @@ function CheckGroupAccordion({
             {group.name}
           </span>
           <span className="text-[11px] text-[var(--color-fg-muted)]">
-            {t('qualityGates.checksCount', { passed: passedCount, total: checkCount })}
+            {t("qualityGates.checksCount", {
+              passed: passedCount,
+              total: checkCount,
+            })}
           </span>
         </div>
       </div>
@@ -621,13 +636,14 @@ function SettingsSection({
 }) {
   const { t } = useTranslation();
   const frequencyOptions: { value: CheckFrequency; label: string }[] = [
-    { value: "on-demand", label: t('qualityGates.frequencyOnDemand') },
-    { value: "after-edit", label: t('qualityGates.frequencyAfterEdit') },
-    { value: "every-5-minutes", label: t('qualityGates.frequencyEvery5Min') },
+    { value: "on-demand", label: t("qualityGates.frequencyOnDemand") },
+    { value: "after-edit", label: t("qualityGates.frequencyAfterEdit") },
+    { value: "every-5-minutes", label: t("qualityGates.frequencyEvery5Min") },
   ];
 
   return (
     <div className="bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
       <button
         type="button"
         onClick={onToggle}
@@ -636,7 +652,7 @@ function SettingsSection({
         <div className="flex items-center gap-2">
           <SettingsIcon />
           <span className="text-[13px] font-medium text-[var(--color-fg-default)]">
-            {t('qualityGates.settings')}
+            {t("qualityGates.settings")}
           </span>
         </div>
         <ChevronIcon expanded={expanded} />
@@ -647,7 +663,7 @@ function SettingsSection({
           <div className="pt-4 space-y-4">
             <SettingsToggle
               id="run-on-save"
-              label={t('qualityGates.runOnSave')}
+              label={t("qualityGates.runOnSave")}
               checked={settings.runOnSave}
               onChange={(checked) =>
                 onSettingsChange?.({ ...settings, runOnSave: checked })
@@ -655,19 +671,21 @@ function SettingsSection({
             />
             <SettingsToggle
               id="block-on-errors"
-              label={t('qualityGates.blockOnErrors')}
+              label={t("qualityGates.blockOnErrors")}
               checked={settings.blockOnErrors}
               onChange={(checked) =>
                 onSettingsChange?.({ ...settings, blockOnErrors: checked })
               }
             />
             <div className="flex items-center justify-between">
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
               <label
                 htmlFor="check-frequency"
                 className="text-[13px] text-[var(--color-fg-default)]"
               >
-                {t('qualityGates.checkFrequency')}
+                {t("qualityGates.checkFrequency")}
               </label>
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized select */}
               <select
                 id="check-frequency"
                 value={settings.frequency}
@@ -795,7 +813,7 @@ export function QualityGatesPanelContent({
       <div className={headerStyles}>
         <div>
           <h2 className="text-[15px] font-semibold text-[var(--color-fg-default)] tracking-tight">
-            {t('qualityGates.title')}
+            {t("qualityGates.title")}
           </h2>
           <div className="mt-2">
             <PanelStatusIndicator
@@ -805,11 +823,12 @@ export function QualityGatesPanelContent({
           </div>
         </div>
         {showCloseButton && (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
           <button
             type="button"
             onClick={onClose}
             className={closeButtonStyles}
-            aria-label={t('qualityGates.closeAriaLabel')}
+            aria-label={t("qualityGates.closeAriaLabel")}
           >
             <CloseIcon />
           </button>
@@ -829,7 +848,7 @@ export function QualityGatesPanelContent({
           className="!justify-center !gap-2"
         >
           <PlayIcon />
-          {t('qualityGates.runAllChecks')}
+          {t("qualityGates.runAllChecks")}
         </Button>
 
         {/* Success message when all passed */}
@@ -837,7 +856,7 @@ export function QualityGatesPanelContent({
           <div className="p-4 bg-[var(--color-success-subtle)] border border-[var(--color-success)]/20 rounded-[var(--radius-lg)] text-center">
             <CheckCircleIcon />
             <p className="text-[13px] text-[var(--color-success)] mt-2">
-              {t('qualityGates.allPassedMessage')}
+              {t("qualityGates.allPassedMessage")}
             </p>
           </div>
         )}

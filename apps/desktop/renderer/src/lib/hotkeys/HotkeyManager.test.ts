@@ -110,7 +110,13 @@ describe("HotkeyManager", () => {
 
   it("global scope handlers fire regardless of active scope", () => {
     const handler = vi.fn();
-    manager.register("test-g", { key: "p", ctrlKey: true }, "global", 1, handler);
+    manager.register(
+      "test-g",
+      { key: "p", ctrlKey: true },
+      "global",
+      1,
+      handler,
+    );
     manager.setActiveScope("editor");
 
     document.dispatchEvent(

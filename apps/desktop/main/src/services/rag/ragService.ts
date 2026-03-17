@@ -416,12 +416,8 @@ export function createRagService(deps: {
         deps.rerank,
       );
 
-      const {
-        items,
-        usedTokens,
-        droppedCount,
-        trimmedCount,
-      } = buildBudgetedItems(ordered, limitRes.data, budgetRes.data);
+      const { items, usedTokens, droppedCount, trimmedCount } =
+        buildBudgetedItems(ordered, limitRes.data, budgetRes.data);
 
       const mode: RagRetrieveDiagnostics["mode"] = rerankDiagnostics.enabled
         ? "fulltext_reranked"

@@ -6,11 +6,12 @@ import { Dialog } from "../../components/primitives/Dialog";
 import { Input } from "../../components/primitives/Input";
 import { Textarea } from "../../components/primitives/Textarea";
 import { Text } from "../../components/primitives/Text";
-import { useTemplateStore, type TemplateStructure } from "../../stores/templateStore";
+import {
+  useTemplateStore,
+  type TemplateStructure,
+} from "../../stores/templateStore";
 
 import { X } from "lucide-react";
-
-/* eslint-disable creonow/no-native-html-element -- form labels and template option buttons */
 
 // =============================================================================
 // Types
@@ -42,12 +43,13 @@ function ListItem({ value, onRemove, disabled }: ListItemProps): JSX.Element {
       <span className="flex-1 text-sm text-[var(--color-fg-default)] truncate">
         {value}
       </span>
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
       <button
         type="button"
         onClick={onRemove}
         disabled={disabled}
         className="text-[var(--color-fg-muted)] hover:text-[var(--color-error)] transition-colors disabled:opacity-50"
-        aria-label={t('projects.template.removeItem', { value })}
+        aria-label={t("projects.template.removeItem", { value })}
       >
         <X size={16} strokeWidth={1.5} />
       </button>
@@ -65,7 +67,11 @@ interface AddItemInputProps {
   disabled?: boolean;
 }
 
-function AddItemInput({ placeholder, onAdd, disabled }: AddItemInputProps): JSX.Element {
+function AddItemInput({
+  placeholder,
+  onAdd,
+  disabled,
+}: AddItemInputProps): JSX.Element {
   const { t } = useTranslation();
   const [value, setValue] = useState("");
 
@@ -105,7 +111,7 @@ function AddItemInput({ placeholder, onAdd, disabled }: AddItemInputProps): JSX.
         onClick={handleAdd}
         disabled={disabled || !value.trim()}
       >
-        {t('projects.template.add')}
+        {t("projects.template.add")}
       </Button>
     </div>
   );
@@ -181,7 +187,7 @@ export function CreateTemplateDialog({
 
       const trimmedName = name.trim();
       if (!trimmedName) {
-        setError(t('projects.template.nameRequired'));
+        setError(t("projects.template.nameRequired"));
         return;
       }
 
@@ -203,20 +209,33 @@ export function CreateTemplateDialog({
         onCreated?.(template.id);
         onOpenChange(false);
       } catch (err) {
-        setError(err instanceof Error ? err.message : t('projects.template.createFailed'));
+        setError(
+          err instanceof Error
+            ? err.message
+            : t("projects.template.createFailed"),
+        );
       } finally {
         setSubmitting(false);
       }
     },
-    [name, description, folders, files, createTemplate, onCreated, onOpenChange, t],
+    [
+      name,
+      description,
+      folders,
+      files,
+      createTemplate,
+      onCreated,
+      onOpenChange,
+      t,
+    ],
   );
 
   return (
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      title={t('projects.template.title')}
-      description={t('projects.template.description')}
+      title={t("projects.template.title")}
+      description={t("projects.template.description")}
       footer={
         <>
           <Button
@@ -225,7 +244,7 @@ export function CreateTemplateDialog({
             onClick={() => onOpenChange(false)}
             disabled={submitting}
           >
-            {t('projects.template.cancel')}
+            {t("projects.template.cancel")}
           </Button>
           <Button
             data-testid="create-template-submit"
@@ -235,7 +254,9 @@ export function CreateTemplateDialog({
             type="submit"
             form={formId}
           >
-            {submitting ? t('projects.template.creating') : t('projects.template.createTemplate')}
+            {submitting
+              ? t("projects.template.creating")
+              : t("projects.template.createTemplate")}
           </Button>
         </>
       }
@@ -248,9 +269,11 @@ export function CreateTemplateDialog({
       >
         {/* Template Name */}
         <div>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
           <label className="block mb-2">
             <Text size="small" color="muted">
-              {t('projects.template.templateName')} <span className="text-[var(--color-error)]">*</span>
+              {t("projects.template.templateName")}{" "}
+              <span className="text-[var(--color-error)]">*</span>
             </Text>
           </label>
           <Input
@@ -258,7 +281,7 @@ export function CreateTemplateDialog({
             value={name}
             onChange={(e) => setName(e.target.value)}
             autoFocus
-            placeholder={t('projects.template.namePlaceholder')}
+            placeholder={t("projects.template.namePlaceholder")}
             fullWidth
             error={!!error && !name.trim()}
           />
@@ -266,17 +289,20 @@ export function CreateTemplateDialog({
 
         {/* Description */}
         <div>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
           <label className="block mb-2">
             <Text size="small" color="muted">
-              {t('projects.template.templateDescription')}{" "}
-              <span className="opacity-50 text-xs">({t('projects.template.optional')})</span>
+              {t("projects.template.templateDescription")}{" "}
+              <span className="opacity-50 text-xs">
+                ({t("projects.template.optional")})
+              </span>
             </Text>
           </label>
           <Textarea
             data-testid="create-template-description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder={t('projects.template.descriptionPlaceholder')}
+            placeholder={t("projects.template.descriptionPlaceholder")}
             fullWidth
             rows={2}
           />
@@ -284,10 +310,13 @@ export function CreateTemplateDialog({
 
         {/* Initial Folders */}
         <div>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
           <label className="block mb-2">
             <Text size="small" color="muted">
-              {t('projects.template.initialFolders')}{" "}
-              <span className="opacity-50 text-xs">({t('projects.template.optional')})</span>
+              {t("projects.template.initialFolders")}{" "}
+              <span className="opacity-50 text-xs">
+                ({t("projects.template.optional")})
+              </span>
             </Text>
           </label>
           <div className="space-y-2">
@@ -300,7 +329,7 @@ export function CreateTemplateDialog({
               />
             ))}
             <AddItemInput
-              placeholder={t('projects.template.folderPlaceholder')}
+              placeholder={t("projects.template.folderPlaceholder")}
               onAdd={handleAddFolder}
               disabled={submitting}
             />
@@ -309,10 +338,13 @@ export function CreateTemplateDialog({
 
         {/* Initial Files */}
         <div>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
           <label className="block mb-2">
             <Text size="small" color="muted">
-              {t('projects.template.initialFiles')}{" "}
-              <span className="opacity-50 text-xs">({t('projects.template.optional')})</span>
+              {t("projects.template.initialFiles")}{" "}
+              <span className="opacity-50 text-xs">
+                ({t("projects.template.optional")})
+              </span>
             </Text>
           </label>
           <div className="space-y-2">
@@ -325,7 +357,7 @@ export function CreateTemplateDialog({
               />
             ))}
             <AddItemInput
-              placeholder={t('projects.template.filePlaceholder')}
+              placeholder={t("projects.template.filePlaceholder")}
               onAdd={handleAddFile}
               disabled={submitting}
             />
@@ -334,7 +366,12 @@ export function CreateTemplateDialog({
 
         {/* Error Message */}
         {error && (
-          <Text size="small" color="muted" as="div" className="text-[var(--color-error)]">
+          <Text
+            size="small"
+            color="muted"
+            as="div"
+            className="text-[var(--color-error)]"
+          >
             {error}
           </Text>
         )}

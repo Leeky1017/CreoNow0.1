@@ -21,7 +21,9 @@ function invalidPayload(message: string): ExportPayloadError {
   return { code: "INVALID_ARGUMENT", message };
 }
 
-function parseDocumentExportPayload(payload: unknown):
+function parseDocumentExportPayload(
+  payload: unknown,
+):
   | { ok: true; data: DocumentExportPayload }
   | { ok: false; error: ExportPayloadError } {
   if (!payload || typeof payload !== "object") {
@@ -41,7 +43,9 @@ function parseDocumentExportPayload(payload: unknown):
   return { ok: true, data: { projectId, documentId } };
 }
 
-function parseProjectBundlePayload(payload: unknown):
+function parseProjectBundlePayload(
+  payload: unknown,
+):
   | { ok: true; data: { projectId: string } }
   | { ok: false; error: ExportPayloadError } {
   if (!payload || typeof payload !== "object") {
@@ -88,13 +92,17 @@ export function registerExportIpcHandlers(deps: {
   projectSessionBinding?: ProjectSessionBindingRegistry;
 }): void {
   const projectSessionBinding =
-    deps.projectSessionBinding ?? getProjectSessionBindingRegistry() ?? undefined;
+    deps.projectSessionBinding ??
+    getProjectSessionBindingRegistry() ??
+    undefined;
 
   const invokeDocumentExport = async (
     event: unknown,
     channel: string,
     payload: unknown,
-    run: (args: DocumentExportPayload) => Promise<
+    run: (
+      args: DocumentExportPayload,
+    ) => Promise<
       | { ok: true; data: { relativePath: string; bytesWritten: number } }
       | { ok: false; error: ExportPayloadError }
     >,

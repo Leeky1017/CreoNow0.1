@@ -93,19 +93,19 @@ describe("CommandPalette file search integration", () => {
     const commands = [...createCommandItems(), ...createFileItems()];
 
     render(
-      <CommandPalette
-        open={true}
-        onOpenChange={vi.fn()}
-        commands={commands}
-      />,
+      <CommandPalette open={true} onOpenChange={vi.fn()} commands={commands} />,
     );
 
     const input = screen.getByRole("textbox", { name: /search commands/i });
     await user.type(input, "章");
 
     // File items matching "章" should appear (use testid since highlightMatch splits text)
-    expect(screen.getByTestId("command-item-file-chapter1")).toBeInTheDocument();
-    expect(screen.getByTestId("command-item-file-chapter2")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("command-item-file-chapter1"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("command-item-file-chapter2"),
+    ).toBeInTheDocument();
     // "README.md" should not appear since it doesn't match "章"
     expect(
       screen.queryByTestId("command-item-file-readme"),
@@ -117,11 +117,7 @@ describe("CommandPalette file search integration", () => {
     const commands = [...createCommandItems(), ...createFileItems()];
 
     render(
-      <CommandPalette
-        open={true}
-        onOpenChange={vi.fn()}
-        commands={commands}
-      />,
+      <CommandPalette open={true} onOpenChange={vi.fn()} commands={commands} />,
     );
 
     const input = screen.getByRole("textbox", { name: /search commands/i });
@@ -137,11 +133,7 @@ describe("CommandPalette file search integration", () => {
     const commands = createCommandItems();
 
     render(
-      <CommandPalette
-        open={true}
-        onOpenChange={vi.fn()}
-        commands={commands}
-      />,
+      <CommandPalette open={true} onOpenChange={vi.fn()} commands={commands} />,
     );
 
     const input = screen.getByRole("textbox", { name: /search commands/i });
@@ -161,11 +153,7 @@ describe("CommandPalette file search integration", () => {
     const commands = [...createCommandItems(), ...createFileItems()];
 
     render(
-      <CommandPalette
-        open={true}
-        onOpenChange={vi.fn()}
-        commands={commands}
-      />,
+      <CommandPalette open={true} onOpenChange={vi.fn()} commands={commands} />,
     );
 
     // With empty query, file items should be hidden (existing behavior)

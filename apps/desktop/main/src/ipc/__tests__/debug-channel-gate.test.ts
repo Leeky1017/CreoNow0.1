@@ -152,24 +152,21 @@ async function main(): Promise<void> {
     },
   );
 
-  await runScenario(
-    "IPC-S2-DBG-S5 E2E 环境允许调试通道用于验收",
-    async () => {
-      const harness = createHarness({
-        env: { CREONOW_E2E: "1", NODE_ENV: "production" },
-        tableNames: ["zeta", "alpha"],
-      });
+  await runScenario("IPC-S2-DBG-S5 E2E 环境允许调试通道用于验收", async () => {
+    const harness = createHarness({
+      env: { CREONOW_E2E: "1", NODE_ENV: "production" },
+      tableNames: ["zeta", "alpha"],
+    });
 
-      registerDbDebugIpcHandlers({
-        ipcMain: harness.ipcMain,
-        db: harness.db,
-        logger: harness.logger,
-        env: harness.env,
-      });
+    registerDbDebugIpcHandlers({
+      ipcMain: harness.ipcMain,
+      db: harness.db,
+      logger: harness.logger,
+      env: harness.env,
+    });
 
-      assert.equal(harness.handlers.has("db:debug:tablenames"), true);
-    },
-  );
+    assert.equal(harness.handlers.has("db:debug:tablenames"), true);
+  });
 }
 
 void main().catch((error) => {

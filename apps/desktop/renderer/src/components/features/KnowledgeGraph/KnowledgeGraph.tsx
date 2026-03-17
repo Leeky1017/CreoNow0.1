@@ -14,8 +14,6 @@ import type {
   GraphNode,
 } from "./types";
 
-/* eslint-disable creonow/no-native-html-element -- graph navigation and filter buttons */
-
 /**
  * Min/max zoom levels
  */
@@ -64,12 +62,13 @@ function EmptyState({ onAddNode }: { onAddNode: () => void }): JSX.Element {
         </div>
         <div>
           <p className="text-sm text-[var(--color-fg-muted)]">
-            {t('kg.graph.emptyTitle')}
+            {t("kg.graph.emptyTitle")}
           </p>
           <p className="text-xs text-[var(--color-fg-subtle)] mt-1">
-            {t('kg.graph.emptyHint')}
+            {t("kg.graph.emptyHint")}
           </p>
         </div>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           onClick={onAddNode}
           className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] text-sm font-medium rounded-[var(--radius-md)] hover:bg-[var(--color-fg-muted)] transition-colors"
@@ -85,7 +84,7 @@ function EmptyState({ onAddNode }: { onAddNode: () => void }): JSX.Element {
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          {t('kg.graph.addNode')}
+          {t("kg.graph.addNode")}
         </button>
       </div>
     </div>
@@ -408,10 +407,11 @@ export function KnowledgeGraph({
 
             {/* Floating add button (bottom-left) */}
             <div className="absolute bottom-6 left-6 z-30">
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
               <button
                 onClick={handleAddNode}
                 className="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-[var(--shadow-lg)] flex items-center justify-center transition-transform hover:scale-105"
-                aria-label={t('kg.graph.addNode')}
+                aria-label={t("kg.graph.addNode")}
               >
                 <svg
                   width="20"

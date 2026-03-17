@@ -8,7 +8,11 @@ import type { IpcMain } from "electron";
 import type { IpcError, IpcResponse } from "@shared/types/ipc-generated";
 import type { Logger } from "../logging/logger";
 import { ensureCreonowDirStructure } from "../services/context/contextFs";
-import { ipcError, type ServiceResult, type Err } from "../services/shared/ipcResult";
+import {
+  ipcError,
+  type ServiceResult,
+  type Err,
+} from "../services/shared/ipcResult";
 
 type ConstraintSource = "user" | "kg";
 
@@ -68,7 +72,9 @@ function invalidArgument(message: string): Err {
   return ipcError("INVALID_ARGUMENT", message);
 }
 
-function readPayloadObject(payload: unknown): ServiceResult<Record<string, unknown>> {
+function readPayloadObject(
+  payload: unknown,
+): ServiceResult<Record<string, unknown>> {
   if (!isRecord(payload)) {
     return invalidArgument("payload must be an object");
   }
@@ -204,7 +210,10 @@ function parsePolicyUpdatePayload(payload: unknown): ServiceResult<{
   if (!patchObj.ok) {
     return patchObj;
   }
-  if (patchObj.data.text !== undefined && typeof patchObj.data.text !== "string") {
+  if (
+    patchObj.data.text !== undefined &&
+    typeof patchObj.data.text !== "string"
+  ) {
     return invalidArgument("patch.text must be a string");
   }
   if (
@@ -991,7 +1000,9 @@ function registerConstraintsCrudHandlers(deps: ConstraintsHandlerDeps): void {
   );
 }
 
-function registerConstraintsDeleteAndLegacyHandlers(deps: ConstraintsHandlerDeps): void {
+function registerConstraintsDeleteAndLegacyHandlers(
+  deps: ConstraintsHandlerDeps,
+): void {
   deps.ipcMain.handle(
     "constraints:policy:delete",
     async (
@@ -1247,7 +1258,9 @@ function registerConstraintsDeleteAndLegacyHandlers(deps: ConstraintsHandlerDeps
  * Why: constraints are project-scoped rules with SSOT at
  * `.creonow/rules/constraints.json`.
  */
-export function registerConstraintsIpcHandlers(deps: ConstraintsHandlerDeps): void {
+export function registerConstraintsIpcHandlers(
+  deps: ConstraintsHandlerDeps,
+): void {
   registerConstraintsCrudHandlers(deps);
   registerConstraintsDeleteAndLegacyHandlers(deps);
 }

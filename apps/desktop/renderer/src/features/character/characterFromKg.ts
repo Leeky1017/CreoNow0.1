@@ -117,9 +117,7 @@ export function parseCharacterMetadata(
         : undefined;
 
     const age =
-      typeof parsed.age === "number" && parsed.age > 0
-        ? parsed.age
-        : undefined;
+      typeof parsed.age === "number" && parsed.age > 0 ? parsed.age : undefined;
 
     const birthDate =
       typeof parsed.birthDate === "string" ? parsed.birthDate : undefined;

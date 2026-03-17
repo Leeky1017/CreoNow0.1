@@ -11,7 +11,9 @@ function jsTraversalSubgraph(
   maxDepth: number,
 ): Set<string> {
   const visited = new Set<string>();
-  const queue: Array<{ id: string; depth: number }> = [{ id: startId, depth: 0 }];
+  const queue: Array<{ id: string; depth: number }> = [
+    { id: startId, depth: 0 },
+  ];
 
   while (queue.length > 0) {
     const item = queue.shift();
@@ -43,7 +45,10 @@ function cteQuerySubgraph(
 /**
  * Build a synthetic graph with `nodeCount` nodes, each connected to up to `fanout` neighbors.
  */
-function buildSyntheticGraph(nodeCount: number, fanout: number): {
+function buildSyntheticGraph(
+  nodeCount: number,
+  fanout: number,
+): {
   adjacency: Map<string, string[]>;
   cteIndex: Map<string, Set<string>>;
 } {
@@ -127,61 +132,70 @@ function main(): void {
     );
   });
 
-  runScenario("BE-TG-S4 cte result correctness: matches js traversal output", () => {
-    const startId = "node-0";
-    const jsResult = jsTraversalSubgraph(adjacency, startId, 10);
-    const cteResult = cteQuerySubgraph(cteIndex, startId);
+  runScenario(
+    "BE-TG-S4 cte result correctness: matches js traversal output",
+    () => {
+      const startId = "node-0";
+      const jsResult = jsTraversalSubgraph(adjacency, startId, 10);
+      const cteResult = cteQuerySubgraph(cteIndex, startId);
 
-    assert.equal(
-      jsResult.size,
-      cteResult.size,
-      `result sizes must match: js=${jsResult.size.toString()} cte=${cteResult.size.toString()}`,
-    );
+      assert.equal(
+        jsResult.size,
+        cteResult.size,
+        `result sizes must match: js=${jsResult.size.toString()} cte=${cteResult.size.toString()}`,
+      );
 
-    for (const id of jsResult) {
-      assert.ok(cteResult.has(id), `CTE result missing node: ${id}`);
-    }
-  });
+      for (const id of jsResult) {
+        assert.ok(cteResult.has(id), `CTE result missing node: ${id}`);
+      }
+    },
+  );
 
-  runScenario("BE-TG-S4 cte query stays under 5ms per query on 500-node graph", () => {
-    const SINGLE_QUERY_BUDGET_MS = 5;
-    const startId = "node-0";
+  runScenario(
+    "BE-TG-S4 cte query stays under 5ms per query on 500-node graph",
+    () => {
+      const SINGLE_QUERY_BUDGET_MS = 5;
+      const startId = "node-0";
 
-    const elapsed = measureMs(() => {
-      cteQuerySubgraph(cteIndex, startId);
-    });
+      const elapsed = measureMs(() => {
+        cteQuerySubgraph(cteIndex, startId);
+      });
 
-    assert.ok(
-      elapsed < SINGLE_QUERY_BUDGET_MS,
-      `single CTE query must be <${SINGLE_QUERY_BUDGET_MS.toString()}ms, got ${elapsed.toFixed(3)}ms`,
-    );
-  });
+      assert.ok(
+        elapsed < SINGLE_QUERY_BUDGET_MS,
+        `single CTE query must be <${SINGLE_QUERY_BUDGET_MS.toString()}ms, got ${elapsed.toFixed(3)}ms`,
+      );
+    },
+  );
 
-  runScenario("BE-TG-S4 cte lookup is O(1): same cost regardless of graph size", () => {
-    const { cteIndex: smallIndex } = buildSyntheticGraph(100, 5);
-    const { cteIndex: largeIndex } = buildSyntheticGraph(1000, 5);
+  runScenario(
+    "BE-TG-S4 cte lookup is O(1): same cost regardless of graph size",
+    () => {
+      const { cteIndex: smallIndex } = buildSyntheticGraph(100, 5);
+      const { cteIndex: largeIndex } = buildSyntheticGraph(1000, 5);
 
-    const smallTime = measureMs(() => {
-      for (let i = 0; i < 20; i++) cteQuerySubgraph(smallIndex, "node-0");
-    });
-    const largeTime = measureMs(() => {
-      for (let i = 0; i < 20; i++) cteQuerySubgraph(largeIndex, "node-0");
-    });
+      const smallTime = measureMs(() => {
+        for (let i = 0; i < 20; i++) cteQuerySubgraph(smallIndex, "node-0");
+      });
+      const largeTime = measureMs(() => {
+        for (let i = 0; i < 20; i++) cteQuerySubgraph(largeIndex, "node-0");
+      });
 
-    console.log(
-      `[BE-TG-S4] cte_small=${smallTime.toFixed(2)}ms cte_large=${largeTime.toFixed(2)}ms (O(1) baseline)`,
-    );
+      console.log(
+        `[BE-TG-S4] cte_small=${smallTime.toFixed(2)}ms cte_large=${largeTime.toFixed(2)}ms (O(1) baseline)`,
+      );
 
-    // Both must be fast — CTE lookup is a Map.get, not graph-size dependent
-    assert.ok(
-      smallTime < 10,
-      `CTE lookup on small graph must be <10ms, got ${smallTime.toFixed(2)}ms`,
-    );
-    assert.ok(
-      largeTime < 10,
-      `CTE lookup on large graph must be <10ms, got ${largeTime.toFixed(2)}ms`,
-    );
-  });
+      // Both must be fast — CTE lookup is a Map.get, not graph-size dependent
+      assert.ok(
+        smallTime < 10,
+        `CTE lookup on small graph must be <10ms, got ${smallTime.toFixed(2)}ms`,
+      );
+      assert.ok(
+        largeTime < 10,
+        `CTE lookup on large graph must be <10ms, got ${largeTime.toFixed(2)}ms`,
+      );
+    },
+  );
 
   console.log("[BE-TG-S4] all scenarios passed");
 }

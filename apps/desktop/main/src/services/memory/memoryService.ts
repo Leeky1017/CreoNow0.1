@@ -5,10 +5,7 @@ import { nowTs } from "@shared/timeUtils";
 
 import type { Logger } from "../../logging/logger";
 import { createUserMemoryVecService } from "./userMemoryVec";
-import {
-  DegradationCounter,
-  logWarn,
-} from "../shared/degradationCounter";
+import { DegradationCounter, logWarn } from "../shared/degradationCounter";
 import { ipcError, type ServiceResult } from "../shared/ipcResult";
 export type { ServiceResult };
 
@@ -521,11 +518,8 @@ function executeCreate(
   const memoryId = randomUUID();
   const ts = nowTs();
   const scopedProjectId =
-    scope === "project" || scope === "document"
-      ? normalizedProjectId!
-      : null;
-  const scopedDocumentId =
-    scope === "document" ? normalizedDocumentId! : null;
+    scope === "project" || scope === "document" ? normalizedProjectId! : null;
+  const scopedDocumentId = scope === "document" ? normalizedDocumentId! : null;
 
   try {
     if (
@@ -613,7 +607,13 @@ function executeMemoryUpdate(
     return resolved;
   }
 
-  const { type, scope, content, projectId: nextProjectId, documentId: nextDocumentId } = resolved.data;
+  const {
+    type,
+    scope,
+    content,
+    projectId: nextProjectId,
+    documentId: nextDocumentId,
+  } = resolved.data;
   const ts = nowTs();
   try {
     if (
@@ -835,9 +835,7 @@ function executePreviewInjection(
         origin: memory.origin,
         content: memory.content,
         reason:
-          score > 0
-            ? { kind: "semantic", score }
-            : { kind: "deterministic" },
+          score > 0 ? { kind: "semantic", score } : { kind: "deterministic" },
       }),
     );
 

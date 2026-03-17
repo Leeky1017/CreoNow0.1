@@ -33,10 +33,7 @@ describe("native-binding-path guard", () => {
   const config = loadConfig();
 
   it("AI-FE-NATIVE-S2: asarUnpack includes **/*.node", () => {
-    assert.ok(
-      Array.isArray(config.asarUnpack),
-      "asarUnpack must be an array",
-    );
+    assert.ok(Array.isArray(config.asarUnpack), "asarUnpack must be an array");
     assert.ok(
       config.asarUnpack.includes("**/*.node"),
       'asarUnpack must include "**/*.node"',

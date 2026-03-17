@@ -618,8 +618,7 @@ function SettingsExpandedRender() {
         <div className="text-[var(--color-fg-muted)] text-sm text-center space-y-2">
           <p>Current settings:</p>
           <p>
-            Run on save:{" "}
-            <strong>{settings.runOnSave ? "Yes" : "No"}</strong>
+            Run on save: <strong>{settings.runOnSave ? "Yes" : "No"}</strong>
           </p>
           <p>
             Block on errors:{" "}

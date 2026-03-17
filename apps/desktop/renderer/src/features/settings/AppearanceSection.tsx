@@ -20,12 +20,12 @@ export function AppearanceSection(): JSX.Element {
       className="flex flex-col gap-2.5 p-3 rounded-[var(--radius-lg)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)]"
     >
       <Heading level="h4" className="font-bold">
-        {t('settings.appearance.title')}
+        {t("settings.appearance.title")}
       </Heading>
 
       <div className="flex items-center gap-2">
         <Text size="small" color="muted">
-          {t('settings.appearance.theme')}
+          {t("settings.appearance.theme")}
         </Text>
 
         <div className="ml-auto flex gap-2">
@@ -40,7 +40,7 @@ export function AppearanceSection(): JSX.Element {
                 : ""
             }
           >
-            {t('settings.appearance.system')}
+            {t("settings.appearance.system")}
           </Button>
           <Button
             data-testid="theme-mode-dark"
@@ -53,7 +53,7 @@ export function AppearanceSection(): JSX.Element {
                 : ""
             }
           >
-            {t('settings.appearance.dark')}
+            {t("settings.appearance.dark")}
           </Button>
           <Button
             data-testid="theme-mode-light"
@@ -66,7 +66,7 @@ export function AppearanceSection(): JSX.Element {
                 : ""
             }
           >
-            {t('settings.appearance.light')}
+            {t("settings.appearance.light")}
           </Button>
         </div>
       </div>

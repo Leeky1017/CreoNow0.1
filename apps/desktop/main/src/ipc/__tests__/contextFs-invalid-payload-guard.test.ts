@@ -64,10 +64,9 @@ assert.ok(watchStop, "context:watch:stop handler should exist");
 let watchStopRejected = false;
 let watchStopResponse: unknown;
 try {
-  watchStopResponse = await watchStop!(
-    {},
-    { projectId: 42 } as unknown as { projectId: string },
-  );
+  watchStopResponse = await watchStop!({}, { projectId: 42 } as unknown as {
+    projectId: string;
+  });
 } catch {
   watchStopRejected = true;
 }
@@ -81,20 +80,24 @@ assert.deepEqual(watchStopResponse, {
   ok: false,
   error: { code: "INVALID_ARGUMENT", message: "projectId is required" },
 });
-assert.equal(stopCalled, 0, "watchService.stop should not run on invalid payload");
+assert.equal(
+  stopCalled,
+  0,
+  "watchService.stop should not run on invalid payload",
+);
 
 const rulesRead = handlers.get("context:rules:read");
 assert.ok(rulesRead, "context:rules:read handler should exist");
 let rulesReadRejected = false;
 let rulesReadResponse: unknown;
 try {
-  rulesReadResponse = await rulesRead!(
-    {},
-    { projectId: "p-1", path: 42 } as unknown as {
-      projectId: string;
-      path: string;
-    },
-  );
+  rulesReadResponse = await rulesRead!({}, {
+    projectId: "p-1",
+    path: 42,
+  } as unknown as {
+    projectId: string;
+    path: string;
+  });
 } catch {
   rulesReadRejected = true;
 }

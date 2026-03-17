@@ -72,8 +72,6 @@ import {
 import { ArrowUp } from "lucide-react";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 
-/* eslint-disable creonow/no-native-html-element -- AiPanel uses specialized buttons (send/stop, toolbar, code actions, candidate cards) and a custom textarea that don't map to design system primitives */
-
 const RECENT_MODELS_STORAGE_KEY = "creonow.ai.recentModels";
 const CANDIDATE_COUNT_STORAGE_KEY = "creonow.ai.candidateCount";
 const DB_REBUILD_DEFAULT_COMMAND = "pnpm -C apps/desktop rebuild:native";
@@ -225,6 +223,7 @@ function SendStopButton(props: {
           : t("ai.panel.sendMessage")
       }
     >
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
       <button
         data-testid="ai-send-stop"
         type="button"
@@ -260,6 +259,7 @@ function ToolButton(props: {
   onClick?: () => void;
 }): JSX.Element {
   return (
+    // eslint-disable-next-line creonow/no-native-html-element -- specialized button
     <button
       data-testid={props.testId}
       type="button"
@@ -327,6 +327,7 @@ function ErrorGuideCard(props: {
               <code className="rounded-[var(--radius-sm)] bg-[var(--color-bg-base)] px-2 py-1 text-[11px] text-[var(--color-fg-default)]">
                 {props.command}
               </code>
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
               <button
                 type="button"
                 data-testid={`${props.testId}-copy-command`}
@@ -339,6 +340,7 @@ function ErrorGuideCard(props: {
           ) : null}
           <div className="mt-2 flex items-center gap-2">
             {props.onAction && props.actionLabel ? (
+              // eslint-disable-next-line creonow/no-native-html-element -- specialized button
               <button
                 type="button"
                 data-testid={props.actionTestId}
@@ -399,6 +401,7 @@ export function CodeBlock(props: {
         </span>
 
         <div className="flex items-center gap-1">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             onClick={handleCopy}
@@ -408,6 +411,7 @@ export function CodeBlock(props: {
           </button>
 
           {props.onApply && (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               type="button"
               onClick={props.onApply}
@@ -1365,6 +1369,7 @@ function AiPanelChatArea(props: AiPanelChatAreaProps): JSX.Element {
           {props.lastCandidates.map((candidate, index) => {
             const isSelected = props.selectedCandidate?.id === candidate.id;
             return (
+              // eslint-disable-next-line creonow/no-native-html-element -- specialized button
               <button
                 key={candidate.id}
                 data-testid={`ai-candidate-card-${index + 1}`}
@@ -1611,6 +1616,7 @@ const AiPanelInputArea = React.forwardRef<
                 </div>
               </div>
               <Tooltip content={t("ai.panel.dismissSelection")}>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   type="button"
                   data-testid="ai-selection-reference-close"
@@ -1623,6 +1629,7 @@ const AiPanelInputArea = React.forwardRef<
             </div>
           </div>
         ) : null}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
         <textarea
           ref={ref}
           data-testid="ai-input"

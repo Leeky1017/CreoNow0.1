@@ -57,12 +57,7 @@ describe("Toggle", () => {
   });
 
   it("renders description when provided", () => {
-    render(
-      <Toggle
-        label="Focus Mode"
-        description="Dims interface elements"
-      />,
-    );
+    render(<Toggle label="Focus Mode" description="Dims interface elements" />);
 
     expect(screen.getByText("Dims interface elements")).toBeInTheDocument();
   });
@@ -70,9 +65,7 @@ describe("Toggle", () => {
   it("is disabled when disabled prop is true", async () => {
     const user = userEvent.setup();
     const onCheckedChange = vi.fn();
-    render(
-      <Toggle disabled={true} onCheckedChange={onCheckedChange} />,
-    );
+    render(<Toggle disabled={true} onCheckedChange={onCheckedChange} />);
 
     const toggle = screen.getByRole("switch");
     expect(toggle).toBeDisabled();

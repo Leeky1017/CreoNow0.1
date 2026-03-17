@@ -35,7 +35,9 @@ describe("search panel empty state (SR1-R1-S3)", () => {
 
     expect(screen.getByText("No matching results")).toBeInTheDocument();
     expect(
-      screen.getByText("Try checking your spelling or using different keywords"),
+      screen.getByText(
+        "Try checking your spelling or using different keywords",
+      ),
     ).toBeInTheDocument();
   });
 });

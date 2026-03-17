@@ -30,7 +30,10 @@ describe("PanelContainer", () => {
 
   it("renders icon when provided", () => {
     render(
-      <PanelContainer title="With Icon" icon={<span data-testid="panel-icon">🎨</span>}>
+      <PanelContainer
+        title="With Icon"
+        icon={<span data-testid="panel-icon">🎨</span>}
+      >
         <p>Body</p>
       </PanelContainer>,
     );

@@ -197,7 +197,9 @@ export function Toggle({
             </label>
           )}
           {description && (
-            <p className={`${descriptionStyles} ${disabled ? "opacity-50" : ""}`}>
+            <p
+              className={`${descriptionStyles} ${disabled ? "opacity-50" : ""}`}
+            >
               {description}
             </p>
           )}

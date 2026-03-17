@@ -30,7 +30,7 @@ export function ShortcutsPanel(): JSX.Element {
         className="text-[length:var(--font-size-lg)] font-semibold"
         style={{ color: "var(--color-fg-default)" }}
       >
-        {t('shortcuts.title')}
+        {t("shortcuts.title")}
       </h2>
 
       <ul className="flex flex-col gap-[var(--spacing-xs)]" role="list">

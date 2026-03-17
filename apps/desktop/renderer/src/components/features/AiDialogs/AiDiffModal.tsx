@@ -3,8 +3,6 @@ import { useTranslation } from "react-i18next";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import type { AiDiffModalProps, DiffChange, DiffChangeState } from "./types";
 
-/* eslint-disable creonow/no-native-html-element -- AiDiffModal uses specialized styled buttons (navigation, accept/reject, footer actions) that don't map to the Button primitive */
-
 /**
  * Modal state for tracking overall operation
  */
@@ -663,7 +661,7 @@ export function AiDiffModal({
       return (
         <div className={acceptedIndicatorStyles}>
           <CheckIcon />
-          <span>{t('ai.diff.accepted')}</span>
+          <span>{t("ai.diff.accepted")}</span>
         </div>
       );
     }
@@ -671,13 +669,13 @@ export function AiDiffModal({
       return (
         <div className={rejectedIndicatorStyles}>
           <XIcon />
-          <span>{t('ai.diff.rejected')}</span>
+          <span>{t("ai.diff.rejected")}</span>
         </div>
       );
     }
     return (
       <div className={pendingIndicatorStyles}>
-        <span>{t('ai.diff.pending')}</span>
+        <span>{t("ai.diff.pending")}</span>
       </div>
     );
   };
@@ -691,10 +689,10 @@ export function AiDiffModal({
           <div className={headerStyles}>
             <div className="flex items-center gap-4">
               <DialogPrimitive.Title className="font-medium text-sm text-[var(--color-fg-default)]">
-                {t('ai.diff.reviewChanges')}
+                {t("ai.diff.reviewChanges")}
               </DialogPrimitive.Title>
               <span className="text-xs text-[var(--color-fg-muted)]">
-                {t('ai.diff.modifyCount', { count: totalChanges })}
+                {t("ai.diff.modifyCount", { count: totalChanges })}
               </span>
             </div>
 
@@ -702,6 +700,7 @@ export function AiDiffModal({
             <div className="flex items-center gap-3">
               {totalChanges > 1 && (
                 <div className={navContainerStyles}>
+                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                   <button
                     type="button"
                     className={navButtonStyles}
@@ -711,8 +710,12 @@ export function AiDiffModal({
                     <ChevronLeftIcon />
                   </button>
                   <span className={navTextStyles}>
-                    {t('ai.diff.changeNav', { current: currentIndex + 1, total: totalChanges })}
+                    {t("ai.diff.changeNav", {
+                      current: currentIndex + 1,
+                      total: totalChanges,
+                    })}
                   </span>
+                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                   <button
                     type="button"
                     className={navButtonStyles}
@@ -727,19 +730,21 @@ export function AiDiffModal({
               {/* Per-change accept/reject buttons */}
               {currentState === "pending" && !isApplying && (
                 <div className="flex items-center gap-1">
+                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                   <button
                     type="button"
                     className={acceptChangeButtonStyles}
                     onClick={() => handleAcceptChange(currentChange.id)}
-                    title={t('ai.diff.acceptThisChange')}
+                    title={t("ai.diff.acceptThisChange")}
                   >
                     <CheckIcon />
                   </button>
+                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                   <button
                     type="button"
                     className={rejectChangeButtonStyles}
                     onClick={() => handleRejectChange(currentChange.id)}
-                    title={t('ai.diff.rejectThisChange')}
+                    title={t("ai.diff.rejectThisChange")}
                   >
                     <XIcon />
                   </button>
@@ -759,7 +764,7 @@ export function AiDiffModal({
           <div className={diffContainerStyles}>
             {/* Before panel */}
             <div className={`${beforePanelStyles} relative`}>
-              <div className={beforeLabelStyles}>{t('ai.diff.before')}</div>
+              <div className={beforeLabelStyles}>{t("ai.diff.before")}</div>
               <p className={beforeTextStyles}>
                 {beforeParts.map((part, idx) => (
                   <span
@@ -777,7 +782,7 @@ export function AiDiffModal({
             {/* After panel */}
             <div className={`${afterPanelStyles} relative`}>
               {renderStateIndicator()}
-              <div className={afterLabelStyles}>{t('ai.diff.after')}</div>
+              <div className={afterLabelStyles}>{t("ai.diff.after")}</div>
               <p className={afterTextStyles}>
                 {afterParts.map((part, idx) => (
                   <span
@@ -795,6 +800,7 @@ export function AiDiffModal({
           <div className={footerStyles}>
             <div className="flex items-center gap-4">
               <div className="flex gap-2">
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   type="button"
                   data-testid="ai-reject-all"
@@ -802,8 +808,9 @@ export function AiDiffModal({
                   onClick={handleRejectAll}
                   disabled={isApplying}
                 >
-                  {t('ai.diff.rejectAll')}
+                  {t("ai.diff.rejectAll")}
                 </button>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   type="button"
                   data-testid="ai-accept-all"
@@ -811,24 +818,26 @@ export function AiDiffModal({
                   onClick={handleAcceptAll}
                   disabled={isApplying}
                 >
-                  {t('ai.diff.acceptAll')}
+                  {t("ai.diff.acceptAll")}
                 </button>
               </div>
 
               {/* Statistics */}
               <div className={statsStyles}>
-                <span className={addedStatsStyles}>{t('ai.diff.statsAdded', { count: stats.added })}</span>
+                <span className={addedStatsStyles}>
+                  {t("ai.diff.statsAdded", { count: stats.added })}
+                </span>
                 <span className={removedStatsStyles}>
-                  {t('ai.diff.statsRemoved', { count: stats.removed })}
+                  {t("ai.diff.statsRemoved", { count: stats.removed })}
                 </span>
                 {(acceptedCount > 0 || rejectedCount > 0) && (
                   <>
                     <span className="text-[var(--color-separator)]">|</span>
                     <span className="text-[var(--color-success)]">
-                      {t('ai.diff.statsAccepted', { count: acceptedCount })}
+                      {t("ai.diff.statsAccepted", { count: acceptedCount })}
                     </span>
                     <span className="text-[var(--color-error)]">
-                      {t('ai.diff.statsRejected', { count: rejectedCount })}
+                      {t("ai.diff.statsRejected", { count: rejectedCount })}
                     </span>
                   </>
                 )}
@@ -837,15 +846,17 @@ export function AiDiffModal({
 
             <div className="flex gap-3">
               {onEditManually && (
+                // eslint-disable-next-line creonow/no-native-html-element -- specialized button
                 <button
                   type="button"
                   className={editManuallyStyles}
                   onClick={onEditManually}
                   disabled={isApplying}
                 >
-                  {t('ai.diff.editManually')}
+                  {t("ai.diff.editManually")}
                 </button>
               )}
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
               <button
                 type="button"
                 className={applyChangesStyles}
@@ -854,10 +865,10 @@ export function AiDiffModal({
               >
                 {isApplying && <Spinner />}
                 {isApplied
-                  ? t('ai.diff.applied')
+                  ? t("ai.diff.applied")
                   : isApplying
-                    ? t('ai.diff.applying')
-                    : t('ai.diff.applyChanges')}
+                    ? t("ai.diff.applying")
+                    : t("ai.diff.applyChanges")}
               </button>
             </div>
           </div>

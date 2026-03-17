@@ -90,9 +90,11 @@ export function TimelineView({
         className={`h-full flex items-center justify-center bg-[var(--color-bg-base)] ${className}`}
       >
         <div className="text-center space-y-2">
-          <p className="text-sm text-[var(--color-fg-muted)]">{t('kg.timeline.empty')}</p>
+          <p className="text-sm text-[var(--color-fg-muted)]">
+            {t("kg.timeline.empty")}
+          </p>
           <p className="text-xs text-[var(--color-fg-subtle)]">
-            {t('kg.timeline.emptyHint')}
+            {t("kg.timeline.emptyHint")}
           </p>
         </div>
       </section>
@@ -105,7 +107,7 @@ export function TimelineView({
     >
       <div className="shrink-0 p-3 border-b border-[var(--color-border-default)]">
         <p className="text-xs text-[var(--color-fg-muted)] uppercase tracking-wide">
-          {t('kg.timelineView.title')}
+          {t("kg.timelineView.title")}
         </p>
       </div>
 

@@ -54,12 +54,7 @@ export function Sidebar(props: {
   const { t } = useTranslation();
 
   if (props.collapsed) {
-    return (
-      <aside
-        data-testid="layout-sidebar"
-        className="hidden w-0"
-      />
-    );
+    return <aside data-testid="layout-sidebar" className="hidden w-0" />;
   }
 
   /**

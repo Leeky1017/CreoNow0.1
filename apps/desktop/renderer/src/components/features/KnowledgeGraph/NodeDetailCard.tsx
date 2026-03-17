@@ -5,12 +5,13 @@ import { Avatar } from "../../primitives/Avatar";
 import { Badge } from "../../primitives/Badge";
 import type { NodeDetailCardProps, NodeType } from "./types";
 
-/* eslint-disable creonow/no-native-html-element -- node action buttons (edit, delete) */
-
 /**
  * Node type to badge variant mapping
  */
-const typeToVariant: Record<NodeType, "info" | "success" | "warning" | "default"> = {
+const typeToVariant: Record<
+  NodeType,
+  "info" | "success" | "warning" | "default"
+> = {
   character: "info",
   location: "success",
   event: "warning",
@@ -31,11 +32,11 @@ const typeColorVars: Record<NodeType, string> = {
 
 function getTypeLabels(t: TFunction): Record<NodeType, string> {
   return {
-    character: t('kg.nodeDetail.character'),
-    location: t('kg.nodeDetail.location'),
-    event: t('kg.nodeDetail.event'),
-    item: t('kg.nodeDetail.item'),
-    faction: t('kg.nodeDetail.faction'),
+    character: t("kg.nodeDetail.character"),
+    location: t("kg.nodeDetail.location"),
+    event: t("kg.nodeDetail.event"),
+    item: t("kg.nodeDetail.item"),
+    faction: t("kg.nodeDetail.faction"),
   };
 }
 
@@ -115,11 +116,12 @@ export function NodeDetailCard({
         <div className="flex items-center gap-1">
           {/* Delete button */}
           {onDelete && (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               onClick={onDelete}
               className="p-1 text-[var(--color-fg-subtle)] hover:text-[var(--color-error)] transition-colors"
-              aria-label={t('kg.nodeDetail.deleteNode')}
-              title={t('kg.nodeDetail.deleteNode')}
+              aria-label={t("kg.nodeDetail.deleteNode")}
+              title={t("kg.nodeDetail.deleteNode")}
             >
               <svg
                 width="16"
@@ -137,10 +139,11 @@ export function NodeDetailCard({
             </button>
           )}
           {/* Close button */}
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             onClick={onClose}
             className="p-1 text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
-            aria-label={t('kg.nodeDetail.close')}
+            aria-label={t("kg.nodeDetail.close")}
           >
             <svg
               width="16"
@@ -189,7 +192,7 @@ export function NodeDetailCard({
           onClick={onEdit}
           className="flex-1"
         >
-          {t('kg.nodeDetail.editNode')}
+          {t("kg.nodeDetail.editNode")}
         </Button>
         <Button
           variant="secondary"
@@ -197,7 +200,7 @@ export function NodeDetailCard({
           onClick={onViewDetails}
           className="flex-1"
         >
-          {t('kg.nodeDetail.viewDetails')}
+          {t("kg.nodeDetail.viewDetails")}
         </Button>
       </div>
     </div>

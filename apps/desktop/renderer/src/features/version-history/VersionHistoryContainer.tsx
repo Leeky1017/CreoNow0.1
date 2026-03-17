@@ -22,8 +22,6 @@ import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore
 import { i18n } from "../../i18n";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 
-/* eslint-disable creonow/no-native-html-element -- version metadata form fields (labels, inputs, textarea) and action buttons */
-
 /**
  * Map backend actor to UI author type.
  */
@@ -245,7 +243,9 @@ function BranchConflictItem(props: {
       </div>
 
       <div className="flex flex-wrap gap-3 text-[11px] text-[var(--color-fg-default)]">
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className="inline-flex items-center gap-1">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
           <input
             type="radio"
             name={`resolution-${conflict.conflictId}`}
@@ -254,7 +254,9 @@ function BranchConflictItem(props: {
           />
           {t("versionHistory.container.useOurs")}
         </label>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className="inline-flex items-center gap-1">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
           <input
             type="radio"
             name={`resolution-${conflict.conflictId}`}
@@ -263,7 +265,9 @@ function BranchConflictItem(props: {
           />
           {t("versionHistory.container.useTheirs")}
         </label>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className="inline-flex items-center gap-1">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
           <input
             data-testid={`branch-conflict-manual-${conflict.conflictId}`}
             type="radio"
@@ -275,6 +279,7 @@ function BranchConflictItem(props: {
         </label>
       </div>
       {selected.resolution === "manual" ? (
+        // eslint-disable-next-line creonow/no-native-html-element -- specialized textarea
         <textarea
           data-testid={`branch-conflict-manual-text-${conflict.conflictId}`}
           className="h-20 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-2 font-mono text-xs text-[var(--color-fg-default)]"
@@ -641,8 +646,10 @@ export function VersionHistoryContainer(
           {t("versionHistory.container.branchMerge")}
         </div>
         <div className="grid grid-cols-1 gap-2">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
           <label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
             {t("versionHistory.container.sourceBranch")}
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
             <input
               data-testid="branch-merge-source-input"
               className="rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2 py-1 text-xs text-[var(--color-fg-default)]"
@@ -650,8 +657,10 @@ export function VersionHistoryContainer(
               onChange={(event) => setSourceBranchName(event.target.value)}
             />
           </label>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
           <label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
             {t("versionHistory.container.targetBranch")}
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
             <input
               data-testid="branch-merge-target-input"
               className="rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] px-2 py-1 text-xs text-[var(--color-fg-default)]"
@@ -660,6 +669,7 @@ export function VersionHistoryContainer(
             />
           </label>
         </div>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           data-testid="branch-merge-submit"
@@ -695,6 +705,7 @@ export function VersionHistoryContainer(
             <div className="text-xs font-semibold text-[var(--color-fg-default)]">
               {t("versionHistory.container.mergeConflictDiff")}
             </div>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               type="button"
               className="focus-ring rounded border border-[var(--color-border-default)] px-2 py-1 text-[11px] text-[var(--color-fg-muted)]"
@@ -721,6 +732,7 @@ export function VersionHistoryContainer(
             );
           })}
 
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             data-testid="branch-conflict-submit"

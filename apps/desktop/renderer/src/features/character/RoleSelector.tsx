@@ -10,8 +10,6 @@ import { Popover } from "../../components/primitives";
 import type { CharacterRole } from "./types";
 import { ROLE_DISPLAY } from "./types";
 
-/* eslint-disable creonow/no-native-html-element -- RoleSelector uses popover trigger and option item buttons */
-
 export interface RoleSelectorProps {
   /** Current role value */
   value: CharacterRole;
@@ -73,6 +71,7 @@ export function RoleSelector({
       layer={layer}
       portalContainer={portalContainer}
       trigger={
+        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
         <button
           type="button"
           className={[
@@ -100,12 +99,13 @@ export function RoleSelector({
     >
       <div className="min-w-40 py-1 -mx-2 -my-2">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
-          {t('character.roleSelector.selectRole')}
+          {t("character.roleSelector.selectRole")}
         </div>
         {ROLE_OPTIONS.map((role) => {
           const config = ROLE_DISPLAY[role];
           const isSelected = role === value;
           return (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               key={role}
               type="button"

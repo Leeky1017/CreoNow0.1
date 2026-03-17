@@ -13,12 +13,8 @@ describe("CharacterCardList.empty-state", () => {
       <CharacterCardList cards={[]} onCreateCharacter={onCreateCharacter} />,
     );
 
-    expect(
-      screen.getByText("No Characters"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Create your first character"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("No Characters")).toBeInTheDocument();
+    expect(screen.getByText("Create your first character")).toBeInTheDocument();
 
     const cta = screen.getByRole("button", { name: "Create Character" });
     expect(cta).toBeInTheDocument();

@@ -129,9 +129,15 @@ export const ROLE_DISPLAY: Record<
   CharacterRole,
   { label: string; color: string }
 > = {
-  protagonist: { label: "Protagonist", color: "text-[var(--color-accent-blue)]" },
+  protagonist: {
+    label: "Protagonist",
+    color: "text-[var(--color-accent-blue)]",
+  },
   antagonist: { label: "Antagonist", color: "text-[var(--color-error)]" },
-  deuteragonist: { label: "Deuteragonist", color: "text-[var(--color-accent-purple)]" },
+  deuteragonist: {
+    label: "Deuteragonist",
+    color: "text-[var(--color-accent-purple)]",
+  },
   mentor: { label: "Mentor", color: "text-[var(--color-success)]" },
   ally: { label: "Ally", color: "text-[var(--color-warning)]" },
 };

@@ -51,12 +51,15 @@ export function createContextProjectScopedCache(deps: {
           }
 
           const value = await compute();
-          const latestGeneration = generationByProject.get(normalizedProjectId) ?? 0;
+          const latestGeneration =
+            generationByProject.get(normalizedProjectId) ?? 0;
           if (latestGeneration !== generation) {
             return value;
           }
 
-          const latestProjectCache = cacheByProject.get(normalizedProjectId) ?? new Map<string, string>();
+          const latestProjectCache =
+            cacheByProject.get(normalizedProjectId) ??
+            new Map<string, string>();
           latestProjectCache.set(normalizedKey, value);
           cacheByProject.set(normalizedProjectId, latestProjectCache);
           return value;
@@ -81,7 +84,9 @@ export function createContextProjectScopedCache(deps: {
         (generationByProject.get(normalizedProjectId) ?? 0) + 1,
       );
 
-      const stopped = deps.watchService.stop({ projectId: normalizedProjectId });
+      const stopped = deps.watchService.stop({
+        projectId: normalizedProjectId,
+      });
       if (!stopped.ok) {
         deps.logger.error("context_project_unbind_watch_stop_failed", {
           code: stopped.error.code,

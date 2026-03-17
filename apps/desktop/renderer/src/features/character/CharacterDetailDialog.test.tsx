@@ -83,4 +83,3 @@ describe("CharacterDetailDialog", () => {
     expect(screen.getByText("Darius")).toBeInTheDocument();
   });
 });
-

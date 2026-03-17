@@ -33,8 +33,6 @@ import {
   X,
 } from "lucide-react";
 
-/* eslint-disable creonow/no-native-html-element -- CharacterDetailDialog uses form fields (inputs, labels) and specialized buttons throughout that don't map to design system primitives */
-
 export interface CharacterDetailDialogProps {
   /** Controlled open state */
   open: boolean;
@@ -314,6 +312,7 @@ function TraitTag({
     >
       {trait}
       {onRemove && (
+        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
         <button
           type="button"
           onClick={onRemove}
@@ -379,6 +378,7 @@ function RelationshipItem({
           {typeConfig.label}
         </span>
         {onRemove && (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
           <button
             type="button"
             onClick={onRemove}
@@ -406,6 +406,7 @@ function ChapterLink({
   onNavigate?: () => void;
 }) {
   return (
+    // eslint-disable-next-line creonow/no-native-html-element -- specialized button
     <button
       type="button"
       onClick={onNavigate}
@@ -477,7 +478,9 @@ function CharacterProfileSection(props: {
   return (
     <div className="space-y-3">
       <div className={sectionHeaderStyles}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className={labelStyles}>{t("character.detail.profile")}</label>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           onClick={props.onToggleExpand}
@@ -580,6 +583,7 @@ function CharacterProfileSection(props: {
                     onRemove={() => props.onRemoveFeature(feature)}
                   />
                 ))}
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
                 <input
                   type="text"
                   placeholder={t("character.detail.addFeaturePlaceholder")}
@@ -601,6 +605,7 @@ function CharacterProfileSection(props: {
                     onRemove={() => props.onRemoveTrait(trait)}
                   />
                 ))}
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
                 <input
                   type="text"
                   placeholder={t("character.detail.addTraitPlaceholder")}
@@ -670,6 +675,7 @@ function CharacterRelationshipsSection(props: {
   return (
     <div className="space-y-3">
       <div className={sectionHeaderStyles}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className={labelStyles}>
           {t("character.detail.relationships")}
         </label>
@@ -723,6 +729,7 @@ function CharacterAppearancesSection(props: {
   return (
     <div className="space-y-3 pb-2">
       <div className={sectionHeaderStyles}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className={labelStyles}>
           {t("character.detail.appearances")}
         </label>
@@ -956,6 +963,7 @@ export function CharacterDetailDialog({
             {/* Name and role */}
             <div className="flex-1 min-w-0 pt-1">
               <div className="flex items-center justify-between mb-2">
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
                 <input
                   type="text"
                   value={editedCharacter.name}
@@ -1011,6 +1019,7 @@ export function CharacterDetailDialog({
             {/* Appearance & Description */}
             <div className="space-y-3">
               <div className={sectionHeaderStyles}>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
                 <label className={labelStyles}>
                   {t("character.detail.appearanceDescription")}
                 </label>

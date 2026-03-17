@@ -127,13 +127,10 @@ export function DropdownMenu({
 }: DropdownMenuProps): JSX.Element {
   const [open, setOpen] = React.useState(false);
 
-  const handleSelect = React.useCallback(
-    (onSelect: () => void) => {
-      setOpen(false);
-      onSelect();
-    },
-    [],
-  );
+  const handleSelect = React.useCallback((onSelect: () => void) => {
+    setOpen(false);
+    onSelect();
+  }, []);
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>

@@ -32,7 +32,11 @@ export const WithActions: Story = {
   args: {
     title: "Characters",
     icon: <FileText size={16} />,
-    actions: <Button size="sm" variant="ghost">Add</Button>,
+    actions: (
+      <Button size="sm" variant="ghost">
+        Add
+      </Button>
+    ),
     children: (
       <div className="p-3 text-sm text-[var(--color-fg-muted)]">
         Panel content with action buttons in header

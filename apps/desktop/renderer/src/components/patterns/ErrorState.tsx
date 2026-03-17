@@ -165,7 +165,7 @@ function DismissButton({
       ]
         .filter(Boolean)
         .join(" ")}
-      aria-label={t('patterns.errorState.close')}
+      aria-label={t("patterns.errorState.close")}
     >
       <svg
         className="w-4 h-4"
@@ -426,7 +426,7 @@ function FullPageError({
 
       {/* Title */}
       <Heading level="h2" className="mb-3">
-        {title ?? t('patterns.errorState.defaultTitle')}
+        {title ?? t("patterns.errorState.defaultTitle")}
       </Heading>
 
       {/* Message */}

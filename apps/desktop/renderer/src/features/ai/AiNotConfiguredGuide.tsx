@@ -22,19 +22,15 @@ export function AiNotConfiguredGuide(props: {
       className="flex flex-col items-center gap-3 p-6 rounded-[var(--radius-lg)]"
     >
       <Text size="body" weight="bold">
-        {t('ai.notConfigured.title')}
+        {t("ai.notConfigured.title")}
       </Text>
 
       <Text size="small" color="muted" className="text-center">
-        {t('ai.notConfigured.description')}
+        {t("ai.notConfigured.description")}
       </Text>
 
-      <Button
-        variant="primary"
-        size="sm"
-        onClick={props.onNavigateToSettings}
-      >
-        {t('ai.notConfigured.goToSettings')}
+      <Button variant="primary" size="sm" onClick={props.onNavigateToSettings}>
+        {t("ai.notConfigured.goToSettings")}
       </Button>
     </Card>
   );

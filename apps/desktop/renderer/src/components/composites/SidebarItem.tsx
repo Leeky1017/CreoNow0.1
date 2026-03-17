@@ -92,7 +92,9 @@ export function SidebarItem({
     >
       {icon && <span className="flex items-center shrink-0">{icon}</span>}
       <span className="flex-1 truncate">{label}</span>
-      {trailing && <span className="flex items-center shrink-0">{trailing}</span>}
+      {trailing && (
+        <span className="flex items-center shrink-0">{trailing}</span>
+      )}
     </div>
   );
 }

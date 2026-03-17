@@ -16,8 +16,6 @@ import { ROLE_DISPLAY, RELATIONSHIP_TYPE_DISPLAY } from "./types";
 
 import { Plus } from "lucide-react";
 
-/* eslint-disable creonow/no-native-html-element -- AddRelationshipPopover uses specialized character selection and relationship type toggle buttons */
-
 export interface AddRelationshipPopoverProps {
   /** Available characters to select from (excluding current character) */
   availableCharacters: Character[];
@@ -156,12 +154,13 @@ export function AddRelationshipPopover({
       portalContainer={portalContainer}
       trigger={
         trigger ?? (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
           <button
             type="button"
             className="text-[10px] text-[var(--color-info)] hover:text-[var(--color-info)]/80 flex items-center gap-1 font-medium transition-colors"
           >
             <PlusIcon />
-            {t('character.addRelation.triggerLabel')}
+            {t("character.addRelation.triggerLabel")}
           </button>
         )
       }
@@ -172,14 +171,14 @@ export function AddRelationshipPopover({
         {/* Header */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
           <h3 className="text-sm font-medium text-[var(--color-fg-default)]">
-            {t('character.addRelation.title')}
+            {t("character.addRelation.title")}
           </h3>
         </div>
 
         {/* Character Selection */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
           <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold mb-2">
-            {t('character.addRelation.selectCharacter')}
+            {t("character.addRelation.selectCharacter")}
           </div>
           {selectableCharacters.length > 0 ? (
             <div className="space-y-1 max-h-40 overflow-y-auto -mx-2 px-2">
@@ -187,6 +186,7 @@ export function AddRelationshipPopover({
                 const isSelected = selectedCharacter?.id === character.id;
                 const roleConfig = ROLE_DISPLAY[character.role];
                 return (
+                  // eslint-disable-next-line creonow/no-native-html-element -- specialized button
                   <button
                     key={character.id}
                     type="button"
@@ -228,7 +228,7 @@ export function AddRelationshipPopover({
             </div>
           ) : (
             <div className="text-xs text-[var(--color-fg-placeholder)] py-4 text-center">
-              {t('character.addRelation.noCharacters')}
+              {t("character.addRelation.noCharacters")}
             </div>
           )}
         </div>
@@ -236,13 +236,14 @@ export function AddRelationshipPopover({
         {/* Relationship Type Selection */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
           <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold mb-2">
-            {t('character.addRelation.relationshipType')}
+            {t("character.addRelation.relationshipType")}
           </div>
           <div className="flex flex-wrap gap-2">
             {RELATIONSHIP_TYPES.map((type) => {
               const config = RELATIONSHIP_TYPE_DISPLAY[type];
               const isSelected = selectedType === type;
               return (
+                // eslint-disable-next-line creonow/no-native-html-element -- specialized button
                 <button
                   key={type}
                   type="button"
@@ -270,7 +271,7 @@ export function AddRelationshipPopover({
         {/* Footer */}
         <div className="px-4 py-3 flex justify-end gap-2">
           <Button variant="ghost" size="sm" onClick={handleClose}>
-            {t('character.addRelation.cancel')}
+            {t("character.addRelation.cancel")}
           </Button>
           <Button
             variant="primary"
@@ -278,7 +279,7 @@ export function AddRelationshipPopover({
             onClick={handleAdd}
             disabled={!canAdd}
           >
-            {t('character.addRelation.add')}
+            {t("character.addRelation.add")}
           </Button>
         </div>
       </div>

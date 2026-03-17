@@ -96,7 +96,9 @@ function classifyPrimaryFailureReason(
   return "PRIMARY_UNAVAILABLE";
 }
 
-function serializeRuntimeError(error: OnnxEmbeddingRuntimeError): Record<string, unknown> {
+function serializeRuntimeError(
+  error: OnnxEmbeddingRuntimeError,
+): Record<string, unknown> {
   return {
     code: error.code,
     message: error.message,

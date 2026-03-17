@@ -49,9 +49,13 @@ type DiffViewPanelProps = {
  */
 function getDefaultVersions(t: TFunction): VersionInfo[] {
   return [
-    { id: "2h", label: t('diff.panel.version2hAgo'), type: "auto" },
-    { id: "yesterday", label: t('diff.panel.versionYesterday'), type: "manual" },
-    { id: "current", label: t('diff.panel.versionCurrent'), type: "current" },
+    { id: "2h", label: t("diff.panel.version2hAgo"), type: "auto" },
+    {
+      id: "yesterday",
+      label: t("diff.panel.versionYesterday"),
+      type: "manual",
+    },
+    { id: "current", label: t("diff.panel.versionCurrent"), type: "current" },
   ];
 }
 

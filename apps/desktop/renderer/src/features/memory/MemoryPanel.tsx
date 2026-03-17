@@ -7,8 +7,6 @@ import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useProjectStore } from "../../stores/projectStore";
 
-/* eslint-disable creonow/no-native-html-element -- MemoryPanel uses specialized scope tab buttons, form labels, textareas, and selects throughout */
-
 type PanelScope = "global" | "project";
 type SemanticRule = IpcResponseData<"memory:semantic:list">["items"][number];
 type SemanticConflict =
@@ -436,6 +434,7 @@ function MemoryScopeTabs(props: {
 }): JSX.Element {
   return (
     <div className="shrink-0 flex gap-1">
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
       <button
         type="button"
         data-testid="memory-scope-global"
@@ -448,6 +447,7 @@ function MemoryScopeTabs(props: {
       >
         {props.t("memory.panel.globalTab")}
       </button>
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
       <button
         type="button"
         data-testid="memory-scope-project"
@@ -607,12 +607,14 @@ function MemoryRulesCard(props: {
                       <div className="flex-1 min-w-0">
                         {isEditing ? (
                           <div className="flex flex-col gap-2">
+                            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
                             <label
                               className="text-xs text-[var(--color-fg-muted)]"
                               htmlFor={`memory-edit-${rule.id}`}
                             >
                               {props.t("memory.panel.ruleText")}
                             </label>
+                            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
                             <textarea
                               id={`memory-edit-${rule.id}`}
                               aria-label={props.t("memory.panel.ruleText")}
@@ -776,12 +778,14 @@ function MemoryComposer(props: {
       className="shrink-0 p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
     >
       <div className="flex flex-col gap-2">
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label
           className="text-xs text-[var(--color-fg-muted)]"
           htmlFor="memory-rule-create-input"
         >
           {props.t("memory.panel.addRule")}
         </label>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
         <textarea
           id="memory-rule-create-input"
           aria-label={props.t("memory.panel.addRule")}
@@ -789,12 +793,14 @@ function MemoryComposer(props: {
           onChange={(event) => props.setDraftRule(event.target.value)}
           className="min-h-18 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 py-1.5 text-sm"
         />
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label
           className="text-xs text-[var(--color-fg-muted)]"
           htmlFor="memory-rule-category"
         >
           {props.t("memory.panel.category")}
         </label>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized select */}
         <select
           id="memory-rule-category"
           value={props.draftCategory}

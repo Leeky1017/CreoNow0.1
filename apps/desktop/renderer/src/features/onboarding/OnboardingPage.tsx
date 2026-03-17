@@ -250,9 +250,7 @@ export function OnboardingPage({
   onComplete,
 }: OnboardingPageProps): JSX.Element {
   const [step, setStep] = React.useState<OnboardingStep>(1);
-  const [language, setLanguage] = React.useState(() =>
-    getLanguagePreference(),
-  );
+  const [language, setLanguage] = React.useState(() => getLanguagePreference());
   const { t } = useTranslation();
 
   const handleLanguageSelect = React.useCallback((lng: string) => {
@@ -313,10 +311,7 @@ export function OnboardingPage({
         {/* Step content */}
         <div className="flex w-full flex-1 items-center justify-center">
           {step === 1 && (
-            <LanguageStep
-              selected={language}
-              onSelect={handleLanguageSelect}
-            />
+            <LanguageStep selected={language} onSelect={handleLanguageSelect} />
           )}
           {step === 2 && <AiConfigStep />}
           {step === 3 && (

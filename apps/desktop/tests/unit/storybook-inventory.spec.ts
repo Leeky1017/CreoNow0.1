@@ -58,7 +58,7 @@ function extractStorybookTitle(content: string): string | null {
   // 匹配 title: "..." 或 title: '...'
   // 只接受 Primitives/Layout/Features 开头的标题
   const match = content.match(
-    /title:\s*["']((Primitives|Layout|Features)\/[^"']+)["']/,
+    /title:\s*["']((Primitives|Layout|Features|Patterns)\/[^"']+)["']/,
   );
   return match ? match[1] : null;
 }
@@ -139,11 +139,13 @@ async function runInventoryCheck(): Promise<void> {
     layout: storyTitles.filter((t) => t.startsWith("Layout/")).length,
     primitives: storyTitles.filter((t) => t.startsWith("Primitives/")).length,
     features: storyTitles.filter((t) => t.startsWith("Features/")).length,
+    patterns: storyTitles.filter((t) => t.startsWith("Patterns/")).length,
   };
   const registryCategories = {
     layout: registryTitles.filter((t) => t.startsWith("Layout/")).length,
     primitives: registryTitles.filter((t) => t.startsWith("Primitives/")).length,
     features: registryTitles.filter((t) => t.startsWith("Features/")).length,
+    patterns: registryTitles.filter((t) => t.startsWith("Patterns/")).length,
   };
 
   console.log("\n📁 By Category:");
@@ -155,6 +157,9 @@ async function runInventoryCheck(): Promise<void> {
   );
   console.log(
     `   Features:   ${storyCategories.features} stories / ${registryCategories.features} registry`,
+  );
+  console.log(
+    `   Patterns:   ${storyCategories.patterns} stories / ${registryCategories.patterns} registry`,
   );
 
   // 6. 检查失败条件

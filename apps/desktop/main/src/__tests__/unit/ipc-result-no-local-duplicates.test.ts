@@ -9,10 +9,7 @@ type Hit = {
 };
 
 const ROOT = path.resolve(import.meta.dirname, "../..");
-const SHARED_IPC_RESULT = path.resolve(
-  ROOT,
-  "services/shared/ipcResult.ts",
-);
+const SHARED_IPC_RESULT = path.resolve(ROOT, "services/shared/ipcResult.ts");
 const ALLOWED_LOCAL_SERVICE_RESULT_FILES = new Set<string>([
   path.resolve(ROOT, "services/documents/types.ts"),
   path.resolve(ROOT, "services/kg/types.ts"),
@@ -65,7 +62,10 @@ function formatHits(hits: Hit[]): string {
     return "";
   }
   return hits
-    .map((hit) => `${path.relative(ROOT, hit.file)}:${hit.line.toString()} -> ${hit.text}`)
+    .map(
+      (hit) =>
+        `${path.relative(ROOT, hit.file)}:${hit.line.toString()} -> ${hit.text}`,
+    )
     .join("\n");
 }
 

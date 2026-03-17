@@ -48,7 +48,9 @@ describe("KnowledgeGraphPanel.empty-state", () => {
     render(<KnowledgeGraphPanel projectId="project-empty" />);
 
     expect(
-      screen.getByText("No entities yet. Click to add your first character or location"),
+      screen.getByText(
+        "No entities yet. Click to add your first character or location",
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getAllByRole("button", { name: "Add Node" }).length,

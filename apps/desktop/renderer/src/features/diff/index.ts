@@ -11,7 +11,12 @@
  * - VersionPane: Single version display for multi-version compare
  */
 
-export { DiffView, UnifiedDiffView, parseDiffLines, getChangePositions } from "./DiffView";
+export {
+  DiffView,
+  UnifiedDiffView,
+  parseDiffLines,
+  getChangePositions,
+} from "./DiffView";
 export type { DiffLine, DiffStats } from "./DiffView";
 
 export { SplitDiffView } from "./SplitDiffView";

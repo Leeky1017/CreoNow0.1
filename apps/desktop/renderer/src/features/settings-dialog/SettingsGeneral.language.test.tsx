@@ -10,10 +10,7 @@ vi.mock("../../i18n", () => ({
   i18n: { changeLanguage: vi.fn(() => Promise.resolve()) },
 }));
 
-import {
-  SettingsGeneral,
-  defaultGeneralSettings,
-} from "./SettingsGeneral";
+import { SettingsGeneral, defaultGeneralSettings } from "./SettingsGeneral";
 
 describe("SettingsGeneral language selector", () => {
   beforeEach(() => {

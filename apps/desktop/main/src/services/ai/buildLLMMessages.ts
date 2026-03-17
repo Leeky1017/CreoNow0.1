@@ -33,7 +33,10 @@ export function buildLLMMessages(args: {
   maxTokenBudget: number;
 }): LLMMessage[] {
   const systemMsg: LLMMessage = { role: "system", content: args.systemPrompt };
-  const currentMsg: LLMMessage = { role: "user", content: args.currentUserMessage };
+  const currentMsg: LLMMessage = {
+    role: "user",
+    content: args.currentUserMessage,
+  };
 
   // Fixed cost: system + current user message
   const fixedTokens =
@@ -61,14 +64,15 @@ export function buildLLMMessages(args: {
 
   // Trim oldest messages first until within budget
   let trimStart = 0;
-  while (totalHistoryTokens > remainingBudget && trimStart < historyWithTokens.length) {
+  while (
+    totalHistoryTokens > remainingBudget &&
+    trimStart < historyWithTokens.length
+  ) {
     totalHistoryTokens -= historyWithTokens[trimStart].tokens;
     trimStart++;
   }
 
-  const keptHistory = historyWithTokens
-    .slice(trimStart)
-    .map((h) => h.msg);
+  const keptHistory = historyWithTokens.slice(trimStart).map((h) => h.msg);
 
   return [systemMsg, ...keptHistory, currentMsg];
 }

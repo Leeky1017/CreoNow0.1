@@ -4,7 +4,9 @@ import { runFireAndForget, type FireAndForgetOptions } from "../fireAndForget";
 
 describe("runFireAndForget", () => {
   it("logs structured failure details with label (AUD-C9-S5)", async () => {
-    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     runFireAndForget(
       async () => {
@@ -29,7 +31,9 @@ describe("runFireAndForget", () => {
   });
 
   it("catches secondary exception in error handler (AUD-C9-S6)", async () => {
-    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     const options: FireAndForgetOptions = {
       label: "handler-task",
@@ -38,18 +42,17 @@ describe("runFireAndForget", () => {
       },
     };
 
-    runFireAndForget(
-      async () => {
-        throw new Error("boom");
-      },
-      options,
-    );
+    runFireAndForget(async () => {
+      throw new Error("boom");
+    }, options);
 
     await Promise.resolve();
 
     expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
     const [secondaryMessage, secondaryDetails] = consoleErrorSpy.mock.calls[0];
-    expect(secondaryMessage).toContain("[fire-and-forget] error handler failed");
+    expect(secondaryMessage).toContain(
+      "[fire-and-forget] error handler failed",
+    );
     expect(secondaryDetails).toMatchObject({
       label: "handler-task",
       errorType: "Error",
@@ -68,7 +71,9 @@ describe("runFireAndForget", () => {
   });
 
   it("logs non-critical failures without blocking (AUD-C9-S7)", async () => {
-    const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const consoleWarnSpy = vi
+      .spyOn(console, "warn")
+      .mockImplementation(() => {});
 
     runFireAndForget(
       async () => {
@@ -94,15 +99,16 @@ describe("runFireAndForget", () => {
 
   it("keeps backward-compat function options signature", async () => {
     const handler = vi.fn();
-    const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const consoleWarnSpy = vi
+      .spyOn(console, "warn")
+      .mockImplementation(() => {});
 
-    runFireAndForget(
-      async () => {
-        throw new Error("boom");
-      },
-      handler,
-    );
+    runFireAndForget(async () => {
+      throw new Error("boom");
+    }, handler);
 
     await Promise.resolve();
 

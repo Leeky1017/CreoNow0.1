@@ -28,7 +28,9 @@ describe("OnboardingPage wizard flow", () => {
   it("renders step 1 (language selection) by default", () => {
     render(<OnboardingPage onComplete={onComplete} />);
     expect(screen.getByTestId("onboarding-step-1")).toBeInTheDocument();
-    expect(screen.getByTestId("onboarding-language-select")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("onboarding-language-select"),
+    ).toBeInTheDocument();
   });
 
   it("persists language selection on step 1", () => {

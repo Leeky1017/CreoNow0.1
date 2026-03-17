@@ -76,13 +76,13 @@ export interface SurfaceRegistryItem {
 }
 
 /**
- * 完整的 Surface Registry（60/60）
+ * 完整的 Surface Registry（69/69）
  *
- * 按类别组织：Layout → Primitives → Features
+ * 按类别组织：Layout → Primitives → Features → Patterns
  */
 export const surfaceRegistry: SurfaceRegistryItem[] = [
   // ============================================================
-  // Layout（7 个）
+  // Layout（10 个）
   // ============================================================
   {
     id: "appShell",
@@ -138,6 +138,31 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     ],
     testId: "right-panel",
     storybookTitle: "Layout/RightPanel",
+  },
+  {
+    id: "layoutShell",
+    kind: "layout",
+    entryPoints: [
+      { type: "storybookOnly", description: "Layout shell wrapper" },
+    ],
+    testId: "layout-shell",
+    storybookTitle: "Layout/LayoutShell",
+  },
+  {
+    id: "leftPanelDialogShell",
+    kind: "layout",
+    entryPoints: [
+      { type: "storybookOnly", description: "Left panel dialog shell" },
+    ],
+    testId: "left-panel-dialog-shell",
+    storybookTitle: "Layout/LeftPanelDialogShell",
+  },
+  {
+    id: "saveIndicator",
+    kind: "layout",
+    entryPoints: [{ type: "storybookOnly", description: "Save indicator" }],
+    testId: "save-indicator",
+    storybookTitle: "Layout/SaveIndicator",
   },
 
   // ============================================================
@@ -580,6 +605,64 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     testId: "zen-mode",
     storybookTitle: "Features/ZenMode",
   },
+
+  // ============================================================
+  // Patterns（6 个）
+  // ============================================================
+  {
+    id: "errorBoundary",
+    kind: "overlay",
+    entryPoints: [
+      { type: "storybookOnly", description: "Error boundary wrapper" },
+    ],
+    testId: "error-boundary",
+    storybookTitle: "Patterns/ErrorBoundary",
+  },
+  {
+    id: "errorState",
+    kind: "overlay",
+    entryPoints: [
+      { type: "storybookOnly", description: "Error state display" },
+    ],
+    testId: "error-state",
+    storybookTitle: "Patterns/ErrorState",
+  },
+  {
+    id: "regionErrorBoundary",
+    kind: "overlay",
+    entryPoints: [
+      { type: "storybookOnly", description: "Region-scoped error boundary" },
+    ],
+    testId: "region-error-boundary",
+    storybookTitle: "Patterns/RegionErrorBoundary",
+  },
+  {
+    id: "emptyState",
+    kind: "overlay",
+    entryPoints: [
+      { type: "storybookOnly", description: "Empty state pattern" },
+    ],
+    testId: "empty-state",
+    storybookTitle: "Patterns/EmptyState",
+  },
+  {
+    id: "loadingState",
+    kind: "overlay",
+    entryPoints: [
+      { type: "storybookOnly", description: "Loading state pattern" },
+    ],
+    testId: "loading-state",
+    storybookTitle: "Patterns/LoadingState",
+  },
+  {
+    id: "regionFallback",
+    kind: "overlay",
+    entryPoints: [
+      { type: "storybookOnly", description: "Region fallback pattern" },
+    ],
+    testId: "region-fallback",
+    storybookTitle: "Patterns/RegionFallback",
+  },
 ];
 
 // ============================================================
@@ -640,7 +723,12 @@ export function getStorybookOnlySurfaces(): SurfaceRegistryItem[] {
 export function getRegistryStats(): {
   total: number;
   byKind: Record<SurfaceKind, number>;
-  byCategory: { layout: number; primitives: number; features: number };
+  byCategory: {
+    layout: number;
+    primitives: number;
+    features: number;
+    patterns: number;
+  };
   appSurfaces: number;
   storybookOnlySurfaces: number;
 } {
@@ -667,6 +755,9 @@ export function getRegistryStats(): {
     ).length,
     features: surfaceRegistry.filter((i) =>
       i.storybookTitle.startsWith("Features/"),
+    ).length,
+    patterns: surfaceRegistry.filter((i) =>
+      i.storybookTitle.startsWith("Patterns/"),
     ).length,
   };
 

@@ -423,7 +423,11 @@ function CardGroupWithActionDemo() {
           className="grid grid-cols-2 gap-3"
         >
           {templates.map((opt) => (
-            <RadioCardItem key={opt.value} value={opt.value} label={opt.label} />
+            <RadioCardItem
+              key={opt.value}
+              value={opt.value}
+              label={opt.label}
+            />
           ))}
           <RadioCardItem
             value=""

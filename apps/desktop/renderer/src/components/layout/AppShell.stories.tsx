@@ -100,7 +100,9 @@ function AppShellWrapper({
               <AiStoreProvider store={aiStore}>
                 <MemoryStoreProvider store={memoryStore}>
                   <SearchStoreProvider store={searchStore}>
-                    <KgStoreProvider store={kgStore}>{children}</KgStoreProvider>
+                    <KgStoreProvider store={kgStore}>
+                      {children}
+                    </KgStoreProvider>
                   </SearchStoreProvider>
                 </MemoryStoreProvider>
               </AiStoreProvider>
@@ -467,14 +469,16 @@ export const ResponsiveNarrow: Story = {
         border: "2px dashed var(--color-border-default)",
       }}
     >
-      <AppShellWithLayoutState sidebarCollapsed={false} panelCollapsed={false} />
+      <AppShellWithLayoutState
+        sidebarCollapsed={false}
+        panelCollapsed={false}
+      />
     </div>
   ),
   parameters: {
     docs: {
       description: {
-        story:
-          "窄视口（800px）响应式布局测试。验证元素不溢出、文字截断正确。",
+        story: "窄视口（800px）响应式布局测试。验证元素不溢出、文字截断正确。",
       },
     },
   },

@@ -195,7 +195,10 @@ function getProjectRootPath(userDataDir: string, projectId: string): string {
   return path.join(userDataDir, "projects", projectId);
 }
 
-function isPathInsideDirectory(targetPath: string, directoryPath: string): boolean {
+function isPathInsideDirectory(
+  targetPath: string,
+  directoryPath: string,
+): boolean {
   const normalizedTargetPath = path.resolve(targetPath);
   const normalizedDirectoryPath = path.resolve(directoryPath);
   const relative = path.relative(normalizedDirectoryPath, normalizedTargetPath);
@@ -209,8 +212,7 @@ function normalizePathForEquality(inputPath: string): string {
   const resolvedPath = path.resolve(inputPath);
   const rootPath = path.parse(resolvedPath).root;
   const trimmedPath = resolvedPath.replace(/[\\/]+$/, "");
-  const normalizedPath =
-    trimmedPath.length === 0 ? rootPath : trimmedPath;
+  const normalizedPath = trimmedPath.length === 0 ? rootPath : trimmedPath;
   if (process.platform === "win32") {
     return normalizedPath.toLowerCase();
   }
@@ -531,7 +533,10 @@ type ProjectServiceCtx = {
 
 function createProjectCrudOps(
   ctx: ProjectServiceCtx,
-): Pick<ProjectService, "create" | "createAiAssistDraft" | "update" | "rename"> {
+): Pick<
+  ProjectService,
+  "create" | "createAiAssistDraft" | "update" | "rename"
+> {
   const args = ctx;
   const now = ctx.now;
 
@@ -1175,7 +1180,12 @@ function createProjectLifecycleOps(
       const project = getProjectById(args.db, projectId);
       if (!project.ok) {
         if (project.error.code === "NOT_FOUND") {
-          return ipcError("NOT_FOUND", "项目已删除", { projectId }, { traceId });
+          return ipcError(
+            "NOT_FOUND",
+            "项目已删除",
+            { projectId },
+            { traceId },
+          );
         }
         return project;
       }
@@ -1190,13 +1200,15 @@ function createProjectLifecycleOps(
         return { ok: false, error: transition.error };
       }
 
-      const sandboxRootPath = path.join(args.userDataDir, PROJECT_SANDBOX_DIR_NAME);
+      const sandboxRootPath = path.join(
+        args.userDataDir,
+        PROJECT_SANDBOX_DIR_NAME,
+      );
       const normalizedProjectRootPath = normalizePathForEquality(
         project.data.rootPath,
       );
-      const normalizedSandboxRootPath = normalizePathForEquality(
-        sandboxRootPath,
-      );
+      const normalizedSandboxRootPath =
+        normalizePathForEquality(sandboxRootPath);
       const isSandboxRootPath =
         normalizedProjectRootPath === normalizedSandboxRootPath;
       const isInsideSandbox = isPathInsideDirectory(
@@ -1234,13 +1246,21 @@ function createProjectLifecycleOps(
           try {
             removeProjectRoot(project.data.rootPath);
           } catch (error) {
-            const failure: RemoveRootFailure = { kind: "remove_root_failed", error };
+            const failure: RemoveRootFailure = {
+              kind: "remove_root_failed",
+              error,
+            };
             throw failure;
           }
         })();
       } catch (error) {
         if (error === purgeNotFoundMarker) {
-          return ipcError("NOT_FOUND", "项目已删除", { projectId }, { traceId });
+          return ipcError(
+            "NOT_FOUND",
+            "项目已删除",
+            { projectId },
+            { traceId },
+          );
         }
 
         if (
@@ -1291,9 +1311,14 @@ function createProjectLifecycleOps(
           trace_id: traceId,
           project_id: projectId,
         });
-        return ipcError("DB_ERROR", "Failed to purge project", { projectId }, {
-          traceId,
-        });
+        return ipcError(
+          "DB_ERROR",
+          "Failed to purge project",
+          { projectId },
+          {
+            traceId,
+          },
+        );
       }
 
       const currentId = readCurrentProjectId(args.db);

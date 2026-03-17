@@ -3,8 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Button } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 
-/* eslint-disable creonow/no-native-html-element -- version history action buttons (restore, compare, delete) */
-
 /**
  * Version author types
  */
@@ -377,6 +375,7 @@ function HoverActions({
       ].join(" ")}
     >
       <Tooltip content={t("versionHistory.panel.restore")}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           onClick={() => onRestore?.(versionId)}
@@ -386,6 +385,7 @@ function HoverActions({
         </button>
       </Tooltip>
       <Tooltip content={t("versionHistory.panel.compare")}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           onClick={() => onCompare?.(versionId)}
@@ -395,6 +395,7 @@ function HoverActions({
         </button>
       </Tooltip>
       <Tooltip content={t("versionHistory.panel.preview")}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           onClick={() => onPreview?.(versionId)}
@@ -735,6 +736,7 @@ export function VersionHistoryPanelContent({
           </p>
         </div>
         {showCloseButton && (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
           <button
             type="button"
             onClick={onClose}
@@ -775,6 +777,7 @@ export function VersionHistoryPanelContent({
               : t("versionHistory.panel.autoSaveOff")}
           </span>
         </div>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           onClick={onConfigureAutoSave}

@@ -115,9 +115,11 @@ describe("CharacterPanel", () => {
       <CharacterPanel characters={SAMPLE_CHARACTERS} onSelect={onSelectMock} />,
     );
 
-    const elaraCard = screen.getByText("Elara Vance").closest('[data-testid="character-card"]');
+    const elaraCard = screen
+      .getByText("Elara Vance")
+      .closest('[data-testid="character-card"]');
     expect(elaraCard).toBeInTheDocument();
-    
+
     if (elaraCard) {
       await user.click(elaraCard);
       expect(onSelectMock).toHaveBeenCalledWith("elara");
@@ -129,9 +131,11 @@ describe("CharacterPanel", () => {
       <CharacterPanel characters={SAMPLE_CHARACTERS} selectedId="elara" />,
     );
 
-    const elaraCard = screen.getByText("Elara Vance").closest('[data-testid="character-card"]');
+    const elaraCard = screen
+      .getByText("Elara Vance")
+      .closest('[data-testid="character-card"]');
     expect(elaraCard).toHaveAttribute("aria-selected", "true");
-    
+
     const indicator = screen.getByTestId("character-card-selected-indicator");
     expect(indicator).toBeInTheDocument();
   });

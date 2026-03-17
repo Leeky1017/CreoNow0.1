@@ -144,10 +144,7 @@ export const DragHandleExtension = Extension.create<
   onCreate() {
     /* Skip DOM work when running in a test / headless environment
        or when the editor is read-only. */
-    if (
-      typeof document === "undefined" ||
-      !this.editor.isEditable
-    ) {
+    if (typeof document === "undefined" || !this.editor.isEditable) {
       return;
     }
 

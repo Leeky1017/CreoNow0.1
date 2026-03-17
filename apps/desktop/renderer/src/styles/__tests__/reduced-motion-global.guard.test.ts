@@ -7,10 +7,7 @@ const STYLES_DIR = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
 );
-const MAIN_CSS = fs.readFileSync(
-  path.join(STYLES_DIR, "main.css"),
-  "utf-8",
-);
+const MAIN_CSS = fs.readFileSync(path.join(STYLES_DIR, "main.css"), "utf-8");
 const TOKENS_CSS = fs.readFileSync(
   path.join(STYLES_DIR, "tokens.css"),
   "utf-8",
@@ -39,7 +36,9 @@ describe("WB-FE-MOTION-S1: main.css contains global reduced-motion rule", () => 
         /\*\s*\{/.test(blockContent);
       const hasAnimationDuration = /animation-duration/.test(blockContent);
       const hasTransitionDuration = /transition-duration/.test(blockContent);
-      return targetsAllElements && hasAnimationDuration && hasTransitionDuration;
+      return (
+        targetsAllElements && hasAnimationDuration && hasTransitionDuration
+      );
     });
 
     expect(hasGlobalOverride).toBe(true);

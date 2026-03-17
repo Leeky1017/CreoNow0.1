@@ -63,10 +63,7 @@ function sleep(ms?: number): Promise<void> {
   });
 }
 
-function readNonEmptyStringField(
-  payload: unknown,
-  key: string,
-): string | null {
+function readNonEmptyStringField(payload: unknown, key: string): string | null {
   if (!payload || typeof payload !== "object") {
     return null;
   }
@@ -184,13 +181,21 @@ type VersionHandlerContext = {
 
 function registerVersionSnapshotHandlers(ctx: VersionHandlerContext): void {
   const {
-    ipcMain, db, coordinator, createService,
-    withIoRetry, simulateLatencyMs, projectSessionBinding,
+    ipcMain,
+    db,
+    coordinator,
+    createService,
+    withIoRetry,
+    simulateLatencyMs,
+    projectSessionBinding,
   } = ctx;
 
   ipcMain.handle(
     "version:snapshot:create",
-    async (event, payload: unknown): Promise<
+    async (
+      event,
+      payload: unknown,
+    ): Promise<
       IpcResponse<{
         versionId: string;
         contentHash: string;
@@ -263,65 +268,62 @@ function registerVersionSnapshotHandlers(ctx: VersionHandlerContext): void {
           ? (payload as { reason?: VersionSnapshotReason }).reason
           : undefined;
 
-      return coordinator.withSerializedDocument(
-        documentId,
-        async () => {
-          await sleep(simulateLatencyMs?.snapshot);
-          return withIoRetry({
-            operation: "version:snapshot:create",
-            documentId,
-            run: async (): Promise<
-              IpcResponse<{
-                versionId: string;
-                contentHash: string;
-                wordCount: number;
-                createdAt: number;
-                compaction?: SnapshotCompactionEvent;
-              }>
-            > => {
-              const svc = createService();
-              const saved = svc.save({
-                projectId,
-                documentId,
-                contentJson: parsed,
-                actor: actor as VersionSnapshotActor,
-                reason: reason as VersionSnapshotReason,
-              });
-              if (!saved.ok) {
-                return { ok: false, error: saved.error };
-              }
+      return coordinator.withSerializedDocument(documentId, async () => {
+        await sleep(simulateLatencyMs?.snapshot);
+        return withIoRetry({
+          operation: "version:snapshot:create",
+          documentId,
+          run: async (): Promise<
+            IpcResponse<{
+              versionId: string;
+              contentHash: string;
+              wordCount: number;
+              createdAt: number;
+              compaction?: SnapshotCompactionEvent;
+            }>
+          > => {
+            const svc = createService();
+            const saved = svc.save({
+              projectId,
+              documentId,
+              contentJson: parsed,
+              actor: actor as VersionSnapshotActor,
+              reason: reason as VersionSnapshotReason,
+            });
+            if (!saved.ok) {
+              return { ok: false, error: saved.error };
+            }
 
-              const listed = svc.listVersions({
-                documentId,
-              });
-              if (!listed.ok) {
-                return { ok: false, error: listed.error };
-              }
-              const latest = listed.data.items[0];
-              if (!latest) {
-                return {
-                  ok: false,
-                  error: {
-                    code: "DB_ERROR",
-                    message: "Snapshot create succeeded but no snapshot found",
-                  },
-                };
-              }
-
+            const listed = svc.listVersions({
+              documentId,
+            });
+            if (!listed.ok) {
+              return { ok: false, error: listed.error };
+            }
+            const latest = listed.data.items[0];
+            if (!latest) {
               return {
-                ok: true,
-                data: {
-                  versionId: latest.versionId,
-                  contentHash: latest.contentHash,
-                  wordCount: latest.wordCount,
-                  createdAt: latest.createdAt,
-                  compaction: saved.data.compaction,
+                ok: false,
+                error: {
+                  code: "DB_ERROR",
+                  message: "Snapshot create succeeded but no snapshot found",
                 },
               };
-            },
-          });
-        },
-      );
+            }
+
+            return {
+              ok: true,
+              data: {
+                versionId: latest.versionId,
+                contentHash: latest.contentHash,
+                wordCount: latest.wordCount,
+                createdAt: latest.createdAt,
+                compaction: saved.data.compaction,
+              },
+            };
+          },
+        });
+      });
     },
   );
 
@@ -470,10 +472,17 @@ function registerVersionSnapshotHandlers(ctx: VersionHandlerContext): void {
   );
 }
 
-function registerVersionSnapshotLifecycleHandlers(ctx: VersionHandlerContext): void {
+function registerVersionSnapshotLifecycleHandlers(
+  ctx: VersionHandlerContext,
+): void {
   const {
-    ipcMain, db, coordinator, createService,
-    rollbackConflict, withIoRetry, simulateLatencyMs,
+    ipcMain,
+    db,
+    coordinator,
+    createService,
+    rollbackConflict,
+    withIoRetry,
+    simulateLatencyMs,
   } = ctx;
 
   ipcMain.handle(
@@ -589,8 +598,14 @@ function registerVersionSnapshotLifecycleHandlers(ctx: VersionHandlerContext): v
 
 function registerVersionBranchHandlers(ctx: VersionHandlerContext): void {
   const {
-    ipcMain, db, logger, coordinator,
-    createService, withIoRetry, simulateLatencyMs, mergeTimeoutMs,
+    ipcMain,
+    db,
+    logger,
+    coordinator,
+    createService,
+    withIoRetry,
+    simulateLatencyMs,
+    mergeTimeoutMs,
   } = ctx;
 
   ipcMain.handle(
@@ -898,7 +913,9 @@ export function registerVersionIpcHandlers(deps: {
         deps.maxDiffPayloadBytes ?? DEFAULT_MAX_DIFF_PAYLOAD_BYTES,
     });
   const projectSessionBinding =
-    deps.projectSessionBinding ?? getProjectSessionBindingRegistry() ?? undefined;
+    deps.projectSessionBinding ??
+    getProjectSessionBindingRegistry() ??
+    undefined;
 
   const rollbackConflict = (documentId: string): IpcResponse<never> => ({
     ok: false,

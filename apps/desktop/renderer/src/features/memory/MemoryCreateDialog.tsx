@@ -58,8 +58,8 @@ export function MemoryCreateDialog(props: {
     <Dialog
       open={props.open}
       onOpenChange={props.onOpenChange}
-      title={t('memory.create.title')}
-      description={t('memory.create.description', { scope: props.scopeLabel })}
+      title={t("memory.create.title")}
+      description={t("memory.create.description", { scope: props.scopeLabel })}
       footer={
         <div className="flex gap-2 justify-end">
           <Button
@@ -67,7 +67,7 @@ export function MemoryCreateDialog(props: {
             size="md"
             onClick={() => props.onOpenChange(false)}
           >
-            {t('memory.create.cancel')}
+            {t("memory.create.cancel")}
           </Button>
           <Button
             variant="primary"
@@ -75,7 +75,7 @@ export function MemoryCreateDialog(props: {
             onClick={() => void handleSubmit()}
             disabled={!content.trim() || isSubmitting}
           >
-            {isSubmitting ? t('memory.create.saving') : t('memory.create.save')}
+            {isSubmitting ? t("memory.create.saving") : t("memory.create.save")}
           </Button>
         </div>
       }
@@ -84,16 +84,16 @@ export function MemoryCreateDialog(props: {
         {/* Type selector */}
         <div className="flex flex-col gap-2">
           <Text size="small" color="muted">
-            {t('memory.create.type')}
+            {t("memory.create.type")}
           </Text>
           <Select
             data-testid="memory-create-type"
             value={type}
             onValueChange={(value) => setType(value as MemoryType)}
             options={[
-              { value: "preference", label: t('memory.create.typePreference') },
-              { value: "fact", label: t('memory.create.typeFact') },
-              { value: "note", label: t('memory.create.typeNote') },
+              { value: "preference", label: t("memory.create.typePreference") },
+              { value: "fact", label: t("memory.create.typeFact") },
+              { value: "note", label: t("memory.create.typeNote") },
             ]}
             className="w-full"
           />
@@ -102,7 +102,7 @@ export function MemoryCreateDialog(props: {
         {/* Content input */}
         <div className="flex flex-col gap-2">
           <Text size="small" color="muted">
-            {t('memory.create.content')}
+            {t("memory.create.content")}
           </Text>
           <Textarea
             data-testid="memory-create-content"
@@ -110,10 +110,10 @@ export function MemoryCreateDialog(props: {
             onChange={(e) => setContent(e.target.value)}
             placeholder={
               type === "preference"
-                ? t('memory.create.examplePreference')
+                ? t("memory.create.examplePreference")
                 : type === "fact"
-                  ? t('memory.create.exampleFact')
-                  : t('memory.create.exampleNote')
+                  ? t("memory.create.exampleFact")
+                  : t("memory.create.exampleNote")
             }
             className="min-h-30"
           />
@@ -122,7 +122,7 @@ export function MemoryCreateDialog(props: {
         {/* Scope info */}
         <div className="flex items-center gap-2 p-2 rounded bg-[var(--color-bg-subtle)]">
           <Text size="tiny" color="muted">
-            {t('memory.create.layerHint')}
+            {t("memory.create.layerHint")}
           </Text>
         </div>
       </div>

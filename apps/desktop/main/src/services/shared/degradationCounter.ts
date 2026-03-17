@@ -28,7 +28,8 @@ export class DegradationCounter {
   private readonly states = new Map<string, CounterState>();
 
   constructor(options?: DegradationCounterOptions) {
-    const threshold = options?.threshold ?? DEFAULT_DEGRADATION_ESCALATION_THRESHOLD;
+    const threshold =
+      options?.threshold ?? DEFAULT_DEGRADATION_ESCALATION_THRESHOLD;
     this.threshold = Math.max(1, Math.floor(threshold));
     this.now = options?.now ?? (() => Date.now());
   }
@@ -70,4 +71,3 @@ export function logWarn(
   }
   logger.info(event, data);
 }
-

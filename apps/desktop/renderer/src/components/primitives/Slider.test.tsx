@@ -52,14 +52,7 @@ describe("Slider", () => {
   });
 
   it("uses default format label (percentage)", () => {
-    render(
-      <Slider
-        defaultValue={50}
-        min={0}
-        max={100}
-        showLabels
-      />,
-    );
+    render(<Slider defaultValue={50} min={0} max={100} showLabels />);
 
     expect(screen.getByText("0%")).toBeInTheDocument();
     expect(screen.getByText("100%")).toBeInTheDocument();
@@ -83,13 +76,7 @@ describe("Slider", () => {
 
   it("is disabled when disabled prop is true", () => {
     const onValueChange = vi.fn();
-    render(
-      <Slider
-        defaultValue={50}
-        disabled
-        onValueChange={onValueChange}
-      />,
-    );
+    render(<Slider defaultValue={50} disabled onValueChange={onValueChange} />);
 
     const slider = screen.getByRole("slider");
     expect(slider).toBeDisabled();

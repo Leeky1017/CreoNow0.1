@@ -10,8 +10,6 @@ import { Popover } from "../../components/primitives";
 import type { CharacterGroup } from "./types";
 import { GROUP_OPTIONS } from "./types";
 
-/* eslint-disable creonow/no-native-html-element -- GroupSelector uses popover trigger and option item buttons */
-
 export interface GroupSelectorProps {
   /** Current group value */
   value: CharacterGroup;
@@ -61,6 +59,7 @@ export function GroupSelector({
       layer={layer}
       portalContainer={portalContainer}
       trigger={
+        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
         <button
           type="button"
           className={[
@@ -86,11 +85,12 @@ export function GroupSelector({
     >
       <div className="min-w-35 py-1 -mx-2 -my-2">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
-          {t('character.groupSelector.selectGroup')}
+          {t("character.groupSelector.selectGroup")}
         </div>
         {GROUP_OPTIONS.map((group) => {
           const isSelected = group.value === value;
           return (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               key={group.value}
               type="button"

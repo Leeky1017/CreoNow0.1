@@ -296,7 +296,9 @@ function DragToMinWidthDemo(): JSX.Element {
           当前宽度:
           <strong
             style={{
-              color: isAtMin ? "var(--color-warning)" : "var(--color-fg-default)",
+              color: isAtMin
+                ? "var(--color-warning)"
+                : "var(--color-fg-default)",
               marginLeft: "4px",
             }}
           >
@@ -440,7 +442,9 @@ function DragToMaxWidthDemo(): JSX.Element {
           当前宽度:
           <strong
             style={{
-              color: isAtMax ? "var(--color-warning)" : "var(--color-fg-default)",
+              color: isAtMax
+                ? "var(--color-warning)"
+                : "var(--color-fg-default)",
               marginLeft: "4px",
             }}
           >

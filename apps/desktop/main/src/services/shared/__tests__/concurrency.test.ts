@@ -68,7 +68,11 @@ async function emptyKeyBypassesLocking(): Promise<void> {
     mutex.runExclusive("", task),
   ]);
 
-  assert.equal(concurrentPeak, 2, "empty key should allow concurrent execution");
+  assert.equal(
+    concurrentPeak,
+    2,
+    "empty key should allow concurrent execution",
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -84,7 +88,10 @@ async function priorTaskErrorReportedViaCallback(): Promise<void> {
 
   // First task throws
   await assert.rejects(
-    () => mutex.runExclusive("k", () => { throw boom; }),
+    () =>
+      mutex.runExclusive("k", () => {
+        throw boom;
+      }),
     (err: unknown) => err === boom,
   );
 
@@ -120,7 +127,11 @@ async function singleflightDeduplicates(): Promise<void> {
 
   // After resolution, next call starts fresh
   const r3 = await sf.run("k", compute);
-  assert.equal(computeCount, 2, "new call after resolution should compute again");
+  assert.equal(
+    computeCount,
+    2,
+    "new call after resolution should compute again",
+  );
   assert.equal(r3, "result");
 }
 

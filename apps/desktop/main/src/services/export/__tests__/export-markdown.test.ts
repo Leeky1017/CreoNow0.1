@@ -12,7 +12,11 @@ import {
   STRUCTURED_EXPORT_CONTENT_JSON,
   STRUCTURED_EXPORT_TITLE,
 } from "./exportFixture";
-import { createNoopLogger, createTestDb, seedProjectAndDocument } from "./exportTestHelpers";
+import {
+  createNoopLogger,
+  createTestDb,
+  seedProjectAndDocument,
+} from "./exportTestHelpers";
 
 /**
  * Scenario: S3-EXPORT-S1
@@ -56,7 +60,9 @@ it("exports markdown from structured contentJson instead of plain-text fallback"
     assert.ok(markdown.includes("*italic words*"));
     assert.ok(markdown.includes("<u>underlined words</u>"));
     assert.ok(markdown.includes("`inline code`"));
-    assert.ok(markdown.includes("[read the archive](https://example.com/archive)"));
+    assert.ok(
+      markdown.includes("[read the archive](https://example.com/archive)"),
+    );
     assert.ok(markdown.includes("- First bullet"));
     assert.ok(markdown.includes("1. First ordered"));
     assert.ok(markdown.includes("> Quoted memory"));

@@ -13,9 +13,7 @@ function createDeferred() {
   return { promise, resolve };
 }
 
-function makeRequest(
-  patch: Partial<EditorSaveRequest>,
-): EditorSaveRequest {
+function makeRequest(patch: Partial<EditorSaveRequest>): EditorSaveRequest {
   return {
     projectId: "project-1",
     documentId: "doc-1",

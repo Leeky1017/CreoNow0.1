@@ -16,28 +16,25 @@ async function main(): Promise<void> {
 
   try {
     // ── WB-FE-WIN-S1: loads saved window state from JSON file ──
-    runScenario(
-      "WB-FE-WIN-S1 loads saved window state from JSON file",
-      () => {
-        const dir = path.join(sandboxRoot, "s1");
-        fs.mkdirSync(dir, { recursive: true });
+    runScenario("WB-FE-WIN-S1 loads saved window state from JSON file", () => {
+      const dir = path.join(sandboxRoot, "s1");
+      fs.mkdirSync(dir, { recursive: true });
 
-        const expected: WindowState = {
-          x: 100,
-          y: 200,
-          width: 1400,
-          height: 900,
-        };
-        fs.writeFileSync(
-          path.join(dir, "window-state.json"),
-          JSON.stringify(expected),
-          "utf8",
-        );
+      const expected: WindowState = {
+        x: 100,
+        y: 200,
+        width: 1400,
+        height: 900,
+      };
+      fs.writeFileSync(
+        path.join(dir, "window-state.json"),
+        JSON.stringify(expected),
+        "utf8",
+      );
 
-        const result = loadWindowState(dir);
-        assert.deepStrictEqual(result, expected);
-      },
-    );
+      const result = loadWindowState(dir);
+      assert.deepStrictEqual(result, expected);
+    });
 
     // ── WB-FE-WIN-S1b: returns null when state file is corrupted ──
     runScenario(
@@ -101,10 +98,7 @@ async function main(): Promise<void> {
       };
       saveWindowState(dir, state);
 
-      const raw = fs.readFileSync(
-        path.join(dir, "window-state.json"),
-        "utf8",
-      );
+      const raw = fs.readFileSync(path.join(dir, "window-state.json"), "utf8");
       const parsed: unknown = JSON.parse(raw);
       assert.deepStrictEqual(parsed, state);
     });
@@ -120,10 +114,7 @@ async function main(): Promise<void> {
       saveWindowState(dir, first);
       saveWindowState(dir, second);
 
-      const raw = fs.readFileSync(
-        path.join(dir, "window-state.json"),
-        "utf8",
-      );
+      const raw = fs.readFileSync(path.join(dir, "window-state.json"), "utf8");
       const parsed: unknown = JSON.parse(raw);
       assert.deepStrictEqual(parsed, second);
     });

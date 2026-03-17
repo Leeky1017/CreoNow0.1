@@ -132,7 +132,6 @@ function parseSemanticSearchPayload(payload: unknown): {
   };
 }
 
-
 function parseReindexPayload(payload: unknown): {
   projectId: string;
   batchSize?: number;
@@ -144,7 +143,10 @@ function parseReindexPayload(payload: unknown): {
   if (typeof payload.projectId !== "string") {
     return null;
   }
-  if (payload.batchSize !== undefined && typeof payload.batchSize !== "number") {
+  if (
+    payload.batchSize !== undefined &&
+    typeof payload.batchSize !== "number"
+  ) {
     return null;
   }
   if (payload.model !== undefined && typeof payload.model !== "string") {
@@ -153,7 +155,9 @@ function parseReindexPayload(payload: unknown): {
 
   return {
     projectId: payload.projectId,
-    ...(typeof payload.batchSize === "number" ? { batchSize: payload.batchSize } : {}),
+    ...(typeof payload.batchSize === "number"
+      ? { batchSize: payload.batchSize }
+      : {}),
     ...(typeof payload.model === "string" ? { model: payload.model } : {}),
   };
 }
@@ -208,7 +212,9 @@ export function registerEmbeddingIpcHandlers(deps: {
 
       const parsedPayload = parseTextGeneratePayload(payload);
       if (!parsedPayload) {
-        return invalidArgument("payload must include texts:string[] and optional model:string");
+        return invalidArgument(
+          "payload must include texts:string[] and optional model:string",
+        );
       }
 
       if (embeddingTextOffload) {
@@ -469,7 +475,9 @@ export function registerEmbeddingIpcHandlers(deps: {
       }
       const parsedPayload = parseReindexPayload(payload);
       if (!parsedPayload) {
-        return invalidArgument("payload must include projectId:string and optional batchSize/model");
+        return invalidArgument(
+          "payload must include projectId:string and optional batchSize/model",
+        );
       }
       if (parsedPayload.projectId.trim().length === 0) {
         return invalidArgument("projectId is required");

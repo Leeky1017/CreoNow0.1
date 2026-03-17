@@ -103,9 +103,12 @@ describe("onboardingStore", () => {
         </OnboardingStoreProvider>
       );
 
-      const { result } = renderHook(() => useOnboardingStore((s) => s.completed), {
-        wrapper,
-      });
+      const { result } = renderHook(
+        () => useOnboardingStore((s) => s.completed),
+        {
+          wrapper,
+        },
+      );
 
       expect(result.current).toBe(false);
     });

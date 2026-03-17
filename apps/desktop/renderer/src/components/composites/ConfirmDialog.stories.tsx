@@ -16,7 +16,8 @@ export const Default: Story = {
   args: {
     open: true,
     title: "Delete Project",
-    description: "This action cannot be undone. All files in this project will be permanently deleted.",
+    description:
+      "This action cannot be undone. All files in this project will be permanently deleted.",
     confirmLabel: "Delete",
     cancelLabel: "Cancel",
     onConfirm: () => {},
@@ -28,7 +29,8 @@ export const Destructive: Story = {
   args: {
     open: true,
     title: "Remove Character",
-    description: "Are you sure you want to remove this character? All related notes will also be deleted.",
+    description:
+      "Are you sure you want to remove this character? All related notes will also be deleted.",
     confirmLabel: "Remove",
     cancelLabel: "Keep",
     destructive: true,

@@ -10,7 +10,15 @@ const meta: Meta<typeof EmptyState> = {
   parameters: { layout: "centered" },
   decorators: [
     (Story) => (
-      <div style={{ width: 400, minHeight: 300, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div
+        style={{
+          width: 400,
+          minHeight: 300,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Story />
       </div>
     ),
@@ -26,7 +34,11 @@ export const NoFiles: Story = {
     icon: <FileText size={48} />,
     title: "No files yet",
     description: "Create your first file to get started.",
-    action: <Button size="sm" onClick={() => {}}>New File</Button>,
+    action: (
+      <Button size="sm" onClick={() => {}}>
+        New File
+      </Button>
+    ),
   },
 };
 
@@ -43,6 +55,10 @@ export const NoCharacters: Story = {
     icon: <Users size={48} />,
     title: "No characters",
     description: "Create a character to start building your story world.",
-    action: <Button size="sm" onClick={() => {}}>Add Character</Button>,
+    action: (
+      <Button size="sm" onClick={() => {}}>
+        Add Character
+      </Button>
+    ),
   },
 };

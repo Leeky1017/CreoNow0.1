@@ -843,7 +843,11 @@ function ErrorStateDemo(): JSX.Element {
           {/* Error Message */}
           <div className="w-full p-3 border border-[var(--color-danger)] rounded-[var(--radius-md)] bg-[var(--color-danger-subtle)]">
             <div className="flex items-start gap-2">
-              <CircleAlert size={16} strokeWidth={1.5} className="text-[var(--color-danger)] shrink-0 mt-0.5" />
+              <CircleAlert
+                size={16}
+                strokeWidth={1.5}
+                className="text-[var(--color-danger)] shrink-0 mt-0.5"
+              />
               <div className="flex-1">
                 <p className="text-[13px] text-[var(--color-danger)] font-medium">
                   请求失败

@@ -5,8 +5,6 @@ import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import { getHumanErrorMessage } from "../../../lib/errorMessages";
 import type { AiErrorCardProps, AiErrorType } from "./types";
 
-/* eslint-disable creonow/no-native-html-element -- AiErrorCard uses specialized action buttons (retry, upgrade, dismiss) that don't map to the Button primitive */
-
 /**
 
  * Card state for tracking visibility and loading
@@ -291,6 +289,7 @@ function AiErrorCardActions(props: {
       {props.errorType === "usage_limit" && (
         <>
           {props.onUpgradePlan && (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               type="button"
               className={upgradeButtonStyles}
@@ -300,6 +299,7 @@ function AiErrorCardActions(props: {
             </button>
           )}
           {props.onViewUsage && (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               type="button"
               className={linkButtonStyles}
@@ -314,6 +314,7 @@ function AiErrorCardActions(props: {
       {props.errorType === "service_error" && (
         <>
           {props.onRetry && (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               type="button"
               className={retryButtonStyles}
@@ -327,6 +328,7 @@ function AiErrorCardActions(props: {
             </button>
           )}
           {props.onCheckStatus && (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               type="button"
               className={linkButtonStyles}
@@ -343,6 +345,7 @@ function AiErrorCardActions(props: {
         props.errorType === "timeout" ||
         props.errorType === "rate_limit") &&
         props.onRetry && (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
           <button
             type="button"
             className={retryButtonStyles}
@@ -780,6 +783,7 @@ export function AiErrorCard({
       {/* Dismiss button */}
 
       {showDismiss && (
+        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
         <button
           type="button"
           className={dismissButtonStyles}

@@ -113,7 +113,9 @@ export function CommandItem({
       )}
 
       {/* Label */}
-      <span className="flex-1 text-[13px] truncate">{labelContent ?? label}</span>
+      <span className="flex-1 text-[13px] truncate">
+        {labelContent ?? label}
+      </span>
 
       {/* Shortcut hint */}
       {hint && (

@@ -50,7 +50,9 @@ describe("editor typography contracts", () => {
   });
 
   it("[ED-TYPO-02] should resolve 125%/150% scale tiers without hardcoded fallback drift", () => {
-    expect(resolveEditorScaleFactor(100)).toBe("var(--text-scale-factor-default)");
+    expect(resolveEditorScaleFactor(100)).toBe(
+      "var(--text-scale-factor-default)",
+    );
     expect(resolveEditorScaleFactor(125)).toBe("var(--text-scale-factor-125)");
     expect(resolveEditorScaleFactor(150)).toBe("var(--text-scale-factor-150)");
     expect(resolveEditorScaleFactor(175)).toBe("var(--text-scale-factor-150)");
@@ -64,9 +66,7 @@ describe("editor typography contracts", () => {
     expect(editorPaneSource).toContain("resolveEditorScaleFactor");
     expect(editorPaneSource).toContain("--editor-scale-factor");
     expect(editorPaneSource).toContain("--editor-font-size");
-    expect(editorPaneSource).toContain(
-      "text-[length:var(--editor-font-size)]",
-    );
+    expect(editorPaneSource).toContain("text-[length:var(--editor-font-size)]");
     expect(editorPaneSource).toContain("leading-[var(--editor-line-height)]");
     expect(editorPaneSource).not.toContain("line-clamp");
     expect(editorPaneSource).not.toContain("truncate");

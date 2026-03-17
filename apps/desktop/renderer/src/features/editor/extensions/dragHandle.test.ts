@@ -54,7 +54,10 @@ describe("dragHandle extension", () => {
       insertContentAt: vi.fn().mockReturnThis(),
       run: vi.fn().mockReturnValue(true),
     };
-    const nodeJson = { type: "paragraph", content: [{ type: "text", text: "moved" }] };
+    const nodeJson = {
+      type: "paragraph",
+      content: [{ type: "text", text: "moved" }],
+    };
     const editor: DragReorderEditor = {
       state: {
         doc: {

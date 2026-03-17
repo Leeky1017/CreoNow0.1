@@ -7,7 +7,10 @@ import type { CommandItem } from "./CommandPalette";
 // Test Helpers
 // =============================================================================
 
-function makeItem(label: string, overrides?: Partial<CommandItem>): CommandItem {
+function makeItem(
+  label: string,
+  overrides?: Partial<CommandItem>,
+): CommandItem {
   return {
     id: label.toLowerCase().replace(/\s+/g, "-"),
     label,

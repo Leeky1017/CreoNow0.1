@@ -28,8 +28,6 @@ import { FilePlus, MoreHorizontal, PenTool, Search } from "lucide-react";
 import { i18n } from "../../i18n";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 
-/* eslint-disable creonow/no-native-html-element -- dashboard card and action buttons */
-
 // =============================================================================
 // Types
 // =============================================================================
@@ -242,6 +240,7 @@ function ProjectCard(props: {
         </div>
         <DropdownMenu
           trigger={
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               onClick={(e) => e.stopPropagation()}
               className="focus-ring text-[var(--color-fg-faint)] hover:text-[var(--color-fg-default)] transition-colors p-1 -m-1 rounded"
@@ -865,6 +864,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
             <div className="mt-10">
               <SectionTitle
                 action={
+                  // eslint-disable-next-line creonow/no-native-html-element -- specialized button
                   <button
                     type="button"
                     data-testid="dashboard-archived-toggle"

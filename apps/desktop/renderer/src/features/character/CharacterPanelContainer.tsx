@@ -19,8 +19,6 @@ import { CharacterPanelSkeleton } from "./CharacterPanelSkeleton";
 import { kgToCharacters, characterToMetadataJson } from "./characterFromKg";
 import type { Character } from "./types";
 
-/* eslint-disable creonow/no-native-html-element -- CharacterPanelContainer uses specialized empty-state create button */
-
 export interface CharacterPanelContainerProps {
   /** Project ID for KG scope */
   projectId: string;
@@ -215,6 +213,7 @@ export function CharacterPanelContainer(
               {t("character.panelContainer.emptyDescription")}
             </p>
           </div>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             onClick={() => void handleCreate()}

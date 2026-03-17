@@ -2,7 +2,10 @@ import type { Logger } from "../../logging/logger";
 import { createKeyedMutex } from "../shared/concurrency";
 
 export type ProjectLifecycleTimers = {
-  setTimeout: (callback: () => void, ms: number) => ReturnType<typeof setTimeout>;
+  setTimeout: (
+    callback: () => void,
+    ms: number,
+  ) => ReturnType<typeof setTimeout>;
   clearTimeout: (handle: ReturnType<typeof setTimeout>) => void;
 };
 
@@ -88,7 +91,12 @@ export function createProjectLifecycle(deps: {
     let operation:
       | void
       | Promise<void>
-      | { then: (onFulfilled: () => void, onRejected?: (error: unknown) => void) => unknown };
+      | {
+          then: (
+            onFulfilled: () => void,
+            onRejected?: (error: unknown) => void,
+          ) => unknown;
+        };
 
     try {
       operation =

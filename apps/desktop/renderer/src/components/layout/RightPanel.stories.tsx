@@ -96,11 +96,7 @@ export const ReducedMotionInfoTab: Story = {
     collapsed: false,
   },
   render: (args) => (
-    <RightPanelStoryRender
-      {...args}
-      activeTab="info"
-      reducedMotion={true}
-    />
+    <RightPanelStoryRender {...args} activeTab="info" reducedMotion={true} />
   ),
 };
 

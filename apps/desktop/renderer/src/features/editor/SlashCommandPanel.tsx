@@ -35,7 +35,7 @@ export function SlashCommandPanel(
         data-testid="slash-command-search-input"
         type="text"
         value={props.query}
-        placeholder={t('editor.slashCommand.searchPlaceholder')}
+        placeholder={t("editor.slashCommand.searchPlaceholder")}
         onChange={(event) => props.onQueryChange(event.target.value)}
         onKeyDown={(event) => {
           if (event.key !== "Escape") {
@@ -52,7 +52,7 @@ export function SlashCommandPanel(
           data-testid="slash-command-empty-state"
           className="rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)] px-2 py-2 text-sm text-[var(--color-fg-muted)]"
         >
-          {t('editor.slashCommand.noCommandsFound')}
+          {t("editor.slashCommand.noCommandsFound")}
         </div>
       ) : (
         <ul className="space-y-1">
