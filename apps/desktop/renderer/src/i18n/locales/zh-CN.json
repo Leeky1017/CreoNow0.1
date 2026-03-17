@@ -955,6 +955,12 @@
       "dangerZone": "危险操作",
       "deleteAccount": "删除账户",
       "deleteAccountDescription": "永久删除你的账户及所有关联数据。",
+      "planFree": "免费版",
+      "planPro": "专业版",
+      "planTeam": "团队版",
+      "freeDescription": "升级到 Pro 版可获得无限 AI 辅助、优先支持和高级导出选项。",
+      "proDescription": "你已拥有所有 Pro 功能，包括无限 AI 辅助和优先支持。",
+      "teamDescription": "团队版包含协作功能、共享工作区和管理员控制。",
       "comingSoonTooltip": "账户功能即将推出"
     },
     "general": {
@@ -994,6 +1000,10 @@
       "navJudge": "质量",
       "navAnalytics": "数据分析",
       "navAccount": "账户",
+      "navExport": "导出",
+      "navShortcuts": "快捷键",
+      "navExport": "导出",
+      "navShortcuts": "快捷键",
       "title": "设置",
       "close": "关闭",
       "description": "配置应用设置，包括外观、AI、质量检查和数据分析。"
