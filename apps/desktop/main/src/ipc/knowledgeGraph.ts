@@ -46,6 +46,8 @@ type EntityListPayload = {
   filter?: {
     aiContextLevel?: AiContextLevel;
   };
+  limit?: number;
+  offset?: number;
 };
 
 type EntityUpdatePayload = {
@@ -78,6 +80,8 @@ type RelationCreatePayload = {
 
 type RelationListPayload = {
   projectId: string;
+  limit?: number;
+  offset?: number;
 };
 
 type RelationUpdatePayload = {
@@ -156,9 +160,9 @@ type QueryByIdsPayload = {
   entityIds: string[];
 };
 
-function normalizeQueryByIdsPayload(payload: unknown):
-  | { ok: true; payload: QueryByIdsPayload }
-  | { ok: false; message: string } {
+function normalizeQueryByIdsPayload(
+  payload: unknown,
+): { ok: true; payload: QueryByIdsPayload } | { ok: false; message: string } {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     return { ok: false, message: "payload must be an object" };
   }
@@ -168,7 +172,10 @@ function normalizeQueryByIdsPayload(payload: unknown):
     entityIds?: unknown;
   };
 
-  if (typeof candidate.projectId !== "string" || candidate.projectId.length === 0) {
+  if (
+    typeof candidate.projectId !== "string" ||
+    candidate.projectId.length === 0
+  ) {
     return { ok: false, message: "projectId is required" };
   }
 
@@ -542,14 +549,16 @@ function registerKgEntityHandlers(
     async (
       _event,
       payload: EntityListPayload,
-    ): Promise<IpcResponse<{ items: KnowledgeEntity[] }>> => {
+    ): Promise<
+      IpcResponse<{ items: KnowledgeEntity[]; totalCount: number }>
+    > => {
       if (!deps.db) {
-        return notReady<{ items: KnowledgeEntity[] }>();
+        return notReady<{ items: KnowledgeEntity[]; totalCount: number }>();
       }
 
       const service = createService();
       if (!service) {
-        return notReady<{ items: KnowledgeEntity[] }>();
+        return notReady<{ items: KnowledgeEntity[]; totalCount: number }>();
       }
       const res = service.entityList(payload);
       return res.ok
@@ -634,14 +643,16 @@ function registerKgRelationHandlers(
     async (
       _event,
       payload: RelationListPayload,
-    ): Promise<IpcResponse<{ items: KnowledgeRelation[] }>> => {
+    ): Promise<
+      IpcResponse<{ items: KnowledgeRelation[]; totalCount: number }>
+    > => {
       if (!deps.db) {
-        return notReady<{ items: KnowledgeRelation[] }>();
+        return notReady<{ items: KnowledgeRelation[]; totalCount: number }>();
       }
 
       const service = createService();
       if (!service) {
-        return notReady<{ items: KnowledgeRelation[] }>();
+        return notReady<{ items: KnowledgeRelation[]; totalCount: number }>();
       }
       const res = service.relationList(payload);
       return res.ok
