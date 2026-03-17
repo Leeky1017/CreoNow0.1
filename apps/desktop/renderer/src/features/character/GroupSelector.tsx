@@ -59,6 +59,7 @@ export function GroupSelector({
       layer={layer}
       portalContainer={portalContainer}
       trigger={
+        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
         <button
           type="button"
           className={[
@@ -82,13 +83,14 @@ export function GroupSelector({
       align="start"
       sideOffset={4}
     >
-      <div className="min-w-[140px] py-1 -mx-2 -my-2">
+      <div className="min-w-35 py-1 -mx-2 -my-2">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
-          {t('character.groupSelector.selectGroup')}
+          {t("character.groupSelector.selectGroup")}
         </div>
         {GROUP_OPTIONS.map((group) => {
           const isSelected = group.value === value;
           return (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               key={group.value}
               type="button"

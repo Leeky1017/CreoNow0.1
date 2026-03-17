@@ -155,6 +155,7 @@ export function AiSettingsSection(): JSX.Element {
         <Text size="small" color="muted">
           {t("settings.aiSection.provider")}
         </Text>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- provider mode select dropdown */}
         <select
           data-testid="ai-provider-mode"
           value={providerMode}

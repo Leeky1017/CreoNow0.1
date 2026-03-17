@@ -38,7 +38,6 @@ function toInternalError(action: string, error: unknown): IpcResponse<never> {
   return toError("INTERNAL", `Failed to ${action} window: ${message}`);
 }
 
-
 export function registerWindowIpcHandlers(args: {
   ipcMain: IpcMain;
   platform: NodeJS.Platform;

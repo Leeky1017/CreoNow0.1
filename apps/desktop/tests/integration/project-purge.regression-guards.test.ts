@@ -44,9 +44,7 @@ function toMixedCasePath(inputPath: string): string {
     .join("");
 }
 
-async function withWindowsPathSemantics<T>(
-  run: () => Promise<T>,
-): Promise<T> {
+async function withWindowsPathSemantics<T>(run: () => Promise<T>): Promise<T> {
   const mutablePath = path as unknown as {
     resolve: typeof path.resolve;
     relative: typeof path.relative;

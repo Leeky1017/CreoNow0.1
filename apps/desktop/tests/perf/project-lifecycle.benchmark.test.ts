@@ -48,7 +48,9 @@ async function main(): Promise<void> {
   const ipcMain = createMockIpcMain();
 
   registerProjectIpcHandlers({
-    ipcMain: ipcMain as unknown as Parameters<typeof registerProjectIpcHandlers>[0]["ipcMain"],
+    ipcMain: ipcMain as unknown as Parameters<
+      typeof registerProjectIpcHandlers
+    >[0]["ipcMain"],
     db,
     userDataDir,
     logger: createNoopLogger(),
@@ -84,7 +86,8 @@ async function main(): Promise<void> {
 
   for (let i = 0; i < createdIds.length; i += 1) {
     const current = createdIds[i];
-    const previous = createdIds[(i + createdIds.length - 1) % createdIds.length];
+    const previous =
+      createdIds[(i + createdIds.length - 1) % createdIds.length];
 
     const tSwitch0 = performance.now();
     await switchHandler?.({} as IpcMainInvokeEvent, {

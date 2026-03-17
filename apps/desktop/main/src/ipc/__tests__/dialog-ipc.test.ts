@@ -115,25 +115,22 @@ async function main(): Promise<void> {
   );
 
   // IPC-FE-OPENF-S3: returns selected directory path
-  await runScenario(
-    "S3 should return selected directory path",
-    async () => {
-      const harness = createHarness({
-        dialogResult: {
-          canceled: false,
-          filePaths: ["/home/user/my-project"],
-        },
-      });
+  await runScenario("S3 should return selected directory path", async () => {
+    const harness = createHarness({
+      dialogResult: {
+        canceled: false,
+        filePaths: ["/home/user/my-project"],
+      },
+    });
 
-      const response = await harness.invoke<{
-        ok: boolean;
-        data?: { selectedPath?: string };
-      }>("dialog:folder:open");
+    const response = await harness.invoke<{
+      ok: boolean;
+      data?: { selectedPath?: string };
+    }>("dialog:folder:open");
 
-      assert.equal(response.ok, true);
-      assert.equal(response.data?.selectedPath, "/home/user/my-project");
-    },
-  );
+    assert.equal(response.ok, true);
+    assert.equal(response.data?.selectedPath, "/home/user/my-project");
+  });
 
   // IPC-FE-OPENF-S4: only allows openDirectory property
   await runScenario(
@@ -143,9 +140,7 @@ async function main(): Promise<void> {
       await harness.invoke("dialog:folder:open");
 
       assert.ok(harness.lastDialogOptions, "expected dialog to be called");
-      assert.deepEqual(harness.lastDialogOptions.properties, [
-        "openDirectory",
-      ]);
+      assert.deepEqual(harness.lastDialogOptions.properties, ["openDirectory"]);
     },
   );
 

@@ -22,6 +22,7 @@ import { getHumanErrorMessage } from "../../lib/errorMessages";
 import type { IpcErrorCode } from "@shared/types/ipc-generated";
 
 import { Plus } from "lucide-react";
+
 // =============================================================================
 // Types
 // =============================================================================
@@ -183,6 +184,7 @@ function FormContent({
     >
       {/* Project Name */}
       <div>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className="block mb-2">
           <Text size="small" color="muted">
             {t("projects.create.projectNameLabel")}{" "}
@@ -216,6 +218,7 @@ function FormContent({
 
       {/* Template Selection */}
       <div>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className="block mb-2">
           <Text size="small" color="muted">
             {t("projects.create.templateLabel")}
@@ -261,6 +264,7 @@ function FormContent({
 
         {/* Create Template Button */}
         <div className="mt-3">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             onClick={onOpenCreateTemplate}
@@ -274,6 +278,7 @@ function FormContent({
 
       {/* Description */}
       <div>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className="block mb-2">
           <Text size="small" color="muted">
             {t("projects.create.descriptionLabel")}{" "}
@@ -294,6 +299,7 @@ function FormContent({
 
       {/* Cover Image */}
       <div>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className="block mb-2">
           <Text size="small" color="muted">
             {t("projects.create.coverImageLabel")}{" "}
@@ -340,6 +346,7 @@ function FormContent({
       )}
 
       {/* Submit button state indicator (hidden, used by parent) */}
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
       <input type="hidden" data-submitting={submitting} />
     </form>
   );
@@ -663,6 +670,7 @@ export function CreateProjectDialog({
               aria-label={t("projects.create.modeLabel")}
               className="flex gap-2"
             >
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
               <button
                 type="button"
                 role="tab"
@@ -672,6 +680,7 @@ export function CreateProjectDialog({
               >
                 {t("projects.create.manualCreate")}
               </button>
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
               <button
                 type="button"
                 role="tab"

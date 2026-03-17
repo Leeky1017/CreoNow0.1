@@ -32,7 +32,11 @@ const SAMPLE_CHARACTERS: Character[] = [
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=faces",
     description:
       "A skilled pilot with a mysterious past, determined to find the lost coordinates of Earth. She wears a faded flight jacket with an emblem no one recognizes.",
-    features: ["Wears a faded flight jacket", "Quick reflexes", "Pilot calluses"],
+    features: [
+      "Wears a faded flight jacket",
+      "Quick reflexes",
+      "Pilot calluses",
+    ],
     traits: ["Brave", "Impulsive", "Loyal"],
     relationships: [
       {
@@ -218,7 +222,9 @@ export const EmptyProject: Story = {
  */
 function EditingCharacterFormRender() {
   const [open, setOpen] = React.useState(true);
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(
+    null,
+  );
   const setContainerRef = React.useCallback((el: HTMLDivElement | null) => {
     setContainerEl(el);
   }, []);
@@ -229,10 +235,7 @@ function EditingCharacterFormRender() {
       ref={setContainerRef}
       className="h-screen min-h-[700px] flex bg-[var(--color-bg-base)] relative"
     >
-      <CharacterPanel
-        characters={SAMPLE_CHARACTERS}
-        selectedId="elara"
-      />
+      <CharacterPanel characters={SAMPLE_CHARACTERS} selectedId="elara" />
       <main className="flex-1 relative" />
       <CharacterDetailDialog
         open={open}
@@ -262,7 +265,9 @@ export const EditingCharacterForm: Story = {
  * Render component for AddingPersonalityTrait story
  */
 function AddingPersonalityTraitRender() {
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(
+    null,
+  );
   const setContainerRef = React.useCallback((el: HTMLDivElement | null) => {
     setContainerEl(el);
   }, []);
@@ -280,10 +285,7 @@ function AddingPersonalityTraitRender() {
       ref={setContainerRef}
       className="h-screen min-h-[700px] flex bg-[var(--color-bg-base)] relative"
     >
-      <CharacterPanel
-        characters={SAMPLE_CHARACTERS}
-        selectedId="elara"
-      />
+      <CharacterPanel characters={SAMPLE_CHARACTERS} selectedId="elara" />
       <main className="flex-1 relative" />
       <CharacterDetailDialog
         open
@@ -314,7 +316,9 @@ export const AddingPersonalityTrait: Story = {
  * Render component for ManagingRelationships story
  */
 function ManagingRelationshipsRender() {
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(
+    null,
+  );
   const setContainerRef = React.useCallback((el: HTMLDivElement | null) => {
     setContainerEl(el);
   }, []);
@@ -346,10 +350,7 @@ function ManagingRelationshipsRender() {
       ref={setContainerRef}
       className="h-screen min-h-[700px] flex bg-[var(--color-bg-base)] relative"
     >
-      <CharacterPanel
-        characters={SAMPLE_CHARACTERS}
-        selectedId="elara"
-      />
+      <CharacterPanel characters={SAMPLE_CHARACTERS} selectedId="elara" />
       <main className="flex-1 relative" />
       <CharacterDetailDialog
         open
@@ -379,7 +380,9 @@ export const ManagingRelationships: Story = {
  * Render component for UploadingAvatar story
  */
 function UploadingAvatarRender() {
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(
+    null,
+  );
   const setContainerRef = React.useCallback((el: HTMLDivElement | null) => {
     setContainerEl(el);
   }, []);
@@ -393,10 +396,7 @@ function UploadingAvatarRender() {
       ref={setContainerRef}
       className="h-screen min-h-[700px] flex bg-[var(--color-bg-base)] relative"
     >
-      <CharacterPanel
-        characters={SAMPLE_CHARACTERS}
-        selectedId="jax"
-      />
+      <CharacterPanel characters={SAMPLE_CHARACTERS} selectedId="jax" />
       <main className="flex-1 relative" />
       <CharacterDetailDialog
         open
@@ -451,7 +451,9 @@ export const DeletingCharacterConfirm: Story = {
  * Render component for SwitchingBetweenCharacters story
  */
 function SwitchingBetweenCharactersRender() {
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(
+    null,
+  );
   const setContainerRef = React.useCallback((el: HTMLDivElement | null) => {
     setContainerEl(el);
   }, []);
@@ -476,9 +478,14 @@ function SwitchingBetweenCharactersRender() {
       />
       <main className="flex-1 relative">
         <div className="p-4 text-[var(--color-fg-muted)] text-sm">
-          <p>Click on different characters in the list to switch between them.</p>
+          <p>
+            Click on different characters in the list to switch between them.
+          </p>
           <p className="mt-2">
-            Currently selected: <strong className="text-[var(--color-fg-default)]">{selectedCharacter?.name}</strong>
+            Currently selected:{" "}
+            <strong className="text-[var(--color-fg-default)]">
+              {selectedCharacter?.name}
+            </strong>
           </p>
         </div>
       </main>
@@ -510,11 +517,15 @@ export const SwitchingBetweenCharacters: Story = {
  * Render component for ChapterAppearanceNavigation story
  */
 function ChapterAppearanceNavigationRender() {
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(
+    null,
+  );
   const setContainerRef = React.useCallback((el: HTMLDivElement | null) => {
     setContainerEl(el);
   }, []);
-  const [lastNavigatedChapter, setLastNavigatedChapter] = React.useState<string | null>(null);
+  const [lastNavigatedChapter, setLastNavigatedChapter] = React.useState<
+    string | null
+  >(null);
 
   return (
     <div
@@ -528,7 +539,9 @@ function ChapterAppearanceNavigationRender() {
       />
       <main className="flex-1 relative">
         <div className="p-4 text-[var(--color-fg-muted)] text-sm">
-          <p>Click on chapter links in the character detail dialog to navigate.</p>
+          <p>
+            Click on chapter links in the character detail dialog to navigate.
+          </p>
           {lastNavigatedChapter && (
             <p className="mt-2 text-[var(--color-info)]">
               Navigated to: {lastNavigatedChapter}
@@ -577,11 +590,14 @@ function RoleSelectorOpenRender() {
           Role Selector Demo
         </h3>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-[var(--color-fg-muted)]">Current Role:</span>
+          <span className="text-xs text-[var(--color-fg-muted)]">
+            Current Role:
+          </span>
           <RoleSelector value={role} onChange={setRole} />
         </div>
         <p className="mt-4 text-xs text-[var(--color-fg-placeholder)]">
-          Click the role badge to open the selector. Try selecting different roles.
+          Click the role badge to open the selector. Try selecting different
+          roles.
         </p>
       </div>
     </div>
@@ -622,11 +638,14 @@ function GroupSelectorOpenRender() {
           Group Selector Demo
         </h3>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-[var(--color-fg-muted)]">Current Group:</span>
+          <span className="text-xs text-[var(--color-fg-muted)]">
+            Current Group:
+          </span>
           <GroupSelector value={group} onChange={setGroup} />
         </div>
         <p className="mt-4 text-xs text-[var(--color-fg-placeholder)]">
-          Click the group tag to open the selector. Try selecting different groups.
+          Click the group tag to open the selector. Try selecting different
+          groups.
         </p>
       </div>
     </div>
@@ -657,8 +676,12 @@ export const GroupSelectorOpen: Story = {
  * Render component for AddingRelationshipFlow story
  */
 function AddingRelationshipFlowRender() {
-  const [character, setCharacter] = React.useState<Character>(SAMPLE_CHARACTERS[0]);
-  const otherCharacters = SAMPLE_CHARACTERS.filter((c) => c.id !== character.id);
+  const [character, setCharacter] = React.useState<Character>(
+    SAMPLE_CHARACTERS[0],
+  );
+  const otherCharacters = SAMPLE_CHARACTERS.filter(
+    (c) => c.id !== character.id,
+  );
 
   const handleAddRelationship = (relationship: {
     characterId: string;
@@ -705,7 +728,8 @@ function AddingRelationshipFlowRender() {
           />
         </div>
         <p className="mt-4 text-xs text-[var(--color-fg-placeholder)]">
-          Click &quot;+ Add Relation&quot; to open the popover. Select a character and relationship type.
+          Click &quot;+ Add Relation&quot; to open the popover. Select a
+          character and relationship type.
         </p>
       </div>
     </div>
@@ -838,10 +862,16 @@ export const AvatarHoverState: Story = {
                   />
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Camera className="text-white w-5 h-5 drop-shadow-md" size={20} strokeWidth={1.5} />
+                  <Camera
+                    className="text-white w-5 h-5 drop-shadow-md"
+                    size={20}
+                    strokeWidth={1.5}
+                  />
                 </div>
               </div>
-              <span className="text-xs text-[var(--color-fg-muted)]">With Avatar</span>
+              <span className="text-xs text-[var(--color-fg-muted)]">
+                With Avatar
+              </span>
             </div>
             {/* Without avatar (fallback) */}
             <div className="text-center">
@@ -850,10 +880,16 @@ export const AvatarHoverState: Story = {
                   J
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Camera className="text-white w-5 h-5 drop-shadow-md" size={20} strokeWidth={1.5} />
+                  <Camera
+                    className="text-white w-5 h-5 drop-shadow-md"
+                    size={20}
+                    strokeWidth={1.5}
+                  />
                 </div>
               </div>
-              <span className="text-xs text-[var(--color-fg-muted)]">Fallback (Initials)</span>
+              <span className="text-xs text-[var(--color-fg-muted)]">
+                Fallback (Initials)
+              </span>
             </div>
           </div>
           <p className="mt-6 text-xs text-[var(--color-fg-placeholder)] text-center">

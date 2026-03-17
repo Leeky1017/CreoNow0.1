@@ -1,7 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { RadioGroup, RadioCardGroup, RadioCardItem, RadioGroupRoot } from "./Radio";
+import {
+  RadioGroup,
+  RadioCardGroup,
+  RadioCardItem,
+  RadioGroupRoot,
+} from "./Radio";
 
 const sampleOptions = [
   { value: "option1", label: "Option 1" },
@@ -335,17 +340,13 @@ describe("RadioCardGroup", () => {
     it("应该支持 defaultValue", () => {
       render(<RadioCardGroup options={cardOptions} defaultValue="short" />);
 
-      expect(
-        screen.getByRole("radio", { name: /Short Story/i }),
-      ).toBeChecked();
+      expect(screen.getByRole("radio", { name: /Short Story/i })).toBeChecked();
     });
 
     it("应该支持受控 value", () => {
       render(<RadioCardGroup options={cardOptions} value="script" />);
 
-      expect(
-        screen.getByRole("radio", { name: /Screenplay/i }),
-      ).toBeChecked();
+      expect(screen.getByRole("radio", { name: /Screenplay/i })).toBeChecked();
     });
   });
 

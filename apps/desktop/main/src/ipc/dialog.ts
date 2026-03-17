@@ -48,11 +48,13 @@ export function registerDialogIpcHandlers(args: {
           data: { selectedPath: result.filePaths[0] },
         };
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : String(error);
+        const message = error instanceof Error ? error.message : String(error);
         return {
           ok: false,
-          error: { code: "INTERNAL", message: `Failed to open folder dialog: ${message}` },
+          error: {
+            code: "INTERNAL",
+            message: `Failed to open folder dialog: ${message}`,
+          },
         };
       }
     },

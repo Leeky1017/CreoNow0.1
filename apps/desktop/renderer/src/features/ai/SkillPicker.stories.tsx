@@ -224,9 +224,7 @@ export const SelectedRewrite: Story = {
  * 无 SKILL 可选
  */
 export const EmptyList: Story = {
-  render: () => (
-    <SkillPickerDemo skills={[]} selectedSkillId="" defaultOpen />
-  ),
+  render: () => <SkillPickerDemo skills={[]} selectedSkillId="" defaultOpen />,
 };
 
 /**

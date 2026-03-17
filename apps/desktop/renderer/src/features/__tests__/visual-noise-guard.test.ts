@@ -41,11 +41,7 @@ function collectTsxFiles(subdirs: readonly string[]): string[] {
         !entry.includes(".stories.")
       ) {
         files.push(
-          path.join(
-            "apps/desktop/renderer/src/features",
-            subdir,
-            entry,
-          ),
+          path.join("apps/desktop/renderer/src/features", subdir, entry),
         );
       }
     }
@@ -94,11 +90,7 @@ describe("WB-FE-VIS visual noise guard", () => {
    *   2. `bg-[var(--color-border-default)]` used as a divider line
    */
   it("S3: separator lines use --color-separator token", () => {
-    const targetFiles = collectTsxFiles([
-      "ai",
-      "dashboard",
-      "settings-dialog",
-    ]);
+    const targetFiles = collectTsxFiles(["ai", "dashboard", "settings-dialog"]);
 
     const SEPARATOR_VIOLATION_PATTERNS: readonly GuardPattern[] = [
       {

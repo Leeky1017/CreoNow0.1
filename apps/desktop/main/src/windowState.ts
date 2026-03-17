@@ -81,10 +81,7 @@ export function loadWindowState(userDataDir: string): WindowState | null {
  *
  * Writes atomically via `writeFileSync` (overwrites existing file).
  */
-export function saveWindowState(
-  userDataDir: string,
-  state: WindowState,
-): void {
+export function saveWindowState(userDataDir: string, state: WindowState): void {
   const filePath = path.join(userDataDir, STATE_FILENAME);
   writeFileSync(filePath, JSON.stringify(state), "utf8");
 }

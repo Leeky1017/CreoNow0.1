@@ -93,7 +93,9 @@ describe("KnowledgeGraph", () => {
     render(<KnowledgeGraph data={emptyData} />);
 
     expect(
-      screen.getByText("No entities yet. Click to add your first character or location"),
+      screen.getByText(
+        "No entities yet. Click to add your first character or location",
+      ),
     ).toBeInTheDocument();
     expect(screen.getAllByText("Add Node").length).toBeGreaterThanOrEqual(1);
   });

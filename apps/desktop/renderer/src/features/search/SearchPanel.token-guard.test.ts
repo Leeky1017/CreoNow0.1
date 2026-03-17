@@ -2,10 +2,7 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, it, expect } from "vitest";
 
-const src = readFileSync(
-  resolve(__dirname, "SearchPanel.tsx"),
-  "utf-8",
-);
+const src = readFileSync(resolve(__dirname, "SearchPanel.tsx"), "utf-8");
 
 describe("SearchPanel token guard", () => {
   it("does not contain raw hex color values (WB-FE-SRCH-S1)", () => {
@@ -15,13 +12,21 @@ describe("SearchPanel token guard", () => {
     const violations: string[] = [];
     lines.forEach((line, i) => {
       // Skip comments and import lines
-      if (line.trim().startsWith("//") || line.trim().startsWith("*") || line.trim().startsWith("import")) return;
+      if (
+        line.trim().startsWith("//") ||
+        line.trim().startsWith("*") ||
+        line.trim().startsWith("import")
+      )
+        return;
       const matches = line.match(hexPattern);
       if (matches) {
         violations.push(`L${i + 1}: ${matches.join(", ")}`);
       }
     });
-    expect(violations, `Found raw hex values:\n${violations.join("\n")}`).toHaveLength(0);
+    expect(
+      violations,
+      `Found raw hex values:\n${violations.join("\n")}`,
+    ).toHaveLength(0);
   });
 
   it("does not contain raw rgba values (WB-FE-SRCH-S1)", () => {
@@ -35,7 +40,10 @@ describe("SearchPanel token guard", () => {
         rgbaPattern.lastIndex = 0;
       }
     });
-    expect(violations, `Found raw rgba:\n${violations.join("\n")}`).toHaveLength(0);
+    expect(
+      violations,
+      `Found raw rgba:\n${violations.join("\n")}`,
+    ).toHaveLength(0);
   });
 
   it("does not contain inline style attributes (WB-FE-SRCH-S1b)", () => {
@@ -49,7 +57,10 @@ describe("SearchPanel token guard", () => {
         stylePattern.lastIndex = 0;
       }
     });
-    expect(violations, `Found inline styles:\n${violations.join("\n")}`).toHaveLength(0);
+    expect(
+      violations,
+      `Found inline styles:\n${violations.join("\n")}`,
+    ).toHaveLength(0);
   });
 
   it("does not use transition-all (WB-FE-SRCH-S3)", () => {
@@ -60,7 +71,10 @@ describe("SearchPanel token guard", () => {
         violations.push(`L${i + 1}: ${line.trim()}`);
       }
     });
-    expect(violations, `Found transition-all:\n${violations.join("\n")}`).toHaveLength(0);
+    expect(
+      violations,
+      `Found transition-all:\n${violations.join("\n")}`,
+    ).toHaveLength(0);
   });
 
   it("does not contain native <button or <input elements (WB-FE-SRCH-S2)", () => {
@@ -69,14 +83,22 @@ describe("SearchPanel token guard", () => {
     lines.forEach((line, i) => {
       // Skip comments, import lines, and type annotations
       const trimmed = line.trim();
-      if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("import")) return;
+      if (
+        trimmed.startsWith("//") ||
+        trimmed.startsWith("*") ||
+        trimmed.startsWith("import")
+      )
+        return;
       // Check for native <button or <input (lowercase JSX tags)
       // Use \b to handle tags split across lines (e.g. "<button\n  type=...")
       if (/<button\b/.test(line) || /<input\b/.test(line)) {
         violations.push(`L${i + 1}: ${trimmed}`);
       }
     });
-    expect(violations, `Found native elements (should use Primitives):\n${violations.join("\n")}`).toHaveLength(0);
+    expect(
+      violations,
+      `Found native elements (should use Primitives):\n${violations.join("\n")}`,
+    ).toHaveLength(0);
   });
 
   it("gates animations with motion-safe modifier (WB-FE-SRCH-S3b)", () => {
@@ -96,6 +118,9 @@ describe("SearchPanel token guard", () => {
         }
       }
     });
-    expect(violations, `Found ungated animations (use motion-safe: prefix):\n${violations.join("\n")}`).toHaveLength(0);
+    expect(
+      violations,
+      `Found ungated animations (use motion-safe: prefix):\n${violations.join("\n")}`,
+    ).toHaveLength(0);
   });
 });

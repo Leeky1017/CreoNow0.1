@@ -14,31 +14,31 @@ function getLegendItems(t: TFunction): Array<{
   return [
     {
       type: "character",
-      label: t('kg.legend.character'),
+      label: t("kg.legend.character"),
       colorVar: "var(--color-node-character)",
       shape: "circle",
     },
     {
       type: "location",
-      label: t('kg.legend.location'),
+      label: t("kg.legend.location"),
       colorVar: "var(--color-node-location)",
       shape: "square",
     },
     {
       type: "event",
-      label: t('kg.legend.event'),
+      label: t("kg.legend.event"),
       colorVar: "var(--color-node-event)",
       shape: "diamond",
     },
     {
       type: "item",
-      label: t('kg.legend.item'),
+      label: t("kg.legend.item"),
       colorVar: "var(--color-node-item)",
       shape: "rounded",
     },
     {
       type: "faction",
-      label: t('kg.legend.faction'),
+      label: t("kg.legend.faction"),
       colorVar: "var(--color-node-other)",
       shape: "rounded",
     },
@@ -120,7 +120,7 @@ export function GraphLegend({ className = "" }: GraphLegendProps): JSX.Element {
     <div className={`${legendStyles} ${className}`}>
       {/* Title */}
       <div className="text-[10px] uppercase tracking-wider text-[var(--color-fg-subtle)] font-medium mb-1">
-        {t('kg.legend.title')}
+        {t("kg.legend.title")}
       </div>
 
       {/* Legend items */}

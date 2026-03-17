@@ -329,8 +329,7 @@ export const ZoomingCanvas: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          "测试缩放功能。使用工具栏的 +/- 按钮验证缩放效果和限制。",
+        story: "测试缩放功能。使用工具栏的 +/- 按钮验证缩放效果和限制。",
       },
     },
   },
@@ -382,8 +381,7 @@ export const FilterByType: Story = {
   parameters: {
     docs: {
       description: {
-        story:
-          "测试筛选功能。点击工具栏的筛选按钮，验证节点过滤效果。",
+        story: "测试筛选功能。点击工具栏的筛选按钮，验证节点过滤效果。",
       },
     },
   },
@@ -722,10 +720,15 @@ export const FullFeatureMatrix: Story = {
     const handleNodeDelete = (nodeId: string) => {
       // Confirm before delete
       const node = data.nodes.find((n) => n.id === nodeId);
-      if (node && confirm(`确定要删除节点 "${node.label}" 吗？此操作不可撤销。`)) {
+      if (
+        node &&
+        confirm(`确定要删除节点 "${node.label}" 吗？此操作不可撤销。`)
+      ) {
         setData((prev) => ({
           nodes: prev.nodes.filter((n) => n.id !== nodeId),
-          edges: prev.edges.filter((e) => e.source !== nodeId && e.target !== nodeId),
+          edges: prev.edges.filter(
+            (e) => e.source !== nodeId && e.target !== nodeId,
+          ),
         }));
         setSelectedId(null);
       }
@@ -740,7 +743,11 @@ export const FullFeatureMatrix: Story = {
         onNodeSave={handleNodeSave}
         onNodeDelete={handleNodeDelete}
         onEditNode={(id) => console.log("Edit triggered:", id)}
-        onViewDetails={(id) => alert(`查看详情: ${id}\n\n完整详情功能可在此实现更复杂的面板或页面跳转。`)}
+        onViewDetails={(id) =>
+          alert(
+            `查看详情: ${id}\n\n完整详情功能可在此实现更复杂的面板或页面跳转。`,
+          )
+        }
         enableEditDialog={true}
       />
     );

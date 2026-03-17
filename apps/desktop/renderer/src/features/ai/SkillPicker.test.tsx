@@ -73,7 +73,9 @@ describe("SkillPicker scope management", () => {
     );
 
     expect(
-      screen.getByText("No custom skills yet. Click to create or describe your needs in natural language."),
+      screen.getByText(
+        "No custom skills yet. Click to create or describe your needs in natural language.",
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Create Skill" }),

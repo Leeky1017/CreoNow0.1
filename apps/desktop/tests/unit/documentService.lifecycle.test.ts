@@ -65,9 +65,19 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
         updatedAt: number,
       ) {
         docs.push({
-          documentId, projectId, type, title,
-          contentJson, contentText, contentMd, contentHash,
-          status, sortOrder, parentId, createdAt, updatedAt,
+          documentId,
+          projectId,
+          type,
+          title,
+          contentJson,
+          contentText,
+          contentMd,
+          contentHash,
+          status,
+          sortOrder,
+          parentId,
+          createdAt,
+          updatedAt,
         });
         return { changes: 1 };
       },
@@ -109,10 +119,19 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
         updatedAt: number,
       ) {
         docs.push({
-          documentId, projectId, type: "chapter", title,
-          contentJson, contentText, contentMd, contentHash,
-          status: "draft", sortOrder: docs.length, parentId: null,
-          createdAt, updatedAt,
+          documentId,
+          projectId,
+          type: "chapter",
+          title,
+          contentJson,
+          contentText,
+          contentMd,
+          contentHash,
+          status: "draft",
+          sortOrder: docs.length,
+          parentId: null,
+          createdAt,
+          updatedAt,
         });
         return { changes: 1 };
       },
@@ -129,9 +148,13 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
           .filter((d) => d.projectId === projectId)
           .sort((a, b) => a.sortOrder - b.sortOrder)
           .map((d) => ({
-            documentId: d.documentId, type: d.type, title: d.title,
-            status: d.status, sortOrder: d.sortOrder,
-            parentId: d.parentId, updatedAt: d.updatedAt,
+            documentId: d.documentId,
+            type: d.type,
+            title: d.title,
+            status: d.status,
+            sortOrder: d.sortOrder,
+            parentId: d.parentId,
+            updatedAt: d.updatedAt,
           }));
       },
     };
@@ -150,12 +173,19 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
           return undefined;
         }
         return {
-          documentId: row.documentId, projectId: row.projectId,
-          type: row.type, title: row.title, status: row.status,
-          sortOrder: row.sortOrder, parentId: row.parentId,
-          contentJson: row.contentJson, contentText: row.contentText,
-          contentMd: row.contentMd, contentHash: row.contentHash,
-          createdAt: row.createdAt, updatedAt: row.updatedAt,
+          documentId: row.documentId,
+          projectId: row.projectId,
+          type: row.type,
+          title: row.title,
+          status: row.status,
+          sortOrder: row.sortOrder,
+          parentId: row.parentId,
+          contentJson: row.contentJson,
+          contentText: row.contentText,
+          contentMd: row.contentMd,
+          contentHash: row.contentHash,
+          createdAt: row.createdAt,
+          updatedAt: row.updatedAt,
         };
       },
     };
@@ -196,8 +226,7 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
       run(projectId: string, documentId: string) {
         const before = docs.length;
         const next = docs.filter(
-          (d) =>
-            !(d.projectId === projectId && d.documentId === documentId),
+          (d) => !(d.projectId === projectId && d.documentId === documentId),
         );
         docs.length = 0;
         docs.push(...next);
@@ -228,8 +257,10 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
           return undefined;
         }
         return {
-          contentJson: row.contentJson, contentText: row.contentText,
-          contentMd: row.contentMd, contentHash: row.contentHash,
+          contentJson: row.contentJson,
+          contentText: row.contentText,
+          contentMd: row.contentMd,
+          contentHash: row.contentHash,
         };
       },
     };
@@ -341,8 +372,11 @@ function prepareFakeVersionStmt(sql: string, versions: VersionRow[]): unknown {
           .filter((v) => v.documentId === documentId)
           .sort((a, b) => b.createdAt - a.createdAt)
           .map((v) => ({
-            versionId: v.versionId, actor: v.actor, reason: v.reason,
-            contentHash: v.contentHash, wordCount: v.wordCount,
+            versionId: v.versionId,
+            actor: v.actor,
+            reason: v.reason,
+            contentHash: v.contentHash,
+            wordCount: v.wordCount,
             createdAt: v.createdAt,
           }));
       },
@@ -362,11 +396,17 @@ function prepareFakeVersionStmt(sql: string, versions: VersionRow[]): unknown {
           return undefined;
         }
         return {
-          documentId: row.documentId, projectId: row.projectId,
-          versionId: row.versionId, actor: row.actor, reason: row.reason,
-          contentJson: row.contentJson, contentText: row.contentText,
-          contentMd: row.contentMd, contentHash: row.contentHash,
-          wordCount: row.wordCount, createdAt: row.createdAt,
+          documentId: row.documentId,
+          projectId: row.projectId,
+          versionId: row.versionId,
+          actor: row.actor,
+          reason: row.reason,
+          contentJson: row.contentJson,
+          contentText: row.contentText,
+          contentMd: row.contentMd,
+          contentHash: row.contentHash,
+          wordCount: row.wordCount,
+          createdAt: row.createdAt,
         };
       },
     };
@@ -432,9 +472,17 @@ function prepareFakeVersionStmt(sql: string, versions: VersionRow[]): unknown {
         const wordCount = hasWordCount ? Number(params[9]) : 0;
         const createdAt = Number(params[params.length - 1]);
         versions.push({
-          versionId, projectId, documentId, actor, reason,
-          contentJson, contentText, contentMd, contentHash,
-          wordCount, createdAt,
+          versionId,
+          projectId,
+          documentId,
+          actor,
+          reason,
+          contentJson,
+          contentText,
+          contentMd,
+          contentHash,
+          wordCount,
+          createdAt,
         });
         return { changes: 1 };
       },

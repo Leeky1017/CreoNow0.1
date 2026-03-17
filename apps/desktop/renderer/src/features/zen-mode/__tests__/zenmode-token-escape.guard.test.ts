@@ -2,10 +2,7 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, it, expect } from "vitest";
 
-const zenModeSrc = readFileSync(
-  resolve(__dirname, "../ZenMode.tsx"),
-  "utf-8",
-);
+const zenModeSrc = readFileSync(resolve(__dirname, "../ZenMode.tsx"), "utf-8");
 const zenModeStatusSrc = readFileSync(
   resolve(__dirname, "../ZenModeStatus.tsx"),
   "utf-8",
@@ -25,7 +22,10 @@ describe("ZenMode token escape guard", () => {
         violations.push(`L${i + 1}: ${line.trim()}`);
       }
     });
-    expect(violations, `Found raw rgba in ZenMode.tsx:\n${violations.join("\n")}`).toHaveLength(0);
+    expect(
+      violations,
+      `Found raw rgba in ZenMode.tsx:\n${violations.join("\n")}`,
+    ).toHaveLength(0);
   });
 
   it("ZenMode.tsx contains no magic pixel values in className (ED-FE-ZEN-S2)", () => {
@@ -47,7 +47,10 @@ describe("ZenMode token escape guard", () => {
         }
       }
     });
-    expect(violations, `Found magic pixel values in ZenMode.tsx:\n${violations.join("\n")}`).toHaveLength(0);
+    expect(
+      violations,
+      `Found magic pixel values in ZenMode.tsx:\n${violations.join("\n")}`,
+    ).toHaveLength(0);
   });
 
   it("ZenModeStatus.tsx contains no raw rgba values (ED-FE-ZEN-S3)", () => {
@@ -59,7 +62,10 @@ describe("ZenMode token escape guard", () => {
         violations.push(`L${i + 1}: ${line.trim()}`);
       }
     });
-    expect(violations, `Found raw rgba in ZenModeStatus.tsx:\n${violations.join("\n")}`).toHaveLength(0);
+    expect(
+      violations,
+      `Found raw rgba in ZenModeStatus.tsx:\n${violations.join("\n")}`,
+    ).toHaveLength(0);
   });
 
   it("tokens.css defines all required zen-mode tokens (ED-FE-ZEN-S4)", () => {
@@ -75,6 +81,9 @@ describe("ZenMode token escape guard", () => {
       "--zen-label-size",
     ];
     const missing = requiredTokens.filter((t) => !tokensSrc.includes(t));
-    expect(missing, `Missing tokens in tokens.css: ${missing.join(", ")}`).toHaveLength(0);
+    expect(
+      missing,
+      `Missing tokens in tokens.css: ${missing.join(", ")}`,
+    ).toHaveLength(0);
   });
 });

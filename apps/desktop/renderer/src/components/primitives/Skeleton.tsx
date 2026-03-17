@@ -124,7 +124,7 @@ export function Skeleton({
       aria-busy="true"
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-label={t('primitives.skeleton.loading')}
+      aria-label={t("primitives.skeleton.loading")}
       {...props}
     />
   );

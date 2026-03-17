@@ -1,7 +1,10 @@
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import Database from "better-sqlite3";
 
-import { createDocumentCoreService, MAX_DOCUMENT_SIZE_BYTES } from "../documentCoreService";
+import {
+  createDocumentCoreService,
+  MAX_DOCUMENT_SIZE_BYTES,
+} from "../documentCoreService";
 
 /**
  * S-SIZE-6: documentCoreService.save() 独立体积校验（第二道防线）
@@ -74,7 +77,11 @@ function createInMemoryDb(): Database.Database {
   return db;
 }
 
-function seedDocument(db: Database.Database, projectId: string, documentId: string): void {
+function seedDocument(
+  db: Database.Database,
+  projectId: string,
+  documentId: string,
+): void {
   db.prepare(
     "INSERT INTO documents (document_id, project_id, type, title, status, sort_order, content_json, content_text, content_md, content_hash, created_at, updated_at) VALUES (?, ?, 'chapter', 'Test', 'draft', 0, '{}', '', '', '', 0, 0)",
   ).run(documentId, projectId);
@@ -99,7 +106,9 @@ describe("documentCoreService.save() — 文档大小限制（第二道防线）
     const bigText = "x".repeat(sixMB);
     const bigContent = {
       type: "doc",
-      content: [{ type: "paragraph", content: [{ type: "text", text: bigText }] }],
+      content: [
+        { type: "paragraph", content: [{ type: "text", text: bigText }] },
+      ],
     };
 
     const result = svc.save({
@@ -120,7 +129,9 @@ describe("documentCoreService.save() — 文档大小限制（第二道防线）
     const svc = createDocumentCoreService({ db, logger: fakeLogger as never });
     const normalContent = {
       type: "doc",
-      content: [{ type: "paragraph", content: [{ type: "text", text: "Hello World" }] }],
+      content: [
+        { type: "paragraph", content: [{ type: "text", text: "Hello World" }] },
+      ],
     };
 
     const result = svc.save({

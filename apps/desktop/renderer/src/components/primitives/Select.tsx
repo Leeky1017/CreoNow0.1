@@ -140,6 +140,7 @@ function getZIndexClass(layer: "dropdown" | "modal"): string {
 /**
  * Viewport styles
  */
+// eslint-disable-next-line creonow/no-hardcoded-dimension -- Design spec §6.6: max dropdown height
 const viewportStyles = "p-1 max-h-[300px] overflow-y-auto";
 
 /**

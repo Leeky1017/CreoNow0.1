@@ -7,20 +7,31 @@ import path from "node:path";
 import { it } from "vitest";
 
 import { createExportService } from "../exportService";
-import { buildPdfRenderPlan, parseStructuredExportDocument } from "../exportRichText";
+import {
+  buildPdfRenderPlan,
+  parseStructuredExportDocument,
+} from "../exportRichText";
 import {
   PLAIN_TEXT_TRAP,
   STRUCTURED_EXPORT_CONTENT_JSON,
   STRUCTURED_EXPORT_TITLE,
   UNSUPPORTED_EXPORT_CONTENT_JSON,
 } from "./exportFixture";
-import { createNoopLogger, createTestDb, seedProjectAndDocument } from "./exportTestHelpers";
+import {
+  createNoopLogger,
+  createTestDb,
+  seedProjectAndDocument,
+} from "./exportTestHelpers";
 
 it("builds a structured pdf render plan from contentJson", () => {
   const structured = parseStructuredExportDocument({
     contentJson: STRUCTURED_EXPORT_CONTENT_JSON,
   });
-  assert.equal(structured.ok, true, "fixture should parse into structured export blocks");
+  assert.equal(
+    structured.ok,
+    true,
+    "fixture should parse into structured export blocks",
+  );
   if (!structured.ok) {
     throw new Error("fixture should parse into structured export blocks");
   }
@@ -73,7 +84,9 @@ it("exports pdf bytes from structured contentJson", async () => {
       throw new Error("pdf export should succeed");
     }
 
-    const pdfBuffer = await fs.readFile(path.join(userDataDir, result.data.relativePath));
+    const pdfBuffer = await fs.readFile(
+      path.join(userDataDir, result.data.relativePath),
+    );
     assert.ok(pdfBuffer.length > 0);
   } finally {
     db.close();
@@ -105,7 +118,11 @@ it("fails before writing files when contentJson contains unsupported structures"
     });
 
     const result = await service.exportMarkdown({ projectId, documentId });
-    assert.equal(result.ok, false, "unsupported structures should fail before file write");
+    assert.equal(
+      result.ok,
+      false,
+      "unsupported structures should fail before file write",
+    );
     if (result.ok) {
       throw new Error("unsupported structures should fail before file write");
     }

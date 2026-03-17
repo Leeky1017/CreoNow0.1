@@ -108,20 +108,17 @@ export function ImageCropper({
   }, []);
 
   // ── Wheel / zoom handler ──────────────────────────────────────────────────
-  const handleWheel = useCallback(
-    (e: React.WheelEvent<HTMLDivElement>) => {
-      e.preventDefault();
+  const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
 
-      setCrop((prev) => {
-        const delta = e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
-        const rawZoom = prev.zoom + delta;
-        const clampedZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, rawZoom));
+    setCrop((prev) => {
+      const delta = e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
+      const rawZoom = prev.zoom + delta;
+      const clampedZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, rawZoom));
 
-        return { x: prev.x, y: prev.y, zoom: clampedZoom };
-      });
-    },
-    [],
-  );
+      return { x: prev.x, y: prev.y, zoom: clampedZoom };
+    });
+  }, []);
 
   // ── Render ─────────────────────────────────────────────────────────────────
   if (!file) return null;

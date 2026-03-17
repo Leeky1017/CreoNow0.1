@@ -48,7 +48,9 @@ type SaveHandler = (
 
 let saveHandler: SaveHandler | undefined;
 
-function createFakeIpcMain(): IpcMain & { _handlers: Map<string, SaveHandler> } {
+function createFakeIpcMain(): IpcMain & {
+  _handlers: Map<string, SaveHandler>;
+} {
   const handlers = new Map<string, SaveHandler>();
   return {
     handle: (channel: string, handler: SaveHandler) => {
@@ -99,7 +101,9 @@ describe("file:document:save — 文档大小限制", () => {
   it("AC-2: 7.3 MB 文档返回 DOCUMENT_SIZE_EXCEEDED", async () => {
     const sevenMB = Math.ceil(7.3 * 1024 * 1024);
     const contentJson = makeContentJson(sevenMB);
-    expect(Buffer.byteLength(contentJson, "utf-8")).toBeGreaterThan(MAX_DOCUMENT_SIZE_BYTES);
+    expect(Buffer.byteLength(contentJson, "utf-8")).toBeGreaterThan(
+      MAX_DOCUMENT_SIZE_BYTES,
+    );
 
     const result = await saveHandler!(fakeEvent, baseSavePayload(contentJson));
     expect(result.ok).toBe(false);
@@ -111,7 +115,9 @@ describe("file:document:save — 文档大小限制", () => {
 
   it("AC-2 边界值: 5,242,881 字节被拦截", async () => {
     const contentJson = makeContentJson(MAX_DOCUMENT_SIZE_BYTES + 1);
-    expect(Buffer.byteLength(contentJson, "utf-8")).toBeGreaterThan(MAX_DOCUMENT_SIZE_BYTES);
+    expect(Buffer.byteLength(contentJson, "utf-8")).toBeGreaterThan(
+      MAX_DOCUMENT_SIZE_BYTES,
+    );
 
     const result = await saveHandler!(fakeEvent, baseSavePayload(contentJson));
     expect(result.ok).toBe(false);
@@ -166,7 +172,9 @@ describe("file:document:save — 文档大小限制", () => {
 
   it("AC-2 边界值: 恰好 5,242,880 字节不触发 DOCUMENT_SIZE_EXCEEDED", async () => {
     const contentJson = makeContentJson(MAX_DOCUMENT_SIZE_BYTES);
-    expect(Buffer.byteLength(contentJson, "utf-8")).toBe(MAX_DOCUMENT_SIZE_BYTES);
+    expect(Buffer.byteLength(contentJson, "utf-8")).toBe(
+      MAX_DOCUMENT_SIZE_BYTES,
+    );
 
     const result = await saveHandler!(fakeEvent, baseSavePayload(contentJson));
     // Should NOT be DOCUMENT_SIZE_EXCEEDED — should pass through to DB check
@@ -181,7 +189,9 @@ describe("file:document:save — 文档大小限制", () => {
     const payload = "a".repeat(charCount);
     const contentJson = JSON.stringify(payload);
 
-    expect(Buffer.byteLength(contentJson, "utf-8")).toBeLessThan(MAX_DOCUMENT_SIZE_BYTES);
+    expect(Buffer.byteLength(contentJson, "utf-8")).toBeLessThan(
+      MAX_DOCUMENT_SIZE_BYTES,
+    );
 
     const result = await saveHandler!(fakeEvent, baseSavePayload(contentJson));
     if (!result.ok) {

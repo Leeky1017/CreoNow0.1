@@ -34,8 +34,14 @@ describe("mapUpstreamStatusToIpcErrorCode", () => {
 
 describe("buildUpstreamHttpError", () => {
   it("reads nested JSON error.message", async () => {
-    const res = makeResponse(500, JSON.stringify({ error: { message: "internal error" } }));
-    const err = await buildUpstreamHttpError({ res, fallbackMessage: "fallback" });
+    const res = makeResponse(
+      500,
+      JSON.stringify({ error: { message: "internal error" } }),
+    );
+    const err = await buildUpstreamHttpError({
+      res,
+      fallbackMessage: "fallback",
+    });
 
     expect(err.code).toBe("LLM_API_ERROR");
     expect(err.message).toBe("internal error");
@@ -46,8 +52,14 @@ describe("buildUpstreamHttpError", () => {
   });
 
   it("falls back to top-level JSON message", async () => {
-    const res = makeResponse(500, JSON.stringify({ message: "top level error" }));
-    const err = await buildUpstreamHttpError({ res, fallbackMessage: "fallback" });
+    const res = makeResponse(
+      500,
+      JSON.stringify({ message: "top level error" }),
+    );
+    const err = await buildUpstreamHttpError({
+      res,
+      fallbackMessage: "fallback",
+    });
 
     expect(err.message).toBe("top level error");
     expect(err.details).toMatchObject({
@@ -58,7 +70,10 @@ describe("buildUpstreamHttpError", () => {
 
   it("falls back when JSON is invalid", async () => {
     const res = makeResponse(500, "{invalid-json");
-    const err = await buildUpstreamHttpError({ res, fallbackMessage: "fallback" });
+    const err = await buildUpstreamHttpError({
+      res,
+      fallbackMessage: "fallback",
+    });
 
     expect(err.message).toBe("fallback");
     expect(err.details).toMatchObject({
@@ -69,7 +84,10 @@ describe("buildUpstreamHttpError", () => {
 
   it("falls back for non-JSON plain text body", async () => {
     const res = makeResponse(500, "Internal Server Error", "text/plain");
-    const err = await buildUpstreamHttpError({ res, fallbackMessage: "fallback" });
+    const err = await buildUpstreamHttpError({
+      res,
+      fallbackMessage: "fallback",
+    });
 
     expect(err.message).toBe("fallback");
     expect(err.details).toMatchObject({
@@ -79,7 +97,10 @@ describe("buildUpstreamHttpError", () => {
   });
 
   it("overrides message for auth and rate-limit statuses", async () => {
-    const authRes = makeResponse(401, JSON.stringify({ error: { message: "bad key" } }));
+    const authRes = makeResponse(
+      401,
+      JSON.stringify({ error: { message: "bad key" } }),
+    );
     const authErr = await buildUpstreamHttpError({
       res: authRes,
       fallbackMessage: "fallback",
@@ -91,7 +112,10 @@ describe("buildUpstreamHttpError", () => {
       upstreamMessage: "bad key",
     });
 
-    const rateRes = makeResponse(429, JSON.stringify({ error: { message: "quota exceeded" } }));
+    const rateRes = makeResponse(
+      429,
+      JSON.stringify({ error: { message: "quota exceeded" } }),
+    );
     const rateErr = await buildUpstreamHttpError({
       res: rateRes,
       fallbackMessage: "fallback",

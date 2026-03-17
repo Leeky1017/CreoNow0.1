@@ -99,9 +99,7 @@ export function formatKnowledgeGraphContext(args: {
         firstLine.length > 160 ? `${firstLine.slice(0, 157)}...` : firstLine;
       const descSuffix = desc.length > 0 ? `: ${desc}` : "";
 
-      lines.push(
-        `  - [entity:${e.id}] ${e.name}${typeSuffix}${descSuffix}`,
-      );
+      lines.push(`  - [entity:${e.id}] ${e.name}${typeSuffix}${descSuffix}`);
     }
   }
 
@@ -110,7 +108,8 @@ export function formatKnowledgeGraphContext(args: {
     lines.push("  - (none)");
   } else {
     for (const r of relations) {
-      const fromName = entityById.get(r.sourceEntityId)?.name ?? r.sourceEntityId;
+      const fromName =
+        entityById.get(r.sourceEntityId)?.name ?? r.sourceEntityId;
       const toName = entityById.get(r.targetEntityId)?.name ?? r.targetEntityId;
       lines.push(
         `  - [rel:${r.id}] ${fromName} -(${r.relationType})-> ${toName}`,

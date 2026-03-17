@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { OutlinePanel, type OutlineItem, type DropPosition } from "./OutlinePanel";
+import {
+  OutlinePanel,
+  type OutlineItem,
+  type DropPosition,
+} from "./OutlinePanel";
 
 /**
  * Sample outline data based on design spec
@@ -26,7 +30,11 @@ const SAMPLE_OUTLINE_DATA: OutlineItem[] = [
         title: "3. The Digital Age",
         level: "h2",
         children: [
-          { id: "h3-interface", title: "3.1 Interface as Structure", level: "h3" },
+          {
+            id: "h3-interface",
+            title: "3.1 Interface as Structure",
+            level: "h3",
+          },
         ],
       },
     ],
@@ -35,9 +43,7 @@ const SAMPLE_OUTLINE_DATA: OutlineItem[] = [
     id: "h1-conclusion",
     title: "Conclusion",
     level: "h1",
-    children: [
-      { id: "h2-future", title: "Future Implications", level: "h2" },
-    ],
+    children: [{ id: "h2-future", title: "Future Implications", level: "h2" }],
   },
 ];
 
@@ -82,7 +88,8 @@ const LONG_TITLE_DATA: OutlineItem[] = [
   ...FLAT_SAMPLE_DATA.slice(0, 2),
   {
     id: "h2-long",
-    title: "This is a very long chapter title that should be truncated with ellipsis when it exceeds the available width",
+    title:
+      "This is a very long chapter title that should be truncated with ellipsis when it exceeds the available width",
     level: "h2",
   },
   ...FLAT_SAMPLE_DATA.slice(2),
@@ -94,11 +101,23 @@ const LONG_TITLE_DATA: OutlineItem[] = [
 function generateLargeOutline(): OutlineItem[] {
   const items: OutlineItem[] = [];
   for (let i = 1; i <= 10; i++) {
-    items.push({ id: `ch-${i}`, title: `Chapter ${i}: The Journey Continues`, level: "h1" });
+    items.push({
+      id: `ch-${i}`,
+      title: `Chapter ${i}: The Journey Continues`,
+      level: "h1",
+    });
     for (let j = 1; j <= 5; j++) {
-      items.push({ id: `ch-${i}-s-${j}`, title: `${i}.${j} Section Title Here`, level: "h2" });
+      items.push({
+        id: `ch-${i}-s-${j}`,
+        title: `${i}.${j} Section Title Here`,
+        level: "h2",
+      });
       for (let k = 1; k <= 3; k++) {
-        items.push({ id: `ch-${i}-s-${j}-ss-${k}`, title: `${i}.${j}.${k} Subsection`, level: "h3" });
+        items.push({
+          id: `ch-${i}-s-${j}-ss-${k}`,
+          title: `${i}.${j}.${k} Subsection`,
+          level: "h3",
+        });
       }
     }
   }
@@ -156,8 +175,8 @@ const meta: Meta<typeof OutlinePanel> = {
               </h1>
               <div className="space-y-6 text-[#bfbfbf] leading-relaxed text-lg font-light">
                 <p>
-                  In a world of noise, silence is a luxury. Our interfaces recede,
-                  allowing the content to breathe.
+                  In a world of noise, silence is a luxury. Our interfaces
+                  recede, allowing the content to breathe.
                 </p>
               </div>
             </div>
@@ -231,7 +250,8 @@ export const SingleNodeCollapse: Story = {
   parameters: {
     docs: {
       description: {
-        story: "P0: 单节点展开/折叠。点击节点左侧的箭头可以折叠/展开该节点的子项。",
+        story:
+          "P0: 单节点展开/折叠。点击节点左侧的箭头可以折叠/展开该节点的子项。",
       },
     },
   },
@@ -249,7 +269,11 @@ function DragDropCompleteRender() {
   const [items, setItems] = React.useState(FLAT_SAMPLE_DATA);
   const [activeId, setActiveId] = React.useState<string>("h1-aesthetics");
 
-  const handleReorder = (draggedId: string, targetId: string, position: DropPosition) => {
+  const handleReorder = (
+    draggedId: string,
+    targetId: string,
+    position: DropPosition,
+  ) => {
     console.log(`Reorder: ${draggedId} -> ${position} ${targetId}`);
     // Simple reorder demo (actual implementation would be more complex)
     const newItems = [...items];
@@ -259,7 +283,11 @@ function DragDropCompleteRender() {
     if (draggedIndex !== -1 && targetIndex !== -1) {
       const [draggedItem] = newItems.splice(draggedIndex, 1);
       const insertIndex = position === "before" ? targetIndex : targetIndex + 1;
-      newItems.splice(insertIndex > draggedIndex ? insertIndex - 1 : insertIndex, 0, draggedItem);
+      newItems.splice(
+        insertIndex > draggedIndex ? insertIndex - 1 : insertIndex,
+        0,
+        draggedItem,
+      );
       setItems(newItems);
     }
   };
@@ -304,7 +332,8 @@ export const EditorScrollSync: Story = {
   parameters: {
     docs: {
       description: {
-        story: "P0: 编辑器滚动同步。启用后底部显示绿色同步指示器，activeId 会随编辑器滚动自动更新。",
+        story:
+          "P0: 编辑器滚动同步。启用后底部显示绿色同步指示器，activeId 会随编辑器滚动自动更新。",
       },
     },
   },
@@ -329,7 +358,8 @@ export const WordCountDisplay: Story = {
   parameters: {
     docs: {
       description: {
-        story: "P1: 字数统计显示。每个大纲项右侧显示该章节的字数（如 2.4k、320 等）。",
+        story:
+          "P1: 字数统计显示。每个大纲项右侧显示该章节的字数（如 2.4k、320 等）。",
       },
     },
   },
@@ -358,7 +388,8 @@ export const SearchFilter: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'P1: 搜索/过滤功能。在顶部搜索框输入关键词，大纲会实时过滤显示匹配项。输入 "Digital" 试试。',
+        story:
+          'P1: 搜索/过滤功能。在顶部搜索框输入关键词，大纲会实时过滤显示匹配项。输入 "Digital" 试试。',
       },
     },
   },
@@ -424,7 +455,9 @@ function KeyboardNavigationRender() {
       </div>
       <div className="p-3 border-t border-[var(--color-separator)] bg-[var(--color-bg-raised)] text-[10px] text-[var(--color-fg-muted)]">
         <div className="font-medium mb-1">键盘快捷键:</div>
-        <div>↑↓: 上下移动 | ←→: 折叠/展开 | Enter: 导航 | F2: 编辑 | Del: 删除</div>
+        <div>
+          ↑↓: 上下移动 | ←→: 折叠/展开 | Enter: 导航 | F2: 编辑 | Del: 删除
+        </div>
       </div>
     </div>
   );
@@ -476,7 +509,8 @@ export const LargeDocument: Story = {
   parameters: {
     docs: {
       description: {
-        story: "大文档性能测试。包含 10 章 × 5 节 × 3 小节 = 180 个大纲项，测试滚动和渲染性能。",
+        story:
+          "大文档性能测试。包含 10 章 × 5 节 × 3 小节 = 180 个大纲项，测试滚动和渲染性能。",
       },
     },
   },
@@ -491,7 +525,11 @@ function AllFeaturesCombinedRender() {
   const [items, setItems] = React.useState(FLAT_SAMPLE_DATA);
   const [activeId, setActiveId] = React.useState<string>("h1-aesthetics");
 
-  const handleReorder = (draggedId: string, targetId: string, position: DropPosition) => {
+  const handleReorder = (
+    draggedId: string,
+    targetId: string,
+    position: DropPosition,
+  ) => {
     const newItems = [...items];
     const draggedIndex = newItems.findIndex((i) => i.id === draggedId);
     const targetIndex = newItems.findIndex((i) => i.id === targetId);
@@ -499,14 +537,20 @@ function AllFeaturesCombinedRender() {
     if (draggedIndex !== -1 && targetIndex !== -1) {
       const [draggedItem] = newItems.splice(draggedIndex, 1);
       const insertIndex = position === "before" ? targetIndex : targetIndex + 1;
-      newItems.splice(insertIndex > draggedIndex ? insertIndex - 1 : insertIndex, 0, draggedItem);
+      newItems.splice(
+        insertIndex > draggedIndex ? insertIndex - 1 : insertIndex,
+        0,
+        draggedItem,
+      );
       setItems(newItems);
     }
   };
 
   const handleRename = (id: string, newTitle: string) => {
     setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, title: newTitle } : item)),
+      prev.map((item) =>
+        item.id === id ? { ...item, title: newTitle } : item,
+      ),
     );
   };
 
@@ -534,7 +578,8 @@ export const AllFeaturesCombined: Story = {
   parameters: {
     docs: {
       description: {
-        story: "所有功能组合演示：折叠/展开、拖拽、搜索、多选、键盘导航、字数统计、滚动同步。",
+        story:
+          "所有功能组合演示：折叠/展开、拖拽、搜索、多选、键盘导航、字数统计、滚动同步。",
       },
     },
   },

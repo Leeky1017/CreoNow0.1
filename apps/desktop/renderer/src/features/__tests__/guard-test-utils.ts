@@ -92,10 +92,7 @@ export function collectPatternViolationsStripped(
   const violations: Violation[] = [];
 
   for (const targetFile of targetFiles) {
-    const rawSource = fs.readFileSync(
-      path.join(REPO_ROOT, targetFile),
-      "utf8",
-    );
+    const rawSource = fs.readFileSync(path.join(REPO_ROOT, targetFile), "utf8");
     // Strip block comments (/** ... */) and single-line comments (// ...)
     const source = rawSource
       .replace(/\/\*[\s\S]*?\*\//g, "")

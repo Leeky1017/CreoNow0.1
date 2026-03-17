@@ -502,7 +502,9 @@ describe("AppShell — integration", () => {
         fireEvent.keyDown(document, { key: "p", ctrlKey: true });
       });
 
-      const input = await screen.findByPlaceholderText("Search commands or files...");
+      const input = await screen.findByPlaceholderText(
+        "Search commands or files...",
+      );
       await act(async () => {
         fireEvent.change(input, { target: { value: "第三章" } });
       });

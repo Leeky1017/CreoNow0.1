@@ -114,10 +114,7 @@ function validateRagConfigUpdatePayload(
   if (payload.topK !== undefined && typeof payload.topK !== "number") {
     return toInvalidPayloadError("topK must be a number");
   }
-  if (
-    payload.minScore !== undefined &&
-    typeof payload.minScore !== "number"
-  ) {
+  if (payload.minScore !== undefined && typeof payload.minScore !== "number") {
     return toInvalidPayloadError("minScore must be a number");
   }
   if (
@@ -148,10 +145,7 @@ function validateRagRetrievePayload(
   if (payload.topK !== undefined && typeof payload.topK !== "number") {
     return toInvalidPayloadError("topK must be a number");
   }
-  if (
-    payload.minScore !== undefined &&
-    typeof payload.minScore !== "number"
-  ) {
+  if (payload.minScore !== undefined && typeof payload.minScore !== "number") {
     return toInvalidPayloadError("minScore must be a number");
   }
   if (
@@ -281,10 +275,7 @@ export function registerRagIpcHandlers(deps: {
 
   deps.ipcMain.handle(
     "rag:config:update",
-    async (
-      _e,
-      payload: unknown,
-    ): Promise<IpcResponse<RagConfig>> => {
+    async (_e, payload: unknown): Promise<IpcResponse<RagConfig>> => {
       const payloadError = validateRagConfigUpdatePayload(payload);
       if (payloadError) {
         return payloadError;

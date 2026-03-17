@@ -26,16 +26,12 @@ describe("SearchInput", () => {
     rerender(
       <SearchInput value="test" onChange={() => {}} onClear={() => {}} />,
     );
-    expect(
-      screen.getByRole("button", { name: /clear/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /clear/i })).toBeInTheDocument();
   });
 
   it("calls onClear when clear button clicked", () => {
     const onClear = vi.fn();
-    render(
-      <SearchInput value="test" onChange={() => {}} onClear={onClear} />,
-    );
+    render(<SearchInput value="test" onChange={() => {}} onClear={onClear} />);
     fireEvent.click(screen.getByRole("button", { name: /clear/i }));
     expect(onClear).toHaveBeenCalledOnce();
   });

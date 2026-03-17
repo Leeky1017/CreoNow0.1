@@ -5,7 +5,10 @@ import { Skeleton } from "../../components/primitives/Skeleton";
  */
 export function CharacterPanelSkeleton(): JSX.Element {
   return (
-    <div data-testid="character-panel-skeleton" className="flex flex-col gap-3 p-3">
+    <div
+      data-testid="character-panel-skeleton"
+      className="flex flex-col gap-3 p-3"
+    >
       {Array.from({ length: 4 }, (_, i) => (
         <div key={i} className="flex items-center gap-3">
           <Skeleton variant="circular" width={40} height={40} />

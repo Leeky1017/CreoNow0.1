@@ -50,7 +50,14 @@ function InteractiveDemo() {
   const [createdId, setCreatedId] = useState<string | null>(null);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem", alignItems: "center" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        alignItems: "center",
+      }}
+    >
       <Button onClick={() => setOpen(true)}>Create Template</Button>
 
       {createdId && (
@@ -86,11 +93,20 @@ export const Interactive: Story = {
 
 function FullFlowDemo() {
   const [open, setOpen] = useState(true);
-  const [result, setResult] = useState<{ success: boolean; id?: string } | null>(null);
+  const [result, setResult] = useState<{
+    success: boolean;
+    id?: string;
+  } | null>(null);
 
   return (
     <div style={{ padding: "2rem" }}>
-      <div style={{ marginBottom: "1rem", fontSize: "12px", color: "var(--color-fg-muted)" }}>
+      <div
+        style={{
+          marginBottom: "1rem",
+          fontSize: "12px",
+          color: "var(--color-fg-muted)",
+        }}
+      >
         Fill in the form and click &quot;Create Template&quot; to test the flow.
       </div>
 
@@ -102,7 +118,9 @@ function FullFlowDemo() {
             backgroundColor: result.success
               ? "var(--color-success-subtle)"
               : "var(--color-error-subtle)",
-            color: result.success ? "var(--color-success)" : "var(--color-error)",
+            color: result.success
+              ? "var(--color-success)"
+              : "var(--color-error)",
             borderRadius: "var(--radius-sm)",
             fontSize: "12px",
           }}

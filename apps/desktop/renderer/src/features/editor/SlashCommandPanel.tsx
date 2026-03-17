@@ -30,11 +30,12 @@ export function SlashCommandPanel(
       data-testid="slash-command-panel"
       className="border-b border-[var(--color-border-default)] bg-[var(--color-bg-raised)] px-3 py-2"
     >
+      {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: slash command inline search input */}
       <input
         data-testid="slash-command-search-input"
         type="text"
         value={props.query}
-        placeholder={t('editor.slashCommand.searchPlaceholder')}
+        placeholder={t("editor.slashCommand.searchPlaceholder")}
         onChange={(event) => props.onQueryChange(event.target.value)}
         onKeyDown={(event) => {
           if (event.key !== "Escape") {
@@ -51,7 +52,7 @@ export function SlashCommandPanel(
           data-testid="slash-command-empty-state"
           className="rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)] px-2 py-2 text-sm text-[var(--color-fg-muted)]"
         >
-          {t('editor.slashCommand.noCommandsFound')}
+          {t("editor.slashCommand.noCommandsFound")}
         </div>
       ) : (
         <ul className="space-y-1">
@@ -60,6 +61,7 @@ export function SlashCommandPanel(
               key={candidate.id}
               className="rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)]"
             >
+              {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: slash command item button */}
               <button
                 type="button"
                 data-testid={`slash-command-item-${candidate.id}`}

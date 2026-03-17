@@ -1,14 +1,13 @@
 import { describe, it, expect, vi } from "vitest";
-import {
-  buildAiStreamUndoCheckpoint,
-  undoAiStream,
-} from "./aiStreamUndo";
+import { buildAiStreamUndoCheckpoint, undoAiStream } from "./aiStreamUndo";
 import type { UndoableEditor } from "./aiStreamUndo";
 
 describe("AI stream atomic undo", () => {
   const sampleDocJson = {
     type: "doc",
-    content: [{ type: "paragraph", content: [{ type: "text", text: "Hello world" }] }],
+    content: [
+      { type: "paragraph", content: [{ type: "text", text: "Hello world" }] },
+    ],
   };
 
   it("[ED-FE-ADV-S2] buildAiStreamUndoCheckpoint creates a checkpoint from pre-stream state", () => {

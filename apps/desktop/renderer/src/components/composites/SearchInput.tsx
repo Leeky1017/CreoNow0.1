@@ -28,11 +28,7 @@ export interface SearchInputProps {
 // Styles
 // =============================================================================
 
-const containerStyles = [
-  "relative",
-  "flex",
-  "items-center",
-].join(" ");
+const containerStyles = ["relative", "flex", "items-center"].join(" ");
 
 const iconStyles = [
   "absolute",
@@ -114,16 +110,14 @@ export function SearchInput({
   "data-testid": testId,
 }: SearchInputProps): JSX.Element {
   const { t } = useTranslation();
-  const resolvedPlaceholder = placeholder ?? t('search.inputPlaceholder');
+  const resolvedPlaceholder = placeholder ?? t("search.inputPlaceholder");
 
   return (
-    <div
-      className={`${containerStyles} ${className}`}
-      data-testid={testId}
-    >
+    <div className={`${containerStyles} ${className}`} data-testid={testId}>
       <div className={iconStyles}>
         <Search size={14} strokeWidth={1.5} />
       </div>
+      {/* eslint-disable-next-line creonow/no-native-html-element -- Composite: SearchInput uses bare input with custom styling */}
       <input
         type="search"
         role="searchbox"
@@ -139,7 +133,7 @@ export function SearchInput({
             variant="ghost"
             size="sm"
             onClick={onClear}
-            aria-label={t('search.clearSearch')}
+            aria-label={t("search.clearSearch")}
             className="h-5 w-5 p-0"
           >
             <X size={12} strokeWidth={1.5} />

@@ -15,10 +15,7 @@ describe("WB-FE-TOKEN-S3 motion token escape guard", () => {
   it("rejects transition-all in all feature files", () => {
     const files = collectAllFeatureTsxFiles();
 
-    const violations = collectPatternViolations(
-      files,
-      MOTION_ESCAPE_PATTERNS,
-    );
+    const violations = collectPatternViolations(files, MOTION_ESCAPE_PATTERNS);
 
     if (violations.length > 0) {
       const summary = violations

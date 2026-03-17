@@ -13,7 +13,11 @@ import {
   STRUCTURED_EXPORT_CONTENT_JSON,
   STRUCTURED_EXPORT_TITLE,
 } from "./exportFixture";
-import { createNoopLogger, createTestDb, seedProjectAndDocument } from "./exportTestHelpers";
+import {
+  createNoopLogger,
+  createTestDb,
+  seedProjectAndDocument,
+} from "./exportTestHelpers";
 
 /**
  * Scenario: S3-EXPORT-S2
@@ -72,8 +76,12 @@ it("keeps txt plain-text while docx preserves structured semantics", async () =>
     );
 
     const archive = await JSZip.loadAsync(firstDocx);
-    const documentXml = await archive.file("word/document.xml")?.async("string");
-    const relsXml = await archive.file("word/_rels/document.xml.rels")?.async("string");
+    const documentXml = await archive
+      .file("word/document.xml")
+      ?.async("string");
+    const relsXml = await archive
+      .file("word/_rels/document.xml.rels")
+      ?.async("string");
 
     assert.ok(documentXml, "docx archive should contain word/document.xml");
     assert.ok(relsXml, "docx archive should contain relationship metadata");
@@ -85,7 +93,9 @@ it("keeps txt plain-text while docx preserves structured semantics", async () =>
     assert.ok(relsXml?.includes("https://example.com/archive"));
     assert.ok(relsXml?.includes("image"));
     assert.ok(
-      Array.from(Object.keys(archive.files)).some((name) => name.startsWith("word/media/")),
+      Array.from(Object.keys(archive.files)).some((name) =>
+        name.startsWith("word/media/"),
+      ),
     );
 
     const secondDocxRes = await service.exportDocx({ projectId, documentId });

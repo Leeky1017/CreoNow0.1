@@ -46,15 +46,16 @@ export function CharacterCardList({
         className={`h-full flex items-center justify-center p-4 bg-[var(--color-bg-base)] ${className}`}
       >
         <EmptyState
-          title={t('character.cardList.emptyTitle')}
-          description={t('character.cardList.emptyDescription')}
+          title={t("character.cardList.emptyTitle")}
+          description={t("character.cardList.emptyDescription")}
           action={
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               type="button"
               onClick={onCreateCharacter}
               className="focus-ring px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
             >
-              {t('character.cardList.createCharacter')}
+              {t("character.cardList.createCharacter")}
             </button>
           }
         />
@@ -68,6 +69,7 @@ export function CharacterCardList({
       className={`h-full min-h-0 overflow-auto bg-[var(--color-bg-base)] p-3 space-y-3 ${className}`}
     >
       {cards.map((card) => (
+        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
         <button
           key={card.id}
           type="button"

@@ -221,14 +221,10 @@ function renderDiffLine(
         {/* +/- indicator */}
         <div className="w-4 flex items-center justify-center">
           {isRemoved && (
-            <span className="text-[var(--color-error)] opacity-50">
-              -
-            </span>
+            <span className="text-[var(--color-error)] opacity-50">-</span>
           )}
           {isAdded && (
-            <span className="text-[var(--color-success)] opacity-50">
-              +
-            </span>
+            <span className="text-[var(--color-success)] opacity-50">+</span>
           )}
         </div>
         {/* Old line number */}
@@ -303,7 +299,7 @@ export function UnifiedDiffView(props: {
         className="border border-[var(--color-separator)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] p-2.5"
       >
         <Text size="small" color="muted" className="text-center py-4">
-          {t('diff.view.noChanges')}
+          {t("diff.view.noChanges")}
         </Text>
       </div>
     );
@@ -320,7 +316,12 @@ export function UnifiedDiffView(props: {
       {props.lines.map((line, index) =>
         line.type === "header"
           ? renderHeaderLine(line, index)
-          : renderDiffLine(line, index, props.currentChangeIndex, props.lineUnderlineStyle),
+          : renderDiffLine(
+              line,
+              index,
+              props.currentChangeIndex,
+              props.lineUnderlineStyle,
+            ),
       )}
     </ScrollArea>
   );
@@ -337,7 +338,7 @@ export function DiffView(props: {
   const { lines } = parseDiffLines(props.diffText);
 
   return (
-    <div className="border border-[var(--color-separator)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] overflow-hidden max-h-[300px]">
+    <div className="border border-[var(--color-separator)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] overflow-hidden max-h-75">
       <UnifiedDiffView lines={lines} testId={props.testId} />
     </div>
   );

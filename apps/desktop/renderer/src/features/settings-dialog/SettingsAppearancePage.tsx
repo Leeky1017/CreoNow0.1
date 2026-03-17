@@ -74,12 +74,12 @@ type TFunction = (key: string, options?: Record<string, unknown>) => string;
  */
 function getAccentColors(t: TFunction) {
   return [
-    { value: "#ffffff", label: t('settingsDialog.appearance.colorWhite') },
-    { value: "#3b82f6", label: t('settingsDialog.appearance.colorBlue') },
-    { value: "#22c55e", label: t('settingsDialog.appearance.colorGreen') },
-    { value: "#f97316", label: t('settingsDialog.appearance.colorOrange') },
-    { value: "#8b5cf6", label: t('settingsDialog.appearance.colorPurple') },
-    { value: "#ec4899", label: t('settingsDialog.appearance.colorPink') },
+    { value: "#ffffff", label: t("settingsDialog.appearance.colorWhite") },
+    { value: "#3b82f6", label: t("settingsDialog.appearance.colorBlue") },
+    { value: "#22c55e", label: t("settingsDialog.appearance.colorGreen") },
+    { value: "#f97316", label: t("settingsDialog.appearance.colorOrange") },
+    { value: "#8b5cf6", label: t("settingsDialog.appearance.colorPurple") },
+    { value: "#ec4899", label: t("settingsDialog.appearance.colorPink") },
   ];
 }
 
@@ -135,31 +135,35 @@ export function SettingsAppearancePage({
   };
 
   const themes: { mode: ThemeMode; label: string }[] = [
-    { mode: "light", label: t('settingsDialog.appearance.themeLight') },
-    { mode: "dark", label: t('settingsDialog.appearance.themeDark') },
-    { mode: "system", label: t('settingsDialog.appearance.themeSystem') },
+    { mode: "light", label: t("settingsDialog.appearance.themeLight") },
+    { mode: "dark", label: t("settingsDialog.appearance.themeDark") },
+    { mode: "system", label: t("settingsDialog.appearance.themeSystem") },
   ];
 
   const accentColors = getAccentColors(t);
 
   return (
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- settings content width per design spec
     <div className="max-w-[560px]">
       {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">
-        {t('settingsDialog.appearance.title')}
+        {t("settingsDialog.appearance.title")}
       </h1>
       <p className="text-[var(--color-fg-subtle)] text-sm mb-12 font-light">
-        {t('settingsDialog.appearance.subtitle')}
+        {t("settingsDialog.appearance.subtitle")}
       </p>
 
       {/* Theme Selection */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.appearance.theme')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.appearance.theme")}
+        </h4>
 
         <div className="flex gap-4">
           {themes.map(({ mode, label }) => {
             const isSelected = settings.themeMode === mode;
             return (
+              // eslint-disable-next-line creonow/no-native-html-element -- specialized button
               <button
                 key={mode}
                 type="button"
@@ -188,13 +192,16 @@ export function SettingsAppearancePage({
 
       {/* Accent Color */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.appearance.accentColor')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.appearance.accentColor")}
+        </h4>
 
         <div className="flex gap-3">
           {accentColors.map(({ value, label }) => {
             const isSelected = settings.accentColor === value;
             return (
               <Tooltip key={value} content={label}>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   type="button"
                   onClick={() => updateSetting("accentColor", value)}
@@ -204,7 +211,9 @@ export function SettingsAppearancePage({
                       : "hover:scale-110"
                   }`}
                   style={{ backgroundColor: value }}
-                  aria-label={t('settingsDialog.appearance.selectAccentColor', { color: label })}
+                  aria-label={t("settingsDialog.appearance.selectAccentColor", {
+                    color: label,
+                  })}
                 />
               </Tooltip>
             );
@@ -216,15 +225,19 @@ export function SettingsAppearancePage({
 
       {/* Font Size */}
       <div className="mb-6">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.appearance.fontSize')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.appearance.fontSize")}
+        </h4>
 
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <Text size="small" color="muted">
-              {t('settingsDialog.appearance.editorFontSize')}
+              {t("settingsDialog.appearance.editorFontSize")}
             </Text>
             <Text size="small" color="default" weight="medium">
-              {t('settingsDialog.appearance.fontSizePx', { size: settings.fontSize })}
+              {t("settingsDialog.appearance.fontSizePx", {
+                size: settings.fontSize,
+              })}
             </Text>
           </div>
           <Slider

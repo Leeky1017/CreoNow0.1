@@ -75,7 +75,9 @@ describe("CommandPalette Open Folder Command", () => {
     );
 
     // Search for "Open Folder"
-    const searchInput = screen.getByPlaceholderText("Search commands or files...");
+    const searchInput = screen.getByPlaceholderText(
+      "Search commands or files...",
+    );
     await userEvent.type(searchInput, "Open Folder");
 
     expect(screen.getByText("Open Folder")).toBeInTheDocument();
@@ -106,7 +108,9 @@ describe("CommandPalette Open Folder Command", () => {
       />,
     );
 
-    const searchInput = screen.getByPlaceholderText("Search commands or files...");
+    const searchInput = screen.getByPlaceholderText(
+      "Search commands or files...",
+    );
     await userEvent.type(searchInput, "Open Folder");
 
     const option = screen.getByText("Open Folder");

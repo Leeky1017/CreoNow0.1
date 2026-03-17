@@ -18,8 +18,14 @@ describe("CreateTemplateDialog", () => {
     vi.clearAllMocks();
 
     // Mock useTemplateStore to return our mock function
-    (useTemplateStore as unknown as ReturnType<typeof vi.fn>).mockImplementation(
-      (selector: (state: { createTemplate: typeof mockCreateTemplate }) => typeof mockCreateTemplate) => {
+    (
+      useTemplateStore as unknown as ReturnType<typeof vi.fn>
+    ).mockImplementation(
+      (
+        selector: (state: {
+          createTemplate: typeof mockCreateTemplate;
+        }) => typeof mockCreateTemplate,
+      ) => {
         return selector({ createTemplate: mockCreateTemplate });
       },
     );
@@ -33,10 +39,7 @@ describe("CreateTemplateDialog", () => {
   describe("渲染", () => {
     it("打开时应该渲染对话框", () => {
       render(
-        <CreateTemplateDialog
-          open={true}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={true} onOpenChange={mockOnOpenChange} />,
       );
 
       expect(screen.getByTestId("create-template-dialog")).toBeInTheDocument();
@@ -44,21 +47,17 @@ describe("CreateTemplateDialog", () => {
 
     it("关闭时不应该渲染对话框内容", () => {
       render(
-        <CreateTemplateDialog
-          open={false}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={false} onOpenChange={mockOnOpenChange} />,
       );
 
-      expect(screen.queryByTestId("create-template-dialog")).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId("create-template-dialog"),
+      ).not.toBeInTheDocument();
     });
 
     it("应该渲染模板名称输入框", () => {
       render(
-        <CreateTemplateDialog
-          open={true}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={true} onOpenChange={mockOnOpenChange} />,
       );
 
       expect(screen.getByTestId("create-template-name")).toBeInTheDocument();
@@ -66,21 +65,17 @@ describe("CreateTemplateDialog", () => {
 
     it("应该渲染描述输入框", () => {
       render(
-        <CreateTemplateDialog
-          open={true}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      expect(screen.getByTestId("create-template-description")).toBeInTheDocument();
+      expect(
+        screen.getByTestId("create-template-description"),
+      ).toBeInTheDocument();
     });
 
     it("应该渲染创建按钮", () => {
       render(
-        <CreateTemplateDialog
-          open={true}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={true} onOpenChange={mockOnOpenChange} />,
       );
 
       expect(screen.getByTestId("create-template-submit")).toBeInTheDocument();
@@ -95,10 +90,7 @@ describe("CreateTemplateDialog", () => {
       const user = userEvent.setup();
 
       render(
-        <CreateTemplateDialog
-          open={true}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={true} onOpenChange={mockOnOpenChange} />,
       );
 
       await user.click(screen.getByTestId("create-template-submit"));
@@ -117,7 +109,10 @@ describe("CreateTemplateDialog", () => {
         />,
       );
 
-      await user.type(screen.getByTestId("create-template-name"), "My Template");
+      await user.type(
+        screen.getByTestId("create-template-name"),
+        "My Template",
+      );
       await user.click(screen.getByTestId("create-template-submit"));
 
       await waitFor(() => {
@@ -140,7 +135,10 @@ describe("CreateTemplateDialog", () => {
         />,
       );
 
-      await user.type(screen.getByTestId("create-template-name"), "My Template");
+      await user.type(
+        screen.getByTestId("create-template-name"),
+        "My Template",
+      );
       await user.click(screen.getByTestId("create-template-submit"));
 
       await waitFor(() => {
@@ -152,13 +150,13 @@ describe("CreateTemplateDialog", () => {
       const user = userEvent.setup();
 
       render(
-        <CreateTemplateDialog
-          open={true}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      await user.type(screen.getByTestId("create-template-name"), "My Template");
+      await user.type(
+        screen.getByTestId("create-template-name"),
+        "My Template",
+      );
       await user.click(screen.getByTestId("create-template-submit"));
 
       await waitFor(() => {
@@ -198,10 +196,7 @@ describe("CreateTemplateDialog", () => {
       const user = userEvent.setup();
 
       render(
-        <CreateTemplateDialog
-          open={true}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={true} onOpenChange={mockOnOpenChange} />,
       );
 
       // Add a folder first
@@ -224,10 +219,7 @@ describe("CreateTemplateDialog", () => {
       const user = userEvent.setup();
 
       render(
-        <CreateTemplateDialog
-          open={true}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={true} onOpenChange={mockOnOpenChange} />,
       );
 
       // Find file input (placeholder: "e.g., outline.md")
@@ -251,10 +243,7 @@ describe("CreateTemplateDialog", () => {
       const user = userEvent.setup();
 
       render(
-        <CreateTemplateDialog
-          open={true}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={true} onOpenChange={mockOnOpenChange} />,
       );
 
       await user.click(screen.getByText("Cancel"));
@@ -272,13 +261,13 @@ describe("CreateTemplateDialog", () => {
       mockCreateTemplate.mockRejectedValueOnce(new Error("Network error"));
 
       render(
-        <CreateTemplateDialog
-          open={true}
-          onOpenChange={mockOnOpenChange}
-        />,
+        <CreateTemplateDialog open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      await user.type(screen.getByTestId("create-template-name"), "My Template");
+      await user.type(
+        screen.getByTestId("create-template-name"),
+        "My Template",
+      );
       await user.click(screen.getByTestId("create-template-submit"));
 
       await waitFor(() => {

@@ -107,9 +107,7 @@ export function Slider({
   className = "",
 }: SliderProps): JSX.Element {
   // Internal state for uncontrolled usage
-  const [internalValue, setInternalValue] = React.useState(
-    defaultValue ?? min,
-  );
+  const [internalValue, setInternalValue] = React.useState(defaultValue ?? min);
 
   // Use controlled value if provided, otherwise use internal state
   const currentValue = value !== undefined ? value : internalValue;
@@ -155,7 +153,7 @@ export function Slider({
           />
         </div>
 
-        {/* Native range input for accessibility */}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: Slider uses native <input type="range"> for a11y */}
         <input
           type="range"
           min={min}

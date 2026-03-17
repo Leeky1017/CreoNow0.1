@@ -42,7 +42,7 @@ function LanguageStep(props: {
   ];
 
   return (
-    <div data-testid="onboarding-step-1" className="w-full max-w-[480px]">
+    <div data-testid="onboarding-step-1" className="w-full max-w-120">
       <Heading
         level="h2"
         color="default"
@@ -59,6 +59,7 @@ function LanguageStep(props: {
         className="flex flex-col gap-3"
       >
         {languages.map((lang) => (
+          // eslint-disable-next-line creonow/no-native-html-element -- language selection card button
           <button
             key={lang.value}
             type="button"
@@ -99,7 +100,7 @@ function LanguageStep(props: {
 function AiConfigStep(): JSX.Element {
   const { t } = useTranslation();
   return (
-    <div data-testid="onboarding-step-2" className="w-full max-w-[480px]">
+    <div data-testid="onboarding-step-2" className="w-full max-w-120">
       <Heading
         level="h2"
         color="default"
@@ -160,7 +161,7 @@ function OpenFolderStep(props: {
 }): JSX.Element {
   const { t } = useTranslation();
   return (
-    <div data-testid="onboarding-step-3" className="w-full max-w-[480px]">
+    <div data-testid="onboarding-step-3" className="w-full max-w-120">
       <Heading
         level="h2"
         color="default"
@@ -249,9 +250,7 @@ export function OnboardingPage({
   onComplete,
 }: OnboardingPageProps): JSX.Element {
   const [step, setStep] = React.useState<OnboardingStep>(1);
-  const [language, setLanguage] = React.useState(() =>
-    getLanguagePreference(),
-  );
+  const [language, setLanguage] = React.useState(() => getLanguagePreference());
   const { t } = useTranslation();
 
   const handleLanguageSelect = React.useCallback((lng: string) => {
@@ -282,6 +281,7 @@ export function OnboardingPage({
       data-testid="onboarding-page"
       className="flex h-full w-full items-center justify-center bg-[var(--color-bg-base)]"
     >
+      {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- onboarding page layout bounds */}
       <main className="relative flex h-full max-h-[900px] w-full max-w-[800px] flex-col items-center justify-center p-8">
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center">
@@ -311,10 +311,7 @@ export function OnboardingPage({
         {/* Step content */}
         <div className="flex w-full flex-1 items-center justify-center">
           {step === 1 && (
-            <LanguageStep
-              selected={language}
-              onSelect={handleLanguageSelect}
-            />
+            <LanguageStep selected={language} onSelect={handleLanguageSelect} />
           )}
           {step === 2 && <AiConfigStep />}
           {step === 3 && (

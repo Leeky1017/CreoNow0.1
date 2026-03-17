@@ -48,11 +48,14 @@ describe("OutlinePanel", () => {
 
   it("[ED-SCROLL-01] 大纲滚动区域应由 ScrollArea viewport 承载", () => {
     const onNavigate = vi.fn();
-    const longItems: OutlineItem[] = Array.from({ length: 180 }, (_, index) => ({
-      id: `outline-${index}`,
-      title: `Heading ${index}`,
-      level: (["h1", "h2", "h3"] as const)[index % 3],
-    }));
+    const longItems: OutlineItem[] = Array.from(
+      { length: 180 },
+      (_, index) => ({
+        id: `outline-${index}`,
+        title: `Heading ${index}`,
+        level: (["h1", "h2", "h3"] as const)[index % 3],
+      }),
+    );
     render(<OutlinePanel items={longItems} onNavigate={onNavigate} />);
 
     const viewport = screen.getByTestId("outline-scroll-viewport");
@@ -94,7 +97,9 @@ describe("OutlinePanel", () => {
 
     // H1 and H2 items should have collapse toggles (they have child items after them)
     const h1Item = screen.getByTestId("outline-item-h1-title");
-    const collapseButton = h1Item.querySelector('button[aria-label="Collapse"]');
+    const collapseButton = h1Item.querySelector(
+      'button[aria-label="Collapse"]',
+    );
     expect(collapseButton).toBeInTheDocument();
   });
 
@@ -104,7 +109,9 @@ describe("OutlinePanel", () => {
 
     // Find the collapse button on the H1 item
     const h1Item = screen.getByTestId("outline-item-h1-title");
-    const collapseButton = h1Item.querySelector('button[aria-label="Collapse"]');
+    const collapseButton = h1Item.querySelector(
+      'button[aria-label="Collapse"]',
+    );
     expect(collapseButton).toBeInTheDocument();
 
     // Click to collapse
@@ -121,7 +128,9 @@ describe("OutlinePanel", () => {
 
   it("handles drag start", () => {
     const onReorder = vi.fn();
-    render(<OutlinePanel items={SAMPLE_ITEMS} onReorder={onReorder} draggable />);
+    render(
+      <OutlinePanel items={SAMPLE_ITEMS} onReorder={onReorder} draggable />,
+    );
 
     const item = screen.getByTestId("outline-item-h2-intro");
     const dataTransfer = {
@@ -137,7 +146,9 @@ describe("OutlinePanel", () => {
 
   it("handles drop with position", () => {
     const onReorder = vi.fn();
-    render(<OutlinePanel items={SAMPLE_ITEMS} onReorder={onReorder} draggable />);
+    render(
+      <OutlinePanel items={SAMPLE_ITEMS} onReorder={onReorder} draggable />,
+    );
 
     const targetItem = screen.getByTestId("outline-item-h2-conclusion");
     const dataTransfer = {
@@ -176,13 +187,15 @@ describe("OutlinePanel", () => {
   // ==========================================================================
 
   it("displays word counts when provided", () => {
-    render(<OutlinePanel items={SAMPLE_ITEMS} wordCounts={SAMPLE_WORD_COUNTS} />);
+    render(
+      <OutlinePanel items={SAMPLE_ITEMS} wordCounts={SAMPLE_WORD_COUNTS} />,
+    );
 
     // Should show formatted word counts - check that word count elements exist
     // Word counts are displayed with formatWordCount function
     const h1Item = screen.getByTestId("outline-item-h1-title");
     const h2IntroItem = screen.getByTestId("outline-item-h2-intro");
-    
+
     // The word count should be rendered within the items
     expect(h1Item.textContent).toContain("2.5k"); // 2450 formatted
     expect(h2IntroItem.textContent).toContain("320");
@@ -196,7 +209,9 @@ describe("OutlinePanel", () => {
     render(<OutlinePanel items={SAMPLE_ITEMS} />);
 
     expect(screen.getByTestId("outline-search-input")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("Filter outline...")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Filter outline..."),
+    ).toBeInTheDocument();
   });
 
   it("filters items based on search query", async () => {
@@ -281,11 +296,13 @@ describe("OutlinePanel", () => {
 
     // Click delete in selection bar
     const selectionBar = screen.getByText("2 selected").closest("div");
-    const deleteButton = selectionBar?.querySelector('button');
+    const deleteButton = selectionBar?.querySelector("button");
     expect(deleteButton).toBeInTheDocument();
     await user.click(deleteButton!);
 
-    expect(onDelete).toHaveBeenCalledWith(expect.arrayContaining(["h2-intro", "h2-conclusion"]));
+    expect(onDelete).toHaveBeenCalledWith(
+      expect.arrayContaining(["h2-intro", "h2-conclusion"]),
+    );
   });
 
   it("clears selection", async () => {
@@ -316,7 +333,13 @@ describe("OutlinePanel", () => {
   it("navigates with Arrow keys", async () => {
     const user = userEvent.setup();
     const onNavigate = vi.fn();
-    render(<OutlinePanel items={SAMPLE_ITEMS} activeId="h1-title" onNavigate={onNavigate} />);
+    render(
+      <OutlinePanel
+        items={SAMPLE_ITEMS}
+        activeId="h1-title"
+        onNavigate={onNavigate}
+      />,
+    );
 
     // Focus the panel
     const panel = screen.getByTestId("outline-panel");
@@ -348,7 +371,13 @@ describe("OutlinePanel", () => {
   it("deletes on Delete key", async () => {
     const user = userEvent.setup();
     const onDelete = vi.fn();
-    render(<OutlinePanel items={SAMPLE_ITEMS} activeId="h1-title" onDelete={onDelete} />);
+    render(
+      <OutlinePanel
+        items={SAMPLE_ITEMS}
+        activeId="h1-title"
+        onDelete={onDelete}
+      />,
+    );
 
     // Focus the panel
     const panel = screen.getByTestId("outline-panel");
@@ -456,16 +485,18 @@ describe("OutlinePanel", () => {
 
     expect(onDelete).toHaveBeenCalledWith(["h2-intro"]);
   });
+});
 
-  // ==========================================================================
-  // Header Actions
-  // ==========================================================================
-
+describe("OutlinePanel — Header Actions", () => {
   it("renders header with Expand/Collapse buttons", () => {
     render(<OutlinePanel items={SAMPLE_ITEMS} />);
 
     expect(screen.getByText("Outline")).toBeInTheDocument();
-    expect(screen.getByLabelText("Expand all outline items")).toBeInTheDocument();
-    expect(screen.getByLabelText("Collapse all outline items")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Expand all outline items"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Collapse all outline items"),
+    ).toBeInTheDocument();
   });
 });

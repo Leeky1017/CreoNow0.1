@@ -27,6 +27,7 @@ import {
 import { FilePlus, MoreHorizontal, PenTool, Search } from "lucide-react";
 import { i18n } from "../../i18n";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
+
 // =============================================================================
 // Types
 // =============================================================================
@@ -79,7 +80,7 @@ function SearchBar(props: {
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
         placeholder={t("dashboard.searchPlaceholder")}
-        className="bg-transparent border-none text-sm w-[300px] placeholder:text-[var(--color-fg-faint)]"
+        className="bg-transparent border-none text-sm w-75 placeholder:text-[var(--color-fg-faint)]"
       />
     </div>
   );
@@ -112,6 +113,7 @@ function HeroCard(props: {
         <h2 className="text-[28px] font-normal tracking-[-0.02em] text-[var(--color-fg-default)] mb-4 leading-tight">
           {project.name || t("dashboard.untitledProject")}
         </h2>
+        {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- hero description width per design spec */}
         <p className="text-[15px] text-[var(--color-fg-muted)] leading-relaxed max-w-[500px] mb-8">
           {t("dashboard.heroSubtitle")}
         </p>
@@ -121,7 +123,7 @@ function HeroCard(props: {
           </span>
         </div>
       </div>
-      <div className="w-[35%] max-w-[280px] hidden lg:block bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)] relative overflow-hidden">
+      <div className="w-[35%] max-w-70 hidden lg:block bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)] relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center text-[var(--color-fg-faint)]">
           <PenTool
             className="w-16 h-16 opacity-20"
@@ -230,7 +232,7 @@ function ProjectCard(props: {
       onKeyDown={(e) => e.key === "Enter" && onClick()}
       role="button"
       tabIndex={0}
-      className="border border-transparent p-6 h-[200px] flex flex-col cursor-pointer transition-colors duration-300 hover:border-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)]"
+      className="border border-transparent p-6 h-50 flex flex-col cursor-pointer transition-colors duration-300 hover:border-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)]"
     >
       <div className="flex justify-between items-start mb-4">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-muted)]">
@@ -238,6 +240,7 @@ function ProjectCard(props: {
         </div>
         <DropdownMenu
           trigger={
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               onClick={(e) => e.stopPropagation()}
               className="focus-ring text-[var(--color-fg-faint)] hover:text-[var(--color-fg-default)] transition-colors p-1 -m-1 rounded"
@@ -283,7 +286,7 @@ function NewDraftCard(props: { onClick: () => void }): JSX.Element {
       onKeyDown={(e) => e.key === "Enter" && props.onClick()}
       role="button"
       tabIndex={0}
-      className="border-2 border-dashed border-[var(--color-separator)] p-6 h-[200px] flex flex-col items-center justify-center cursor-pointer opacity-50 hover:opacity-100 hover:border-[var(--color-fg-muted)] transition-[opacity,border-color] duration-300"
+      className="border-2 border-dashed border-[var(--color-separator)] p-6 h-50 flex flex-col items-center justify-center cursor-pointer opacity-50 hover:opacity-100 hover:border-[var(--color-fg-muted)] transition-[opacity,border-color] duration-300"
     >
       <div className="text-[32px] font-light text-[var(--color-fg-faint)] mb-3">
         +
@@ -861,6 +864,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
             <div className="mt-10">
               <SectionTitle
                 action={
+                  // eslint-disable-next-line creonow/no-native-html-element -- specialized button
                   <button
                     type="button"
                     data-testid="dashboard-archived-toggle"

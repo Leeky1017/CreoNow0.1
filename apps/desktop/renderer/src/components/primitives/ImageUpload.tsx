@@ -57,7 +57,8 @@ export function ImageUpload({
   hint,
 }: ImageUploadProps): JSX.Element {
   const { t } = useTranslation();
-  const resolvedPlaceholder = placeholder ?? t("primitives.imageUpload.placeholder");
+  const resolvedPlaceholder =
+    placeholder ?? t("primitives.imageUpload.placeholder");
   const resolvedHint = hint ?? t("primitives.imageUpload.hint");
   const [isDragging, setIsDragging] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -219,6 +220,7 @@ export function ImageUpload({
     "border-2",
     "border-dashed",
     "rounded-[var(--radius-sm)]",
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- Primitive: minimum upload area for usability
     "min-h-[140px]",
     "flex",
     "flex-col",
@@ -241,10 +243,7 @@ export function ImageUpload({
         "opacity-50",
       ]
     : isDragging
-      ? [
-          "border-[var(--color-accent)]",
-          "bg-[var(--color-accent-subtle)]",
-        ]
+      ? ["border-[var(--color-accent)]", "bg-[var(--color-accent-subtle)]"]
       : [
           "border-[var(--color-border-default)]",
           "hover:border-[var(--color-border-hover)]",
@@ -270,6 +269,7 @@ export function ImageUpload({
       data-testid="image-upload"
     >
       {/* Hidden file input */}
+      {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: hidden file <input> for native file picker */}
       <input
         ref={fileInputRef}
         type="file"
@@ -290,6 +290,7 @@ export function ImageUpload({
           />
           {/* Remove button overlay */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: ImageUpload remove button is internal */}
             <button
               type="button"
               onClick={handleRemove}

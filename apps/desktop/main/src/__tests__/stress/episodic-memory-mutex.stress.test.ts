@@ -38,7 +38,10 @@ function createLogger(): Logger {
   };
 }
 
-function createRecordInput(projectId: string, chapterId: string): EpisodeRecordInput {
+function createRecordInput(
+  projectId: string,
+  chapterId: string,
+): EpisodeRecordInput {
   return {
     projectId,
     chapterId,
@@ -182,7 +185,11 @@ async function main(): Promise<void> {
     await Promise.all(pendingInsertOperations);
 
     assert.equal(recordResult.ok, true, "recordEpisode should succeed");
-    assert.equal(distillResult.ok, true, "distillSemanticMemory should succeed");
+    assert.equal(
+      distillResult.ok,
+      true,
+      "distillSemanticMemory should succeed",
+    );
     assert.ok(distillSnapshots.length > 0, "distillLlm should be called");
     assert.ok(
       (distillSnapshots[0] ?? 0) >= 1,
@@ -237,7 +244,11 @@ async function main(): Promise<void> {
       service.recordEpisode(createRecordInput("proj-right", "right-1")),
     );
 
-    for (let attempt = 0; attempt < 5 && startedProjects.size < 2; attempt += 1) {
+    for (
+      let attempt = 0;
+      attempt < 5 && startedProjects.size < 2;
+      attempt += 1
+    ) {
       await Promise.resolve();
     }
     assert.equal(
@@ -259,7 +270,10 @@ async function main(): Promise<void> {
 
     assert.equal(left.ok, true);
     assert.equal(right.ok, true);
-    assert.ok(maxInflightGlobal >= 2, "different projects should run in parallel");
+    assert.ok(
+      maxInflightGlobal >= 2,
+      "different projects should run in parallel",
+    );
   }
 
   console.log("episodic-memory-mutex.stress.test.ts: all assertions passed");

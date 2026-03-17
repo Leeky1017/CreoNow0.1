@@ -163,7 +163,11 @@ function registerSkillRegistryHandlers(deps: SkillHandlerDeps): void {
       if (typeof payload.enabled !== "boolean") {
         return createInvalidArgument("enabled must be a boolean");
       }
-      if ("id" in payload && payload.id !== undefined && typeof payload.id !== "string") {
+      if (
+        "id" in payload &&
+        payload.id !== undefined &&
+        typeof payload.id !== "string"
+      ) {
         return createInvalidArgument("id must be a string");
       }
       if (

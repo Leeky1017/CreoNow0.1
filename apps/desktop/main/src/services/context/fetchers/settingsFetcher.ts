@@ -4,10 +4,7 @@ import type {
 } from "../../memory/memoryService";
 import type { ContextLayerFetcher } from "../types";
 import type { Logger } from "../../../logging/logger";
-import {
-  DegradationCounter,
-  logWarn,
-} from "../../shared/degradationCounter";
+import { DegradationCounter, logWarn } from "../../shared/degradationCounter";
 
 const MEMORY_UNAVAILABLE_WARNING = "MEMORY_UNAVAILABLE: 记忆数据未注入";
 const MEMORY_DEGRADED_WARNING_PREFIX = "MEMORY_DEGRADED";

@@ -505,7 +505,10 @@ function toBranchListItem(
  * Create a document service backed by SQLite (SSOT).
  */
 
-function createDocUtilityHelpers(args: { db: Database.Database; logger: Logger }) {
+function createDocUtilityHelpers(args: {
+  db: Database.Database;
+  logger: Logger;
+}) {
   const rollbackToVersion = (params: {
     documentId: string;
     versionId: string;
@@ -672,7 +675,7 @@ function createDocUtilityHelpers(args: { db: Database.Database; logger: Logger }
 
 function createDocBranchHelpers(
   args: { db: Database.Database; logger: Logger },
-  readBranch: ReturnType<typeof createDocUtilityHelpers>['readBranch'],
+  readBranch: ReturnType<typeof createDocUtilityHelpers>["readBranch"],
 ) {
   const ensureMainBranch = (params: {
     documentId: string;
@@ -924,10 +927,7 @@ type DocCoreCtx = {
 
 function createDocCrudOps(
   ctx: DocCoreCtx,
-): Pick<
-  DocumentService,
-  "create" | "list" | "read" | "update"
-> {
+): Pick<DocumentService, "create" | "list" | "read" | "update"> {
   const args = ctx;
   return {
     create: ({ projectId, title, type }) => {
@@ -1155,16 +1155,10 @@ function createDocCrudOps(
         return documentError("DB_ERROR", "Failed to update document");
       }
     },
-
   };
 }
 
-function createDocSaveOps(
-  ctx: DocCoreCtx,
-): Pick<
-  DocumentService,
-  "save"
-> {
+function createDocSaveOps(ctx: DocCoreCtx): Pick<DocumentService, "save"> {
   const args = ctx;
   const { maxSnapshotsPerDocument, autosaveCompactionAgeMs } = ctx;
   return {
@@ -1173,10 +1167,14 @@ function createDocSaveOps(
         return documentError("INVALID_ARGUMENT", "actor/reason mismatch");
       }
 
-      const serializedForSizeCheck = typeof contentJson === "string"
-        ? contentJson
-        : JSON.stringify(contentJson);
-      const contentByteLength = Buffer.byteLength(serializedForSizeCheck, "utf-8");
+      const serializedForSizeCheck =
+        typeof contentJson === "string"
+          ? contentJson
+          : JSON.stringify(contentJson);
+      const contentByteLength = Buffer.byteLength(
+        serializedForSizeCheck,
+        "utf-8",
+      );
       if (contentByteLength > MAX_DOCUMENT_SIZE_BYTES) {
         const sizeMB = (contentByteLength / (1024 * 1024)).toFixed(1);
         return documentError(
@@ -1379,16 +1377,12 @@ function createDocSaveOps(
       }
       return { ok: true, data: { updatedAt: ts, contentHash, compaction } };
     },
-
   };
 }
 
 function createDocLifecycleOps(
   ctx: DocCoreCtx,
-): Pick<
-  DocumentService,
-  "delete" | "reorder" | "updateStatus"
-> {
+): Pick<DocumentService, "delete" | "reorder" | "updateStatus"> {
   const args = ctx;
   return {
     delete: ({ projectId, documentId }) => {
@@ -1637,16 +1631,12 @@ function createDocLifecycleOps(
         );
       }
     },
-
   };
 }
 
 function createDocNavigationOps(
   ctx: DocCoreCtx,
-): Pick<
-  DocumentService,
-  "getCurrent" | "setCurrent"
-> {
+): Pick<DocumentService, "getCurrent" | "setCurrent"> {
   const args = ctx;
   return {
     getCurrent: ({ projectId }) => {
@@ -1718,7 +1708,6 @@ function createDocNavigationOps(
       });
       return { ok: true, data: { documentId } };
     },
-
   };
 }
 
@@ -1726,7 +1715,11 @@ function createVersionOps(
   ctx: DocCoreCtx,
 ): Pick<
   DocumentService,
-  "listVersions" | "readVersion" | "diffVersions" | "rollbackVersion" | "restoreVersion"
+  | "listVersions"
+  | "readVersion"
+  | "diffVersions"
+  | "rollbackVersion"
+  | "restoreVersion"
 > {
   const args = ctx;
   const { maxDiffPayloadBytes, rollbackToVersion } = ctx;
@@ -1873,10 +1866,7 @@ function createVersionOps(
 
 function createBranchCrudOps(
   ctx: DocCoreCtx,
-): Pick<
-  DocumentService,
-  "createBranch" | "listBranches" | "switchBranch"
-> {
+): Pick<DocumentService, "createBranch" | "listBranches" | "switchBranch"> {
   const args = ctx;
   const { readBranch, ensureMainBranch, resolveCurrentBranchName } = ctx;
   return {
@@ -2078,16 +2068,12 @@ function createBranchCrudOps(
         },
       };
     },
-
   };
 }
 
 function createBranchMergeOps(
   ctx: DocCoreCtx,
-): Pick<
-  DocumentService,
-  "mergeBranch" | "resolveMergeConflict"
-> {
+): Pick<DocumentService, "mergeBranch" | "resolveMergeConflict"> {
   const args = ctx;
   const { readBranch, ensureMainBranch, persistBranchMerge } = ctx;
   return {
@@ -2345,7 +2331,6 @@ function createBranchMergeOps(
 
       return merged;
     },
-
   };
 }
 
@@ -2369,9 +2354,12 @@ export function createDocumentCoreService(args: {
     args.maxDiffPayloadBytes ?? DEFAULT_MAX_DIFF_PAYLOAD_BYTES,
   );
 
-
-  const { rollbackToVersion, readBranch, resolveCurrentBranchName } = createDocUtilityHelpers(args);
-  const { ensureMainBranch, persistBranchMerge } = createDocBranchHelpers(args, readBranch);
+  const { rollbackToVersion, readBranch, resolveCurrentBranchName } =
+    createDocUtilityHelpers(args);
+  const { ensureMainBranch, persistBranchMerge } = createDocBranchHelpers(
+    args,
+    readBranch,
+  );
 
   const ctx: DocCoreCtx = {
     db: args.db,

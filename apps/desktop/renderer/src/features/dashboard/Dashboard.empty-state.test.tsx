@@ -49,7 +49,9 @@ describe("Dashboard empty state (PM1-S7)", () => {
       expect(screen.getByTestId("dashboard-empty")).toBeInTheDocument();
     });
 
-    expect(screen.getByText("Create your first writing project")).toBeInTheDocument();
+    expect(
+      screen.getByText("Create your first writing project"),
+    ).toBeInTheDocument();
     expect(screen.getByTestId("dashboard-create-first")).toBeInTheDocument();
   });
 

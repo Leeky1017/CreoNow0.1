@@ -128,9 +128,9 @@ module.exports = {
           },
         ],
         "creonow/no-raw-tailwind-tokens": "error",
-        "creonow/no-native-html-element": "warn",
-        "creonow/no-raw-error-code-in-ui": "warn",
-        "creonow/no-hardcoded-dimension": "warn",
+        "creonow/no-native-html-element": "error",
+        "creonow/no-raw-error-code-in-ui": "error",
+        "creonow/no-hardcoded-dimension": "error",
         "no-restricted-syntax": [
           "error",
           {
@@ -147,7 +147,7 @@ module.exports = {
       files: ["**/*.stories.{ts,tsx}"],
       rules: {
         "i18next/no-literal-string": "off",
-        "creonow/no-raw-tailwind-tokens": "warn",
+        "creonow/no-raw-tailwind-tokens": "error",
       },
     },
     {
@@ -183,8 +183,7 @@ module.exports = {
           {
             selector:
               "CallExpression[callee.type='MemberExpression'][callee.object.name='React'][callee.property.name='createElement']",
-            message:
-              "Use JSX syntax instead of React.createElement in stores.",
+            message: "Use JSX syntax instead of React.createElement in stores.",
           },
         ],
       },

@@ -47,7 +47,9 @@ const contentStyles = [
   "rounded-[var(--radius-md)]",
   "shadow-[var(--shadow-md)]",
   // Sizing
+  // eslint-disable-next-line creonow/no-hardcoded-dimension -- Design spec §6.6: min/max menu width
   "min-w-[160px]",
+  // eslint-disable-next-line creonow/no-hardcoded-dimension -- Design spec §6.6: min/max menu width
   "max-w-[240px]",
   "py-1",
   // Animation via CSS transition
@@ -125,13 +127,10 @@ export function DropdownMenu({
 }: DropdownMenuProps): JSX.Element {
   const [open, setOpen] = React.useState(false);
 
-  const handleSelect = React.useCallback(
-    (onSelect: () => void) => {
-      setOpen(false);
-      onSelect();
-    },
-    [],
-  );
+  const handleSelect = React.useCallback((onSelect: () => void) => {
+    setOpen(false);
+    onSelect();
+  }, []);
 
   return (
     <Popover.Root open={open} onOpenChange={setOpen}>
@@ -152,6 +151,7 @@ export function DropdownMenu({
                 : normalItemStyles;
 
             return (
+              // eslint-disable-next-line creonow/no-native-html-element -- Primitive: DropdownMenu items use native button internally
               <button
                 key={item.key}
                 type="button"

@@ -65,6 +65,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
       <div className="flex items-center gap-4">
         {/* Before version selector */}
         <div className="relative">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             onClick={() => setBeforeDropdownOpen((v) => !v)}
@@ -72,9 +73,15 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
           >
             {/* Clock icon */}
             <Clock size={16} strokeWidth={1.5} />
-            <span>{selectedBefore?.label ?? t('diff.header.selectVersion')}</span>
+            <span>
+              {selectedBefore?.label ?? t("diff.header.selectVersion")}
+            </span>
             {/* Caret down */}
-            <ChevronDown size={16} strokeWidth={1.5} className="text-[var(--color-fg-subtle)]" />
+            <ChevronDown
+              size={16}
+              strokeWidth={1.5}
+              className="text-[var(--color-fg-subtle)]"
+            />
           </button>
 
           {/* Dropdown */}
@@ -87,7 +94,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               />
               <div className="absolute top-full left-0 mt-2 w-64 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-lg shadow-[0_18px_48px_var(--color-shadow)] z-[var(--z-popover)] p-1 overflow-hidden">
                 <div className="px-3 py-2 text-[10px] text-[var(--color-fg-subtle)] uppercase tracking-wider font-medium">
-                  {t('diff.header.history')}
+                  {t("diff.header.history")}
                 </div>
                 {props.versions
                   .filter((v) => v.id !== "current")
@@ -95,6 +102,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
                     const isSelected =
                       version.id === props.selectedBeforeVersion;
                     return (
+                      // eslint-disable-next-line creonow/no-native-html-element -- specialized button
                       <button
                         key={version.id}
                         type="button"
@@ -121,8 +129,8 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
                           </div>
                           <div className="text-[10px] text-[var(--color-fg-subtle)]">
                             {version.type === "auto"
-                              ? t('diff.header.autoSaved')
-                              : t('diff.header.manualSave')}
+                              ? t("diff.header.autoSaved")
+                              : t("diff.header.manualSave")}
                           </div>
                         </div>
                       </button>
@@ -134,17 +142,26 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
         </div>
 
         {/* Arrow */}
-        <ArrowRight size={16} strokeWidth={1.5} className="text-[var(--color-fg-subtle)]" />
+        <ArrowRight
+          size={16}
+          strokeWidth={1.5}
+          className="text-[var(--color-fg-subtle)]"
+        />
 
         {/* After version (current) */}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           className="flex items-center gap-2 px-3 py-1.5 bg-[var(--color-bg-hover)] rounded border border-[var(--color-border-default)] text-xs text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)] transition-colors whitespace-nowrap"
         >
           {/* Green dot */}
           <div className="w-2 h-2 rounded-full bg-[var(--color-success)] shadow-[0_0_8px_var(--color-success-subtle)]" />
-          <span>{selectedAfter?.label ?? t('diff.header.currentVersion')}</span>
-          <ChevronDown size={16} strokeWidth={1.5} className="text-[var(--color-fg-subtle)]" />
+          <span>{selectedAfter?.label ?? t("diff.header.currentVersion")}</span>
+          <ChevronDown
+            size={16}
+            strokeWidth={1.5}
+            className="text-[var(--color-fg-subtle)]"
+          />
         </button>
       </div>
 
@@ -152,6 +169,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
       <div className="flex items-center gap-6">
         {/* View mode toggle */}
         <div className="flex items-center gap-1 bg-[var(--color-bg-base)] p-1 rounded-lg border border-[var(--color-border-default)]">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             onClick={() => props.onViewModeChange("split")}
@@ -164,8 +182,9 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               }
             `}
           >
-            {t('diff.header.split')}
+            {t("diff.header.split")}
           </button>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             onClick={() => props.onViewModeChange("unified")}
@@ -178,7 +197,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               }
             `}
           >
-            {t('diff.header.unified')}
+            {t("diff.header.unified")}
           </button>
         </div>
 
@@ -187,34 +206,36 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
 
         {/* Change navigation */}
         <div className="flex items-center gap-2">
-          <Tooltip content={t('diff.header.previousChange')}>
+          <Tooltip content={t("diff.header.previousChange")}>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               type="button"
               onClick={props.onPreviousChange}
               disabled={props.currentChangeIndex <= 0}
               className="w-8 h-8 flex items-center justify-center rounded hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label={t('diff.header.previousChange')}
+              aria-label={t("diff.header.previousChange")}
             >
               <ChevronUp size={16} strokeWidth={1.5} />
             </button>
           </Tooltip>
           <span className="text-xs font-[var(--font-family-mono)] text-[var(--color-fg-muted)] px-2">
-            {t('diff.header.changeLabel')}{" "}
+            {t("diff.header.changeLabel")}{" "}
             <span className="text-[var(--color-fg-default)]">
               {props.totalChanges > 0 ? props.currentChangeIndex + 1 : 0}
             </span>{" "}
-            {t('diff.header.of')}{" "}
+            {t("diff.header.of")}{" "}
             <span className="text-[var(--color-fg-default)]">
               {props.totalChanges}
             </span>
           </span>
-          <Tooltip content={t('diff.header.nextChange')}>
+          <Tooltip content={t("diff.header.nextChange")}>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               type="button"
               onClick={props.onNextChange}
               disabled={props.currentChangeIndex >= props.totalChanges - 1}
               className="w-8 h-8 flex items-center justify-center rounded hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label={t('diff.header.nextChange')}
+              aria-label={t("diff.header.nextChange")}
             >
               <ChevronDown size={16} strokeWidth={1.5} />
             </button>
@@ -225,6 +246,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
         <div className="h-4 w-px bg-[var(--color-separator)]" />
 
         {/* Close button */}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           onClick={props.onClose}

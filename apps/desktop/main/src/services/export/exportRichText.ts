@@ -101,7 +101,10 @@ export type PdfRenderOp =
 const DEFAULT_IMAGE_WIDTH = 320;
 const DEFAULT_IMAGE_HEIGHT = 180;
 
-function structuredError(message: string, unsupported: string[]): StructuredExportResult<never> {
+function structuredError(
+  message: string,
+  unsupported: string[],
+): StructuredExportResult<never> {
   return { ok: false, message, unsupported };
 }
 
@@ -152,16 +155,21 @@ function parseMarks(args: {
         parsed.push({ type: mark.type });
         break;
       case "link": {
-        const href = typeof mark.attrs?.href === "string" ? mark.attrs.href.trim() : "";
+        const href =
+          typeof mark.attrs?.href === "string" ? mark.attrs.href.trim() : "";
         if (href.length === 0) {
-          unsupported.push(`${nodePath([...args.path, "marks", i])}:link[href]`);
+          unsupported.push(
+            `${nodePath([...args.path, "marks", i])}:link[href]`,
+          );
           break;
         }
         parsed.push({ type: "link", href });
         break;
       }
       default:
-        unsupported.push(`${nodePath([...args.path, "marks", i])}:${mark.type}`);
+        unsupported.push(
+          `${nodePath([...args.path, "marks", i])}:${mark.type}`,
+        );
         break;
     }
   }
@@ -180,7 +188,8 @@ function parseImageNode(args: {
   node: TipTapNode;
   path: Array<string | number>;
 }): StructuredExportResult<ExportImageNode> {
-  const src = typeof args.node.attrs?.src === "string" ? args.node.attrs.src.trim() : "";
+  const src =
+    typeof args.node.attrs?.src === "string" ? args.node.attrs.src.trim() : "";
   if (src.length === 0) {
     return structuredError(
       `Export format does not yet support: ${nodePath(args.path)}:image[src]`,
@@ -189,11 +198,13 @@ function parseImageNode(args: {
   }
 
   const width =
-    typeof args.node.attrs?.width === "number" && Number.isFinite(args.node.attrs.width)
+    typeof args.node.attrs?.width === "number" &&
+    Number.isFinite(args.node.attrs.width)
       ? Math.max(1, Math.round(args.node.attrs.width))
       : DEFAULT_IMAGE_WIDTH;
   const height =
-    typeof args.node.attrs?.height === "number" && Number.isFinite(args.node.attrs.height)
+    typeof args.node.attrs?.height === "number" &&
+    Number.isFinite(args.node.attrs.height)
       ? Math.max(1, Math.round(args.node.attrs.height))
       : DEFAULT_IMAGE_HEIGHT;
 
@@ -203,7 +214,8 @@ function parseImageNode(args: {
       type: "image",
       src,
       alt: typeof args.node.attrs?.alt === "string" ? args.node.attrs.alt : "",
-      title: typeof args.node.attrs?.title === "string" ? args.node.attrs.title : "",
+      title:
+        typeof args.node.attrs?.title === "string" ? args.node.attrs.title : "",
       width,
       height,
     },
@@ -343,7 +355,9 @@ function parseBlocks(args: {
           break;
         }
         const level =
-          typeof node.attrs?.level === "number" && node.attrs.level >= 1 && node.attrs.level <= 6
+          typeof node.attrs?.level === "number" &&
+          node.attrs.level >= 1 &&
+          node.attrs.level <= 6
             ? node.attrs.level
             : 1;
         blocks.push({ type: "heading", level, content: content.data });
@@ -394,7 +408,10 @@ function parseBlocks(args: {
         blocks.push({
           type: "codeBlock",
           text: readCodeBlockText(node),
-          language: typeof node.attrs?.language === "string" ? node.attrs.language : null,
+          language:
+            typeof node.attrs?.language === "string"
+              ? node.attrs.language
+              : null,
         });
         break;
       case "image": {
@@ -429,11 +446,15 @@ export function parseStructuredExportDocument(args: {
   try {
     parsed = JSON.parse(args.contentJson);
   } catch {
-    return structuredError("Invalid TipTap JSON document", ["contentJson:invalid-json"]);
+    return structuredError("Invalid TipTap JSON document", [
+      "contentJson:invalid-json",
+    ]);
   }
 
   if (!isTipTapNode(parsed) || parsed.type !== "doc") {
-    return structuredError("Invalid TipTap JSON document", ["contentJson:doc-root"]);
+    return structuredError("Invalid TipTap JSON document", [
+      "contentJson:doc-root",
+    ]);
   }
 
   const blocks = parseBlocks({
@@ -455,7 +476,10 @@ function applyMarkdownMarks(text: string, marks: ExportMark[]): string {
   const code = marks.find((mark) => mark.type === "code");
   if (code) {
     const linkedCode = `\`${text.replaceAll("`", "\\`")}\``;
-    const link = marks.find((mark): mark is Extract<ExportMark, { type: "link" }> => mark.type === "link");
+    const link = marks.find(
+      (mark): mark is Extract<ExportMark, { type: "link" }> =>
+        mark.type === "link",
+    );
     return link ? `[${linkedCode}](${link.href})` : linkedCode;
   }
 
@@ -474,7 +498,10 @@ function applyMarkdownMarks(text: string, marks: ExportMark[]): string {
     result = `~~${result}~~`;
   }
 
-  const link = marks.find((mark): mark is Extract<ExportMark, { type: "link" }> => mark.type === "link");
+  const link = marks.find(
+    (mark): mark is Extract<ExportMark, { type: "link" }> =>
+      mark.type === "link",
+  );
   if (link) {
     result = `[${result}](${link.href})`;
   }
@@ -491,7 +518,10 @@ function renderInlineMarkdown(inlines: ExportInline[]): string {
       if (inline.type === "hardBreak") {
         return "  \n";
       }
-      const title = inline.title.length > 0 ? ` "${inline.title.replaceAll("\"", "\\\"")}"` : "";
+      const title =
+        inline.title.length > 0
+          ? ` "${inline.title.replaceAll('"', '\\"')}"`
+          : "";
       return `![${inline.alt}](${inline.src}${title})`;
     })
     .join("");
@@ -513,7 +543,9 @@ function renderBlockMarkdown(block: ExportBlock, depth = 0): string {
       return block.items
         .map((item, index) => {
           const marker = block.type === "orderedList" ? `${index + 1}. ` : "- ";
-          const rendered = renderStructuredMarkdown({ blocks: item.blocks }).split("\n");
+          const rendered = renderStructuredMarkdown({
+            blocks: item.blocks,
+          }).split("\n");
           return rendered
             .map((line, lineIndex) => {
               if (lineIndex === 0) {
@@ -529,14 +561,21 @@ function renderBlockMarkdown(block: ExportBlock, depth = 0): string {
     case "codeBlock":
       return `\`\`\`${block.language ?? ""}\n${block.text}\n\`\`\``;
     case "image": {
-      const title = block.title.length > 0 ? ` "${block.title.replaceAll("\"", "\\\"")}"` : "";
+      const title =
+        block.title.length > 0
+          ? ` "${block.title.replaceAll('"', '\\"')}"`
+          : "";
       return `![${block.alt}](${block.src}${title})`;
     }
   }
 }
 
-export function renderStructuredMarkdown(document: StructuredExportDocument): string {
-  return document.blocks.map((block) => renderBlockMarkdown(block)).join("\n\n");
+export function renderStructuredMarkdown(
+  document: StructuredExportDocument,
+): string {
+  return document.blocks
+    .map((block) => renderBlockMarkdown(block))
+    .join("\n\n");
 }
 
 export function renderStructuredMarkdownExport(args: {
@@ -560,7 +599,10 @@ function inlineToSegments(inlines: ExportInline[]): PdfTextSegment[] {
       segments.push({ text: "\n", marks: [] });
       continue;
     }
-    segments.push({ text: `[Image: ${inline.alt || inline.title || inline.src}]`, marks: [] });
+    segments.push({
+      text: `[Image: ${inline.alt || inline.title || inline.src}]`,
+      marks: [],
+    });
   }
   return segments;
 }
@@ -575,10 +617,18 @@ function pushPdfOps(args: {
   for (const block of args.blocks) {
     switch (block.type) {
       case "heading":
-        args.out.push({ type: "heading", level: block.level, segments: inlineToSegments(block.content) });
+        args.out.push({
+          type: "heading",
+          level: block.level,
+          segments: inlineToSegments(block.content),
+        });
         break;
       case "paragraph":
-        args.out.push({ type: "paragraph", segments: inlineToSegments(block.content), indent: args.indent });
+        args.out.push({
+          type: "paragraph",
+          segments: inlineToSegments(block.content),
+          indent: args.indent,
+        });
         break;
       case "blockquote":
         pushPdfOps({
@@ -628,7 +678,11 @@ function pushPdfOps(args: {
         args.out.push({ type: "horizontal-rule" });
         break;
       case "codeBlock":
-        args.out.push({ type: "code-block", text: block.text, language: block.language });
+        args.out.push({
+          type: "code-block",
+          text: block.text,
+          language: block.language,
+        });
         break;
       case "image":
         args.out.push({
@@ -654,13 +708,20 @@ export function buildPdfRenderPlan(args: {
       segments: [{ text: args.title, marks: [] }],
     },
   ];
-  pushPdfOps({ blocks: args.document.blocks, out: plan, indent: 0, listDepth: 0 });
+  pushPdfOps({
+    blocks: args.document.blocks,
+    out: plan,
+    indent: 0,
+    listDepth: 0,
+  });
   return plan;
 }
 
 function resolvePdfFont(marks: ExportMark[]): string {
   if (marks.some((mark) => mark.type === "code")) {
-    return marks.some((mark) => mark.type === "bold") ? "Courier-Bold" : "Courier";
+    return marks.some((mark) => mark.type === "bold")
+      ? "Courier-Bold"
+      : "Courier";
   }
 
   const bold = marks.some((mark) => mark.type === "bold");
@@ -698,7 +759,12 @@ async function readImageBinary(src: string): Promise<Buffer> {
 function detectDocxImageType(src: string): "jpg" | "png" | "gif" | "bmp" {
   const normalized = src.toLowerCase();
 
-  if (normalized.startsWith("data:image/jpeg") || normalized.startsWith("data:image/jpg") || normalized.endsWith(".jpg") || normalized.endsWith(".jpeg")) {
+  if (
+    normalized.startsWith("data:image/jpeg") ||
+    normalized.startsWith("data:image/jpg") ||
+    normalized.endsWith(".jpg") ||
+    normalized.endsWith(".jpeg")
+  ) {
     return "jpg";
   }
   if (normalized.startsWith("data:image/gif") || normalized.endsWith(".gif")) {
@@ -719,14 +785,21 @@ function renderPdfSegments(args: {
   fillColor?: string;
 }): void {
   const { pdfDoc, segments, fontSize, indent } = args;
-  const width = pdfDoc.page.width - pdfDoc.page.margins.left - pdfDoc.page.margins.right - indent;
+  const width =
+    pdfDoc.page.width -
+    pdfDoc.page.margins.left -
+    pdfDoc.page.margins.right -
+    indent;
 
   segments.forEach((segment, index) => {
     const font = resolvePdfFont(segment.marks);
     const underline = segment.marks.some((mark) => mark.type === "underline");
     const isLink = segment.marks.some((mark) => mark.type === "link");
 
-    pdfDoc.font(font).fontSize(fontSize).fillColor(isLink ? "#1D4ED8" : args.fillColor ?? "black");
+    pdfDoc
+      .font(font)
+      .fontSize(fontSize)
+      .fillColor(isLink ? "#1D4ED8" : (args.fillColor ?? "black"));
     pdfDoc.text(segment.text, {
       continued: index < segments.length - 1,
       underline,
@@ -800,7 +873,9 @@ export async function renderPdfPlan(args: {
   }
 }
 
-function mapHeadingLevel(level: number): (typeof HeadingLevel)[keyof typeof HeadingLevel] {
+function mapHeadingLevel(
+  level: number,
+): (typeof HeadingLevel)[keyof typeof HeadingLevel] {
   switch (level) {
     case 1:
       return HeadingLevel.HEADING_1;
@@ -823,7 +898,8 @@ function buildDocxRuns(inlines: ExportInline[]): ParagraphChild[] {
   for (const inline of inlines) {
     if (inline.type === "text") {
       const link = inline.marks.find(
-        (mark): mark is Extract<ExportMark, { type: "link" }> => mark.type === "link",
+        (mark): mark is Extract<ExportMark, { type: "link" }> =>
+          mark.type === "link",
       );
 
       const run = new TextRun({
@@ -831,12 +907,18 @@ function buildDocxRuns(inlines: ExportInline[]): ParagraphChild[] {
         bold: inline.marks.some((mark) => mark.type === "bold"),
         italics: inline.marks.some((mark) => mark.type === "italic"),
         strike: inline.marks.some((mark) => mark.type === "strike"),
-        underline: inline.marks.some((mark) => mark.type === "underline") ? {} : undefined,
-        font: inline.marks.some((mark) => mark.type === "code") ? "Courier New" : undefined,
+        underline: inline.marks.some((mark) => mark.type === "underline")
+          ? {}
+          : undefined,
+        font: inline.marks.some((mark) => mark.type === "code")
+          ? "Courier New"
+          : undefined,
       });
 
       if (link) {
-        children.push(new ExternalHyperlink({ link: link.href, children: [run] }));
+        children.push(
+          new ExternalHyperlink({ link: link.href, children: [run] }),
+        );
       } else {
         children.push(run);
       }
@@ -848,7 +930,9 @@ function buildDocxRuns(inlines: ExportInline[]): ParagraphChild[] {
       continue;
     }
 
-    children.push(new TextRun({ text: inline.alt || inline.title || "[image]" }));
+    children.push(
+      new TextRun({ text: inline.alt || inline.title || "[image]" }),
+    );
   }
 
   return children;
@@ -882,7 +966,9 @@ async function pushDocxParagraphs(args: {
         );
         break;
       case "paragraph":
-        args.out.push(new Paragraph({ children: buildDocxRuns(block.content) }));
+        args.out.push(
+          new Paragraph({ children: buildDocxRuns(block.content) }),
+        );
         break;
       case "blockquote":
         await pushDocxParagraphs({
@@ -958,7 +1044,11 @@ export async function buildDocxBuffer(args: {
       children: [new TextRun(args.title)],
     }),
   ];
-  await pushDocxParagraphs({ blocks: args.document.blocks, out: children, listDepth: 0 });
+  await pushDocxParagraphs({
+    blocks: args.document.blocks,
+    out: children,
+    listDepth: 0,
+  });
 
   const docx = new Document({
     numbering: {

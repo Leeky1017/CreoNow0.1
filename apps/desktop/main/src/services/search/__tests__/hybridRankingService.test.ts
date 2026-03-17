@@ -165,7 +165,11 @@ function createService(overrides?: {
   });
 
   assert.equal(res.ok, true);
-  assert.equal(semanticCalled, false, "semantic should not be called for fts strategy");
+  assert.equal(
+    semanticCalled,
+    false,
+    "semantic should not be called for fts strategy",
+  );
   if (res.ok) {
     assert.equal(res.data.strategy, "fts");
     assert.equal(res.data.fallback, "none");
@@ -184,7 +188,12 @@ function createService(overrides?: {
       ftsCalled = true;
       return {
         ok: true as const,
-        data: { results: [], total: 0, hasMore: false, indexState: "ready" as const },
+        data: {
+          results: [],
+          total: 0,
+          hasMore: false,
+          indexState: "ready" as const,
+        },
       };
     },
     reindex: () => ({
@@ -198,7 +207,7 @@ function createService(overrides?: {
   };
   const semantic = createSemanticStub([
     makeSemanticItem({ documentId: "s1", chunkId: "c1", score: 0.95 }),
-    makeSemanticItem({ documentId: "s2", chunkId: "c2", score: 0.80 }),
+    makeSemanticItem({ documentId: "s2", chunkId: "c2", score: 0.8 }),
   ]);
 
   const svc = createService({ fts, semantic });
@@ -209,7 +218,11 @@ function createService(overrides?: {
   });
 
   assert.equal(res.ok, true);
-  assert.equal(ftsCalled, false, "fts should not be called for semantic strategy");
+  assert.equal(
+    ftsCalled,
+    false,
+    "fts should not be called for semantic strategy",
+  );
   if (res.ok) {
     assert.equal(res.data.strategy, "semantic");
     assert.equal(res.data.results.length, 2);
@@ -256,15 +269,16 @@ function createService(overrides?: {
     const d1Item = res.data.results.find((r) => r.documentId === "d1");
     assert.ok(d1Item, "d1 should appear in results");
     assert.ok(d1Item.scoreBreakdown.bm25 > 0, "d1 should have bm25 score");
-    assert.ok(d1Item.scoreBreakdown.semantic > 0, "d1 should have semantic score");
+    assert.ok(
+      d1Item.scoreBreakdown.semantic > 0,
+      "d1 should have semantic score",
+    );
   }
 }
 
 // ── Scenario 5: semantic timeout in hybrid → degrades to FTS ───────────
 {
-  const fts = createFtsStub([
-    makeFtsResult({ documentId: "d1", score: 8.0 }),
-  ]);
+  const fts = createFtsStub([makeFtsResult({ documentId: "d1", score: 8.0 })]);
   const semantic: SemanticRetriever = {
     search: () => ({
       ok: false as const,
@@ -383,7 +397,11 @@ function createService(overrides?: {
 
   assert.equal(res.ok, true);
   if (res.ok) {
-    assert.equal(res.data.results.length, 0, "low-score item should be filtered out");
+    assert.equal(
+      res.data.results.length,
+      0,
+      "low-score item should be filtered out",
+    );
     assert.equal(res.data.total, 0);
   }
 }

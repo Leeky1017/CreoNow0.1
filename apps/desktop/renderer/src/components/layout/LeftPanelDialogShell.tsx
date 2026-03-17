@@ -75,12 +75,18 @@ export function LeftPanelDialogShell(
     <DialogPrimitive.Root open={props.open} onOpenChange={props.onOpenChange}>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className={overlayStyles} />
-        <DialogPrimitive.Content className={contentStyles} data-testid={props.testId}>
+        <DialogPrimitive.Content
+          className={contentStyles}
+          data-testid={props.testId}
+        >
           <div className="flex items-center justify-between border-b border-[var(--color-border-default)] px-6 py-4">
             <DialogPrimitive.Title className="text-sm font-semibold tracking-wide text-[var(--color-fg-default)]">
               {props.title}
             </DialogPrimitive.Title>
-            <DialogPrimitive.Close className={closeButtonStyles} data-testid="leftpanel-dialog-close">
+            <DialogPrimitive.Close
+              className={closeButtonStyles}
+              data-testid="leftpanel-dialog-close"
+            >
               <svg
                 width="16"
                 height="16"
@@ -96,9 +102,13 @@ export function LeftPanelDialogShell(
             </DialogPrimitive.Close>
           </div>
 
-          <div className="min-h-0 flex-1 overflow-auto p-6">{props.children}</div>
+          <div className="min-h-0 flex-1 overflow-auto p-6">
+            {props.children}
+          </div>
           <DialogPrimitive.Description className="sr-only">
-            {t("workbench.leftPanel.dialogPanelDescription", { title: props.title })}
+            {t("workbench.leftPanel.dialogPanelDescription", {
+              title: props.title,
+            })}
           </DialogPrimitive.Description>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

@@ -8,7 +8,15 @@ const meta: Meta<typeof EmptyState> = {
   parameters: { layout: "centered" },
   decorators: [
     (Story) => (
-      <div style={{ width: 480, minHeight: 360, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div
+        style={{
+          width: 480,
+          minHeight: 360,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Story />
       </div>
     ),

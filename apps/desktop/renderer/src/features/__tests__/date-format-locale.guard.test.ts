@@ -24,7 +24,11 @@ describe("WB-FE-I18N-CORE-S4: date-format-locale guard", () => {
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) {
         results.push(...findTsxFiles(full));
-      } else if (entry.name.endsWith(".tsx") && !entry.name.includes(".test.") && !entry.name.includes(".stories.")) {
+      } else if (
+        entry.name.endsWith(".tsx") &&
+        !entry.name.includes(".test.") &&
+        !entry.name.includes(".stories.")
+      ) {
         results.push(full);
       }
     }

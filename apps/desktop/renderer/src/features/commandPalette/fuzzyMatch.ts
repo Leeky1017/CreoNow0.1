@@ -145,9 +145,7 @@ export function fuzzyFilter(
   for (const item of items) {
     // 对 label 和 subtext 分别评分，取较高分
     const labelScore = fuzzyScore(item.label, trimmed);
-    const subtextScore = item.subtext
-      ? fuzzyScore(item.subtext, trimmed)
-      : -1;
+    const subtextScore = item.subtext ? fuzzyScore(item.subtext, trimmed) : -1;
     const bestScore = Math.max(labelScore, subtextScore);
 
     if (bestScore > 0) {

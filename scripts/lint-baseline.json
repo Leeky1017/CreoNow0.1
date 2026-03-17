@@ -4,15 +4,15 @@
   "source": "eslint-json",
   "governance": {
     "issue": "#1124",
-    "reason": "chat-history-persistence-using-design-system-components"
+    "reason": "visual-compliance-complete-all-4-rules-promoted-to-error"
   },
   "snapshot": {
-    "totalViolations": 690,
+    "totalViolations": 401,
     "byRule": {
-      "creonow/no-hardcoded-dimension": 59,
-      "creonow/no-native-html-element": 221,
-      "creonow/no-raw-error-code-in-ui": 5,
-      "creonow/no-raw-tailwind-tokens": 4,
+      "creonow/no-hardcoded-dimension": 0,
+      "creonow/no-native-html-element": 0,
+      "creonow/no-raw-error-code-in-ui": 0,
+      "creonow/no-raw-tailwind-tokens": 0,
       "creonow/require-describe-in-tests": 401
     }
   }

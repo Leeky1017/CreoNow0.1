@@ -48,7 +48,10 @@ const PRESET_TEMPLATES: ProjectTemplate[] = [
       folders: ["chapters", "characters", "worldbuilding"],
       files: [
         { path: "chapters/chapter-01.md", content: "# Chapter 1\n\n" },
-        { path: "outline.md", content: "# Story Outline\n\n## Act 1\n\n## Act 2\n\n## Act 3\n" },
+        {
+          path: "outline.md",
+          content: "# Story Outline\n\n## Act 1\n\n## Act 2\n\n## Act 3\n",
+        },
       ],
     },
   },
@@ -70,7 +73,10 @@ const PRESET_TEMPLATES: ProjectTemplate[] = [
     structure: {
       folders: ["scenes"],
       files: [
-        { path: "scenes/scene-01.md", content: "# Scene 1\n\nINT. LOCATION - DAY\n\n" },
+        {
+          path: "scenes/scene-01.md",
+          content: "# Scene 1\n\nINT. LOCATION - DAY\n\n",
+        },
         { path: "characters.md", content: "# Characters\n\n" },
       ],
     },

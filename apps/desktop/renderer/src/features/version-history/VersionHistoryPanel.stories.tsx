@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { NotepadText } from "lucide-react";
 import React from "react";
-import {
-  VersionHistoryPanel,
-  type TimeGroup,
-} from "./VersionHistoryPanel";
+import { VersionHistoryPanel, type TimeGroup } from "./VersionHistoryPanel";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "../../components/primitives";
 
@@ -53,7 +50,8 @@ const SAMPLE_TIME_GROUPS: TimeGroup[] = [
         wordChange: { type: "added", count: 124 },
         reason: "ai-apply:run-abc123",
         affectedParagraphs: 3,
-        diffSummary: '+ "安全协议" 章节新增：包括数据加密、访问控制、审计日志等内容...',
+        diffSummary:
+          '+ "安全协议" 章节新增：包括数据加密、访问控制、审计日志等内容...',
       },
       {
         id: "v-0915",
@@ -101,7 +99,8 @@ const SAMPLE_TIME_GROUPS: TimeGroup[] = [
         wordChange: { type: "added", count: 312 },
         reason: "ai-apply:run-xyz789",
         affectedParagraphs: 5,
-        diffSummary: '+ 技术规格大纲生成：包括系统架构、API 设计、数据模型等...',
+        diffSummary:
+          "+ 技术规格大纲生成：包括系统架构、API 设计、数据模型等...",
       },
       {
         id: "v-y-1100",
@@ -180,7 +179,7 @@ const meta: Meta<typeof VersionHistoryPanel> = {
           </div>
 
           <div className="flex-1 p-12 overflow-hidden flex justify-center">
-            <div className="w-full max-w-3xl h-full bg-[#121212] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-2xl p-16 relative">
+            <div className="w-full max-w-3xl h-full bg-[#121212] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-[var(--shadow-2xl)] p-16 relative">
               <div className="w-1/3 h-8 bg-[rgba(255,255,255,0.08)] rounded mb-10" />
               <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
               <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
@@ -342,7 +341,7 @@ function RestoreConfirmDialog({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-[rgba(0,0,0,0.6)] backdrop-blur-sm" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[var(--z-modal)] w-[400px] bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-2xl p-6 focus:outline-none">
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[var(--z-modal)] w-[400px] bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-2xl)] p-6 focus:outline-none">
           <Dialog.Title className="text-lg font-medium text-[var(--color-fg-default)] mb-2">
             Restore Version?
           </Dialog.Title>
@@ -434,7 +433,7 @@ export const RestoreConfirmation: Story = {
     docs: {
       description: {
         story:
-          '恢复版本确认流程。点击选中版本的 Restore 按钮，会弹出确认对话框。点击 Restore 确认恢复，或点击 Cancel 取消。',
+          "恢复版本确认流程。点击选中版本的 Restore 按钮，会弹出确认对话框。点击 Restore 确认恢复，或点击 Cancel 取消。",
       },
     },
   },
@@ -505,7 +504,7 @@ export const CompareWithCurrent: Story = {
     docs: {
       description: {
         story:
-          '与当前版本对比功能。点击选中版本的 Compare 按钮，触发对比模式（实际应用中会打开 Diff 视图）。',
+          "与当前版本对比功能。点击选中版本的 Compare 按钮，触发对比模式（实际应用中会打开 Diff 视图）。",
       },
     },
   },
@@ -747,7 +746,7 @@ export const PreviewVersion: Story = {
     docs: {
       description: {
         story:
-          '预览版本功能。点击选中版本的 Preview 按钮，进入只读预览模式（实际应用中会显示该版本的文档内容）。',
+          "预览版本功能。点击选中版本的 Preview 按钮，进入只读预览模式（实际应用中会显示该版本的文档内容）。",
       },
     },
   },
@@ -769,7 +768,8 @@ const RICH_VERSION_INFO: TimeGroup[] = [
         wordChange: { type: "added", count: 256 },
         reason: "ai-apply:run-abc123",
         affectedParagraphs: 4,
-        diffSummary: '+ 第三章"安全协议"：本章详细描述了系统的安全机制，包括数据加密标准、用户权限管理...',
+        diffSummary:
+          '+ 第三章"安全协议"：本章详细描述了系统的安全机制，包括数据加密标准、用户权限管理...',
       },
       {
         id: "rich-manual",
@@ -780,7 +780,7 @@ const RICH_VERSION_INFO: TimeGroup[] = [
         wordChange: { type: "added", count: 78 },
         reason: "manual-save",
         affectedParagraphs: 2,
-        diffSummary: '+ 项目范围扩展至包含移动端应用...',
+        diffSummary: "+ 项目范围扩展至包含移动端应用...",
       },
       {
         id: "rich-auto",

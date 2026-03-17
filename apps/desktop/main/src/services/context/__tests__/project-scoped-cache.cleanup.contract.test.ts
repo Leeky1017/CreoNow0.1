@@ -145,8 +145,16 @@ function createDeferred<T>(): Deferred<T> {
       return "fresh-v2";
     },
   });
-  assert.equal(secondResult, "fresh-v2", "next read should recompute after unbind");
-  assert.equal(computeCalls, 2, "stale in-flight result should not repopulate cache");
+  assert.equal(
+    secondResult,
+    "fresh-v2",
+    "next read should recompute after unbind",
+  );
+  assert.equal(
+    computeCalls,
+    2,
+    "stale in-flight result should not repopulate cache",
+  );
 
   const cachedFresh = await cache.getOrComputeString({
     projectId: "proj-race",
@@ -162,4 +170,6 @@ function createDeferred<T>(): Deferred<T> {
   assert.equal(errors.length, 0);
 }
 
-console.log("project-scoped-cache.cleanup.contract.test.ts: all assertions passed");
+console.log(
+  "project-scoped-cache.cleanup.contract.test.ts: all assertions passed",
+);

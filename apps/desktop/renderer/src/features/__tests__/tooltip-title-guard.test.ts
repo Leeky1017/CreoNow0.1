@@ -63,7 +63,11 @@ function findNativeTitleViolations(
     const trimmed = line.trim();
 
     // Skip comments
-    if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*")) {
+    if (
+      trimmed.startsWith("//") ||
+      trimmed.startsWith("*") ||
+      trimmed.startsWith("/*")
+    ) {
       continue;
     }
 
@@ -143,10 +147,7 @@ describe("tooltip-title-guard (WB-FE-TT-S1)", () => {
     const allViolations: { file: string; line: number; text: string }[] = [];
 
     for (const file of files) {
-      const relPath = path.relative(
-        path.resolve(CURRENT_DIR, "../.."),
-        file,
-      );
+      const relPath = path.relative(path.resolve(CURRENT_DIR, "../.."), file);
       const violations = findNativeTitleViolations(file);
       for (const v of violations) {
         allViolations.push({ file: relPath, ...v });

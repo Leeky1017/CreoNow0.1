@@ -47,7 +47,11 @@ function OverflowHarness(props: {
             configurable: true,
           });
           // Assign to containerRef.current for test harness (ref is mutable at runtime)
-          Object.defineProperty(containerRef, "current", { value: el, writable: true, configurable: true });
+          Object.defineProperty(containerRef, "current", {
+            value: el,
+            writable: true,
+            configurable: true,
+          });
         }
       }}
       data-testid="overflow-container"
@@ -99,7 +103,9 @@ describe("EditorToolbar overflow detection", () => {
     // Render without the harness — use the hook directly with no element
     function BareHarness(): JSX.Element {
       const { isOverflowing } = useOverflowDetection();
-      return <div data-testid="bare" data-overflowing={String(isOverflowing)} />;
+      return (
+        <div data-testid="bare" data-overflowing={String(isOverflowing)} />
+      );
     }
     const { getByTestId } = render(<BareHarness />);
     expect(getByTestId("bare").getAttribute("data-overflowing")).toBe("false");

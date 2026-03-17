@@ -42,8 +42,12 @@ async function simulateStreamWrite(args: {
     if (args.failAtBlock !== undefined && i === args.failAtBlock) {
       try {
         tx.applyWrite({
-          apply: () => { throw new Error(`write failed at block ${i.toString()}`); },
-          rollback: () => { rolledBack += 1; },
+          apply: () => {
+            throw new Error(`write failed at block ${i.toString()}`);
+          },
+          rollback: () => {
+            rolledBack += 1;
+          },
         });
       } catch {
         // transaction auto-aborts on apply failure
@@ -54,7 +58,9 @@ async function simulateStreamWrite(args: {
       break;
     } else {
       tx.applyWrite({
-        apply: () => { blocks.push(blockId); },
+        apply: () => {
+          blocks.push(blockId);
+        },
         rollback: () => {
           const idx = blocks.lastIndexOf(blockId);
           if (idx >= 0) blocks.splice(idx, 1);
@@ -85,82 +91,123 @@ function runScenario(name: string, fn: () => Promise<void>): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  await runScenario("BE-TG-S5 1000 blocks: all applied and committed", async () => {
-    const result = await simulateStreamWrite({ blockCount: 1000 });
+  await runScenario(
+    "BE-TG-S5 1000 blocks: all applied and committed",
+    async () => {
+      const result = await simulateStreamWrite({ blockCount: 1000 });
 
-    assert.equal(result.finalState, "committed");
-    assert.equal(result.applied, 1000);
-    assert.equal(result.rolledBack, 0);
-    console.log(`[BE-TG-S5] 1000-block write: applied=${result.applied.toString()} maxTickMs=${result.maxTickMs.toFixed(2)}`);
-  });
+      assert.equal(result.finalState, "committed");
+      assert.equal(result.applied, 1000);
+      assert.equal(result.rolledBack, 0);
+      console.log(
+        `[BE-TG-S5] 1000-block write: applied=${result.applied.toString()} maxTickMs=${result.maxTickMs.toFixed(2)}`,
+      );
+    },
+  );
 
-  await runScenario("BE-TG-S5 no main thread freeze: max tick under 50ms", async () => {
-    const result = await simulateStreamWrite({ blockCount: 1000, yieldEvery: 50 });
+  await runScenario(
+    "BE-TG-S5 no main thread freeze: max tick under 50ms",
+    async () => {
+      const result = await simulateStreamWrite({
+        blockCount: 1000,
+        yieldEvery: 50,
+      });
 
-    // Each yield should return quickly — if main is frozen, ticks will be long
-    assert.ok(
-      result.maxTickMs < 50,
-      `max tick must be <50ms to avoid freezing main, got ${result.maxTickMs.toFixed(2)}ms`,
-    );
-  });
+      // Each yield should return quickly — if main is frozen, ticks will be long
+      assert.ok(
+        result.maxTickMs < 50,
+        `max tick must be <50ms to avoid freezing main, got ${result.maxTickMs.toFixed(2)}ms`,
+      );
+    },
+  );
 
-  await runScenario("BE-TG-S5 rollback-safe: failure mid-stream rolls back all applied writes", async () => {
-    const FAIL_AT = 500;
-    const result = await simulateStreamWrite({
-      blockCount: 1000,
-      failAtBlock: FAIL_AT,
-    });
+  await runScenario(
+    "BE-TG-S5 rollback-safe: failure mid-stream rolls back all applied writes",
+    async () => {
+      const FAIL_AT = 500;
+      const result = await simulateStreamWrite({
+        blockCount: 1000,
+        failAtBlock: FAIL_AT,
+      });
 
-    assert.equal(result.finalState, "aborted");
-    // All previously applied blocks should be rolled back
-    assert.equal(result.applied, 0, "all applied blocks must be rolled back on failure");
-    assert.ok(result.rolledBack > 0, "rollback must have been called");
-    console.log(`[BE-TG-S5] rollback at block ${FAIL_AT.toString()}: rolledBack=${result.rolledBack.toString()}`);
-  });
+      assert.equal(result.finalState, "aborted");
+      // All previously applied blocks should be rolled back
+      assert.equal(
+        result.applied,
+        0,
+        "all applied blocks must be rolled back on failure",
+      );
+      assert.ok(result.rolledBack > 0, "rollback must have been called");
+      console.log(
+        `[BE-TG-S5] rollback at block ${FAIL_AT.toString()}: rolledBack=${result.rolledBack.toString()}`,
+      );
+    },
+  );
 
-  await runScenario("BE-TG-S5 abort mid-stream: partial writes rolled back", async () => {
-    const ABORT_AT = 300;
-    const result = await simulateStreamWrite({
-      blockCount: 1000,
-      abortAtBlock: ABORT_AT,
-    });
+  await runScenario(
+    "BE-TG-S5 abort mid-stream: partial writes rolled back",
+    async () => {
+      const ABORT_AT = 300;
+      const result = await simulateStreamWrite({
+        blockCount: 1000,
+        abortAtBlock: ABORT_AT,
+      });
 
-    assert.equal(result.finalState, "aborted");
-    assert.equal(result.applied, 0, "abort must roll back all applied writes");
-    console.log(`[BE-TG-S5] abort at block ${ABORT_AT.toString()}: rolledBack=${result.rolledBack.toString()}`);
-  });
+      assert.equal(result.finalState, "aborted");
+      assert.equal(
+        result.applied,
+        0,
+        "abort must roll back all applied writes",
+      );
+      console.log(
+        `[BE-TG-S5] abort at block ${ABORT_AT.toString()}: rolledBack=${result.rolledBack.toString()}`,
+      );
+    },
+  );
 
-  await runScenario("BE-TG-S5 double-commit guard: commit after commit throws", async () => {
-    const tx = createAiWriteTransaction();
-    tx.applyWrite({ apply: () => undefined, rollback: () => undefined });
-    tx.commit();
+  await runScenario(
+    "BE-TG-S5 double-commit guard: commit after commit throws",
+    async () => {
+      const tx = createAiWriteTransaction();
+      tx.applyWrite({ apply: () => undefined, rollback: () => undefined });
+      tx.commit();
 
-    assert.throws(
-      () => tx.commit(),
-      (err: unknown) => err instanceof Error && /committed/u.test(err.message),
-      "double commit must throw with state in message",
-    );
-  });
+      assert.throws(
+        () => tx.commit(),
+        (err: unknown) =>
+          err instanceof Error && /committed/u.test(err.message),
+        "double commit must throw with state in message",
+      );
+    },
+  );
 
-  await runScenario("BE-TG-S5 write after commit guard: applyWrite after commit throws", async () => {
-    const tx = createAiWriteTransaction();
-    tx.commit();
+  await runScenario(
+    "BE-TG-S5 write after commit guard: applyWrite after commit throws",
+    async () => {
+      const tx = createAiWriteTransaction();
+      tx.commit();
 
-    assert.throws(
-      () => tx.applyWrite({ apply: () => undefined, rollback: () => undefined }),
-      (err: unknown) => err instanceof Error && /committed/u.test(err.message),
-      "write after commit must throw",
-    );
-  });
+      assert.throws(
+        () =>
+          tx.applyWrite({ apply: () => undefined, rollback: () => undefined }),
+        (err: unknown) =>
+          err instanceof Error && /committed/u.test(err.message),
+        "write after commit must throw",
+      );
+    },
+  );
 
-  await runScenario("BE-TG-S5 abort idempotent: double abort is safe", async () => {
-    const tx = createAiWriteTransaction();
-    tx.applyWrite({ apply: () => undefined, rollback: () => undefined });
-    tx.abort();
-    // second abort must not throw
-    assert.doesNotThrow(() => tx.abort());
-    assert.equal(tx.state(), "aborted");
-  });
+  await runScenario(
+    "BE-TG-S5 abort idempotent: double abort is safe",
+    async () => {
+      const tx = createAiWriteTransaction();
+      tx.applyWrite({ apply: () => undefined, rollback: () => undefined });
+      tx.abort();
+      // second abort must not throw
+      assert.doesNotThrow(() => tx.abort());
+      assert.equal(tx.state(), "aborted");
+    },
+  );
 
   console.log("[BE-TG-S5] all scenarios passed");
 }

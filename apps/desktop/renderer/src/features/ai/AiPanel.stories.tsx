@@ -843,7 +843,11 @@ function ErrorStateDemo(): JSX.Element {
           {/* Error Message */}
           <div className="w-full p-3 border border-[var(--color-danger)] rounded-[var(--radius-md)] bg-[var(--color-danger-subtle)]">
             <div className="flex items-start gap-2">
-              <CircleAlert size={16} strokeWidth={1.5} className="text-[var(--color-danger)] shrink-0 mt-0.5" />
+              <CircleAlert
+                size={16}
+                strokeWidth={1.5}
+                className="text-[var(--color-danger)] shrink-0 mt-0.5"
+              />
               <div className="flex-1">
                 <p className="text-[13px] text-[var(--color-danger)] font-medium">
                   请求失败
@@ -1132,7 +1136,7 @@ function HistoryDropdownDemo(): JSX.Element {
             </button>
 
             {/* History Dropdown (static demo) */}
-            <div className="absolute top-full right-0 mt-1 w-64 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-lg shadow-xl overflow-hidden z-50">
+            <div className="absolute top-full right-0 mt-1 w-64 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-lg shadow-[var(--shadow-xl)] overflow-hidden z-50">
               {/* Search */}
               <div className="px-3 py-2 border-b border-[var(--color-border-default)]">
                 <input

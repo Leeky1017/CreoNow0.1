@@ -346,41 +346,46 @@ export function AiInlineConfirm({
       {/* Action toolbar */}
       {!isFinished && (
         <div className={`${toolbarStyles} ${toolbarOpacity}`}>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             className={acceptButtonStyles}
             onClick={handleAccept}
             disabled={isApplying}
-            title={t('ai.inlineConfirm.accept')}
+            title={t("ai.inlineConfirm.accept")}
           >
             {isApplying ? <Spinner /> : <CheckIcon />}
             <span className={labelStyles}>
-              {isApplying ? t('ai.inlineConfirm.applying') : t('ai.inlineConfirm.accept')}
+              {isApplying
+                ? t("ai.inlineConfirm.applying")
+                : t("ai.inlineConfirm.accept")}
             </span>
           </button>
 
           <div className={separatorStyles} />
 
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             className={rejectButtonStyles}
             onClick={handleReject}
             disabled={isApplying}
-            title={t('ai.inlineConfirm.reject')}
+            title={t("ai.inlineConfirm.reject")}
           >
             <XIcon />
-            <span className={labelStyles}>{t('ai.inlineConfirm.reject')}</span>
+            <span className={labelStyles}>{t("ai.inlineConfirm.reject")}</span>
           </button>
 
           {onViewDiff && (
             <>
               <div className={separatorStyles} />
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
               <button
                 type="button"
                 className={diffButtonStyles}
                 onClick={onViewDiff}
                 disabled={isApplying}
-                title={t('ai.inlineConfirm.viewDiff')}
+                title={t("ai.inlineConfirm.viewDiff")}
               >
                 <DiffIcon />
               </button>

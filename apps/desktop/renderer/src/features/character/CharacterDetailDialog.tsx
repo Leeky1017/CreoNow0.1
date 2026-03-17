@@ -32,6 +32,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+
 export interface CharacterDetailDialogProps {
   /** Controlled open state */
   open: boolean;
@@ -92,6 +93,7 @@ function getContentStyles(hasContainer: boolean): string {
     "-translate-x-1/2",
     hasContainer ? "translate-y-0" : "-translate-y-1/2",
     "z-[var(--z-modal)]",
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- dialog content width per design spec
     "w-[560px]",
     hasContainer ? "max-h-[calc(100%-3.5rem)]" : "max-h-[92vh]",
     "bg-[var(--color-bg-surface)]",
@@ -310,6 +312,7 @@ function TraitTag({
     >
       {trait}
       {onRemove && (
+        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
         <button
           type="button"
           onClick={onRemove}
@@ -375,6 +378,7 @@ function RelationshipItem({
           {typeConfig.label}
         </span>
         {onRemove && (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
           <button
             type="button"
             onClick={onRemove}
@@ -402,6 +406,7 @@ function ChapterLink({
   onNavigate?: () => void;
 }) {
   return (
+    // eslint-disable-next-line creonow/no-native-html-element -- specialized button
     <button
       type="button"
       onClick={onNavigate}
@@ -473,7 +478,9 @@ function CharacterProfileSection(props: {
   return (
     <div className="space-y-3">
       <div className={sectionHeaderStyles}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className={labelStyles}>{t("character.detail.profile")}</label>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           onClick={props.onToggleExpand}
@@ -576,6 +583,7 @@ function CharacterProfileSection(props: {
                     onRemove={() => props.onRemoveFeature(feature)}
                   />
                 ))}
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
                 <input
                   type="text"
                   placeholder={t("character.detail.addFeaturePlaceholder")}
@@ -583,7 +591,7 @@ function CharacterProfileSection(props: {
                   onChange={(e) => props.onNewFeatureChange(e.target.value)}
                   onKeyDown={props.onFeatureKeyDown}
                   onBlur={props.onAddFeature}
-                  className="bg-transparent text-xs text-[var(--color-fg-default)] placeholder-[var(--color-fg-placeholder)] focus:outline-none focus:placeholder-[var(--color-fg-muted)] min-w-[80px] py-1 px-1 ml-1 hover:bg-[var(--color-bg-surface)] rounded transition-colors"
+                  className="bg-transparent text-xs text-[var(--color-fg-default)] placeholder-[var(--color-fg-placeholder)] focus:outline-none focus:placeholder-[var(--color-fg-muted)] min-w-20 py-1 px-1 ml-1 hover:bg-[var(--color-bg-surface)] rounded transition-colors"
                 />
               </div>
             </ProfileTableRow>
@@ -597,6 +605,7 @@ function CharacterProfileSection(props: {
                     onRemove={() => props.onRemoveTrait(trait)}
                   />
                 ))}
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
                 <input
                   type="text"
                   placeholder={t("character.detail.addTraitPlaceholder")}
@@ -604,7 +613,7 @@ function CharacterProfileSection(props: {
                   onChange={(e) => props.onNewTraitChange(e.target.value)}
                   onKeyDown={props.onTraitKeyDown}
                   onBlur={props.onAddTrait}
-                  className="bg-transparent text-xs text-[var(--color-fg-default)] placeholder-[var(--color-fg-placeholder)] focus:outline-none focus:placeholder-[var(--color-fg-muted)] min-w-[60px] py-1 px-1 ml-1 hover:bg-[var(--color-bg-surface)] rounded transition-colors"
+                  className="bg-transparent text-xs text-[var(--color-fg-default)] placeholder-[var(--color-fg-placeholder)] focus:outline-none focus:placeholder-[var(--color-fg-muted)] min-w-15 py-1 px-1 ml-1 hover:bg-[var(--color-bg-surface)] rounded transition-colors"
                 />
               </div>
             </ProfileTableRow>
@@ -666,6 +675,7 @@ function CharacterRelationshipsSection(props: {
   return (
     <div className="space-y-3">
       <div className={sectionHeaderStyles}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className={labelStyles}>
           {t("character.detail.relationships")}
         </label>
@@ -719,6 +729,7 @@ function CharacterAppearancesSection(props: {
   return (
     <div className="space-y-3 pb-2">
       <div className={sectionHeaderStyles}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className={labelStyles}>
           {t("character.detail.appearances")}
         </label>
@@ -952,6 +963,7 @@ export function CharacterDetailDialog({
             {/* Name and role */}
             <div className="flex-1 min-w-0 pt-1">
               <div className="flex items-center justify-between mb-2">
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
                 <input
                   type="text"
                   value={editedCharacter.name}
@@ -1007,6 +1019,7 @@ export function CharacterDetailDialog({
             {/* Appearance & Description */}
             <div className="space-y-3">
               <div className={sectionHeaderStyles}>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
                 <label className={labelStyles}>
                   {t("character.detail.appearanceDescription")}
                 </label>
@@ -1018,7 +1031,7 @@ export function CharacterDetailDialog({
                 }
                 placeholder={t("character.detail.descriptionPlaceholder")}
                 fullWidth
-                className="min-h-[80px] focus:min-h-[100px] transition-[min-height] resize-none"
+                className="min-h-20 focus:min-h-25 transition-[min-height] resize-none"
               />
             </div>
 

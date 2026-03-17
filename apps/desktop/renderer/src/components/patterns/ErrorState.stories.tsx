@@ -8,7 +8,15 @@ const meta: Meta<typeof ErrorState> = {
   parameters: { layout: "centered" },
   decorators: [
     (Story) => (
-      <div style={{ width: 480, minHeight: 300, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div
+        style={{
+          width: 480,
+          minHeight: 300,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Story />
       </div>
     ),
@@ -32,7 +40,8 @@ export const Page: Story = {
   args: {
     variant: "page",
     title: "Something went wrong",
-    message: "The application encountered an unexpected error. Please try reloading.",
+    message:
+      "The application encountered an unexpected error. Please try reloading.",
     onRetry: () => {},
     onDismiss: () => {},
   },

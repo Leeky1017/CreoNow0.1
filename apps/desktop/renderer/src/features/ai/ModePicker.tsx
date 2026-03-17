@@ -10,13 +10,27 @@ import { Button, Text } from "../../components/primitives";
 
 export type AiMode = "agent" | "plan" | "ask";
 
-function getModes(t: (key: string) => string): { id: AiMode; name: string; description: string }[] {
+function getModes(
+  t: (key: string) => string,
+): { id: AiMode; name: string; description: string }[] {
   return [
-    { id: "agent", name: t('ai.modePicker.modeAgent'), description: t('ai.modePicker.modeAgentDesc') },
+    {
+      id: "agent",
+      name: t("ai.modePicker.modeAgent"),
+      description: t("ai.modePicker.modeAgentDesc"),
+    },
 
-    { id: "plan", name: t('ai.modePicker.modePlan'), description: t('ai.modePicker.modePlanDesc') },
+    {
+      id: "plan",
+      name: t("ai.modePicker.modePlan"),
+      description: t("ai.modePicker.modePlanDesc"),
+    },
 
-    { id: "ask", name: t('ai.modePicker.modeAsk'), description: t('ai.modePicker.modeAskDesc') },
+    {
+      id: "ask",
+      name: t("ai.modePicker.modeAsk"),
+      description: t("ai.modePicker.modeAskDesc"),
+    },
   ];
 }
 
@@ -59,13 +73,13 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
 
       <div
         role="dialog"
-        aria-label={t('ai.modePicker.selectMode')}
+        aria-label={t("ai.modePicker.selectMode")}
         onClick={(e) => e.stopPropagation()}
         className="absolute bottom-full left-0 right-0 mb-1 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
         <div className="px-2.5 py-2 border-b border-[var(--color-separator)]">
           <Text size="tiny" color="muted" className="uppercase tracking-wide">
-            {t('ai.modePicker.sectionTitle')}
+            {t("ai.modePicker.sectionTitle")}
           </Text>
         </div>
 
@@ -99,7 +113,11 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
                 </div>
 
                 {selected && (
-                  <Check size={16} strokeWidth={1.5} className="text-[var(--color-fg-accent)] shrink-0" />
+                  <Check
+                    size={16}
+                    strokeWidth={1.5}
+                    className="text-[var(--color-fg-accent)] shrink-0"
+                  />
                 )}
               </Button>
             );

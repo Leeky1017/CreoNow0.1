@@ -16,7 +16,9 @@ describe("versionPreferencesStore", () => {
   });
 
   it("should persist showAiMarks to creonow.editor.showAiMarks", () => {
-    const persisted = useVersionPreferencesStore.getState().setShowAiMarks(true);
+    const persisted = useVersionPreferencesStore
+      .getState()
+      .setShowAiMarks(true);
 
     expect(persisted).toBe(true);
     expect(window.localStorage.getItem(VERSION_SHOW_AI_MARKS_KEY)).toBe("true");

@@ -52,9 +52,7 @@ const SKIP_DIR_NAMES = new Set([
  * Only exempts hardcoded-hex and hardcoded-rgba checks;
  * shadow and Tailwind raw color rules still apply.
  */
-const HEX_RGBA_ALLOWLISTED_FILES = [
-  /SettingsAppearancePage\.tsx$/,
-];
+const HEX_RGBA_ALLOWLISTED_FILES = [/SettingsAppearancePage\.tsx$/];
 
 // ─── Violation patterns ───
 
@@ -77,9 +75,28 @@ const BARE_SHADOW_REGEX =
  *   - bg-inherit, text-inherit
  */
 const TAILWIND_COLOR_NAMES = [
-  "red", "orange", "amber", "yellow", "lime", "green", "emerald", "teal",
-  "cyan", "sky", "blue", "indigo", "violet", "purple", "fuchsia", "pink",
-  "rose", "slate", "gray", "zinc", "neutral", "stone",
+  "red",
+  "orange",
+  "amber",
+  "yellow",
+  "lime",
+  "green",
+  "emerald",
+  "teal",
+  "cyan",
+  "sky",
+  "blue",
+  "indigo",
+  "violet",
+  "purple",
+  "fuchsia",
+  "pink",
+  "rose",
+  "slate",
+  "gray",
+  "zinc",
+  "neutral",
+  "stone",
 ];
 const TAILWIND_RAW_COLOR_REGEX = new RegExp(
   `(?:^|[\\s"'\`])!?(?:hover:|focus:|active:|group-hover:)*!?(?:bg|text|border|ring|shadow|outline|decoration|from|to|via)-(?:${TAILWIND_COLOR_NAMES.join("|")})-\\d{2,3}(?:\\/\\d+)?\\b`,
@@ -99,16 +116,14 @@ const BARE_WHITE_BLACK_REGEX =
  * Matches: #fff, #ffffff, #cc2b3e, bg-[#121212], text-[#bfbfbf]
  * Does NOT match: hex values inside var() or CSS custom property definitions
  */
-const HARDCODED_HEX_REGEX =
-  /(?:^|[\s"'`=:,])#(?:[0-9a-fA-F]{3}){1,2}\b/;
+const HARDCODED_HEX_REGEX = /(?:^|[\s"'`=:,])#(?:[0-9a-fA-F]{3}){1,2}\b/;
 
 /**
  * Hardcoded rgba() values in className or style context.
  * Matches: rgba(255,255,255,0.5), rgba(34, 197, 94, 0.4)
  * Does NOT match: rgba inside var() definitions
  */
-const HARDCODED_RGBA_REGEX =
-  /rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}/;
+const HARDCODED_RGBA_REGEX = /rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}/;
 
 // ─── Helpers ───
 
@@ -138,7 +153,8 @@ function isCodeLine(line: string): boolean {
   if (trimmed.startsWith("//")) return false;
   if (trimmed.startsWith("*") || trimmed.startsWith("/*")) return false;
   if (/^\{\/\*.*\*\/\}$/.test(trimmed)) return false;
-  if (trimmed.startsWith("import ") || trimmed.startsWith("export type")) return false;
+  if (trimmed.startsWith("import ") || trimmed.startsWith("export type"))
+    return false;
   return true;
 }
 
@@ -146,7 +162,12 @@ function isHexRgbaAllowlisted(filePath: string): boolean {
   return HEX_RGBA_ALLOWLISTED_FILES.some((p) => p.test(filePath));
 }
 
-type ViolationType = "bare-shadow" | "raw-tailwind-color" | "bare-white-black" | "hardcoded-hex" | "hardcoded-rgba";
+type ViolationType =
+  | "bare-shadow"
+  | "raw-tailwind-color"
+  | "bare-white-black"
+  | "hardcoded-hex"
+  | "hardcoded-rgba";
 interface Violation {
   type: ViolationType;
   line: number;
@@ -173,12 +194,20 @@ function scanFile(filePath: string): Violation[] {
 
     // 2. Raw Tailwind color utilities
     if (TAILWIND_RAW_COLOR_REGEX.test(line)) {
-      violations.push({ type: "raw-tailwind-color", line: i + 1, text: line.trim() });
+      violations.push({
+        type: "raw-tailwind-color",
+        line: i + 1,
+        text: line.trim(),
+      });
     }
 
     // 3. Bare white/black
     if (BARE_WHITE_BLACK_REGEX.test(line)) {
-      violations.push({ type: "bare-white-black", line: i + 1, text: line.trim() });
+      violations.push({
+        type: "bare-white-black",
+        line: i + 1,
+        text: line.trim(),
+      });
     }
 
     // 4-5. Hardcoded hex/rgba — only in className or style contexts
@@ -195,13 +224,21 @@ function scanFile(filePath: string): Violation[] {
         // exclude CSS variable references like var(--color-xxx)
         const withoutVars = line.replace(/var\(--[^)]+\)/g, "");
         if (HARDCODED_HEX_REGEX.test(withoutVars)) {
-          violations.push({ type: "hardcoded-hex", line: i + 1, text: line.trim() });
+          violations.push({
+            type: "hardcoded-hex",
+            line: i + 1,
+            text: line.trim(),
+          });
         }
       }
       if (HARDCODED_RGBA_REGEX.test(line)) {
         const withoutVars = line.replace(/var\(--[^)]+\)/g, "");
         if (HARDCODED_RGBA_REGEX.test(withoutVars)) {
-          violations.push({ type: "hardcoded-rgba", line: i + 1, text: line.trim() });
+          violations.push({
+            type: "hardcoded-rgba",
+            line: i + 1,
+            text: line.trim(),
+          });
         }
       }
     }

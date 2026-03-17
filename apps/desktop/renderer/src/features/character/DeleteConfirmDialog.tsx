@@ -52,7 +52,7 @@ export function DeleteConfirmDialog({
   return (
     <ConfirmDialog
       open={open}
-      title={t('character.deleteConfirm.title')}
+      title={t("character.deleteConfirm.title")}
       description={`Are you sure you want to delete "${characterName}"? This action cannot be undone. All their data, including relationships and chapter appearances, will be removed.`}
       confirmLabel="Delete"
       cancelLabel="Cancel"
@@ -62,4 +62,3 @@ export function DeleteConfirmDialog({
     />
   );
 }
-

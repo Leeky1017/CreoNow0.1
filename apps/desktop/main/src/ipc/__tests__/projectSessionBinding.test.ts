@@ -40,7 +40,6 @@ import { createProjectSessionBindingRegistry } from "../projectSessionBinding";
   );
 }
 
-
 // S2: projectId 异常类型不应抛错，并应清空已有绑定
 {
   const registry = createProjectSessionBindingRegistry();

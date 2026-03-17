@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createSurfaceActions, type DialogStoreActions, type LayoutStoreActions } from "./openSurface";
+import {
+  createSurfaceActions,
+  type DialogStoreActions,
+  type LayoutStoreActions,
+} from "./openSurface";
 
 function createMockLayoutStore(): LayoutStoreActions {
   return {

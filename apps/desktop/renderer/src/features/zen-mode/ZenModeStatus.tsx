@@ -68,7 +68,7 @@ export function ZenModeStatus({
             color: "var(--color-fg-muted)",
           }}
         >
-          {t('zenMode.status.wordCount', { count: wordCount })}
+          {t("zenMode.status.wordCount", { count: wordCount })}
         </span>
 
         <StatusDot />
@@ -96,7 +96,7 @@ export function ZenModeStatus({
             color: "var(--color-fg-muted)",
           }}
         >
-          {t('zenMode.status.readTime', { minutes: readTimeMinutes })}
+          {t("zenMode.status.readTime", { minutes: readTimeMinutes })}
         </span>
 
         {/* Current time (optional) */}

@@ -82,8 +82,7 @@ async function main(): Promise<void> {
       );
 
       const raced = await Promise.race<
-        | { kind: "result"; value: ServiceResult<string> }
-        | { kind: "timeout" }
+        { kind: "result"; value: ServiceResult<string> } | { kind: "timeout" }
       >([
         resultPromiseB.then((value) => ({ kind: "result" as const, value })),
         new Promise<{ kind: "timeout" }>((resolve) => {
@@ -91,7 +90,11 @@ async function main(): Promise<void> {
         }),
       ]);
 
-      assert.equal(raced.kind, "result", "expected slot recovery to unblock queue");
+      assert.equal(
+        raced.kind,
+        "result",
+        "expected slot recovery to unblock queue",
+      );
       if (raced.kind === "result") {
         assert.equal(raced.value.ok, true);
       }
@@ -120,4 +123,3 @@ void main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
-

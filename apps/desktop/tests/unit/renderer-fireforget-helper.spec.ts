@@ -59,7 +59,15 @@ function flushMicrotasks(): Promise<void> {
 
   assert.ok(captured instanceof Error);
   assert.equal((captured as Error).message, "handled");
-  assert.equal(errorCalls.length, 0, "expected handled errors to avoid critical logs");
-  assert.equal(warnCalls.length, 1, "expected handled errors to emit non-critical warning");
+  assert.equal(
+    errorCalls.length,
+    0,
+    "expected handled errors to avoid critical logs",
+  );
+  assert.equal(
+    warnCalls.length,
+    1,
+    "expected handled errors to emit non-critical warning",
+  );
   assert.equal(warnCalls[0][0], "[fire-and-forget][non-critical] task failed");
 }

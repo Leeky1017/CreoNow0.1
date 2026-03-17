@@ -41,32 +41,35 @@ export interface EmptyStateProps {
  */
 function getVariantDefaults(
   t: (key: string) => string,
-): Record<EmptyStateVariant, { title: string; description: string; actionLabel: string }> {
+): Record<
+  EmptyStateVariant,
+  { title: string; description: string; actionLabel: string }
+> {
   return {
     project: {
-      title: t('patterns.emptyState.firstFileTitle'),
-      description: t('patterns.emptyState.firstFileDescription'),
-      actionLabel: t('patterns.emptyState.firstFileAction'),
+      title: t("patterns.emptyState.firstFileTitle"),
+      description: t("patterns.emptyState.firstFileDescription"),
+      actionLabel: t("patterns.emptyState.firstFileAction"),
     },
     files: {
-      title: t('patterns.emptyState.noFiles'),
-      description: t('patterns.emptyState.noFilesDescription'),
-      actionLabel: t('patterns.emptyState.noFilesAction'),
+      title: t("patterns.emptyState.noFiles"),
+      description: t("patterns.emptyState.noFilesDescription"),
+      actionLabel: t("patterns.emptyState.noFilesAction"),
     },
     search: {
-      title: t('patterns.emptyState.noSearchResults'),
-      description: t('patterns.emptyState.noSearchResultsDescription'),
-      actionLabel: t('patterns.emptyState.noSearchResultsAction'),
+      title: t("patterns.emptyState.noSearchResults"),
+      description: t("patterns.emptyState.noSearchResultsDescription"),
+      actionLabel: t("patterns.emptyState.noSearchResultsAction"),
     },
     characters: {
-      title: t('patterns.emptyState.noCharacters'),
-      description: t('patterns.emptyState.noCharactersDescription'),
-      actionLabel: t('patterns.emptyState.noCharactersAction'),
+      title: t("patterns.emptyState.noCharacters"),
+      description: t("patterns.emptyState.noCharactersDescription"),
+      actionLabel: t("patterns.emptyState.noCharactersAction"),
     },
     generic: {
-      title: t('patterns.emptyState.noContent'),
-      description: t('patterns.emptyState.noContentDescription'),
-      actionLabel: t('patterns.emptyState.noContentAction'),
+      title: t("patterns.emptyState.noContent"),
+      description: t("patterns.emptyState.noContentDescription"),
+      actionLabel: t("patterns.emptyState.noContentAction"),
     },
   };
 }
@@ -210,7 +213,7 @@ export function EmptyState({
 
       {/* Description */}
       {displayDescription && (
-        <Text size="body" color="muted" as="p" className="mb-6 max-w-[280px]">
+        <Text size="body" color="muted" as="p" className="mb-6 max-w-xs">
           {displayDescription}
         </Text>
       )}

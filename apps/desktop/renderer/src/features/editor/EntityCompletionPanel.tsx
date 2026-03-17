@@ -20,8 +20,8 @@ export function EntityCompletionPanel(
     <div
       data-testid="entity-completion-panel"
       role="listbox"
-      aria-label={t('editor.entityCompletion.ariaLabel')}
-      className="min-w-[240px] rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-1 shadow-[var(--shadow-lg)]"
+      aria-label={t("editor.entityCompletion.ariaLabel")}
+      className="min-w-60 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-1 shadow-[var(--shadow-lg)]"
       style={{
         position: "fixed",
         top: `${session.anchorTop}px`,
@@ -34,7 +34,7 @@ export function EntityCompletionPanel(
           className="px-2 py-1 text-xs text-[var(--color-fg-muted)]"
           data-testid="entity-completion-loading-state"
         >
-          {t('editor.entityCompletion.loading')}
+          {t("editor.entityCompletion.loading")}
         </div>
       ) : null}
 
@@ -42,6 +42,7 @@ export function EntityCompletionPanel(
         <ul className="space-y-1">
           {session.candidates.map((candidate, index) => (
             <li key={candidate.id}>
+              {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: completion item with role="option" needs native button */}
               <button
                 type="button"
                 role="option"
@@ -68,7 +69,7 @@ export function EntityCompletionPanel(
           className="px-2 py-1 text-xs text-[var(--color-fg-muted)]"
           data-testid="entity-completion-empty-state"
         >
-          {t('editor.entityCompletion.noMatching')}
+          {t("editor.entityCompletion.noMatching")}
         </div>
       ) : null}
 
@@ -77,7 +78,7 @@ export function EntityCompletionPanel(
           className="px-2 py-1 text-xs text-[var(--color-status-error)]"
           data-testid="entity-completion-error-state"
         >
-          {session.message ?? t('editor.entityCompletion.unavailable')}
+          {session.message ?? t("editor.entityCompletion.unavailable")}
         </div>
       ) : null}
     </div>

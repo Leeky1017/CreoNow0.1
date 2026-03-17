@@ -508,7 +508,11 @@ function SearchInProgressDemo(): JSX.Element {
               border: "1px solid var(--color-border-default)",
             }}
           >
-            <Search size={16} strokeWidth={1.5} style={{ color: "var(--color-fg-muted)" }} />
+            <Search
+              size={16}
+              strokeWidth={1.5}
+              style={{ color: "var(--color-fg-muted)" }}
+            />
             <input
               type="text"
               placeholder="Search documents, memories, knowledge..."

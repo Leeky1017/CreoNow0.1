@@ -60,19 +60,26 @@ function collectTsxFiles(dir: string): string[] {
 function isUserFacingLine(line: string): boolean {
   const trimmed = line.trim();
   // Skip comments (single-line, block, JSDoc)
-  if (trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*")) return false;
+  if (
+    trimmed.startsWith("//") ||
+    trimmed.startsWith("*") ||
+    trimmed.startsWith("/*")
+  )
+    return false;
   // Skip JSX comments: {/* ... */}
   if (/^\{\/\*.*\*\/\}$/.test(trimmed)) return false;
   // Skip imports/exports
-  if (trimmed.startsWith("import ") || trimmed.startsWith("export type")) return false;
+  if (trimmed.startsWith("import ") || trimmed.startsWith("export type"))
+    return false;
   // Skip console statements
   if (/console\.(log|warn|error|debug|info)\(/.test(trimmed)) return false;
   // Skip regex patterns (data matching, not UI text)
-  if (/\/.*[\u4e00-\u9fff].*\//.test(trimmed) && trimmed.includes(".test(")) return false;
+  if (/\/.*[\u4e00-\u9fff].*\//.test(trimmed) && trimmed.includes(".test("))
+    return false;
   // Skip AI prompt templates (sent to LLM, not displayed as UI)
   if (trimmed.includes("promptTemplate") && trimmed.includes("`")) return false;
   // Skip keyword matching patterns (e.g. checking if input contains a specific word)
-  if (trimmed.includes(".includes(\"") && trimmed.includes("?")) return false;
+  if (trimmed.includes('.includes("') && trimmed.includes("?")) return false;
   return true;
 }
 
@@ -89,7 +96,10 @@ describe("i18n global compliance: no hardcoded CJK in production files", () => {
     expect(allFiles.length).toBeGreaterThan(0);
   });
 
-  const violatingFiles: Array<{ file: string; lines: Array<{ num: number; text: string }> }> = [];
+  const violatingFiles: Array<{
+    file: string;
+    lines: Array<{ num: number; text: string }>;
+  }> = [];
 
   for (const filePath of allFiles) {
     const content = readFileSync(filePath, "utf8");

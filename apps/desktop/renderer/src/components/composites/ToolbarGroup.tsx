@@ -19,12 +19,7 @@ export interface ToolbarGroupProps {
 // Styles
 // =============================================================================
 
-const groupStyles = [
-  "flex",
-  "flex-row",
-  "items-center",
-  "gap-1",
-].join(" ");
+const groupStyles = ["flex", "flex-row", "items-center", "gap-1"].join(" ");
 
 const separatorStyles = [
   "w-px",

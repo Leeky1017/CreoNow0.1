@@ -136,15 +136,17 @@ export function WindowTitleBar(): JSX.Element | null {
       </div>
 
       <div className="cn-window-controls cn-window-no-drag">
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           className="cn-window-control-btn"
-          aria-label={t('workbench.titleBar.minimize')}
+          aria-label={t("workbench.titleBar.minimize")}
           onClick={() => void handleMinimize()}
         >
           <MinimizeIcon />
         </button>
 
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           className="cn-window-control-btn"
@@ -154,10 +156,11 @@ export function WindowTitleBar(): JSX.Element | null {
           {state.isMaximized ? <RestoreIcon /> : <MaximizeIcon />}
         </button>
 
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
         <button
           type="button"
           className="cn-window-control-btn cn-window-control-btn--close"
-          aria-label={t('workbench.titleBar.close')}
+          aria-label={t("workbench.titleBar.close")}
           onClick={() => void handleClose()}
         >
           <CloseIcon />

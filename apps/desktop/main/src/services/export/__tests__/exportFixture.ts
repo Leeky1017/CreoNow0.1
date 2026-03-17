@@ -19,14 +19,20 @@ export const STRUCTURED_EXPORT_CONTENT_JSON = JSON.stringify({
         { type: "text", text: " and " },
         { type: "text", text: "italic words", marks: [{ type: "italic" }] },
         { type: "text", text: " plus " },
-        { type: "text", text: "underlined words", marks: [{ type: "underline" }] },
+        {
+          type: "text",
+          text: "underlined words",
+          marks: [{ type: "underline" }],
+        },
         { type: "text", text: " with " },
         { type: "text", text: "inline code", marks: [{ type: "code" }] },
         { type: "text", text: " and " },
         {
           type: "text",
           text: "read the archive",
-          marks: [{ type: "link", attrs: { href: "https://example.com/archive" } }],
+          marks: [
+            { type: "link", attrs: { href: "https://example.com/archive" } },
+          ],
         },
         { type: "hardBreak" },
         { type: "text", text: "after the break." },
@@ -37,11 +43,21 @@ export const STRUCTURED_EXPORT_CONTENT_JSON = JSON.stringify({
       content: [
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "First bullet" }] }],
+          content: [
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "First bullet" }],
+            },
+          ],
         },
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Second bullet" }] }],
+          content: [
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "Second bullet" }],
+            },
+          ],
         },
       ],
     },
@@ -50,17 +66,32 @@ export const STRUCTURED_EXPORT_CONTENT_JSON = JSON.stringify({
       content: [
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "First ordered" }] }],
+          content: [
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "First ordered" }],
+            },
+          ],
         },
         {
           type: "listItem",
-          content: [{ type: "paragraph", content: [{ type: "text", text: "Second ordered" }] }],
+          content: [
+            {
+              type: "paragraph",
+              content: [{ type: "text", text: "Second ordered" }],
+            },
+          ],
         },
       ],
     },
     {
       type: "blockquote",
-      content: [{ type: "paragraph", content: [{ type: "text", text: "Quoted memory" }] }],
+      content: [
+        {
+          type: "paragraph",
+          content: [{ type: "text", text: "Quoted memory" }],
+        },
+      ],
     },
     { type: "horizontalRule" },
     {

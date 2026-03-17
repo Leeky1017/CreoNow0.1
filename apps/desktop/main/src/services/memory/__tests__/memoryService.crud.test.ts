@@ -423,10 +423,7 @@ function createCrudDbStub(args?: {
     assert.equal(result.data.content, "更新后的内容");
     assert.equal(result.data.type, "fact");
     assert.equal(result.data.scope, "global");
-    assert.ok(
-      result.data.updatedAt >= 100,
-      "updatedAt should be >= original",
-    );
+    assert.ok(result.data.updatedAt >= 100, "updatedAt should be >= original");
   }
 }
 

@@ -109,7 +109,11 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
           </Text>
         </div>
         {selected && (
-          <Check size={16} strokeWidth={1.5} className="text-[var(--color-fg-accent)] shrink-0" />
+          <Check
+            size={16}
+            strokeWidth={1.5}
+            className="text-[var(--color-fg-accent)] shrink-0"
+          />
         )}
       </Button>
     );
@@ -124,7 +128,7 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
       />
       <div
         role="dialog"
-        aria-label={t('ai.modelPicker.selectModel')}
+        aria-label={t("ai.modelPicker.selectModel")}
         onClick={(e) => e.stopPropagation()}
         className="absolute bottom-full left-0 right-0 mb-1 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
@@ -134,10 +138,11 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
               data-testid="ai-model-search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.currentTarget.value)}
-              placeholder={t('ai.modelPicker.searchPlaceholder')}
+              placeholder={t("ai.modelPicker.searchPlaceholder")}
               className="h-8"
               fullWidth
             />
+            {/* eslint-disable-next-line creonow/no-native-html-element -- group-by dropdown with minimal styling, Select primitive is overkill */}
             <select
               data-testid="ai-model-groupby"
               className="h-8 px-2 text-[11px] rounded-[var(--radius-sm)] bg-[var(--color-bg-base)] border border-[var(--color-border-default)]"
@@ -146,12 +151,12 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
                 setGroupBy(e.currentTarget.value as "provider" | "none")
               }
             >
-              <option value="provider">{t('ai.modelPicker.groupBy')}</option>
-              <option value="none">{t('ai.modelPicker.noGroup')}</option>
+              <option value="provider">{t("ai.modelPicker.groupBy")}</option>
+              <option value="none">{t("ai.modelPicker.noGroup")}</option>
             </select>
           </div>
           <Text size="tiny" color="muted" className="uppercase tracking-wide">
-            {t('ai.modelPicker.modelsTitle')}
+            {t("ai.modelPicker.modelsTitle")}
           </Text>
         </div>
 
@@ -159,7 +164,7 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
           {recentModels.length > 0 ? (
             <div className="px-1.5 pb-1">
               <Text size="tiny" color="muted" className="px-1 py-1 uppercase">
-                {t('ai.modelPicker.recentlyUsed')}
+                {t("ai.modelPicker.recentlyUsed")}
               </Text>
               {recentModels.map(renderItem)}
             </div>
@@ -187,7 +192,7 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
           {filteredModels.length === 0 ? (
             <div className="px-3 py-2">
               <Text size="small" color="muted">
-                {t('ai.modelPicker.noModelsFound')}
+                {t("ai.modelPicker.noModelsFound")}
               </Text>
             </div>
           ) : null}

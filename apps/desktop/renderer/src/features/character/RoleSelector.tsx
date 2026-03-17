@@ -71,6 +71,7 @@ export function RoleSelector({
       layer={layer}
       portalContainer={portalContainer}
       trigger={
+        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
         <button
           type="button"
           className={[
@@ -96,14 +97,15 @@ export function RoleSelector({
       align="start"
       sideOffset={4}
     >
-      <div className="min-w-[160px] py-1 -mx-2 -my-2">
+      <div className="min-w-40 py-1 -mx-2 -my-2">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
-          {t('character.roleSelector.selectRole')}
+          {t("character.roleSelector.selectRole")}
         </div>
         {ROLE_OPTIONS.map((role) => {
           const config = ROLE_DISPLAY[role];
           const isSelected = role === value;
           return (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               key={role}
               type="button"

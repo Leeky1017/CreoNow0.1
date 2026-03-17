@@ -47,9 +47,9 @@ function createHarness(): Harness {
     },
     shutdownTimeoutMs: 10,
     exit: () => {},
-    setTimeoutFn: ((() => {
+    setTimeoutFn: (() => {
       return {} as ReturnType<typeof setTimeout>;
-    }) as unknown as typeof setTimeout),
+    }) as unknown as typeof setTimeout,
     clearTimeoutFn: (() => {}) as typeof clearTimeout,
   };
 

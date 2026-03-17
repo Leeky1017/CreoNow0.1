@@ -1,6 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { Download, FileText, Moon, PanelLeft, Pencil, Settings, SquareTerminal } from "lucide-react";
+import {
+  Download,
+  FileText,
+  Moon,
+  PanelLeft,
+  Pencil,
+  Settings,
+  SquareTerminal,
+} from "lucide-react";
 import React from "react";
 
 import { CommandPalette, type CommandItem } from "./CommandPalette";
@@ -111,7 +119,14 @@ function FileIcon({
   className?: string;
   color?: string;
 }): JSX.Element {
-  return <FileText className={className} style={{ color }} size={16} strokeWidth={1.5} />;
+  return (
+    <FileText
+      className={className}
+      style={{ color }}
+      size={16}
+      strokeWidth={1.5}
+    />
+  );
 }
 
 function EditIcon({ className }: { className?: string }): JSX.Element {

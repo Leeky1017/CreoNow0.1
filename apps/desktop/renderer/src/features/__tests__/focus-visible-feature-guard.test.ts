@@ -130,7 +130,9 @@ describe("WB-FE-A11Y-FV-S1: feature layer <button> focus-visible coverage", () =
           /focus:ring/.test(window);
 
         if (!hasFocusVisible) {
-          const line = content.substring(0, startMatch.index).split("\n").length;
+          const line = content
+            .substring(0, startMatch.index)
+            .split("\n").length;
           const relPath = relative(resolve(__dirname, "../.."), file);
           violations.push(`${relPath}:${line}`);
         }

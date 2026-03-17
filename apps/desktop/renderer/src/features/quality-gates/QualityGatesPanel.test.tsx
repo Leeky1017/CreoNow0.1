@@ -1,9 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import {
-  QualityGatesPanel,
-  type CheckGroup,
-} from "./QualityGatesPanel";
+import { QualityGatesPanel, type CheckGroup } from "./QualityGatesPanel";
 
 /**
  * Sample test data

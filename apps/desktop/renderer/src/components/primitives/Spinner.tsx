@@ -51,7 +51,7 @@ export function Spinner({
   ...props
 }: SpinnerProps): JSX.Element {
   const { t } = useTranslation();
-  const resolvedLabel = label ?? t('primitives.spinner.loading');
+  const resolvedLabel = label ?? t("primitives.spinner.loading");
   const dimension = sizeMap[size];
 
   const classes = ["animate-spin", "text-current", className]

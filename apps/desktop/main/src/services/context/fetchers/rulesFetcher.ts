@@ -2,10 +2,7 @@ import type { ContextLayerFetcher } from "../types";
 import type { KnowledgeGraphService } from "../../kg/kgService";
 import { formatEntityForContext } from "../utils/formatEntity";
 import type { Logger } from "../../../logging/logger";
-import {
-  DegradationCounter,
-  logWarn,
-} from "../../shared/degradationCounter";
+import { DegradationCounter, logWarn } from "../../shared/degradationCounter";
 
 const KG_UNAVAILABLE_WARNING = "KG_UNAVAILABLE: 知识图谱数据未注入";
 

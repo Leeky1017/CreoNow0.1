@@ -151,7 +151,6 @@ function createTextExportOps(
   deps: ExportDeps,
   resolve: ResolveDocFn,
 ): Pick<ExportService, "exportMarkdown" | "exportTxt"> {
-
   async function exportMarkdown(args: {
     projectId: string;
     documentId?: string;
@@ -369,7 +368,10 @@ function createBinaryExportOps(
         title: doc.data.title,
         document: structured.data,
       });
-      const estimatedPdfSourceBytes = Buffer.byteLength(doc.data.contentJson, "utf8");
+      const estimatedPdfSourceBytes = Buffer.byteLength(
+        doc.data.contentJson,
+        "utf8",
+      );
       assertSizeWithinLimit({ bytes: estimatedPdfSourceBytes, format: "pdf" });
 
       let bytesWritten = 0;

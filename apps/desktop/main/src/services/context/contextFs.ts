@@ -62,7 +62,10 @@ function buildCreonowDirStructurePlan(
 ): CreonowDirStructurePlan {
   const base = getCreonowRootPath(projectRootPath);
   return {
-    dirs: [base, ...CREONOW_REQUIRED_SUBDIRS.map((dir) => path.join(base, dir))],
+    dirs: [
+      base,
+      ...CREONOW_REQUIRED_SUBDIRS.map((dir) => path.join(base, dir)),
+    ],
     defaultFiles: CREONOW_DEFAULT_FILE_TEMPLATES.map((template) => ({
       absPath: path.join(base, template.relativePath),
       content: template.content,
@@ -70,7 +73,9 @@ function buildCreonowDirStructurePlan(
   };
 }
 
-function ensureCreonowDirStructureSyncFromPlan(plan: CreonowDirStructurePlan): void {
+function ensureCreonowDirStructureSyncFromPlan(
+  plan: CreonowDirStructurePlan,
+): void {
   for (const dirPath of plan.dirs) {
     fs.mkdirSync(dirPath, { recursive: true });
   }
@@ -106,7 +111,9 @@ async function ensureCreonowDirStructureAsyncFromPlan(
   }
 }
 
-function toIoErrorDetails(error: unknown): { message: string } | { error: unknown } {
+function toIoErrorDetails(
+  error: unknown,
+): { message: string } | { error: unknown } {
   return error instanceof Error ? { message: error.message } : { error };
 }
 
@@ -138,7 +145,11 @@ function mapCreonowDirStatusError(
   if (isErrorWithCode(error, "ENOENT")) {
     return toCreonowDirStatusResult({ exists: false, creonowRootPath });
   }
-  return ipcError("IO_ERROR", "Failed to read .creonow status", toIoErrorDetails(error));
+  return ipcError(
+    "IO_ERROR",
+    "Failed to read .creonow status",
+    toIoErrorDetails(error),
+  );
 }
 
 /**
@@ -156,7 +167,11 @@ export function ensureCreonowDirStructure(
     );
     return { ok: true, data: true };
   } catch (error) {
-    return ipcError("IO_ERROR", "Failed to initialize .creonow directory", toIoErrorDetails(error));
+    return ipcError(
+      "IO_ERROR",
+      "Failed to initialize .creonow directory",
+      toIoErrorDetails(error),
+    );
   }
 }
 
@@ -375,7 +390,11 @@ export function listCreonowFiles(args: {
     if (isErrorWithCode(error, "ENOENT")) {
       return { ok: true, data: { items: [] } };
     }
-    return ipcError("IO_ERROR", "Failed to read directory", toIoErrorDetails(error));
+    return ipcError(
+      "IO_ERROR",
+      "Failed to read directory",
+      toIoErrorDetails(error),
+    );
   }
 
   const listed = listFilesRecursive({ dirAbs, prefixRel: baseRel });
@@ -550,7 +569,11 @@ export async function listCreonowFilesAsync(args: {
     if (isErrorWithCode(error, "ENOENT")) {
       return { ok: true, data: { items: [] } };
     }
-    return ipcError("IO_ERROR", "Failed to read directory", toIoErrorDetails(error));
+    return ipcError(
+      "IO_ERROR",
+      "Failed to read directory",
+      toIoErrorDetails(error),
+    );
   }
 
   const listed = await listFilesRecursiveAsync({ dirAbs, prefixRel: baseRel });

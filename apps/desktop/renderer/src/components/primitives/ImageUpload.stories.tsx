@@ -81,18 +81,12 @@ function ControlledDemo() {
         File: {file ? file.name : "None"}
       </div>
       {error && (
-        <div
-          style={{ fontSize: "12px", color: "var(--color-error)" }}
-        >
+        <div style={{ fontSize: "12px", color: "var(--color-error)" }}>
           Error: {error}
         </div>
       )}
       <div style={{ maxWidth: "400px" }}>
-        <ImageUpload
-          value={file}
-          onChange={setFile}
-          onError={setError}
-        />
+        <ImageUpload value={file} onChange={setFile} onError={setError} />
       </div>
     </div>
   );
@@ -120,10 +114,7 @@ function WithPreviewDemo() {
         Hover over the image to see the remove button
       </div>
       <div style={{ maxWidth: "400px" }}>
-        <ImageUpload
-          value={file || previewUrl}
-          onChange={setFile}
-        />
+        <ImageUpload value={file || previewUrl} onChange={setFile} />
       </div>
     </div>
   );

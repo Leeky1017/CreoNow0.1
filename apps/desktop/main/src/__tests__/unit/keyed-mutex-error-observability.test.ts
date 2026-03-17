@@ -4,15 +4,18 @@ import { createKeyedMutex } from "../../services/shared/concurrency";
 
 describe("keyed mutex prior-task error observability", () => {
   it("reports prior task failures on subsequent executions", async () => {
-    const onPriorTaskError = vi.fn<(args: { key: string; error: unknown }) => void>();
+    const onPriorTaskError =
+      vi.fn<(args: { key: string; error: unknown }) => void>();
     const mutex = createKeyedMutex({ onPriorTaskError });
 
     let firstError: unknown = null;
-    await mutex.runExclusive("project-a", async () => {
-      throw new Error("first task failed");
-    }).catch((error: unknown) => {
-      firstError = error;
-    });
+    await mutex
+      .runExclusive("project-a", async () => {
+        throw new Error("first task failed");
+      })
+      .catch((error: unknown) => {
+        firstError = error;
+      });
 
     await expect(
       mutex.runExclusive("project-a", async () => "second-ok"),
@@ -42,11 +45,13 @@ describe("keyed mutex prior-task error observability", () => {
     });
 
     let firstError: unknown = null;
-    await mutex.runExclusive("project-b", async () => {
-      throw new Error("original task failed");
-    }).catch((error: unknown) => {
-      firstError = error;
-    });
+    await mutex
+      .runExclusive("project-b", async () => {
+        throw new Error("original task failed");
+      })
+      .catch((error: unknown) => {
+        firstError = error;
+      });
 
     await expect(
       mutex.runExclusive("project-b", async () => "still-runs"),

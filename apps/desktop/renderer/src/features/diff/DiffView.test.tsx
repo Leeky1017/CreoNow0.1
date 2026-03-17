@@ -78,7 +78,7 @@ Context
 
       // 外层容器有 max-h 和 overflow-hidden
       const panel = screen.getByTestId("ai-diff").parentElement;
-      expect(panel).toHaveClass("max-h-[300px]");
+      expect(panel).toHaveClass("max-h-75");
       expect(panel).toHaveClass("overflow-hidden");
     });
 

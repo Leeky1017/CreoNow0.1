@@ -33,7 +33,8 @@ async function snapshotCreonow(projectRootPath: string): Promise<string[]> {
 
     for (const entry of entries) {
       const absChild = path.join(absPath, entry.name);
-      const relChild = relPath.length > 0 ? `${relPath}/${entry.name}` : entry.name;
+      const relChild =
+        relPath.length > 0 ? `${relPath}/${entry.name}` : entry.name;
       if (entry.isDirectory()) {
         items.push(`D:${relChild}`);
         await walk(absChild, relChild);
@@ -59,8 +60,12 @@ function assertIoErrorShape(
 
 // AUD-C6-S2: sync ensure must match async ensure output.
 {
-  const syncRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "creonow-c6-sync-"));
-  const asyncRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "creonow-c6-async-"));
+  const syncRoot = await fsp.mkdtemp(
+    path.join(os.tmpdir(), "creonow-c6-sync-"),
+  );
+  const asyncRoot = await fsp.mkdtemp(
+    path.join(os.tmpdir(), "creonow-c6-async-"),
+  );
 
   try {
     const syncEnsured = ensureCreonowDirStructure(syncRoot);
@@ -80,7 +85,9 @@ function assertIoErrorShape(
 
 // AUD-C6-S4: sync status query must match async status query.
 {
-  const projectRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "creonow-c6-status-"));
+  const projectRoot = await fsp.mkdtemp(
+    path.join(os.tmpdir(), "creonow-c6-status-"),
+  );
 
   try {
     const syncBefore = getCreonowDirStatus(projectRoot);
@@ -100,7 +107,9 @@ function assertIoErrorShape(
 
 // AUD-C6-S4: list/read sync APIs should stay behaviorally consistent with async APIs.
 {
-  const projectRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "creonow-c6-list-read-"));
+  const projectRoot = await fsp.mkdtemp(
+    path.join(os.tmpdir(), "creonow-c6-list-read-"),
+  );
 
   try {
     const ensured = await ensureCreonowDirStructureAsync(projectRoot);
@@ -138,7 +147,9 @@ function assertIoErrorShape(
 
 // AUD-C6-S5: sync/async ensure should expose equivalent error semantics.
 {
-  const tempRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "creonow-c6-error-"));
+  const tempRoot = await fsp.mkdtemp(
+    path.join(os.tmpdir(), "creonow-c6-error-"),
+  );
   const fileAsProjectRoot = path.join(tempRoot, "project-root-as-file.txt");
 
   try {
@@ -164,7 +175,9 @@ function assertIoErrorShape(
 
 // AUD-C6-S6: async ensure should be idempotent.
 {
-  const projectRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "creonow-c6-idempotent-"));
+  const projectRoot = await fsp.mkdtemp(
+    path.join(os.tmpdir(), "creonow-c6-idempotent-"),
+  );
 
   try {
     const first = await ensureCreonowDirStructureAsync(projectRoot);
@@ -200,7 +213,11 @@ function assertIoErrorShape(
   ];
   for (const literal of singleSourceLiterals) {
     const matches = source.match(new RegExp(escapeRegExp(literal), "g")) ?? [];
-    assert.equal(matches.length, 1, `literal should be defined once: ${literal}`);
+    assert.equal(
+      matches.length,
+      1,
+      `literal should be defined once: ${literal}`,
+    );
   }
 
   assert.match(source, /const CREONOW_REQUIRED_SUBDIRS = \[/);
@@ -225,4 +242,6 @@ function assertIoErrorShape(
   );
 }
 
-console.log("context-fs-sync-async-parity.contract.test.ts: all assertions passed");
+console.log(
+  "context-fs-sync-async-parity.contract.test.ts: all assertions passed",
+);

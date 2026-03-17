@@ -13,7 +13,11 @@ function main(): void {
     },
   );
 
-  assert.equal(result.ok, false, "AUD-C4-S1: ipcError must return Err envelope");
+  assert.equal(
+    result.ok,
+    false,
+    "AUD-C4-S1: ipcError must return Err envelope",
+  );
   assert.equal(
     result.error.traceId,
     "trace-aud-c4-s1",

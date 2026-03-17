@@ -12,26 +12,34 @@ function getFilterButtons(t: TFunction): Array<{
   colorClass: string;
 }> {
   return [
-    { filter: "all", label: t('kg.toolbar.all'), colorClass: "bg-[var(--color-fg-muted)]" },
+    {
+      filter: "all",
+      label: t("kg.toolbar.all"),
+      colorClass: "bg-[var(--color-fg-muted)]",
+    },
     {
       filter: "character",
-      label: t('kg.toolbar.roles'),
+      label: t("kg.toolbar.roles"),
       colorClass: "bg-[var(--color-node-character)]",
     },
     {
       filter: "location",
-      label: t('kg.toolbar.locations'),
+      label: t("kg.toolbar.locations"),
       colorClass: "bg-[var(--color-node-location)]",
     },
     {
       filter: "event",
-      label: t('kg.toolbar.events'),
+      label: t("kg.toolbar.events"),
       colorClass: "bg-[var(--color-node-event)]",
     },
-    { filter: "item", label: t('kg.toolbar.items'), colorClass: "bg-[var(--color-node-item)]" },
+    {
+      filter: "item",
+      label: t("kg.toolbar.items"),
+      colorClass: "bg-[var(--color-node-item)]",
+    },
     {
       filter: "faction",
-      label: t('kg.toolbar.factions'),
+      label: t("kg.toolbar.factions"),
       colorClass: "bg-[var(--color-node-other)]",
     },
   ];
@@ -109,13 +117,14 @@ export function GraphToolbar({
   return (
     <header className={toolbarStyles}>
       {/* Left section: Back button + Title */}
-      <div className="flex items-center gap-4 w-[240px]">
+      <div className="flex items-center gap-4 w-60">
         {onBack && (
           <>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               onClick={onBack}
               className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
-              aria-label={t('kg.toolbar.goBack')}
+              aria-label={t("kg.toolbar.goBack")}
             >
               <svg
                 width="20"
@@ -132,13 +141,14 @@ export function GraphToolbar({
           </>
         )}
         <h1 className="text-sm font-medium tracking-wide text-[var(--color-fg-default)]">
-          {t('kg.toolbar.title')}
+          {t("kg.toolbar.title")}
         </h1>
       </div>
 
       {/* Center section: Filter buttons */}
       <div className="flex items-center gap-2">
         {filterButtons.map(({ filter, label, colorClass }) => (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
           <button
             key={filter}
             onClick={() => onFilterChange(filter)}
@@ -157,13 +167,14 @@ export function GraphToolbar({
       </div>
 
       {/* Right section: Zoom + Add Node */}
-      <div className="flex items-center gap-3 w-[240px] justify-end">
+      <div className="flex items-center gap-3 w-60 justify-end">
         {/* Zoom controls */}
         <div className="flex items-center bg-[var(--color-bg-raised)] rounded border border-[var(--color-border-default)]">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             onClick={onZoomOut}
             className="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
-            aria-label={t('kg.toolbar.zoomOut')}
+            aria-label={t("kg.toolbar.zoomOut")}
           >
             <svg
               width="14"
@@ -179,10 +190,11 @@ export function GraphToolbar({
           <span className="text-[10px] w-8 text-center text-[var(--color-fg-subtle)]">
             {Math.round(zoom * 100)}%
           </span>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             onClick={onZoomIn}
             className="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
-            aria-label={t('kg.toolbar.zoomIn')}
+            aria-label={t("kg.toolbar.zoomIn")}
           >
             <svg
               width="14"
@@ -216,7 +228,7 @@ export function GraphToolbar({
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          {t('kg.toolbar.addNode')}
+          {t("kg.toolbar.addNode")}
         </Button>
       </div>
     </header>

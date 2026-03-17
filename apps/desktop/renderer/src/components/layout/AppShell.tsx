@@ -1173,6 +1173,7 @@ export function AppShell(): JSX.Element {
                     confirm={ctrl.confirm}
                   />
                 </RegionErrorBoundary>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- Layout: small inline icon button for AI panel toggle */}
                 <button
                   type="button"
                   aria-label={ctrl.t("workbench.appShell.aiPanelLabel")}

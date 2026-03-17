@@ -17,7 +17,9 @@ export interface DeleteProjectDialogProps {
  *
  * Why: PM-2 requires explicit second confirmation to prevent accidental purge.
  */
-export function DeleteProjectDialog(props: DeleteProjectDialogProps): JSX.Element {
+export function DeleteProjectDialog(
+  props: DeleteProjectDialogProps,
+): JSX.Element {
   const { t } = useTranslation();
   const [typedName, setTypedName] = React.useState("");
 
@@ -29,13 +31,16 @@ export function DeleteProjectDialog(props: DeleteProjectDialogProps): JSX.Elemen
 
   const canDelete = typedName === props.projectName && !props.submitting;
 
-  const description = t('projects.delete.description', { name: props.projectName, count: props.documentCount });
+  const description = t("projects.delete.description", {
+    name: props.projectName,
+    count: props.documentCount,
+  });
 
   return (
     <Dialog
       open={props.open}
       onOpenChange={props.onOpenChange}
-      title={t('projects.delete.title')}
+      title={t("projects.delete.title")}
       description={description}
       footer={
         <>
@@ -45,7 +50,7 @@ export function DeleteProjectDialog(props: DeleteProjectDialogProps): JSX.Elemen
             onClick={() => props.onOpenChange(false)}
             disabled={Boolean(props.submitting)}
           >
-            {t('projects.delete.cancel')}
+            {t("projects.delete.cancel")}
           </Button>
           <Button
             data-testid="delete-project-confirm-button"
@@ -60,14 +65,14 @@ export function DeleteProjectDialog(props: DeleteProjectDialogProps): JSX.Elemen
               void props.onConfirm();
             }}
           >
-            {t('projects.delete.confirm')}
+            {t("projects.delete.confirm")}
           </Button>
         </>
       }
     >
       <div className="space-y-3">
         <Text size="small" color="muted">
-          {t('projects.delete.inputHint')}
+          {t("projects.delete.inputHint")}
         </Text>
         <Input
           data-testid="delete-project-name-input"

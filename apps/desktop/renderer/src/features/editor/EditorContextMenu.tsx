@@ -39,6 +39,7 @@ const AI_CONTEXT_ACTIONS = [
 /* ------------------------------------------------------------------ */
 
 const menuContentClass = [
+  // eslint-disable-next-line creonow/no-hardcoded-dimension -- Editor: context menu min-width per design spec
   "min-w-[180px]",
   "rounded-[var(--radius-md)]",
   "bg-[var(--color-bg-raised)]",

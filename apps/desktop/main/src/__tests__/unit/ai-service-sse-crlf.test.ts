@@ -85,8 +85,8 @@ try {
 
   globalThis.fetch = (async () => {
     return new Response(
-      "data: {\"choices\":[{\"delta\":{\"content\":\"hello\"}}]}\r\n\r\n" +
-        "data: {\"choices\":[{\"delta\":{\"content\":\" world\"}}]}\r\n\r\n" +
+      'data: {"choices":[{"delta":{"content":"hello"}}]}\r\n\r\n' +
+        'data: {"choices":[{"delta":{"content":" world"}}]}\r\n\r\n' +
         "data: [DONE]\r\n\r\n",
       {
         status: 200,

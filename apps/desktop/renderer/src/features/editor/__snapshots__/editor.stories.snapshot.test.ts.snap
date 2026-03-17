@@ -4611,7 +4611,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
   >
     <button
       class="
-            pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
+            pointer-events-auto inline-flex min-w-22 items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
             cursor-not-allowed border-[var(--color-border-default)] bg-[var(--color-bg-raised)] text-[var(--color-fg-muted)] opacity-70
           "
       data-state="closed"
@@ -4640,7 +4640,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
   >
     <button
       class="
-            pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
+            pointer-events-auto inline-flex min-w-22 items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
             cursor-not-allowed border-[var(--color-border-default)] bg-[var(--color-bg-raised)] text-[var(--color-fg-muted)] opacity-70
           "
       data-state="closed"
@@ -4669,7 +4669,7 @@ exports[`editor stories snapshots > [ED-TEST-01] should cover toolbar + write bu
   >
     <button
       class="
-            pointer-events-auto inline-flex min-w-[88px] items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
+            pointer-events-auto inline-flex min-w-22 items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
             cursor-pointer border-[var(--color-border-accent)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
           "
       data-state="closed"

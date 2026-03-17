@@ -25,15 +25,15 @@ export function MemorySettingsDialog(props: {
     <Dialog
       open={props.open}
       onOpenChange={props.onOpenChange}
-      title={t('memory.settings.title')}
-      description={t('memory.settings.description')}
+      title={t("memory.settings.title")}
+      description={t("memory.settings.description")}
       footer={
         <Button
           variant="primary"
           size="md"
           onClick={() => props.onOpenChange(false)}
         >
-          {t('memory.settings.done')}
+          {t("memory.settings.done")}
         </Button>
       }
     >
@@ -47,10 +47,10 @@ export function MemorySettingsDialog(props: {
             })
           }
           disabled={!settings}
-          label={t('memory.settings.enableInjection')}
+          label={t("memory.settings.enableInjection")}
         />
         <Text size="tiny" color="muted" className="-mt-2 ml-6">
-          {t('memory.settings.injectionDesc')}
+          {t("memory.settings.injectionDesc")}
         </Text>
 
         <Checkbox
@@ -62,10 +62,10 @@ export function MemorySettingsDialog(props: {
             })
           }
           disabled={!settings}
-          label={t('memory.settings.enableLearning')}
+          label={t("memory.settings.enableLearning")}
         />
         <Text size="tiny" color="muted" className="-mt-2 ml-6">
-          {t('memory.settings.learningDesc')}
+          {t("memory.settings.learningDesc")}
         </Text>
 
         <Checkbox
@@ -77,15 +77,15 @@ export function MemorySettingsDialog(props: {
             })
           }
           disabled={!settings}
-          label={t('memory.settings.privacyMode')}
+          label={t("memory.settings.privacyMode")}
         />
         <Text size="tiny" color="muted" className="-mt-2 ml-6">
-          {t('memory.settings.privacyDesc')}
+          {t("memory.settings.privacyDesc")}
         </Text>
 
         <div className="flex items-center gap-3 mt-2">
           <Text size="small" color="muted">
-            {t('memory.settings.learningThreshold')}
+            {t("memory.settings.learningThreshold")}
           </Text>
           <Input
             data-testid="memory-settings-threshold"
@@ -103,7 +103,7 @@ export function MemorySettingsDialog(props: {
           />
         </div>
         <Text size="tiny" color="muted" className="-mt-2">
-          {t('memory.settings.thresholdDesc')}
+          {t("memory.settings.thresholdDesc")}
         </Text>
       </div>
     </Dialog>

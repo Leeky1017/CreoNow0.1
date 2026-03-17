@@ -9,7 +9,14 @@ const meta: Meta<typeof CommandItem> = {
   parameters: { layout: "centered" },
   decorators: [
     (Story) => (
-      <div style={{ width: 480, background: "var(--color-bg-raised)", borderRadius: 8, padding: 4 }}>
+      <div
+        style={{
+          width: 480,
+          background: "var(--color-bg-raised)",
+          borderRadius: 8,
+          padding: 4,
+        }}
+      >
         <Story />
       </div>
     ),
@@ -42,10 +49,31 @@ export const Active: Story = {
 export const CommandList: Story = {
   render: () => (
     <div className="space-y-0.5">
-      <CommandItem icon={<Plus size={16} />} label="New File" hint="⌘N" active onSelect={() => {}} />
-      <CommandItem icon={<FileText size={16} />} label="Open File" hint="⌘O" onSelect={() => {}} />
-      <CommandItem icon={<Search size={16} />} label="Search" hint="⌘K" onSelect={() => {}} />
-      <CommandItem icon={<Settings size={16} />} label="Settings" hint="⌘," onSelect={() => {}} />
+      <CommandItem
+        icon={<Plus size={16} />}
+        label="New File"
+        hint="⌘N"
+        active
+        onSelect={() => {}}
+      />
+      <CommandItem
+        icon={<FileText size={16} />}
+        label="Open File"
+        hint="⌘O"
+        onSelect={() => {}}
+      />
+      <CommandItem
+        icon={<Search size={16} />}
+        label="Search"
+        hint="⌘K"
+        onSelect={() => {}}
+      />
+      <CommandItem
+        icon={<Settings size={16} />}
+        label="Settings"
+        hint="⌘,"
+        onSelect={() => {}}
+      />
     </div>
   ),
 };

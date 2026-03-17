@@ -33,8 +33,6 @@ describe("AiNotConfiguredGuide", () => {
   it("shows guidance text about API key", () => {
     render(<AiNotConfiguredGuide onNavigateToSettings={vi.fn()} />);
 
-    expect(
-      screen.getByText(/API Key/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/API Key/i)).toBeInTheDocument();
   });
 });

@@ -24,13 +24,49 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     testId: "layout-shell",
-    activityBar: <Placeholder label="Activity Bar" bg="var(--color-bg-sunken)" />,
-    left: <div style={{ width: 240, height: "100%" }}><Placeholder label="Left Panel" bg="var(--color-bg-surface)" /></div>,
-    leftResizer: <div style={{ width: 4, height: "100%", background: "var(--color-separator)", cursor: "col-resize" }} />,
-    main: <div style={{ flex: 1, height: "100%" }}><Placeholder label="Main Content" bg="var(--color-bg-base)" /></div>,
-    rightResizer: <div style={{ width: 4, height: "100%", background: "var(--color-separator)", cursor: "col-resize" }} />,
-    right: <div style={{ width: 320, height: "100%" }}><Placeholder label="Right Panel" bg="var(--color-bg-surface)" /></div>,
-    bottomBar: <div style={{ height: 28 }}><Placeholder label="Bottom Bar" bg="var(--color-bg-sunken)" /></div>,
+    activityBar: (
+      <Placeholder label="Activity Bar" bg="var(--color-bg-sunken)" />
+    ),
+    left: (
+      <div style={{ width: 240, height: "100%" }}>
+        <Placeholder label="Left Panel" bg="var(--color-bg-surface)" />
+      </div>
+    ),
+    leftResizer: (
+      <div
+        style={{
+          width: 4,
+          height: "100%",
+          background: "var(--color-separator)",
+          cursor: "col-resize",
+        }}
+      />
+    ),
+    main: (
+      <div style={{ flex: 1, height: "100%" }}>
+        <Placeholder label="Main Content" bg="var(--color-bg-base)" />
+      </div>
+    ),
+    rightResizer: (
+      <div
+        style={{
+          width: 4,
+          height: "100%",
+          background: "var(--color-separator)",
+          cursor: "col-resize",
+        }}
+      />
+    ),
+    right: (
+      <div style={{ width: 320, height: "100%" }}>
+        <Placeholder label="Right Panel" bg="var(--color-bg-surface)" />
+      </div>
+    ),
+    bottomBar: (
+      <div style={{ height: 28 }}>
+        <Placeholder label="Bottom Bar" bg="var(--color-bg-sunken)" />
+      </div>
+    ),
     overlays: null,
   },
 };

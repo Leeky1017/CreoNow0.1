@@ -80,5 +80,6 @@ export function Textarea({
     .filter(Boolean)
     .join(" ");
 
+  // eslint-disable-next-line creonow/no-native-html-element -- Primitive: Textarea wraps native <textarea>
   return <textarea className={classes} {...props} />;
 }

@@ -7,9 +7,7 @@ export type ProjectSessionBindingRegistry = {
 let activeProjectSessionBindingRegistry: ProjectSessionBindingRegistry | null =
   null;
 
-export function getProjectSessionBindingRegistry():
-  | ProjectSessionBindingRegistry
-  | null {
+export function getProjectSessionBindingRegistry(): ProjectSessionBindingRegistry | null {
   return activeProjectSessionBindingRegistry;
 }
 

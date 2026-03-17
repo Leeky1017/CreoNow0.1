@@ -71,6 +71,7 @@ import {
 
 import { ArrowUp } from "lucide-react";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
+
 const RECENT_MODELS_STORAGE_KEY = "creonow.ai.recentModels";
 const CANDIDATE_COUNT_STORAGE_KEY = "creonow.ai.candidateCount";
 const DB_REBUILD_DEFAULT_COMMAND = "pnpm -C apps/desktop rebuild:native";
@@ -222,6 +223,7 @@ function SendStopButton(props: {
           : t("ai.panel.sendMessage")
       }
     >
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
       <button
         data-testid="ai-send-stop"
         type="button"
@@ -257,6 +259,7 @@ function ToolButton(props: {
   onClick?: () => void;
 }): JSX.Element {
   return (
+    // eslint-disable-next-line creonow/no-native-html-element -- specialized button
     <button
       data-testid={props.testId}
       type="button"
@@ -324,6 +327,7 @@ function ErrorGuideCard(props: {
               <code className="rounded-[var(--radius-sm)] bg-[var(--color-bg-base)] px-2 py-1 text-[11px] text-[var(--color-fg-default)]">
                 {props.command}
               </code>
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
               <button
                 type="button"
                 data-testid={`${props.testId}-copy-command`}
@@ -336,6 +340,7 @@ function ErrorGuideCard(props: {
           ) : null}
           <div className="mt-2 flex items-center gap-2">
             {props.onAction && props.actionLabel ? (
+              // eslint-disable-next-line creonow/no-native-html-element -- specialized button
               <button
                 type="button"
                 data-testid={props.actionTestId}
@@ -346,6 +351,7 @@ function ErrorGuideCard(props: {
               </button>
             ) : null}
             <span className="text-[10px] font-mono text-[var(--color-error)]">
+              {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- diagnostic code reference, user-friendly text shown in description/steps above */}
               {props.errorCode}
             </span>
           </div>
@@ -395,6 +401,7 @@ export function CodeBlock(props: {
         </span>
 
         <div className="flex items-center gap-1">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             onClick={handleCopy}
@@ -404,6 +411,7 @@ export function CodeBlock(props: {
           </button>
 
           {props.onApply && (
+            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
             <button
               type="button"
               onClick={props.onApply}
@@ -418,6 +426,7 @@ export function CodeBlock(props: {
       {/* Code content */}
 
       <pre className="m-0 p-3 overflow-x-auto text-[12px] leading-[1.6] text-[var(--color-fg-default)] font-[var(--font-family-mono)]">
+        {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- props.code is programming code content, not an error code */}
         <code>{props.code}</code>
       </pre>
     </div>
@@ -1360,6 +1369,7 @@ function AiPanelChatArea(props: AiPanelChatAreaProps): JSX.Element {
           {props.lastCandidates.map((candidate, index) => {
             const isSelected = props.selectedCandidate?.id === candidate.id;
             return (
+              // eslint-disable-next-line creonow/no-native-html-element -- specialized button
               <button
                 key={candidate.id}
                 data-testid={`ai-candidate-card-${index + 1}`}
@@ -1606,6 +1616,7 @@ const AiPanelInputArea = React.forwardRef<
                 </div>
               </div>
               <Tooltip content={t("ai.panel.dismissSelection")}>
+                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                 <button
                   type="button"
                   data-testid="ai-selection-reference-close"
@@ -1618,6 +1629,7 @@ const AiPanelInputArea = React.forwardRef<
             </div>
           </div>
         ) : null}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
         <textarea
           ref={ref}
           data-testid="ai-input"
@@ -1625,7 +1637,7 @@ const AiPanelInputArea = React.forwardRef<
           onChange={(e) => props.setInput(e.target.value)}
           onKeyDown={props.handleKeyDown}
           placeholder={t("ai.panel.inputPlaceholder")}
-          className="w-full min-h-[60px] max-h-[160px] px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
+          className="w-full min-h-15 max-h-40 px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
         />
         <div className="flex items-center justify-between px-2 pb-2">
           <div className="flex items-center gap-1">

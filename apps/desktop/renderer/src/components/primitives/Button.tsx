@@ -178,6 +178,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       .join(" ");
 
     return (
+      // eslint-disable-next-line creonow/no-native-html-element -- Primitive: Button wraps native <button>
       <button
         ref={ref}
         type="button"
@@ -186,7 +187,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {loading && <Spinner />}
-        <span className="inline-flex items-center gap-2 truncate">{children}</span>
+        <span className="inline-flex items-center gap-2 truncate">
+          {children}
+        </span>
       </button>
     );
   },

@@ -71,15 +71,16 @@ export function MultiVersionCompare(
       <header className="h-12 flex items-center justify-between px-4 border-b border-[var(--color-separator)] bg-[var(--color-bg-raised)] shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-xs font-medium text-[var(--color-fg-default)]">
-            {t('diff.multiVersion.comparingVersions', { count })}
+            {t("diff.multiVersion.comparingVersions", { count })}
           </span>
           {syncScroll && (
             <span className="text-[10px] text-[var(--color-fg-subtle)] px-2 py-0.5 bg-[var(--color-bg-hover)] rounded">
-              {t('diff.multiVersion.syncScroll')}
+              {t("diff.multiVersion.syncScroll")}
             </span>
           )}
         </div>
         {props.onClose && (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized close button
           <button
             type="button"
             onClick={props.onClose}

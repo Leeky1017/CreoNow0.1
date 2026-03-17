@@ -33,10 +33,7 @@ describe("WB-FE-I18N-CORE-S3: AiPanel i18n guard", () => {
 
   it("has no hardcoded English visible strings for i18n-relevant labels", () => {
     const cleaned = stripSafeContexts(source);
-    const hardcodedPatterns = [
-      /"Applied & saved"/,
-      /"Applied &amp; saved"/,
-    ];
+    const hardcodedPatterns = [/"Applied & saved"/, /"Applied &amp; saved"/];
 
     const found: string[] = [];
     for (const pattern of hardcodedPatterns) {

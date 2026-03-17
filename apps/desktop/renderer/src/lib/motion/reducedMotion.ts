@@ -8,10 +8,10 @@ type ReducedMotionMatchMedia = (
  * Read reduced-motion preference in a safe way for test/runtime.
  */
 export function readPrefersReducedMotion(
-  matchMedia: ReducedMotionMatchMedia | undefined =
-    typeof window !== "undefined" && typeof window.matchMedia === "function"
-      ? window.matchMedia.bind(window)
-      : undefined,
+  matchMedia: ReducedMotionMatchMedia | undefined = typeof window !==
+    "undefined" && typeof window.matchMedia === "function"
+    ? window.matchMedia.bind(window)
+    : undefined,
 ): boolean {
   if (!matchMedia) {
     return false;

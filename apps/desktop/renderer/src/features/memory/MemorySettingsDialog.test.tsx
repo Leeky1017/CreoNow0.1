@@ -59,7 +59,9 @@ describe("MemorySettingsDialog", () => {
       expect(
         screen.getByTestId("memory-settings-learning"),
       ).toBeInTheDocument();
-      expect(screen.getByText("Enable Preference Learning")).toBeInTheDocument();
+      expect(
+        screen.getByText("Enable Preference Learning"),
+      ).toBeInTheDocument();
     });
 
     it("应该显示Privacy Mode开关", () => {
@@ -86,21 +88,27 @@ describe("MemorySettingsDialog", () => {
     it("应该显示注入开关的说明", () => {
       render(<MemorySettingsDialog open={true} onOpenChange={vi.fn()} />);
 
-      expect(screen.getByText("AI will reference your memories when writing")).toBeInTheDocument();
+      expect(
+        screen.getByText("AI will reference your memories when writing"),
+      ).toBeInTheDocument();
     });
 
     it("应该显示学习开关的说明", () => {
       render(<MemorySettingsDialog open={true} onOpenChange={vi.fn()} />);
 
       expect(
-        screen.getByText("AI will learn writing preferences from your feedback"),
+        screen.getByText(
+          "AI will learn writing preferences from your feedback",
+        ),
       ).toBeInTheDocument();
     });
 
     it("应该显示Privacy Mode的说明", () => {
       render(<MemorySettingsDialog open={true} onOpenChange={vi.fn()} />);
 
-      expect(screen.getByText("Reduce storage of identifiable content fragments")).toBeInTheDocument();
+      expect(
+        screen.getByText("Reduce storage of identifiable content fragments"),
+      ).toBeInTheDocument();
     });
   });
 

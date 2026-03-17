@@ -25,31 +25,22 @@ export interface FormFieldProps {
 // Styles
 // =============================================================================
 
-const containerStyles = [
-  "flex",
-  "flex-col",
-  "gap-2",
-].join(" ");
+const containerStyles = ["flex", "flex-col", "gap-2"].join(" ");
 
-const labelStyles = [
-  "text-[13px]",
-  "text-[color:var(--color-fg-muted)]",
-].join(" ");
+const labelStyles = ["text-[13px]", "text-[color:var(--color-fg-muted)]"].join(
+  " ",
+);
 
 const labelErrorStyles = [
   "text-[13px]",
   "text-[color:var(--color-error)]",
 ].join(" ");
 
-const helpStyles = [
-  "text-xs",
-  "text-[color:var(--color-fg-placeholder)]",
-].join(" ");
+const helpStyles = ["text-xs", "text-[color:var(--color-fg-placeholder)]"].join(
+  " ",
+);
 
-const errorStyles = [
-  "text-xs",
-  "text-[color:var(--color-error)]",
-].join(" ");
+const errorStyles = ["text-xs", "text-[color:var(--color-error)]"].join(" ");
 
 // =============================================================================
 // Component
@@ -88,6 +79,7 @@ export function FormField({
 }: FormFieldProps): JSX.Element {
   return (
     <div className={`${containerStyles} ${className}`}>
+      {/* eslint-disable-next-line creonow/no-native-html-element -- Composite: no Label primitive exists; native <label> provides htmlFor accessibility */}
       <label
         htmlFor={htmlFor}
         className={error ? labelErrorStyles : labelStyles}

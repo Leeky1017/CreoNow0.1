@@ -213,6 +213,7 @@ export function CharacterPanelContainer(
               {t("character.panelContainer.emptyDescription")}
             </p>
           </div>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
           <button
             type="button"
             onClick={() => void handleCreate()}

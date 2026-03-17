@@ -2116,7 +2116,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                     class="relative border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] focus-within:border-[var(--color-border-focus)]"
                   >
                     <textarea
-                      class="w-full min-h-[60px] max-h-[160px] px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
+                      class="w-full min-h-15 max-h-40 px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
                       data-testid="ai-input"
                       placeholder="Ask the AI to help with your writing..."
                     />

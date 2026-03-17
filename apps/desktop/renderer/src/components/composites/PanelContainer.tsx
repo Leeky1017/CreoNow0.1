@@ -49,11 +49,7 @@ const titleGroupStyles = [
   "font-medium",
 ].join(" ");
 
-const bodyStyles = [
-  "flex-1",
-  "overflow-auto",
-  "min-h-0",
-].join(" ");
+const bodyStyles = ["flex-1", "overflow-auto", "min-h-0"].join(" ");
 
 // =============================================================================
 // Component
@@ -77,18 +73,13 @@ export function PanelContainer({
   "data-testid": testId,
 }: PanelContainerProps): JSX.Element {
   return (
-    <section
-      data-testid={testId}
-      className={`${containerStyles} ${className}`}
-    >
+    <section data-testid={testId} className={`${containerStyles} ${className}`}>
       <div className={headerStyles}>
         <div className={titleGroupStyles}>
           {icon && <span className="flex items-center">{icon}</span>}
           <span>{title}</span>
         </div>
-        {actions && (
-          <div className="flex items-center gap-1">{actions}</div>
-        )}
+        {actions && <div className="flex items-center gap-1">{actions}</div>}
       </div>
       <div className={bodyStyles}>{children}</div>
     </section>

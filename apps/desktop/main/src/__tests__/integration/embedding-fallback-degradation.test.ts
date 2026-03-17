@@ -81,7 +81,9 @@ function createLogger(logs: LogEntry[]): Logger & {
     throw new Error("AUD-C3-S4: expected encode failure");
   }
 
-  const warn = logs.find((entry) => entry.event === "embedding_fallback_failure");
+  const warn = logs.find(
+    (entry) => entry.event === "embedding_fallback_failure",
+  );
   assert.ok(warn, "AUD-C3-S4: expected embedding_fallback_failure warning");
   assert.equal(warn?.data?.module, "embedding-service");
   assert.equal(warn?.data?.primaryProvider, "onnx");

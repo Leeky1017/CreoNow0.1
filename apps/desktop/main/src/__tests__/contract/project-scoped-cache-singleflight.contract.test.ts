@@ -34,9 +34,7 @@ function createLogger(): Logger {
   };
 }
 
-function toAsyncStringCompute(
-  fn: () => Promise<string>,
-): () => string {
+function toAsyncStringCompute(fn: () => Promise<string>): () => string {
   return () => fn() as unknown as string;
 }
 
@@ -122,16 +120,27 @@ async function main(): Promise<void> {
       }),
     );
 
-    for (let attempt = 0; attempt < 4 && (!startedA || !startedB); attempt += 1) {
+    for (
+      let attempt = 0;
+      attempt < 4 && (!startedA || !startedB);
+      attempt += 1
+    ) {
       await Promise.resolve();
     }
     assert.equal(startedA, true, "key-a compute should start");
-    assert.equal(startedB, true, "key-b compute should start without waiting key-a");
+    assert.equal(
+      startedB,
+      true,
+      "key-b compute should start without waiting key-a",
+    );
 
     releaseA.resolve(undefined);
     releaseB.resolve(undefined);
 
-    const [resultA, resultB] = await Promise.all([resultAPromise, resultBPromise]);
+    const [resultA, resultB] = await Promise.all([
+      resultAPromise,
+      resultBPromise,
+    ]);
 
     assert.equal(resultA, "A");
     assert.equal(resultB, "B");
@@ -192,7 +201,9 @@ async function main(): Promise<void> {
     assert.equal(attempts, 2, "failed compute should not stay cached");
   }
 
-  console.log("project-scoped-cache-singleflight.contract.test.ts: all assertions passed");
+  console.log(
+    "project-scoped-cache-singleflight.contract.test.ts: all assertions passed",
+  );
 }
 
 await main();

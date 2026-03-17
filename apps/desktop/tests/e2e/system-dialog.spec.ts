@@ -151,9 +151,7 @@ test("system dialog: cancel/confirm across file tree + knowledge graph", async (
     "leftpanel-dialog-knowledgeGraph",
   );
   await expect(knowledgeGraphDialog).toBeVisible();
-  await expect(
-    knowledgeGraphDialog.getByTestId("kg-view-graph"),
-  ).toBeVisible();
+  await expect(knowledgeGraphDialog.getByTestId("kg-view-graph")).toBeVisible();
   await knowledgeGraphDialog.getByTestId("kg-view-list").click();
   await expect(page.getByTestId("kg-entity-create")).toBeEnabled();
 

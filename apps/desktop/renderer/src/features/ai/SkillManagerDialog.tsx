@@ -109,8 +109,10 @@ function SkillFormFields(props: {
         {props.heading}
       </Text>
 
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
       <label className="block text-xs text-[var(--color-fg-muted)]">
         {t("ai.skillManager.fieldName")}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
         <input
           value={props.form.name}
           onChange={(e) =>
@@ -126,8 +128,10 @@ function SkillFormFields(props: {
         )}
       </label>
 
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
       <label className="block text-xs text-[var(--color-fg-muted)]">
         {t("ai.skillManager.fieldDescription")}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
         <input
           value={props.form.description}
           onChange={(e) =>
@@ -146,8 +150,10 @@ function SkillFormFields(props: {
         )}
       </label>
 
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
       <label className="block text-xs text-[var(--color-fg-muted)]">
         {t("ai.skillManager.fieldPromptTemplate")}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
         <textarea
           value={props.form.promptTemplate}
           onChange={(e) =>
@@ -171,8 +177,10 @@ function SkillFormFields(props: {
       </label>
 
       <div className="grid grid-cols-2 gap-2">
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className="block text-xs text-[var(--color-fg-muted)]">
           {t("ai.skillManager.fieldInputType")}
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized select */}
           <select
             value={props.form.inputType}
             onChange={(e) =>
@@ -193,8 +201,10 @@ function SkillFormFields(props: {
           </select>
         </label>
 
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
         <label className="block text-xs text-[var(--color-fg-muted)]">
           {t("ai.skillManager.fieldScope")}
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized select */}
           <select
             value={props.form.scope}
             onChange={(e) =>
@@ -212,8 +222,10 @@ function SkillFormFields(props: {
         </label>
       </div>
 
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
       <label className="block text-xs text-[var(--color-fg-muted)]">
         {t("ai.skillManager.fieldContextRules")}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
         <textarea
           value={props.form.contextRulesText}
           onChange={(e) =>
@@ -232,7 +244,9 @@ function SkillFormFields(props: {
         )}
       </label>
 
+      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
       <label className="flex items-center gap-2 text-xs text-[var(--color-fg-muted)]">
+        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
         <input
           type="checkbox"
           checked={props.form.enabled}
@@ -294,6 +308,7 @@ function SkillItemList(props: {
                   </Text>
                 </div>
                 <div className="flex items-center gap-2">
+                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                   <button
                     type="button"
                     className="px-2 py-1 rounded border border-[var(--color-border-default)] text-xs"
@@ -302,6 +317,7 @@ function SkillItemList(props: {
                   >
                     {t("ai.skillManager.edit")}
                   </button>
+                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
                   <button
                     type="button"
                     className="px-2 py-1 rounded border border-[var(--color-error)]/30 text-xs text-[var(--color-error)]"
@@ -527,6 +543,7 @@ export function SkillManagerDialog(props: {
         description={t("ai.skillManager.dialogDescription")}
         footer={
           <>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               type="button"
               className="px-3 py-2 rounded border border-[var(--color-border-default)] text-[var(--color-fg-default)]"
@@ -535,6 +552,7 @@ export function SkillManagerDialog(props: {
             >
               {t("ai.skillManager.reset")}
             </button>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               type="button"
               className="px-3 py-2 rounded bg-[var(--color-accent-emphasis)] text-[var(--color-fg-on-emphasis)] disabled:opacity-50"
@@ -556,6 +574,7 @@ export function SkillManagerDialog(props: {
             <Text size="tiny" color="muted" className="uppercase tracking-wide">
               {t("ai.skillManager.aiAssisted")}
             </Text>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
             <textarea
               value={aiDescription}
               onChange={(e) => setAiDescription(e.target.value)}
@@ -563,6 +582,7 @@ export function SkillManagerDialog(props: {
               className="w-full min-h-20 rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
               data-testid="skill-manager-ai-description"
             />
+            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
             <button
               type="button"
               className="px-3 py-2 rounded border border-[var(--color-border-default)] text-[var(--color-fg-default)]"

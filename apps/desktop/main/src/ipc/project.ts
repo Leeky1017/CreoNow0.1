@@ -279,7 +279,9 @@ function registerProjectCrudHandlers(deps: ProjectHandlerDeps): void {
   );
 }
 
-function registerProjectSessionAndLifecycleHandlers(deps: ProjectHandlerDeps): void {
+function registerProjectSessionAndLifecycleHandlers(
+  deps: ProjectHandlerDeps,
+): void {
   deps.ipcMain.handle(
     "project:project:getcurrent",
     async (

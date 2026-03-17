@@ -16,7 +16,7 @@ export function runFireAndForget(
   const normalized: FireAndForgetOptions =
     typeof options === "function"
       ? { onError: options, critical: false }
-      : options ?? {};
+      : (options ?? {});
 
   const { label, onError, critical = true } = normalized;
 
@@ -51,7 +51,9 @@ export function runFireAndForget(
       const secondaryDetails = {
         label: label ?? "unknown",
         errorType:
-          handlerError instanceof Error ? handlerError.name : typeof handlerError,
+          handlerError instanceof Error
+            ? handlerError.name
+            : typeof handlerError,
         message:
           handlerError instanceof Error
             ? handlerError.message

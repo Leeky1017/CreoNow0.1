@@ -174,7 +174,10 @@ describe("CreateProjectDialog — ImageCropper integration", () => {
     await waitFor(() => {
       expect(createAndSetCurrent).toHaveBeenCalledTimes(1);
     });
-    const callArgs = createAndSetCurrent.mock.calls[0][0] as Record<string, unknown>;
+    const callArgs = createAndSetCurrent.mock.calls[0][0] as Record<
+      string,
+      unknown
+    >;
     expect(callArgs).toHaveProperty("name", "My Novel");
     // coverImage and cropArea must be threaded through to createAndSetCurrent
     expect(callArgs).toHaveProperty("coverImage");
