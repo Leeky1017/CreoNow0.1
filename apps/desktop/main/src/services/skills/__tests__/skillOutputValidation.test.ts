@@ -544,10 +544,15 @@ describe("skillOutputValidation stream mode", () => {
   });
 });
 
-
 describe("skillOutputValidation expanded coverage", () => {
   it("AC-10: strict 类技能正常输出通过校验 (condense/shrink/summarize/translate/style-transfer)", async () => {
-    for (const skillId of ["condense", "shrink", "summarize", "translate", "style-transfer"]) {
+    for (const skillId of [
+      "condense",
+      "shrink",
+      "summarize",
+      "translate",
+      "style-transfer",
+    ]) {
       const result = await buildExecutor(
         `builtin:${skillId}`,
         repeat("甲", 480),
@@ -557,7 +562,13 @@ describe("skillOutputValidation expanded coverage", () => {
   });
 
   it("AC-11: strict 类技能膨胀超过 10x 被拦截", async () => {
-    for (const skillId of ["condense", "shrink", "summarize", "translate", "style-transfer"]) {
+    for (const skillId of [
+      "condense",
+      "shrink",
+      "summarize",
+      "translate",
+      "style-transfer",
+    ]) {
       const result = await buildExecutor(
         `builtin:${skillId}`,
         repeat("甲", 2500),
@@ -571,7 +582,14 @@ describe("skillOutputValidation expanded coverage", () => {
   });
 
   it("AC-12: loose 类技能正常输出通过校验 (brainstorm/critique/describe/dialogue/roleplay/write)", async () => {
-    for (const skillId of ["brainstorm", "critique", "describe", "dialogue", "roleplay", "write"]) {
+    for (const skillId of [
+      "brainstorm",
+      "critique",
+      "describe",
+      "dialogue",
+      "roleplay",
+      "write",
+    ]) {
       const result = await buildExecutor(
         `builtin:${skillId}`,
         repeat("甲", 3000),
@@ -581,7 +599,14 @@ describe("skillOutputValidation expanded coverage", () => {
   });
 
   it("AC-13: loose 类技能膨胀超过 20x 被拦截", async () => {
-    for (const skillId of ["brainstorm", "critique", "describe", "dialogue", "roleplay", "write"]) {
+    for (const skillId of [
+      "brainstorm",
+      "critique",
+      "describe",
+      "dialogue",
+      "roleplay",
+      "write",
+    ]) {
       const result = await buildExecutor(
         `builtin:${skillId}`,
         repeat("甲", 4200),
@@ -650,10 +675,15 @@ describe("skillOutputValidation expanded coverage", () => {
   });
 });
 
-
 describe("skillOutputValidation expanded coverage", () => {
   it("AC-10: strict 类技能正常输出通过校验 (condense/shrink/summarize/translate/style-transfer)", async () => {
-    for (const skillId of ["condense", "shrink", "summarize", "translate", "style-transfer"]) {
+    for (const skillId of [
+      "condense",
+      "shrink",
+      "summarize",
+      "translate",
+      "style-transfer",
+    ]) {
       const result = await buildExecutor(
         `builtin:${skillId}`,
         repeat("甲", 480),
@@ -663,7 +693,13 @@ describe("skillOutputValidation expanded coverage", () => {
   });
 
   it("AC-11: strict 类技能膨胀超过 10x 被拦截", async () => {
-    for (const skillId of ["condense", "shrink", "summarize", "translate", "style-transfer"]) {
+    for (const skillId of [
+      "condense",
+      "shrink",
+      "summarize",
+      "translate",
+      "style-transfer",
+    ]) {
       const result = await buildExecutor(
         `builtin:${skillId}`,
         repeat("甲", 2500),
@@ -677,7 +713,14 @@ describe("skillOutputValidation expanded coverage", () => {
   });
 
   it("AC-12: loose 类技能正常输出通过校验 (brainstorm/critique/describe/dialogue/roleplay/write)", async () => {
-    for (const skillId of ["brainstorm", "critique", "describe", "dialogue", "roleplay", "write"]) {
+    for (const skillId of [
+      "brainstorm",
+      "critique",
+      "describe",
+      "dialogue",
+      "roleplay",
+      "write",
+    ]) {
       const result = await buildExecutor(
         `builtin:${skillId}`,
         repeat("甲", 3000),
@@ -687,7 +730,14 @@ describe("skillOutputValidation expanded coverage", () => {
   });
 
   it("AC-13: loose 类技能膨胀超过 20x 被拦截", async () => {
-    for (const skillId of ["brainstorm", "critique", "describe", "dialogue", "roleplay", "write"]) {
+    for (const skillId of [
+      "brainstorm",
+      "critique",
+      "describe",
+      "dialogue",
+      "roleplay",
+      "write",
+    ]) {
       const result = await buildExecutor(
         `builtin:${skillId}`,
         repeat("甲", 4200),

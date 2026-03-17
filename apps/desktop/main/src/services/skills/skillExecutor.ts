@@ -343,8 +343,25 @@ function validateSkillInput(args: {
   };
 }
 
-const CREATIVE_SKILLS_STRICT = new Set(["polish", "rewrite", "condense", "shrink", "summarize", "translate", "style-transfer"]);
-const CREATIVE_SKILLS_LOOSE = new Set(["continue", "expand", "brainstorm", "critique", "describe", "dialogue", "roleplay", "write"]);
+const CREATIVE_SKILLS_STRICT = new Set([
+  "polish",
+  "rewrite",
+  "condense",
+  "shrink",
+  "summarize",
+  "translate",
+  "style-transfer",
+]);
+const CREATIVE_SKILLS_LOOSE = new Set([
+  "continue",
+  "expand",
+  "brainstorm",
+  "critique",
+  "describe",
+  "dialogue",
+  "roleplay",
+  "write",
+]);
 
 const CREATIVE_SKILLS_FORMAT_ONLY = new Set(["chat"]);
 
@@ -420,7 +437,11 @@ function validateSkillRunOutput(args: {
     return ipcError("SKILL_OUTPUT_INVALID", "AI 返回了空内容，请重试");
   }
 
-  if (CREATIVE_SKILLS_STRICT.has(leaf) || CREATIVE_SKILLS_LOOSE.has(leaf) || CREATIVE_SKILLS_FORMAT_ONLY.has(leaf)) {
+  if (
+    CREATIVE_SKILLS_STRICT.has(leaf) ||
+    CREATIVE_SKILLS_LOOSE.has(leaf) ||
+    CREATIVE_SKILLS_FORMAT_ONLY.has(leaf)
+  ) {
     const creativeResult = validateCreativeSkillOutput({
       skillId: args.skillId,
       outputText: args.outputText,
