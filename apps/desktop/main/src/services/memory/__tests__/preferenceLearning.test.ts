@@ -18,9 +18,7 @@ function createLogger(): Logger {
   };
 }
 
-function defaultSettings(
-  overrides?: Partial<MemorySettings>,
-): MemorySettings {
+function defaultSettings(overrides?: Partial<MemorySettings>): MemorySettings {
   return {
     memoryEnabled: true,
     preferenceLearningEnabled: true,
@@ -75,8 +73,7 @@ function createDbStub(args?: {
         sql.includes("source_ref")
       ) {
         return {
-          get: () =>
-            existingId ? { memoryId: existingId } : undefined,
+          get: () => (existingId ? { memoryId: existingId } : undefined),
         };
       }
 

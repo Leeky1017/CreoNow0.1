@@ -282,7 +282,12 @@ function registerMemoryEpisodicAndTraceHandlers(ctx: {
   rememberSender: (event: unknown) => void;
   handleWithProjectAccess: HandleWithProjectAccessFn;
 }): void {
-  const { episodicService, traceService, rememberSender, handleWithProjectAccess } = ctx;
+  const {
+    episodicService,
+    traceService,
+    rememberSender,
+    handleWithProjectAccess,
+  } = ctx;
 
   handleWithProjectAccess(
     "memory:episode:record",

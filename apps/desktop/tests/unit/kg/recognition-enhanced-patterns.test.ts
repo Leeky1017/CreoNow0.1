@@ -50,8 +50,9 @@ async function waitForCondition(
       "expected at least 2 surname-based character suggestions",
     );
 
-    const events =
-      harness.getPushEvents<SuggestionPayload>(KG_SUGGESTION_CHANNEL);
+    const events = harness.getPushEvents<SuggestionPayload>(
+      KG_SUGGESTION_CHANNEL,
+    );
     const names = events.map((e) => e.payload.name);
     assert.ok(names.includes("赵云"), "should recognize 赵云");
     assert.ok(names.includes("张飞"), "should recognize 张飞");
@@ -68,16 +69,13 @@ async function waitForCondition(
 {
   const harness = createKnowledgeGraphIpcHarness();
   try {
-    await harness.invoke<{ taskId: string }>(
-      "knowledge:recognition:enqueue",
-      {
-        projectId: harness.projectId,
-        documentId: "doc-location",
-        sessionId: "session-location",
-        contentText: "他们来到了龙虎山，途经碧水镇，最终到达凤凰殿。",
-        traceId: "trace-location-1",
-      },
-    );
+    await harness.invoke<{ taskId: string }>("knowledge:recognition:enqueue", {
+      projectId: harness.projectId,
+      documentId: "doc-location",
+      sessionId: "session-location",
+      contentText: "他们来到了龙虎山，途经碧水镇，最终到达凤凰殿。",
+      traceId: "trace-location-1",
+    });
 
     await waitForCondition(
       () => harness.getPushEvents(KG_SUGGESTION_CHANNEL).length >= 3,
@@ -85,8 +83,9 @@ async function waitForCondition(
       "expected at least 3 location suggestions",
     );
 
-    const events =
-      harness.getPushEvents<SuggestionPayload>(KG_SUGGESTION_CHANNEL);
+    const events = harness.getPushEvents<SuggestionPayload>(
+      KG_SUGGESTION_CHANNEL,
+    );
     const locationNames = events
       .filter((e) => e.payload.type === "location")
       .map((e) => e.payload.name);
@@ -103,16 +102,13 @@ async function waitForCondition(
 {
   const harness = createKnowledgeGraphIpcHarness();
   try {
-    await harness.invoke<{ taskId: string }>(
-      "knowledge:recognition:enqueue",
-      {
-        projectId: harness.projectId,
-        documentId: "doc-events",
-        sessionId: "session-events",
-        contentText: "武林大会即将召开，此前的天山之战仍历历在目。",
-        traceId: "trace-events-1",
-      },
-    );
+    await harness.invoke<{ taskId: string }>("knowledge:recognition:enqueue", {
+      projectId: harness.projectId,
+      documentId: "doc-events",
+      sessionId: "session-events",
+      contentText: "武林大会即将召开，此前的天山之战仍历历在目。",
+      traceId: "trace-events-1",
+    });
 
     await waitForCondition(
       () => harness.getPushEvents(KG_SUGGESTION_CHANNEL).length >= 2,
@@ -120,8 +116,9 @@ async function waitForCondition(
       "expected at least 2 event suggestions",
     );
 
-    const events =
-      harness.getPushEvents<SuggestionPayload>(KG_SUGGESTION_CHANNEL);
+    const events = harness.getPushEvents<SuggestionPayload>(
+      KG_SUGGESTION_CHANNEL,
+    );
     const eventNames = events
       .filter((e) => e.payload.type === "event")
       .map((e) => e.payload.name);
@@ -137,16 +134,13 @@ async function waitForCondition(
 {
   const harness = createKnowledgeGraphIpcHarness();
   try {
-    await harness.invoke<{ taskId: string }>(
-      "knowledge:recognition:enqueue",
-      {
-        projectId: harness.projectId,
-        documentId: "doc-items",
-        sessionId: "session-items",
-        contentText: "她手持倚天神剑，腰间别着九阳秘籍。",
-        traceId: "trace-items-1",
-      },
-    );
+    await harness.invoke<{ taskId: string }>("knowledge:recognition:enqueue", {
+      projectId: harness.projectId,
+      documentId: "doc-items",
+      sessionId: "session-items",
+      contentText: "她手持倚天神剑，腰间别着九阳秘籍。",
+      traceId: "trace-items-1",
+    });
 
     await waitForCondition(
       () => harness.getPushEvents(KG_SUGGESTION_CHANNEL).length >= 2,
@@ -154,8 +148,9 @@ async function waitForCondition(
       "expected at least 2 item suggestions",
     );
 
-    const events =
-      harness.getPushEvents<SuggestionPayload>(KG_SUGGESTION_CHANNEL);
+    const events = harness.getPushEvents<SuggestionPayload>(
+      KG_SUGGESTION_CHANNEL,
+    );
     const itemNames = events
       .filter((e) => e.payload.type === "item")
       .map((e) => e.payload.name);
@@ -171,16 +166,13 @@ async function waitForCondition(
 {
   const harness = createKnowledgeGraphIpcHarness();
   try {
-    await harness.invoke<{ taskId: string }>(
-      "knowledge:recognition:enqueue",
-      {
-        projectId: harness.projectId,
-        documentId: "doc-quoted",
-        sessionId: "session-quoted",
-        contentText: "传说中的「天外飞仙」是一种独特的武功。",
-        traceId: "trace-quoted-1",
-      },
-    );
+    await harness.invoke<{ taskId: string }>("knowledge:recognition:enqueue", {
+      projectId: harness.projectId,
+      documentId: "doc-quoted",
+      sessionId: "session-quoted",
+      contentText: "传说中的「天外飞仙」是一种独特的武功。",
+      traceId: "trace-quoted-1",
+    });
 
     await waitForCondition(
       () => harness.getPushEvents(KG_SUGGESTION_CHANNEL).length >= 1,
@@ -188,8 +180,9 @@ async function waitForCondition(
       "expected at least 1 quoted entity suggestion",
     );
 
-    const events =
-      harness.getPushEvents<SuggestionPayload>(KG_SUGGESTION_CHANNEL);
+    const events = harness.getPushEvents<SuggestionPayload>(
+      KG_SUGGESTION_CHANNEL,
+    );
     assert.ok(
       events.some((e) => e.payload.name === "天外飞仙"),
       "should recognize quoted entity 天外飞仙",
@@ -207,16 +200,13 @@ async function waitForCondition(
 
   const harness = createKnowledgeGraphIpcHarness();
   try {
-    await harness.invoke<{ taskId: string }>(
-      "knowledge:recognition:enqueue",
-      {
-        projectId: harness.projectId,
-        documentId: "doc-degrade",
-        sessionId: "session-degrade",
-        contentText: "测试降级路径。",
-        traceId: "trace-degrade-1",
-      },
-    );
+    await harness.invoke<{ taskId: string }>("knowledge:recognition:enqueue", {
+      projectId: harness.projectId,
+      documentId: "doc-degrade",
+      sessionId: "session-degrade",
+      contentText: "测试降级路径。",
+      traceId: "trace-degrade-1",
+    });
 
     await waitForCondition(
       () =>

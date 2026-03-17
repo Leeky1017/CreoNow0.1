@@ -43,6 +43,14 @@ type RecognitionTask = {
   canceled: boolean;
 };
 
+type NormalizedEnqueueInput = {
+  projectId: string;
+  documentId: string;
+  sessionId: string;
+  contentText: string;
+  traceId: string;
+};
+
 type RecognitionSessionState = {
   dismissedKeys: Set<string>;
   suggestions: Map<string, StoredSuggestion>;
@@ -149,7 +157,9 @@ function normalizeSuggestionKey(args: {
 }
 
 function inferSuggestionType(name: string): KnowledgeEntityType {
-  if (/(仓库|城|镇|村|山|馆|楼|谷|岛|洞|林|峰|崖|寺|庙|殿|府|庄|堡)$/u.test(name)) {
+  if (
+    /(仓库|城|镇|村|山|馆|楼|谷|岛|洞|林|峰|崖|寺|庙|殿|府|庄|堡)$/u.test(name)
+  ) {
     return "location";
   }
   if (EVENT_SUFFIXES.test(name)) {
@@ -185,30 +195,189 @@ async function sleep(ms: number): Promise<void> {
  * Common Chinese surname list for character name detection.
  */
 const COMMON_SURNAMES = [
-  "赵", "钱", "孙", "李", "周", "吴", "郑", "王",
-  "冯", "陈", "褚", "卫", "蒋", "沈", "韩", "杨",
-  "朱", "秦", "尤", "许", "何", "吕", "施", "张",
-  "孔", "曹", "严", "华", "金", "魏", "陶", "姜",
-  "戚", "谢", "邹", "喻", "柏", "水", "窦", "章",
-  "苏", "潘", "葛", "奚", "范", "彭", "郎", "鲁",
-  "韦", "昌", "马", "苗", "凤", "花", "方", "俞",
-  "任", "袁", "柳", "丰", "鲍", "史", "唐", "费",
-  "廉", "岑", "薛", "雷", "贺", "倪", "汤", "滕",
-  "殷", "罗", "毕", "郝", "邬", "安", "常", "乐",
-  "于", "时", "傅", "皮", "卞", "齐", "康", "伍",
-  "余", "元", "卜", "顾", "孟", "黄", "穆", "萧",
-  "尹", "姚", "邵", "湛", "汪", "祁", "毛", "禹",
-  "狄", "贝", "明", "臧", "计", "伏", "成", "戴",
-  "谈", "宋", "茅", "庞", "熊", "纪", "舒", "屈",
-  "项", "祝", "董", "梁", "杜", "阮", "蓝", "闽",
-  "席", "季", "麻", "强", "贾", "路", "娄", "危",
-  "林", "刘", "徐", "高", "夏", "田", "胡", "郭",
-  "程", "叶", "宫", "温", "白", "崔", "吉", "钮",
-  "龚", "黎", "段", "武", "江", "颜", "侯", "邢",
-  "钟", "付", "丁", "石", "肖", "谷", "邓", "曾",
-  "欧阳", "司马", "上官", "诸葛", "公孙", "令狐",
-  "慕容", "司徒", "皇甫", "东方", "西门", "南宫",
-  "独孤", "长孙", "宇文",
+  "赵",
+  "钱",
+  "孙",
+  "李",
+  "周",
+  "吴",
+  "郑",
+  "王",
+  "冯",
+  "陈",
+  "褚",
+  "卫",
+  "蒋",
+  "沈",
+  "韩",
+  "杨",
+  "朱",
+  "秦",
+  "尤",
+  "许",
+  "何",
+  "吕",
+  "施",
+  "张",
+  "孔",
+  "曹",
+  "严",
+  "华",
+  "金",
+  "魏",
+  "陶",
+  "姜",
+  "戚",
+  "谢",
+  "邹",
+  "喻",
+  "柏",
+  "水",
+  "窦",
+  "章",
+  "苏",
+  "潘",
+  "葛",
+  "奚",
+  "范",
+  "彭",
+  "郎",
+  "鲁",
+  "韦",
+  "昌",
+  "马",
+  "苗",
+  "凤",
+  "花",
+  "方",
+  "俞",
+  "任",
+  "袁",
+  "柳",
+  "丰",
+  "鲍",
+  "史",
+  "唐",
+  "费",
+  "廉",
+  "岑",
+  "薛",
+  "雷",
+  "贺",
+  "倪",
+  "汤",
+  "滕",
+  "殷",
+  "罗",
+  "毕",
+  "郝",
+  "邬",
+  "安",
+  "常",
+  "乐",
+  "于",
+  "时",
+  "傅",
+  "皮",
+  "卞",
+  "齐",
+  "康",
+  "伍",
+  "余",
+  "元",
+  "卜",
+  "顾",
+  "孟",
+  "黄",
+  "穆",
+  "萧",
+  "尹",
+  "姚",
+  "邵",
+  "湛",
+  "汪",
+  "祁",
+  "毛",
+  "禹",
+  "狄",
+  "贝",
+  "明",
+  "臧",
+  "计",
+  "伏",
+  "成",
+  "戴",
+  "谈",
+  "宋",
+  "茅",
+  "庞",
+  "熊",
+  "纪",
+  "舒",
+  "屈",
+  "项",
+  "祝",
+  "董",
+  "梁",
+  "杜",
+  "阮",
+  "蓝",
+  "闽",
+  "席",
+  "季",
+  "麻",
+  "强",
+  "贾",
+  "路",
+  "娄",
+  "危",
+  "林",
+  "刘",
+  "徐",
+  "高",
+  "夏",
+  "田",
+  "胡",
+  "郭",
+  "程",
+  "叶",
+  "宫",
+  "温",
+  "白",
+  "崔",
+  "吉",
+  "钮",
+  "龚",
+  "黎",
+  "段",
+  "武",
+  "江",
+  "颜",
+  "侯",
+  "邢",
+  "钟",
+  "付",
+  "丁",
+  "石",
+  "肖",
+  "谷",
+  "邓",
+  "曾",
+  "欧阳",
+  "司马",
+  "上官",
+  "诸葛",
+  "公孙",
+  "令狐",
+  "慕容",
+  "司徒",
+  "皇甫",
+  "东方",
+  "西门",
+  "南宫",
+  "独孤",
+  "长孙",
+  "宇文",
 ] as const;
 
 const SURNAME_PATTERN = new RegExp(
@@ -219,12 +388,14 @@ const SURNAME_PATTERN = new RegExp(
 /**
  * Event-related keyword patterns for recognizing events.
  */
-const EVENT_SUFFIXES = /(大会|之战|盟约|仪式|庆典|比武|论道|祭祀|会议|大典|风波|事变|之乱|叛乱|起义)$/u;
+const EVENT_SUFFIXES =
+  /(大会|之战|盟约|仪式|庆典|比武|论道|祭祀|会议|大典|风波|事变|之乱|叛乱|起义)$/u;
 
 /**
  * Item/artifact keyword patterns for recognizing items.
  */
-const ITEM_SUFFIXES = /(之剑|之刃|神剑|宝剑|法杖|令牌|秘籍|宝典|圣物|神器|法宝|灵石|丹药|卷轴|古籍)$/u;
+const ITEM_SUFFIXES =
+  /(之剑|之刃|神剑|宝剑|法杖|令牌|秘籍|宝典|圣物|神器|法宝|灵石|丹药|卷轴|古籍)$/u;
 
 /**
  * Create a deterministic mock recognizer for KG suggestions.
@@ -309,7 +480,8 @@ function createMockRecognizer(): Recognizer {
       }
 
       // Pattern 4: Event recognition (prefix 2 chars to avoid greedy over-match)
-      const eventPattern = /[\u4e00-\u9fa5]{2,2}(大会|之战|盟约|仪式|庆典|比武|论道|祭祀|会议|大典|风波|事变|之乱|叛乱|起义)/gu;
+      const eventPattern =
+        /[\u4e00-\u9fa5]{2,2}(大会|之战|盟约|仪式|庆典|比武|论道|祭祀|会议|大典|风波|事变|之乱|叛乱|起义)/gu;
       for (const match of contentText.matchAll(eventPattern)) {
         const rawName = match[0]?.trim() ?? "";
         if (rawName.length === 0) {
@@ -324,7 +496,8 @@ function createMockRecognizer(): Recognizer {
       }
 
       // Pattern 5: Item recognition (prefix 2 chars to avoid greedy over-match)
-      const itemPattern = /[\u4e00-\u9fa5]{2,2}(之剑|之刃|神剑|宝剑|法杖|令牌|秘籍|宝典|圣物|神器|法宝|灵石|丹药|卷轴|古籍)/gu;
+      const itemPattern =
+        /[\u4e00-\u9fa5]{2,2}(之剑|之刃|神剑|宝剑|法杖|令牌|秘籍|宝典|圣物|神器|法宝|灵石|丹药|卷轴|古籍)/gu;
       for (const match of contentText.matchAll(itemPattern)) {
         const rawName = match[0]?.trim() ?? "";
         if (rawName.length === 0) {
@@ -359,10 +532,7 @@ function createMockRecognizer(): Recognizer {
 function createSuggestionOps(ctx: {
   sessions: Map<string, RecognitionSessionState>;
   kgService: ReturnType<typeof createKnowledgeGraphService>;
-}): Pick<
-  KgRecognitionRuntime,
-  "acceptSuggestion" | "dismissSuggestion"
-> {
+}): Pick<KgRecognitionRuntime, "acceptSuggestion" | "dismissSuggestion"> {
   function getSession(sessionId: string): RecognitionSessionState {
     const existing = ctx.sessions.get(sessionId);
     if (existing) {
@@ -492,6 +662,38 @@ function buildRuntimeStats(
   };
 }
 
+function normalizeEnqueueInput(args: {
+  projectId: string;
+  documentId: string;
+  sessionId: string;
+  contentText: string;
+  traceId: string;
+}): NormalizedEnqueueInput {
+  return {
+    projectId: args.projectId.trim(),
+    documentId: args.documentId.trim(),
+    sessionId: args.sessionId.trim(),
+    contentText: args.contentText.trim(),
+    traceId: args.traceId.trim(),
+  };
+}
+
+function getOrCreateRecognitionSession(
+  sessions: Map<string, RecognitionSessionState>,
+  sessionId: string,
+): RecognitionSessionState {
+  const existing = sessions.get(sessionId);
+  if (existing) {
+    return existing;
+  }
+  const created: RecognitionSessionState = {
+    dismissedKeys: new Set<string>(),
+    suggestions: new Map<string, StoredSuggestion>(),
+  };
+  sessions.set(sessionId, created);
+  return created;
+}
+
 /**
  * Create queue-backed KG recognition runtime.
  *
@@ -522,19 +724,6 @@ export function createKgRecognitionRuntime(args: {
     db: args.db,
     logger: args.logger,
   });
-
-  function getSessionState(sessionId: string): RecognitionSessionState {
-    const existing = sessions.get(sessionId);
-    if (existing) {
-      return existing;
-    }
-    const created: RecognitionSessionState = {
-      dismissedKeys: new Set<string>(),
-      suggestions: new Map<string, StoredSuggestion>(),
-    };
-    sessions.set(sessionId, created);
-    return created;
-  }
 
   function safeSendSuggestion(
     sender: Electron.WebContents | null,
@@ -619,7 +808,10 @@ export function createKgRecognitionRuntime(args: {
       ),
     );
 
-    const sessionState = getSessionState(task.sessionId);
+    const sessionState = getOrCreateRecognitionSession(
+      sessions,
+      task.sessionId,
+    );
 
     for (const candidate of recognitionRes.data.candidates) {
       const dedupeKey = normalizeSuggestionKey({
@@ -720,17 +912,19 @@ export function createKgRecognitionRuntime(args: {
       traceId,
       sender,
     }) => {
-      const normalizedProjectId = projectId.trim();
-      const normalizedDocumentId = documentId.trim();
-      const normalizedSessionId = sessionId.trim();
-      const normalizedContentText = contentText.trim();
-      const normalizedTraceId = traceId.trim();
+      const normalized = normalizeEnqueueInput({
+        projectId,
+        documentId,
+        sessionId,
+        contentText,
+        traceId,
+      });
 
       if (
-        normalizedProjectId.length === 0 ||
-        normalizedDocumentId.length === 0 ||
-        normalizedSessionId.length === 0 ||
-        normalizedTraceId.length === 0
+        normalized.projectId.length === 0 ||
+        normalized.documentId.length === 0 ||
+        normalized.sessionId.length === 0 ||
+        normalized.traceId.length === 0
       ) {
         return toErr(
           "INVALID_ARGUMENT",
@@ -738,7 +932,7 @@ export function createKgRecognitionRuntime(args: {
         );
       }
 
-      if (normalizedContentText.length === 0) {
+      if (normalized.contentText.length === 0) {
         return {
           ok: true,
           data: {
@@ -751,11 +945,11 @@ export function createKgRecognitionRuntime(args: {
 
       const task: RecognitionTask = {
         taskId: randomUUID(),
-        projectId: normalizedProjectId,
-        documentId: normalizedDocumentId,
-        sessionId: normalizedSessionId,
-        contentText: normalizedContentText,
-        traceId: normalizedTraceId,
+        projectId: normalized.projectId,
+        documentId: normalized.documentId,
+        sessionId: normalized.sessionId,
+        contentText: normalized.contentText,
+        traceId: normalized.traceId,
         sender,
         canceled: false,
       };

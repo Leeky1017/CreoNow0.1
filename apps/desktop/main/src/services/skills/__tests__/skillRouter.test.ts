@@ -5,7 +5,10 @@ import { inferSkillFromInput } from "../skillRouter";
 // --- S1: default to chat for free text ---
 
 assert.equal(
-  inferSkillFromInput({ input: "帮我想一个悬疑小说的开头", hasSelection: false }),
+  inferSkillFromInput({
+    input: "帮我想一个悬疑小说的开头",
+    hasSelection: false,
+  }),
   "builtin:chat",
   "free text without keywords → chat",
 );
@@ -95,7 +98,11 @@ assert.equal(
 // --- Explicit skill override takes precedence ---
 
 assert.equal(
-  inferSkillFromInput({ input: "续写", hasSelection: false, explicitSkillId: "builtin:polish" }),
+  inferSkillFromInput({
+    input: "续写",
+    hasSelection: false,
+    explicitSkillId: "builtin:polish",
+  }),
   "builtin:polish",
   "explicit skill overrides keyword detection",
 );

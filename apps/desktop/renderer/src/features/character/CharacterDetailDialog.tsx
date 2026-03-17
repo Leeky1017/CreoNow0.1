@@ -24,7 +24,14 @@ import {
   ZODIAC_OPTIONS,
 } from "./types";
 
-import { ArrowRight, Camera, ChevronDown, FileText, Trash2, X } from "lucide-react";
+import {
+  ArrowRight,
+  Camera,
+  ChevronDown,
+  FileText,
+  Trash2,
+  X,
+} from "lucide-react";
 export interface CharacterDetailDialogProps {
   /** Controlled open state */
   open: boolean;
@@ -216,14 +223,27 @@ function ProfileSummaryItem({
  * ChevronDownIcon - Small chevron used in expand/collapse toggles.
  */
 function ChevronDownIcon({ className }: { className?: string }): JSX.Element {
-  return <ChevronDown className={className} size={16} strokeWidth={1.5} aria-hidden="true" />;
+  return (
+    <ChevronDown
+      className={className}
+      size={16}
+      strokeWidth={1.5}
+      aria-hidden="true"
+    />
+  );
 }
 
 /**
  * Camera icon for avatar upload
  */
 function CameraIcon() {
-  return <Camera className="text-[var(--color-fg-on-accent)] w-5 h-5 drop-shadow-md" size={20} strokeWidth={1.5} />;
+  return (
+    <Camera
+      className="text-[var(--color-fg-on-accent)] w-5 h-5 drop-shadow-md"
+      size={20}
+      strokeWidth={1.5}
+    />
+  );
 }
 
 /**
@@ -303,7 +323,7 @@ function TraitTag({
             "scale-75",
             "group-hover:scale-100",
           ].join(" ")}
-          aria-label={t('character.detail.removeTrait', { trait })}
+          aria-label={t("character.detail.removeTrait", { trait })}
         >
           <CloseIcon />
         </button>
@@ -359,7 +379,9 @@ function RelationshipItem({
             type="button"
             onClick={onRemove}
             className="focus-ring opacity-0 group-hover:opacity-100 text-[var(--color-fg-placeholder)] hover:text-[var(--color-error)] transition-[opacity,color]"
-            aria-label={t('character.detail.removeRelationship', { name: relationship.characterName })}
+            aria-label={t("character.detail.removeRelationship", {
+              name: relationship.characterName,
+            })}
           >
             <CloseIcon />
           </button>
@@ -440,7 +462,10 @@ function CharacterProfileSection(props: {
   onAddFeature: () => void;
   onRemoveFeature: (feature: string) => void;
   onFeatureKeyDown: (e: React.KeyboardEvent) => void;
-  onFieldChange: <K extends keyof Character>(field: K, value: Character[K]) => void;
+  onFieldChange: <K extends keyof Character>(
+    field: K,
+    value: Character[K],
+  ) => void;
 }): JSX.Element {
   const { t } = useTranslation();
   const c = props.character;
@@ -448,17 +473,23 @@ function CharacterProfileSection(props: {
   return (
     <div className="space-y-3">
       <div className={sectionHeaderStyles}>
-        <label className={labelStyles}>{t('character.detail.profile')}</label>
+        <label className={labelStyles}>{t("character.detail.profile")}</label>
         <button
           type="button"
           onClick={props.onToggleExpand}
           aria-expanded={props.isExpanded}
           aria-controls={props.contentId}
-          aria-label={props.isExpanded ? t('character.detail.collapseProfile') : t('character.detail.expandProfile')}
+          aria-label={
+            props.isExpanded
+              ? t("character.detail.collapseProfile")
+              : t("character.detail.expandProfile")
+          }
           className="focus-ring text-[10px] text-[var(--color-fg-placeholder)] hover:text-[var(--color-fg-muted)] inline-flex items-center gap-1 font-medium transition-colors"
         >
           <span aria-hidden="true">
-            {props.isExpanded ? t('character.detail.collapse') : t('character.detail.expand')}
+            {props.isExpanded
+              ? t("character.detail.collapse")
+              : t("character.detail.expand")}
           </span>
           <ChevronDownIcon
             className={[
@@ -472,19 +503,22 @@ function CharacterProfileSection(props: {
       <div id={props.contentId}>
         {props.isExpanded ? (
           <div className="rounded-lg overflow-hidden border border-[var(--color-border-default)] divide-y divide-[var(--color-border-default)] bg-[var(--color-bg-base)]">
-            <ProfileTableRow label={t('character.detail.age')}>
+            <ProfileTableRow label={t("character.detail.age")}>
               <Input
                 type="text"
                 value={c.age?.toString() ?? ""}
                 onChange={(e) => {
                   const val = e.target.value;
-                  props.onFieldChange("age", val ? parseInt(val, 10) : undefined);
+                  props.onFieldChange(
+                    "age",
+                    val ? parseInt(val, 10) : undefined,
+                  );
                 }}
                 fullWidth
               />
             </ProfileTableRow>
 
-            <ProfileTableRow label={t('character.detail.birthDate')}>
+            <ProfileTableRow label={t("character.detail.birthDate")}>
               <Input
                 type="date"
                 value={c.birthDate ?? ""}
@@ -500,38 +534,51 @@ function CharacterProfileSection(props: {
               />
             </ProfileTableRow>
 
-            <ProfileTableRow label={t('character.detail.zodiac')}>
+            <ProfileTableRow label={t("character.detail.zodiac")}>
               <Select
                 value={c.zodiac ?? ""}
                 onValueChange={(val) =>
-                  props.onFieldChange("zodiac", val ? (val as ZodiacSign) : undefined)
+                  props.onFieldChange(
+                    "zodiac",
+                    val ? (val as ZodiacSign) : undefined,
+                  )
                 }
-                options={ZODIAC_OPTIONS.map((z) => ({ value: z.value, label: z.label }))}
-                placeholder={t('character.detail.selectZodiacPlaceholder')}
+                options={ZODIAC_OPTIONS.map((z) => ({
+                  value: z.value,
+                  label: z.label,
+                }))}
+                placeholder={t("character.detail.selectZodiacPlaceholder")}
                 fullWidth
                 layer="modal"
               />
             </ProfileTableRow>
 
-            <ProfileTableRow label={t('character.detail.archetype')}>
+            <ProfileTableRow label={t("character.detail.archetype")}>
               <Select
                 value={c.archetype ?? ""}
                 onValueChange={(val) => props.onFieldChange("archetype", val)}
-                options={ARCHETYPE_OPTIONS.map((a) => ({ value: a.value, label: a.label }))}
-                placeholder={t('character.detail.selectArchetypePlaceholder')}
+                options={ARCHETYPE_OPTIONS.map((a) => ({
+                  value: a.value,
+                  label: a.label,
+                }))}
+                placeholder={t("character.detail.selectArchetypePlaceholder")}
                 fullWidth
                 layer="modal"
               />
             </ProfileTableRow>
 
-            <ProfileTableRow label={t('character.detail.features')}>
+            <ProfileTableRow label={t("character.detail.features")}>
               <div className="flex flex-wrap gap-2">
                 {(c.features ?? []).map((feature) => (
-                  <TraitTag key={feature} trait={feature} onRemove={() => props.onRemoveFeature(feature)} />
+                  <TraitTag
+                    key={feature}
+                    trait={feature}
+                    onRemove={() => props.onRemoveFeature(feature)}
+                  />
                 ))}
                 <input
                   type="text"
-                  placeholder={t('character.detail.addFeaturePlaceholder')}
+                  placeholder={t("character.detail.addFeaturePlaceholder")}
                   value={props.newFeature}
                   onChange={(e) => props.onNewFeatureChange(e.target.value)}
                   onKeyDown={props.onFeatureKeyDown}
@@ -541,14 +588,18 @@ function CharacterProfileSection(props: {
               </div>
             </ProfileTableRow>
 
-            <ProfileTableRow label={t('character.detail.personality')}>
+            <ProfileTableRow label={t("character.detail.personality")}>
               <div className="flex flex-wrap gap-2">
                 {c.traits.map((trait) => (
-                  <TraitTag key={trait} trait={trait} onRemove={() => props.onRemoveTrait(trait)} />
+                  <TraitTag
+                    key={trait}
+                    trait={trait}
+                    onRemove={() => props.onRemoveTrait(trait)}
+                  />
                 ))}
                 <input
                   type="text"
-                  placeholder={t('character.detail.addTraitPlaceholder')}
+                  placeholder={t("character.detail.addTraitPlaceholder")}
                   value={props.newTrait}
                   onChange={(e) => props.onNewTraitChange(e.target.value)}
                   onKeyDown={props.onTraitKeyDown}
@@ -561,12 +612,30 @@ function CharacterProfileSection(props: {
         ) : (
           <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-3">
             <div className="flex flex-wrap gap-2">
-              <ProfileSummaryItem label={t('character.detail.age')} value={c.age !== undefined ? String(c.age) : "—"} />
-              <ProfileSummaryItem label={t('character.detail.birth')} value={c.birthDate ?? "—"} />
-              <ProfileSummaryItem label={t('character.detail.zodiac')} value={props.zodiacLabel ?? "—"} />
-              <ProfileSummaryItem label={t('character.detail.archetype')} value={props.archetypeLabel ?? "—"} />
-              <ProfileSummaryItem label={t('character.detail.features')} value={String((c.features ?? []).length)} />
-              <ProfileSummaryItem label={t('character.detail.traits')} value={String(c.traits.length)} />
+              <ProfileSummaryItem
+                label={t("character.detail.age")}
+                value={c.age !== undefined ? String(c.age) : "—"}
+              />
+              <ProfileSummaryItem
+                label={t("character.detail.birth")}
+                value={c.birthDate ?? "—"}
+              />
+              <ProfileSummaryItem
+                label={t("character.detail.zodiac")}
+                value={props.zodiacLabel ?? "—"}
+              />
+              <ProfileSummaryItem
+                label={t("character.detail.archetype")}
+                value={props.archetypeLabel ?? "—"}
+              />
+              <ProfileSummaryItem
+                label={t("character.detail.features")}
+                value={String((c.features ?? []).length)}
+              />
+              <ProfileSummaryItem
+                label={t("character.detail.traits")}
+                value={String(c.traits.length)}
+              />
             </div>
           </div>
         )}
@@ -581,30 +650,40 @@ function CharacterProfileSection(props: {
 function CharacterRelationshipsSection(props: {
   character: Character;
   availableCharacters: Character[] | undefined;
-  onFieldChange: <K extends keyof Character>(field: K, value: Character[K]) => void;
+  onFieldChange: <K extends keyof Character>(
+    field: K,
+    value: Character[K],
+  ) => void;
   onRemoveRelationship: (characterId: string) => void;
 }): JSX.Element {
   const { t } = useTranslation();
   const c = props.character;
 
-  const candidates = (props.availableCharacters ?? []).filter((ch) => ch.id !== c.id);
+  const candidates = (props.availableCharacters ?? []).filter(
+    (ch) => ch.id !== c.id,
+  );
 
   return (
     <div className="space-y-3">
       <div className={sectionHeaderStyles}>
-        <label className={labelStyles}>{t('character.detail.relationships')}</label>
+        <label className={labelStyles}>
+          {t("character.detail.relationships")}
+        </label>
         {candidates.length > 0 ? (
           <AddRelationshipPopover
             availableCharacters={candidates}
             existingRelationships={c.relationships}
             onAdd={(relationship) =>
-              props.onFieldChange("relationships", [...c.relationships, relationship])
+              props.onFieldChange("relationships", [
+                ...c.relationships,
+                relationship,
+              ])
             }
             layer="modal"
           />
         ) : (
           <span className="text-[10px] text-[var(--color-fg-placeholder)]">
-            {t('character.detail.noOtherCharacters')}
+            {t("character.detail.noOtherCharacters")}
           </span>
         )}
       </div>
@@ -620,7 +699,7 @@ function CharacterRelationshipsSection(props: {
         </div>
       ) : (
         <div className="text-xs text-[var(--color-fg-placeholder)] py-4 text-center border border-dashed border-[var(--color-border-default)] rounded-lg">
-          {t('character.detail.noRelationships')}
+          {t("character.detail.noRelationships")}
         </div>
       )}
     </div>
@@ -640,9 +719,11 @@ function CharacterAppearancesSection(props: {
   return (
     <div className="space-y-3 pb-2">
       <div className={sectionHeaderStyles}>
-        <label className={labelStyles}>{t('character.detail.appearances')}</label>
+        <label className={labelStyles}>
+          {t("character.detail.appearances")}
+        </label>
         <span className="text-[10px] text-[var(--color-fg-placeholder)]">
-          {props.appearances.length} {t('character.detail.chapters')}
+          {props.appearances.length} {t("character.detail.chapters")}
         </span>
       </div>
       {props.navigationWarning ? (
@@ -667,10 +748,10 @@ function CharacterAppearancesSection(props: {
       ) : (
         <>
           <div className="text-xs text-[var(--color-fg-placeholder)] py-4 text-center border border-dashed border-[var(--color-border-default)] rounded-lg">
-            {t('character.detail.noAppearances')}
+            {t("character.detail.noAppearances")}
           </div>
           <p className="text-[11px] text-[var(--color-fg-placeholder)]">
-            {t('character.detail.noAppearancesFallbackHint')}
+            {t("character.detail.noAppearancesFallbackHint")}
           </p>
         </>
       )}
@@ -699,7 +780,8 @@ export function CharacterDetailDialog({
   const { t } = useTranslation();
 
   // Form state
-  const [editedCharacter, setEditedCharacter] = React.useState<Character | null>(null);
+  const [editedCharacter, setEditedCharacter] =
+    React.useState<Character | null>(null);
   const [newTrait, setNewTrait] = React.useState("");
   const [newFeature, setNewFeature] = React.useState("");
   const [isProfileExpanded, setIsProfileExpanded] = React.useState(false);
@@ -747,7 +829,11 @@ export function CharacterDetailDialog({
 
   const handleAddTrait = () => {
     const trimmed = newTrait.trim();
-    if (trimmed && editedCharacter && !editedCharacter.traits.includes(trimmed)) {
+    if (
+      trimmed &&
+      editedCharacter &&
+      !editedCharacter.traits.includes(trimmed)
+    ) {
       handleFieldChange("traits", [...editedCharacter.traits, trimmed]);
       setNewTrait("");
     }
@@ -790,7 +876,9 @@ export function CharacterDetailDialog({
     if (editedCharacter) {
       handleFieldChange(
         "relationships",
-        editedCharacter.relationships.filter((r) => r.characterId !== characterId),
+        editedCharacter.relationships.filter(
+          (r) => r.characterId !== characterId,
+        ),
       );
     }
   };
@@ -869,11 +957,11 @@ export function CharacterDetailDialog({
                   value={editedCharacter.name}
                   onChange={(e) => handleFieldChange("name", e.target.value)}
                   className="bg-transparent text-xl font-semibold text-[var(--color-fg-default)] focus:outline-none border-b border-transparent focus:border-[var(--color-info)]/30 pb-0.5 w-full mr-4 placeholder-[var(--color-fg-placeholder)]"
-                  placeholder={t('character.detail.namePlaceholder')}
+                  placeholder={t("character.detail.namePlaceholder")}
                 />
                 <DialogPrimitive.Close
                   className="p-2 text-[var(--color-fg-placeholder)] hover:text-[var(--color-fg-default)] transition-colors rounded hover:bg-[var(--color-bg-hover)]"
-                  aria-label={t('character.detail.close')}
+                  aria-label={t("character.detail.close")}
                 >
                   <CloseIcon />
                 </DialogPrimitive.Close>
@@ -919,12 +1007,16 @@ export function CharacterDetailDialog({
             {/* Appearance & Description */}
             <div className="space-y-3">
               <div className={sectionHeaderStyles}>
-                <label className={labelStyles}>{t('character.detail.appearanceDescription')}</label>
+                <label className={labelStyles}>
+                  {t("character.detail.appearanceDescription")}
+                </label>
               </div>
               <Textarea
                 value={editedCharacter.description ?? ""}
-                onChange={(e) => handleFieldChange("description", e.target.value)}
-                placeholder={t('character.detail.descriptionPlaceholder')}
+                onChange={(e) =>
+                  handleFieldChange("description", e.target.value)
+                }
+                placeholder={t("character.detail.descriptionPlaceholder")}
                 fullWidth
                 className="min-h-[80px] focus:min-h-[100px] transition-[min-height] resize-none"
               />
@@ -955,26 +1047,28 @@ export function CharacterDetailDialog({
             >
               <span className="inline-flex items-center gap-1.5">
                 <TrashIcon />
-                {t('character.detail.delete')}
+                {t("character.detail.delete")}
               </span>
             </Button>
             <div className="flex items-center gap-3">
               <Button variant="ghost" size="sm" onClick={handleCancel}>
-                {t('character.detail.cancel')}
+                {t("character.detail.cancel")}
               </Button>
               {/* Save Changes: 无图标，secondary 样式 */}
               <Button variant="secondary" size="sm" onClick={handleSave}>
-                {t('character.detail.saveChanges')}
+                {t("character.detail.saveChanges")}
               </Button>
             </div>
           </div>
 
           {/* Hidden title for accessibility */}
           <DialogPrimitive.Title className="sr-only">
-            {t('character.detail.editCharacterTitle', { name: editedCharacter.name })}
+            {t("character.detail.editCharacterTitle", {
+              name: editedCharacter.name,
+            })}
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="sr-only">
-            {t('character.detail.editCharacterDescription')}
+            {t("character.detail.editCharacterDescription")}
           </DialogPrimitive.Description>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>

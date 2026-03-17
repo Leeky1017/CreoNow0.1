@@ -262,13 +262,15 @@ export type EpisodeRepository = {
 };
 
 export type EpisodicMemoryService = {
-  recordEpisode: (args: EpisodeRecordInput) => Promise<ServiceResult<{
-    accepted: true;
-    episodeId: string;
-    retryCount: number;
-    implicitSignal: ImplicitSignal;
-    implicitWeight: number;
-  }>>;
+  recordEpisode: (args: EpisodeRecordInput) => Promise<
+    ServiceResult<{
+      accepted: true;
+      episodeId: string;
+      retryCount: number;
+      implicitSignal: ImplicitSignal;
+      implicitWeight: number;
+    }>
+  >;
   queryEpisodes: (args: EpisodeQueryInput) => ServiceResult<{
     items: EpisodeRecord[];
     memoryDegraded: boolean;
@@ -1063,9 +1065,14 @@ type EpisodicState = {
 type EpisodicSmallHelpers = ReturnType<typeof createEpisodicSmallHelpers>;
 type EpisodicExecHelpers = ReturnType<typeof createEpisodicExecHelpers>;
 
-type EpisodicCtx = Pick<EpisodicServiceArgs, 'repository' | 'logger' | 'semanticRecall'> & {
+type EpisodicCtx = Pick<
+  EpisodicServiceArgs,
+  "repository" | "logger" | "semanticRecall"
+> & {
   now: () => number;
-} & EpisodicState & EpisodicSmallHelpers & EpisodicExecHelpers;
+} & EpisodicState &
+  EpisodicSmallHelpers &
+  EpisodicExecHelpers;
 
 function createEpisodicSmallHelpers(
   args: EpisodicServiceArgs,
@@ -1278,7 +1285,6 @@ function createEpisodicSmallHelpers(
     return outputs;
   }
 
-
   function fallbackRules(): string[] {
     return [
       "Use concise, coherent narration.",
@@ -1328,52 +1334,90 @@ function createEpisodicSmallHelpers(
     );
   }
 
+  return {
+    cloneSemanticRule,
+    cloneConflict,
+    toPlaceholder,
+    normalizeRuleText,
+    isConfidenceInRange,
+    clampConfidence,
+    isDirectContradiction,
+    emitDistillProgress,
+    logDegradeEvent,
+    invalidateSemanticCache,
+    resolveScopePriority,
+    getSemanticRules,
+    getConflictQueue,
+    upsertSemanticRule,
+    enqueueConflict,
+    defaultDistillLlm,
+    fallbackRules,
+    validateRecordInput,
+    scoreEpisode,
+  };
+}
 
-  return { cloneSemanticRule, cloneConflict, toPlaceholder, normalizeRuleText, isConfidenceInRange, clampConfidence, isDirectContradiction, emitDistillProgress, logDegradeEvent, invalidateSemanticCache, resolveScopePriority, getSemanticRules, getConflictQueue, upsertSemanticRule, enqueueConflict, defaultDistillLlm, fallbackRules, validateRecordInput, scoreEpisode };
+function buildEpisodeClusters(
+  repository: EpisodeRepository,
+  projectId: string,
+): Array<{ sceneType: string; skillUsed: string; episodes: EpisodeRecord[] }> {
+  const snapshot = repository.listEpisodesByProject({
+    projectId,
+    includeCompressed: false,
+  });
+  const grouped = new Map<
+    string,
+    { sceneType: string; skillUsed: string; episodes: EpisodeRecord[] }
+  >();
+  for (const episode of snapshot) {
+    const key = `${episode.sceneType}::${episode.skillUsed}`;
+    const current = grouped.get(key);
+    if (current) {
+      current.episodes.push(episode);
+    } else {
+      grouped.set(key, {
+        sceneType: episode.sceneType,
+        skillUsed: episode.skillUsed,
+        episodes: [episode],
+      });
+    }
+  }
+  return [...grouped.values()];
 }
 
 function createEpisodicExecHelpers(
   args: EpisodicServiceArgs,
   state: EpisodicState,
-  derived: { now: () => number; distillScheduler: (job: () => void) => void; distillLlm: EpisodicServiceArgs['distillLlm'] extends infer T ? NonNullable<T> : never },
+  derived: {
+    now: () => number;
+    distillScheduler: (job: () => void) => void;
+    distillLlm: EpisodicServiceArgs["distillLlm"] extends infer T
+      ? NonNullable<T>
+      : never;
+  },
   helpers: ReturnType<typeof createEpisodicSmallHelpers>,
 ) {
-  const { knownProjectIds, distillingProjects, distillIoDegradedProjects,
-    retryPendingByProject, pendingEpisodeCountByProject,
-    scheduledBatchDistillProjects, projectMutex } = state;
+  const {
+    knownProjectIds,
+    distillingProjects,
+    distillIoDegradedProjects,
+    retryPendingByProject,
+    pendingEpisodeCountByProject,
+    scheduledBatchDistillProjects,
+    projectMutex,
+  } = state;
   const { now, distillScheduler, distillLlm } = derived;
-  const { emitDistillProgress, logDegradeEvent, isConfidenceInRange,
-    getSemanticRules, normalizeRuleText, clampConfidence,
-    upsertSemanticRule, isDirectContradiction, enqueueConflict } = helpers;
-
-  function buildClusters(projectId: string): Array<{
-    sceneType: string;
-    skillUsed: string;
-    episodes: EpisodeRecord[];
-  }> {
-    const snapshot = args.repository.listEpisodesByProject({
-      projectId,
-      includeCompressed: false,
-    });
-    const grouped = new Map<
-      string,
-      { sceneType: string; skillUsed: string; episodes: EpisodeRecord[] }
-    >();
-    for (const episode of snapshot) {
-      const key = `${episode.sceneType}::${episode.skillUsed}`;
-      const current = grouped.get(key);
-      if (current) {
-        current.episodes.push(episode);
-      } else {
-        grouped.set(key, {
-          sceneType: episode.sceneType,
-          skillUsed: episode.skillUsed,
-          episodes: [episode],
-        });
-      }
-    }
-    return [...grouped.values()];
-  }
+  const {
+    emitDistillProgress,
+    logDegradeEvent,
+    isConfidenceInRange,
+    getSemanticRules,
+    normalizeRuleText,
+    clampConfidence,
+    upsertSemanticRule,
+    isDirectContradiction,
+    enqueueConflict,
+  } = helpers;
 
   function executeDistillation(args2: {
     projectId: string;
@@ -1389,7 +1433,7 @@ function createEpisodicExecHelpers(
       projectId,
       includeCompressed: false,
     });
-    const clusters = buildClusters(projectId);
+    const clusters = buildEpisodeClusters(args.repository, projectId);
 
     emitDistillProgress({
       runId: args2.runId,
@@ -1640,17 +1684,27 @@ function createEpisodicExecHelpers(
     }
   }
 
-  return { buildClusters, executeDistillation, scheduleBatchDistillation, maybeTriggerBatchDistillation };
+  return {
+    executeDistillation,
+    scheduleBatchDistillation,
+    maybeTriggerBatchDistillation,
+  };
 }
 
 function createEpisodicQueryOps(
   ctx: EpisodicCtx,
-): Pick<
-  EpisodicMemoryService,
-  "queryEpisodes"
-> {
+): Pick<EpisodicMemoryService, "queryEpisodes"> {
   const args = ctx;
-  const { now, scoreEpisode, logDegradeEvent, resolveScopePriority, getSemanticRules, toPlaceholder, distillIoDegradedProjects, fallbackRules } = ctx;
+  const {
+    now,
+    scoreEpisode,
+    logDegradeEvent,
+    resolveScopePriority,
+    getSemanticRules,
+    toPlaceholder,
+    distillIoDegradedProjects,
+    fallbackRules,
+  } = ctx;
   return {
     queryEpisodes: (input) => {
       if (input.projectId.trim().length === 0) {
@@ -1770,7 +1824,6 @@ function createEpisodicQueryOps(
         };
       }
     },
-
   };
 }
 
@@ -1778,10 +1831,20 @@ function createEpisodicTriggerOps(
   ctx: EpisodicCtx,
 ): Pick<
   EpisodicMemoryService,
-  "realtimeEvictionTrigger" | "dailyDecayRecomputeTrigger" | "weeklyCompressTrigger" | "monthlyPurgeTrigger"
+  | "realtimeEvictionTrigger"
+  | "dailyDecayRecomputeTrigger"
+  | "weeklyCompressTrigger"
+  | "monthlyPurgeTrigger"
 > {
   const args = ctx;
-  const { now, knownProjectIds, semanticRulesByProject, getSemanticRules, clampConfidence, upsertSemanticRule } = ctx;
+  const {
+    now,
+    knownProjectIds,
+    semanticRulesByProject,
+    getSemanticRules,
+    clampConfidence,
+    upsertSemanticRule,
+  } = ctx;
   return {
     realtimeEvictionTrigger: ({ projectId }) => {
       if (projectId.trim().length === 0) {
@@ -1924,7 +1987,6 @@ function createEpisodicTriggerOps(
         return ipcError("DB_ERROR", "Failed monthly purge trigger");
       }
     },
-
   };
 }
 
@@ -1932,10 +1994,26 @@ function createEpisodicSemanticOps(
   ctx: EpisodicCtx,
 ): Pick<
   EpisodicMemoryService,
-  "listSemanticMemory" | "addSemanticMemory" | "updateSemanticMemory" | "deleteSemanticMemory" | "promoteSemanticMemory"
+  | "listSemanticMemory"
+  | "addSemanticMemory"
+  | "updateSemanticMemory"
+  | "deleteSemanticMemory"
+  | "promoteSemanticMemory"
 > {
   const args = ctx;
-  const { knownProjectIds, getSemanticRules, cloneSemanticRule, getConflictQueue, cloneConflict, normalizeRuleText, isConfidenceInRange, upsertSemanticRule, now, semanticRulesByProject, invalidateSemanticCache } = ctx;
+  const {
+    knownProjectIds,
+    getSemanticRules,
+    cloneSemanticRule,
+    getConflictQueue,
+    cloneConflict,
+    normalizeRuleText,
+    isConfidenceInRange,
+    upsertSemanticRule,
+    now,
+    semanticRulesByProject,
+    invalidateSemanticCache,
+  } = ctx;
   return {
     listSemanticMemory: ({ projectId }) => {
       if (projectId.trim().length === 0) {
@@ -2077,7 +2155,6 @@ function createEpisodicSemanticOps(
       const item = upsertSemanticRule(projectId, promoted);
       return { ok: true, data: { item } };
     },
-
   };
 }
 
@@ -2085,10 +2162,28 @@ function createEpisodicManagementOps(
   ctx: EpisodicCtx,
 ): Pick<
   EpisodicMemoryService,
-  "getRetryQueueSize" | "clearProjectMemory" | "clearAllMemory" | "distillSemanticMemory" | "listConflictQueue"
+  | "getRetryQueueSize"
+  | "clearProjectMemory"
+  | "clearAllMemory"
+  | "distillSemanticMemory"
+  | "listConflictQueue"
 > {
   const args = ctx;
-  const { retryQueue, semanticRulesByProject, conflictQueueByProject, knownProjectIds, pendingEpisodeCountByProject, retryPendingByProject, scheduledBatchDistillProjects, distillIoDegradedProjects, distillingProjects, projectMutex, executeDistillation, getConflictQueue, cloneConflict } = ctx;
+  const {
+    retryQueue,
+    semanticRulesByProject,
+    conflictQueueByProject,
+    knownProjectIds,
+    pendingEpisodeCountByProject,
+    retryPendingByProject,
+    scheduledBatchDistillProjects,
+    distillIoDegradedProjects,
+    distillingProjects,
+    projectMutex,
+    executeDistillation,
+    getConflictQueue,
+    cloneConflict,
+  } = ctx;
   return {
     getRetryQueueSize: () => retryQueue.length,
 
@@ -2211,7 +2306,9 @@ function createEpisodicManagementOps(
   };
 }
 
-export function createEpisodicMemoryService(args: EpisodicServiceArgs): EpisodicMemoryService {
+export function createEpisodicMemoryService(
+  args: EpisodicServiceArgs,
+): EpisodicMemoryService {
   const now = args.now ?? (() => Date.now());
   const distillScheduler =
     args.distillScheduler ?? ((job: () => void) => queueMicrotask(job));
@@ -2225,7 +2322,6 @@ export function createEpisodicMemoryService(args: EpisodicServiceArgs): Episodic
   const semanticRulesByProject = new Map<string, SemanticMemoryRule[]>();
   const conflictQueueByProject = new Map<string, SemanticConflictQueueItem[]>();
   const distillIoDegradedProjects = new Set<string>();
-
 
   const state: EpisodicState = {
     retryQueue,
@@ -2243,9 +2339,17 @@ export function createEpisodicMemoryService(args: EpisodicServiceArgs): Episodic
   const smallHelpers = createEpisodicSmallHelpers(args, state, now);
   const distillLlm = args.distillLlm ?? smallHelpers.defaultDistillLlm;
   const derived = { now, distillScheduler, distillLlm };
-  const execHelpers = createEpisodicExecHelpers(args, state, derived, smallHelpers);
+  const execHelpers = createEpisodicExecHelpers(
+    args,
+    state,
+    derived,
+    smallHelpers,
+  );
 
-  const { validateRecordInput, maybeTriggerBatchDistillation } = { ...smallHelpers, ...execHelpers };
+  const { validateRecordInput, maybeTriggerBatchDistillation } = {
+    ...smallHelpers,
+    ...execHelpers,
+  };
 
   function ensureCapacity(projectId: string): ServiceResult<void> {
     const eviction = service.realtimeEvictionTrigger({ projectId });
@@ -2433,7 +2537,6 @@ export function createEpisodicMemoryService(args: EpisodicServiceArgs): Episodic
         );
       });
     },
-
 
     ...createEpisodicQueryOps(ctx),
     ...createEpisodicTriggerOps(ctx),

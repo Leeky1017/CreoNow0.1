@@ -52,9 +52,7 @@ describe("CharacterDetailDialog chapter navigation", () => {
 
     const chapterButtons = screen
       .getAllByRole("button")
-      .filter((btn) =>
-        btn.textContent?.includes("Chapter 1: The Beginning"),
-      );
+      .filter((btn) => btn.textContent?.includes("Chapter 1: The Beginning"));
     expect(chapterButtons.length).toBeGreaterThan(0);
 
     await user.click(chapterButtons[0]!);
@@ -73,12 +71,8 @@ describe("CharacterDetailDialog chapter navigation", () => {
       />,
     );
 
-    expect(
-      screen.getByText("Chapter 1: The Beginning"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Chapter 5: The Trial"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Chapter 1: The Beginning")).toBeInTheDocument();
+    expect(screen.getByText("Chapter 5: The Trial")).toBeInTheDocument();
   });
 
   it("does not throw when onNavigateToChapter is not provided", async () => {
@@ -95,9 +89,7 @@ describe("CharacterDetailDialog chapter navigation", () => {
 
     const chapterButtons = screen
       .getAllByRole("button")
-      .filter((btn) =>
-        btn.textContent?.includes("Chapter 5: The Trial"),
-      );
+      .filter((btn) => btn.textContent?.includes("Chapter 5: The Trial"));
     expect(chapterButtons.length).toBeGreaterThan(0);
 
     // Should not throw

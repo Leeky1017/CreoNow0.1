@@ -52,13 +52,16 @@ type RecognitionEnqueueDto = {
     );
     assert.equal(pushEvents.length >= 1, true);
 
+    const hasExpectedSuggestion = pushEvents.some((event) =>
+      event.payload.name.includes("林小雨"),
+    );
+    assert.equal(hasExpectedSuggestion, true);
+
     const first = pushEvents[0]?.payload;
     assert.ok(first);
     if (!first) {
       assert.fail("expected pushed suggestion");
     }
-
-    assert.equal(first.name.includes("林小雨"), true);
     assert.equal(first.sessionId, "session-1");
   } finally {
     harness.close();

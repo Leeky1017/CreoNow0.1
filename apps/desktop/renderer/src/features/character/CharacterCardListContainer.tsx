@@ -80,8 +80,12 @@ export function CharacterCardListContainer({
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
-  const [navigationWarning, setNavigationWarning] = React.useState<string | null>(null);
-  const latestEditorDocumentIdRef = React.useRef<string | null>(editorDocumentId);
+  const [navigationWarning, setNavigationWarning] = React.useState<
+    string | null
+  >(null);
+  const latestEditorDocumentIdRef = React.useRef<string | null>(
+    editorDocumentId,
+  );
   const latestEditorBootstrapStatusRef = React.useRef(editorBootstrapStatus);
 
   React.useEffect(() => {
