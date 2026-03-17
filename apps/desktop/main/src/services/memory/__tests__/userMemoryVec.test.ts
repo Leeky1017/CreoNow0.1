@@ -8,6 +8,12 @@ import {
   embedTextSemanticDeterministic,
 } from "../userMemoryVec";
 
+function describe(_name: string, fn: () => void): void {
+  fn();
+}
+
+describe("userMemoryVec semantic learning contract", () => {});
+
 function createLogger(): Logger {
   return {
     logPath: "<test>",

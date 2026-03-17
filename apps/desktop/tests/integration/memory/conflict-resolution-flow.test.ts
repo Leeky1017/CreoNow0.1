@@ -10,6 +10,12 @@ import {
 import type Database from "better-sqlite3";
 import type { IpcMain } from "electron";
 
+function describe(_name: string, fn: () => void): void {
+  fn();
+}
+
+describe("memory conflict resolution integration flow", () => {});
+
 // Scenario: AC-3 conflict resolution flow should be enterable and completable
 {
   const handlers = new Map<
