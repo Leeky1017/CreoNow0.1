@@ -126,9 +126,8 @@ describe("Windows keyboard compatibility", () => {
 
   describe("spec alignment: every spec-defined shortcut has an implementation", () => {
     it("all shortcuts from design/system/06-shortcuts.md are defined", async () => {
-      const { EDITOR_SHORTCUTS, LAYOUT_SHORTCUTS } = await import(
-        "../../config/shortcuts"
-      );
+      const { EDITOR_SHORTCUTS, LAYOUT_SHORTCUTS } =
+        await import("../../config/shortcuts");
 
       // From spec §全局快捷键
       expect(LAYOUT_SHORTCUTS.commandPalette.keys).toBe("mod+P");
