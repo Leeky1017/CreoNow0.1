@@ -652,6 +652,326 @@ border-radius: var(--radius-sm);
 - Selected: background: var(--color-bg-selected)
 - Active (Icon Bar): 左侧 2px 白色指示条
 
+### 6.5 Dialog
+
+**基于 Radix UI Dialog，MUST 封装为 Primitive。**
+
+```css
+/* 遮罩层 */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-scrim);
+  z-index: var(--z-modal);
+  animation: fadeIn var(--duration-normal) var(--ease-out);
+}
+
+/* 内容容器 */
+.dialog-content {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg); /* 12px */
+  box-shadow: var(--shadow-xl);
+  z-index: var(--z-modal);
+}
+```
+
+**尺寸变体 (MUST):**
+
+| 变体 | 宽度  | padding | 用途             |
+| ---- | ----- | ------- | ---------------- |
+| sm   | 400px | 24px    | 确认/告知        |
+| md   | 560px | 24px    | 表单/创建        |
+| lg   | 720px | 32px    | 复杂配置/预览    |
+| xl   | 900px | 32px    | 大型面板式对话框 |
+
+**动效 (MUST):**
+
+- 进入: `scale(0.96) → scale(1)`, `opacity: 0 → 1`, 时长 `var(--duration-normal)`
+- 退出: `scale(1) → scale(0.96)`, `opacity: 1 → 0`, 时长 `var(--duration-fast)`
+- MUST NOT 使用 bounce/elastic 缓动
+
+**关闭行为 (MUST):**
+
+- `Escape` 键关闭
+- 点击遮罩层关闭（MAY 通过 prop 禁用）
+- 关闭按钮（右上角，Ghost 按钮，X 图标）
+
+### 6.6 Select / Dropdown
+
+**基于 Radix UI Select。**
+
+**触发器:**
+
+```css
+height: 40px;
+padding: 0 12px;
+background: var(--color-bg-surface);
+border: 1px solid var(--color-border-default);
+border-radius: var(--radius-sm);
+font-size: 13px;
+```
+
+**下拉内容:**
+
+```css
+background: var(--color-bg-raised);
+border: 1px solid var(--color-border-default);
+border-radius: var(--radius-md);
+box-shadow: var(--shadow-md);
+z-index: var(--z-dropdown);
+max-height: 320px;
+overflow-y: auto;
+padding: var(--space-1); /* 4px */
+```
+
+**选项项:**
+
+```css
+height: 32px;
+padding: 0 8px 0 32px; /* 左侧留空给选中勾 */
+border-radius: var(--radius-sm);
+font-size: 13px;
+```
+
+**状态:**
+
+- Hover: background: var(--color-bg-hover)
+- Selected: background: var(--color-bg-selected), 左侧显示 Check 图标
+- Disabled: opacity: 0.5
+
+**分组 (MAY):**
+
+- 分组标签: text-xs, uppercase, tracking-wider, muted color, px-8, py-2
+
+### 6.7 Tabs
+
+**基于 Radix UI Tabs。**
+
+**Tab 列表容器:**
+
+```css
+display: flex;
+border-bottom: 1px solid var(--color-separator);
+gap: 0; /* tabs 紧密排列 */
+```
+
+**单个 Tab:**
+
+```css
+height: 36px;
+padding: 0 16px;
+font-size: 13px;
+font-weight: 400;
+color: var(--color-fg-muted);
+border-bottom: 2px solid transparent;
+transition: color var(--duration-fast), border-color var(--duration-fast);
+```
+
+**状态:**
+
+- Default: muted 文字, transparent 底边
+- Hover: default 文字色
+- Active: default 文字色, font-weight: 500, border-bottom: 2px solid var(--color-accent)
+- Disabled: opacity: 0.4, cursor: not-allowed
+
+**滑动指示器 (SHOULD):**
+
+- 底部 2px 白色条（--color-accent）
+- 切换 Tab 时 SHOULD 滑动过渡: `transform: translateX(...)`, `var(--duration-normal)`
+
+### 6.8 Accordion
+
+**基于 Radix UI Accordion。**
+
+**触发器:**
+
+```css
+display: flex;
+align-items: center;
+justify-content: space-between;
+width: 100%;
+height: 40px;
+padding: 0 12px;
+font-size: 13px;
+font-weight: 500;
+color: var(--color-fg-default);
+border-radius: var(--radius-sm);
+```
+
+**展开图标:**
+
+- 使用 ChevronDown (lucide-react), 16px
+- 展开时旋转 180°: `transform: rotate(180deg)`, `var(--duration-normal)`
+
+**内容区:**
+
+- padding: 12px
+- 展开动效: `grid-template-rows: 0fr → 1fr` 过渡（MUST NOT 直接动画 height）
+- 时长: var(--duration-slow)
+
+### 6.9 Badge
+
+**尺寸变体:**
+
+| 尺寸 | 高度 | 字号 | padding  | 圆角          |
+| ---- | ---- | ---- | -------- | ------------- |
+| sm   | 18px | 10px | 0 6px    | --radius-full |
+| md   | 22px | 11px | 0 8px    | --radius-full |
+
+**颜色变体:**
+
+| 变体    | 背景                     | 文字                |
+| ------- | ------------------------ | ------------------- |
+| default | var(--color-bg-hover)    | var(--color-fg-muted) |
+| accent  | var(--color-accent-subtle) | var(--color-fg-default) |
+| success | var(--color-success-subtle) | var(--color-success) |
+| warning | var(--color-warning-subtle) | var(--color-warning) |
+| error   | var(--color-error-subtle)   | var(--color-error) |
+| info    | var(--color-info-subtle)    | var(--color-info) |
+
+**字体:** font-weight: 500, letter-spacing: 0.02em
+
+### 6.10 Toggle / Checkbox / Radio
+
+**Toggle Switch:**
+
+```css
+/* 轨道 */
+width: 36px;
+height: 20px;
+border-radius: var(--radius-full);
+background: var(--color-bg-hover); /* Off */
+/* On: background: var(--color-accent); */
+transition: background var(--duration-fast);
+border: 1px solid var(--color-border-default);
+
+/* 滑块 */
+width: 16px;
+height: 16px;
+border-radius: var(--radius-full);
+background: var(--color-fg-muted); /* Off */
+/* On: background: var(--color-fg-inverse); transform: translateX(16px); */
+transition: transform var(--duration-fast), background var(--duration-fast);
+```
+
+**Checkbox:**
+
+```css
+width: 16px;
+height: 16px;
+border-radius: var(--radius-sm); /* 4px */
+border: 1px solid var(--color-border-default);
+/* Checked: background: var(--color-accent); border-color: var(--color-accent); */
+```
+
+- 选中时显示 Check 图标（白色，12px）
+- 动效: scale(0.9) → scale(1) 弹性反馈
+
+**Radio:**
+
+```css
+width: 16px;
+height: 16px;
+border-radius: var(--radius-full);
+border: 2px solid var(--color-border-default);
+/* Selected: border-color: var(--color-accent); 内部显示 8px 实心圆 */
+```
+
+### 6.11 Popover / Tooltip
+
+**Popover（基于 Radix UI Popover）:**
+
+```css
+background: var(--color-bg-raised);
+border: 1px solid var(--color-border-default);
+border-radius: var(--radius-md);
+box-shadow: var(--shadow-md);
+z-index: var(--z-popover);
+padding: var(--space-3); /* 12px */
+min-width: 200px;
+max-width: 360px;
+```
+
+- 动效: scale(0.96) + opacity 渐入, var(--duration-fast)
+- 箭头 (MAY): 使用 Radix Arrow, 填充 var(--color-bg-raised), 边框同容器
+
+**Tooltip:**
+
+```css
+background: var(--color-bg-raised);
+border: 1px solid var(--color-border-default);
+border-radius: var(--radius-sm);
+box-shadow: var(--shadow-sm);
+z-index: var(--z-tooltip);
+padding: 4px 8px;
+font-size: 12px;
+color: var(--color-fg-default);
+max-width: 240px;
+```
+
+- 出现延迟: 500ms（避免误触）
+- 消失延迟: 100ms
+- 动效: opacity 渐入, var(--duration-fast)
+
+### 6.12 Toast（视觉规范）
+
+**补充 §11.6 接口定义，此处定义视觉规格。**
+
+**容器:**
+
+```css
+position: fixed;
+bottom: var(--space-6); /* 24px */
+right: var(--space-6); /* 24px */
+z-index: var(--z-toast);
+display: flex;
+flex-direction: column;
+gap: var(--space-2); /* 8px */
+max-width: 360px;
+```
+
+**单条 Toast:**
+
+```css
+background: var(--color-bg-raised);
+border: 1px solid var(--color-border-default);
+border-radius: var(--radius-md);
+box-shadow: var(--shadow-lg);
+padding: 12px 16px;
+display: flex;
+align-items: flex-start;
+gap: 12px;
+```
+
+**变体左侧指示:**
+
+| 变体    | 图标色              | 左侧条色           |
+| ------- | ------------------- | ------------------- |
+| success | var(--color-success) | var(--color-success) |
+| error   | var(--color-error)   | var(--color-error)   |
+| warning | var(--color-warning) | var(--color-warning) |
+| info    | var(--color-info)    | var(--color-info)    |
+
+**尺寸:**
+
+- 标题: 13px, font-weight: 500
+- 描述: 12px, muted color
+- 关闭按钮: 16px 图标, Ghost 风格
+- 操作按钮 (MAY): text-xs, font-medium, accent color
+
+**动效:**
+
+- 进入: `translateX(100%) → translateX(0)`, var(--duration-slow)
+- 退出: `opacity: 1 → 0`, var(--duration-fast)
+- 堆叠: 新 Toast 从底部推入，旧 Toast 向上位移
+
+**行为约束 (MUST):**
+
+- 同时最多显示 3 条 Toast
+- 超出 3 条时，最旧的自动消失
+- MUST NOT 用 Toast 展示保存成功——保存状态走状态栏微指示器（见 §18）
+
 ---
 
 ## 7. 交互规范
@@ -963,6 +1283,246 @@ toast.info("已保存");
 toast.error("保存失败", { description: "网络连接超时" });
 ```
 
+### 11.7 EditorToolbar
+
+```typescript
+interface EditorToolbarProps {
+  /** TipTap editor instance */
+  editor: Editor | null;
+  /** Disable all toolbar actions (read-only preview) */
+  disabled?: boolean;
+  className?: string;
+}
+
+interface ToolbarItemButton {
+  type: "button";
+  label: string;
+  shortcut?: string;
+  getActive: () => boolean;
+  getDisabled: () => boolean;
+  run: () => void;
+  testId?: string;
+}
+
+interface ToolbarItemSeparator {
+  type: "separator";
+}
+
+type ToolbarItem = ToolbarItemButton | ToolbarItemSeparator;
+```
+
+**行为约束 (MUST):**
+
+- 数据驱动: 按钮组由 ToolbarItem[] 配置生成，MUST NOT 硬编码 JSX
+- 工具栏溢出时 MUST 出现「更多」菜单（DropdownMenu），包含所有溢出项
+- 在 `editor === null` 时所有按钮 MUST disabled
+- z-index: var(--z-overlay) (用于溢出菜单)
+
+### 11.8 ContextMenu
+
+```typescript
+interface ContextMenuProps {
+  /** 触发右键菜单的元素 */
+  children: React.ReactNode;
+  /** 菜单项 */
+  items: ContextMenuItem[];
+  onOpenChange?: (open: boolean) => void;
+}
+
+interface ContextMenuItem {
+  key: string;
+  label: string;
+  onSelect: () => void;
+  disabled?: boolean;
+  destructive?: boolean;
+  icon?: React.ReactNode;
+}
+```
+
+**行为约束 (MUST):**
+
+- 基于 Radix UI ContextMenu
+- destructive 项使用 --color-error 文字色
+- z-index: var(--z-popover)
+
+### 11.9 SearchPanel
+
+```typescript
+interface SearchPanelProps {
+  projectId: string;
+  open: boolean;
+  focusNonce?: number;
+  onClose?: () => void;
+}
+
+interface SearchResultItem {
+  id: string;
+  documentId?: string;
+  type: "document" | "memory" | "knowledge";
+  title: string;
+  snippet?: string;
+  anchor?: { start: number; end: number };
+  path?: string;
+  matchScore?: number;
+  editedTime?: string;
+  meta?: string;
+}
+
+type SearchCategory = "all" | "documents" | "memories" | "knowledge" | "assets";
+type SearchStatus = "idle" | "loading" | "ready" | "error";
+```
+
+**行为约束 (MUST):**
+
+- Escape 关闭，Enter 搜索，↑↓ 导航结果
+- open 为 true 时自动 focus 输入框
+- 结果按类型分组（Document / Memory / Knowledge）
+- 匹配文本 MUST 高亮显示
+- 玻璃面板风格弹窗，slide-down 动效
+- z-index: var(--z-popover)
+- Store 连接: useSearchStore, useFileStore
+
+### 11.10 ZenMode
+
+```typescript
+interface ZenModeProps {
+  /** 禅模式是否打开 */
+  open: boolean;
+  /** 退出回调 */
+  onExit: () => void;
+  /** TipTap editor instance（与正常模式共用） */
+  editor: Editor | null;
+  /** 文档标题 */
+  title: string;
+  /** 编辑器内容是否为空 */
+  isEmpty: boolean;
+  /** 状态栏统计 */
+  stats: ZenModeStats;
+  /** 当前时间（显示用） */
+  currentTime?: string;
+}
+
+interface ZenModeStats {
+  wordCount: number;
+  saveStatus: string;
+  readTimeMinutes: number;
+}
+```
+
+**行为约束 (MUST):**
+
+- 布局: fixed inset-0 全屏覆盖
+- z-index: var(--z-modal)
+- 背景: 径向渐变光晕 (var(--color-zen-bg))
+- 顶部悬浮区域: hover 时 opacity 0→1（var(--duration-slow)），含退出按钮
+- Escape 键退出
+- 打开时 50ms 延迟自动 focus 编辑器
+- 状态栏: 标题、保存状态、时钟、字数、预计阅读时间
+
+### 11.11 InlineAiInput
+
+```typescript
+interface InlineAiInputProps {
+  onSubmit: (instruction: string) => void;
+  onDismiss: () => void;
+}
+```
+
+**行为约束 (MUST):**
+
+- 定位: absolute, 以选区为锚点居中 (`bottom: calc(100% + var(--space-2)); left: 50%; transform: translateX(-50%)`)
+- z-index: var(--z-popover)
+- 尺寸: min-width 320px, max-width 480px
+- Enter 提交指令，Escape 取消
+- 点击外部关闭（mousedown listener）
+- 挂载时自动 focus
+- 动效: inline-ai-appear 200ms var(--ease-out)
+
+### 11.12 MemoryPanel
+
+```typescript
+// MemoryPanel 无 Props——完全由上下文驱动
+function MemoryPanel(): JSX.Element;
+
+// 内部状态由 hook 管理
+type MemoryScope = "global" | "project";
+type MemoryCategory = "style" | "structure" | "character" | "pacing" | "vocabulary";
+type MemoryStatus = "idle" | "loading" | "ready" | "error";
+```
+
+**行为约束 (MUST):**
+
+- 布局: flex column, h-full, padding 12px, bg-surface
+- Tab 切换: Global / Project（无 projectId 时 Project 禁用）
+- 分类过滤: style / structure / character / pacing / vocabulary
+- 功能: Composer 对话框、规则编辑、冲突计数、学习开关
+- Store 连接: useProjectStore
+- IPC 通道: memory:semantic:list / add / update / delete / distill, memory:settings:get / update
+
+### 11.13 CharacterPanel
+
+```typescript
+interface CharacterPanelProps {
+  characters: Character[];
+  selectedId?: string | null;
+  onSelect?: (characterId: string) => void;
+  onCreate?: () => void;
+  onUpdate?: (character: Character) => void;
+  onDelete?: (characterId: string) => void;
+  onNavigateToChapter?: (chapterId: string) => void;
+  /** 面板宽度（px） */
+  width?: number;
+}
+```
+
+**行为约束 (MUST):**
+
+- 容器: aside, border-right, 默认宽度 300px
+- 角色分组: 主角 / 配角 / 其他（groupCharacters 工具函数）
+- 头部: h-56px, 右上角"添加"按钮
+- 选中触发详情对话框
+- 编辑/删除按钮 hover 时显示
+- 滚动: flex-1 overflow-y-auto
+
+### 11.14 DashboardPage
+
+```typescript
+interface DashboardPageProps {
+  onProjectSelect?: (projectId: string) => void;
+}
+```
+
+**行为约束 (MUST):**
+
+- 组件挂载时触发 bootstrap()
+- bootstrapStatus 状态机: idle → loading → ready
+- loading 时显示 DashboardLoadingState（200ms 延迟骨架屏）
+- 无项目时显示空状态
+- 最近项目显示为 HeroCard（突出展示）
+- 其余项目以 grid 布局排列（ProjectCard）
+- 搜索栏实时过滤项目名称
+- 项目操作: 打开、重命名、复制、归档/取消归档、删除
+- 新建项目: NewDraftCard（虚线框 + 图标按钮）
+- 已归档项目: 可折叠区域
+- Store 连接: useProjectStore, useConfirmDialog
+
+### 11.15 WriteButton
+
+```typescript
+interface WriteButtonProps {
+  /** 触发进入写作模式（导航到最近文档或创建新文档） */
+  onClick: () => void;
+  /** 是否禁用（无项目选择时） */
+  disabled?: boolean;
+}
+```
+
+**行为约束 (MUST):**
+
+- 使用 Primary 按钮样式
+- 文案通过 t() i18n
+- 位于 Dashboard HeroCard 区域或侧边栏底部
+
 ---
 
 ## 12. 状态显示
@@ -985,7 +1545,7 @@ toast.error("保存失败", { description: "网络连接超时" });
 ### 12.3 错误状态 (MUST)
 
 - **内联错误**: 输入框下方红色文字，使用 --color-error
-- **Toast 通知**: 右上角短暂显示，5s 后消失
+- **Toast 通知**: 右下角短暂显示，5s 后消失（位置 MUST 为视口右下角，`position: fixed; bottom: var(--space-6); right: var(--space-6);`）
 - **错误对话框**: 严重错误，需用户确认
 
 ---
@@ -1119,6 +1679,23 @@ function migratePreferences(): void {
 | 17   | 17-command-palette.html         | 命令面板         | 采用 |
 | 18   | 18-character-manager.html       | 角色管理         | 采用 |
 | 19   | 19-knowledge-graph.html         | 知识图谱         | 采用 |
+| 20   | 20-memory-panel.html            | 记忆面板         | 采用 |
+| 20a  | 20-memory-panel-alt.html        | 记忆面板备选     | 备选 |
+| 21   | 21-skills-picker.html           | 技能选择器       | 参考 |
+| 22   | 22-context-viewer.html          | 上下文查看器     | 参考 |
+| 23   | 23-version-history.html         | 版本历史         | 采用 |
+| 24   | 24-diff-view.html               | 差异对比视图     | 采用 |
+| 25   | 25-search-panel.html            | 搜索面板         | 采用 |
+| 26   | 26-empty-states.html            | 空状态集合       | 采用 |
+| 27   | 27-loading-states.html          | 加载状态集合     | 采用 |
+| 28   | 28-template-picker.html         | 模板选择器       | 采用 |
+| 29   | 29-export-dialog.html           | 导出对话框       | 采用 |
+| 30   | 30-zen-mode.html                | 禅模式           | 采用 |
+| 31   | 31-interaction-patterns.html    | 交互模式参考     | 参考 |
+| 32   | 32-ai-streaming-states.html     | AI 流式状态      | 采用 |
+| 33   | 33-ai-dialogs.html              | AI 对话框        | 采用 |
+| 34   | 34-component-primitives.html    | 组件原语参考     | 参考 |
+| 35   | 35-constraints-panel.html       | 约束面板         | 参考 |
 
 ### 待补充设计稿
 
@@ -1126,22 +1703,9 @@ function migratePreferences(): void {
 
 > 注意：根据 `creonow-v1-workbench/spec.md`，V1 只交付深色主题，浅色主题不作为 P0 阻塞项。
 
-**缺失状态 (P1):**
+**缺失状态 (P0/P1):** 已补充为独立设计稿 26-empty-states、27-loading-states。
 
-- 禅模式界面
-- 空状态（空项目、空文件树、空搜索）
-- 加载状态（顶部进度条、骨架屏）
-- 错误对话框
-- 模板选择对话框
-- 版本对比视图
-- 导出对话框
-
-**缺失交互 (P2):**
-
-- 选中文字浮动工具栏
-- 选中文字 AI 按钮
-- 拖拽调整宽度指示器
-- 右键菜单
+**缺失交互 (P1/P2):** 已补充为独立设计稿 31-interaction-patterns。
 
 ---
 
@@ -1158,6 +1722,371 @@ function migratePreferences(): void {
 | 路由         | React Router                 | 6.x    |
 | 状态管理     | Zustand                      | 4.x    |
 | Electron     | electron-vite                | latest |
+
+---
+
+## 17. 页面流转与首屏 (P0)
+
+### 17.1 应用启动序列 (MUST)
+
+```
+冷启动 → SplashScreen (品牌标识 + 进度条, ≤2s)
+  → Bootstrap 完成? → yes → 有最近打开项目? → yes → EditorPage
+                                              → no  → DashboardPage
+                     → no  → OnboardingFlow (首次安装)
+```
+
+**SplashScreen 规范:**
+
+- 全屏覆盖, z-index: var(--z-modal)
+- 居中 CreoNow Logo (48px)
+- 底部进度条: 2px, var(--color-accent), 线性动画
+- 背景: var(--color-bg-base)
+- MUST 在 2s 内完成 bootstrap 或显示超时错误
+
+### 17.2 DashboardPage 首屏结构 (MUST)
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  CreoNow Logo   搜索栏                        用户 头像  │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  ┌─────────────────────────────────────┐                │
+│  │         HeroCard                     │                │
+│  │  最近打开项目 (大卡片, 含摘要)       │                │
+│  │  [继续写作] 按钮                     │                │
+│  └─────────────────────────────────────┘                │
+│                                                         │
+│  所有项目                                                │
+│  ┌──────┐  ┌──────┐  ┌──────┐  ┌ ─ ─ ─ ┐              │
+│  │ Card │  │ Card │  │ Card │  │ + 新建 │              │
+│  └──────┘  └──────┘  └──────┘  └ ─ ─ ─ ┘              │
+│                                                         │
+│  ▸ 已归档 (N)                                           │
+└─────────────────────────────────────────────────────────┘
+```
+
+**HeroCard (MUST):**
+
+- 背景: subtle gradient 或半透明, 区别于普通卡片
+- 高度: 180-220px
+- 信息: 项目名、最后编辑时间、字数统计、缩略预览
+- 操作: 「继续写作」Primary 按钮
+
+**ProjectCard (MUST):**
+
+- grid 布局: `grid-template-columns: repeat(auto-fill, minmax(240px, 1fr))`
+- 卡片: 圆角 var(--radius-lg), hover 时 shadow 提升
+- 三点菜单: 右上角, hover 时显示
+- 右键菜单: 与三点菜单相同操作项
+
+**NewDraftCard (MUST):**
+
+- 虚线边框: 2px dashed var(--color-border-default)
+- 居中 Plus 图标 + 文案
+- hover: 边框色变亮, 背景微色
+
+### 17.3 页面导航 (MUST)
+
+| 触发                | 目标         | 过渡              |
+| ------------------- | ------------ | ----------------- |
+| 打开项目            | EditorPage   | fade 200ms        |
+| 点击 Logo / Home    | DashboardPage | fade 200ms        |
+| 进入禅模式          | ZenMode overlay | slide-up 300ms |
+| Cmd+K               | SearchPanel overlay | slide-down 200ms |
+| 设置入口            | SettingsPage | fade 200ms        |
+
+---
+
+## 18. 通知与反馈行为 (P0)
+
+### 18.1 保存反馈 (MUST)
+
+> **核心原则: 保存是后台行为，MUST NOT 打断用户写作流。**
+
+**状态栏微指示器 (MUST):**
+
+```
+┌─ 状态栏 (底部或标题栏) ──────────────────┐
+│ ...                    ✓ 已保存  12:34   │  ← 常态
+│ ...                    ● 保存中...        │  ← 写入中
+│ ...                    ✕ 保存失败 [重试]  │  ← 错误 (MUST 允许重试)
+└───────────────────────────────────────────┘
+```
+
+**视觉规格:**
+
+- 字号: 12px, color: var(--color-fg-muted)
+- 「已保存」: 显示 checkmark 图标, 2s 后淡出为时间戳
+- 「保存中」: 显示 spinning dot 动画
+- 「保存失败」: color: var(--color-error), 保持显示直到重试成功
+- MUST NOT 使用 Toast 展示保存成功
+
+### 18.2 Toast 使用场景 (MUST)
+
+**允许使用 Toast 的场景:**
+
+- 用户主动操作的结果（删除、导出、复制、移动）
+- 后台任务完成通知（AI 生成完成、索引重建完成）
+- 不可恢复错误（网络断开、权限不足）
+
+**禁止使用 Toast 的场景:**
+
+- 自动保存成功/失败（走状态栏指示器）
+- 输入验证错误（走内联错误提示）
+- 重复性操作反馈（如每次按快捷键都弹 Toast）
+
+### 18.3 操作确认 (MUST)
+
+| 操作     | 确认方式     | 可撤销? |
+| -------- | ------------ | ------- |
+| 删除文件 | ConfirmDialog | 否 (移入回收站 MAY 可撤销) |
+| 删除项目 | ConfirmDialog (二次确认) | 否 |
+| 删除角色 | ConfirmDialog | 否 |
+| 归档     | 直接执行 + Toast (含 Undo) | 是 |
+| 移动文件 | 直接执行 + Toast (含 Undo) | 是 |
+
+---
+
+## 19. 编辑器交互 (P1)
+
+### 19.1 EditorToolbar 行为 (MUST)
+
+**布局:**
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ B  I  U  S  │ H1 H2 H3 │ " - ✓ │  ← ⊞ │  💡 │ ··· │
+└─────────────────────────────────────────────────────────┘
+    格式组        标题组     列表组   插入组  AI   溢出
+```
+
+**溢出逻辑 (MUST):**
+
+- 使用 ResizeObserver 检测容器宽度
+- 宽度不足时，从右向左将按钮收入「更多」下拉菜单
+- 「更多」菜单使用 DropdownMenu, z-index: var(--z-overlay)
+- 菜单项 MUST 保持图标 + 文字 + 快捷键完整信息
+
+**按钮状态 (MUST):**
+
+- Active: 光标在已格式化文字内 → 按钮高亮 (var(--color-bg-selected))
+- Disabled: editor 未就绪或只读模式 → opacity: 0.4
+- Hover: var(--color-bg-hover) + Tooltip (500ms 延迟)
+
+### 19.2 选中文字行为 (MUST)
+
+**选中文字 → 显示气泡工具栏（BubbleMenu，TipTap 内置扩展）:**
+
+```
+                    选中的文字
+        ┌───────────────────────────┐
+        │ B  I  U  S  │ 链接 │ AI  │
+        └───────────────────────────┘
+```
+
+- 定位: 选区上方居中, 偏移 var(--space-2)
+- z-index: var(--z-popover)
+- 动效: scale(0.96) + opacity 渐入, var(--duration-fast)
+- 点击 AI 按钮 → 打开 InlineAiInput（见 §11.11）
+
+### 19.3 右键菜单 (MUST)
+
+**编辑器内右键 → EditorContextMenu:**
+
+```
+┌──────────────────┐
+│ ✂️ 剪切    Cmd+X │
+│ 📋 粘贴    Cmd+V │
+│ 📄 复制    Cmd+C │
+│ ─────────────── │
+│ 🔍 查找    Cmd+F │
+│ 🔄 替换    Cmd+H │
+│ ─────────────── │
+│ 💡 AI 润色       │
+│ 💡 AI 续写       │
+│ 💡 AI 翻译       │
+└──────────────────┘
+```
+
+- 基于 Radix ContextMenu Primitive
+- z-index: var(--z-popover)
+- destructive 操作（删除类）MUST 使用 --color-error 文字
+
+---
+
+## 20. 禅模式 (P1)
+
+### 20.1 进入方式 (MUST)
+
+| 入口               | 动作                        |
+| ------------------ | --------------------------- |
+| 快捷键 Cmd+Shift+Z | 切换禅模式                  |
+| 工具栏按钮          | EditorToolbar 最右侧按钮   |
+| 命令面板            | "进入禅模式"                |
+
+### 20.2 视觉规范 (MUST)
+
+```
+┌────────────────── 全屏 ──────────────────┐
+│                                          │  ← hover 时显示:
+│              ┌──── 退出 ────┐            │     退出按钮 + 文档标题
+│              └──────────────┘            │
+│                                          │
+│                                          │
+│         ┌─────────────────────┐          │
+│         │                     │          │
+│         │    编辑器内容        │          │
+│         │    最大宽度 680px    │          │
+│         │                     │          │
+│         │                     │          │
+│         └─────────────────────┘          │
+│                                          │
+│ 标题 │ ✓ 已保存 │ 12:34 │ 1,234 字 │ 5 分钟 │
+└──────────────────────────────────────────┘
+```
+
+**背景:**
+
+- 纯色 var(--color-zen-bg) + 径向渐变光晕（中心微亮）
+- MUST NOT 使用分散注意力的纹理或动画背景
+
+**编辑区域:**
+
+- 最大宽度: 680px, 居中
+- 行高: 1.8（比正常模式更宽松）
+- 字体大小: 比正常模式大 2px（SHOULD 可配置）
+
+**工具栏隐藏:**
+
+- 顶部 60px 区域为 hover 感应区
+- hover 时: opacity 0 → 1, var(--duration-slow)
+- 包含: 退出按钮 (Ghost) + 文档标题
+
+**状态栏:**
+
+- 底部固定, 半透明背景
+- 信息: 文档标题 | 保存状态 | 当前时间 | 字数 | 预计阅读时间
+- hover 时显示, 非 hover 时 opacity 降至 0.3
+
+---
+
+## 21. 搜索面板 (P1)
+
+### 21.1 入口与定位 (MUST)
+
+- 快捷键: Cmd+K (全局搜索)
+- 定位: 视口顶部居中, 向下滑入
+- z-index: var(--z-popover)
+- 最大宽度: 640px
+- 遮罩: var(--color-scrim), 点击关闭
+
+### 21.2 视觉结构 (MUST)
+
+```
+┌──────────────────────────────────────────┐
+│  🔍 搜索...                    ⟳ 索引中  │  ← 输入区
+├──────────────────────────────────────────┤
+│  [全部] [文档] [记忆] [知识] [素材]      │  ← 分类 Tab
+├──────────────────────────────────────────┤
+│  📄 文档 (3)                             │  ← 结果分组
+│  ├─ 第一章 引子                          │
+│  │   ...匹配的**关键词**在这里...         │
+│  ├─ 第三章 转折                          │
+│  │   ...另一段**匹配**内容...             │
+│  └─ 角色设定                             │
+│                                          │
+│  🧠 记忆 (1)                             │
+│  └─ 写作风格: 简洁明快                    │
+├──────────────────────────────────────────┤
+│  Enter 打开 · ↑↓ 导航 · Esc 关闭        │  ← 快捷键提示
+└──────────────────────────────────────────┘
+```
+
+**玻璃面板效果:**
+
+```css
+background: color-mix(in srgb, var(--color-bg-surface) 85%, transparent);
+backdrop-filter: blur(12px);
+border: 1px solid var(--color-border-default);
+border-radius: var(--radius-lg);
+box-shadow: var(--shadow-xl);
+```
+
+**搜索结果项:**
+
+- 高亮匹配: background: var(--color-accent-subtle), font-weight: 600
+- 选中项: background: var(--color-bg-selected), 左侧 2px accent 条
+- 时间标注: text-xs, var(--color-fg-muted), 右对齐
+
+### 21.3 键盘导航 (MUST)
+
+| 按键   | 行为             |
+| ------ | ---------------- |
+| ↑ / ↓  | 切换选中结果     |
+| Enter  | 打开选中结果     |
+| Escape | 关闭搜索面板     |
+| Tab    | 切换分类 Tab     |
+
+---
+
+## 22. AI 面板 (P2)
+
+### 22.1 InlineAiInput 交互流 (MUST)
+
+```
+选中文字 → BubbleMenu 出现 → 点击 AI → InlineAiInput 弹出
+                                          ├── 输入指令 → Enter 提交
+                                          │   └── 展示 AI 流式输出
+                                          │       ├── Accept → 替换选中文字
+                                          │       └── Reject → 恢复原文
+                                          └── Escape → 取消
+```
+
+**InlineAiInput 视觉 (补充 §11.11):**
+
+```css
+.inline-ai-input {
+  background: var(--color-bg-raised);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md), 0 0 0 1px var(--color-accent-subtle);
+  padding: var(--space-2) var(--space-3);
+}
+
+.inline-ai-input input {
+  font-size: 13px;
+  color: var(--color-fg-default);
+  background: transparent;
+  /* Placeholder: "告诉 AI 你想做什么..." */
+}
+```
+
+### 22.2 AI 流式输出状态 (MUST)
+
+| 状态     | 显示                                     |
+| -------- | ---------------------------------------- |
+| pending  | 输入框下方显示 shimmer 加载条             |
+| streaming | 逐字显示 AI 输出, 光标闪烁动画          |
+| complete | 显示 Accept / Reject 按钮对              |
+| error    | 红色错误信息 + 重试按钮                  |
+
+**Accept / Reject 按钮:**
+
+- Accept: Primary 按钮 (小尺寸), "接受" 或 checkmark 图标
+- Reject: Ghost 按钮, "放弃" 或 X 图标
+- 快捷键: Cmd+Enter 接受, Escape 放弃
+
+### 22.3 AI 面板 (侧边栏) (P2)
+
+**布局:**
+
+- 位于右侧面板区域, 宽度 360px（可拖拽调整）
+- 结构: 聊天式对话界面
+- 消息气泡: 用户消息右对齐, AI 消息左对齐
+- 输入区: 底部固定, 多行 textarea, 发送按钮
+
+> 注: AI 面板侧边栏为 P2 功能, V1 优先实现 InlineAiInput。
 
 ---
 
