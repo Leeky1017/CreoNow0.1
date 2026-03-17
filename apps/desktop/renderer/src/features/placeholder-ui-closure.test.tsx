@@ -304,11 +304,11 @@ describe("ChatHistory placeholder UI closure", () => {
 });
 
 /* ================================================================== */
-/* 4. Version restore — button disabled + tooltip                     */
+/* 4. Version restore activation                                      */
 /* ================================================================== */
 
 describe("VersionHistoryPanel restore placeholder UI closure", () => {
-  it("selected version restore button is disabled", () => {
+  it("selected version restore button is enabled", () => {
     render(
       <VersionHistoryPanel
         documentTitle="Test Doc"
@@ -318,9 +318,8 @@ describe("VersionHistoryPanel restore placeholder UI closure", () => {
     );
 
     const restoreButtons = screen.getAllByRole("button", { name: /restore/i });
-    for (const btn of restoreButtons) {
-      expect(btn).toBeDisabled();
-    }
+    expect(restoreButtons.length).toBeGreaterThan(0);
+    expect(restoreButtons[0]).not.toBeDisabled();
   });
 });
 
