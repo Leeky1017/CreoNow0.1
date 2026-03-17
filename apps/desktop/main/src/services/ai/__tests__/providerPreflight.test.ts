@@ -157,7 +157,9 @@ describe("isModelValidForProvider", () => {
 
   it("accepts claude models for anthropic", () => {
     expect(isModelValidForProvider("anthropic", "claude-3-opus")).toBe(true);
-    expect(isModelValidForProvider("anthropic", "claude-3.5-sonnet")).toBe(true);
+    expect(isModelValidForProvider("anthropic", "claude-3.5-sonnet")).toBe(
+      true,
+    );
   });
 
   it("rejects gpt models for anthropic", () => {

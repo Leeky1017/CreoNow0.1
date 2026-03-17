@@ -15,9 +15,7 @@ const OPENAI_PREFIXES = [
   "chatgpt-4o",
 ] as const;
 
-const ANTHROPIC_PREFIXES = [
-  "claude-",
-] as const;
+const ANTHROPIC_PREFIXES = ["claude-"] as const;
 
 const PROVIDER_MODEL_PREFIXES: Record<string, readonly string[]> = {
   openai: [...OPENAI_PREFIXES],
