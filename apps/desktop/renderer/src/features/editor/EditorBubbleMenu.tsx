@@ -4,6 +4,7 @@ import { BubbleMenu } from "@tiptap/react";
 import { useTranslation } from "react-i18next";
 
 import { InlineFormatButton } from "./InlineFormatButton";
+import { Button } from "../../components/primitives/Button";
 import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
 import { captureSelectionRef } from "../ai/applySelection";
 import { useEditorStore } from "../../stores/editorStore";
@@ -16,11 +17,13 @@ import {
 
 import {
   Bold,
+  Check,
   Code,
   Italic,
   Link,
   Strikethrough,
   Underline,
+  X,
 } from "lucide-react";
 export const EDITOR_INLINE_BUBBLE_MENU_PLUGIN_KEY = "cn-editor-inline-bubble";
 const BUBBLE_AI_SKILLS = [
@@ -140,6 +143,10 @@ export function EditorBubbleMenu(props: {
     };
   }, [editor, updateVisibilityAndPlacement]);
 
+  const [linkInputOpen, setLinkInputOpen] = React.useState(false);
+  const [linkUrl, setLinkUrl] = React.useState("");
+  const linkInputRef = React.useRef<HTMLInputElement>(null);
+
   if (!editor) {
     return null;
   }
@@ -149,10 +156,6 @@ export function EditorBubbleMenu(props: {
   // Hide in zen mode to keep the distraction-free aesthetic.
   const shouldShowBubble = visible && editor.isEditable && !zenMode;
   const inlineDisabled = !editor.isEditable || editor.isActive("codeBlock");
-
-  const [linkInputOpen, setLinkInputOpen] = React.useState(false);
-  const [linkUrl, setLinkUrl] = React.useState("");
-  const linkInputRef = React.useRef<HTMLInputElement>(null);
 
   const openLinkInput = () => {
     const existingHref = editor.getAttributes("link").href as
@@ -310,50 +313,27 @@ export function EditorBubbleMenu(props: {
             aria-label={t("editor.link.placeholder")}
             className="h-6 w-40 px-2 text-[11px] rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] border border-[var(--color-border-default)] focus-visible:border-[var(--color-border-focus)] focus-visible:outline-none"
           />
-          <button
-            type="button"
+          <Button
             data-testid="link-apply"
             onClick={applyLink}
             aria-label={t("editor.link.apply")}
-            className="focus-ring p-1 rounded-[var(--radius-sm)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-overlay)]"
+            variant="ghost"
+            size="sm"
+            className="h-6 min-w-0 px-1 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-          </button>
+            <Check size={16} strokeWidth={1.5} />
+          </Button>
           {editor.isActive("link") && (
-            <button
-              type="button"
+            <Button
               data-testid="link-remove"
               onClick={removeLink}
               aria-label={t("editor.link.remove")}
-              className="focus-ring p-1 rounded-[var(--radius-sm)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-danger)] hover:bg-[var(--color-bg-overlay)]"
+              variant="ghost"
+              size="sm"
+              className="h-6 min-w-0 px-1 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-danger)]"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+              <X size={16} strokeWidth={1.5} />
+            </Button>
           )}
         </div>
       )}
