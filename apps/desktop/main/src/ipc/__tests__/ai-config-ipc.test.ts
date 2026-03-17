@@ -390,7 +390,7 @@ async function main(): Promise<void> {
         error?: { code?: string; message?: string };
       }>("ai:config:update", {
         patch: {
-          openAiByokApiKey: "sk-test",
+          openAiByokApiKey: "sk-test-0001",
         },
       });
 
@@ -412,7 +412,7 @@ async function main(): Promise<void> {
         patch: {
           providerMode: "openai-byok",
           openAiByokBaseUrl: "https://api.openai.com",
-          openAiByokApiKey: "sk-good",
+          openAiByokApiKey: "sk-good-0001",
         },
       });
 
@@ -444,7 +444,7 @@ async function main(): Promise<void> {
         assert.equal(typeof tested.data?.latencyMs, "number");
         assert.equal(fetchCalls.length, 1);
         assert.equal(fetchCalls[0]?.url, "https://api.openai.com/v1/models");
-        assert.equal(fetchCalls[0]?.authHeader, "Bearer sk-good");
+        assert.equal(fetchCalls[0]?.authHeader, "Bearer sk-good-0001");
       } finally {
         globalThis.fetch = originalFetch;
       }
