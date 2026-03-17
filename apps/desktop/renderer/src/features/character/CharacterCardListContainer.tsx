@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { useKgStore } from "../../stores/kgStore";
+import { useEditorStore } from "../../stores/editorStore";
 import {
   CharacterCardList,
   type CharacterCardSummary,
@@ -71,10 +72,29 @@ export function CharacterCardListContainer({
   const entityUpdate = useKgStore((state) => state.entityUpdate);
   const entityDelete = useKgStore((state) => state.entityDelete);
 
+  const openDocument = useEditorStore((s) => s.openDocument);
+  const editorDocumentId = useEditorStore((s) => s.documentId);
+  const editorBootstrapStatus = useEditorStore((s) => s.bootstrapStatus);
+
   const { confirm, dialogProps } = useConfirmDialog();
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const [navigationWarning, setNavigationWarning] = React.useState<
+    string | null
+  >(null);
+  const latestEditorDocumentIdRef = React.useRef<string | null>(
+    editorDocumentId,
+  );
+  const latestEditorBootstrapStatusRef = React.useRef(editorBootstrapStatus);
+
+  React.useEffect(() => {
+    latestEditorDocumentIdRef.current = editorDocumentId;
+  }, [editorDocumentId]);
+
+  React.useEffect(() => {
+    latestEditorBootstrapStatusRef.current = editorBootstrapStatus;
+  }, [editorBootstrapStatus]);
 
   React.useEffect(() => {
     void bootstrapForProject(projectId);
@@ -148,6 +168,20 @@ export function CharacterCardListContainer({
     [characters, confirm, entityDelete, selectedId, t],
   );
 
+  const handleNavigateToChapter = React.useCallback(
+    async (chapterId: string) => {
+      setNavigationWarning(null);
+      await openDocument({ projectId, documentId: chapterId });
+      const navigationFailed =
+        latestEditorBootstrapStatusRef.current === "error" ||
+        latestEditorDocumentIdRef.current !== chapterId;
+      if (navigationFailed) {
+        setNavigationWarning(t("character.detail.navigationDegraded"));
+      }
+    },
+    [openDocument, projectId, t],
+  );
+
   if (bootstrapStatus === "loading") {
     return (
       <div className="h-full flex items-center justify-center">
@@ -189,6 +223,8 @@ export function CharacterCardListContainer({
         character={selectedCharacter}
         onSave={(character) => void handleSaveCharacter(character)}
         onDelete={(characterId) => void handleDeleteCharacter(characterId)}
+        onNavigateToChapter={handleNavigateToChapter}
+        navigationWarning={navigationWarning}
         availableCharacters={characters}
       />
 
