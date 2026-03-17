@@ -370,6 +370,84 @@ describe("EditorPane", () => {
     });
   });
 
+  it("should apply link from Bubble Menu after entering URL", async () => {
+    const store = createReadyEditorStore({ onSave: () => {} });
+    const versionStore = createVersionStoreForEditorPaneTests();
+
+    render(
+      <VersionStoreProvider store={versionStore}>
+        <EditorStoreProvider store={store}>
+          <EditorPane projectId="project-1" />
+        </EditorStoreProvider>
+      </VersionStoreProvider>,
+    );
+
+    await screen.findByTestId("editor-pane");
+    await screen.findByTestId("tiptap-editor");
+
+    const editor = await waitForEditorInstance(store);
+
+    act(() => {
+      editor.commands.focus("start");
+      editor.commands.setTextSelection({ from: 1, to: 6 });
+    });
+
+    fireEvent.click(await screen.findByTestId("bubble-link"));
+    const input = await screen.findByLabelText("Enter URL");
+    fireEvent.change(input, { target: { value: "https://creonow.dev" } });
+    fireEvent.click(screen.getByTestId("link-apply"));
+
+    await waitFor(() => {
+      expect(editor.getHTML()).toContain('href="https://creonow.dev"');
+      expect(editor.isActive("link")).toBe(true);
+    });
+  });
+
+  it("should remove link from Bubble Menu", async () => {
+    const store = createReadyEditorStore({ onSave: () => {} });
+    const versionStore = createVersionStoreForEditorPaneTests();
+
+    render(
+      <VersionStoreProvider store={versionStore}>
+        <EditorStoreProvider store={store}>
+          <EditorPane projectId="project-1" />
+        </EditorStoreProvider>
+      </VersionStoreProvider>,
+    );
+
+    await screen.findByTestId("editor-pane");
+    await screen.findByTestId("tiptap-editor");
+
+    const editor = await waitForEditorInstance(store);
+
+    act(() => {
+      editor.commands.focus("start");
+      editor.commands.setTextSelection({ from: 1, to: 6 });
+    });
+
+    fireEvent.click(await screen.findByTestId("bubble-link"));
+    const input = await screen.findByLabelText("Enter URL");
+    fireEvent.change(input, { target: { value: "https://creonow.dev" } });
+    fireEvent.click(screen.getByTestId("link-apply"));
+
+    await waitFor(() => {
+      expect(editor.isActive("link")).toBe(true);
+    });
+
+    act(() => {
+      editor.commands.focus("start");
+      editor.commands.setTextSelection({ from: 1, to: 6 });
+    });
+
+    fireEvent.click(await screen.findByTestId("bubble-link"));
+    fireEvent.click(await screen.findByTestId("link-remove"));
+
+    await waitFor(() => {
+      expect(editor.getHTML()).not.toContain('href="https://creonow.dev"');
+      expect(editor.isActive("link")).toBe(false);
+    });
+  });
+
   it("S2-BA-1 should hide Bubble Menu when selection is collapsed", async () => {
     const store = createReadyEditorStore({ onSave: () => {} });
     const versionStore = createVersionStoreForEditorPaneTests();
