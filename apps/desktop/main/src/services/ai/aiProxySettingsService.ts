@@ -130,12 +130,25 @@ function normalizeBaseUrl(raw: unknown): string | null {
   }
 }
 
+function hasRecognizedApiKeyFormat(value: string): boolean {
+  return (
+    value.length >= 8 &&
+    (value.startsWith("sk-") ||
+      value.startsWith("pk-") ||
+      value.startsWith("rk-") ||
+      value.startsWith("ak-"))
+  );
+}
+
 function normalizeApiKey(raw: unknown): string | null {
   if (typeof raw !== "string") {
     return null;
   }
   const trimmed = raw.trim();
   if (trimmed.length === 0) {
+    return null;
+  }
+  if (!hasRecognizedApiKeyFormat(trimmed)) {
     return null;
   }
   const preflight = validateProviderApiKeyPreflight({
@@ -180,12 +193,20 @@ function validatePatchedApiKeys(args: {
     if (typeof candidate.value !== "string") {
       continue;
     }
-    if (candidate.value.trim().length === 0) {
+    const trimmed = candidate.value.trim();
+    if (trimmed.length === 0) {
       continue;
+    }
+    if (!hasRecognizedApiKeyFormat(trimmed)) {
+      return ipcError(
+        "INVALID_ARGUMENT",
+        `${candidate.fieldName} has invalid API key format`,
+        { fieldName: candidate.fieldName },
+      );
     }
     const preflight = validateProviderApiKeyPreflight({
       provider: candidate.provider,
-      apiKey: candidate.value,
+      apiKey: trimmed,
       allowMissingApiKey: true,
     });
     if (!preflight.ok) {

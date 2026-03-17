@@ -7,6 +7,7 @@
  */
 
 const OPENAI_PREFIXES = [
+  "gpt-5",
   "gpt-4",
   "gpt-3.5",
   "o1",

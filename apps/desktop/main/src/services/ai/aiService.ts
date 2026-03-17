@@ -1246,6 +1246,7 @@ function createAiStreamHelpers(
   return { runOpenAiStream, runAnthropicStream };
 }
 
+// eslint-disable-next-line max-lines-per-function
 function createAiRunPipelineHelpers(
   deps: AiServiceDeps,
   state: AiInternalState,
@@ -1588,6 +1589,7 @@ function createAiRunPipelineHelpers(
   return { executeNonStreamImpl, executeStreamImpl };
 }
 
+// eslint-disable-next-line max-lines-per-function
 function createAiRunSkillOp(
   deps: AiServiceDeps,
   state: AiInternalState,
@@ -1614,6 +1616,7 @@ function createAiRunSkillOp(
   } = helpers;
   const { executeNonStreamImpl, executeStreamImpl } = pipeline;
 
+  // eslint-disable-next-line max-lines-per-function
   const runSkill: AiService["runSkill"] = async (args) => {
     const cfgRes = await providerResolver.resolveProviderConfig({
       env: deps.env,
