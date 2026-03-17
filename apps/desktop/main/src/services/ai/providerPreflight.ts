@@ -24,7 +24,7 @@ export type PreflightResult =
   | { ok: true }
   | { ok: false; error: PreflightError };
 
-const API_KEY_FORMAT = /^(?:sk|pk|rk|ak)-[A-Za-z0-9._-]{4,}$/u;
+const API_KEY_FORMAT = /^(?:sk|pk|rk|ak)-[A-Za-z0-9._-]{2,}$/u;
 
 export interface PreflightInput {
   provider: string;
