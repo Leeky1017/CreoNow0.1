@@ -36,6 +36,8 @@ import { createOnnxEmbeddingRuntime } from "./services/embedding/onnxRuntime";
 import { createSemanticChunkIndexService } from "./services/embedding/semanticChunkIndexService";
 import { createJudgeService } from "./services/judge/judgeService";
 import { createJudgeQualityService } from "./services/ai/judgeQualityService";
+import { createAdvancedCheckRunner } from "./services/ai/judgeAdvancedRunner";
+import { createAiProxySettingsService } from "./services/ai/aiProxySettingsService";
 import { createKgRecognitionRuntime } from "./services/kg/kgRecognitionRuntime";
 import { createStateExtractor } from "./services/kg/stateExtractor";
 import { createContextProjectScopedCache } from "./services/context/projectScopedCache";
@@ -264,9 +266,6 @@ function registerIpcHandlers(deps: {
     logger: deps.logger,
     isE2E: process.env.CREONOW_E2E === "1",
   });
-  const judgeQualityService = createJudgeQualityService({
-    logger: deps.logger,
-  });
   const watchService = createCreonowWatchService({ logger: deps.logger });
   const contextCache = createContextProjectScopedCache({
     logger: deps.logger,
@@ -340,6 +339,36 @@ function registerIpcHandlers(deps: {
     decryptString: (cipherText: Buffer) =>
       safeStorage.decryptString(cipherText),
   };
+
+  const judgeQualityService = createJudgeQualityService({
+    logger: deps.logger,
+    runAdvancedChecks: createAdvancedCheckRunner({
+      logger: deps.logger,
+      getProviderConfig: () => {
+        if (!deps.db) return null;
+        const proxySvc = createAiProxySettingsService({
+          db: deps.db,
+          logger: deps.logger,
+          secretStorage,
+        });
+        const raw = proxySvc.getRaw();
+        if (!raw.ok || !raw.data.enabled) return null;
+        const mode = raw.data.providerMode;
+        const creds =
+          mode === "anthropic-byok"
+            ? raw.data.anthropicByok
+            : mode === "openai-byok"
+              ? raw.data.openAiByok
+              : raw.data.openAiCompatible;
+        if (!creds.baseUrl) return null;
+        return {
+          baseUrl: creds.baseUrl,
+          apiKey: creds.apiKey,
+          model: deps.env.CREONOW_JUDGE_MODEL ?? "gpt-4o-mini",
+        };
+      },
+    }),
+  });
 
   guardedIpcMain.handle(
     "app:system:ping",

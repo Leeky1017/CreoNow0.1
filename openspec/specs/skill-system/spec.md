@@ -211,9 +211,11 @@
 执行结果在进入渲染进程前**必须**经过输出校验：
 
 - `validateSkillRunOutput()` **必须**在 LLM 输出落地前运行，负责阻断明显无效的生成结果
-- `synopsis` 保持专属校验路径；其余技能至少**必须**拒绝空输出
-- 对 `polish`、`rewrite`、`continue`、`expand` 四个高频创作技能，系统**必须**额外拦截代码块污染、HTML 标签污染与异常膨胀输出
-- `polish` / `rewrite` 的膨胀阈值为输入长度的 10 倍；`continue` / `expand` 的膨胀阈值为 20 倍
+- `synopsis` 保持专属校验路径
+- 所有内置技能**必须**拒绝空输出、代码块污染、HTML 标签污染
+- `polish` / `rewrite` / `condense` / `shrink` / `summarize` / `translate` / `style-transfer` 的膨胀阈值为输入长度的 10 倍（strict）
+- `continue` / `expand` / `brainstorm` / `critique` / `describe` / `dialogue` / `roleplay` / `write` 的膨胀阈值为输入长度的 20 倍（loose）
+- `chat` 执行空输出、代码块、HTML 污染检测，但不做膨胀检测
 - 校验失败时**必须**返回 `SKILL_OUTPUT_INVALID`，并通过既有失败事件链路反馈到 AI 面板
 
 #### Scenario: 技能流式执行正常完成
@@ -247,14 +249,15 @@
 
 系统**必须**对高频创作技能的输出执行基础质量闸门，防止空内容、格式污染或异常膨胀的结果直接进入编辑链路。当前实现位于 `SkillExecutor` 的 `validateSkillRunOutput()` 与 `validateCreativeSkillOutput()`。
 
-- `polish`、`rewrite`、`continue`、`expand` **必须**在输出进入 renderer 前完成校验
+- 所有内置 skill **必须**在输出进入 renderer 前完成校验
 - `V-EMPTY`：`outputText` 缺失或 trim 后为空时，**必须**返回 `SKILL_OUTPUT_INVALID`
 - `V-CODEBLOCK`：输出包含三个连续反引号时，**必须**判为无效
 - `V-HTML`：输出匹配 HTML 开标签模式时，**必须**判为无效
-- `V-INFLATE-STRICT`：`polish` / `rewrite` 的输出长度大于输入长度 10 倍时，**必须**判为无效
-- `V-INFLATE-LOOSE`：`continue` / `expand` 的输出长度大于输入长度 20 倍时，**必须**判为无效
+- `V-INFLATE-STRICT`：`polish` / `rewrite` / `condense` / `shrink` / `summarize` / `translate` / `style-transfer` 的输出长度大于输入长度 10 倍时，**必须**判为无效
+- `V-INFLATE-LOOSE`：`continue` / `expand` / `brainstorm` / `critique` / `describe` / `dialogue` / `roleplay` / `write` 的输出长度大于输入长度 20 倍时，**必须**判为无效
 - `continue` 的膨胀基准**必须**优先取文档上下文（`contextPrompt` / 文档上下文），其余创作技能取用户输入文本
-- `synopsis` 继续沿用独立校验逻辑；其他未列入本 Requirement 的技能不增加额外格式闸门
+- `synopsis` 继续沿用独立校验逻辑
+- `chat` 检测空输出、代码块、HTML 标签，不做膨胀检测
 
 #### Scenario: 高频创作 skill 的正常输出通过校验
 

@@ -39,6 +39,10 @@ import { invoke } from "../../lib/ipcClient";
 import { DiffView } from "../diff/DiffView";
 
 import { applySelection, captureSelectionRef } from "./applySelection";
+import {
+  createInlineDiffDecorations,
+  type InlineDiffDecoration,
+} from "../editor/extensions/inlineDiff";
 
 import { SkillPicker } from "./SkillPicker";
 import { SkillManagerDialog } from "./SkillManagerDialog";
@@ -84,6 +88,20 @@ type ModelsListError = {
 
 function isRunning(status: AiStatus): boolean {
   return status === "running" || status === "streaming";
+}
+
+function updateInlineDiffDecorations(
+  editor: Editor,
+  diffs: InlineDiffDecoration[],
+): void {
+  const editorStorage = (editor as { storage?: unknown }).storage;
+  if (!editorStorage || typeof editorStorage !== "object") return;
+  const inlineDiffStorage = (editorStorage as UnknownRecord).inlineDiff as
+    | UnknownRecord
+    | undefined;
+  if (!inlineDiffStorage || !Array.isArray(inlineDiffStorage.diffs)) return;
+  inlineDiffStorage.diffs = diffs;
+  editor.view.dispatch(editor.state.tr.setMeta("inlineDiffUpdate", true));
 }
 
 type UnknownRecord = Record<string, unknown>;
@@ -544,6 +562,7 @@ type AiPanelEffectsDeps = {
     selectionRef: SelectionRef;
     selectionText: string;
   } | null>;
+  inlineDiffConfirmOpen: boolean;
   setInlineDiffConfirmOpen: React.Dispatch<React.SetStateAction<boolean>>;
   lastRunId: string | null;
   projectId: string | null;
@@ -564,6 +583,7 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
     bootstrapStatus,
     candidateCount,
     editor,
+    inlineDiffConfirmOpen,
     evaluatedRunIdRef,
     handleNewChatRef,
     lastCandidates,
@@ -776,6 +796,11 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
   React.useEffect(() => {
     if (!proposal) setInlineDiffConfirmOpen(false);
   }, [proposal, setInlineDiffConfirmOpen]);
+
+  React.useEffect(() => {
+    if (!inlineDiffConfirmOpen && editor)
+      updateInlineDiffDecorations(editor, []);
+  }, [inlineDiffConfirmOpen, editor]);
 
   React.useEffect(() => {
     function onJudgeResultEvent(evt: Event): void {
@@ -1045,6 +1070,13 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
     if (!a.editor || !a.proposal || !a.projectId || !a.documentId) return;
     if (!a.inlineDiffConfirmOpen) {
       a.setInlineDiffConfirmOpen(true);
+      if (a.editor) {
+        const diffs = createInlineDiffDecorations({
+          originalText: a.proposal.selectionText,
+          suggestedText: a.proposal.replacementText,
+        });
+        updateInlineDiffDecorations(a.editor, diffs);
+      }
       return;
     }
     const applied = applySelection({
@@ -1068,6 +1100,7 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
       contentJson: json,
       runId: a.proposal.runId,
     });
+    if (a.editor) updateInlineDiffDecorations(a.editor, []);
     a.setInlineDiffConfirmOpen(false);
   }
 
@@ -1884,6 +1917,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
     setProposal,
     setCompareMode,
     pendingSelectionSnapshotRef,
+    inlineDiffConfirmOpen,
     setInlineDiffConfirmOpen,
     lastRunId,
     projectId,
