@@ -574,3 +574,20 @@ export const FullMatrix: Story = {
     </div>
   ),
 };
+
+/** Underline variant — 底线指示器风格 */
+export const Underline: Story = {
+  args: {
+    tabs: basicTabs,
+    variant: "underline",
+  },
+};
+
+/** Underline + Full Width */
+export const UnderlineFullWidth: Story = {
+  args: {
+    tabs: basicTabs,
+    variant: "underline",
+    fullWidth: true,
+  },
+};

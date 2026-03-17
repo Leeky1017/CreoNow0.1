@@ -7,7 +7,12 @@ import React from "react";
  * - raised: Card with elevation shadow (for floating elements)
  * - bordered: Card with prominent border
  */
-export type CardVariant = "default" | "raised" | "bordered";
+export type CardVariant =
+  | "default"
+  | "raised"
+  | "bordered"
+  | "bento"
+  | "compact";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Visual style variant */
@@ -46,6 +51,18 @@ const variantStyles: Record<CardVariant, string> = {
   raised:
     "border border-[var(--color-border-default)] shadow-[var(--shadow-md)]",
   bordered: "border-2 border-[var(--color-border-default)]",
+  bento: [
+    "rounded-[var(--radius-2xl)]",
+    "border",
+    "border-[var(--color-border-default)]",
+    "transition-colors",
+    "duration-[var(--duration-normal)]",
+  ].join(" "),
+  compact: [
+    "rounded-[var(--radius-md)]",
+    "border",
+    "border-[var(--color-border-default)]",
+  ].join(" "),
 };
 
 /**
@@ -86,11 +103,19 @@ export function Card({
   children,
   ...props
 }: CardProps): JSX.Element {
+  const paddingClass = noPadding
+    ? ""
+    : variant === "bento"
+      ? "p-8"
+      : variant === "compact"
+        ? "p-3 space-y-1"
+        : "p-6";
+
   const classes = [
     baseStyles,
     variantStyles[variant],
     hoverable ? hoverableStyles : "",
-    noPadding ? "" : "p-6",
+    paddingClass,
     className,
   ]
     .filter(Boolean)

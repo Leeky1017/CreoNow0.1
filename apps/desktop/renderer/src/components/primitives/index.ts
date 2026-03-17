@@ -62,7 +62,7 @@ export { Checkbox } from "./Checkbox";
 export type { CheckboxProps } from "./Checkbox";
 
 export { Tabs, TabsRoot, TabsList, TabsTrigger, TabsContent } from "./Tabs";
-export type { TabsProps, TabItem } from "./Tabs";
+export type { TabsProps, TabItem, TabsVariant } from "./Tabs";
 
 // Feedback & Status
 export { Badge } from "./Badge";
