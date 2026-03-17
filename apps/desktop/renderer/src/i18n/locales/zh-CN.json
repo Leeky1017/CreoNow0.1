@@ -302,7 +302,7 @@
       "includeArchived": "包含已归档",
       "scope": "范围",
       "currentProject": "当前项目",
-        "allProjects": "所有项目"
+      "allProjects": "所有项目"
     },
     "results": {
       "match": "{{count}} 个匹配",

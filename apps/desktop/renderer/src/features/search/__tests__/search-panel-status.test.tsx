@@ -50,7 +50,9 @@ describe("Search Panel status rendering (S3-SEARCH-PANEL-S3)", () => {
     const { rerender } = render(<SearchPanel projectId="proj_1" open={true} />);
 
     expect(screen.getByText("No matching results")).toBeInTheDocument();
-    expect(screen.queryByText("Search failed, please retry")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Search failed, please retry"),
+    ).not.toBeInTheDocument();
 
     mockSearchState = createSearchState({
       status: "error",

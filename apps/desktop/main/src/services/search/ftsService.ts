@@ -97,9 +97,7 @@ export function expandCjkQuery(query: string): string {
 
   // Remove CJK characters from query to get non-CJK tokens
   const nonCjk = query.replace(CJK_CHAR, " ").trim();
-  const nonCjkTokens = nonCjk
-    .split(/\s+/)
-    .filter((t) => t.length > 0);
+  const nonCjkTokens = nonCjk.split(/\s+/).filter((t) => t.length > 0);
 
   // Build OR-joined CJK character tokens
   const cjkTokens = cjkChars.map((c) => `"${c}"`);

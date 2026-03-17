@@ -302,7 +302,7 @@
       "includeArchived": "Include Archived",
       "scope": "Scope",
       "currentProject": "Current Project",
-        "allProjects": "All Projects"
+      "allProjects": "All Projects"
     },
     "results": {
       "match": "{{count}} match(es)",

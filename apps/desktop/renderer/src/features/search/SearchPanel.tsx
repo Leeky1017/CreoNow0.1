@@ -8,7 +8,11 @@ import { ListItem } from "../../components/primitives/ListItem";
 import { Spinner } from "../../components/primitives/Spinner";
 import { Toggle } from "../../components/primitives/Toggle";
 import { useFileStore } from "../../stores/fileStore";
-import { useSearchStore, type SearchScope, type SearchStatus } from "../../stores/searchStore";
+import {
+  useSearchStore,
+  type SearchScope,
+  type SearchStatus,
+} from "../../stores/searchStore";
 
 import {
   ArrowRight,
@@ -258,9 +262,7 @@ function MemoryResultItem(props: {
   const { item, query } = props;
 
   return (
-    <ListItem
-      className="group w-full text-left mx-2 mt-1 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3"
-    >
+    <ListItem className="group w-full text-left mx-2 mt-1 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3">
       {/* Icon */}
       <div className="mt-1 w-8 h-8 rounded flex items-center justify-center text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] border border-[var(--color-separator)] shrink-0 transition-colors">
         <Lightbulb className="w-4 h-4" size={16} strokeWidth={1.5} />
@@ -309,9 +311,7 @@ function KnowledgeResultItem(props: {
   const { item, query } = props;
 
   return (
-    <ListItem
-      className="group w-full text-left mx-2 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3"
-    >
+    <ListItem className="group w-full text-left mx-2 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3">
       {/* Icon */}
       <div className="mt-1 w-8 h-8 rounded bg-[var(--color-separator)] flex items-center justify-center text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] border border-[var(--color-separator)] shrink-0 transition-colors">
         <Share2 className="w-4 h-4" size={16} strokeWidth={1.5} />

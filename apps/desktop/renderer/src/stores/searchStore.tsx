@@ -1,10 +1,7 @@
 import React from "react";
 import { create } from "zustand";
 
-import type {
-  IpcError,
-  IpcResponseData,
-} from "@shared/types/ipc-generated";
+import type { IpcError, IpcResponseData } from "@shared/types/ipc-generated";
 import type { IpcInvoke } from "../lib/ipcTypes";
 
 export type { IpcInvoke };

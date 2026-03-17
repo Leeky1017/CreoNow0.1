@@ -124,7 +124,7 @@ describe("SearchPanel", () => {
       vi.mocked(useSearchStore).mockImplementation((selector) => {
         const state = {
           query: "",
-            scope: "current" as const,
+          scope: "current" as const,
           items: [],
           status: "loading" as const,
           indexState: "ready" as const,
@@ -132,7 +132,7 @@ describe("SearchPanel", () => {
           hasMore: false,
           lastError: null,
           setQuery: vi.fn(),
-            setScope: vi.fn(),
+          setScope: vi.fn(),
           runFulltext: vi.fn(),
           clearResults: vi.fn(),
           clearError: vi.fn(),
@@ -183,7 +183,9 @@ describe("SearchPanel", () => {
   describe("Close功能", () => {
     it("点击背景遮罩应触发Close", () => {
       const onClose = vi.fn();
-      render(<SearchPanel projectId="test-project" open={true} onClose={onClose} />);
+      render(
+        <SearchPanel projectId="test-project" open={true} onClose={onClose} />,
+      );
 
       // 点击背景遮罩
       const backdrop = document.querySelector(".backdrop-blur-sm");

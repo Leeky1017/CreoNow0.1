@@ -125,37 +125,63 @@ function registerSearchReplaceHandlers(
   logger: Logger,
   replaceService: SearchReplaceService | null,
 ): void {
-  ipcMain.handle("search:replace:preview", async (_e, payload: Parameters<SearchReplaceService["preview"]>[0]) => {
-    if (!db || !replaceService) {
-      return { ok: false, error: { code: "DB_ERROR", message: "Database not ready" } };
-    }
-    try {
-      const res = replaceService.preview(payload);
-      if (!res.ok) {
-        logger.error("search_replace_preview_failed", { code: res.error.code, message: res.error.message });
-        return { ok: false, error: res.error };
+  ipcMain.handle(
+    "search:replace:preview",
+    async (_e, payload: Parameters<SearchReplaceService["preview"]>[0]) => {
+      if (!db || !replaceService) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
       }
-      return { ok: true, data: res.data };
-    } catch (error) {
-      return toInternalSearchError(logger, "search_replace_preview_exception", error);
-    }
-  });
+      try {
+        const res = replaceService.preview(payload);
+        if (!res.ok) {
+          logger.error("search_replace_preview_failed", {
+            code: res.error.code,
+            message: res.error.message,
+          });
+          return { ok: false, error: res.error };
+        }
+        return { ok: true, data: res.data };
+      } catch (error) {
+        return toInternalSearchError(
+          logger,
+          "search_replace_preview_exception",
+          error,
+        );
+      }
+    },
+  );
 
-  ipcMain.handle("search:replace:execute", async (_e, payload: Parameters<SearchReplaceService["execute"]>[0]) => {
-    if (!db || !replaceService) {
-      return { ok: false, error: { code: "DB_ERROR", message: "Database not ready" } };
-    }
-    try {
-      const res = replaceService.execute(payload);
-      if (!res.ok) {
-        logger.error("search_replace_execute_failed", { code: res.error.code, message: res.error.message });
-        return { ok: false, error: res.error };
+  ipcMain.handle(
+    "search:replace:execute",
+    async (_e, payload: Parameters<SearchReplaceService["execute"]>[0]) => {
+      if (!db || !replaceService) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
       }
-      return { ok: true, data: res.data };
-    } catch (error) {
-      return toInternalSearchError(logger, "search_replace_execute_exception", error);
-    }
-  });
+      try {
+        const res = replaceService.execute(payload);
+        if (!res.ok) {
+          logger.error("search_replace_execute_failed", {
+            code: res.error.code,
+            message: res.error.message,
+          });
+          return { ok: false, error: res.error };
+        }
+        return { ok: true, data: res.data };
+      } catch (error) {
+        return toInternalSearchError(
+          logger,
+          "search_replace_execute_exception",
+          error,
+        );
+      }
+    },
+  );
 }
 
 function registerFtsHandlers(args: {
@@ -249,7 +275,11 @@ function registerFtsHandlers(args: {
         });
         return { ok: true, data: res.data };
       } catch (error) {
-        return toInternalSearchError(logger, "search_fts_query_exception", error);
+        return toInternalSearchError(
+          logger,
+          "search_fts_query_exception",
+          error,
+        );
       }
     },
   );
