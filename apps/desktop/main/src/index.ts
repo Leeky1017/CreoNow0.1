@@ -52,6 +52,8 @@ import {
   WINDOW_STATE_DEFAULTS,
 } from "./windowState";
 
+import { initCrashReporter } from "./crashReporterSetup";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
@@ -563,6 +565,7 @@ function logAppInitFatal(error: unknown): void {
 }
 
 enableE2EUserDataIsolation();
+initCrashReporter();
 
 // ── Single-instance lock ──
 const gotTheLock = app.requestSingleInstanceLock();

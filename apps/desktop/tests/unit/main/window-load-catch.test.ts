@@ -9,6 +9,7 @@ const appMock = {
   quit: vi.fn(),
   setPath: vi.fn(),
   getPath: vi.fn(() => "/tmp/creonow-test-user-data"),
+  getVersion: vi.fn(() => "0.0.0-test"),
   requestSingleInstanceLock: vi.fn(() => true),
 };
 
@@ -45,6 +46,9 @@ vi.mock("electron", () => {
     BrowserWindow: BrowserWindowMock,
     app: appMock,
     ipcMain: {},
+    crashReporter: {
+      start: vi.fn(),
+    },
     safeStorage: {
       isEncryptionAvailable: vi.fn(() => false),
       encryptString: vi.fn(),
