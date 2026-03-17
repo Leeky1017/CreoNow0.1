@@ -4,6 +4,7 @@ import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import { nowTs } from "@shared/timeUtils";
 import type { Logger } from "../../logging/logger";
 import { ipcError, type ServiceResult } from "../shared/ipcResult";
+import { validateProviderApiKeyPreflight } from "./providerPreflight";
 export type { ServiceResult };
 
 export type AiProxySettings = {
@@ -80,12 +81,6 @@ const KEY_ANTH_BYOK_BASE_URL =
 const KEY_ANTH_BYOK_API_KEY =
   "creonow.ai.provider.anthropicByok.apiKey" as const;
 const ENCRYPTED_SECRET_PREFIX = "__safe_storage_v1__:";
-const API_KEY_FORMAT = /^(?:sk|pk|rk|ak)-[A-Za-z0-9._-]{4,}$/u;
-
-function hasRecognizedApiKeyFormat(value: string): boolean {
-  return API_KEY_FORMAT.test(value);
-}
-
 type SettingsRow = { valueJson: string };
 
 function readSetting(db: Database.Database, key: string): unknown | null {
@@ -143,7 +138,11 @@ function normalizeApiKey(raw: unknown): string | null {
   if (trimmed.length === 0) {
     return null;
   }
-  return hasRecognizedApiKeyFormat(trimmed) ? trimmed : null;
+  const preflight = validateProviderApiKeyPreflight({
+    provider: "openai",
+    apiKey: trimmed,
+  });
+  return preflight.ok ? trimmed : null;
 }
 
 function validatePatchedApiKeys(args: {
@@ -154,15 +153,25 @@ function validatePatchedApiKeys(args: {
     anthropicByokApiKey: string;
   }>;
 }): ServiceResult<true> {
-  const candidates: Array<{ fieldName: string; value: string | undefined }> = [
-    { fieldName: "apiKey", value: args.patch.apiKey },
+  const candidates: Array<{
+    fieldName: string;
+    provider: "proxy" | "openai" | "anthropic";
+    value: string | undefined;
+  }> = [
+    { fieldName: "apiKey", provider: "proxy", value: args.patch.apiKey },
     {
       fieldName: "openAiCompatibleApiKey",
+      provider: "proxy",
       value: args.patch.openAiCompatibleApiKey,
     },
-    { fieldName: "openAiByokApiKey", value: args.patch.openAiByokApiKey },
+    {
+      fieldName: "openAiByokApiKey",
+      provider: "openai",
+      value: args.patch.openAiByokApiKey,
+    },
     {
       fieldName: "anthropicByokApiKey",
+      provider: "anthropic",
       value: args.patch.anthropicByokApiKey,
     },
   ];
@@ -174,7 +183,12 @@ function validatePatchedApiKeys(args: {
     if (candidate.value.trim().length === 0) {
       continue;
     }
-    if (normalizeApiKey(candidate.value) === null) {
+    const preflight = validateProviderApiKeyPreflight({
+      provider: candidate.provider,
+      apiKey: candidate.value,
+      allowMissingApiKey: true,
+    });
+    if (!preflight.ok) {
       return ipcError(
         "INVALID_ARGUMENT",
         `${candidate.fieldName} has invalid API key format`,

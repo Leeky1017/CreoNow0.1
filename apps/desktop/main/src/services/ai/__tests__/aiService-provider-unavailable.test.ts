@@ -60,3 +60,51 @@ function createLogger(): Logger {
     globalThis.fetch = originalFetch;
   }
 }
+
+// --- runSkill preflight blocks provider/model mismatch before network ---
+{
+  const originalFetch = globalThis.fetch;
+
+  try {
+    let fetchCalled = false;
+    globalThis.fetch = (async () => {
+      fetchCalled = true;
+      return new Response("unexpected", { status: 500 });
+    }) as typeof fetch;
+
+    const service = createAiService({
+      logger: createLogger(),
+      env: {},
+      sleep: async () => {},
+      rateLimitPerMinute: 1_000,
+      getProxySettings: () => ({
+        enabled: false,
+        providerMode: "openai-byok",
+        openAiByok: {
+          baseUrl: "https://api.openai.com",
+          apiKey: "sk-valid1234",
+        },
+      }),
+    });
+
+    const result = await service.runSkill({
+      skillId: "builtin:polish",
+      input: "hello",
+      mode: "ask",
+      model: "claude-3-sonnet",
+      stream: false,
+      ts: 1_700_000_000_001,
+      emitEvent: () => {},
+    });
+
+    assert.equal(result.ok, false);
+    if (result.ok) {
+      throw new Error("runSkill should fail preflight on provider mismatch");
+    }
+
+    assert.equal(result.error.code, "PREFLIGHT_MODEL_PROVIDER_MISMATCH");
+    assert.equal(fetchCalled, false, "must fail before provider network call");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+}
