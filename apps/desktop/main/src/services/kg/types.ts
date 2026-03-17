@@ -119,7 +119,9 @@ export type KnowledgeGraphService = {
     filter?: {
       aiContextLevel?: AiContextLevel;
     };
-  }) => ServiceResult<{ items: KnowledgeEntity[] }>;
+    limit?: number;
+    offset?: number;
+  }) => ServiceResult<{ items: KnowledgeEntity[]; totalCount: number }>;
   entityUpdate: (args: {
     projectId: string;
     id: string;
@@ -148,7 +150,9 @@ export type KnowledgeGraphService = {
   }) => ServiceResult<KnowledgeRelation>;
   relationList: (args: {
     projectId: string;
-  }) => ServiceResult<{ items: KnowledgeRelation[] }>;
+    limit?: number;
+    offset?: number;
+  }) => ServiceResult<{ items: KnowledgeRelation[]; totalCount: number }>;
   relationUpdate: (args: {
     projectId: string;
     id: string;

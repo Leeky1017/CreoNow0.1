@@ -36,6 +36,7 @@ describe("kgStore native contract", () => {
               version: 1,
             },
           ],
+          totalCount: 1,
         });
       }
       if (channel === "knowledge:relation:list") {
@@ -51,6 +52,7 @@ describe("kgStore native contract", () => {
               createdAt: "2026-02-27T00:00:00.000Z",
             },
           ],
+          totalCount: 1,
         });
       }
       throw new Error(`Unexpected channel: ${channel}`);
@@ -97,11 +99,13 @@ describe("kgStore native contract", () => {
       if (channel === "knowledge:entity:list") {
         return ok(channel, {
           items: [],
+          totalCount: 0,
         });
       }
       if (channel === "knowledge:relation:list") {
         return ok(channel, {
           items: [],
+          totalCount: 0,
         });
       }
       throw new Error(`Unexpected channel: ${channel}`);

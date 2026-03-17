@@ -17,7 +17,16 @@ export type PreferenceLearningOutcome = {
   learned: boolean;
   learnedMemoryId?: string;
   signalCount?: number;
+  rejectCount?: number;
+  partialCount?: number;
+  weightedScore?: number;
   threshold?: number;
+};
+
+const FEEDBACK_WEIGHT: Record<SkillFeedbackAction, number> = {
+  accept: 1,
+  partial: -0.5,
+  reject: -1,
 };
 
 const MIN_EVIDENCE_REF_LEN = 3;
@@ -93,16 +102,17 @@ function insertFeedbackRow(
   );
 }
 
-function countAcceptedSignals(
+function countSignalsByAction(
   db: Database.Database,
+  action: SkillFeedbackAction,
   evidenceRef: string,
 ): number {
   const row = db
     .prepare<
-      [string],
+      [SkillFeedbackAction, string],
       { count: number }
-    >("SELECT COUNT(*) as count FROM skill_feedback WHERE action = 'accept' AND evidence_ref = ? AND ignored = 0")
-    .get(evidenceRef);
+    >("SELECT COUNT(*) as count FROM skill_feedback WHERE action = ? AND evidence_ref = ? AND ignored = 0")
+    .get(action, evidenceRef);
   return row ? row.count : 0;
 }
 
@@ -195,42 +205,6 @@ export function recordSkillFeedbackAndLearn(args: {
     };
   }
 
-  if (args.action !== "accept") {
-    try {
-      insertFeedbackRow(args.db, {
-        runId: args.runId,
-        action: args.action,
-        evidenceRef: null,
-        ignored: true,
-        ignoredReason: "unsupported_action",
-        ts,
-      });
-    } catch (error) {
-      args.logger.error("preference_signal_ingest_failed", {
-        code: "DB_ERROR",
-        message: error instanceof Error ? error.message : String(error),
-      });
-      return ipcError("DB_ERROR", "Failed to record feedback");
-    }
-
-    args.logger.info("preference_signal_ingested", {
-      action: args.action,
-      ignored: true,
-      learned: false,
-      reason: "unsupported_action",
-    });
-
-    return {
-      ok: true,
-      data: {
-        recorded: true,
-        ignored: true,
-        ignoredReason: "unsupported_action",
-        learned: false,
-      },
-    };
-  }
-
   const normalized = normalizeEvidenceRef({
     evidenceRef: args.evidenceRef,
     privacyModeEnabled: args.settings.privacyModeEnabled,
@@ -290,8 +264,18 @@ export function recordSkillFeedbackAndLearn(args: {
   }
 
   const threshold = args.settings.preferenceLearningThreshold;
-  const signalCount = countAcceptedSignals(args.db, normalized.value);
-  const shouldLearn = signalCount >= threshold;
+  const signalCount = countSignalsByAction(args.db, "accept", normalized.value);
+  const rejectCount = countSignalsByAction(args.db, "reject", normalized.value);
+  const partialCount = countSignalsByAction(
+    args.db,
+    "partial",
+    normalized.value,
+  );
+  const weightedScore =
+    signalCount * FEEDBACK_WEIGHT.accept +
+    rejectCount * FEEDBACK_WEIGHT.reject +
+    partialCount * FEEDBACK_WEIGHT.partial;
+  const shouldLearn = signalCount > 0 && weightedScore >= threshold;
 
   let learnedMemoryId: string | undefined;
   let learned = false;
@@ -326,6 +310,9 @@ export function recordSkillFeedbackAndLearn(args: {
     ignored: false,
     learned,
     signal_count: signalCount,
+    reject_count: rejectCount,
+    partial_count: partialCount,
+    weighted_score: weightedScore,
     threshold,
   });
 
@@ -337,6 +324,9 @@ export function recordSkillFeedbackAndLearn(args: {
       learned,
       learnedMemoryId,
       signalCount,
+      rejectCount,
+      partialCount,
+      weightedScore,
       threshold,
     },
   };

@@ -97,17 +97,20 @@ type SkillFeedbackResponse = {
 type ChatSendPayload = {
   message: string;
   projectId?: string;
+  sessionId?: string;
   documentId?: string;
 };
 
 type ChatSendResponse = {
   accepted: true;
   messageId: string;
+  sessionId: string;
   echoed: string;
 };
 
 type ChatListPayload = {
   projectId?: string;
+  sessionId?: string;
 };
 
 type ChatMessageRole = "user" | "assistant";
@@ -128,11 +131,38 @@ type ChatListResponse = {
 
 type ChatClearPayload = {
   projectId?: string;
+  sessionId?: string;
 };
 
 type ChatClearResponse = {
   cleared: true;
   removed: number;
+};
+
+type ChatSession = {
+  sessionId: string;
+  projectId: string;
+  title: string;
+  createdAt: number;
+  updatedAt: number;
+};
+
+type ChatSessionsPayload = {
+  projectId?: string;
+  query?: string;
+};
+
+type ChatSessionsResponse = {
+  sessions: ChatSession[];
+};
+
+type ChatSessionDeletePayload = {
+  projectId?: string;
+  sessionId: string;
+};
+
+type ChatSessionDeleteResponse = {
+  deleted: true;
 };
 
 const AI_CANDIDATE_COUNT_MIN = 1;
@@ -283,6 +313,15 @@ function parseModelPricingMap(
  *
  * Why: chat history must be isolated by project to prevent cross-project leakage.
  */
+
+function validateChatPayload(
+  payload: unknown,
+): asserts payload is Record<string, unknown> {
+  if (typeof payload !== "object" || payload === null) {
+    throw new Error("payload must be an object");
+  }
+}
+
 function resolveChatProjectId(args: {
   projectId?: string;
   boundProjectId?: string | null;
@@ -368,7 +407,6 @@ type AiIpcContext = {
     string,
     { startedAt: number; context?: SkillRunPayload["context"] }
   >;
-  chatHistoryByProject: Map<string, ChatHistoryMessage[]>;
   sessionTokenTotalsByContext: Map<string, number>;
   modelPricingByModel: Map<string, ModelPricing>;
   pushBackpressureByRenderer: Map<
@@ -417,9 +455,7 @@ function rememberRunInRegistry(
   }
 }
 
-function resolveUsageContextKey(
-  context?: SkillRunPayload["context"],
-): string {
+function resolveUsageContextKey(context?: SkillRunPayload["context"]): string {
   const projectId = context?.projectId?.trim() ?? "";
   if (projectId.length > 0) {
     return `project:${projectId}`;
@@ -508,7 +544,6 @@ export function registerAiIpcHandlers(deps: AiIpcDeps): void {
     string,
     { startedAt: number; context?: SkillRunPayload["context"] }
   >();
-  const chatHistoryByProject = new Map<string, ChatHistoryMessage[]>();
   const sessionTokenTotalsByContext = new Map<string, number>();
   const modelPricingByModel = parseModelPricingMap(deps.env);
   const degradationCounter = new DegradationCounter();
@@ -632,7 +667,6 @@ export function registerAiIpcHandlers(deps: AiIpcDeps): void {
     aiService,
     skillExecutor,
     runRegistry,
-    chatHistoryByProject,
     sessionTokenTotalsByContext,
     modelPricingByModel,
     pushBackpressureByRenderer,
@@ -733,7 +767,10 @@ function registerAiSkillRunHandler(ctx: AiIpcContext): void {
         });
       };
 
-      const stats = createStatsService({ db: ctx.deps.db, logger: ctx.deps.logger });
+      const stats = createStatsService({
+        db: ctx.deps.db,
+        logger: ctx.deps.logger,
+      });
       const inc = stats.increment({
         ts: nowTs(),
         delta: { skillsUsed: 1 },
@@ -761,7 +798,10 @@ function registerAiSkillRunHandler(ctx: AiIpcContext): void {
             return { ok: false, error: res.error };
           }
 
-          rememberRunInRegistry(ctx, { runId: res.data.runId, context: payload.context });
+          rememberRunInRegistry(ctx, {
+            runId: res.data.runId,
+            context: payload.context,
+          });
 
           const outputText = res.data.outputText;
           if (typeof outputText === "string") {
@@ -823,7 +863,10 @@ function registerAiSkillRunHandler(ctx: AiIpcContext): void {
           if (!res.ok) {
             return { ok: false, error: res.error };
           }
-          rememberRunInRegistry(ctx, { runId: res.data.runId, context: payload.context });
+          rememberRunInRegistry(ctx, {
+            runId: res.data.runId,
+            context: payload.context,
+          });
           runs.push({
             executionId: res.data.executionId,
             runId: res.data.runId,
@@ -1044,9 +1087,49 @@ function registerAiChatHandlers(ctx: AiIpcContext): void {
         };
       }
 
+      const db = ctx.deps.db;
+      if (!db) {
+        return { ok: false, error: createDbNotReadyError() };
+      }
+
       const timestamp = nowTs();
-      const projectMessages = ctx.chatHistoryByProject.get(projectId.data) ?? [];
-      if (projectMessages.length >= ctx.runtimeGovernance.ai.chatMessageCapacity) {
+
+      // Resolve or create session
+      const sessionId = payload.sessionId?.trim() || null;
+      let resolvedSessionId: string;
+
+      if (sessionId) {
+        const existing = db
+          .prepare(
+            "SELECT id FROM chat_sessions WHERE id = ? AND project_id = ?",
+          )
+          .get(sessionId, projectId.data) as { id: string } | undefined;
+        if (!existing) {
+          return {
+            ok: false,
+            error: {
+              code: "NOT_FOUND",
+              message: "session not found",
+            },
+          };
+        }
+        resolvedSessionId = sessionId;
+      } else {
+        resolvedSessionId = `session-${timestamp}-${Math.random().toString(36).slice(2, 8)}`;
+        db.prepare(
+          "INSERT INTO chat_sessions (id, project_id, title, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+        ).run(resolvedSessionId, projectId.data, "", timestamp, timestamp);
+      }
+
+      // Check capacity
+      const msgCount = (
+        db
+          .prepare(
+            "SELECT COUNT(*) AS cnt FROM chat_messages WHERE project_id = ?",
+          )
+          .get(projectId.data) as { cnt: number }
+      ).cnt;
+      if (msgCount >= ctx.runtimeGovernance.ai.chatMessageCapacity) {
         return {
           ok: false,
           error: {
@@ -1055,23 +1138,40 @@ function registerAiChatHandlers(ctx: AiIpcContext): void {
           },
         };
       }
-      const messageId = `chat-${timestamp}`;
-      const nextMessage: ChatHistoryMessage = {
+
+      const messageId = `chat-${timestamp}-${Math.random().toString(36).slice(2, 8)}`;
+      const traceId = `trace-${messageId}`;
+
+      db.prepare(
+        "INSERT INTO chat_messages (id, session_id, project_id, role, content, skill_id, timestamp, trace_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      ).run(
         messageId,
-        projectId: projectId.data,
-        role: "user",
-        content: message,
+        resolvedSessionId,
+        projectId.data,
+        "user",
+        message,
+        payload.documentId ?? null,
         timestamp,
-        traceId: `trace-${messageId}`,
-      };
-      const nextMessages = [...projectMessages, nextMessage];
-      ctx.chatHistoryByProject.set(projectId.data, nextMessages);
+        traceId,
+      );
+
+      // Update session title from first message if empty
+      db.prepare(
+        "UPDATE chat_sessions SET title = ?, updated_at = ? WHERE id = ? AND title = ''",
+      ).run(message.slice(0, 100), timestamp, resolvedSessionId);
+
+      // Always update session timestamp
+      db.prepare("UPDATE chat_sessions SET updated_at = ? WHERE id = ?").run(
+        timestamp,
+        resolvedSessionId,
+      );
 
       return {
         ok: true,
         data: {
           accepted: true,
           messageId,
+          sessionId: resolvedSessionId,
           echoed: message,
         },
       };
@@ -1097,10 +1197,28 @@ function registerAiChatHandlers(ctx: AiIpcContext): void {
         };
       }
 
-      const messages = ctx.chatHistoryByProject.get(projectId.data) ?? [];
+      const db = ctx.deps.db;
+      if (!db) {
+        return { ok: false, error: createDbNotReadyError() };
+      }
+
+      const sessionId = payload.sessionId?.trim() || null;
+
+      const rows = sessionId
+        ? (db
+            .prepare(
+              "SELECT id AS messageId, project_id AS projectId, role, content, skill_id AS skillId, timestamp, trace_id AS traceId FROM chat_messages WHERE project_id = ? AND session_id = ? ORDER BY timestamp ASC",
+            )
+            .all(projectId.data, sessionId) as ChatHistoryMessage[])
+        : (db
+            .prepare(
+              "SELECT id AS messageId, project_id AS projectId, role, content, skill_id AS skillId, timestamp, trace_id AS traceId FROM chat_messages WHERE project_id = ? ORDER BY timestamp ASC",
+            )
+            .all(projectId.data) as ChatHistoryMessage[]);
+
       return {
         ok: true,
-        data: { items: [...messages] },
+        data: { items: rows },
       };
     },
   );
@@ -1124,8 +1242,31 @@ function registerAiChatHandlers(ctx: AiIpcContext): void {
         };
       }
 
-      const removed = ctx.chatHistoryByProject.get(projectId.data)?.length ?? 0;
-      ctx.chatHistoryByProject.delete(projectId.data);
+      const db = ctx.deps.db;
+      if (!db) {
+        return { ok: false, error: createDbNotReadyError() };
+      }
+
+      const sessionId = payload.sessionId?.trim() || null;
+      let removed: number;
+
+      if (sessionId) {
+        removed = db
+          .prepare(
+            "DELETE FROM chat_messages WHERE project_id = ? AND session_id = ?",
+          )
+          .run(projectId.data, sessionId).changes;
+        db.prepare(
+          "DELETE FROM chat_sessions WHERE id = ? AND project_id = ?",
+        ).run(sessionId, projectId.data);
+      } else {
+        removed = db
+          .prepare("DELETE FROM chat_messages WHERE project_id = ?")
+          .run(projectId.data).changes;
+        db.prepare("DELETE FROM chat_sessions WHERE project_id = ?").run(
+          projectId.data,
+        );
+      }
 
       return {
         ok: true,
@@ -1133,6 +1274,88 @@ function registerAiChatHandlers(ctx: AiIpcContext): void {
           cleared: true,
           removed,
         },
+      };
+    },
+  );
+
+  ctx.deps.ipcMain.handle(
+    "ai:chat:sessions",
+    async (
+      event,
+      payload: ChatSessionsPayload,
+    ): Promise<IpcResponse<ChatSessionsResponse>> => {
+      validateChatPayload(payload);
+      const projectId = resolveChatProjectId({
+        projectId: payload.projectId,
+        boundProjectId: ctx.deps.projectSessionBinding?.resolveProjectId({
+          webContentsId: event.sender.id,
+        }),
+      });
+      if (!projectId.ok) {
+        return {
+          ok: false,
+          error: projectId.error,
+        };
+      }
+
+      const db = ctx.deps.db;
+      if (!db) {
+        return { ok: false, error: createDbNotReadyError() };
+      }
+
+      const query = payload.query?.trim() || null;
+      const sessions = query
+        ? (db
+            .prepare(
+              "SELECT s.id AS sessionId, s.project_id AS projectId, s.title, s.created_at AS createdAt, s.updated_at AS updatedAt FROM chat_sessions s WHERE s.project_id = ? AND (s.title LIKE ? OR EXISTS (SELECT 1 FROM chat_messages m WHERE m.session_id = s.id AND m.content LIKE ?)) ORDER BY s.updated_at DESC",
+            )
+            .all(projectId.data, `%${query}%`, `%${query}%`) as ChatSession[])
+        : (db
+            .prepare(
+              "SELECT id AS sessionId, project_id AS projectId, title, created_at AS createdAt, updated_at AS updatedAt FROM chat_sessions WHERE project_id = ? ORDER BY updated_at DESC",
+            )
+            .all(projectId.data) as ChatSession[]);
+
+      return {
+        ok: true,
+        data: { sessions },
+      };
+    },
+  );
+
+  ctx.deps.ipcMain.handle(
+    "ai:chatsession:delete",
+    async (
+      event,
+      payload: ChatSessionDeletePayload,
+    ): Promise<IpcResponse<ChatSessionDeleteResponse>> => {
+      validateChatPayload(payload);
+      const projectId = resolveChatProjectId({
+        projectId: payload.projectId,
+        boundProjectId: ctx.deps.projectSessionBinding?.resolveProjectId({
+          webContentsId: event.sender.id,
+        }),
+      });
+      if (!projectId.ok) {
+        return {
+          ok: false,
+          error: projectId.error,
+        };
+      }
+
+      const db = ctx.deps.db;
+      if (!db) {
+        return { ok: false, error: createDbNotReadyError() };
+      }
+
+      // CASCADE delete handles messages
+      db.prepare(
+        "DELETE FROM chat_sessions WHERE id = ? AND project_id = ?",
+      ).run(payload.sessionId, projectId.data);
+
+      return {
+        ok: true,
+        data: { deleted: true },
       };
     },
   );
