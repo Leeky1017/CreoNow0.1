@@ -31,6 +31,7 @@ import { WriteButton } from "./WriteButton";
 import { EditorContextMenu } from "./EditorContextMenu";
 import { SlashCommandExtension } from "./extensions/slashCommand";
 import { DragHandleExtension } from "./extensions/dragHandle";
+import { InlineDiffExtension } from "./extensions/inlineDiff";
 import { SlashCommandPanel } from "./SlashCommandPanel";
 import { EntityCompletionPanel } from "./EntityCompletionPanel";
 import {
@@ -924,6 +925,7 @@ function useEditorPaneCore(projectId: string) {
         onClosePanel: closeSlashPanel,
       }),
       DragHandleExtension,
+      InlineDiffExtension,
       ...(!IS_VITEST_RUNTIME
         ? [
             BubbleMenuExtension.configure({
