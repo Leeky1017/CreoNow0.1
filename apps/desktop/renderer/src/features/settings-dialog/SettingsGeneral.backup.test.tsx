@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("../../i18n/languagePreference", () => ({
@@ -15,13 +16,18 @@ import { SettingsGeneral, defaultGeneralSettings } from "./SettingsGeneral";
 import enLocale from "../../i18n/locales/en.json";
 import zhCNLocale from "../../i18n/locales/zh-CN.json";
 
-function renderSettingsGeneral() {
+function renderSettingsGeneral(overrides?: {
+  onManualBackup?: () => void;
+  onManualRestore?: () => void;
+}) {
   return render(
     <SettingsGeneral
       settings={defaultGeneralSettings}
       showAiMarks={false}
       onShowAiMarksChange={vi.fn()}
       onSettingsChange={vi.fn()}
+      onManualBackup={overrides?.onManualBackup}
+      onManualRestore={overrides?.onManualRestore}
     />,
   );
 }
@@ -37,6 +43,30 @@ describe("SettingsGeneral backup interval visible", () => {
     renderSettingsGeneral();
 
     expect(screen.getByText("Data & Storage")).toBeInTheDocument();
+  });
+
+  it("renders manual backup and restore action buttons", () => {
+    renderSettingsGeneral();
+
+    expect(
+      screen.getByRole("button", { name: "Backup Now" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Restore Latest" }),
+    ).toBeInTheDocument();
+  });
+
+  it("invokes callbacks when backup and restore buttons are clicked", async () => {
+    const user = userEvent.setup();
+    const onManualBackup = vi.fn();
+    const onManualRestore = vi.fn();
+    renderSettingsGeneral({ onManualBackup, onManualRestore });
+
+    await user.click(screen.getByRole("button", { name: "Backup Now" }));
+    await user.click(screen.getByRole("button", { name: "Restore Latest" }));
+
+    expect(onManualBackup).toHaveBeenCalledTimes(1);
+    expect(onManualRestore).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -59,6 +89,14 @@ describe("i18n backup keys", () => {
     expect(enLocale.settings.general.backupOption_1hour).toBe("Every hour");
   });
 
+  it("en locale has manual backup keys", () => {
+    expect(enLocale.settings.general.manualBackup).toBe(
+      "Manual Backup & Restore",
+    );
+    expect(enLocale.settings.general.backupNow).toBe("Backup Now");
+    expect(enLocale.settings.general.restoreLatest).toBe("Restore Latest");
+  });
+
   it("zh-CN locale has backupInterval key", () => {
     expect(zhCNLocale.settings.general.backupInterval).toBe("备份间隔");
   });
@@ -73,5 +111,11 @@ describe("i18n backup keys", () => {
     expect(zhCNLocale.settings.general.backupOption_5min).toBe("每 5 分钟");
     expect(zhCNLocale.settings.general.backupOption_15min).toBe("每 15 分钟");
     expect(zhCNLocale.settings.general.backupOption_1hour).toBe("每小时");
+  });
+
+  it("zh-CN locale has manual backup keys", () => {
+    expect(zhCNLocale.settings.general.manualBackup).toBe("手动备份与恢复");
+    expect(zhCNLocale.settings.general.backupNow).toBe("立即备份");
+    expect(zhCNLocale.settings.general.restoreLatest).toBe("恢复最近备份");
   });
 });

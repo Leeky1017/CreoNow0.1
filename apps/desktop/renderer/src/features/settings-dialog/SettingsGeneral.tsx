@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { Toggle } from "../../components/primitives/Toggle";
 import { Slider } from "../../components/primitives/Slider";
-import { Select } from "../../components/primitives";
+import { Button, Select } from "../../components/primitives";
 import { FormField } from "../../components/composites/FormField";
 import { i18n } from "../../i18n";
 import {
@@ -36,6 +36,16 @@ export interface SettingsGeneralProps {
   onShowAiMarksChange: (enabled: boolean) => void;
   /** Callback when settings change */
   onSettingsChange: (settings: GeneralSettings) => void;
+  /** Trigger manual backup snapshot creation */
+  onManualBackup?: () => void | Promise<void>;
+  /** Trigger manual restore from latest snapshot */
+  onManualRestore?: () => void | Promise<void>;
+  /** Busy flag while manual backup is running */
+  manualBackupLoading?: boolean;
+  /** Busy flag while manual restore is running */
+  manualRestoreLoading?: boolean;
+  /** Disable backup actions when no project is active */
+  backupActionsDisabled?: boolean;
 }
 
 /**
@@ -85,6 +95,11 @@ export function SettingsGeneral({
   showAiMarks,
   onShowAiMarksChange,
   onSettingsChange,
+  onManualBackup,
+  onManualRestore,
+  manualBackupLoading = false,
+  manualRestoreLoading = false,
+  backupActionsDisabled = false,
 }: SettingsGeneralProps): JSX.Element {
   const { t } = useTranslation();
 
@@ -210,6 +225,38 @@ export function SettingsGeneral({
               onValueChange={(value) => updateSetting("backupInterval", value)}
               fullWidth
             />
+          </FormField>
+
+          <FormField
+            label={t("settings.general.manualBackup")}
+            htmlFor="manual-backup-actions"
+            help={t("settings.general.manualBackupHelp")}
+          >
+            <div
+              id="manual-backup-actions"
+              className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+            >
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  void onManualBackup?.();
+                }}
+                loading={manualBackupLoading}
+                disabled={backupActionsDisabled}
+              >
+                {t("settings.general.backupNow")}
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  void onManualRestore?.();
+                }}
+                loading={manualRestoreLoading}
+                disabled={backupActionsDisabled}
+              >
+                {t("settings.general.restoreLatest")}
+              </Button>
+            </div>
           </FormField>
         </div>
       </div>

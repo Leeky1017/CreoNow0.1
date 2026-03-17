@@ -49,6 +49,23 @@ function createTestDb(): Database.Database {
       size_bytes INTEGER NOT NULL DEFAULT 0,
       label TEXT
     );
+    CREATE TABLE backup_snapshot_documents (
+      snapshot_id TEXT NOT NULL,
+      document_id TEXT NOT NULL,
+      project_id TEXT NOT NULL,
+      type TEXT NOT NULL,
+      title TEXT NOT NULL,
+      status TEXT NOT NULL,
+      sort_order INTEGER NOT NULL,
+      parent_id TEXT,
+      content_json TEXT NOT NULL,
+      content_text TEXT NOT NULL,
+      content_md TEXT NOT NULL,
+      content_hash TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      PRIMARY KEY (snapshot_id, document_id)
+    );
     CREATE INDEX idx_backup_snapshots_project_created
       ON backup_snapshots(project_id, created_at DESC);
   `);
@@ -60,6 +77,30 @@ function seedProject(db: Database.Database, projectId: string): void {
     projectId,
     "Test Project",
   );
+}
+
+function insertDocument(args: {
+  db: Database.Database;
+  documentId: string;
+  projectId: string;
+  contentText: string;
+}): void {
+  args.db
+    .prepare(
+      `INSERT INTO documents (
+         document_id, project_id, type, title, status,
+         sort_order, parent_id, content_json, content_text,
+         content_md, content_hash, created_at, updated_at
+       ) VALUES (?, ?, 'chapter', ?, 'draft', 0, NULL, '{}', ?, ?, ?, 1, 1)`,
+    )
+    .run(
+      args.documentId,
+      args.projectId,
+      args.documentId,
+      args.contentText,
+      args.contentText,
+      `${args.documentId}-hash`,
+    );
 }
 
 describe("BackupService", () => {
@@ -163,6 +204,43 @@ describe("BackupService", () => {
       expect(() => restoreBackupSnapshot(deps, "")).toThrow(
         "BACKUP_INVALID_ID",
       );
+    });
+
+    it("restores document content and removes docs created after snapshot", () => {
+      seedProject(db, "proj-1");
+      insertDocument({
+        db,
+        documentId: "doc-1",
+        projectId: "proj-1",
+        contentText: "draft-v1",
+      });
+
+      const snapshot = createBackupSnapshot(deps, "proj-1", "checkpoint");
+
+      db.prepare(
+        "UPDATE documents SET content_text = ?, content_md = ?, content_hash = ? WHERE document_id = ?",
+      ).run("draft-v2", "draft-v2", "doc-1-hash-v2", "doc-1");
+      insertDocument({
+        db,
+        documentId: "doc-2",
+        projectId: "proj-1",
+        contentText: "new-content",
+      });
+
+      restoreBackupSnapshot(deps, snapshot.id);
+
+      const restoredDoc1 = db
+        .prepare(
+          "SELECT content_text AS contentText, content_hash AS contentHash FROM documents WHERE document_id = ?",
+        )
+        .get("doc-1") as { contentText: string; contentHash: string };
+      const restoredDoc2 = db
+        .prepare("SELECT document_id FROM documents WHERE document_id = ?")
+        .get("doc-2") as { document_id: string } | undefined;
+
+      expect(restoredDoc1.contentText).toBe("draft-v1");
+      expect(restoredDoc1.contentHash).toBe("doc-1-hash");
+      expect(restoredDoc2).toBeUndefined();
     });
   });
 

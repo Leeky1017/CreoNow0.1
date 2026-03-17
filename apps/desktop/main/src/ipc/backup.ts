@@ -56,6 +56,7 @@ function toBackupError(error: unknown): BackupPayloadError {
       "BACKUP_PROJECT_NOT_FOUND",
       "BACKUP_INVALID_ID",
       "BACKUP_SNAPSHOT_NOT_FOUND",
+      "BACKUP_SNAPSHOT_CONTENT_MISSING",
     ] as const;
     for (const code of knownCodes) {
       if (error.message === code) {
