@@ -40,6 +40,7 @@ async function bootIndexWithWhenReady(
     app: {
       whenReady: vi.fn(() => whenReadyPromise),
       getPath: vi.fn(() => "/tmp/creonow-test-user-data"),
+      getVersion: vi.fn(() => "0.0.0-test"),
       setPath: vi.fn(),
       on: vi.fn(),
       quit: appQuit,
@@ -53,6 +54,9 @@ async function bootIndexWithWhenReady(
       isEncryptionAvailable: vi.fn(() => true),
       encryptString: vi.fn((plainText: string) => Buffer.from(plainText)),
       decryptString: vi.fn((cipherText: Buffer) => cipherText.toString("utf8")),
+    },
+    crashReporter: {
+      start: vi.fn(),
     },
   }));
 
