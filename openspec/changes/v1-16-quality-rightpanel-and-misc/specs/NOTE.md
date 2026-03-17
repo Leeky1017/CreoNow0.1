@@ -1,4 +1,4 @@
-本 change 涉及 QualityGatesPanel / QualityPanel / InfoPanel / Diff 模块（7 文件）/ 
+本 change 涉及 QualityGatesPanel / QualityPanel / InfoPanel / Diff 模块（7 文件）/
 AnalyticsPage / ZenMode / ShortcutsPanel / Settings 子组件，
 均为视觉对齐 + 结构重构（Design Token 统一 + PanelHeader 组件复用），不修改对外行为协议。
 变更限于 JSX/CSS 渲染层，不影响 Store / IPC / Service / diff 算法 / 质量门禁规则引擎。

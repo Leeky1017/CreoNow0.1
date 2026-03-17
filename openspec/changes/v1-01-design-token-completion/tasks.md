@@ -8,19 +8,19 @@
 
 ## 验收标准
 
-| ID | 标准 | 验证方式 |
-| --- | --- | --- |
-| AC-1 | `design/system/01-tokens.css` 包含 `--text-display-*`（48px）、`--text-heading-*`（24px）、`--text-nav-*`（13px）、`--text-metadata-*`（12px）四组 typography token，每组包含 size / weight / line-height / letter-spacing | `grep` 四组 token 名 |
-| AC-2 | 独立 weight token（`--weight-light/normal/medium/semibold`）、tracking token（`--tracking-tight/normal/wide/wider`）、leading token（`--leading-tight/normal/relaxed`）全部定义 | `grep` 验证 |
-| AC-4 | 语义间距 `--space-panel-padding`、`--space-section-gap`、`--space-item-gap`、`--space-inline-gap` 已定义，且值通过 `var(--space-N)` 引用基础间距 | `grep` + 值检查 |
-| AC-5 | `renderer/src/styles/main.css` 的 `@theme` 块导出 `--duration-instant`（50ms）和 `--duration-slower`（500ms） | `grep` main.css @theme |
-| AC-6 | `renderer/src/styles/main.css` 的 `@theme` 块包含 typography token 的 Tailwind 映射 | `grep` main.css @theme |
-| AC-7 | `renderer/src/styles/tokens.css` 与 `design/system/01-tokens.css` 保持同步（如有同步关系） | diff 比较 |
-| AC-8 | 所有新增 token 在 `tokens.css` 中有中文注释说明用途 | 人工审查 |
-| AC-9 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | CI 命令 |
-| AC-10 | 全量测试通过（`pnpm -C apps/desktop vitest run`） | CI 命令 |
-| AC-11 | TypeScript 类型检查通过（`pnpm typecheck`） | CI 命令 |
-| AC-12 | lint ratchet 无新增违规（`pnpm lint`） | CI 命令 |
+| ID    | 标准                                                                                                                                                                                                                       | 验证方式               |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| AC-1  | `design/system/01-tokens.css` 包含 `--text-display-*`（48px）、`--text-heading-*`（24px）、`--text-nav-*`（13px）、`--text-metadata-*`（12px）四组 typography token，每组包含 size / weight / line-height / letter-spacing | `grep` 四组 token 名   |
+| AC-2  | 独立 weight token（`--weight-light/normal/medium/semibold`）、tracking token（`--tracking-tight/normal/wide/wider`）、leading token（`--leading-tight/normal/relaxed`）全部定义                                            | `grep` 验证            |
+| AC-4  | 语义间距 `--space-panel-padding`、`--space-section-gap`、`--space-item-gap`、`--space-inline-gap` 已定义，且值通过 `var(--space-N)` 引用基础间距                                                                           | `grep` + 值检查        |
+| AC-5  | `renderer/src/styles/main.css` 的 `@theme` 块导出 `--duration-instant`（50ms）和 `--duration-slower`（500ms）                                                                                                              | `grep` main.css @theme |
+| AC-6  | `renderer/src/styles/main.css` 的 `@theme` 块包含 typography token 的 Tailwind 映射                                                                                                                                        | `grep` main.css @theme |
+| AC-7  | `renderer/src/styles/tokens.css` 与 `design/system/01-tokens.css` 保持同步（如有同步关系）                                                                                                                                 | diff 比较              |
+| AC-8  | 所有新增 token 在 `tokens.css` 中有中文注释说明用途                                                                                                                                                                        | 人工审查               |
+| AC-9  | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                                                                                                                 | CI 命令                |
+| AC-10 | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                                                                                                                          | CI 命令                |
+| AC-11 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                                                                                                                                | CI 命令                |
+| AC-12 | lint ratchet 无新增违规（`pnpm lint`）                                                                                                                                                                                     | CI 命令                |
 
 ---
 

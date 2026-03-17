@@ -8,28 +8,28 @@
 
 ## 验收标准
 
-| ID | 标准 | 验证方式 |
-| --- | --- | --- |
-| AC-1 | `ButtonVariant` type 包含 `"pill"`，`ButtonSize` type 包含 `"icon"` | TypeScript 编译 + grep |
-| AC-2 | `<Button variant="pill">` 渲染时 `border-radius` 为 `var(--radius-full)` | 单元测试 className 断言 |
-| AC-3 | `<Button size="icon">` 渲染时宽高相等，padding 为 0 | 单元测试 className 断言 |
-| AC-4 | `CardVariant` type 包含 `"bento"` 和 `"compact"` | TypeScript 编译 + grep |
-| AC-5 | `<Card variant="bento">` 渲染时 `border-radius` 为 `var(--radius-2xl)`，padding 为 `var(--space-8)` | 单元测试 className 断言 |
-| AC-6 | `<Card variant="compact">` 渲染时使用紧凑 padding `var(--space-3)` | 单元测试 className 断言 |
-| AC-7 | Tabs 组件支持 `variant` prop，类型为 `"default" \| "underline"` | TypeScript 编译 |
-| AC-8 | `<Tabs variant="underline">` 的 active tab 下方渲染 2px accent 色底线 | 单元测试 DOM 断言 |
-| AC-9 | 不传 `variant` 时 Tabs 行为与当前完全一致（默认 `"default"`，无底线） | 回归测试 |
-| AC-10 | `BadgeVariant` type 包含 `"pill"` | TypeScript 编译 + grep |
-| AC-11 | `<Badge variant="pill">` 渲染时有 `uppercase`、`border-radius: var(--radius-full)`、正确的 letter-spacing | 单元测试 className 断言 |
-| AC-12 | Button / Card / Tabs / Badge 各有新增 variant 的 Storybook Story | Story 存在 + `storybook:build` 通过 |
-| AC-13 | 所有现有 Button / Card / Tabs / Badge 测试通过（回归零破坏） | `vitest run` |
-| AC-14 | Storybook 可构建 | `pnpm -C apps/desktop storybook:build` |
-| AC-15 | 全量测试通过 | `pnpm -C apps/desktop vitest run` |
-| AC-16 | TypeScript 类型检查通过 | `pnpm typecheck` |
-| AC-17 | lint 无新增违规 | `pnpm lint` |
-| AC-18 | `Radio.tsx` 从 493 行拆分为 RadioGroup + RadioItem + hook，各文件 ≤ 200 行 | 架构 |
-| AC-19 | `Select.tsx` 从 350 行拆分为 Select + SelectContent，各文件 ≤ 200 行 | 架构 |
-| AC-20 | `ImageUpload.tsx` 从 335 行分离 ImagePreview，各文件 ≤ 200 行 | 架构 |
+| ID    | 标准                                                                                                      | 验证方式                               |
+| ----- | --------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| AC-1  | `ButtonVariant` type 包含 `"pill"`，`ButtonSize` type 包含 `"icon"`                                       | TypeScript 编译 + grep                 |
+| AC-2  | `<Button variant="pill">` 渲染时 `border-radius` 为 `var(--radius-full)`                                  | 单元测试 className 断言                |
+| AC-3  | `<Button size="icon">` 渲染时宽高相等，padding 为 0                                                       | 单元测试 className 断言                |
+| AC-4  | `CardVariant` type 包含 `"bento"` 和 `"compact"`                                                          | TypeScript 编译 + grep                 |
+| AC-5  | `<Card variant="bento">` 渲染时 `border-radius` 为 `var(--radius-2xl)`，padding 为 `var(--space-8)`       | 单元测试 className 断言                |
+| AC-6  | `<Card variant="compact">` 渲染时使用紧凑 padding `var(--space-3)`                                        | 单元测试 className 断言                |
+| AC-7  | Tabs 组件支持 `variant` prop，类型为 `"default" \| "underline"`                                           | TypeScript 编译                        |
+| AC-8  | `<Tabs variant="underline">` 的 active tab 下方渲染 2px accent 色底线                                     | 单元测试 DOM 断言                      |
+| AC-9  | 不传 `variant` 时 Tabs 行为与当前完全一致（默认 `"default"`，无底线）                                     | 回归测试                               |
+| AC-10 | `BadgeVariant` type 包含 `"pill"`                                                                         | TypeScript 编译 + grep                 |
+| AC-11 | `<Badge variant="pill">` 渲染时有 `uppercase`、`border-radius: var(--radius-full)`、正确的 letter-spacing | 单元测试 className 断言                |
+| AC-12 | Button / Card / Tabs / Badge 各有新增 variant 的 Storybook Story                                          | Story 存在 + `storybook:build` 通过    |
+| AC-13 | 所有现有 Button / Card / Tabs / Badge 测试通过（回归零破坏）                                              | `vitest run`                           |
+| AC-14 | Storybook 可构建                                                                                          | `pnpm -C apps/desktop storybook:build` |
+| AC-15 | 全量测试通过                                                                                              | `pnpm -C apps/desktop vitest run`      |
+| AC-16 | TypeScript 类型检查通过                                                                                   | `pnpm typecheck`                       |
+| AC-17 | lint 无新增违规                                                                                           | `pnpm lint`                            |
+| AC-18 | `Radio.tsx` 从 493 行拆分为 RadioGroup + RadioItem + hook，各文件 ≤ 200 行                                | 架构                                   |
+| AC-19 | `Select.tsx` 从 350 行拆分为 Select + SelectContent，各文件 ≤ 200 行                                      | 架构                                   |
+| AC-20 | `ImageUpload.tsx` 从 335 行分离 ImagePreview，各文件 ≤ 200 行                                             | 架构                                   |
 
 ---
 

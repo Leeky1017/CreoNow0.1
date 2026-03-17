@@ -8,24 +8,24 @@
 
 ## 验收标准
 
-| ID | 标准 | 验证方式 |
-| --- | --- | --- |
-| AC-1 | `<EmptyState>` 组件存在于 `renderer/src/components/patterns/EmptyState.tsx`，支持 `icon` / `title` / `description` / `action` props | 代码审查 |
-| AC-2 | `<LoadingState>` 组件存在于 `renderer/src/components/patterns/LoadingState.tsx`，支持 `variant` (`spinner` / `skeleton`) / `skeletonRows` / `message` props | 代码审查 |
-| AC-3 | `<ErrorState>` 组件存在于 `renderer/src/components/patterns/ErrorState.tsx`，支持 `severity` (`error` / `warning` / `info`) / `title` / `description` / `action` props | 代码审查 |
-| AC-4 | `<EmptyState>` 视觉符合 `26-empty-states.html`：居中 flex column、48px+ icon、13-14px 描述、max-width 280px | Storybook 视觉验证 |
-| AC-5 | `<LoadingState variant="spinner">` 渲染 24px 圆环动画 | Storybook 视觉验证 |
-| AC-6 | `<LoadingState variant="skeleton">` 渲染 shimmer 动画骨架行 | Storybook 视觉验证 |
-| AC-7 | `<ErrorState>` 三种 severity 各有对应色条和 icon | Storybook 视觉验证 |
-| AC-8 | 3 个组件各有 Storybook Story，覆盖所有 variant 和 props 组合 | Storybook 构建 |
-| AC-9 | 全 Features 层原有碎片化空状态已替换为 `<EmptyState>` | grep 验证 |
-| AC-10 | 全 Features 层原有碎片化加载状态已替换为 `<LoadingState>` | grep 验证 |
-| AC-11 | 全 Features 层原有碎片化错误状态已替换为 `<ErrorState>`（Toast 除外） | grep 验证 |
-| AC-12 | 所有新增视觉元素使用语义化 Design Token，0 处新增 arbitrary 值 | grep 验证 |
-| AC-13 | 全量测试通过（`pnpm -C apps/desktop vitest run`） | CI 命令 |
-| AC-14 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | CI 命令 |
-| AC-15 | TypeScript 类型检查通过（`pnpm typecheck`） | CI 命令 |
-| AC-16 | lint 无新增违规（`pnpm lint`） | CI 命令 |
+| ID    | 标准                                                                                                                                                                   | 验证方式           |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
+| AC-1  | `<EmptyState>` 组件存在于 `renderer/src/components/patterns/EmptyState.tsx`，支持 `icon` / `title` / `description` / `action` props                                    | 代码审查           |
+| AC-2  | `<LoadingState>` 组件存在于 `renderer/src/components/patterns/LoadingState.tsx`，支持 `variant` (`spinner` / `skeleton`) / `skeletonRows` / `message` props            | 代码审查           |
+| AC-3  | `<ErrorState>` 组件存在于 `renderer/src/components/patterns/ErrorState.tsx`，支持 `severity` (`error` / `warning` / `info`) / `title` / `description` / `action` props | 代码审查           |
+| AC-4  | `<EmptyState>` 视觉符合 `26-empty-states.html`：居中 flex column、48px+ icon、13-14px 描述、max-width 280px                                                            | Storybook 视觉验证 |
+| AC-5  | `<LoadingState variant="spinner">` 渲染 24px 圆环动画                                                                                                                  | Storybook 视觉验证 |
+| AC-6  | `<LoadingState variant="skeleton">` 渲染 shimmer 动画骨架行                                                                                                            | Storybook 视觉验证 |
+| AC-7  | `<ErrorState>` 三种 severity 各有对应色条和 icon                                                                                                                       | Storybook 视觉验证 |
+| AC-8  | 3 个组件各有 Storybook Story，覆盖所有 variant 和 props 组合                                                                                                           | Storybook 构建     |
+| AC-9  | 全 Features 层原有碎片化空状态已替换为 `<EmptyState>`                                                                                                                  | grep 验证          |
+| AC-10 | 全 Features 层原有碎片化加载状态已替换为 `<LoadingState>`                                                                                                              | grep 验证          |
+| AC-11 | 全 Features 层原有碎片化错误状态已替换为 `<ErrorState>`（Toast 除外）                                                                                                  | grep 验证          |
+| AC-12 | 所有新增视觉元素使用语义化 Design Token，0 处新增 arbitrary 值                                                                                                         | grep 验证          |
+| AC-13 | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                                                                      | CI 命令            |
+| AC-14 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                                                             | CI 命令            |
+| AC-15 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                                                                            | CI 命令            |
+| AC-16 | lint 无新增违规（`pnpm lint`）                                                                                                                                         | CI 命令            |
 
 ---
 
@@ -33,38 +33,38 @@
 
 ### 空状态实现
 
-| 模块 | 当前实现方式 | 位置（预估） | 迁移难度 |
-| --- | --- | --- | --- |
-| CharacterPanel | Icon + 文字 + "Create" 按钮，自行布局 | CharacterPanel.tsx 空列表渲染 | 低 |
-| MemoryPanel | 纯文字 `<p className="text-muted">` | MemoryPanel.tsx 无 rules 时 | 低 |
-| OutlinePanel | Icon + 文字，自行 inline SVG | OutlinePanel.tsx 无大纲节点时 | 低 |
-| KnowledgeGraphPanel | 自定义渲染函数，独立布局 | KnowledgeGraphPanel.tsx 空图谱 | 中 |
-| VersionHistoryPanel | 纯文字 | VersionHistoryPanel.tsx 无历史时 | 低 |
-| AI Panel | 48px icon + 居中文案（v1-06 已修复为 `<AiEmptyState>`） | AiPanel 子组件 | 已完成 |
-| Dashboard | 卡片空状态，各卡片各自实现 | 各 Dashboard 卡片组件 | 中 |
-| FileTree | 无文件时提示 | FileTreePanel.tsx | 低 |
-| Settings | 无设置项时提示（如适用） | 各 Settings 子页 | 低 |
-| Search | 无搜索结果 | SearchPanel.tsx | 低 |
+| 模块                | 当前实现方式                                            | 位置（预估）                     | 迁移难度 |
+| ------------------- | ------------------------------------------------------- | -------------------------------- | -------- |
+| CharacterPanel      | Icon + 文字 + "Create" 按钮，自行布局                   | CharacterPanel.tsx 空列表渲染    | 低       |
+| MemoryPanel         | 纯文字 `<p className="text-muted">`                     | MemoryPanel.tsx 无 rules 时      | 低       |
+| OutlinePanel        | Icon + 文字，自行 inline SVG                            | OutlinePanel.tsx 无大纲节点时    | 低       |
+| KnowledgeGraphPanel | 自定义渲染函数，独立布局                                | KnowledgeGraphPanel.tsx 空图谱   | 中       |
+| VersionHistoryPanel | 纯文字                                                  | VersionHistoryPanel.tsx 无历史时 | 低       |
+| AI Panel            | 48px icon + 居中文案（v1-06 已修复为 `<AiEmptyState>`） | AiPanel 子组件                   | 已完成   |
+| Dashboard           | 卡片空状态，各卡片各自实现                              | 各 Dashboard 卡片组件            | 中       |
+| FileTree            | 无文件时提示                                            | FileTreePanel.tsx                | 低       |
+| Settings            | 无设置项时提示（如适用）                                | 各 Settings 子页                 | 低       |
+| Search              | 无搜索结果                                              | SearchPanel.tsx                  | 低       |
 
 ### 加载状态实现
 
-| 模块 | 当前实现方式 | 位置（预估） | 迁移难度 |
-| --- | --- | --- | --- |
-| Dashboard | Skeleton loader（自行实现） | DashboardPage 骨架组件 | 中 |
-| AI Panel | `animate-spin` spinner | AiPanel 流式加载 | 低 |
-| MemoryPanel | 无加载指示 / 纯文字 | MemoryPanel Distilling | 低 |
-| KnowledgeGraphPanel | 无加载指示 | 图谱数据加载 | 低 |
-| 各面板通用 | 无标准实现 | — | — |
+| 模块                | 当前实现方式                | 位置（预估）           | 迁移难度 |
+| ------------------- | --------------------------- | ---------------------- | -------- |
+| Dashboard           | Skeleton loader（自行实现） | DashboardPage 骨架组件 | 中       |
+| AI Panel            | `animate-spin` spinner      | AiPanel 流式加载       | 低       |
+| MemoryPanel         | 无加载指示 / 纯文字         | MemoryPanel Distilling | 低       |
+| KnowledgeGraphPanel | 无加载指示                  | 图谱数据加载           | 低       |
+| 各面板通用          | 无标准实现                  | —                      | —        |
 
 ### 错误状态实现
 
-| 模块 | 当前实现方式 | 位置（预估） | 迁移难度 |
-| --- | --- | --- | --- |
-| AI Panel | ErrorGuideCard + 顶部 banner（v1-06 已标准化） | AiPanel 子组件 | 已完成 |
-| Settings | 独立 error card | Settings 子页 | 低 |
-| KnowledgeGraphPanel | 静默失败 / 无 error UI | JSON 解析等 | 中 |
-| 文件操作 | inline error message | FileTree / Editor | 低 |
-| 全局 | Toast 通知（不在本 change 范围） | Toast 系统 | N/A |
+| 模块                | 当前实现方式                                   | 位置（预估）      | 迁移难度 |
+| ------------------- | ---------------------------------------------- | ----------------- | -------- |
+| AI Panel            | ErrorGuideCard + 顶部 banner（v1-06 已标准化） | AiPanel 子组件    | 已完成   |
+| Settings            | 独立 error card                                | Settings 子页     | 低       |
+| KnowledgeGraphPanel | 静默失败 / 无 error UI                         | JSON 解析等       | 中       |
+| 文件操作            | inline error message                           | FileTree / Editor | 低       |
+| 全局                | Toast 通知（不在本 change 范围）               | Toast 系统        | N/A      |
 
 ---
 

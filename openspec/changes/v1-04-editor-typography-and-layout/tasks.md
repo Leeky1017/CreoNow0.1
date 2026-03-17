@@ -8,19 +8,19 @@
 
 ## 验收标准
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-1 | 编辑器正文区域存在 `max-width: 760px`（或等效 token 值）+ 水平居中 | 全局 |
-| AC-2 | 编辑器文档标题使用 `--text-display-*` token（48px / weight 300 / letter-spacing -0.03em），不再使用 `text-4xl` | 全局 |
-| AC-3 | CSS 层面支持 serif 字体（Lora 或等效），通过 CSS 变量或 class 切换 | 全局 |
-| AC-4 | 编辑器正文 line-height 为 1.8（使用 `--leading-relaxed` token） | 全局 |
-| AC-5 | 编辑器顶部有 featured image 区域 + gradient overlay，当无图片时优雅降级 | 全局 |
-| AC-6 | 编辑区域侧边 padding 为 40-48px（使用语义间距 token） | 全局 |
-| AC-7 | 所有 typography 修改使用 Design Token，0 处新增 Tailwind arbitrary 字号/色值 | 全局 |
-| AC-8 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | 全局 |
-| AC-9 | 全量测试通过（`pnpm -C apps/desktop vitest run`） | 全局 |
-| AC-10 | TypeScript 类型检查通过（`pnpm typecheck`） | 全局 |
-| AC-11 | lint 无新增违规（`pnpm lint`） | 全局 |
+| ID    | 标准                                                                                                           | 对应 Scenario |
+| ----- | -------------------------------------------------------------------------------------------------------------- | ------------- |
+| AC-1  | 编辑器正文区域存在 `max-width: 760px`（或等效 token 值）+ 水平居中                                             | 全局          |
+| AC-2  | 编辑器文档标题使用 `--text-display-*` token（48px / weight 300 / letter-spacing -0.03em），不再使用 `text-4xl` | 全局          |
+| AC-3  | CSS 层面支持 serif 字体（Lora 或等效），通过 CSS 变量或 class 切换                                             | 全局          |
+| AC-4  | 编辑器正文 line-height 为 1.8（使用 `--leading-relaxed` token）                                                | 全局          |
+| AC-5  | 编辑器顶部有 featured image 区域 + gradient overlay，当无图片时优雅降级                                        | 全局          |
+| AC-6  | 编辑区域侧边 padding 为 40-48px（使用语义间距 token）                                                          | 全局          |
+| AC-7  | 所有 typography 修改使用 Design Token，0 处新增 Tailwind arbitrary 字号/色值                                   | 全局          |
+| AC-8  | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                     | 全局          |
+| AC-9  | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                              | 全局          |
+| AC-10 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                    | 全局          |
+| AC-11 | lint 无新增违规（`pnpm lint`）                                                                                 | 全局          |
 
 ---
 

@@ -44,17 +44,17 @@ Primitives 层（15,080 行）质量优秀，Design Token 覆盖完整，ESLint 
 
 ### 4. 证据来源
 
-| 数据点 | 值 | 来源 |
-| --- | --- | --- |
-| Features 层总行数 | 28,481 行 / 73 文件 | `wc -l` 统计 |
-| eslint-disable 注释 | 176 处 | `grep -r eslint-disable features/` |
-| 原生 HTML 元素 | 200+ 处 | `grep -r '<button\|<input\|<select' features/` |
-| 硬编码颜色值 | 51 处 | `grep -rP '#[0-9a-f]{3,6}' features/` |
-| inline style 对象 | 173 处 | `grep -r 'style={{' features/` |
-| 最大文件 | AiPanel.tsx 2,500 行 | `wc -l` |
-| 设计稿页数 | 35 | `ls design/Variant/designs/` |
-| Design Token 覆盖 | 405 行 CSS 变量 | `wc -l design/system/01-tokens.css` |
-| DESIGN_DECISIONS.md | 2,179 行 | `wc -l` |
+| 数据点              | 值                   | 来源                                           |
+| ------------------- | -------------------- | ---------------------------------------------- |
+| Features 层总行数   | 28,481 行 / 73 文件  | `wc -l` 统计                                   |
+| eslint-disable 注释 | 176 处               | `grep -r eslint-disable features/`             |
+| 原生 HTML 元素      | 200+ 处              | `grep -r '<button\|<input\|<select' features/` |
+| 硬编码颜色值        | 51 处                | `grep -rP '#[0-9a-f]{3,6}' features/`          |
+| inline style 对象   | 173 处               | `grep -r 'style={{' features/`                 |
+| 最大文件            | AiPanel.tsx 2,500 行 | `wc -l`                                        |
+| 设计稿页数          | 35                   | `ls design/Variant/designs/`                   |
+| Design Token 覆盖   | 405 行 CSS 变量      | `wc -l design/system/01-tokens.css`            |
+| DESIGN_DECISIONS.md | 2,179 行             | `wc -l`                                        |
 
 ---
 
@@ -64,49 +64,49 @@ Primitives 层（15,080 行）质量优秀，Design Token 覆盖完整，ESLint 
 
 ### Wave 0：地基增强（无用户可见变化，纯底层完善）
 
-| Change | 名称 | 目标 |
-| --- | --- | --- |
-| v1-01 | Design Token 补完 | 补全 typography scale、spacing 精细化、animation token |
-| v1-02 | Primitive 组件进化 | Button pill/ghost、Card bento/stat、Tabs 底线指示器、Badge 增强 + Radio/Select/ImageUpload 解耦重构 |
+| Change | 名称               | 目标                                                                                                |
+| ------ | ------------------ | --------------------------------------------------------------------------------------------------- |
+| v1-01  | Design Token 补完  | 补全 typography scale、spacing 精细化、animation token                                              |
+| v1-02  | Primitive 组件进化 | Button pill/ghost、Card bento/stat、Tabs 底线指示器、Badge 增强 + Radio/Select/ImageUpload 解耦重构 |
 
 ### Wave 1：P0 页面重塑（用户打开 App 最先看到的两个场景）
 
-| Change | 名称 | 目标 |
-| --- | --- | --- |
-| v1-03 | Dashboard 视觉重写 | DashboardPage shell 重写，对齐设计稿 bento grid / sidebar-full |
-| v1-04 | 编辑器排版与布局 | 正文 760px 居中、Lora serif 选项、标题 48px/300/-0.03em |
-| v1-05 | 编辑器组件拆分 | EditorPane.tsx 1,550→300 行：提取 inline AI、entity、slash command |
+| Change | 名称               | 目标                                                               |
+| ------ | ------------------ | ------------------------------------------------------------------ |
+| v1-03  | Dashboard 视觉重写 | DashboardPage shell 重写，对齐设计稿 bento grid / sidebar-full     |
+| v1-04  | 编辑器排版与布局   | 正文 760px 居中、Lora serif 选项、标题 48px/300/-0.03em            |
+| v1-05  | 编辑器组件拆分     | EditorPane.tsx 1,550→300 行：提取 inline AI、entity、slash command |
 
 ### Wave 2：AI 面板 + 设置
 
-| Change | 名称 | 目标 |
-| --- | --- | --- |
-| v1-06 | AI 面板大整修 | AiPanel.tsx 2,100→≤300 行 + accent 视觉标识 + Tab UI + 空状态 |
-| v1-07 | Settings 视觉精修 | 外观页主题/字体/色板选择器、分节标题、toggle 动效 |
+| Change | 名称              | 目标                                                          |
+| ------ | ----------------- | ------------------------------------------------------------- |
+| v1-06  | AI 面板大整修     | AiPanel.tsx 2,100→≤300 行 + accent 视觉标识 + Tab UI + 空状态 |
+| v1-07  | Settings 视觉精修 | 外观页主题/字体/色板选择器、分节标题、toggle 动效             |
 
 ### Wave 3：布局精度
 
-| Change | 名称 | 目标 |
-| --- | --- | --- |
-| v1-08 | FileTree 像素级对齐 | 48px icon bar、32px 行高、拖拽圆形手柄、rename focus 边框 |
-| v1-09 | CommandPalette + Search 视觉 | 分组分隔线、快捷键标签、filter pills、search highlighting |
+| Change | 名称                         | 目标                                                      |
+| ------ | ---------------------------- | --------------------------------------------------------- |
+| v1-08  | FileTree 像素级对齐          | 48px icon bar、32px 行高、拖拽圆形手柄、rename focus 边框 |
+| v1-09  | CommandPalette + Search 视觉 | 分组分隔线、快捷键标签、filter pills、search highlighting |
 
 ### Wave 4：侧面板 + 收口
 
-| Change | 名称 | 目标 |
-| --- | --- | --- |
-| v1-10 | 侧面板视觉统一 | Character/Memory/Outline/KG/VersionHistory 统一面板语言 |
-| v1-11 | 空/加载/错误状态统一 | 设计稿 26/27 标准化，全局状态组件收口 |
-| v1-12 | 交互动效与原生元素收口 | 0.2-0.3s 过渡、hover 状态、scroll shadow + 200+ native→primitives + AppShell 1,260→≤250 解耦 |
-| v1-13 | eslint-disable 审计清扫 | 逐条审查 176 个 eslint-disable，确认合理或替换为 Primitive |
+| Change | 名称                    | 目标                                                                                         |
+| ------ | ----------------------- | -------------------------------------------------------------------------------------------- |
+| v1-10  | 侧面板视觉统一          | Character/Memory/Outline/KG/VersionHistory 统一面板语言                                      |
+| v1-11  | 空/加载/错误状态统一    | 设计稿 26/27 标准化，全局状态组件收口                                                        |
+| v1-12  | 交互动效与原生元素收口  | 0.2-0.3s 过渡、hover 状态、scroll shadow + 200+ native→primitives + AppShell 1,260→≤250 解耦 |
+| v1-13  | eslint-disable 审计清扫 | 逐条审查 176 个 eslint-disable，确认合理或替换为 Primitive                                   |
 
 ### Wave 5：全覆盖收口（100% 用户路径覆盖）
 
-| Change | 名称 | 目标 |
-| --- | --- | --- |
-| v1-14 | 对话框与入口页视觉补完 | ExportDialog/CreateProjectDialog/OnboardingPage 破坏性重构 + SettingsGeneral 对齐 |
-| v1-15 | AI Overlay 组件视觉统一 | AiDiffModal/AiErrorCard/SystemDialog/AiInlineConfirm 解耦 + v1-06 视觉统一 |
-| v1-16 | Quality/Diff/杂项页面补完 | Quality 面板 + Diff 模块 + Analytics/ZenMode/Shortcuts/Settings 子组件全覆盖 |
+| Change | 名称                      | 目标                                                                              |
+| ------ | ------------------------- | --------------------------------------------------------------------------------- |
+| v1-14  | 对话框与入口页视觉补完    | ExportDialog/CreateProjectDialog/OnboardingPage 破坏性重构 + SettingsGeneral 对齐 |
+| v1-15  | AI Overlay 组件视觉统一   | AiDiffModal/AiErrorCard/SystemDialog/AiInlineConfirm 解耦 + v1-06 视觉统一        |
+| v1-16  | Quality/Diff/杂项页面补完 | Quality 面板 + Diff 模块 + Analytics/ZenMode/Shortcuts/Settings 子组件全覆盖      |
 
 ---
 

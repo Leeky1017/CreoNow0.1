@@ -10,42 +10,42 @@
 
 ### Part A: Quality 面板
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-1 | `QualityGatesPanel.tsx` 从 967 行拆分为 4 文件，主文件 ≤ 200 行 | 架构 |
-| AC-2 | QualityGatesPanel 使用 PanelHeader 组件（v1-10 产物） | 视觉 |
-| AC-3 | QualityResultCard 使用 Card + severity 色彩系统 | 视觉 |
-| AC-4 | `QualityPanel.tsx` 从 575 行拆分为 2 文件，主文件 ≤ 250 行 | 架构 |
-| AC-5 | QualityPanel 使用 PanelHeader 组件 | 视觉 |
-| AC-6 | `InfoPanel.tsx` 对齐 Design Token + PanelHeader，≤ 250 行 | 视觉 |
+| ID   | 标准                                                            | 对应 Scenario |
+| ---- | --------------------------------------------------------------- | ------------- |
+| AC-1 | `QualityGatesPanel.tsx` 从 967 行拆分为 4 文件，主文件 ≤ 200 行 | 架构          |
+| AC-2 | QualityGatesPanel 使用 PanelHeader 组件（v1-10 产物）           | 视觉          |
+| AC-3 | QualityResultCard 使用 Card + severity 色彩系统                 | 视觉          |
+| AC-4 | `QualityPanel.tsx` 从 575 行拆分为 2 文件，主文件 ≤ 250 行      | 架构          |
+| AC-5 | QualityPanel 使用 PanelHeader 组件                              | 视觉          |
+| AC-6 | `InfoPanel.tsx` 对齐 Design Token + PanelHeader，≤ 250 行       | 视觉          |
 
 ### Part B: Diff 模块
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-7 | Diff 组件（7 文件）全部使用语义化 Design Token | 视觉 |
-| AC-8 | Diff 高亮与 v1-15 AiDiffModal 统一（`--color-success-subtle` / `--color-danger-subtle`） | 视觉 |
-| AC-9 | DiffView 与 v1-10 VersionHistoryPanel 视觉连续 | 视觉 |
+| ID   | 标准                                                                                     | 对应 Scenario |
+| ---- | ---------------------------------------------------------------------------------------- | ------------- |
+| AC-7 | Diff 组件（7 文件）全部使用语义化 Design Token                                           | 视觉          |
+| AC-8 | Diff 高亮与 v1-15 AiDiffModal 统一（`--color-success-subtle` / `--color-danger-subtle`） | 视觉          |
+| AC-9 | DiffView 与 v1-10 VersionHistoryPanel 视觉连续                                           | 视觉          |
 
 ### Part C: 杂项页面
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-10 | AnalyticsPage 使用 Card 组件展示指标 + Design Token | 视觉 |
-| AC-11 | ZenMode 编辑器居中 `max-width: 760px`（与 v1-04 一致） | 视觉 |
-| AC-12 | ZenModeStatus 底部悬浮栏使用 `--color-bg-elevated` | 视觉 |
-| AC-13 | ShortcutsPanel 使用 Design Token 标签色 | 视觉 |
-| AC-14 | Settings 子组件（AiSettingsSection/JudgeSection/AppearanceSection）对齐 FormField 布局 | 视觉 |
+| ID    | 标准                                                                                   | 对应 Scenario |
+| ----- | -------------------------------------------------------------------------------------- | ------------- |
+| AC-10 | AnalyticsPage 使用 Card 组件展示指标 + Design Token                                    | 视觉          |
+| AC-11 | ZenMode 编辑器居中 `max-width: 760px`（与 v1-04 一致）                                 | 视觉          |
+| AC-12 | ZenModeStatus 底部悬浮栏使用 `--color-bg-elevated`                                     | 视觉          |
+| AC-13 | ShortcutsPanel 使用 Design Token 标签色                                                | 视觉          |
+| AC-14 | Settings 子组件（AiSettingsSection/JudgeSection/AppearanceSection）对齐 FormField 布局 | 视觉          |
 
 ### 全局
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-15 | 所有新增样式使用语义化 Design Token，0 处新增 arbitrary 色值 | 全局 |
-| AC-16 | 现有相关测试 100% 通过，0 个新增失败 | 全局 |
-| AC-17 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | 全局 |
-| AC-18 | TypeScript 类型检查通过（`pnpm typecheck`） | 全局 |
-| AC-19 | lint 无新增违规（`pnpm lint`） | 全局 |
+| ID    | 标准                                                         | 对应 Scenario |
+| ----- | ------------------------------------------------------------ | ------------- |
+| AC-15 | 所有新增样式使用语义化 Design Token，0 处新增 arbitrary 色值 | 全局          |
+| AC-16 | 现有相关测试 100% 通过，0 个新增失败                         | 全局          |
+| AC-17 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）   | 全局          |
+| AC-18 | TypeScript 类型检查通过（`pnpm typecheck`）                  | 全局          |
+| AC-19 | lint 无新增违规（`pnpm lint`）                               | 全局          |
 
 ---
 

@@ -8,20 +8,20 @@
 
 ## 验收标准
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-1 | `EditorPane.tsx` 行数 ≤ 300 行，仅保留布局编排逻辑 | 全局 |
-| AC-2 | `useEditorSetup.ts` 独立文件存在，包含 TipTap 初始化 + 扩展注册 + editor 实例创建，行数 ≤ 300 行 | 全局 |
-| AC-3 | `InlineAiOverlay.tsx` 独立文件存在，包含 inline AI 输入处理 + proposal 展示 + accept/reject，行数 ≤ 300 行 | 全局 |
-| AC-4 | `EntityCompletionPopover.tsx` 独立文件存在，包含 `@` mention 触发 + 候选列表 + 键盘导航，行数 ≤ 300 行 | 全局 |
-| AC-5 | `SlashCommandMenu.tsx` 独立文件存在，包含 `/` 命令面板 + 命令执行，行数 ≤ 300 行 | 全局 |
-| AC-6 | `useEditorKeybindings.ts` 独立文件存在，包含快捷键注册逻辑，行数 ≤ 300 行 | 全局 |
-| AC-7 | 拆分前后全量测试 100% 通过，0 个新增失败 | 全局 |
-| AC-8 | 拆分前后所有现有行为不变（纯重构，无功能变更） | 全局 |
-| AC-9 | 拆分后各子模块之间通过 props / hook 返回值通信，无全局隐式依赖 | 全局 |
-| AC-10 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | 全局 |
-| AC-11 | TypeScript 类型检查通过（`pnpm typecheck`） | 全局 |
-| AC-12 | lint 无新增违规（`pnpm lint`） | 全局 |
+| ID    | 标准                                                                                                       | 对应 Scenario |
+| ----- | ---------------------------------------------------------------------------------------------------------- | ------------- |
+| AC-1  | `EditorPane.tsx` 行数 ≤ 300 行，仅保留布局编排逻辑                                                         | 全局          |
+| AC-2  | `useEditorSetup.ts` 独立文件存在，包含 TipTap 初始化 + 扩展注册 + editor 实例创建，行数 ≤ 300 行           | 全局          |
+| AC-3  | `InlineAiOverlay.tsx` 独立文件存在，包含 inline AI 输入处理 + proposal 展示 + accept/reject，行数 ≤ 300 行 | 全局          |
+| AC-4  | `EntityCompletionPopover.tsx` 独立文件存在，包含 `@` mention 触发 + 候选列表 + 键盘导航，行数 ≤ 300 行     | 全局          |
+| AC-5  | `SlashCommandMenu.tsx` 独立文件存在，包含 `/` 命令面板 + 命令执行，行数 ≤ 300 行                           | 全局          |
+| AC-6  | `useEditorKeybindings.ts` 独立文件存在，包含快捷键注册逻辑，行数 ≤ 300 行                                  | 全局          |
+| AC-7  | 拆分前后全量测试 100% 通过，0 个新增失败                                                                   | 全局          |
+| AC-8  | 拆分前后所有现有行为不变（纯重构，无功能变更）                                                             | 全局          |
+| AC-9  | 拆分后各子模块之间通过 props / hook 返回值通信，无全局隐式依赖                                             | 全局          |
+| AC-10 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                 | 全局          |
+| AC-11 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                | 全局          |
+| AC-12 | lint 无新增违规（`pnpm lint`）                                                                             | 全局          |
 
 ---
 
@@ -120,7 +120,7 @@
 **映射验收标准**: AC-2
 
 - [ ] 从 EditorPane.tsx 中提取 TipTap 初始化代码：
-  - editor 实例创建（`useEditor()`  或等效）
+  - editor 实例创建（`useEditor()` 或等效）
   - 扩展注册列表
   - 初始内容设置
   - editor 生命周期管理（onDestroy / cleanup）

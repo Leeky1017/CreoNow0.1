@@ -8,31 +8,31 @@
 
 ## 验收标准
 
-| ID | 标准 | 验证方式 |
-| --- | --- | --- |
-| AC-1 | `main.css` 包含 `.transition-default` utility class，duration 为 `var(--duration-fast)`、easing 为 `var(--ease-default)` | grep main.css |
-| AC-2 | `main.css` 包含 `.transition-slow` utility class，duration 为 `var(--duration-normal)` | grep main.css |
-| AC-3 | `main.css` 包含 `.scroll-shadow-y` utility class，实现顶部/底部渐变遮罩 | grep + 视觉验证 |
-| AC-4 | 所有面板列表项 hover 时背景色变化有 smooth transition（非直接跳变） | 视觉交互验证 |
-| AC-5 | 所有面板可滚动容器有 scroll shadow 指示 | 视觉验证 |
-| AC-6 | 列表项 hover 时 action icons 有 fade-in 过渡（opacity 0→1） | 视觉交互验证 |
-| AC-7 | 面板折叠/展开有 height 过渡动画 | 视觉交互验证 |
-| AC-8 | Features 层原生 `<button>` 替换率 ≥ 80%（替换为 `<Button>` / `<IconButton>`） | grep 统计 |
-| AC-9 | Features 层原生 `<input type="text">` 替换率 ≥ 80%（替换为 `<Input>`） | grep 统计 |
-| AC-10 | Features 层原生 `<select>` 替换率 ≥ 80%（替换为 `<Select>`） | grep 统计 |
-| AC-11 | Features 层原生 `<textarea>` 替换率 ≥ 80%（替换为 `<Textarea>`） | grep 统计 |
-| AC-12 | `eslint-disable` 中 `no-native-html-element` 相关从 ~153 降至 ≤30 | grep 统计 |
-| AC-13 | 替换过程中 0 处功能回归（所有现有测试通过） | CI 全量测试 |
-| AC-14 | 所有新增视觉元素使用语义化 Design Token | grep 验证 |
-| AC-15 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | CI 命令 |
-| AC-16 | TypeScript 类型检查通过（`pnpm typecheck`） | CI 命令 |
-| AC-17 | lint 无新增违规（`pnpm lint`） | CI 命令 |
-| AC-18 | 全量测试通过（`pnpm -C apps/desktop vitest run`） | CI 命令 |
-| AC-19 | `AppShell.tsx` 从 1,260 行按职责解耦为 5+ 文件，每个文件只承担一个职责 | 架构 |
-| AC-20 | 布局骨架使用语义化 Design Token（`--space-panel-padding`、`--color-border-subtle`） | 视觉 |
-| AC-21 | 全窗口组合 Story（Dashboard + AppShell）以 `layout: 'fullscreen'` 渲染可构建 | Storybook |
-| AC-22 | 全窗口组合 Story（Editor + FileTree + RightPanel）以 `layout: 'fullscreen'` 渲染可构建 | Storybook |
-| AC-23 | 全窗口组合 Story（AiPanel 展开 + EditorPane）以 `layout: 'fullscreen'` 渲染可构建 | Storybook |
+| ID    | 标准                                                                                                                     | 验证方式        |
+| ----- | ------------------------------------------------------------------------------------------------------------------------ | --------------- |
+| AC-1  | `main.css` 包含 `.transition-default` utility class，duration 为 `var(--duration-fast)`、easing 为 `var(--ease-default)` | grep main.css   |
+| AC-2  | `main.css` 包含 `.transition-slow` utility class，duration 为 `var(--duration-normal)`                                   | grep main.css   |
+| AC-3  | `main.css` 包含 `.scroll-shadow-y` utility class，实现顶部/底部渐变遮罩                                                  | grep + 视觉验证 |
+| AC-4  | 所有面板列表项 hover 时背景色变化有 smooth transition（非直接跳变）                                                      | 视觉交互验证    |
+| AC-5  | 所有面板可滚动容器有 scroll shadow 指示                                                                                  | 视觉验证        |
+| AC-6  | 列表项 hover 时 action icons 有 fade-in 过渡（opacity 0→1）                                                              | 视觉交互验证    |
+| AC-7  | 面板折叠/展开有 height 过渡动画                                                                                          | 视觉交互验证    |
+| AC-8  | Features 层原生 `<button>` 替换率 ≥ 80%（替换为 `<Button>` / `<IconButton>`）                                            | grep 统计       |
+| AC-9  | Features 层原生 `<input type="text">` 替换率 ≥ 80%（替换为 `<Input>`）                                                   | grep 统计       |
+| AC-10 | Features 层原生 `<select>` 替换率 ≥ 80%（替换为 `<Select>`）                                                             | grep 统计       |
+| AC-11 | Features 层原生 `<textarea>` 替换率 ≥ 80%（替换为 `<Textarea>`）                                                         | grep 统计       |
+| AC-12 | `eslint-disable` 中 `no-native-html-element` 相关从 ~153 降至 ≤30                                                        | grep 统计       |
+| AC-13 | 替换过程中 0 处功能回归（所有现有测试通过）                                                                              | CI 全量测试     |
+| AC-14 | 所有新增视觉元素使用语义化 Design Token                                                                                  | grep 验证       |
+| AC-15 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                               | CI 命令         |
+| AC-16 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                              | CI 命令         |
+| AC-17 | lint 无新增违规（`pnpm lint`）                                                                                           | CI 命令         |
+| AC-18 | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                        | CI 命令         |
+| AC-19 | `AppShell.tsx` 从 1,260 行按职责解耦为 5+ 文件，每个文件只承担一个职责                                                   | 架构            |
+| AC-20 | 布局骨架使用语义化 Design Token（`--space-panel-padding`、`--color-border-subtle`）                                      | 视觉            |
+| AC-21 | 全窗口组合 Story（Dashboard + AppShell）以 `layout: 'fullscreen'` 渲染可构建                                             | Storybook       |
+| AC-22 | 全窗口组合 Story（Editor + FileTree + RightPanel）以 `layout: 'fullscreen'` 渲染可构建                                   | Storybook       |
+| AC-23 | 全窗口组合 Story（AiPanel 展开 + EditorPane）以 `layout: 'fullscreen'` 渲染可构建                                        | Storybook       |
 
 ---
 
@@ -105,7 +105,8 @@
 - [ ] `.transition-default` 定义：
   ```css
   .transition-default {
-    transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+    transition-property:
+      color, background-color, border-color, opacity, box-shadow, transform;
     transition-duration: var(--duration-fast);
     transition-timing-function: var(--ease-default);
   }
@@ -116,8 +117,10 @@
   .scroll-shadow-y {
     mask-image: linear-gradient(
       to bottom,
-      transparent, black 24px,
-      black calc(100% - 24px), transparent
+      transparent,
+      black 24px,
+      black calc(100% - 24px),
+      transparent
     );
   }
   ```
@@ -173,6 +176,7 @@
 - [ ] 替换后运行该模块测试确认无回归
 
 **原则**：
+
 - 纯图标按钮 → `<IconButton icon={...} aria-label="..." />`
 - 文字按钮 → `<Button variant="ghost">` 或 `<Button variant="outline">`
 - 有特殊样式的按钮 → 评估是否可用 `<Button className="...">` 实现

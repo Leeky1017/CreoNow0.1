@@ -10,35 +10,35 @@
 
 ### CommandPalette 验收
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-1 | 命令组之间有可见的 section header（10px uppercase `--color-fg-muted`）+ 1px 分隔线 | 视觉 |
-| AC-2 | Active（选中）命令项左侧有 2px `--color-info` accent 边框 | 视觉 |
-| AC-3 | 有快捷键的命令项右侧显示 shortcut pill（11px 字号、rounded pill 背景） | 视觉 |
-| AC-4 | 至少 4 类命令（导航/AI/文件/编辑器）有差异化图标颜色 | 视觉 |
-| AC-5 | 生产代码中 0 处 inline style 对象（`style={{...}}`），全部迁移为 Tailwind className | 全局 |
+| ID   | 标准                                                                                | 对应 Scenario |
+| ---- | ----------------------------------------------------------------------------------- | ------------- |
+| AC-1 | 命令组之间有可见的 section header（10px uppercase `--color-fg-muted`）+ 1px 分隔线  | 视觉          |
+| AC-2 | Active（选中）命令项左侧有 2px `--color-info` accent 边框                           | 视觉          |
+| AC-3 | 有快捷键的命令项右侧显示 shortcut pill（11px 字号、rounded pill 背景）              | 视觉          |
+| AC-4 | 至少 4 类命令（导航/AI/文件/编辑器）有差异化图标颜色                                | 视觉          |
+| AC-5 | 生产代码中 0 处 inline style 对象（`style={{...}}`），全部迁移为 Tailwind className | 全局          |
 
 ### SearchPanel 验收
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-6 | Active filter pill 有 shadow（`--shadow-sm`）+ 蓝色文字或指示线 | 视觉 |
-| AC-7 | Match highlight 背景色为 `rgba(59, 130, 246, 0.2)` 或对应 `--color-info-subtle` token | 视觉 |
-| AC-8 | Toggle controls（Semantic search / Include archived）对齐 Primitive 规范（20px 高/36px 宽/圆角/0.2s 过渡） | 视觉 |
-| AC-9 | 选中结果左侧指示条宽度对齐设计稿（验证后为 2px 或 3px），使用 `--color-info` token | 视觉 |
+| ID   | 标准                                                                                                       | 对应 Scenario |
+| ---- | ---------------------------------------------------------------------------------------------------------- | ------------- |
+| AC-6 | Active filter pill 有 shadow（`--shadow-sm`）+ 蓝色文字或指示线                                            | 视觉          |
+| AC-7 | Match highlight 背景色为 `rgba(59, 130, 246, 0.2)` 或对应 `--color-info-subtle` token                      | 视觉          |
+| AC-8 | Toggle controls（Semantic search / Include archived）对齐 Primitive 规范（20px 高/36px 宽/圆角/0.2s 过渡） | 视觉          |
+| AC-9 | 选中结果左侧指示条宽度对齐设计稿（验证后为 2px 或 3px），使用 `--color-info` token                         | 视觉          |
 
 ### 全局验收
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-10 | 所有新增样式使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值 | 全局 |
-| AC-11 | 键盘导航（↑/↓/Enter/Esc）在 CommandPalette 分组 header 上正确跳过，不中断操作流 | 可访问性 |
-| AC-12 | 现有 CommandPalette + SearchPanel 相关测试 100% 通过，0 个新增失败 | 全局 |
-| AC-13 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | 全局 |
-| AC-14 | TypeScript 类型检查通过（`pnpm typecheck`） | 全局 |
-| AC-15 | lint 无新增违规（`pnpm lint`） | 全局 |
-| AC-16 | `CommandPalette.tsx` 从 ~793 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行 | 架构 |
-| AC-17 | `SearchPanel.tsx` 从 ~994 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行 | 架构 |
+| ID    | 标准                                                                            | 对应 Scenario |
+| ----- | ------------------------------------------------------------------------------- | ------------- |
+| AC-10 | 所有新增样式使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值           | 全局          |
+| AC-11 | 键盘导航（↑/↓/Enter/Esc）在 CommandPalette 分组 header 上正确跳过，不中断操作流 | 可访问性      |
+| AC-12 | 现有 CommandPalette + SearchPanel 相关测试 100% 通过，0 个新增失败              | 全局          |
+| AC-13 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                      | 全局          |
+| AC-14 | TypeScript 类型检查通过（`pnpm typecheck`）                                     | 全局          |
+| AC-15 | lint 无新增违规（`pnpm lint`）                                                  | 全局          |
+| AC-16 | `CommandPalette.tsx` 从 ~793 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行         | 架构          |
+| AC-17 | `SearchPanel.tsx` 从 ~994 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行            | 架构          |
 
 ---
 
@@ -176,11 +176,13 @@ className={cn(
 - [ ] 命令项右侧增加 shortcut pill：
 
 ```tsx
-{command.shortcut && (
-  <span className="ml-auto pl-3 text-[11px] text-[var(--color-fg-muted)] bg-[var(--color-bg-elevated)] px-1.5 py-0.5 rounded">
-    {command.shortcut}
-  </span>
-)}
+{
+  command.shortcut && (
+    <span className="ml-auto pl-3 text-[11px] text-[var(--color-fg-muted)] bg-[var(--color-bg-elevated)] px-1.5 py-0.5 rounded">
+      {command.shortcut}
+    </span>
+  );
+}
 ```
 
 - [ ] 使用 `--color-bg-elevated` token（映射到 `~#2a2a2a`）而非硬编码
@@ -195,10 +197,10 @@ className={cn(
 
 ```typescript
 const COMMAND_CATEGORY_COLORS: Record<string, string> = {
-  navigation: 'text-[var(--color-info)]',
-  ai:         'text-[var(--color-accent)]',
-  file:       'text-[var(--color-success)]',
-  editor:     'text-[var(--color-warning)]',
+  navigation: "text-[var(--color-info)]",
+  ai: "text-[var(--color-accent)]",
+  file: "text-[var(--color-success)]",
+  editor: "text-[var(--color-warning)]",
 };
 ```
 

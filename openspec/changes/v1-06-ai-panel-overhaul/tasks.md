@@ -8,27 +8,27 @@
 
 ## 验收标准
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-1 | `AiPanel.tsx` 行数 ≤ 300 行，仅保留面板框架 + Tab 切换 + 子组件编排 | 全局 |
-| AC-2 | `AiPanelTabBar.tsx` 独立文件存在，实现 Chat / History 标签页切换 UI | 全局 |
-| AC-3 | `AiMessageList.tsx` 独立文件存在，包含消息流渲染（用户 + AI + 系统消息） | 全局 |
-| AC-4 | `AiInputArea.tsx` 独立文件存在，包含 textarea + emoji + 文件上传 + Model / Mode / Skill 选择器 | 全局 |
-| AC-5 | `AiProposalView.tsx` 独立文件存在，包含 Proposal accept / reject / undo + inline diff | 全局 |
-| AC-6 | `AiEmptyState.tsx` 独立文件存在，包含 48px sunburst icon + 居中引导文案 + 渐入动画 | 全局 |
-| AC-7 | `AiUsageStats.tsx` 独立文件存在，包含 token / cost 分行展示 + 小字注释 | 全局 |
-| AC-8 | AI 回复消息左侧有 2px accent 边框，使用 `--color-accent` token | 视觉 |
-| AC-9 | 代码块使用 `var(--font-mono)` 字体，渲染为等宽字体（JetBrains Mono 或回退） | 视觉 |
-| AC-10 | Model / Mode / Skill 选择器有 chevron icon + hover 高亮交互指示 | 视觉 |
-| AC-11 | 流式输出有打字机逐字渲染效果 + 脉冲光标动画 | 视觉 |
-| AC-12 | ErrorGuideCard 按严重等级区分左边框颜色：error（`--color-danger`）/ warning（`--color-warning`）/ info（`--color-info`） | 视觉 |
-| AC-13 | 拆分前后全量测试 100% 通过，0 个新增失败 | 全局 |
-| AC-14 | 拆分前后现有 14 个 AI 测试文件全部通过，行为无任何变化 | 全局 |
-| AC-15 | 拆分后各子组件通过 props / hook 返回值通信，无全局隐式依赖 | 全局 |
-| AC-16 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | 全局 |
-| AC-17 | TypeScript 类型检查通过（`pnpm typecheck`） | 全局 |
-| AC-18 | lint 无新增违规（`pnpm lint`） | 全局 |
-| AC-19 | 所有新增视觉元素使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值 / 字号 | 全局 |
+| ID    | 标准                                                                                                                     | 对应 Scenario |
+| ----- | ------------------------------------------------------------------------------------------------------------------------ | ------------- |
+| AC-1  | `AiPanel.tsx` 行数 ≤ 300 行，仅保留面板框架 + Tab 切换 + 子组件编排                                                      | 全局          |
+| AC-2  | `AiPanelTabBar.tsx` 独立文件存在，实现 Chat / History 标签页切换 UI                                                      | 全局          |
+| AC-3  | `AiMessageList.tsx` 独立文件存在，包含消息流渲染（用户 + AI + 系统消息）                                                 | 全局          |
+| AC-4  | `AiInputArea.tsx` 独立文件存在，包含 textarea + emoji + 文件上传 + Model / Mode / Skill 选择器                           | 全局          |
+| AC-5  | `AiProposalView.tsx` 独立文件存在，包含 Proposal accept / reject / undo + inline diff                                    | 全局          |
+| AC-6  | `AiEmptyState.tsx` 独立文件存在，包含 48px sunburst icon + 居中引导文案 + 渐入动画                                       | 全局          |
+| AC-7  | `AiUsageStats.tsx` 独立文件存在，包含 token / cost 分行展示 + 小字注释                                                   | 全局          |
+| AC-8  | AI 回复消息左侧有 2px accent 边框，使用 `--color-accent` token                                                           | 视觉          |
+| AC-9  | 代码块使用 `var(--font-mono)` 字体，渲染为等宽字体（JetBrains Mono 或回退）                                              | 视觉          |
+| AC-10 | Model / Mode / Skill 选择器有 chevron icon + hover 高亮交互指示                                                          | 视觉          |
+| AC-11 | 流式输出有打字机逐字渲染效果 + 脉冲光标动画                                                                              | 视觉          |
+| AC-12 | ErrorGuideCard 按严重等级区分左边框颜色：error（`--color-danger`）/ warning（`--color-warning`）/ info（`--color-info`） | 视觉          |
+| AC-13 | 拆分前后全量测试 100% 通过，0 个新增失败                                                                                 | 全局          |
+| AC-14 | 拆分前后现有 14 个 AI 测试文件全部通过，行为无任何变化                                                                   | 全局          |
+| AC-15 | 拆分后各子组件通过 props / hook 返回值通信，无全局隐式依赖                                                               | 全局          |
+| AC-16 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                               | 全局          |
+| AC-17 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                              | 全局          |
+| AC-18 | lint 无新增违规（`pnpm lint`）                                                                                           | 全局          |
+| AC-19 | 所有新增视觉元素使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值 / 字号                                         | 全局          |
 
 ---
 

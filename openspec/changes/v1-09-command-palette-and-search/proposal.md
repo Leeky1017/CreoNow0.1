@@ -48,20 +48,20 @@
 
 ### 4. 证据来源
 
-| 数据点 | 值 | 来源 |
-| --- | --- | --- |
-| CommandPalette.tsx 行数 | ~730 行 | `wc -l` |
-| SearchPanel.tsx 行数 | ~900 行 | `wc -l` |
-| SearchPanel stories 行数 | ~950 行 | `wc -l` |
-| Inline style 对象总数 | ~35 处 | `grep -c 'style={{' CommandPalette.tsx SearchPanel.tsx` |
-| 命令组分隔设计 | 10px uppercase muted header + 分隔线 | `17-command-palette.html` |
-| Active 左蓝线 | `border-left: 2px solid #3b82f6` | `17-command-palette.html` |
-| 快捷键标签样式 | 11px、`#2a2a2a` 背景 pill | `17-command-palette.html` |
-| 分类图标颜色 | 蓝=导航、紫=AI、绿=文件、黄=编辑器 | `17-command-palette.html` |
-| Filter pills active shadow | `--shadow-sm` + 蓝色文字 | `25-search-panel.html` |
-| Match highlight 色 | `rgba(59, 130, 246, 0.2)` | `25-search-panel.html` |
-| 选中结果左侧指示条 | 当前 `w-0.5`（2px），设计稿可能 3-4px | `25-search-panel.html` |
-| DESIGN_DECISIONS.md | §11.4（CommandPalette）、§11.9（SearchPanel）、§21（搜索面板规范） | 设计文档 |
+| 数据点                     | 值                                                                 | 来源                                                    |
+| -------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------- |
+| CommandPalette.tsx 行数    | ~730 行                                                            | `wc -l`                                                 |
+| SearchPanel.tsx 行数       | ~900 行                                                            | `wc -l`                                                 |
+| SearchPanel stories 行数   | ~950 行                                                            | `wc -l`                                                 |
+| Inline style 对象总数      | ~35 处                                                             | `grep -c 'style={{' CommandPalette.tsx SearchPanel.tsx` |
+| 命令组分隔设计             | 10px uppercase muted header + 分隔线                               | `17-command-palette.html`                               |
+| Active 左蓝线              | `border-left: 2px solid #3b82f6`                                   | `17-command-palette.html`                               |
+| 快捷键标签样式             | 11px、`#2a2a2a` 背景 pill                                          | `17-command-palette.html`                               |
+| 分类图标颜色               | 蓝=导航、紫=AI、绿=文件、黄=编辑器                                 | `17-command-palette.html`                               |
+| Filter pills active shadow | `--shadow-sm` + 蓝色文字                                           | `25-search-panel.html`                                  |
+| Match highlight 色         | `rgba(59, 130, 246, 0.2)`                                          | `25-search-panel.html`                                  |
+| 选中结果左侧指示条         | 当前 `w-0.5`（2px），设计稿可能 3-4px                              | `25-search-panel.html`                                  |
+| DESIGN_DECISIONS.md        | §11.4（CommandPalette）、§11.9（SearchPanel）、§21（搜索面板规范） | 设计文档                                                |
 
 ---
 

@@ -8,19 +8,19 @@
 
 ## 验收标准
 
-| ID | 标准 | 验证方式 |
-| --- | --- | --- |
-| AC-1 | `eslint-disable` 总数（全 Features 层）≤ 20 处 | `grep -r eslint-disable features/ \| wc -l` |
-| AC-2 | 每一条保留的 `eslint-disable` 都有 `-- 技术原因：...` 格式的详细注释 | 人工审查 + grep `eslint-disable.*--` |
-| AC-3 | 每一条保留的 `eslint-disable` 注释末尾有 `审计：v1-13 #<编号> KEEP` 标记 | grep 验证 |
-| AC-4 | `docs/references/eslint-disable-audit.md` 审计清单文档存在，记录每条 disable 的审计结论 | 文件存在 + 内容格式 |
-| AC-5 | `docs/references/coding-standards.md` 中包含 eslint-disable 审批流程章节 | grep 验证 |
-| AC-6 | 审计中识别的可替换 disable 已全部修复（替换为 Primitive 或调整代码） | diff 审查 |
-| AC-7 | 审计中识别的需要新 Primitive 的 disable 已创建对应 Issue | Issue 链接 |
-| AC-8 | 全量测试通过（`pnpm -C apps/desktop vitest run`） | CI 命令 |
-| AC-9 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | CI 命令 |
-| AC-10 | TypeScript 类型检查通过（`pnpm typecheck`） | CI 命令 |
-| AC-11 | lint 无新增违规（`pnpm lint`） | CI 命令 |
+| ID    | 标准                                                                                    | 验证方式                                    |
+| ----- | --------------------------------------------------------------------------------------- | ------------------------------------------- |
+| AC-1  | `eslint-disable` 总数（全 Features 层）≤ 20 处                                          | `grep -r eslint-disable features/ \| wc -l` |
+| AC-2  | 每一条保留的 `eslint-disable` 都有 `-- 技术原因：...` 格式的详细注释                    | 人工审查 + grep `eslint-disable.*--`        |
+| AC-3  | 每一条保留的 `eslint-disable` 注释末尾有 `审计：v1-13 #<编号> KEEP` 标记                | grep 验证                                   |
+| AC-4  | `docs/references/eslint-disable-audit.md` 审计清单文档存在，记录每条 disable 的审计结论 | 文件存在 + 内容格式                         |
+| AC-5  | `docs/references/coding-standards.md` 中包含 eslint-disable 审批流程章节                | grep 验证                                   |
+| AC-6  | 审计中识别的可替换 disable 已全部修复（替换为 Primitive 或调整代码）                    | diff 审查                                   |
+| AC-7  | 审计中识别的需要新 Primitive 的 disable 已创建对应 Issue                                | Issue 链接                                  |
+| AC-8  | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                       | CI 命令                                     |
+| AC-9  | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                              | CI 命令                                     |
+| AC-10 | TypeScript 类型检查通过（`pnpm typecheck`）                                             | CI 命令                                     |
+| AC-11 | lint 无新增违规（`pnpm lint`）                                                          | CI 命令                                     |
 
 ---
 
@@ -28,7 +28,7 @@
 
 每条 `eslint-disable` 需填写以下审计条目：
 
-```markdown
+````markdown
 ### #<编号>
 
 - **文件**: `<文件路径>`
@@ -39,13 +39,16 @@
   ```tsx
   // 3 行上下文
   ```
+````
+
 - **判定**: `REMOVE` | `KEEP` | `TRACK`
 - **理由**: <详细技术理由>
 - **动作**:
   - REMOVE → 替换方案：<具体替换代码>
   - KEEP → 保留原因：<技术限制说明>
   - TRACK → 创建 Issue：<Issue 标题 + 预期解决路径>
-```
+
+````
 
 ---
 
@@ -62,7 +65,8 @@
     grep -oP 'creonow/[a-z-]+' | sort | uniq -c | sort -rn
   # 导出完整清单
   grep -rn 'eslint-disable' --include='*.tsx' --include='*.ts' renderer/src/features/ > /tmp/eslint-disable-inventory.txt
-  ```
+````
+
 - [ ] 阅读 `docs/references/coding-standards.md`，确认当前是否有 eslint-disable 相关规范
 - [ ] 确认 Primitives 层可用组件清单，评估替换可行性
 
@@ -120,6 +124,7 @@
 
 - [ ] 创建 `docs/references/eslint-disable-audit.md`
 - [ ] 文档结构：
+
   ```markdown
   # eslint-disable 审计清单
 
@@ -131,13 +136,15 @@
   ## 总览
 
   | 规则 | 审计前 | REMOVE | KEEP | TRACK | 审计后 |
-  | --- | --- | --- | --- | --- | --- |
+  | ---- | ------ | ------ | ---- | ----- | ------ |
 
   ## 逐条审计记录
 
   ### #001 ...
+
   ### #002 ...
   ```
+
 - [ ] 填写所有审计条目（使用上方模板）
 
 ### Task 2.2: 审批流程建立
@@ -145,6 +152,7 @@
 **映射验收标准**: AC-5
 
 - [ ] 在 `docs/references/coding-standards.md` 中追加章节：
+
   ```markdown
   ## eslint-disable 使用规范
 

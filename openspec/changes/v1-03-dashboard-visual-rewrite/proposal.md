@@ -33,15 +33,15 @@ DashboardPage.tsx 约 929 行，是一个中型巨石组件。HeroCard、Project
 
 ### 4. 证据来源
 
-| 数据点 | 值 | 来源 |
-| --- | --- | --- |
-| DashboardPage.tsx 行数 | 929 行 | `wc -l` |
-| HeroCard arbitrary 值 | 6 处（p-10, max-w-[500px], w-16, h-16, text-[11px] 等） | `grep` 审计 |
-| 原生 `<button>` + eslint-disable | 2 处 | ProjectCard menu trigger + archived toggle |
-| 网格 minmax 值 | 280px（代码） vs 240px（spec） | DashboardPage.tsx vs DESIGN_DECISIONS.md §11.14 |
-| 设计稿采纳版 | `05-dashboard-sidebar-full.html` | DESIGN_DECISIONS.md §1.2 + §11.14 |
-| 空状态设计稿 | `26-empty-states.html` | 设计稿目录 |
-| Design Token CSS 变量 | 405 行（v1-01 补完后更多） | `design/system/01-tokens.css` |
+| 数据点                           | 值                                                      | 来源                                            |
+| -------------------------------- | ------------------------------------------------------- | ----------------------------------------------- |
+| DashboardPage.tsx 行数           | 929 行                                                  | `wc -l`                                         |
+| HeroCard arbitrary 值            | 6 处（p-10, max-w-[500px], w-16, h-16, text-[11px] 等） | `grep` 审计                                     |
+| 原生 `<button>` + eslint-disable | 2 处                                                    | ProjectCard menu trigger + archived toggle      |
+| 网格 minmax 值                   | 280px（代码） vs 240px（spec）                          | DashboardPage.tsx vs DESIGN_DECISIONS.md §11.14 |
+| 设计稿采纳版                     | `05-dashboard-sidebar-full.html`                        | DESIGN_DECISIONS.md §1.2 + §11.14               |
+| 空状态设计稿                     | `26-empty-states.html`                                  | 设计稿目录                                      |
+| Design Token CSS 变量            | 405 行（v1-01 补完后更多）                              | `design/system/01-tokens.css`                   |
 
 ---
 
@@ -58,6 +58,7 @@ DashboardPage.tsx 约 929 行，是一个中型巨石组件。HeroCard、Project
 ### 3. 设计稿元素补全
 
 实现设计稿 `05-dashboard-sidebar-full.html` 中定义但当前缺失的视觉元素：
+
 - plus-grid 装饰图案（新建项目卡片区域）
 - arrow icon hover 旋转动效（0.2s cubic-bezier）
 - stat display 卡片（字数/章节/创作天数统计区域）

@@ -15,6 +15,7 @@
 全应用的空状态、加载状态、错误状态实现碎片化——用户在不同面板遇到相同的"无数据"情境，却看到截然不同的视觉表达。正如一座建筑中，每间房间的"请勿打扰"牌设计各异——「器不一则用不专，用不专则心不安。」
 
 **空状态碎片化（至少 5 种实现）**：
+
 - 纯文字型：`<p className="text-muted">暂无内容</p>`（MemoryPanel）
 - Icon + 文字型：自行内联 SVG + 文字（OutlinePanel）
 - Icon + 文字 + 按钮型：三元素垂直布局但每处间距不同（CharacterPanel）
@@ -22,11 +23,13 @@
 - 无处理型：部分列表空时直接渲染空 `<div>`
 
 **加载状态碎片化（3 种实现）**：
+
 - Spinner 型：`<div className="animate-spin" />`（各面板各自实现）
 - Skeleton 型：仅 Dashboard 有骨架屏，其余面板无
 - 文字型：`"加载中..."` 纯文本（部分功能模块）
 
 **错误状态碎片化（4 种实现）**：
+
 - 红色 Banner 型：顶部固定红色条（AI 面板）
 - Card 型：带 icon 的错误卡片（Settings）
 - Toast 型：右下角弹出（全局）
@@ -44,15 +47,15 @@
 
 ### 4. 证据来源
 
-| 数据点 | 值 | 来源 |
-| --- | --- | --- |
-| 空状态实现方式 | ≥5 种 | grep 各面板空状态渲染代码 |
-| 加载状态实现方式 | ≥3 种 | grep `animate-spin`、skeleton、加载中 |
-| 错误状态实现方式 | ≥4 种 | grep error banner / card / toast / inline |
-| 设计稿空状态规范 | `26-empty-states.html` | 48px icon + 居中 + max-width |
-| 设计稿加载状态规范 | `27-loading-states.html` | skeleton loader + spinner 标准 |
-| DESIGN_DECISIONS.md | §12 状态显示 | 设计决策文档 |
-| patterns 目录 | `renderer/src/components/patterns/` | 已有 patterns 目录可放置 |
+| 数据点              | 值                                  | 来源                                      |
+| ------------------- | ----------------------------------- | ----------------------------------------- |
+| 空状态实现方式      | ≥5 种                               | grep 各面板空状态渲染代码                 |
+| 加载状态实现方式    | ≥3 种                               | grep `animate-spin`、skeleton、加载中     |
+| 错误状态实现方式    | ≥4 种                               | grep error banner / card / toast / inline |
+| 设计稿空状态规范    | `26-empty-states.html`              | 48px icon + 居中 + max-width              |
+| 设计稿加载状态规范  | `27-loading-states.html`            | skeleton loader + spinner 标准            |
+| DESIGN_DECISIONS.md | §12 状态显示                        | 设计决策文档                              |
+| patterns 目录       | `renderer/src/components/patterns/` | 已有 patterns 目录可放置                  |
 
 ---
 
@@ -71,6 +74,7 @@ Props:
 ```
 
 视觉规范（来源 `26-empty-states.html`）：
+
 - Flex column 居中布局
 - Icon：48px+、`opacity: 0.6`、`var(--color-text-muted)`
 - 标题：`var(--text-card-title-size)`、`var(--weight-semibold)`
@@ -88,6 +92,7 @@ Props:
 ```
 
 视觉规范（来源 `27-loading-states.html`）：
+
 - Spinner：24px 圆环动画、`var(--color-accent)` 描边、居中
 - Skeleton：圆角矩形 + shimmer 动画、`var(--color-bg-hover)` 底色
 - Message：`var(--text-caption-size)`、`var(--color-text-muted)`
@@ -103,6 +108,7 @@ Props:
 ```
 
 视觉规范：
+
 - 左侧 3px 色条：error → `var(--color-danger)`、warning → `var(--color-warning)`、info → `var(--color-info)`
 - 背景：对应 subtle 色（`var(--color-danger-subtle)` 等）
 - Icon：对应等级 icon（AlertCircle / AlertTriangle / Info）

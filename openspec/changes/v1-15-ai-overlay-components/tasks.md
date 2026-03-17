@@ -8,23 +8,23 @@
 
 ## 验收标准
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-1 | `AiDiffModal.tsx` 从 893 行拆分为 4 文件，主文件 ≤ 200 行 | 架构 |
-| AC-2 | AiDiffModal 使用 Dialog primitive（`--radius-lg`、`--shadow-dialog`） | 视觉 |
-| AC-3 | Diff 高亮使用 `--color-success-subtle` / `--color-danger-subtle` | 视觉 |
-| AC-4 | `AiErrorCard.tsx` 从 855 行拆分为 3 文件，主文件 ≤ 200 行 | 架构 |
-| AC-5 | AiErrorCard severity 色彩与 v1-06 ErrorGuideCard 统一 | 视觉 |
-| AC-6 | AiErrorCard 使用 Card `variant="bordered"` + 左侧 4px severity 色条 | 视觉 |
-| AC-7 | `SystemDialog.tsx` 从 638 行拆分为 2 文件，主文件 ≤ 250 行 | 架构 |
-| AC-8 | SystemDialog 消息风格与 v1-06 AiPanel 统一 | 视觉 |
-| AC-9 | `AiInlineConfirm.tsx` 从 398 行拆分为 2 文件，主文件 ≤ 200 行 | 架构 |
-| AC-10 | AiInlineConfirm 确认条背景 `--color-bg-elevated` | 视觉 |
-| AC-11 | 所有新增样式使用语义化 Design Token，0 处新增 arbitrary 色值 | 全局 |
-| AC-12 | 现有相关测试 100% 通过，0 个新增失败 | 全局 |
-| AC-13 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | 全局 |
-| AC-14 | TypeScript 类型检查通过（`pnpm typecheck`） | 全局 |
-| AC-15 | lint 无新增违规（`pnpm lint`） | 全局 |
+| ID    | 标准                                                                  | 对应 Scenario |
+| ----- | --------------------------------------------------------------------- | ------------- |
+| AC-1  | `AiDiffModal.tsx` 从 893 行拆分为 4 文件，主文件 ≤ 200 行             | 架构          |
+| AC-2  | AiDiffModal 使用 Dialog primitive（`--radius-lg`、`--shadow-dialog`） | 视觉          |
+| AC-3  | Diff 高亮使用 `--color-success-subtle` / `--color-danger-subtle`      | 视觉          |
+| AC-4  | `AiErrorCard.tsx` 从 855 行拆分为 3 文件，主文件 ≤ 200 行             | 架构          |
+| AC-5  | AiErrorCard severity 色彩与 v1-06 ErrorGuideCard 统一                 | 视觉          |
+| AC-6  | AiErrorCard 使用 Card `variant="bordered"` + 左侧 4px severity 色条   | 视觉          |
+| AC-7  | `SystemDialog.tsx` 从 638 行拆分为 2 文件，主文件 ≤ 250 行            | 架构          |
+| AC-8  | SystemDialog 消息风格与 v1-06 AiPanel 统一                            | 视觉          |
+| AC-9  | `AiInlineConfirm.tsx` 从 398 行拆分为 2 文件，主文件 ≤ 200 行         | 架构          |
+| AC-10 | AiInlineConfirm 确认条背景 `--color-bg-elevated`                      | 视觉          |
+| AC-11 | 所有新增样式使用语义化 Design Token，0 处新增 arbitrary 色值          | 全局          |
+| AC-12 | 现有相关测试 100% 通过，0 个新增失败                                  | 全局          |
+| AC-13 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）            | 全局          |
+| AC-14 | TypeScript 类型检查通过（`pnpm typecheck`）                           | 全局          |
+| AC-15 | lint 无新增违规（`pnpm lint`）                                        | 全局          |
 
 ---
 

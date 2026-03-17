@@ -17,29 +17,34 @@
 具体问题：
 
 **CharacterPanel**（CharacterPanel.tsx ~450 行 + CharacterDetailDialog.tsx ~900 行）：
+
 - Dialog 内容滚动溢出无视觉指示（scroll shadow 缺失）
 - Avatar 灰度 + 透明度在 relationships 中不一致
 - 30+ 处原生 HTML 元素绕过 Primitives
 - 26 个 `eslint-disable` 注释
 
 **MemoryPanel**（MemoryPanel.tsx ~750 行）：
+
 - Distilling 进度无 loading indicator，用户无法感知处理状态
 - Rule cards 不区分 auto-generated vs user-confirmed（设计稿有标签差异）
 - 冲突解决面板在滚动区内，优先级不足——应浮于顶部或有醒目的视觉强调
 - 13 个 `eslint-disable` 注释
 
 **OutlinePanel**（OutlinePanel.tsx ~1,020 行）：
+
 - 缩进级别 16/32/48px 横向不可缩放（窄屏下三级缩进挤压内容）
 - Collapse toggle icon (4px) 过小，不符合 44px 最小触控目标
 - Word count badge 与 hover action 视觉冲突（同行竞争注意力）
 - 9 个 `eslint-disable` 注释
 
 **KnowledgeGraphPanel**（KnowledgeGraphPanel.tsx ~950 行）：
+
 - 图谱空状态无引导信息——设计稿有居中图标 + 描述 + 操作按钮
 - Entity metadata JSON 解析失败静默（无 error state 反馈）
 - Timeline 拖拽视觉反馈微弱（缺少拖拽手柄 + 阴影升起效果）
 
 **VersionHistoryPanel**（VersionHistoryPanel.tsx ~620 行）：
+
 - Diff 摘要 `line-clamp` 无 "read more" 展开入口
 - Hover action buttons 过渡太快难以交互（需 150ms 延迟或 fade-in）
 - "No changes" badge 对比度不足（前景/背景色 contrast ratio 未达 4.5:1）
@@ -60,18 +65,18 @@
 
 ### 4. 证据来源
 
-| 数据点 | 值 | 来源 |
-| --- | --- | --- |
-| CharacterPanel.tsx 行数 | ~450 行 | `wc -l` |
-| CharacterDetailDialog.tsx 行数 | ~900 行 | `wc -l` |
-| MemoryPanel.tsx 行数 | ~750 行 | `wc -l` |
-| OutlinePanel.tsx 行数 | ~1,020 行 | `wc -l` |
-| KnowledgeGraphPanel.tsx 行数 | ~950 行 | `wc -l` |
-| VersionHistoryPanel.tsx 行数 | ~620 行 | `wc -l` |
-| eslint-disable 总计（5 面板） | 93 处 | `grep -r eslint-disable` 各面板 |
-| 原生 HTML 元素（CharacterPanel） | 30+ 处 | grep 统计 |
-| Collapse toggle icon 尺寸 | 4px | OutlinePanel 代码审查 |
-| 设计稿 | 5 个 HTML | 18/19/20/23/13 |
+| 数据点                           | 值        | 来源                            |
+| -------------------------------- | --------- | ------------------------------- |
+| CharacterPanel.tsx 行数          | ~450 行   | `wc -l`                         |
+| CharacterDetailDialog.tsx 行数   | ~900 行   | `wc -l`                         |
+| MemoryPanel.tsx 行数             | ~750 行   | `wc -l`                         |
+| OutlinePanel.tsx 行数            | ~1,020 行 | `wc -l`                         |
+| KnowledgeGraphPanel.tsx 行数     | ~950 行   | `wc -l`                         |
+| VersionHistoryPanel.tsx 行数     | ~620 行   | `wc -l`                         |
+| eslint-disable 总计（5 面板）    | 93 处     | `grep -r eslint-disable` 各面板 |
+| 原生 HTML 元素（CharacterPanel） | 30+ 处    | grep 统计                       |
+| Collapse toggle icon 尺寸        | 4px       | OutlinePanel 代码审查           |
+| 设计稿                           | 5 个 HTML | 18/19/20/23/13                  |
 
 ---
 
@@ -80,6 +85,7 @@
 ### 1. 统一面板 Header 规范
 
 提取 `<PanelHeader>` 共享组件或 CSS class，确保 5 个面板的 header 统一：
+
 - 高度：40px（含 1px 底部分隔线）
 - 标题字号：`var(--text-subtitle-size)`（14px）、`var(--weight-semibold)`
 - 内边距：`var(--space-panel-padding)`
@@ -89,6 +95,7 @@
 ### 2. 统一 Section Content 间距
 
 面板内部各 section 统一使用：
+
 - Section 间距：`var(--space-section-gap)`
 - 内容内边距：`var(--space-panel-padding)`
 - 列表项间距：`var(--space-item-gap)`
@@ -96,6 +103,7 @@
 ### 3. 统一列表项交互状态
 
 为所有面板中的列表项定义统一的交互状态链：
+
 - Default → Hover（`var(--color-bg-hover)`）→ Selected（`var(--color-bg-selected)`）→ Active（左侧 2px `var(--color-accent)` 边框）
 - Hover 时 action icons fade-in（`opacity: 0 → 1`，`var(--duration-fast)` `var(--ease-default)`）
 

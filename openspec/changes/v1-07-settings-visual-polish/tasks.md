@@ -8,23 +8,23 @@
 
 ## 验收标准
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-1 | SettingsAppearancePage.tsx 中 0 处硬编码 hex 颜色值直接出现在生产渲染逻辑中 | 全局 |
-| AC-2 | 色板选项通过命名常量 + Design Token 映射定义，不直接写 hex 字面量 | 全局 |
-| AC-3 | ThemePreview 组件中 0 处硬编码颜色值，全部替换为 `--color-*` token 引用 | 全局 |
-| AC-4 | Section headers 使用 uppercase 10px 0.1em letter-spacing + 底部 1px 分割线样式 | 视觉 |
-| AC-5 | Theme 选中态为 filled 样式（背景色 + box-shadow），非 outline | 视觉 |
-| AC-6 | Font size 滑块下方有 12px–24px 刻度标记 | 视觉 |
-| AC-7 | 色板选环 hover 时有 scale(1.15) + glow shadow 动画效果 | 视觉 |
-| AC-8 | Nav active 项有 glow 背景或指示器，对齐 `10-settings.html` 设计稿 | 视觉 |
-| AC-9 | Toggle 组件切换有 ≥ 0.15s smooth 过渡动画 | 视觉 |
-| AC-10 | 所有新增样式使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值 / 字号 | 全局 |
-| AC-11 | 现有测试 100% 通过，0 个新增失败 | 全局 |
-| AC-12 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | 全局 |
-| AC-13 | TypeScript 类型检查通过（`pnpm typecheck`） | 全局 |
-| AC-14 | lint 无新增违规（`pnpm lint`） | 全局 |
-| AC-15 | `SettingsDialog.tsx` 从 ~486 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行 | 架构 |
+| ID    | 标准                                                                           | 对应 Scenario |
+| ----- | ------------------------------------------------------------------------------ | ------------- |
+| AC-1  | SettingsAppearancePage.tsx 中 0 处硬编码 hex 颜色值直接出现在生产渲染逻辑中    | 全局          |
+| AC-2  | 色板选项通过命名常量 + Design Token 映射定义，不直接写 hex 字面量              | 全局          |
+| AC-3  | ThemePreview 组件中 0 处硬编码颜色值，全部替换为 `--color-*` token 引用        | 全局          |
+| AC-4  | Section headers 使用 uppercase 10px 0.1em letter-spacing + 底部 1px 分割线样式 | 视觉          |
+| AC-5  | Theme 选中态为 filled 样式（背景色 + box-shadow），非 outline                  | 视觉          |
+| AC-6  | Font size 滑块下方有 12px–24px 刻度标记                                        | 视觉          |
+| AC-7  | 色板选环 hover 时有 scale(1.15) + glow shadow 动画效果                         | 视觉          |
+| AC-8  | Nav active 项有 glow 背景或指示器，对齐 `10-settings.html` 设计稿              | 视觉          |
+| AC-9  | Toggle 组件切换有 ≥ 0.15s smooth 过渡动画                                      | 视觉          |
+| AC-10 | 所有新增样式使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值 / 字号   | 全局          |
+| AC-11 | 现有测试 100% 通过，0 个新增失败                                               | 全局          |
+| AC-12 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                     | 全局          |
+| AC-13 | TypeScript 类型检查通过（`pnpm typecheck`）                                    | 全局          |
+| AC-14 | lint 无新增违规（`pnpm lint`）                                                 | 全局          |
+| AC-15 | `SettingsDialog.tsx` 从 ~486 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行        | 架构          |
 
 ---
 
@@ -34,35 +34,35 @@
 
 ### 色板选项（`getAccentColors()` L77–82）
 
-| 行号 | 当前硬编码值 | 用途 | 目标 Token / 方案 |
-| --- | --- | --- | --- |
-| L77 | `#ffffff` | 白色强调色选项 | `--accent-white` 命名常量（色板选项属于功能性枚举，需定义为语义常量集合） |
-| L78 | `#3b82f6` | 蓝色强调色选项 | `--accent-blue` 命名常量 |
-| L79 | `#22c55e` | 绿色强调色选项 | `--accent-green` 命名常量 |
-| L80 | `#f97316` | 橙色强调色选项 | `--accent-orange` 命名常量 |
-| L81 | `#8b5cf6` | 紫色强调色选项 | `--accent-purple` 命名常量 |
-| L82 | `#ec4899` | 粉色强调色选项 | `--accent-pink` 命名常量 |
+| 行号 | 当前硬编码值 | 用途           | 目标 Token / 方案                                                         |
+| ---- | ------------ | -------------- | ------------------------------------------------------------------------- |
+| L77  | `#ffffff`    | 白色强调色选项 | `--accent-white` 命名常量（色板选项属于功能性枚举，需定义为语义常量集合） |
+| L78  | `#3b82f6`    | 蓝色强调色选项 | `--accent-blue` 命名常量                                                  |
+| L79  | `#22c55e`    | 绿色强调色选项 | `--accent-green` 命名常量                                                 |
+| L80  | `#f97316`    | 橙色强调色选项 | `--accent-orange` 命名常量                                                |
+| L81  | `#8b5cf6`    | 紫色强调色选项 | `--accent-purple` 命名常量                                                |
+| L82  | `#ec4899`    | 粉色强调色选项 | `--accent-pink` 命名常量                                                  |
 
 **方案说明**：色板选项是用户功能选择（持久化到 preference store），不适合直接替换为可变 token。正确做法是将 6 组颜色值提取为 `ACCENT_PALETTE` 命名常量对象（位于 `packages/shared/` 或 `renderer/src/constants/`），并在 `01-tokens.css` 中注册对应 `--accent-*` token。这样品牌色调整时只需修改一处。
 
 ### ThemePreview 组件（L92–94）
 
-| 行号 | 当前硬编码值 | 用途 | 目标 Token |
-| --- | --- | --- | --- |
-| L92 | `#0f0f0f` | 暗色主题预览背景 | `--color-bg-base`（dark theme value） |
-| L92 | `#ffffff` | 亮色主题预览背景 | `--color-bg-base`（light theme value） |
-| L93 | `#ffffff` | 暗色主题预览前景 | `--color-fg-default`（dark theme value） |
-| L93 | `#1a1a1a` | 亮色主题预览前景 | `--color-fg-default`（light theme value） |
-| L94 | `#666666` | 暗色主题 muted 色 | `--color-fg-muted`（dark theme value） |
-| L94 | `#888888` | 亮色主题 muted 色 | `--color-fg-muted`（light theme value） |
+| 行号 | 当前硬编码值 | 用途              | 目标 Token                                |
+| ---- | ------------ | ----------------- | ----------------------------------------- |
+| L92  | `#0f0f0f`    | 暗色主题预览背景  | `--color-bg-base`（dark theme value）     |
+| L92  | `#ffffff`    | 亮色主题预览背景  | `--color-bg-base`（light theme value）    |
+| L93  | `#ffffff`    | 暗色主题预览前景  | `--color-fg-default`（dark theme value）  |
+| L93  | `#1a1a1a`    | 亮色主题预览前景  | `--color-fg-default`（light theme value） |
+| L94  | `#666666`    | 暗色主题 muted 色 | `--color-fg-muted`（dark theme value）    |
+| L94  | `#888888`    | 亮色主题 muted 色 | `--color-fg-muted`（light theme value）   |
 
 **方案说明**：ThemePreview 的用途是预览不同主题的效果。正确做法是通过 CSS class（如 `[data-theme="dark"]`）切换 token 值，让预览区域自动继承目标主题的 token 值，而非硬编码。
 
 ### 默认值（L263）
 
-| 行号 | 当前硬编码值 | 用途 | 目标 Token |
-| --- | --- | --- | --- |
-| L263 | `#ffffff` | accentColor 默认值 | `ACCENT_PALETTE.white`（引用命名常量） |
+| 行号 | 当前硬编码值 | 用途               | 目标 Token                             |
+| ---- | ------------ | ------------------ | -------------------------------------- |
+| L263 | `#ffffff`    | accentColor 默认值 | `ACCENT_PALETTE.white`（引用命名常量） |
 
 ---
 
@@ -153,12 +153,12 @@
 
 ```typescript
 export const ACCENT_PALETTE = [
-  { id: 'white',  value: '#ffffff', token: '--accent-white'  },
-  { id: 'blue',   value: '#3b82f6', token: '--accent-blue'   },
-  { id: 'green',  value: '#22c55e', token: '--accent-green'  },
-  { id: 'orange', value: '#f97316', token: '--accent-orange'  },
-  { id: 'purple', value: '#8b5cf6', token: '--accent-purple'  },
-  { id: 'pink',   value: '#ec4899', token: '--accent-pink'   },
+  { id: "white", value: "#ffffff", token: "--accent-white" },
+  { id: "blue", value: "#3b82f6", token: "--accent-blue" },
+  { id: "green", value: "#22c55e", token: "--accent-green" },
+  { id: "orange", value: "#f97316", token: "--accent-orange" },
+  { id: "purple", value: "#8b5cf6", token: "--accent-purple" },
+  { id: "pink", value: "#ec4899", token: "--accent-pink" },
 ] as const;
 ```
 
@@ -175,7 +175,7 @@ export const ACCENT_PALETTE = [
 - [ ] 方案 A（推荐）：ThemePreview 改为通过 `data-theme` 属性切换主题 class，让预览区域自动继承目标主题的 token 值：
 
 ```tsx
-<div data-theme={mode === 'dark' ? 'dark' : 'light'} className="...">
+<div data-theme={mode === "dark" ? "dark" : "light"} className="...">
   {/* 内部元素自动使用 --color-bg-base, --color-fg-default 等 */}
 </div>
 ```
@@ -184,8 +184,16 @@ export const ACCENT_PALETTE = [
 
 ```typescript
 const THEME_PREVIEW_TOKENS = {
-  dark:  { bg: 'var(--color-bg-base)',    fg: 'var(--color-fg-default)', muted: 'var(--color-fg-muted)' },
-  light: { bg: 'var(--color-bg-base)',    fg: 'var(--color-fg-default)', muted: 'var(--color-fg-muted)' },
+  dark: {
+    bg: "var(--color-bg-base)",
+    fg: "var(--color-fg-default)",
+    muted: "var(--color-fg-muted)",
+  },
+  light: {
+    bg: "var(--color-bg-base)",
+    fg: "var(--color-fg-default)",
+    muted: "var(--color-fg-muted)",
+  },
 } as const;
 ```
 

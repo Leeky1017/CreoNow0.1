@@ -45,20 +45,20 @@ FileTreePanel.tsx 约 1,320 行，承载文件树全部逻辑——展开/折叠
 
 ### 4. 证据来源
 
-| 数据点 | 值 | 来源 |
-| --- | --- | --- |
-| FileTreePanel.tsx 行数 | ~1,320 行 | `wc -l` |
-| 设计稿 icon bar 宽度 | 48px 固定 | `12-sidebar-filetree.html` |
-| 设计稿行高 | 32px per item | `12-sidebar-filetree.html` `.tree-item { height: 32px }` |
-| 当前行 padding | `py-1.5`（6px × 2） | FileTreePanel.tsx className |
-| 拖拽指示器设计稿 | 2px 蓝线 + 8px 圆形手柄 | `12-sidebar-filetree.html` `.drag-indicator::before { width: 8px; border-radius: 50% }` |
-| Rename focus border 设计色 | `#3b82f6` | `12-sidebar-filetree.html` `.rename-input:focus { border-color: #3b82f6 }` |
-| Hover 背景色 | `--bg-hover` → `#1a1a1a` | `12-sidebar-filetree.html` |
-| Selected 背景色 | `--bg-selected` → `#222222` | `12-sidebar-filetree.html` |
-| 箭头旋转动效 | `transition: transform 0.2s` | `12-sidebar-filetree.html` `.chevron` |
-| 文件类型图标配色 | `.ts`=蓝 `#3b82f6`、`.md`=绿 `#22c55e`、`.json`=黄 `#eab308` | `12-sidebar-filetree.html` |
-| 快捷键标注样式 | 11px、`--color-fg-muted` | `12-sidebar-filetree.html` `.shortcut { font-size: 11px }` |
-| DESIGN_DECISIONS.md 参考 | §9.1（左侧 Icon Bar）、§11.3（FileTree） | 设计文档 |
+| 数据点                     | 值                                                           | 来源                                                                                    |
+| -------------------------- | ------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| FileTreePanel.tsx 行数     | ~1,320 行                                                    | `wc -l`                                                                                 |
+| 设计稿 icon bar 宽度       | 48px 固定                                                    | `12-sidebar-filetree.html`                                                              |
+| 设计稿行高                 | 32px per item                                                | `12-sidebar-filetree.html` `.tree-item { height: 32px }`                                |
+| 当前行 padding             | `py-1.5`（6px × 2）                                          | FileTreePanel.tsx className                                                             |
+| 拖拽指示器设计稿           | 2px 蓝线 + 8px 圆形手柄                                      | `12-sidebar-filetree.html` `.drag-indicator::before { width: 8px; border-radius: 50% }` |
+| Rename focus border 设计色 | `#3b82f6`                                                    | `12-sidebar-filetree.html` `.rename-input:focus { border-color: #3b82f6 }`              |
+| Hover 背景色               | `--bg-hover` → `#1a1a1a`                                     | `12-sidebar-filetree.html`                                                              |
+| Selected 背景色            | `--bg-selected` → `#222222`                                  | `12-sidebar-filetree.html`                                                              |
+| 箭头旋转动效               | `transition: transform 0.2s`                                 | `12-sidebar-filetree.html` `.chevron`                                                   |
+| 文件类型图标配色           | `.ts`=蓝 `#3b82f6`、`.md`=绿 `#22c55e`、`.json`=黄 `#eab308` | `12-sidebar-filetree.html`                                                              |
+| 快捷键标注样式             | 11px、`--color-fg-muted`                                     | `12-sidebar-filetree.html` `.shortcut { font-size: 11px }`                              |
+| DESIGN_DECISIONS.md 参考   | §9.1（左侧 Icon Bar）、§11.3（FileTree）                     | 设计文档                                                                                |
 
 ---
 

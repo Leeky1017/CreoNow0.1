@@ -41,19 +41,19 @@ SettingsDialog 模块共 12 个文件、2,420 行总代码，结构清晰（Dial
 
 ### 4. 证据来源
 
-| 数据点 | 值 | 来源 |
-| --- | --- | --- |
-| SettingsDialog.tsx 行数 | 486 行 | `wc -l` |
-| SettingsAppearancePage.tsx 行数 | 265 行 | `wc -l` |
-| SettingsGeneral.tsx 行数 | 330 行 | `wc -l` |
-| Settings 模块总行数 | 2,420 行 / 12 文件 | `wc -l` 统计 |
-| 硬编码颜色值行数（SettingsAppearancePage） | 10 处独立硬编码行 | `grep '#[0-9a-fA-F]'` |
-| 色板选项硬编码 | 6 处（`#ffffff`, `#3b82f6`, `#22c55e`, `#f97316`, `#8b5cf6`, `#ec4899`） | SettingsAppearancePage.tsx L77–82 |
-| ThemePreview 硬编码 | 4 处独立值（`#0f0f0f`, `#1a1a1a`, `#666666`, `#888888`） + 1 处重复 `#ffffff` | SettingsAppearancePage.tsx L92–94 |
-| 默认 accentColor 硬编码 | 1 处（`#ffffff`） | SettingsAppearancePage.tsx L263 |
-| 设计稿参考 | `10-settings.html` | 设计稿目录 |
-| 组件规范参考 | `34-component-primitives.html` | 设计稿目录 |
-| DESIGN_DECISIONS.md | §6（组件规范）、§6.10（Toggle）、§6.7（Tabs） | 设计文档 |
+| 数据点                                     | 值                                                                            | 来源                              |
+| ------------------------------------------ | ----------------------------------------------------------------------------- | --------------------------------- |
+| SettingsDialog.tsx 行数                    | 486 行                                                                        | `wc -l`                           |
+| SettingsAppearancePage.tsx 行数            | 265 行                                                                        | `wc -l`                           |
+| SettingsGeneral.tsx 行数                   | 330 行                                                                        | `wc -l`                           |
+| Settings 模块总行数                        | 2,420 行 / 12 文件                                                            | `wc -l` 统计                      |
+| 硬编码颜色值行数（SettingsAppearancePage） | 10 处独立硬编码行                                                             | `grep '#[0-9a-fA-F]'`             |
+| 色板选项硬编码                             | 6 处（`#ffffff`, `#3b82f6`, `#22c55e`, `#f97316`, `#8b5cf6`, `#ec4899`）      | SettingsAppearancePage.tsx L77–82 |
+| ThemePreview 硬编码                        | 4 处独立值（`#0f0f0f`, `#1a1a1a`, `#666666`, `#888888`） + 1 处重复 `#ffffff` | SettingsAppearancePage.tsx L92–94 |
+| 默认 accentColor 硬编码                    | 1 处（`#ffffff`）                                                             | SettingsAppearancePage.tsx L263   |
+| 设计稿参考                                 | `10-settings.html`                                                            | 设计稿目录                        |
+| 组件规范参考                               | `34-component-primitives.html`                                                | 设计稿目录                        |
+| DESIGN_DECISIONS.md                        | §6（组件规范）、§6.10（Toggle）、§6.7（Tabs）                                 | 设计文档                          |
 
 ---
 

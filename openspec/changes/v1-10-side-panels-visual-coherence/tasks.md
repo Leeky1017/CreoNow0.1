@@ -8,32 +8,32 @@
 
 ## 验收标准
 
-| ID | 标准 | 验证方式 |
-| --- | --- | --- |
-| AC-1 | 5 个面板 header 高度统一 40px，标题字号统一 `var(--text-subtitle-size)`，内边距统一 `var(--space-panel-padding)` | 视觉审查 + Storybook |
-| AC-2 | 5 个面板 section 间距统一使用 `var(--space-section-gap)`，内容内边距统一 `var(--space-panel-padding)` | grep token 引用 |
-| AC-3 | 列表项交互状态链统一：hover → selected → active 视觉表现一致 | 视觉交互验证 |
-| AC-4 | CharacterDetailDialog 滚动溢出有 scroll shadow 提示 | 视觉验证 |
-| AC-5 | CharacterPanel Avatar 灰度/透明度在 relationships 中一致 | 视觉验证 |
-| AC-6 | MemoryPanel Distilling 有 `<LoadingState>` indicator | 代码审查 + 视觉验证 |
-| AC-7 | MemoryPanel Rule cards 区分 auto-generated vs user-confirmed 标签 | 视觉验证 |
-| AC-8 | MemoryPanel 冲突解决面板为 sticky 置顶或有醒目视觉强调 | 视觉验证 |
-| AC-9 | OutlinePanel 缩进改用 `em` 比例制（响应式缩放） | 代码审查 |
-| AC-10 | OutlinePanel Collapse toggle icon ≥ 24px | 代码审查 + 视觉验证 |
-| AC-11 | OutlinePanel Word count badge 与 hover action 不重叠冲突 | 视觉交互验证 |
-| AC-12 | KnowledgeGraphPanel 空状态使用 `<EmptyState>` 组件 | 代码审查 |
-| AC-13 | KnowledgeGraphPanel JSON 解析失败显示 `<ErrorState>` | 代码审查 + 视觉验证 |
-| AC-14 | KnowledgeGraphPanel Timeline 拖拽有阴影升起视觉反馈 | 视觉交互验证 |
-| AC-15 | VersionHistoryPanel diff 摘要 line-clamp 有 "展开" 按钮 | 视觉交互验证 |
-| AC-16 | VersionHistoryPanel hover action buttons 有 ≥150ms fade-in 过渡 | 视觉交互验证 |
-| AC-17 | VersionHistoryPanel "No changes" badge contrast ratio ≥ 4.5:1 | 对比度工具检查 |
-| AC-18 | 5 个面板 eslint-disable 从 93 处降至 ≤10 | `grep` 统计 |
-| AC-19 | 所有新增视觉元素使用语义化 Design Token，0 处新增 arbitrary 值 | grep 验证 |
-| AC-20 | 全量测试通过（`pnpm -C apps/desktop vitest run`） | CI 命令 |
-| AC-21 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | CI 命令 |
-| AC-22 | TypeScript 类型检查通过（`pnpm typecheck`） | CI 命令 |
-| AC-23 | lint 无新增违规（`pnpm lint`） | CI 命令 |
-| AC-24 | 7 个面板主文件（KnowledgeGraphPanel / OutlinePanel / CharacterDetailDialog / MemoryPanel / VersionHistoryPanel / VersionHistoryContainer / CharacterPanel）各 ≤ 300 行 | 架构 |
+| ID    | 标准                                                                                                                                                                   | 验证方式             |
+| ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| AC-1  | 5 个面板 header 高度统一 40px，标题字号统一 `var(--text-subtitle-size)`，内边距统一 `var(--space-panel-padding)`                                                       | 视觉审查 + Storybook |
+| AC-2  | 5 个面板 section 间距统一使用 `var(--space-section-gap)`，内容内边距统一 `var(--space-panel-padding)`                                                                  | grep token 引用      |
+| AC-3  | 列表项交互状态链统一：hover → selected → active 视觉表现一致                                                                                                           | 视觉交互验证         |
+| AC-4  | CharacterDetailDialog 滚动溢出有 scroll shadow 提示                                                                                                                    | 视觉验证             |
+| AC-5  | CharacterPanel Avatar 灰度/透明度在 relationships 中一致                                                                                                               | 视觉验证             |
+| AC-6  | MemoryPanel Distilling 有 `<LoadingState>` indicator                                                                                                                   | 代码审查 + 视觉验证  |
+| AC-7  | MemoryPanel Rule cards 区分 auto-generated vs user-confirmed 标签                                                                                                      | 视觉验证             |
+| AC-8  | MemoryPanel 冲突解决面板为 sticky 置顶或有醒目视觉强调                                                                                                                 | 视觉验证             |
+| AC-9  | OutlinePanel 缩进改用 `em` 比例制（响应式缩放）                                                                                                                        | 代码审查             |
+| AC-10 | OutlinePanel Collapse toggle icon ≥ 24px                                                                                                                               | 代码审查 + 视觉验证  |
+| AC-11 | OutlinePanel Word count badge 与 hover action 不重叠冲突                                                                                                               | 视觉交互验证         |
+| AC-12 | KnowledgeGraphPanel 空状态使用 `<EmptyState>` 组件                                                                                                                     | 代码审查             |
+| AC-13 | KnowledgeGraphPanel JSON 解析失败显示 `<ErrorState>`                                                                                                                   | 代码审查 + 视觉验证  |
+| AC-14 | KnowledgeGraphPanel Timeline 拖拽有阴影升起视觉反馈                                                                                                                    | 视觉交互验证         |
+| AC-15 | VersionHistoryPanel diff 摘要 line-clamp 有 "展开" 按钮                                                                                                                | 视觉交互验证         |
+| AC-16 | VersionHistoryPanel hover action buttons 有 ≥150ms fade-in 过渡                                                                                                        | 视觉交互验证         |
+| AC-17 | VersionHistoryPanel "No changes" badge contrast ratio ≥ 4.5:1                                                                                                          | 对比度工具检查       |
+| AC-18 | 5 个面板 eslint-disable 从 93 处降至 ≤10                                                                                                                               | `grep` 统计          |
+| AC-19 | 所有新增视觉元素使用语义化 Design Token，0 处新增 arbitrary 值                                                                                                         | grep 验证            |
+| AC-20 | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                                                                      | CI 命令              |
+| AC-21 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                                                             | CI 命令              |
+| AC-22 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                                                                            | CI 命令              |
+| AC-23 | lint 无新增违规（`pnpm lint`）                                                                                                                                         | CI 命令              |
+| AC-24 | 7 个面板主文件（KnowledgeGraphPanel / OutlinePanel / CharacterDetailDialog / MemoryPanel / VersionHistoryPanel / VersionHistoryContainer / CharacterPanel）各 ≤ 300 行 | 架构                 |
 
 ---
 

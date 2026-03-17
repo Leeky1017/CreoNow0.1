@@ -8,11 +8,11 @@
 
 ## 验收标准（总控级）
 
-| ID | 标准 |
-| --- | --- |
-| AC-1 | 13 个 child change 各自建立 proposal.md + tasks.md + specs/ |
-| AC-2 | EXECUTION_ORDER.md 更新，包含 V1 波次排程 |
-| AC-3 | 每个 child change 有独立 GitHub Issue |
+| ID   | 标准                                                                |
+| ---- | ------------------------------------------------------------------- |
+| AC-1 | 13 个 child change 各自建立 proposal.md + tasks.md + specs/         |
+| AC-2 | EXECUTION_ORDER.md 更新，包含 V1 波次排程                           |
+| AC-3 | 每个 child change 有独立 GitHub Issue                               |
 | AC-4 | 所有 child change 合并后，Features 层指标达到 proposal 中的验收标准 |
 
 ---

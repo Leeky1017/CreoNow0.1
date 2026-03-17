@@ -88,55 +88,55 @@
 
 ### 3.0 总控层
 
-| 顺位 | Change | GitHub Issue | 说明 |
-| --- | --- | --- | --- |
-| 0 | `v1-00-visual-overhaul-program` | 待创建 | 视觉重塑总控；建立 child changes 与波次排程 |
+| 顺位 | Change                          | GitHub Issue | 说明                                        |
+| ---- | ------------------------------- | ------------ | ------------------------------------------- |
+| 0    | `v1-00-visual-overhaul-program` | 待创建       | 视觉重塑总控；建立 child changes 与波次排程 |
 
 ### 3.1 Wave 0：地基增强（无用户可见变化）
 
-| 顺位 | Change | GitHub Issue | 说明 |
-| --- | --- | --- | --- |
-| 1 | `v1-01-design-token-completion` | 待创建 | Typography scale、spacing 精细化、animation token |
-| 2 | `v1-02-primitive-visual-evolution` | 待创建 | Button pill/ghost、Card bento、Tabs underline、Badge pill + Radio/Select/ImageUpload 解耦重构 |
+| 顺位 | Change                             | GitHub Issue | 说明                                                                                          |
+| ---- | ---------------------------------- | ------------ | --------------------------------------------------------------------------------------------- |
+| 1    | `v1-01-design-token-completion`    | 待创建       | Typography scale、spacing 精细化、animation token                                             |
+| 2    | `v1-02-primitive-visual-evolution` | 待创建       | Button pill/ghost、Card bento、Tabs underline、Badge pill + Radio/Select/ImageUpload 解耦重构 |
 
 ### 3.2 Wave 1：P0 页面重塑
 
-| 顺位 | Change | GitHub Issue | 说明 |
-| --- | --- | --- | --- |
-| 3 | `v1-03-dashboard-visual-rewrite` | 待创建 | DashboardPage shell 重写，对齐设计稿 |
-| 4 | `v1-04-editor-typography-and-layout` | 待创建 | 编辑器 760px 居中、Lora serif、标题 48px/300 |
-| 5 | `v1-05-editor-decomposition` | 待创建 | EditorPane 1,550→300 行组件解体 |
+| 顺位 | Change                               | GitHub Issue | 说明                                         |
+| ---- | ------------------------------------ | ------------ | -------------------------------------------- |
+| 3    | `v1-03-dashboard-visual-rewrite`     | 待创建       | DashboardPage shell 重写，对齐设计稿         |
+| 4    | `v1-04-editor-typography-and-layout` | 待创建       | 编辑器 760px 居中、Lora serif、标题 48px/300 |
+| 5    | `v1-05-editor-decomposition`         | 待创建       | EditorPane 1,550→300 行组件解体              |
 
 ### 3.3 Wave 2：AI 面板 + 设置
 
-| 顺位 | Change | GitHub Issue | 说明 |
-| --- | --- | --- | --- |
-| 6 | `v1-06-ai-panel-overhaul` | 待创建 | AiPanel 2,100→≤300 行 + accent 视觉标识 + Tab UI |
-| 7 | `v1-07-settings-visual-polish` | 待创建 | Settings 外观页主题/色板/字体选择器 |
+| 顺位 | Change                         | GitHub Issue | 说明                                             |
+| ---- | ------------------------------ | ------------ | ------------------------------------------------ |
+| 6    | `v1-06-ai-panel-overhaul`      | 待创建       | AiPanel 2,100→≤300 行 + accent 视觉标识 + Tab UI |
+| 7    | `v1-07-settings-visual-polish` | 待创建       | Settings 外观页主题/色板/字体选择器              |
 
 ### 3.4 Wave 3：布局精度
 
-| 顺位 | Change | GitHub Issue | 说明 |
-| --- | --- | --- | --- |
-| 8 | `v1-08-file-tree-precision` | 待创建 | 48px icon bar、32px 行高、拖拽手柄 |
-| 9 | `v1-09-command-palette-and-search` | 待创建 | 分组分隔线、快捷键 pill、filter pills |
+| 顺位 | Change                             | GitHub Issue | 说明                                  |
+| ---- | ---------------------------------- | ------------ | ------------------------------------- |
+| 8    | `v1-08-file-tree-precision`        | 待创建       | 48px icon bar、32px 行高、拖拽手柄    |
+| 9    | `v1-09-command-palette-and-search` | 待创建       | 分组分隔线、快捷键 pill、filter pills |
 
 ### 3.5 Wave 4：侧面板 + 收口
 
-| 顺位 | Change | GitHub Issue | 说明 |
-| --- | --- | --- | --- |
-| 10 | `v1-11-empty-loading-error-states` | 待创建 | 空/加载/错误三状态标准组件 |
-| 11 | `v1-10-side-panels-visual-coherence` | 待创建 | Character/Memory/Outline/KG/VersionHistory |
-| 12 | `v1-12-interaction-motion-and-native-cleanup` | 待创建 | 过渡动效 + 200+ 原生 HTML 替换 + AppShell 1,260→≤250 解耦 |
-| 13 | `v1-13-eslint-disable-audit` | 待创建 | eslint-disable 176→≤20 审计清扫 |
+| 顺位 | Change                                        | GitHub Issue | 说明                                                      |
+| ---- | --------------------------------------------- | ------------ | --------------------------------------------------------- |
+| 10   | `v1-11-empty-loading-error-states`            | 待创建       | 空/加载/错误三状态标准组件                                |
+| 11   | `v1-10-side-panels-visual-coherence`          | 待创建       | Character/Memory/Outline/KG/VersionHistory                |
+| 12   | `v1-12-interaction-motion-and-native-cleanup` | 待创建       | 过渡动效 + 200+ 原生 HTML 替换 + AppShell 1,260→≤250 解耦 |
+| 13   | `v1-13-eslint-disable-audit`                  | 待创建       | eslint-disable 176→≤20 审计清扫                           |
 
 ### 3.6 Wave 5：全覆盖收口（100% 用户路径覆盖）
 
-| 顺位 | Change | GitHub Issue | 说明 |
-| --- | --- | --- | --- |
-| 14 | `v1-14-dialog-and-entry-pages` | 待创建 | ExportDialog/CreateProjectDialog/OnboardingPage 破坏性重构 + SettingsGeneral 对齐 |
-| 15 | `v1-15-ai-overlay-components` | 待创建 | AiDiffModal/AiErrorCard/SystemDialog/AiInlineConfirm 解耦 + v1-06 视觉统一 |
-| 16 | `v1-16-quality-rightpanel-and-misc` | 待创建 | Quality 面板 + Diff 模块 + Analytics/ZenMode/Shortcuts/Settings 子组件全覆盖 |
+| 顺位 | Change                              | GitHub Issue | 说明                                                                              |
+| ---- | ----------------------------------- | ------------ | --------------------------------------------------------------------------------- |
+| 14   | `v1-14-dialog-and-entry-pages`      | 待创建       | ExportDialog/CreateProjectDialog/OnboardingPage 破坏性重构 + SettingsGeneral 对齐 |
+| 15   | `v1-15-ai-overlay-components`       | 待创建       | AiDiffModal/AiErrorCard/SystemDialog/AiInlineConfirm 解耦 + v1-06 视觉统一        |
+| 16   | `v1-16-quality-rightpanel-and-misc` | 待创建       | Quality 面板 + Diff 模块 + Analytics/ZenMode/Shortcuts/Settings 子组件全覆盖      |
 
 ### 3.7 V1 依赖关系
 

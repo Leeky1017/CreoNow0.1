@@ -8,22 +8,22 @@
 
 ## 验收标准
 
-| ID | 标准 | 对应 Scenario |
-| --- | --- | --- |
-| AC-1 | 左侧 Icon Bar 宽度固定 48px（`w-12` + `flex-shrink-0`），窗口缩放时不被内容撑开 | 视觉 |
-| AC-2 | 每个树节点行高固定 32px（`h-8`），rename input 出现时行高不跳动 | 视觉 |
-| AC-3 | 拖拽指示器包含 2px 蓝色横线 + 左端 8px 圆形手柄（`rounded-full`） | 视觉 |
-| AC-4 | Rename input focus 态边框颜色为 `--color-info`（对应 `#3b82f6`），1px 宽度 | 视觉 |
-| AC-5 | Context menu 各菜单项右侧显示快捷键标注（11px、`--color-fg-muted`） | 视觉 |
-| AC-6 | `--bg-hover` 与 `--bg-selected` 的视觉区分度可验证（hover → selected 有明显色差） | 可访问性 |
-| AC-7 | 展开/折叠箭头有 `transition-transform` 旋转过渡（≥ 150ms） | 动效 |
-| AC-8 | 至少 4 种文件类型（`.ts`、`.md`、`.json`、`.css`）有差异化图标颜色 | 视觉 |
-| AC-9 | 所有新增样式使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值 | 全局 |
-| AC-10 | 现有 FileTree 相关测试 100% 通过，0 个新增失败 | 全局 |
-| AC-11 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`） | 全局 |
-| AC-12 | TypeScript 类型检查通过（`pnpm typecheck`） | 全局 |
-| AC-13 | lint 无新增违规（`pnpm lint`） | 全局 |
-| AC-14 | `FileTreePanel.tsx` 从 ~1,402 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行 | 架构 |
+| ID    | 标准                                                                              | 对应 Scenario |
+| ----- | --------------------------------------------------------------------------------- | ------------- |
+| AC-1  | 左侧 Icon Bar 宽度固定 48px（`w-12` + `flex-shrink-0`），窗口缩放时不被内容撑开   | 视觉          |
+| AC-2  | 每个树节点行高固定 32px（`h-8`），rename input 出现时行高不跳动                   | 视觉          |
+| AC-3  | 拖拽指示器包含 2px 蓝色横线 + 左端 8px 圆形手柄（`rounded-full`）                 | 视觉          |
+| AC-4  | Rename input focus 态边框颜色为 `--color-info`（对应 `#3b82f6`），1px 宽度        | 视觉          |
+| AC-5  | Context menu 各菜单项右侧显示快捷键标注（11px、`--color-fg-muted`）               | 视觉          |
+| AC-6  | `--bg-hover` 与 `--bg-selected` 的视觉区分度可验证（hover → selected 有明显色差） | 可访问性      |
+| AC-7  | 展开/折叠箭头有 `transition-transform` 旋转过渡（≥ 150ms）                        | 动效          |
+| AC-8  | 至少 4 种文件类型（`.ts`、`.md`、`.json`、`.css`）有差异化图标颜色                | 视觉          |
+| AC-9  | 所有新增样式使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值             | 全局          |
+| AC-10 | 现有 FileTree 相关测试 100% 通过，0 个新增失败                                    | 全局          |
+| AC-11 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                        | 全局          |
+| AC-12 | TypeScript 类型检查通过（`pnpm typecheck`）                                       | 全局          |
+| AC-13 | lint 无新增违规（`pnpm lint`）                                                    | 全局          |
+| AC-14 | `FileTreePanel.tsx` 从 ~1,402 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行          | 架构          |
 
 ---
 
@@ -202,11 +202,13 @@
 - [ ] 菜单项右侧渲染快捷键标注：
 
 ```tsx
-{item.shortcut && (
-  <span className="text-[11px] text-[var(--color-fg-muted)] ml-auto pl-4">
-    {item.shortcut}
-  </span>
-)}
+{
+  item.shortcut && (
+    <span className="text-[11px] text-[var(--color-fg-muted)] ml-auto pl-4">
+      {item.shortcut}
+    </span>
+  );
+}
 ```
 
 - [ ] 使用 `--color-fg-muted` token + 11px 字号
@@ -233,8 +235,8 @@
 ```tsx
 <ChevronIcon
   className={cn(
-    'transition-transform duration-[var(--duration-fast)]',
-    isExpanded ? 'rotate-90' : 'rotate-0'
+    "transition-transform duration-[var(--duration-fast)]",
+    isExpanded ? "rotate-90" : "rotate-0",
   )}
 />
 ```
@@ -251,12 +253,12 @@
 
 ```typescript
 const FILE_TYPE_COLORS: Record<string, string> = {
-  ts:   'text-[var(--color-info)]',
-  tsx:  'text-[var(--color-info)]',
-  md:   'text-[var(--color-success)]',
-  json: 'text-[var(--color-warning)]',
-  css:  'text-[var(--color-accent)]',
-  scss: 'text-[var(--color-accent)]',
+  ts: "text-[var(--color-info)]",
+  tsx: "text-[var(--color-info)]",
+  md: "text-[var(--color-success)]",
+  json: "text-[var(--color-warning)]",
+  css: "text-[var(--color-accent)]",
+  scss: "text-[var(--color-accent)]",
 };
 ```
 
