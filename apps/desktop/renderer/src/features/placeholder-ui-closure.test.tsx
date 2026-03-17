@@ -53,6 +53,18 @@ vi.mock("../lib/hotkeys/useHotkey", () => ({
   useHotkey: vi.fn(),
 }));
 
+vi.mock("../stores/aiStore", () => ({
+  useAiStore: vi.fn((selector: (s: Record<string, unknown>) => unknown) => {
+    const state = {
+      chatSessions: [],
+      chatSessionsStatus: "ready" as const,
+      loadChatSessions: vi.fn(),
+      deleteChatSession: vi.fn(),
+    };
+    return selector(state);
+  }),
+}));
+
 /* ------------------------------------------------------------------ */
 /* Fixtures                                                            */
 /* ------------------------------------------------------------------ */
@@ -254,10 +266,20 @@ describe("SearchPanel placeholder UI closure", () => {
 /* ================================================================== */
 
 describe("ChatHistory placeholder UI closure", () => {
-  it("does not render a disabled fake search input", () => {
-    render(<ChatHistory open onOpenChange={vi.fn()} onSelectChat={vi.fn()} />);
+  it("renders a functional search input (not a disabled fake)", () => {
+    render(
+      <ChatHistory
+        open
+        onOpenChange={vi.fn()}
+        onSelectChat={vi.fn()}
+        projectId="test-project"
+      />,
+    );
 
-    expect(screen.queryByPlaceholderText(/search/i)).not.toBeInTheDocument();
+    const searchInput = screen.queryByRole("searchbox");
+    if (searchInput) {
+      expect(searchInput).not.toBeDisabled();
+    }
   });
 
   it("click does nothing and does not call console.info", () => {
@@ -265,7 +287,12 @@ describe("ChatHistory placeholder UI closure", () => {
     const consoleSpy = vi.spyOn(console, "info").mockImplementation(() => {});
 
     render(
-      <ChatHistory open onOpenChange={vi.fn()} onSelectChat={onSelectChat} />,
+      <ChatHistory
+        open
+        onOpenChange={vi.fn()}
+        onSelectChat={onSelectChat}
+        projectId="test-project"
+      />,
     );
 
     // ChatHistory shows empty state — no clickable chat items

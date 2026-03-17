@@ -171,7 +171,7 @@ function createMutableKgService(args: {
       if (projectId !== args.projectId) {
         return {
           ok: true,
-          data: { items: [], total: 0 },
+          data: { items: [], totalCount: 0 },
         };
       }
       const level = filter?.aiContextLevel;
@@ -180,7 +180,7 @@ function createMutableKgService(args: {
           ok: true,
           data: {
             items: alwaysEntities,
-            total: alwaysEntities.length,
+            totalCount: alwaysEntities.length,
           },
         };
       }
@@ -189,7 +189,7 @@ function createMutableKgService(args: {
           ok: true,
           data: {
             items: detectedEntities,
-            total: detectedEntities.length,
+            totalCount: detectedEntities.length,
           },
         };
       }
@@ -198,7 +198,7 @@ function createMutableKgService(args: {
         ok: true,
         data: {
           items: merged,
-          total: merged.length,
+          totalCount: merged.length,
         },
       };
     },
@@ -559,7 +559,7 @@ function createKnowledgeEntity(args: {
   const kgService = {
     entityList: ({ projectId: pid, filter }) => {
       if (pid !== projectId) {
-        return { ok: true, data: { items: [], total: 0 } };
+        return { ok: true, data: { items: [], totalCount: 0 } };
       }
       if (filter?.aiContextLevel === "always") {
         return {
@@ -574,11 +574,11 @@ function createKnowledgeEntity(args: {
                 level: "always",
               }),
             ],
-            total: 1,
+            totalCount: 1,
           },
         };
       }
-      return { ok: true, data: { items: [], total: 0 } };
+      return { ok: true, data: { items: [], totalCount: 0 } };
     },
   } satisfies Pick<KnowledgeGraphService, "entityList">;
 

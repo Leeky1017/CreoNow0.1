@@ -88,7 +88,7 @@ describe("entity completion empty/error states", () => {
     const store = createReadyEditorStore({
       entityListResult: {
         ok: true,
-        data: { items: [] },
+        data: { items: [], totalCount: 0 },
       },
     });
     const versionStore = createVersionStoreForEditorPaneTests();
