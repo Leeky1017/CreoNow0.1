@@ -953,6 +953,12 @@
       "dangerZone": "Danger Zone",
       "deleteAccount": "Delete Account",
       "deleteAccountDescription": "Permanently delete your account and all associated data.",
+      "planFree": "Free",
+      "planPro": "Pro",
+      "planTeam": "Team",
+      "freeDescription": "Upgrade to Pro for unlimited AI assistance, priority support, and advanced export options.",
+      "proDescription": "You have access to all Pro features including unlimited AI assistance and priority support.",
+      "teamDescription": "Team plan includes collaboration features, shared workspaces, and admin controls.",
       "comingSoonTooltip": "Account features coming soon"
     },
     "general": {
@@ -992,6 +998,10 @@
       "navJudge": "Quality",
       "navAnalytics": "Analytics",
       "navAccount": "Account",
+      "navExport": "Export",
+      "navShortcuts": "Shortcuts",
+      "navExport": "Export",
+      "navShortcuts": "Shortcuts",
       "title": "Settings",
       "close": "Close",
       "description": "Configure application settings including appearance, AI, quality check, and analytics."
