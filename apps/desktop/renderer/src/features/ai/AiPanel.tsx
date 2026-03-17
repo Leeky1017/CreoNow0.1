@@ -96,8 +96,9 @@ function updateInlineDiffDecorations(
 ): void {
   const editorStorage = (editor as { storage?: unknown }).storage;
   if (!editorStorage || typeof editorStorage !== "object") return;
-  const inlineDiffStorage = (editorStorage as UnknownRecord)
-    .inlineDiff as UnknownRecord | undefined;
+  const inlineDiffStorage = (editorStorage as UnknownRecord).inlineDiff as
+    | UnknownRecord
+    | undefined;
   if (!inlineDiffStorage || !Array.isArray(inlineDiffStorage.diffs)) return;
   inlineDiffStorage.diffs = diffs;
   editor.view.dispatch(editor.state.tr.setMeta("inlineDiffUpdate", true));
@@ -797,7 +798,8 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
   }, [proposal, setInlineDiffConfirmOpen]);
 
   React.useEffect(() => {
-    if (!inlineDiffConfirmOpen && editor) updateInlineDiffDecorations(editor, []);
+    if (!inlineDiffConfirmOpen && editor)
+      updateInlineDiffDecorations(editor, []);
   }, [inlineDiffConfirmOpen, editor]);
 
   React.useEffect(() => {
