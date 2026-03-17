@@ -212,6 +212,11 @@
         "label": "/Search",
         "description": "Search for relevant information in the project."
       }
+    },
+    "link": {
+      "placeholder": "Enter URL",
+      "apply": "Apply link",
+      "remove": "Remove link"
     }
   },
   "dashboard": {
