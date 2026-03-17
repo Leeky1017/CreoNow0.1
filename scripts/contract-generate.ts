@@ -65,6 +65,7 @@ const DOMAIN_REGISTRY: Readonly<Record<string, string>> = {
   skill: "Skill System",
   stats: "Workbench",
   version: "Version Control",
+  backup: "Document Management",
 };
 const RESOURCE_ACTION_SEGMENT_PATTERN = /^[a-z][a-z0-9]*$/;
 const VALID_SCHEMA_KINDS = new Set([

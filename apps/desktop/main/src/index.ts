@@ -15,6 +15,7 @@ import { registerConstraintsIpcHandlers } from "./ipc/constraints";
 import { registerDialogIpcHandlers } from "./ipc/dialog";
 import { registerFileIpcHandlers } from "./ipc/file";
 import { registerExportIpcHandlers } from "./ipc/export";
+import { registerBackupIpcHandlers } from "./ipc/backup";
 import { registerJudgeIpcHandlers } from "./ipc/judge";
 import { registerKnowledgeGraphIpcHandlers } from "./ipc/knowledgeGraph";
 import { registerEmbeddingIpcHandlers } from "./ipc/embedding";
@@ -465,6 +466,11 @@ function registerIpcHandlers(deps: {
     userDataDir: deps.userDataDir,
   });
 
+  registerBackupIpcHandlers({
+    ipcMain: guardedIpcMain,
+    db: deps.db,
+    logger: deps.logger,
+  });
   registerStatsIpcHandlers({
     ipcMain: guardedIpcMain,
     db: deps.db,

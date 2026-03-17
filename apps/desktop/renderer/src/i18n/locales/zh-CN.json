@@ -941,6 +941,13 @@
       "localAutoSaveDescription": "自动将更改保存到浏览器的本地存储。",
       "backupInterval": "备份间隔",
       "backupIntervalHelp": "上次备份：2 分钟前",
+      "backupOption_5min": "每 5 分钟",
+      "backupOption_15min": "每 15 分钟",
+      "backupOption_1hour": "每小时",
+      "manualBackup": "手动备份与恢复",
+      "manualBackupHelp": "立即创建快照，或恢复最近一次备份快照。",
+      "backupNow": "立即备份",
+      "restoreLatest": "恢复最近备份",
       "differentiateAiEdits": "区分 AI 编辑",
       "defaultTypography": "默认排版",
       "interfaceScale": "界面缩放"
@@ -1450,6 +1457,26 @@
     "settings": {
       "success": {
         "title": "设置已保存"
+      },
+      "backup": {
+        "noProject": {
+          "title": "请先打开一个项目"
+        },
+        "noSnapshot": {
+          "title": "暂无可用备份快照"
+        },
+        "createSuccess": {
+          "title": "备份快照已创建"
+        },
+        "createError": {
+          "title": "备份失败"
+        },
+        "restoreSuccess": {
+          "title": "备份已恢复"
+        },
+        "restoreError": {
+          "title": "恢复失败"
+        }
       }
     },
     "autosave": {

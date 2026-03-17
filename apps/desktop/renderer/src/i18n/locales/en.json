@@ -941,6 +941,13 @@
       "localAutoSaveDescription": "Automatically save changes to your browser's local storage.",
       "backupInterval": "Backup Interval",
       "backupIntervalHelp": "Last backup: 2 minutes ago",
+      "backupOption_5min": "Every 5 minutes",
+      "backupOption_15min": "Every 15 minutes",
+      "backupOption_1hour": "Every hour",
+      "manualBackup": "Manual Backup & Restore",
+      "manualBackupHelp": "Create a snapshot now, or restore from the latest snapshot.",
+      "backupNow": "Backup Now",
+      "restoreLatest": "Restore Latest",
       "differentiateAiEdits": "Differentiate AI edits",
       "defaultTypography": "Default Typography",
       "interfaceScale": "Interface Scale"
@@ -1450,6 +1457,26 @@
     "settings": {
       "success": {
         "title": "Settings saved"
+      },
+      "backup": {
+        "noProject": {
+          "title": "Open a project first"
+        },
+        "noSnapshot": {
+          "title": "No backup snapshot available"
+        },
+        "createSuccess": {
+          "title": "Backup snapshot created"
+        },
+        "createError": {
+          "title": "Backup failed"
+        },
+        "restoreSuccess": {
+          "title": "Backup restored"
+        },
+        "restoreError": {
+          "title": "Restore failed"
+        }
       }
     },
     "autosave": {
