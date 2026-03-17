@@ -49,7 +49,9 @@ function parseJudgeResponse(raw: string): JudgeIssue[] {
         typeof item === "object" &&
         item !== null &&
         typeof (item as Record<string, unknown>).severity === "string" &&
-        validSeverities.has((item as Record<string, unknown>).severity as string) &&
+        validSeverities.has(
+          (item as Record<string, unknown>).severity as string,
+        ) &&
         typeof (item as Record<string, unknown>).label === "string" &&
         ((item as Record<string, unknown>).label as string).length > 0,
     )

@@ -66,9 +66,9 @@ afterEach(() => {
 
 // Scenario: advanced checks throw → partialChecksSkipped = true, rule issues preserved
 {
-  globalThis.fetch = vi.fn().mockRejectedValue(
-    new Error("network error"),
-  ) as unknown as typeof fetch;
+  globalThis.fetch = vi
+    .fn()
+    .mockRejectedValue(new Error("network error")) as unknown as typeof fetch;
 
   const svc = createJudgeQualityService({
     logger: createLogger(),

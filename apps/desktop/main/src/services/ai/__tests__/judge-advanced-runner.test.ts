@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it, beforeEach, afterEach, vi } from "vitest";
 
-import { parseJudgeResponse, createAdvancedCheckRunner } from "../judgeAdvancedRunner";
+import {
+  parseJudgeResponse,
+  createAdvancedCheckRunner,
+} from "../judgeAdvancedRunner";
 import type { Logger } from "../../../logging/logger";
 
 function createLogger(): Logger {
@@ -14,7 +17,8 @@ function createLogger(): Logger {
 
 describe("parseJudgeResponse", () => {
   it("parses a valid JSON array", () => {
-    const raw = '[{"severity":"high","label":"视角不一致"},{"severity":"low","label":"轻微重复"}]';
+    const raw =
+      '[{"severity":"high","label":"视角不一致"},{"severity":"low","label":"轻微重复"}]';
     const result = parseJudgeResponse(raw);
     assert.equal(result.length, 2);
     assert.equal(result[0]!.severity, "high");
@@ -41,14 +45,16 @@ describe("parseJudgeResponse", () => {
   });
 
   it("filters out items with invalid severity", () => {
-    const raw = '[{"severity":"critical","label":"严重问题"},{"severity":"high","label":"有效问题"}]';
+    const raw =
+      '[{"severity":"critical","label":"严重问题"},{"severity":"high","label":"有效问题"}]';
     const result = parseJudgeResponse(raw);
     assert.equal(result.length, 1);
     assert.equal(result[0]!.severity, "high");
   });
 
   it("filters out items with empty label", () => {
-    const raw = '[{"severity":"high","label":""},{"severity":"medium","label":"有效"}]';
+    const raw =
+      '[{"severity":"high","label":""},{"severity":"medium","label":"有效"}]';
     const result = parseJudgeResponse(raw);
     assert.equal(result.length, 1);
     assert.equal(result[0]!.label, "有效");
