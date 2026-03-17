@@ -39,7 +39,10 @@ import { invoke } from "../../lib/ipcClient";
 import { DiffView } from "../diff/DiffView";
 
 import { applySelection, captureSelectionRef } from "./applySelection";
-import { createInlineDiffDecorations } from "../editor/extensions/inlineDiff";
+import {
+  createInlineDiffDecorations,
+  type InlineDiffDecoration,
+} from "../editor/extensions/inlineDiff";
 
 import { SkillPicker } from "./SkillPicker";
 import { SkillManagerDialog } from "./SkillManagerDialog";
@@ -85,6 +88,19 @@ type ModelsListError = {
 
 function isRunning(status: AiStatus): boolean {
   return status === "running" || status === "streaming";
+}
+
+function updateInlineDiffDecorations(
+  editor: Editor,
+  diffs: InlineDiffDecoration[],
+): void {
+  const editorStorage = (editor as { storage?: unknown }).storage;
+  if (!editorStorage || typeof editorStorage !== "object") return;
+  const inlineDiffStorage = (editorStorage as UnknownRecord)
+    .inlineDiff as UnknownRecord | undefined;
+  if (!inlineDiffStorage || !Array.isArray(inlineDiffStorage.diffs)) return;
+  inlineDiffStorage.diffs = diffs;
+  editor.view.dispatch(editor.state.tr.setMeta("inlineDiffUpdate", true));
 }
 
 type UnknownRecord = Record<string, unknown>;
@@ -781,10 +797,7 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
   }, [proposal, setInlineDiffConfirmOpen]);
 
   React.useEffect(() => {
-    if (!inlineDiffConfirmOpen && editor) {
-      editor.storage.inlineDiff.diffs = [];
-      editor.view.dispatch(editor.state.tr.setMeta("inlineDiffUpdate", true));
-    }
+    if (!inlineDiffConfirmOpen && editor) updateInlineDiffDecorations(editor, []);
   }, [inlineDiffConfirmOpen, editor]);
 
   React.useEffect(() => {
@@ -1060,10 +1073,7 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
           originalText: a.proposal.selectionText,
           suggestedText: a.proposal.replacementText,
         });
-        a.editor.storage.inlineDiff.diffs = diffs;
-        a.editor.view.dispatch(
-          a.editor.state.tr.setMeta("inlineDiffUpdate", true),
-        );
+        updateInlineDiffDecorations(a.editor, diffs);
       }
       return;
     }
@@ -1088,12 +1098,7 @@ function createAiPanelActions(a: AiPanelActionsDeps) {
       contentJson: json,
       runId: a.proposal.runId,
     });
-    if (a.editor) {
-      a.editor.storage.inlineDiff.diffs = [];
-      a.editor.view.dispatch(
-        a.editor.state.tr.setMeta("inlineDiffUpdate", true),
-      );
-    }
+    if (a.editor) updateInlineDiffDecorations(a.editor, []);
     a.setInlineDiffConfirmOpen(false);
   }
 
