@@ -50,7 +50,10 @@ async function invokeEvaluate(args: {
   });
 
   const evaluate = handlers.get("judge:quality:evaluate");
-  assert.ok(evaluate, "expected judge:quality:evaluate handler to be registered");
+  assert.ok(
+    evaluate,
+    "expected judge:quality:evaluate handler to be registered",
+  );
   if (!evaluate) {
     throw new Error("missing judge:quality:evaluate handler");
   }

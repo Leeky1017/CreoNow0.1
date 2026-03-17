@@ -71,7 +71,9 @@ async function main(): Promise<void> {
   };
 
   registerProjectIpcHandlers({
-    ipcMain: ipcMain as unknown as Parameters<typeof registerProjectIpcHandlers>[0]["ipcMain"],
+    ipcMain: ipcMain as unknown as Parameters<
+      typeof registerProjectIpcHandlers
+    >[0]["ipcMain"],
     db,
     userDataDir,
     logger: createNoopLogger(),
@@ -103,8 +105,16 @@ async function main(): Promise<void> {
     throw new Error("switch project failed");
   }
 
-  assert.equal(switchCalls, 1, "switch must go through lifecycle.switchProject");
-  assert.equal(persistCalls, 1, "persist should run inside lifecycle.switchProject");
+  assert.equal(
+    switchCalls,
+    1,
+    "switch must go through lifecycle.switchProject",
+  );
+  assert.equal(
+    persistCalls,
+    1,
+    "persist should run inside lifecycle.switchProject",
+  );
   assert.equal(unbindCalls, 0, "ipc entry should not call unbindAll directly");
   assert.equal(bindCalls, 0, "ipc entry should not call bindAll directly");
   assert.equal(seenFromProjectId, createdA.data.projectId);

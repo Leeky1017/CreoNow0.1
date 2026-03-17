@@ -52,10 +52,16 @@ describe("ping dead-code cleanup", () => {
     ).toBe(false);
 
     const stalePhase4GateTests = [
-      path.resolve(__dirname, "../../e2e/visual/phase4-baseline-capture.spec.ts"),
+      path.resolve(
+        __dirname,
+        "../../e2e/visual/phase4-baseline-capture.spec.ts",
+      ),
       path.resolve(__dirname, "../../e2e/visual/phase4-visual-diff.spec.ts"),
       path.resolve(__dirname, "../../perf/phase4-benchmark.spec.ts"),
-      path.resolve(__dirname, "../../integration/workbench/phase4-visual-audit.spec.ts"),
+      path.resolve(
+        __dirname,
+        "../../integration/workbench/phase4-visual-audit.spec.ts",
+      ),
     ];
 
     for (const staleTestPath of stalePhase4GateTests) {

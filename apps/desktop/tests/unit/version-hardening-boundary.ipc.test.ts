@@ -458,7 +458,6 @@ async function testConcurrentRollbackConflict(): Promise<void> {
   db.close();
 }
 
-
 async function testSnapshotCreateRejectsNonStringIdsWithoutThrowing(): Promise<void> {
   const db = createVersionDb();
   const now = Date.now();

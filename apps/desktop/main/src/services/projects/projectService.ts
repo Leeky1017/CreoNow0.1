@@ -1023,8 +1023,7 @@ function createProjectLifecycleOps(
   "lifecycleArchive" | "lifecycleRestore" | "lifecyclePurge"
 > {
   const args = ctx;
-  const now = ctx.now;
-  const removeProjectRoot = ctx.removeProjectRoot;
+  const { now, removeProjectRoot } = ctx;
 
   return {
     lifecycleArchive: ({ projectId, traceId }) => {

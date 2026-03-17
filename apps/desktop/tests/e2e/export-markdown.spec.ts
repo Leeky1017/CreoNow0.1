@@ -1,4 +1,9 @@
-import { _electron as electron, expect, test, type Page } from "@playwright/test";
+import {
+  _electron as electron,
+  expect,
+  test,
+  type Page,
+} from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";

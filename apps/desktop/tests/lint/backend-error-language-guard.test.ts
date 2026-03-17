@@ -18,7 +18,9 @@ function findChineseFragments(source: string): string[] {
 
 describe("AUD-C13-S3 backend error language guard", () => {
   it("detects chinese fragments in fixtures", async () => {
-    const tempDir = await mkdtemp(path.join(os.tmpdir(), "backend-error-lang-"));
+    const tempDir = await mkdtemp(
+      path.join(os.tmpdir(), "backend-error-lang-"),
+    );
     const fixture = path.join(tempDir, "fixture.ts");
     await writeFile(
       fixture,
@@ -41,9 +43,7 @@ describe("AUD-C13-S3 backend error language guard", () => {
       const source = await readFile(absolutePath, "utf8");
       const fragments = findChineseFragments(source);
       if (fragments.length > 0) {
-        violations.push(
-          `${relativePath}: ${fragments.join(" ")}`,
-        );
+        violations.push(`${relativePath}: ${fragments.join(" ")}`);
       }
     }
 

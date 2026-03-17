@@ -48,7 +48,9 @@ async function main(): Promise<void> {
   const ipcMain = createMockIpcMain();
 
   registerProjectIpcHandlers({
-    ipcMain: ipcMain as unknown as Parameters<typeof registerProjectIpcHandlers>[0]["ipcMain"],
+    ipcMain: ipcMain as unknown as Parameters<
+      typeof registerProjectIpcHandlers
+    >[0]["ipcMain"],
     db,
     userDataDir,
     logger: createNoopLogger(),

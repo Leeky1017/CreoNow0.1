@@ -116,7 +116,10 @@ test.describe("RightPanel Info/Quality wiring", () => {
     await expect(judgeStatus).toBeVisible();
 
     // Status should be one of: ready, not_ready, downloading, error
-    await expect(judgeStatus).toHaveAttribute("data-status", /ready|not_ready|downloading|error/);
+    await expect(judgeStatus).toHaveAttribute(
+      "data-status",
+      /ready|not_ready|downloading|error/,
+    );
 
     await electronApp.close();
   });

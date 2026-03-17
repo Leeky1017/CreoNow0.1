@@ -143,7 +143,8 @@ async function runInventoryCheck(): Promise<void> {
   };
   const registryCategories = {
     layout: registryTitles.filter((t) => t.startsWith("Layout/")).length,
-    primitives: registryTitles.filter((t) => t.startsWith("Primitives/")).length,
+    primitives: registryTitles.filter((t) => t.startsWith("Primitives/"))
+      .length,
     features: registryTitles.filter((t) => t.startsWith("Features/")).length,
     patterns: registryTitles.filter((t) => t.startsWith("Patterns/")).length,
   };

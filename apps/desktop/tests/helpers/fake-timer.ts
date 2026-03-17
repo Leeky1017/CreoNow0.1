@@ -15,7 +15,9 @@
 import { vi } from "vitest";
 
 /** Activate Vitest fake timers with a fixed base date. */
-export function useFakeTimer(baseDate: Date = new Date("2025-01-01T00:00:00Z")) {
+export function useFakeTimer(
+  baseDate: Date = new Date("2025-01-01T00:00:00Z"),
+) {
   vi.useFakeTimers();
   vi.setSystemTime(baseDate);
 }

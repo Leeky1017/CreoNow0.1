@@ -74,9 +74,17 @@ async function main(): Promise<void> {
   } as unknown as Parameters<typeof registerRagIpcHandlers>[0]);
 
   const configUpdateHandler = handlers.get("rag:config:update");
-  assert.ok(configUpdateHandler, "rag:config:update handler should be registered");
+  assert.ok(
+    configUpdateHandler,
+    "rag:config:update handler should be registered",
+  );
 
-  const invalidConfigPayloads: unknown[] = [null, 3, { model: 9 }, { topK: "2" }];
+  const invalidConfigPayloads: unknown[] = [
+    null,
+    3,
+    { model: 9 },
+    { topK: "2" },
+  ];
   for (const payload of invalidConfigPayloads) {
     const response = (await configUpdateHandler?.({}, payload)) as {
       ok: boolean;
@@ -87,7 +95,10 @@ async function main(): Promise<void> {
   }
 
   const retrieveHandler = handlers.get("rag:context:retrieve");
-  assert.ok(retrieveHandler, "rag:context:retrieve handler should be registered");
+  assert.ok(
+    retrieveHandler,
+    "rag:context:retrieve handler should be registered",
+  );
 
   const invalidRetrievePayloads: unknown[] = [
     null,

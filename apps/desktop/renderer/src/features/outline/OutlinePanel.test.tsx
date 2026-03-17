@@ -485,11 +485,9 @@ describe("OutlinePanel", () => {
 
     expect(onDelete).toHaveBeenCalledWith(["h2-intro"]);
   });
+});
 
-  // ==========================================================================
-  // Header Actions
-  // ==========================================================================
-
+describe("OutlinePanel — Header Actions", () => {
   it("renders header with Expand/Collapse buttons", () => {
     render(<OutlinePanel items={SAMPLE_ITEMS} />);
 

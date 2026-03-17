@@ -109,7 +109,10 @@ async function invokeWrapped(
     assert.fail("expected error envelope");
   }
   assert.equal(res.error.code, "INTERNAL_ERROR");
-  assert.equal(res.error.message, "Response payload does not match IPC contract");
+  assert.equal(
+    res.error.message,
+    "Response payload does not match IPC contract",
+  );
 }
 
 // S4: 未捕获异常统一映射为 INTERNAL_ERROR [ADDED]

@@ -73,9 +73,17 @@ async function main(): Promise<void> {
   } as unknown as Parameters<typeof registerEmbeddingIpcHandlers>[0]);
 
   const generateHandler = handlers.get("embedding:text:generate");
-  assert.ok(generateHandler, "embedding:text:generate handler should be registered");
+  assert.ok(
+    generateHandler,
+    "embedding:text:generate handler should be registered",
+  );
 
-  for (const payload of [null, 1, { texts: [1] }, { texts: ["ok"], model: 1 }] as unknown[]) {
+  for (const payload of [
+    null,
+    1,
+    { texts: [1] },
+    { texts: ["ok"], model: 1 },
+  ] as unknown[]) {
     const response = (await generateHandler?.({}, payload)) as {
       ok: boolean;
       error?: { code: string };
@@ -85,9 +93,17 @@ async function main(): Promise<void> {
   }
 
   const searchHandler = handlers.get("embedding:semantic:search");
-  assert.ok(searchHandler, "embedding:semantic:search handler should be registered");
+  assert.ok(
+    searchHandler,
+    "embedding:semantic:search handler should be registered",
+  );
 
-  for (const payload of [null, 1, { projectId: 1, queryText: "q" }, { projectId: "p1", queryText: 2 }] as unknown[]) {
+  for (const payload of [
+    null,
+    1,
+    { projectId: 1, queryText: "q" },
+    { projectId: "p1", queryText: 2 },
+  ] as unknown[]) {
     const response = (await searchHandler?.({}, payload)) as {
       ok: boolean;
       error?: { code: string };
@@ -97,9 +113,17 @@ async function main(): Promise<void> {
   }
 
   const reindexHandler = handlers.get("embedding:index:reindex");
-  assert.ok(reindexHandler, "embedding:index:reindex handler should be registered");
+  assert.ok(
+    reindexHandler,
+    "embedding:index:reindex handler should be registered",
+  );
 
-  for (const payload of [null, 1, { projectId: 1 }, { projectId: "p1", model: 2 }] as unknown[]) {
+  for (const payload of [
+    null,
+    1,
+    { projectId: 1 },
+    { projectId: "p1", model: 2 },
+  ] as unknown[]) {
     const response = (await reindexHandler?.({}, payload)) as {
       ok: boolean;
       error?: { code: string };

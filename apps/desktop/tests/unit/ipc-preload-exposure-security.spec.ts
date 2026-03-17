@@ -5,7 +5,10 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "../../../..");
-const preloadIndexPath = path.join(repoRoot, "apps/desktop/preload/src/index.ts");
+const preloadIndexPath = path.join(
+  repoRoot,
+  "apps/desktop/preload/src/index.ts",
+);
 const preloadSource = await fs.readFile(preloadIndexPath, "utf8");
 
 const exposedKeys = [
@@ -27,4 +30,3 @@ for (const forbidden of ["ipcRenderer", "require", "process"]) {
 }
 
 console.log("ipc-preload-exposure-security.spec.ts: all assertions passed");
-

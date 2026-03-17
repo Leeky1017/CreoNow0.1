@@ -18,7 +18,9 @@ type FakeIpcMain = {
 };
 
 async function createTempDir(): Promise<string> {
-  return await fs.mkdtemp(path.join(os.tmpdir(), "CreoNow constraints payload "));
+  return await fs.mkdtemp(
+    path.join(os.tmpdir(), "CreoNow constraints payload "),
+  );
 }
 
 function createLogger(): Logger {

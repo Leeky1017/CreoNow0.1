@@ -33,8 +33,13 @@ async function main(): Promise<void> {
   }
 
   const originalPrepare = db.prepare.bind(db);
-  (db as unknown as { prepare: Database.Database["prepare"] }).prepare = ((sql) => {
-    if (typeof sql === "string" && sql.includes("UPDATE projects SET archived_at = ?, updated_at = ?")) {
+  (db as unknown as { prepare: Database.Database["prepare"] }).prepare = ((
+    sql,
+  ) => {
+    if (
+      typeof sql === "string" &&
+      sql.includes("UPDATE projects SET archived_at = ?, updated_at = ?")
+    ) {
       return {
         run: () => {
           throw new Error("db write failed");
