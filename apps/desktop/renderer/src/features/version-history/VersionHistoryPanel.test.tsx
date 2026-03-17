@@ -212,6 +212,28 @@ describe("VersionHistoryPanel", () => {
     expect(onRestore).toHaveBeenCalledWith("v-1042");
   });
 
+  it("does not call onRestore when no version is selected", () => {
+    const onRestore = vi.fn();
+    const onSelect = vi.fn();
+    render(
+      <VersionHistoryPanel
+        documentTitle="Test Document"
+        timeGroups={SAMPLE_TIME_GROUPS}
+        onRestore={onRestore}
+        onSelect={onSelect}
+      />,
+    );
+
+    expect(
+      screen.queryByRole("button", { name: /Restore/i }),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId("version-card-v-1042"));
+
+    expect(onSelect).toHaveBeenCalledWith("v-1042");
+    expect(onRestore).not.toHaveBeenCalled();
+  });
+
   it("calls onCompare when clicking Compare button", () => {
     const onCompare = vi.fn();
     render(
