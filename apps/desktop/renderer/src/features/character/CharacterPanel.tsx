@@ -46,11 +46,13 @@ function groupCharacters(
 /**
  * Group configuration for display
  */
-function getGroupConfig(t: (key: string) => string): Record<CharacterGroup, { label: string }> {
+function getGroupConfig(
+  t: (key: string) => string,
+): Record<CharacterGroup, { label: string }> {
   return {
-    main: { label: t('character.panel.groupMain') },
-    supporting: { label: t('character.panel.groupSupporting') },
-    others: { label: t('character.panel.groupOthers') },
+    main: { label: t("character.panel.groupMain") },
+    supporting: { label: t("character.panel.groupSupporting") },
+    others: { label: t("character.panel.groupOthers") },
   };
 }
 
@@ -93,7 +95,7 @@ function EmptyGroupState({ onClick }: { onClick?: () => void }) {
         "transition-colors",
       ].join(" ")}
     >
-      <span className="text-[11px]">{t('character.panel.noCharacters')}</span>
+      <span className="text-[11px]">{t("character.panel.noCharacters")}</span>
     </button>
   );
 }
@@ -172,6 +174,8 @@ export interface CharacterPanelContentProps {
   onDelete?: (characterId: string) => void;
   /** Callback when navigating to a chapter */
   onNavigateToChapter?: (chapterId: string) => void;
+  /** User-visible warning for navigation degradation */
+  navigationWarning?: string | null;
 }
 
 /**
@@ -206,10 +210,12 @@ export function CharacterPanelContent({
   onUpdate,
   onDelete,
   onNavigateToChapter,
+  navigationWarning,
 }: CharacterPanelContentProps): JSX.Element {
   const { t } = useTranslation();
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [editingCharacter, setEditingCharacter] = React.useState<Character | null>(null);
+  const [editingCharacter, setEditingCharacter] =
+    React.useState<Character | null>(null);
 
   const grouped = groupCharacters(characters);
 
@@ -243,7 +249,7 @@ export function CharacterPanelContent({
         {/* Header */}
         <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--color-border-default)] shrink-0">
           <span className="font-medium text-sm tracking-wide text-[var(--color-fg-default)]">
-            {t('character.panel.title')}
+            {t("character.panel.title")}
           </span>
           <button
             type="button"
@@ -263,7 +269,7 @@ export function CharacterPanelContent({
               "border-transparent",
               "hover:border-[var(--color-border-hover)]",
             ].join(" ")}
-            aria-label={t('character.panel.addCharacter')}
+            aria-label={t("character.panel.addCharacter")}
           >
             <PlusIcon />
           </button>
@@ -309,6 +315,7 @@ export function CharacterPanelContent({
         onSave={onUpdate}
         onDelete={onDelete}
         onNavigateToChapter={onNavigateToChapter}
+        navigationWarning={navigationWarning}
         availableCharacters={characters}
       />
     </>
