@@ -65,9 +65,11 @@ function cloneMemoryRow(row: MemoryRow): MemoryRow {
 function createDbStub(args?: {
   memories?: MemoryRow[];
   settings?: SettingsRow[];
+  loadExtensionFails?: boolean;
 }): Database.Database {
   const memories = [...(args?.memories ?? [])];
   const settings = [...(args?.settings ?? [])];
+  const loadExtensionFails = args?.loadExtensionFails ?? true;
 
   const db = {
     prepare: (sql: string) => {
@@ -128,7 +130,9 @@ function createDbStub(args?: {
       throw new Error(`Unexpected SQL: ${sql}`);
     },
     loadExtension: () => {
-      throw new Error("sqlite-vec unavailable");
+      if (loadExtensionFails) {
+        throw new Error("sqlite-vec unavailable");
+      }
     },
   } as unknown as Database.Database;
 
@@ -159,11 +163,17 @@ const memories: MemoryRow[] = [
 
   const service = createMemoryService({
     db: createDbStub({
+      loadExtensionFails: false,
       settings: [
         {
           scope: "app",
           key: "creonow.memory.injectionEnabled",
           valueJson: "true",
+        },
+        {
+          scope: "app",
+          key: "creonow.user_memory_vec.dimension",
+          valueJson: "1024",
         },
       ],
       memories,

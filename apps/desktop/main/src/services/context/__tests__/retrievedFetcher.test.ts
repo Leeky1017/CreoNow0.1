@@ -51,6 +51,7 @@ describe("createRetrievedFetcher", () => {
             description: "林默的妹妹",
           }),
         ],
+        totalCount: 1,
       },
     }));
     const matcher = vi.fn<
@@ -95,6 +96,7 @@ describe("createRetrievedFetcher", () => {
             aliases: ["小雨"],
           }),
         ],
+        totalCount: 1,
       },
     }));
     const matcher = vi.fn<
@@ -117,7 +119,10 @@ describe("createRetrievedFetcher", () => {
   it("should skip detection when additionalInput is empty", async () => {
     const entityList = vi.fn<KnowledgeGraphService["entityList"]>(() => ({
       ok: true,
-      data: { items: [createEntity({ id: "e1", name: "林小雨" })] },
+      data: {
+        items: [createEntity({ id: "e1", name: "林小雨" })],
+        totalCount: 1,
+      },
     }));
     const matcher = vi.fn<
       (text: string, entities: MatchableEntity[]) => MatchResult[]
@@ -164,6 +169,7 @@ describe("createRetrievedFetcher", () => {
       ok: true,
       data: {
         items: [createEntity({ id: "e1", name: "林小雨", aliases: ["小雨"] })],
+        totalCount: 1,
       },
     }));
     const matcher = vi.fn<
