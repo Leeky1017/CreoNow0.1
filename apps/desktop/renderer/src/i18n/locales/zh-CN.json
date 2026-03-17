@@ -212,6 +212,11 @@
         "label": "/搜索",
         "description": "检索项目中的相关信息。"
       }
+    },
+    "link": {
+      "placeholder": "输入链接地址",
+      "apply": "应用链接",
+      "remove": "移除链接"
     }
   },
   "dashboard": {
@@ -301,7 +306,8 @@
       "semanticSearch": "语义搜索",
       "includeArchived": "包含已归档",
       "scope": "范围",
-      "currentProject": "当前项目"
+      "currentProject": "当前项目",
+      "allProjects": "所有项目"
     },
     "results": {
       "match": "{{count}} 个匹配",
@@ -603,6 +609,8 @@
       "appearances": "出场",
       "chapters": "章节",
       "noAppearances": "该角色尚未出现在任何章节中",
+      "noAppearancesFallbackHint": "若 KG 识别降级，你仍可在文件树中手动定位章节。",
+      "navigationDegraded": "章节跳转暂时不可用。你可以先通过文件树继续写作。",
       "delete": "删除",
       "cancel": "取消",
       "saveChanges": "保存更改",
@@ -933,6 +941,13 @@
       "localAutoSaveDescription": "自动将更改保存到浏览器的本地存储。",
       "backupInterval": "备份间隔",
       "backupIntervalHelp": "上次备份：2 分钟前",
+      "backupOption_5min": "每 5 分钟",
+      "backupOption_15min": "每 15 分钟",
+      "backupOption_1hour": "每小时",
+      "manualBackup": "手动备份与恢复",
+      "manualBackupHelp": "立即创建快照，或恢复最近一次备份快照。",
+      "backupNow": "立即备份",
+      "restoreLatest": "恢复最近备份",
       "differentiateAiEdits": "区分 AI 编辑",
       "defaultTypography": "默认排版",
       "interfaceScale": "界面缩放"
@@ -1442,6 +1457,26 @@
     "settings": {
       "success": {
         "title": "设置已保存"
+      },
+      "backup": {
+        "noProject": {
+          "title": "请先打开一个项目"
+        },
+        "noSnapshot": {
+          "title": "暂无可用备份快照"
+        },
+        "createSuccess": {
+          "title": "备份快照已创建"
+        },
+        "createError": {
+          "title": "备份失败"
+        },
+        "restoreSuccess": {
+          "title": "备份已恢复"
+        },
+        "restoreError": {
+          "title": "恢复失败"
+        }
       }
     },
     "autosave": {

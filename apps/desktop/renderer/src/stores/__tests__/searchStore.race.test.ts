@@ -52,6 +52,30 @@ function createSearchResponse(
 }
 
 describe("searchStore race scenarios", () => {
+  it("forwards scope to search IPC payload", async () => {
+    const invoke: IpcInvoke = async (channel, payload) => {
+      if (channel !== "search:fts:query") {
+        throw new Error(`Unexpected channel: ${channel}`);
+      }
+      expect(payload).toMatchObject({
+        projectId: "project-1",
+        query: "alpha",
+        scope: "all",
+      } satisfies Partial<IpcRequest<"search:fts:query">>);
+
+      return ok("search:fts:query", createSearchResponse("alpha"));
+    };
+
+    const store = createSearchStore({ invoke });
+    store.getState().setQuery("alpha");
+    store.getState().setScope("all");
+
+    await store.getState().runFulltext({ projectId: "project-1", limit: 20 });
+
+    expect(store.getState().status).toBe("ready");
+    expect(store.getState().items).toHaveLength(1);
+  });
+
   it("WB-S2-SRF-S2 prevents stale search results from overriding latest query", async () => {
     const pendingByQuery = new Map<
       string,

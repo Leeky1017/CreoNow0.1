@@ -43,6 +43,10 @@ vi.mock("../../i18n", () => ({
   i18n: { changeLanguage: vi.fn(() => Promise.resolve()) },
 }));
 
+vi.mock("../../stores/projectStore", () => ({
+  useProjectStore: vi.fn(() => null),
+}));
+
 function createBrowserPreferences(): PreferenceStore {
   window.localStorage.clear();
   return createPreferenceStore(window.localStorage);

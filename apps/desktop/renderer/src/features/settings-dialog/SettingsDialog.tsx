@@ -24,8 +24,10 @@ import {
 } from "./SettingsExport";
 import { ShortcutsPanel } from "../shortcuts/ShortcutsPanel";
 import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore";
+import { useProjectStore } from "../../stores/projectStore";
 import { useAppToast } from "../../components/providers/AppToastProvider";
 import { usePreferences } from "../../contexts/PreferencesContext";
+import { invoke } from "../../lib/ipcClient";
 import type { PreferenceStore } from "../../lib/preferences";
 
 import { X } from "lucide-react";
@@ -237,6 +239,11 @@ export function SettingsDialog({
   const [exportSettings, setExportSettings] = React.useState<ExportSettings>(
     defaultExportSettings,
   );
+  const [manualBackupLoading, setManualBackupLoading] =
+    React.useState<boolean>(false);
+  const [manualRestoreLoading, setManualRestoreLoading] =
+    React.useState<boolean>(false);
+  const currentProjectId = useProjectStore((s) => s.current?.projectId ?? null);
   const showAiMarks = useVersionPreferencesStore((s) => s.showAiMarks);
   const setShowAiMarks = useVersionPreferencesStore((s) => s.setShowAiMarks);
 
@@ -261,6 +268,92 @@ export function SettingsDialog({
     [setShowAiMarks, showToast, t],
   );
 
+  const handleManualBackup = React.useCallback(async () => {
+    if (!currentProjectId) {
+      showToast({
+        title: t("toast.settings.backup.noProject.title"),
+        variant: "warning",
+      });
+      return;
+    }
+
+    setManualBackupLoading(true);
+    try {
+      const label = `manual-${new Date().toISOString()}`;
+      const result = await invoke("backup:snapshot:create", {
+        projectId: currentProjectId,
+        label,
+      });
+      if (!result.ok) {
+        showToast({
+          title: t("toast.settings.backup.createError.title"),
+          description: result.error.message,
+          variant: "error",
+        });
+        return;
+      }
+      showToast({
+        title: t("toast.settings.backup.createSuccess.title"),
+        variant: "success",
+      });
+    } finally {
+      setManualBackupLoading(false);
+    }
+  }, [currentProjectId, showToast, t]);
+
+  const handleManualRestore = React.useCallback(async () => {
+    if (!currentProjectId) {
+      showToast({
+        title: t("toast.settings.backup.noProject.title"),
+        variant: "warning",
+      });
+      return;
+    }
+
+    setManualRestoreLoading(true);
+    try {
+      const listResult = await invoke("backup:snapshot:list", {
+        projectId: currentProjectId,
+      });
+      if (!listResult.ok) {
+        showToast({
+          title: t("toast.settings.backup.restoreError.title"),
+          description: listResult.error.message,
+          variant: "error",
+        });
+        return;
+      }
+
+      const latest = listResult.data[0];
+      if (!latest) {
+        showToast({
+          title: t("toast.settings.backup.noSnapshot.title"),
+          variant: "warning",
+        });
+        return;
+      }
+
+      const restoreResult = await invoke("backup:snapshot:restore", {
+        backupId: latest.id,
+      });
+      if (!restoreResult.ok) {
+        showToast({
+          title: t("toast.settings.backup.restoreError.title"),
+          description: restoreResult.error.message,
+          variant: "error",
+        });
+        return;
+      }
+
+      showToast({
+        title: t("toast.settings.backup.restoreSuccess.title"),
+        variant: "success",
+      });
+    } finally {
+      setManualRestoreLoading(false);
+    }
+  }, [currentProjectId, showToast, t]);
+
   React.useEffect(() => {
     if (open) {
       setActiveTab(defaultTab);
@@ -277,6 +370,11 @@ export function SettingsDialog({
             showAiMarks={showAiMarks}
             onShowAiMarksChange={handleShowAiMarksChange}
             onSettingsChange={handleSettingsChange}
+            onManualBackup={handleManualBackup}
+            onManualRestore={handleManualRestore}
+            manualBackupLoading={manualBackupLoading}
+            manualRestoreLoading={manualRestoreLoading}
+            backupActionsDisabled={currentProjectId === null}
           />
         );
       case "appearance":

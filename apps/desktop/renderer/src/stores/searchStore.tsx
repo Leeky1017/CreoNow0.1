@@ -1,10 +1,7 @@
 import React from "react";
 import { create } from "zustand";
 
-import type {
-  IpcError,
-  IpcResponseData,
-} from "@shared/types/ipc-generated";
+import type { IpcError, IpcResponseData } from "@shared/types/ipc-generated";
 import type { IpcInvoke } from "../lib/ipcTypes";
 
 export type { IpcInvoke };
@@ -14,8 +11,11 @@ export type SearchItem = IpcResponseData<"search:fts:query">["results"][number];
 export type SearchStatus = "idle" | "loading" | "ready" | "error";
 export type SearchIndexState = "ready" | "rebuilding";
 
+export type SearchScope = "current" | "all";
+
 export type SearchState = {
   query: string;
+  scope: SearchScope;
   items: SearchItem[];
   status: SearchStatus;
   indexState: SearchIndexState;
@@ -26,7 +26,12 @@ export type SearchState = {
 
 export type SearchActions = {
   setQuery: (query: string) => void;
-  runFulltext: (args: { projectId: string; limit?: number }) => Promise<void>;
+  setScope: (scope: SearchScope) => void;
+  runFulltext: (args: {
+    projectId: string;
+    limit?: number;
+    scope?: SearchScope;
+  }) => Promise<void>;
   clearResults: () => void;
   clearError: () => void;
 };
@@ -49,6 +54,7 @@ export function createSearchStore(deps: { invoke: IpcInvoke }) {
 
   return create<SearchStore>((set, get) => ({
     query: "",
+    scope: "current" as SearchScope,
     items: [],
     status: "idle",
     indexState: "ready",
@@ -57,6 +63,7 @@ export function createSearchStore(deps: { invoke: IpcInvoke }) {
     lastError: null,
 
     setQuery: (query) => set({ query }),
+    setScope: (scope) => set({ scope }),
 
     clearResults: () => {
       latestSearchRequestId += 1;
@@ -74,8 +81,9 @@ export function createSearchStore(deps: { invoke: IpcInvoke }) {
 
     clearError: () => set({ lastError: null }),
 
-    runFulltext: async ({ projectId, limit }) => {
+    runFulltext: async ({ projectId, limit, scope }) => {
       const query = get().query;
+      const effectiveScope = scope ?? get().scope;
       if (query.trim().length === 0) {
         latestSearchRequestId += 1;
         activeSearchController?.abort();
@@ -106,6 +114,7 @@ export function createSearchStore(deps: { invoke: IpcInvoke }) {
           query,
           limit,
           offset: 0,
+          scope: effectiveScope,
         });
 
         const shouldCommit =

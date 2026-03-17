@@ -1365,6 +1365,34 @@ function createEpisodicSmallHelpers(
   };
 }
 
+function buildEpisodeClusters(
+  repository: EpisodeRepository,
+  projectId: string,
+): Array<{ sceneType: string; skillUsed: string; episodes: EpisodeRecord[] }> {
+  const snapshot = repository.listEpisodesByProject({
+    projectId,
+    includeCompressed: false,
+  });
+  const grouped = new Map<
+    string,
+    { sceneType: string; skillUsed: string; episodes: EpisodeRecord[] }
+  >();
+  for (const episode of snapshot) {
+    const key = `${episode.sceneType}::${episode.skillUsed}`;
+    const current = grouped.get(key);
+    if (current) {
+      current.episodes.push(episode);
+    } else {
+      grouped.set(key, {
+        sceneType: episode.sceneType,
+        skillUsed: episode.skillUsed,
+        episodes: [episode],
+      });
+    }
+  }
+  return [...grouped.values()];
+}
+
 // eslint-disable-next-line max-lines-per-function -- Keep episodic execution helpers co-located for transactional consistency.
 function createEpisodicExecHelpers(
   args: EpisodicServiceArgs,
@@ -1400,35 +1428,6 @@ function createEpisodicExecHelpers(
     enqueueConflict,
   } = helpers;
 
-  function buildClusters(projectId: string): Array<{
-    sceneType: string;
-    skillUsed: string;
-    episodes: EpisodeRecord[];
-  }> {
-    const snapshot = args.repository.listEpisodesByProject({
-      projectId,
-      includeCompressed: false,
-    });
-    const grouped = new Map<
-      string,
-      { sceneType: string; skillUsed: string; episodes: EpisodeRecord[] }
-    >();
-    for (const episode of snapshot) {
-      const key = `${episode.sceneType}::${episode.skillUsed}`;
-      const current = grouped.get(key);
-      if (current) {
-        current.episodes.push(episode);
-      } else {
-        grouped.set(key, {
-          sceneType: episode.sceneType,
-          skillUsed: episode.skillUsed,
-          episodes: [episode],
-        });
-      }
-    }
-    return [...grouped.values()];
-  }
-
   function executeDistillation(args2: {
     projectId: string;
     trigger: DistillTrigger;
@@ -1443,7 +1442,7 @@ function createEpisodicExecHelpers(
       projectId,
       includeCompressed: false,
     });
-    const clusters = buildClusters(projectId);
+    const clusters = buildEpisodeClusters(args.repository, projectId);
 
     emitDistillProgress({
       runId: args2.runId,
@@ -1695,7 +1694,6 @@ function createEpisodicExecHelpers(
   }
 
   return {
-    buildClusters,
     executeDistillation,
     scheduleBatchDistillation,
     maybeTriggerBatchDistillation,

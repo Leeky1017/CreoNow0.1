@@ -4,6 +4,10 @@ import userEvent from "@testing-library/user-event";
 
 import { AppToastProvider } from "../components/providers/AppToastProvider";
 import { SettingsDialog } from "../features/settings-dialog/SettingsDialog";
+import {
+  ProjectStoreProvider,
+  createProjectStore,
+} from "../stores/projectStore";
 
 const setShowAiMarks = vi.fn(() => true);
 
@@ -24,6 +28,23 @@ vi.mock("../stores/versionPreferencesStore", () => ({
  * AC-7: 设置保存成功后出现 success Toast
  */
 describe("toast-settings integration", () => {
+  function renderSettingsDialogForTest() {
+    const invoke = vi.fn(async () => ({ ok: true, data: {} })) as Parameters<
+      typeof createProjectStore
+    >[0]["invoke"];
+    const projectStore = createProjectStore({
+      invoke,
+    });
+
+    return render(
+      <AppToastProvider>
+        <ProjectStoreProvider store={projectStore}>
+          <SettingsDialog open onOpenChange={() => {}} defaultTab="general" />
+        </ProjectStoreProvider>
+      </AppToastProvider>,
+    );
+  }
+
   afterEach(() => {
     vi.restoreAllMocks();
     setShowAiMarks.mockReset();
@@ -32,12 +53,7 @@ describe("toast-settings integration", () => {
 
   it("持久化设置写入成功后触发 success Toast (AC-7)", async () => {
     const user = userEvent.setup();
-
-    render(
-      <AppToastProvider>
-        <SettingsDialog open onOpenChange={() => {}} defaultTab="general" />
-      </AppToastProvider>,
-    );
+    renderSettingsDialogForTest();
 
     const toggles = screen.getAllByRole("switch");
 
@@ -51,12 +67,7 @@ describe("toast-settings integration", () => {
 
   it("仅修改本地状态设置时不应提前触发 success Toast", async () => {
     const user = userEvent.setup();
-
-    render(
-      <AppToastProvider>
-        <SettingsDialog open onOpenChange={() => {}} defaultTab="general" />
-      </AppToastProvider>,
-    );
+    renderSettingsDialogForTest();
 
     const toggles = screen.getAllByRole("switch");
 

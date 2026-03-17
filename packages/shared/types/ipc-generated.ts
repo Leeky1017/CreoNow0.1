@@ -142,6 +142,10 @@ export const IPC_CHANNELS = [
   "app:window:getstate",
   "app:window:minimize",
   "app:window:togglemaximized",
+  "backup:snapshot:create",
+  "backup:snapshot:delete",
+  "backup:snapshot:list",
+  "backup:snapshot:restore",
   "constraints:policy:create",
   "constraints:policy:delete",
   "constraints:policy:get",
@@ -598,6 +602,51 @@ export type IpcChannelSpec = {
   "app:window:togglemaximized": {
     request: Record<string, never>;
     response: Record<string, never>;
+  };
+  "backup:snapshot:create": {
+    request: {
+      label?: string;
+      projectId: string;
+    };
+    response: {
+      createdAt: string;
+      id: string;
+      label?: string;
+      projectId: string;
+      sizeBytes: number;
+    };
+  };
+  "backup:snapshot:delete": {
+    request: {
+      backupId: string;
+    };
+    response: {
+      deleted: boolean;
+    };
+  };
+  "backup:snapshot:list": {
+    request: {
+      projectId: string;
+    };
+    response: Array<{
+      createdAt: string;
+      id: string;
+      label?: string;
+      projectId: string;
+      sizeBytes: number;
+    }>;
+  };
+  "backup:snapshot:restore": {
+    request: {
+      backupId: string;
+    };
+    response: {
+      createdAt: string;
+      id: string;
+      label?: string;
+      projectId: string;
+      sizeBytes: number;
+    };
   };
   "constraints:policy:create": {
     request: {
@@ -2724,6 +2773,7 @@ export type IpcChannelSpec = {
       offset?: number;
       projectId: string;
       query: string;
+      scope?: "current" | "all";
     };
     response: {
       hasMore: boolean;

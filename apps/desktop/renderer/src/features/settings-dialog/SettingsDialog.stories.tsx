@@ -2,6 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { AppToastProvider } from "../../components/providers/AppToastProvider";
 import { createPreferenceStore } from "../../lib/preferences";
+import {
+  ProjectStoreProvider,
+  createProjectStore,
+} from "../../stores/projectStore";
 import { createThemeStore, ThemeStoreProvider } from "../../stores/themeStore";
 import { SettingsDialog } from "./SettingsDialog";
 
@@ -32,6 +36,37 @@ function createMemoryStorage(): Storage {
 
 const preferences = createPreferenceStore(createMemoryStorage());
 const themeStore = createThemeStore(preferences);
+const storyInvoke = (async (channel: string) => {
+  if (channel === "project:project:getcurrent") {
+    return {
+      ok: true,
+      data: {
+        projectId: "storybook-project",
+        rootPath: "/tmp/storybook-project",
+      },
+    };
+  }
+  if (channel === "project:project:list") {
+    return {
+      ok: true,
+      data: {
+        items: [
+          {
+            projectId: "storybook-project",
+            name: "Storybook Project",
+            rootPath: "/tmp/storybook-project",
+            updatedAt: Date.now(),
+          },
+        ],
+      },
+    };
+  }
+  return { ok: true, data: {} };
+}) as Parameters<typeof createProjectStore>[0]["invoke"];
+
+const projectStore = createProjectStore({
+  invoke: storyInvoke,
+});
 
 const meta: Meta<typeof SettingsDialog> = {
   title: "Features/SettingsDialog",
@@ -54,14 +89,16 @@ const meta: Meta<typeof SettingsDialog> = {
     (Story) => {
       return (
         <AppToastProvider>
-          <ThemeStoreProvider store={themeStore}>
-            <div
-              className="w-full h-screen bg-[var(--color-bg-base)]"
-              data-theme="dark"
-            >
-              <Story />
-            </div>
-          </ThemeStoreProvider>
+          <ProjectStoreProvider store={projectStore}>
+            <ThemeStoreProvider store={themeStore}>
+              <div
+                className="w-full h-screen bg-[var(--color-bg-base)]"
+                data-theme="dark"
+              >
+                <Story />
+              </div>
+            </ThemeStoreProvider>
+          </ProjectStoreProvider>
         </AppToastProvider>
       );
     },

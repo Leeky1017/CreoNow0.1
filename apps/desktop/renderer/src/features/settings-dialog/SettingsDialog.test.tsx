@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { beforeEach, describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -7,8 +7,45 @@ import { createPreferenceStore } from "../../lib/preferences";
 import { PreferencesProvider } from "../../contexts/PreferencesContext";
 import { SettingsDialog } from "./SettingsDialog";
 
+const invokeMock = vi.fn();
+
+vi.mock("../../lib/ipcClient", () => ({
+  invoke: (...args: unknown[]) => invokeMock(...args),
+}));
+
+vi.mock("../../stores/projectStore", () => ({
+  useProjectStore: (
+    selector: (state: { current: { projectId: string } }) => unknown,
+  ) => selector({ current: { projectId: "proj-1" } }),
+}));
+
 vi.mock("./SettingsGeneral", () => ({
-  SettingsGeneral: () => <div data-testid="mock-general-section">General</div>,
+  SettingsGeneral: (props: {
+    onManualBackup?: () => void | Promise<void>;
+    onManualRestore?: () => void | Promise<void>;
+  }) => (
+    <div data-testid="mock-general-section">
+      General
+      <button
+        type="button"
+        data-testid="mock-manual-backup"
+        onClick={() => {
+          void props.onManualBackup?.();
+        }}
+      >
+        backup
+      </button>
+      <button
+        type="button"
+        data-testid="mock-manual-restore"
+        onClick={() => {
+          void props.onManualRestore?.();
+        }}
+      >
+        restore
+      </button>
+    </div>
+  ),
   defaultGeneralSettings: {
     focusMode: true,
     typewriterScroll: false,
@@ -96,6 +133,75 @@ function renderWithToastProvider(ui: JSX.Element) {
 }
 
 describe("SettingsDialog", () => {
+  beforeEach(() => {
+    invokeMock.mockReset();
+  });
+
+  it("manual backup action triggers backup create IPC", async () => {
+    const user = userEvent.setup();
+    invokeMock.mockResolvedValueOnce({
+      ok: true,
+      data: {
+        id: "backup-1",
+        projectId: "proj-1",
+        createdAt: new Date().toISOString(),
+        sizeBytes: 0,
+        label: "manual",
+      },
+    });
+
+    renderWithToastProvider(
+      <SettingsDialog open={true} onOpenChange={vi.fn()} />,
+    );
+
+    await user.click(screen.getByTestId("mock-manual-backup"));
+
+    expect(invokeMock).toHaveBeenCalledWith("backup:snapshot:create", {
+      projectId: "proj-1",
+      label: expect.stringMatching(/^manual-/),
+    });
+  });
+
+  it("manual restore action lists snapshots then restores latest", async () => {
+    const user = userEvent.setup();
+    invokeMock
+      .mockResolvedValueOnce({
+        ok: true,
+        data: [
+          {
+            id: "backup-latest",
+            projectId: "proj-1",
+            createdAt: new Date().toISOString(),
+            sizeBytes: 1024,
+            label: "latest",
+          },
+        ],
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        data: {
+          id: "backup-latest",
+          projectId: "proj-1",
+          createdAt: new Date().toISOString(),
+          sizeBytes: 1024,
+          label: "latest",
+        },
+      });
+
+    renderWithToastProvider(
+      <SettingsDialog open={true} onOpenChange={vi.fn()} />,
+    );
+
+    await user.click(screen.getByTestId("mock-manual-restore"));
+
+    expect(invokeMock).toHaveBeenNthCalledWith(1, "backup:snapshot:list", {
+      projectId: "proj-1",
+    });
+    expect(invokeMock).toHaveBeenNthCalledWith(2, "backup:snapshot:restore", {
+      backupId: "backup-latest",
+    });
+  });
+
   it("renders when open is true", () => {
     renderWithToastProvider(
       <SettingsDialog open={true} onOpenChange={vi.fn()} />,

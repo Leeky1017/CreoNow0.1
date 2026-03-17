@@ -4,6 +4,7 @@ import { BubbleMenu } from "@tiptap/react";
 import { useTranslation } from "react-i18next";
 
 import { InlineFormatButton } from "./InlineFormatButton";
+import { Button } from "../../components/primitives/Button";
 import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
 import { captureSelectionRef } from "../ai/applySelection";
 import { useEditorStore } from "../../stores/editorStore";
@@ -16,11 +17,13 @@ import {
 
 import {
   Bold,
+  Check,
   Code,
   Italic,
   Link,
   Strikethrough,
   Underline,
+  X,
 } from "lucide-react";
 export const EDITOR_INLINE_BUBBLE_MENU_PLUGIN_KEY = "cn-editor-inline-bubble";
 const BUBBLE_AI_SKILLS = [
@@ -140,6 +143,10 @@ export function EditorBubbleMenu(props: {
     };
   }, [editor, updateVisibilityAndPlacement]);
 
+  const [linkInputOpen, setLinkInputOpen] = React.useState(false);
+  const [linkUrl, setLinkUrl] = React.useState("");
+  const linkInputRef = React.useRef<HTMLInputElement>(null);
+
   if (!editor) {
     return null;
   }
@@ -150,12 +157,42 @@ export function EditorBubbleMenu(props: {
   const shouldShowBubble = visible && editor.isEditable && !zenMode;
   const inlineDisabled = !editor.isEditable || editor.isActive("codeBlock");
 
-  const toggleLink = () => {
-    if (editor.isActive("link")) {
+  const openLinkInput = () => {
+    const existingHref = editor.getAttributes("link").href as
+      | string
+      | undefined;
+    setLinkUrl(existingHref ?? "");
+    setLinkInputOpen(true);
+    requestAnimationFrame(() => linkInputRef.current?.focus());
+  };
+
+  const applyLink = () => {
+    const trimmed = linkUrl.trim();
+    if (trimmed.length === 0) {
       editor.chain().focus().unsetLink().run();
-      return;
+    } else {
+      editor.chain().focus().setLink({ href: trimmed }).run();
     }
-    editor.chain().focus().setLink({ href: "https://example.com" }).run();
+    setLinkInputOpen(false);
+    setLinkUrl("");
+  };
+
+  const removeLink = () => {
+    editor.chain().focus().unsetLink().run();
+    setLinkInputOpen(false);
+    setLinkUrl("");
+  };
+
+  const handleLinkKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      applyLink();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      setLinkInputOpen(false);
+      setLinkUrl("");
+      editor.commands.focus();
+    }
   };
 
   const aiDisabled =
@@ -257,10 +294,49 @@ export function EditorBubbleMenu(props: {
         label={t("editor.bubbleMenu.link")}
         isActive={editor.isActive("link")}
         disabled={inlineDisabled}
-        onClick={toggleLink}
+        onClick={openLinkInput}
       >
         {icons.link}
       </InlineFormatButton>
+      {linkInputOpen && (
+        <div
+          className="flex items-center gap-1 px-1"
+          data-testid="link-input-container"
+        >
+          <input
+            ref={linkInputRef}
+            type="url"
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+            onKeyDown={handleLinkKeyDown}
+            placeholder={t("editor.link.placeholder")}
+            aria-label={t("editor.link.placeholder")}
+            className="h-6 w-40 px-2 text-[11px] rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] border border-[var(--color-border-default)] focus-visible:border-[var(--color-border-focus)] focus-visible:outline-none"
+          />
+          <Button
+            data-testid="link-apply"
+            onClick={applyLink}
+            aria-label={t("editor.link.apply")}
+            variant="ghost"
+            size="sm"
+            className="h-6 min-w-0 px-1 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+          >
+            <Check size={16} strokeWidth={1.5} />
+          </Button>
+          {editor.isActive("link") && (
+            <Button
+              data-testid="link-remove"
+              onClick={removeLink}
+              aria-label={t("editor.link.remove")}
+              variant="ghost"
+              size="sm"
+              className="h-6 min-w-0 px-1 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-danger)]"
+            >
+              <X size={16} strokeWidth={1.5} />
+            </Button>
+          )}
+        </div>
+      )}
       <div className="mx-1 h-5 w-px bg-[var(--color-border-default)]" />
       <div className="flex items-center gap-1">
         {BUBBLE_AI_SKILLS.map((skill) => (
