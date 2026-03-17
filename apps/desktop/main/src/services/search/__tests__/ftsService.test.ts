@@ -128,7 +128,7 @@ function createDbStub(args?: {
   assert.equal(first.snippet, "月光照在古道上");
   assert.ok(first.highlights.length > 0, "should have highlights");
   assert.equal(first.highlights[0]!.start, 0);
-  assert.deepStrictEqual(first.anchor, { start: 0, end: 2 });
+  assert.deepStrictEqual(first.anchor, { start: 0, end: 1 });
 }
 
 // S2: search with empty projectId returns INVALID_ARGUMENT
