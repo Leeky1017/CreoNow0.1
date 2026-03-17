@@ -141,7 +141,10 @@ describe("VC-FE-DIFF-S4: decoration uses semantic token classes for insert/delet
     // directly as the attrs object depending on ProseMirror version.
     // We check both the spec and the rendered DOM attribute.
     const classNames = decorations.map(
-      (d: { spec?: { class?: string }; type?: { attrs?: { class?: string } } }) => {
+      (d: {
+        spec?: { class?: string };
+        type?: { attrs?: { class?: string } };
+      }) => {
         // ProseMirror Decoration.inline stores attrs in type.attrs
         const fromAttrs = d.type?.attrs?.class ?? "";
         const fromSpec = d.spec?.class ?? "";
@@ -163,7 +166,6 @@ describe("VC-FE-DIFF-S4: decoration uses semantic token classes for insert/delet
   });
 });
 
-
 /* ------------------------------------------------------------------ */
 /*  VC-FE-DIFF-S5 — accept/reject resolves diff text correctly        */
 /* ------------------------------------------------------------------ */
@@ -177,7 +179,6 @@ describe("VC-FE-DIFF-S5: accept/reject resolves InlineDiff text correctly", () =
       originalText: original,
       suggestedText: suggested,
     });
-
 
     const decisions = decorations.map(() => "accepted" as const);
     const result = resolveInlineDiffText({
@@ -197,7 +198,6 @@ describe("VC-FE-DIFF-S5: accept/reject resolves InlineDiff text correctly", () =
       originalText: original,
       suggestedText: suggested,
     });
-
 
     const decisions = decorations.map(() => "rejected" as const);
     const result = resolveInlineDiffText({

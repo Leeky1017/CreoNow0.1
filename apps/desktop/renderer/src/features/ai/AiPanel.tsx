@@ -783,9 +783,7 @@ function useAiPanelEffects(d: AiPanelEffectsDeps): void {
   React.useEffect(() => {
     if (!inlineDiffConfirmOpen && editor) {
       editor.storage.inlineDiff.diffs = [];
-      editor.view.dispatch(
-        editor.state.tr.setMeta("inlineDiffUpdate", true),
-      );
+      editor.view.dispatch(editor.state.tr.setMeta("inlineDiffUpdate", true));
     }
   }, [inlineDiffConfirmOpen, editor]);
 
