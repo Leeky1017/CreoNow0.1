@@ -76,10 +76,10 @@ function createDbStub(): {
 
       if (sql.startsWith("SELECT COUNT(*) as count FROM skill_feedback")) {
         return {
-          get: (evidenceRef: string) => ({
+          get: (action: string, evidenceRef: string) => ({
             count: feedback.filter(
               (row) =>
-                row.action === "accept" &&
+                row.action === action &&
                 row.evidenceRef === evidenceRef &&
                 row.ignored === 0,
             ).length,
