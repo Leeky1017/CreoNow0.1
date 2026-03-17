@@ -14,6 +14,8 @@ import type {
   GraphNode,
 } from "./types";
 
+/* eslint-disable creonow/no-native-html-element -- graph navigation and filter buttons */
+
 /**
  * Min/max zoom levels
  */

@@ -71,6 +71,9 @@ import {
 
 import { ArrowUp } from "lucide-react";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
+
+/* eslint-disable creonow/no-native-html-element -- AiPanel uses specialized buttons (send/stop, toolbar, code actions, candidate cards) and a custom textarea that don't map to design system primitives */
+
 const RECENT_MODELS_STORAGE_KEY = "creonow.ai.recentModels";
 const CANDIDATE_COUNT_STORAGE_KEY = "creonow.ai.candidateCount";
 const DB_REBUILD_DEFAULT_COMMAND = "pnpm -C apps/desktop rebuild:native";
@@ -346,6 +349,7 @@ function ErrorGuideCard(props: {
               </button>
             ) : null}
             <span className="text-[10px] font-mono text-[var(--color-error)]">
+              {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- diagnostic code reference, user-friendly text shown in description/steps above */}
               {props.errorCode}
             </span>
           </div>
@@ -418,6 +422,7 @@ export function CodeBlock(props: {
       {/* Code content */}
 
       <pre className="m-0 p-3 overflow-x-auto text-[12px] leading-[1.6] text-[var(--color-fg-default)] font-[var(--font-family-mono)]">
+        {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- props.code is programming code content, not an error code */}
         <code>{props.code}</code>
       </pre>
     </div>
@@ -1625,7 +1630,7 @@ const AiPanelInputArea = React.forwardRef<
           onChange={(e) => props.setInput(e.target.value)}
           onKeyDown={props.handleKeyDown}
           placeholder={t("ai.panel.inputPlaceholder")}
-          className="w-full min-h-[60px] max-h-[160px] px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
+          className="w-full min-h-15 max-h-40 px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
         />
         <div className="flex items-center justify-between px-2 pb-2">
           <div className="flex items-center gap-1">

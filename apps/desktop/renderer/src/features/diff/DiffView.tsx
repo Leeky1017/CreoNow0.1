@@ -337,7 +337,7 @@ export function DiffView(props: {
   const { lines } = parseDiffLines(props.diffText);
 
   return (
-    <div className="border border-[var(--color-separator)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] overflow-hidden max-h-[300px]">
+    <div className="border border-[var(--color-separator)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] overflow-hidden max-h-75">
       <UnifiedDiffView lines={lines} testId={props.testId} />
     </div>
   );

@@ -9,6 +9,8 @@ import { i18n } from "../../i18n";
 import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 
+/* eslint-disable creonow/no-native-html-element -- SkillManagerDialog uses form fields (label/input/select/textarea) and action buttons throughout that don't map to design system primitives */
+
 export type CustomSkillListItem =
   IpcResponseData<"skill:custom:list">["items"][number];
 

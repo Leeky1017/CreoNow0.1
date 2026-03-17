@@ -1146,6 +1146,7 @@ const FileTreeNodeRow = React.forwardRef<
           className={`border ${selected ? "border-[var(--color-border-focus)]" : "border-transparent"} group ${dropInto ? "bg-[var(--color-bg-hover)]" : ""} ${isDragging ? "opacity-50" : ""}`}
         >
           {hasChildren ? (
+            // eslint-disable-next-line creonow/no-native-html-element -- tree expand/collapse toggle
             <button
               type="button"
               data-testid={`file-folder-toggle-${item.documentId}`}

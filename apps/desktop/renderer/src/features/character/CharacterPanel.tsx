@@ -5,6 +5,9 @@ import { CharacterDetailDialog } from "./CharacterDetailDialog";
 import type { Character, CharacterGroup } from "./types";
 
 import { Plus } from "lucide-react";
+
+/* eslint-disable creonow/no-native-html-element -- CharacterPanel uses specialized empty-state and add-character buttons */
+
 export interface CharacterPanelProps {
   /** List of characters */
   characters: Character[];

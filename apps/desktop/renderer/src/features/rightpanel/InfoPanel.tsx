@@ -282,6 +282,7 @@ export function InfoPanel(props: InfoPanelProps = {}): JSX.Element {
       <DocumentInfoSection document={currentDocument} />
       <TodayStatsSection stats={stats} error={statsError} loading={loading} />
 
+      {/* eslint-disable-next-line creonow/no-native-html-element -- minimal inline link-style button */}
       <button
         type="button"
         className="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"

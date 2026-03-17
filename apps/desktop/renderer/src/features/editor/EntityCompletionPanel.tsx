@@ -21,7 +21,7 @@ export function EntityCompletionPanel(
       data-testid="entity-completion-panel"
       role="listbox"
       aria-label={t('editor.entityCompletion.ariaLabel')}
-      className="min-w-[240px] rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-1 shadow-[var(--shadow-lg)]"
+      className="min-w-60 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-1 shadow-[var(--shadow-lg)]"
       style={{
         position: "fixed",
         top: `${session.anchorTop}px`,
@@ -42,6 +42,7 @@ export function EntityCompletionPanel(
         <ul className="space-y-1">
           {session.candidates.map((candidate, index) => (
             <li key={candidate.id}>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: completion item with role="option" needs native button */}
               <button
                 type="button"
                 role="option"

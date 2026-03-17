@@ -649,6 +649,7 @@ export function CommandPalette({
         aria-modal="true"
         aria-label={t("workbench.commandPalette.ariaLabel")}
         onClick={(e) => e.stopPropagation()}
+        // eslint-disable-next-line creonow/no-hardcoded-dimension -- command palette modal width per design spec
         className="w-[600px] max-w-[90vw] flex flex-col bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
         {/* Header: 搜索框 */}
@@ -660,6 +661,7 @@ export function CommandPalette({
                 : "text-[var(--color-fg-muted)] mr-3 shrink-0"
             }
           />
+          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized search input with custom focus behavior */}
           <input
             ref={inputRef}
             type="text"
@@ -676,6 +678,8 @@ export function CommandPalette({
         {/* Body: 命令列表 */}
         <div
           ref={listRef}
+          // eslint-disable-next-line creonow/no-hardcoded-dimension -- command list height per design spec
+          // eslint-disable-next-line creonow/no-hardcoded-dimension -- command list height per design spec
           className="max-h-[424px] overflow-y-auto p-2"
           role="listbox"
           data-active-index={activeIndex}

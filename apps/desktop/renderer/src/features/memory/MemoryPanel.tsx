@@ -7,6 +7,8 @@ import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useProjectStore } from "../../stores/projectStore";
 
+/* eslint-disable creonow/no-native-html-element -- MemoryPanel uses specialized scope tab buttons, form labels, textareas, and selects throughout */
+
 type PanelScope = "global" | "project";
 type SemanticRule = IpcResponseData<"memory:semantic:list">["items"][number];
 type SemanticConflict =
@@ -574,7 +576,7 @@ function MemoryRulesCard(props: {
           </Text>
         </div>
       ) : props.state.filteredRules.length === 0 ? (
-        <div className="h-full min-h-[180px] flex flex-col items-center justify-center gap-3 text-center">
+        <div className="h-full min-h-45 flex flex-col items-center justify-center gap-3 text-center">
           <div className="w-9 h-9 rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] flex items-center justify-center text-[var(--color-fg-muted)]">
             {props.t("memory.panel.emptyIcon")}
           </div>
@@ -618,6 +620,7 @@ function MemoryRulesCard(props: {
                               onChange={(event) =>
                                 props.state.setEditingText(event.target.value)
                               }
+                              // eslint-disable-next-line creonow/no-hardcoded-dimension -- inline text edit area height
                               className="min-h-[70px] rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 py-1.5 text-sm"
                             />
                             <div className="flex gap-2">
@@ -784,7 +787,7 @@ function MemoryComposer(props: {
           aria-label={props.t("memory.panel.addRule")}
           value={props.draftRule}
           onChange={(event) => props.setDraftRule(event.target.value)}
-          className="min-h-[72px] rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 py-1.5 text-sm"
+          className="min-h-18 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 py-1.5 text-sm"
         />
         <label
           className="text-xs text-[var(--color-fg-muted)]"

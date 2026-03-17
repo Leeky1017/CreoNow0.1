@@ -88,6 +88,7 @@ export function FormField({
 }: FormFieldProps): JSX.Element {
   return (
     <div className={`${containerStyles} ${className}`}>
+      {/* eslint-disable-next-line creonow/no-native-html-element -- Composite: no Label primitive exists; native <label> provides htmlFor accessibility */}
       <label
         htmlFor={htmlFor}
         className={error ? labelErrorStyles : labelStyles}

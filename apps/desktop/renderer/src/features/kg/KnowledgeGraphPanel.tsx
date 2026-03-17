@@ -152,6 +152,7 @@ function ViewModeToggle(props: {
   return (
     <div className="flex items-center gap-1">
       {entries.map((entry) => (
+        // eslint-disable-next-line creonow/no-native-html-element -- KG view mode toggle button
         <button
           key={entry.mode}
           type="button"

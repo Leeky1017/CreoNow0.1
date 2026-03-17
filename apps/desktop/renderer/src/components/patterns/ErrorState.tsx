@@ -147,6 +147,7 @@ function DismissButton({
 }): JSX.Element {
   const { t } = useTranslation();
   return (
+    // eslint-disable-next-line creonow/no-native-html-element -- Pattern: DismissButton is a small inline icon control
     <button
       type="button"
       onClick={onClick}
@@ -274,6 +275,7 @@ function BannerError({
           {message}
         </Text>
         {actionLabel && onAction && (
+          // eslint-disable-next-line creonow/no-native-html-element -- Pattern: inline text link action
           <button
             type="button"
             onClick={onAction}
@@ -350,7 +352,7 @@ function CardError({
       )}
 
       {/* Message */}
-      <Text size="body" color="muted" as="p" className="mb-6 max-w-[320px]">
+      <Text size="body" color="muted" as="p" className="mb-6 max-w-xs">
         {message}
       </Text>
 
@@ -402,7 +404,7 @@ function FullPageError({
     <div
       className={[
         "flex flex-col items-center justify-center",
-        "min-h-[400px] p-8",
+        "min-h-[24rem] p-8",
         "text-center",
         className,
       ]
@@ -428,7 +430,7 @@ function FullPageError({
       </Heading>
 
       {/* Message */}
-      <Text size="body" color="muted" as="p" className="mb-8 max-w-[400px]">
+      <Text size="body" color="muted" as="p" className="mb-8 max-w-sm">
         {message}
       </Text>
 

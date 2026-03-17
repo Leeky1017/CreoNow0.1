@@ -173,6 +173,7 @@ export function Checkbox({
     return (
       <div className="flex items-center gap-2">
         {checkboxElement}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: no Label primitive exists */}
         <label htmlFor={checkboxId} className={labelStyles}>
           {label}
         </label>

@@ -138,6 +138,7 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
               className="h-8"
               fullWidth
             />
+            {/* eslint-disable-next-line creonow/no-native-html-element -- group-by dropdown with minimal styling, Select primitive is overkill */}
             <select
               data-testid="ai-model-groupby"
               className="h-8 px-2 text-[11px] rounded-[var(--radius-sm)] bg-[var(--color-bg-base)] border border-[var(--color-border-default)]"

@@ -168,6 +168,7 @@ export function Toggle({
   ].join(" ");
 
   const toggleElement = (
+    // eslint-disable-next-line creonow/no-native-html-element -- Primitive: Toggle wraps native <button> for switch semantics
     <button
       type="button"
       role="switch"
@@ -187,6 +188,7 @@ export function Toggle({
       <div className="flex items-start justify-between gap-4 group">
         <div className="flex flex-col gap-1">
           {label && (
+            // eslint-disable-next-line creonow/no-native-html-element -- Primitive: no Label primitive exists
             <label
               htmlFor={toggleId}
               className={`${labelStyles} ${disabled ? "opacity-50" : ""} cursor-pointer`}

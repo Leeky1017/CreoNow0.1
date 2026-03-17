@@ -2,6 +2,8 @@ import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import type { AiInlineConfirmProps, InlineConfirmState } from "./types";
 
+/* eslint-disable creonow/no-native-html-element -- inline confirm toolbar uses specialized accept/reject/diff buttons */
+
 /**
  * Icon components for the inline confirm actions
  */

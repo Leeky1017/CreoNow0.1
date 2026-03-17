@@ -65,6 +65,7 @@ const viewportStyles = [
   "flex",
   "flex-col",
   "gap-2",
+  // eslint-disable-next-line creonow/no-hardcoded-dimension -- Design spec §6.12: Toast viewport width
   "w-[360px]",
   "max-w-[calc(100vw-32px)]",
   "outline-none",

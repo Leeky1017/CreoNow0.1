@@ -4,6 +4,9 @@ import type { Character, CharacterRole } from "./types";
 import { ROLE_DISPLAY } from "./types";
 
 import { Pencil, Trash2 } from "lucide-react";
+
+/* eslint-disable creonow/no-native-html-element -- CharacterCard uses specialized overlay edit/delete action buttons */
+
 export interface CharacterCardProps {
   /** Character data */
   character: Character;

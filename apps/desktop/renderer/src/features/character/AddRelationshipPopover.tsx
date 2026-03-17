@@ -15,6 +15,9 @@ import type {
 import { ROLE_DISPLAY, RELATIONSHIP_TYPE_DISPLAY } from "./types";
 
 import { Plus } from "lucide-react";
+
+/* eslint-disable creonow/no-native-html-element -- AddRelationshipPopover uses specialized character selection and relationship type toggle buttons */
+
 export interface AddRelationshipPopoverProps {
   /** Available characters to select from (excluding current character) */
   availableCharacters: Character[];
@@ -165,7 +168,7 @@ export function AddRelationshipPopover({
       align="end"
       sideOffset={4}
     >
-      <div className="w-[280px] -mx-2 -my-2">
+      <div className="w-70 -mx-2 -my-2">
         {/* Header */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
           <h3 className="text-sm font-medium text-[var(--color-fg-default)]">
@@ -179,7 +182,7 @@ export function AddRelationshipPopover({
             {t('character.addRelation.selectCharacter')}
           </div>
           {selectableCharacters.length > 0 ? (
-            <div className="space-y-1 max-h-[160px] overflow-y-auto -mx-2 px-2">
+            <div className="space-y-1 max-h-40 overflow-y-auto -mx-2 px-2">
               {selectableCharacters.map((character) => {
                 const isSelected = selectedCharacter?.id === character.id;
                 const roleConfig = ROLE_DISPLAY[character.role];

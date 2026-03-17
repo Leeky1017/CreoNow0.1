@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Button } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 
+/* eslint-disable creonow/no-native-html-element -- version history action buttons (restore, compare, delete) */
+
 /**
  * Version author types
  */
@@ -728,7 +730,7 @@ export function VersionHistoryPanelContent({
           <h2 className="text-[15px] font-semibold text-[var(--color-fg-default)] tracking-tight">
             {t("versionHistory.panel.title")}
           </h2>
-          <p className="text-xs text-[var(--color-fg-muted)] mt-1 font-medium truncate max-w-[200px]">
+          <p className="text-xs text-[var(--color-fg-muted)] mt-1 font-medium truncate max-w-50">
             {documentTitle}
           </p>
         </div>

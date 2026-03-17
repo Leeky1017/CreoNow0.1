@@ -5,6 +5,8 @@ import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import { getHumanErrorMessage } from "../../../lib/errorMessages";
 import type { AiErrorCardProps, AiErrorType } from "./types";
 
+/* eslint-disable creonow/no-native-html-element -- AiErrorCard uses specialized action buttons (retry, upgrade, dismiss) that don't map to the Button primitive */
+
 /**
 
  * Card state for tracking visibility and loading

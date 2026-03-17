@@ -123,6 +123,7 @@ export function ZenMode({
           >
             {t("zenMode.pressEscToExit")}
           </span>
+          {/* eslint-disable-next-line creonow/no-native-html-element -- zen mode exit button */}
           <button
             data-testid="zen-exit-button"
             onClick={onExit}

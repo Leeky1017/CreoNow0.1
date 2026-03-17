@@ -219,6 +219,7 @@ export function ImageUpload({
     "border-2",
     "border-dashed",
     "rounded-[var(--radius-sm)]",
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- Primitive: minimum upload area for usability
     "min-h-[140px]",
     "flex",
     "flex-col",
@@ -270,6 +271,7 @@ export function ImageUpload({
       data-testid="image-upload"
     >
       {/* Hidden file input */}
+      {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: hidden file <input> for native file picker */}
       <input
         ref={fileInputRef}
         type="file"
@@ -290,6 +292,7 @@ export function ImageUpload({
           />
           {/* Remove button overlay */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: ImageUpload remove button is internal */}
             <button
               type="button"
               onClick={handleRemove}

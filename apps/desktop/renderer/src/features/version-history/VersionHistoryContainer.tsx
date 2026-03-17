@@ -22,6 +22,8 @@ import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore
 import { i18n } from "../../i18n";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 
+/* eslint-disable creonow/no-native-html-element -- version metadata form fields (labels, inputs, textarea) and action buttons */
+
 /**
  * Map backend actor to UI author type.
  */

@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { invoke } from "../../lib/ipcClient";
 import { useProjectStore } from "../../stores/projectStore";
 
+/* eslint-disable creonow/no-native-html-element -- window control buttons (minimize, maximize, close) */
+
 type WindowControlState = {
   controlsEnabled: boolean;
   isMaximized: boolean;

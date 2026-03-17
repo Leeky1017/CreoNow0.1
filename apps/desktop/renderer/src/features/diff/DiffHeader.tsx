@@ -3,6 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "../../components/primitives/Tooltip";
 
+/* eslint-disable creonow/no-native-html-element -- diff toolbar mode and action buttons */
+
 /**
  * View mode for diff display.
  */

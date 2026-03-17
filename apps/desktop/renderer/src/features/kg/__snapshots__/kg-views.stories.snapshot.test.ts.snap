@@ -233,7 +233,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       class="h-12 flex-shrink-0 bg-[var(--color-bg-surface)] border-b border-[var(--color-border-default)] flex items-center justify-between px-4 z-30"
     >
       <div
-        class="flex items-center gap-4 w-[240px]"
+        class="flex items-center gap-4 w-60"
       >
         <h1
           class="text-sm font-medium tracking-wide text-[var(--color-fg-default)]"
@@ -291,7 +291,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         </button>
       </div>
       <div
-        class="flex items-center gap-3 w-[240px] justify-end"
+        class="flex items-center gap-3 w-60 justify-end"
       >
         <div
           class="flex items-center bg-[var(--color-bg-raised)] rounded border border-[var(--color-border-default)]"
@@ -488,7 +488,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       class="h-12 flex-shrink-0 bg-[var(--color-bg-surface)] border-b border-[var(--color-border-default)] flex items-center justify-between px-4 z-30"
     >
       <div
-        class="flex items-center gap-4 w-[240px]"
+        class="flex items-center gap-4 w-60"
       >
         <h1
           class="text-sm font-medium tracking-wide text-[var(--color-fg-default)]"
@@ -546,7 +546,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         </button>
       </div>
       <div
-        class="flex items-center gap-3 w-[240px] justify-end"
+        class="flex items-center gap-3 w-60 justify-end"
       >
         <div
           class="flex items-center bg-[var(--color-bg-raised)] rounded border border-[var(--color-border-default)]"
@@ -832,7 +832,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       class="h-12 flex-shrink-0 bg-[var(--color-bg-surface)] border-b border-[var(--color-border-default)] flex items-center justify-between px-4 z-30"
     >
       <div
-        class="flex items-center gap-4 w-[240px]"
+        class="flex items-center gap-4 w-60"
       >
         <h1
           class="text-sm font-medium tracking-wide text-[var(--color-fg-default)]"
@@ -890,7 +890,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         </button>
       </div>
       <div
-        class="flex items-center gap-3 w-[240px] justify-end"
+        class="flex items-center gap-3 w-60 justify-end"
       >
         <div
           class="flex items-center bg-[var(--color-bg-raised)] rounded border border-[var(--color-border-default)]"

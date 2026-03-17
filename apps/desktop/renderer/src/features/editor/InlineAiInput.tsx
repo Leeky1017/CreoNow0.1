@@ -42,7 +42,7 @@ export function InlineAiInput(props: InlineAiInputProps): JSX.Element {
   return (
     <div
       data-testid="inline-ai-input"
-      className="absolute z-[var(--z-popover)] min-w-[320px] max-w-[480px] rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] shadow-[var(--shadow-lg)] animate-[inline-ai-appear_200ms_var(--ease-out)]"
+      className="absolute z-[var(--z-popover)] min-w-80 max-w-lg rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] shadow-[var(--shadow-lg)] animate-[inline-ai-appear_200ms_var(--ease-out)]"
       style={{
         bottom: "calc(100% + var(--space-2))",
         left: "50%",
@@ -50,6 +50,7 @@ export function InlineAiInput(props: InlineAiInputProps): JSX.Element {
       }}
     >
       <div className="flex items-center gap-2 px-[var(--space-3)] py-[var(--space-2)]">
+        {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: inline AI input with transparent borderless styling */}
         <input
           ref={inputRef}
           type="text"

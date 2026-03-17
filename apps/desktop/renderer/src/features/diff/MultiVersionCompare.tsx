@@ -80,6 +80,7 @@ export function MultiVersionCompare(
           )}
         </div>
         {props.onClose && (
+          // eslint-disable-next-line creonow/no-native-html-element -- specialized close button
           <button
             type="button"
             onClick={props.onClose}

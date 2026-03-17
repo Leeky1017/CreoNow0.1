@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
 import type { SystemDialogProps, SystemDialogType } from "./types";
 
+/* eslint-disable creonow/no-native-html-element -- SystemDialog uses specialized action buttons (cancel/delete/save/discard/done) per dialog type variant */
+
 /**
  * Dialog action state
  */

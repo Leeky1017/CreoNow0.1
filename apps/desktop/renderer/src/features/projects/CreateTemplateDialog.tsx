@@ -9,6 +9,9 @@ import { Text } from "../../components/primitives/Text";
 import { useTemplateStore, type TemplateStructure } from "../../stores/templateStore";
 
 import { X } from "lucide-react";
+
+/* eslint-disable creonow/no-native-html-element -- form labels and template option buttons */
+
 // =============================================================================
 // Types
 // =============================================================================

@@ -10,6 +10,8 @@ import { Popover } from "../../components/primitives";
 import type { CharacterGroup } from "./types";
 import { GROUP_OPTIONS } from "./types";
 
+/* eslint-disable creonow/no-native-html-element -- GroupSelector uses popover trigger and option item buttons */
+
 export interface GroupSelectorProps {
   /** Current group value */
   value: CharacterGroup;
@@ -82,7 +84,7 @@ export function GroupSelector({
       align="start"
       sideOffset={4}
     >
-      <div className="min-w-[140px] py-1 -mx-2 -my-2">
+      <div className="min-w-35 py-1 -mx-2 -my-2">
         <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
           {t('character.groupSelector.selectGroup')}
         </div>

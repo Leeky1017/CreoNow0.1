@@ -5,6 +5,8 @@ import { Avatar } from "../../primitives/Avatar";
 import { Badge } from "../../primitives/Badge";
 import type { NodeDetailCardProps, NodeType } from "./types";
 
+/* eslint-disable creonow/no-native-html-element -- node action buttons (edit, delete) */
+
 /**
  * Node type to badge variant mapping
  */
@@ -41,7 +43,7 @@ function getTypeLabels(t: TFunction): Record<NodeType, string> {
  * Card base styles
  */
 const cardStyles = [
-  "w-[280px]",
+  "w-70",
   "bg-[var(--color-bg-surface)]/95",
   "backdrop-blur-md",
   "border",

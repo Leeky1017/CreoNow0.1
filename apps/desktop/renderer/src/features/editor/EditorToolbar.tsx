@@ -46,6 +46,7 @@ function ToolbarButton({
 
   return (
     <Tooltip content={tooltipContent}>
+      {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: ToolbarButton is a specialized toggle with aria-pressed */}
       <button
         type="button"
         data-testid={testId}

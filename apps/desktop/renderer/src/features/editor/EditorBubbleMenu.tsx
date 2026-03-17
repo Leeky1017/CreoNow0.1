@@ -281,12 +281,15 @@ export function EditorBubbleMenu(props: {
       </InlineFormatButton>
       <InlineFormatButton
         testId="bubble-code"
+        // eslint-disable-next-line creonow/no-raw-error-code-in-ui -- false positive: EDITOR_SHORTCUTS.code refers to code-formatting shortcut, not error code
         label={EDITOR_SHORTCUTS.code.label}
+        // eslint-disable-next-line creonow/no-raw-error-code-in-ui -- false positive: EDITOR_SHORTCUTS.code refers to code-formatting shortcut, not error code
         shortcut={EDITOR_SHORTCUTS.code.display()}
         isActive={editor.isActive("code")}
         disabled={inlineDisabled}
         onClick={() => editor.chain().focus().toggleCode().run()}
       >
+        {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- false positive: icons.code is the code-formatting icon */}
         {icons.code}
       </InlineFormatButton>
       <InlineFormatButton
@@ -303,6 +306,7 @@ export function EditorBubbleMenu(props: {
           className="flex items-center gap-1 px-1"
           data-testid="link-input-container"
         >
+          {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: inline link URL input with custom compact styling */}
           <input
             ref={linkInputRef}
             type="url"
@@ -340,6 +344,7 @@ export function EditorBubbleMenu(props: {
       <div className="mx-1 h-5 w-px bg-[var(--color-border-default)]" />
       <div className="flex items-center gap-1">
         {BUBBLE_AI_SKILLS.map((skill) => (
+          // eslint-disable-next-line creonow/no-native-html-element -- Editor: AI skill inline button with custom compact styling
           <button
             key={skill.id}
             type="button"

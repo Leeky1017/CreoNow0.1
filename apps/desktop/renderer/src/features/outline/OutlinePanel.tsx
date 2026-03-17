@@ -5,6 +5,9 @@ import { Tooltip } from "../../components/primitives/Tooltip";
 import { SearchInput } from "../../components/composites/SearchInput";
 
 import { ChevronDown, ChevronRight, ChevronsDownUp, ChevronsUpDown, Dot, File, FileText, Pencil, Trash2 } from "lucide-react";
+
+/* eslint-disable creonow/no-native-html-element -- outline tree item buttons and inline editing input */
+
 // ============================================================================
 // Types
 // ============================================================================

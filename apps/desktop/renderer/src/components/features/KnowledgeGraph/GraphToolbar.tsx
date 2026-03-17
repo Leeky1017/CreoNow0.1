@@ -3,6 +3,8 @@ import type { TFunction } from "i18next";
 import { Button } from "../../primitives/Button";
 import type { GraphToolbarProps, NodeFilter } from "./types";
 
+/* eslint-disable creonow/no-native-html-element -- specialized toolbar filter and action buttons */
+
 /**
  * Filter button configuration
  */
@@ -109,7 +111,7 @@ export function GraphToolbar({
   return (
     <header className={toolbarStyles}>
       {/* Left section: Back button + Title */}
-      <div className="flex items-center gap-4 w-[240px]">
+      <div className="flex items-center gap-4 w-60">
         {onBack && (
           <>
             <button
@@ -157,7 +159,7 @@ export function GraphToolbar({
       </div>
 
       {/* Right section: Zoom + Add Node */}
-      <div className="flex items-center gap-3 w-[240px] justify-end">
+      <div className="flex items-center gap-3 w-60 justify-end">
         {/* Zoom controls */}
         <div className="flex items-center bg-[var(--color-bg-raised)] rounded border border-[var(--color-border-default)]">
           <button

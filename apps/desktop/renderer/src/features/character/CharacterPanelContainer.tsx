@@ -19,6 +19,8 @@ import { CharacterPanelSkeleton } from "./CharacterPanelSkeleton";
 import { kgToCharacters, characterToMetadataJson } from "./characterFromKg";
 import type { Character } from "./types";
 
+/* eslint-disable creonow/no-native-html-element -- CharacterPanelContainer uses specialized empty-state create button */
+
 export interface CharacterPanelContainerProps {
   /** Project ID for KG scope */
   projectId: string;

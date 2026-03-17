@@ -145,6 +145,7 @@ export function RadioGroup({
             <RadioIndicator size={size} />
           </RadioGroupPrimitive.Item>
           <div className="flex flex-col">
+            {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: no Label primitive exists */}
             <label
               htmlFor={`radio-${name || "group"}-${option.value}`}
               className={`${styles.label} text-[var(--color-fg-default)] cursor-pointer ${
@@ -463,6 +464,7 @@ export function RadioCardItem({
 
   if (isAction && onAction) {
     return (
+      // eslint-disable-next-line creonow/no-native-html-element -- Primitive: RadioCard action variant uses native button internally
       <button
         type="button"
         onClick={onAction}

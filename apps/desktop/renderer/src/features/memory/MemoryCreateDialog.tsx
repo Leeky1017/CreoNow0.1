@@ -115,7 +115,7 @@ export function MemoryCreateDialog(props: {
                   ? t('memory.create.exampleFact')
                   : t('memory.create.exampleNote')
             }
-            className="min-h-[120px]"
+            className="min-h-30"
           />
         </div>
 

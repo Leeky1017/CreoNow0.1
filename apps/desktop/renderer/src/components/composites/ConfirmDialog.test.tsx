@@ -21,10 +21,10 @@ describe("ConfirmDialog", () => {
     ).toBeInTheDocument();
   });
 
-  it("applies destructive style to confirm button", () => {
+  it("applies danger variant to confirm button when destructive", () => {
     render(<ConfirmDialog {...defaultProps} destructive />);
     const confirmBtn = screen.getByRole("button", { name: "Delete" });
-    expect(confirmBtn.className).toMatch(/destructive/i);
+    expect(confirmBtn.className).toMatch(/color-error/i);
   });
 
   it("calls onConfirm when confirm button is clicked", () => {

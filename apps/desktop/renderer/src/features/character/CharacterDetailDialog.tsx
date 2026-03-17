@@ -32,6 +32,9 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+
+/* eslint-disable creonow/no-native-html-element -- CharacterDetailDialog uses form fields (inputs, labels) and specialized buttons throughout that don't map to design system primitives */
+
 export interface CharacterDetailDialogProps {
   /** Controlled open state */
   open: boolean;
@@ -92,6 +95,7 @@ function getContentStyles(hasContainer: boolean): string {
     "-translate-x-1/2",
     hasContainer ? "translate-y-0" : "-translate-y-1/2",
     "z-[var(--z-modal)]",
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- dialog content width per design spec
     "w-[560px]",
     hasContainer ? "max-h-[calc(100%-3.5rem)]" : "max-h-[92vh]",
     "bg-[var(--color-bg-surface)]",
@@ -583,7 +587,7 @@ function CharacterProfileSection(props: {
                   onChange={(e) => props.onNewFeatureChange(e.target.value)}
                   onKeyDown={props.onFeatureKeyDown}
                   onBlur={props.onAddFeature}
-                  className="bg-transparent text-xs text-[var(--color-fg-default)] placeholder-[var(--color-fg-placeholder)] focus:outline-none focus:placeholder-[var(--color-fg-muted)] min-w-[80px] py-1 px-1 ml-1 hover:bg-[var(--color-bg-surface)] rounded transition-colors"
+                  className="bg-transparent text-xs text-[var(--color-fg-default)] placeholder-[var(--color-fg-placeholder)] focus:outline-none focus:placeholder-[var(--color-fg-muted)] min-w-20 py-1 px-1 ml-1 hover:bg-[var(--color-bg-surface)] rounded transition-colors"
                 />
               </div>
             </ProfileTableRow>
@@ -604,7 +608,7 @@ function CharacterProfileSection(props: {
                   onChange={(e) => props.onNewTraitChange(e.target.value)}
                   onKeyDown={props.onTraitKeyDown}
                   onBlur={props.onAddTrait}
-                  className="bg-transparent text-xs text-[var(--color-fg-default)] placeholder-[var(--color-fg-placeholder)] focus:outline-none focus:placeholder-[var(--color-fg-muted)] min-w-[60px] py-1 px-1 ml-1 hover:bg-[var(--color-bg-surface)] rounded transition-colors"
+                  className="bg-transparent text-xs text-[var(--color-fg-default)] placeholder-[var(--color-fg-placeholder)] focus:outline-none focus:placeholder-[var(--color-fg-muted)] min-w-15 py-1 px-1 ml-1 hover:bg-[var(--color-bg-surface)] rounded transition-colors"
                 />
               </div>
             </ProfileTableRow>
@@ -1018,7 +1022,7 @@ export function CharacterDetailDialog({
                 }
                 placeholder={t("character.detail.descriptionPlaceholder")}
                 fullWidth
-                className="min-h-[80px] focus:min-h-[100px] transition-[min-height] resize-none"
+                className="min-h-20 focus:min-h-25 transition-[min-height] resize-none"
               />
             </div>
 

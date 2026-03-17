@@ -2,6 +2,8 @@ import { ChevronDown, CircleCheck, CircleX, Loader2, MapPin, Play, Settings, Tri
 import { useTranslation } from "react-i18next";
 import { Button } from "../../components/primitives";
 
+/* eslint-disable creonow/no-native-html-element -- gate category labels, filter controls, and action buttons */
+
 // ============================================================================
 // Types
 // ============================================================================

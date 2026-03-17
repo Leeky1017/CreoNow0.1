@@ -3,6 +3,8 @@ import { Text } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 import { Slider } from "../../components/primitives/Slider";
 
+/* eslint-disable creonow/no-native-html-element -- theme selection buttons */
+
 /**
  * Theme mode types
  */
@@ -143,6 +145,7 @@ export function SettingsAppearancePage({
   const accentColors = getAccentColors(t);
 
   return (
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- settings content width per design spec
     <div className="max-w-[560px]">
       {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">

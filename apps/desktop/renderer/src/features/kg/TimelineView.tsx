@@ -125,6 +125,7 @@ export function TimelineView({
       <ul className="flex-1 min-h-0 overflow-auto p-4 space-y-3">
         {orderedEvents.map((event) => (
           <li key={event.id}>
+            {/* eslint-disable-next-line creonow/no-native-html-element -- timeline event interactive item */}
             <button
               type="button"
               draggable

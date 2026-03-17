@@ -2,6 +2,8 @@ import { useTranslation } from "react-i18next";
 
 import { EmptyState } from "../../components/composites/EmptyState";
 
+/* eslint-disable creonow/no-native-html-element -- CharacterCardList uses specialized create and card selection buttons */
+
 export interface CharacterCardSummary {
   id: string;
   name: string;

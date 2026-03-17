@@ -124,6 +124,7 @@ export function SearchInput({
       <div className={iconStyles}>
         <Search size={14} strokeWidth={1.5} />
       </div>
+      {/* eslint-disable-next-line creonow/no-native-html-element -- Composite: SearchInput uses bare input with custom styling */}
       <input
         type="search"
         role="searchbox"

@@ -7,6 +7,8 @@ import { Select } from "../../primitives/Select";
 import { Textarea } from "../../primitives/Textarea";
 import type { GraphNode, NodeEditDialogProps, NodeType } from "./types";
 
+/* eslint-disable creonow/no-native-html-element -- form labels and dialog action buttons */
+
 /**
  * Node type color variables
  */

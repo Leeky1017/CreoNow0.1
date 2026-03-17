@@ -136,6 +136,7 @@ export function InfoBar({
       <span className="flex-1">{message}</span>
       {action && <div className="shrink-0">{action}</div>}
       {dismissible && (
+        // eslint-disable-next-line creonow/no-native-html-element -- Composite: dismiss button is an icon-only inline control
         <button
           type="button"
           aria-label={t('workbench.infoBar.dismiss')}

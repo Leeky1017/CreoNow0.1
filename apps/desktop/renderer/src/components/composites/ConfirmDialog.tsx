@@ -1,3 +1,4 @@
+import { Button } from "../primitives/Button";
 import { Dialog } from "../primitives/Dialog";
 
 // =============================================================================
@@ -26,51 +27,6 @@ export interface ConfirmDialogProps {
 // =============================================================================
 // Styles
 // =============================================================================
-
-const confirmBaseStyles = [
-  "px-4",
-  "py-2",
-  "text-sm",
-  "font-medium",
-  "rounded-[var(--radius-md)]",
-  "transition-colors",
-  "duration-[var(--duration-fast)]",
-  "focus-visible:outline",
-  "focus-visible:outline-[length:var(--ring-focus-width)]",
-  "focus-visible:outline-offset-[var(--ring-focus-offset)]",
-  "focus-visible:outline-[var(--color-ring-focus)]",
-].join(" ");
-
-const confirmDefaultStyles = [
-  "bg-[var(--color-fg-default)]",
-  "text-[var(--color-fg-inverse)]",
-  "hover:bg-[var(--color-fg-muted)]",
-].join(" ");
-
-const confirmDestructiveStyles = [
-  "destructive",
-  "bg-[var(--color-error)]",
-  "text-[var(--color-fg-inverse)]",
-  "hover:bg-[var(--color-error)]/90",
-].join(" ");
-
-const cancelStyles = [
-  "px-4",
-  "py-2",
-  "text-sm",
-  "font-medium",
-  "rounded-[var(--radius-md)]",
-  "bg-transparent",
-  "text-[var(--color-fg-muted)]",
-  "hover:bg-[var(--color-bg-hover)]",
-  "hover:text-[var(--color-fg-default)]",
-  "transition-colors",
-  "duration-[var(--duration-fast)]",
-  "focus-visible:outline",
-  "focus-visible:outline-[length:var(--ring-focus-width)]",
-  "focus-visible:outline-offset-[var(--ring-focus-offset)]",
-  "focus-visible:outline-[var(--color-ring-focus)]",
-].join(" ");
 
 // =============================================================================
 // Component
@@ -111,10 +67,6 @@ export function ConfirmDialog({
   onCancel,
   open,
 }: ConfirmDialogProps): JSX.Element {
-  const confirmClassName = destructive
-    ? `${confirmBaseStyles} ${confirmDestructiveStyles}`
-    : `${confirmBaseStyles} ${confirmDefaultStyles}`;
-
   return (
     <Dialog
       open={open}
@@ -129,20 +81,20 @@ export function ConfirmDialog({
       closeOnOverlayClick
       footer={
         <>
-          <button
-            type="button"
-            className={cancelStyles}
+          <Button
+            variant="ghost"
+            size="md"
             onClick={onCancel}
           >
             {cancelLabel}
-          </button>
-          <button
-            type="button"
-            className={confirmClassName}
+          </Button>
+          <Button
+            variant={destructive ? "danger" : "primary"}
+            size="md"
             onClick={onConfirm}
           >
             {confirmLabel}
-          </button>
+          </Button>
         </>
       }
     >

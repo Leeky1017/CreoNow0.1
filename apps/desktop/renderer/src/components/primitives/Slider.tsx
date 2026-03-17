@@ -155,7 +155,7 @@ export function Slider({
           />
         </div>
 
-        {/* Native range input for accessibility */}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: Slider uses native <input type="range"> for a11y */}
         <input
           type="range"
           min={min}

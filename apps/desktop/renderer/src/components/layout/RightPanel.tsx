@@ -152,6 +152,7 @@ export function RightPanel(props: {
           {RIGHT_PANEL_TABS.map(({ type, labelKey, testId }) => {
             const isActive = activeRightPanel === type;
             return (
+              // eslint-disable-next-line creonow/no-native-html-element -- Layout: tab button with aria-pressed
               <button
                 key={type}
                 type="button"
@@ -167,6 +168,7 @@ export function RightPanel(props: {
           <div className="flex-1" />
           {activeRightPanel === "ai" ? (
             <div className="relative flex items-center gap-1">
+              {/* eslint-disable-next-line creonow/no-native-html-element -- Layout: small icon action button */}
               <button
                 type="button"
                 data-testid="right-panel-ai-history-action"
@@ -190,6 +192,7 @@ export function RightPanel(props: {
                   <polyline points="12 6 12 12 16 14" />
                 </svg>
               </button>
+              {/* eslint-disable-next-line creonow/no-native-html-element -- Layout: small icon action button */}
               <button
                 type="button"
                 data-testid="right-panel-ai-new-chat-action"
@@ -229,6 +232,7 @@ export function RightPanel(props: {
             </div>
           ) : null}
           {props.onCollapse ? (
+            // eslint-disable-next-line creonow/no-native-html-element -- Layout: collapse action button
             <button
               type="button"
               data-testid="right-panel-collapse-btn"

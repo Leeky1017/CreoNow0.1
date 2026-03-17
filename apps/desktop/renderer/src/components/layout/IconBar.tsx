@@ -204,6 +204,7 @@ export function IconBar({
       (item.behavior === "dialog" && item.dialogType === dialogType) ||
       (item.behavior === "spotlight" && spotlightOpen);
     return (
+      // eslint-disable-next-line creonow/no-native-html-element -- Layout: IconBar uses native button with aria-pressed for toggle semantics
       <button
         key={id}
         type="button"
@@ -237,6 +238,7 @@ export function IconBar({
 
       {/* Settings (dialog entry point) */}
       <div className="flex flex-col items-center gap-1">
+        {/* eslint-disable-next-line creonow/no-native-html-element -- Layout: IconBar settings button with aria-pressed toggle */}
         <button
           type="button"
           onClick={onOpenSettings}

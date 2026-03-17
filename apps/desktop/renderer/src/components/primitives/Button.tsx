@@ -178,6 +178,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       .join(" ");
 
     return (
+      // eslint-disable-next-line creonow/no-native-html-element -- Primitive: Button wraps native <button>
       <button
         ref={ref}
         type="button"

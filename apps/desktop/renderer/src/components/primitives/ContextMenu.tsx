@@ -43,7 +43,9 @@ const contentStyles = [
   "rounded-[var(--radius-md)]",
   "shadow-[var(--shadow-md)]",
   // Sizing
+  // eslint-disable-next-line creonow/no-hardcoded-dimension -- Design spec §6.6: min/max menu width
   "min-w-[160px]",
+  // eslint-disable-next-line creonow/no-hardcoded-dimension -- Design spec §6.6: min/max menu width
   "max-w-[240px]",
   "py-1",
   // Animation via CSS transition

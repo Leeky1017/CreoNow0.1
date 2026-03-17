@@ -79,6 +79,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       .filter(Boolean)
       .join(" ");
 
+    // eslint-disable-next-line creonow/no-native-html-element -- Primitive: Input wraps native <input>
     return <input ref={ref} className={classes} {...props} />;
   },
 );

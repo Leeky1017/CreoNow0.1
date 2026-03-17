@@ -7,6 +7,8 @@ import { resolveSkillsForPicker } from "./scopeResolver";
 
 import { Plus } from "lucide-react";
 
+/* eslint-disable creonow/no-native-html-element -- SkillPicker uses specialized interactive buttons (skill items, toggles, add-skill) that don't map to the Button primitive */
+
 /**
  * SkillItemRow – renders one skill entry with optional action buttons.
  */

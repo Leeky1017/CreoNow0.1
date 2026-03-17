@@ -95,7 +95,7 @@ describe("ProjectSwitcher", () => {
 
     expect(dropdown.className).toContain("shadow-[var(--shadow-md)]");
     expect(dropdown.className).toContain("z-[var(--z-dropdown)]");
-    expect(options).toHaveClass("max-h-[320px]");
+    expect(options).toHaveClass("max-h-80");
     expect(options).toHaveClass("overflow-y-auto");
     expect(searchInput).toHaveFocus();
   });

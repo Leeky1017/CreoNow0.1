@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import type { ProjectListItem } from "../../stores/projectStore";
 
+/* eslint-disable creonow/no-native-html-element -- project list buttons and search input */
+
 export interface ProjectSwitcherProps {
   currentProjectId: string | null;
   projects: ProjectListItem[];
@@ -241,7 +243,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
           ) : (
             <div
               data-testid="project-switcher-options"
-              className="max-h-[320px] overflow-y-auto py-1"
+              className="max-h-80 overflow-y-auto py-1"
             >
               {filteredProjects.map((project) => {
                 const selected = project.projectId === props.currentProjectId;

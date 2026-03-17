@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import type { AiDiffModalProps, DiffChange, DiffChangeState } from "./types";
 
+/* eslint-disable creonow/no-native-html-element -- AiDiffModal uses specialized styled buttons (navigation, accept/reject, footer actions) that don't map to the Button primitive */
+
 /**
  * Modal state for tracking overall operation
  */
@@ -131,6 +133,7 @@ const contentStyles = [
   "shadow-[var(--shadow-xl)]",
   "w-full",
   "max-w-4xl",
+  // eslint-disable-next-line creonow/no-hardcoded-dimension -- dialog content height per design spec
   "h-[500px]",
   "overflow-hidden",
   "flex",

@@ -22,6 +22,9 @@ import { getHumanErrorMessage } from "../../lib/errorMessages";
 import type { IpcErrorCode } from "@shared/types/ipc-generated";
 
 import { Plus } from "lucide-react";
+
+/* eslint-disable creonow/no-native-html-element -- form labels, inputs, and navigation buttons */
+
 // =============================================================================
 // Types
 // =============================================================================
