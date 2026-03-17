@@ -306,7 +306,8 @@
       "semanticSearch": "Semantic Search",
       "includeArchived": "Include Archived",
       "scope": "Scope",
-      "currentProject": "Current Project"
+      "currentProject": "Current Project",
+      "allProjects": "All Projects"
     },
     "results": {
       "match": "{{count}} match(es)",

@@ -9,6 +9,7 @@ let mockSearchState: SearchStore;
 function createSearchState(overrides: Partial<SearchStore> = {}): SearchStore {
   return {
     query: "missing",
+    scope: "current" as const,
     items: [],
     status: "ready",
     indexState: "ready",
@@ -16,6 +17,7 @@ function createSearchState(overrides: Partial<SearchStore> = {}): SearchStore {
     hasMore: false,
     lastError: null,
     setQuery: vi.fn(),
+    setScope: vi.fn(),
     runFulltext: vi.fn().mockResolvedValue(undefined),
     clearResults: vi.fn(),
     clearError: vi.fn(),
@@ -48,7 +50,9 @@ describe("Search Panel status rendering (S3-SEARCH-PANEL-S3)", () => {
     const { rerender } = render(<SearchPanel projectId="proj_1" open={true} />);
 
     expect(screen.getByText("No matching results")).toBeInTheDocument();
-    expect(screen.queryByText("Search failed, please retry")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Search failed, please retry"),
+    ).not.toBeInTheDocument();
 
     mockSearchState = createSearchState({
       status: "error",
@@ -69,6 +73,7 @@ describe("Search Panel status rendering (S3-SEARCH-PANEL-S3)", () => {
       expect(mockSearchState.runFulltext).toHaveBeenCalledWith({
         projectId: "proj_1",
         limit: 20,
+        scope: "current",
       });
     });
   });

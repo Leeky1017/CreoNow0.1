@@ -192,7 +192,7 @@ describe("SearchPanel placeholder UI closure", () => {
     expect(screen.queryByText(/0\.04s/i)).not.toBeInTheDocument();
   });
 
-  it("marks memory and knowledge results as coming soon instead of pretending they jump", () => {
+  it("renders real memory and knowledge results without coming-soon placeholder", () => {
     render(
       <SearchPanel
         projectId="p1"
@@ -216,9 +216,9 @@ describe("SearchPanel placeholder UI closure", () => {
       />,
     );
 
-    expect(screen.getAllByText(/coming soon/i).length).toBeGreaterThanOrEqual(
-      2,
-    );
+    expect(screen.getByText("Memory item")).toBeInTheDocument();
+    expect(screen.getByText("Knowledge item")).toBeInTheDocument();
+    expect(screen.queryByText(/coming soon/i)).not.toBeInTheDocument();
   });
 
   it("does not render View More button", () => {
