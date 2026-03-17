@@ -35,13 +35,17 @@ function defaultSettings(overrides?: Partial<MemorySettings>): MemorySettings {
  * so tests can verify exactly what was written.
  */
 function createDbStub(args?: {
-  acceptedCount?: number;
+  feedbackCounts?: Partial<Record<"accept" | "reject" | "partial", number>>;
   existingLearnedMemoryId?: string | null;
   onInsertFeedback?: (params: unknown[]) => void;
   onInsertMemory?: (params: unknown[]) => void;
   onUpdateMemory?: (params: unknown[]) => void;
 }): Database.Database {
-  const acceptedCount = args?.acceptedCount ?? 0;
+  const feedbackCounts = {
+    accept: args?.feedbackCounts?.accept ?? 0,
+    reject: args?.feedbackCounts?.reject ?? 0,
+    partial: args?.feedbackCounts?.partial ?? 0,
+  };
   const existingId = args?.existingLearnedMemoryId ?? null;
 
   const db = {
@@ -59,10 +63,12 @@ function createDbStub(args?: {
       if (
         sql.includes("SELECT COUNT(*)") &&
         sql.includes("skill_feedback") &&
-        sql.includes("accept")
+        sql.includes("action = ?")
       ) {
         return {
-          get: () => ({ count: acceptedCount }),
+          get: (action: "accept" | "reject" | "partial") => ({
+            count: feedbackCounts[action] ?? 0,
+          }),
         };
       }
 
@@ -114,7 +120,7 @@ function ok(
 {
   const inserted: unknown[][] = [];
   const db = createDbStub({
-    acceptedCount: 1, // below threshold of 3
+    feedbackCounts: { accept: 1 }, // below threshold of 3
     onInsertFeedback: (p) => inserted.push(p),
   });
 
@@ -230,7 +236,7 @@ function ok(
 {
   const insertedMemories: unknown[][] = [];
   const db = createDbStub({
-    acceptedCount: 3, // equals threshold
+    feedbackCounts: { accept: 3 }, // equals threshold
     existingLearnedMemoryId: null, // no prior learned memory → INSERT path
     onInsertMemory: (p) => insertedMemories.push(p),
   });
@@ -255,10 +261,11 @@ function ok(
   assert.equal(insertedMemories.length, 1, "one user_memory row inserted");
 }
 
-// ─── S6: Reject action → recorded, ignored as unsupported, not learned ─────
+// ─── S6: Reject action → recorded and counted as negative signal ───────────
 {
   const inserted: unknown[][] = [];
   const db = createDbStub({
+    feedbackCounts: { accept: 2, reject: 1 },
     onInsertFeedback: (p) => inserted.push(p),
   });
 
@@ -274,14 +281,61 @@ function ok(
 
   const outcome = ok(result);
   assert.equal(outcome.recorded, true);
-  assert.equal(outcome.ignored, true);
-  assert.equal(outcome.ignoredReason, "unsupported_action");
+  assert.equal(outcome.ignored, false);
   assert.equal(outcome.learned, false);
+  assert.equal(outcome.signalCount, 2);
+  assert.equal(outcome.rejectCount, 1);
+  assert.equal(outcome.partialCount, 0);
+  assert.equal(outcome.weightedScore, 1);
 
   const row = inserted[0]!;
   assert.equal(row[2], "reject"); // action preserved
-  assert.equal(row[3], null, "evidenceRef null for non-accept action");
-  assert.equal(row[4], 1, "ignored = 1");
+  assert.equal(
+    row[3],
+    "avoid-passive-voice",
+    "evidenceRef retained for learning",
+  );
+  assert.equal(row[4], 0, "ignored = 0");
+}
+
+// ─── S7: Partial feedback lowers weighted score and blocks learning ─────────
+{
+  const inserted: unknown[][] = [];
+  const insertedMemories: unknown[][] = [];
+  const db = createDbStub({
+    feedbackCounts: { accept: 3, partial: 2 },
+    onInsertFeedback: (p) => inserted.push(p),
+    onInsertMemory: (p) => insertedMemories.push(p),
+  });
+
+  const result = recordSkillFeedbackAndLearn({
+    db,
+    logger: createLogger(),
+    settings: defaultSettings({ preferenceLearningThreshold: 3 }),
+    runId: "run-007",
+    action: "partial",
+    evidenceRef: "prefer-short-sentences",
+    ts: 7000,
+  });
+
+  const outcome = ok(result);
+  assert.equal(outcome.recorded, true);
+  assert.equal(outcome.ignored, false);
+  assert.equal(
+    outcome.learned,
+    false,
+    "partial should reduce weighted score below threshold",
+  );
+  assert.equal(outcome.signalCount, 3);
+  assert.equal(outcome.rejectCount, 0);
+  assert.equal(outcome.partialCount, 2);
+  assert.equal(outcome.weightedScore, 2);
+  assert.equal(inserted.length, 1);
+  assert.equal(
+    insertedMemories.length,
+    0,
+    "no learned memory upsert when weighted score is insufficient",
+  );
 }
 
 console.log("preferenceLearning.test.ts: all assertions passed");
