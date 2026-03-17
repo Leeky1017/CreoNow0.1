@@ -89,6 +89,11 @@ type SemanticUpdatePayload = {
     >
   >;
 };
+type SemanticConflictResolvePayload = {
+  projectId: string;
+  conflictId: string;
+  chosenRuleId: string;
+};
 type SemanticDeletePayload = { projectId: string; ruleId: string };
 type SemanticPromotePayload = { projectId: string; ruleId: string };
 type ClearProjectPayload = { projectId: string; confirmed: boolean };
@@ -276,13 +281,19 @@ function registerMemoryEntryHandlers(ctx: {
   );
 }
 
+// eslint-disable-next-line max-lines-per-function -- Handler registration groups related memory IPC channels in one place.
 function registerMemoryEpisodicAndTraceHandlers(ctx: {
   episodicService: EpisodicMemoryService | null;
   traceService: MemoryTraceService;
   rememberSender: (event: unknown) => void;
   handleWithProjectAccess: HandleWithProjectAccessFn;
 }): void {
-  const { episodicService, traceService, rememberSender, handleWithProjectAccess } = ctx;
+  const {
+    episodicService,
+    traceService,
+    rememberSender,
+    handleWithProjectAccess,
+  } = ctx;
 
   handleWithProjectAccess(
     "memory:episode:record",
@@ -420,6 +431,42 @@ function registerMemoryEpisodicAndTraceHandlers(ctx: {
       return res.ok
         ? { ok: true, data: res.data }
         : { ok: false, error: res.error };
+    },
+  );
+
+  handleWithProjectAccess(
+    "memory:conflict:resolve",
+    async (
+      e,
+      payload: SemanticConflictResolvePayload,
+    ): Promise<
+      IpcResponse<{
+        item: { id: string; ruleIds: string[]; status: "pending" | "resolved" };
+        keptRule: SemanticMemoryRule;
+      }>
+    > => {
+      if (!episodicService) {
+        return {
+          ok: false,
+          error: { code: "DB_ERROR", message: "Database not ready" },
+        };
+      }
+      rememberSender(e);
+      const res = episodicService.resolveSemanticConflict(payload);
+      if (!res.ok) {
+        return { ok: false, error: res.error };
+      }
+      return {
+        ok: true,
+        data: {
+          item: {
+            id: res.data.item.id,
+            ruleIds: [...res.data.item.ruleIds],
+            status: res.data.item.status,
+          },
+          keptRule: res.data.keptRule,
+        },
+      };
     },
   );
 

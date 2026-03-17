@@ -49,6 +49,7 @@ async function runCeS2FdS1InjectsWhenDetectedEntityWhenTextMatches() {
           description: "林默的妹妹",
         }),
       ],
+      totalCount: 1,
     },
   });
 
@@ -96,6 +97,7 @@ async function runCeS2FdS2SkipsEntitiesWithAiContextLevelNever() {
           aiContextLevel: "never",
         }),
       ],
+      totalCount: 2,
     },
   });
 
@@ -134,6 +136,7 @@ async function runCeS2FdS3ReturnsDegradableWarningWhenMatcherOrQueryFails() {
           aiContextLevel: "when_detected",
         }),
       ],
+      totalCount: 1,
     },
   });
 
