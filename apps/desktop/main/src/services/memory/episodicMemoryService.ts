@@ -262,13 +262,15 @@ export type EpisodeRepository = {
 };
 
 export type EpisodicMemoryService = {
-  recordEpisode: (args: EpisodeRecordInput) => Promise<ServiceResult<{
-    accepted: true;
-    episodeId: string;
-    retryCount: number;
-    implicitSignal: ImplicitSignal;
-    implicitWeight: number;
-  }>>;
+  recordEpisode: (args: EpisodeRecordInput) => Promise<
+    ServiceResult<{
+      accepted: true;
+      episodeId: string;
+      retryCount: number;
+      implicitSignal: ImplicitSignal;
+      implicitWeight: number;
+    }>
+  >;
   queryEpisodes: (args: EpisodeQueryInput) => ServiceResult<{
     items: EpisodeRecord[];
     memoryDegraded: boolean;
@@ -346,6 +348,14 @@ export type EpisodicMemoryService = {
   listConflictQueue: (args: {
     projectId: string;
   }) => ServiceResult<{ items: SemanticConflictQueueItem[] }>;
+  resolveSemanticConflict: (args: {
+    projectId: string;
+    conflictId: string;
+    chosenRuleId: string;
+  }) => ServiceResult<{
+    item: SemanticConflictQueueItem;
+    keptRule: SemanticMemoryRule;
+  }>;
 };
 
 export type InMemoryEpisodeRepository = EpisodeRepository & {
@@ -1063,9 +1073,14 @@ type EpisodicState = {
 type EpisodicSmallHelpers = ReturnType<typeof createEpisodicSmallHelpers>;
 type EpisodicExecHelpers = ReturnType<typeof createEpisodicExecHelpers>;
 
-type EpisodicCtx = Pick<EpisodicServiceArgs, 'repository' | 'logger' | 'semanticRecall'> & {
+type EpisodicCtx = Pick<
+  EpisodicServiceArgs,
+  "repository" | "logger" | "semanticRecall"
+> & {
   now: () => number;
-} & EpisodicState & EpisodicSmallHelpers & EpisodicExecHelpers;
+} & EpisodicState &
+  EpisodicSmallHelpers &
+  EpisodicExecHelpers;
 
 function createEpisodicSmallHelpers(
   args: EpisodicServiceArgs,
@@ -1278,7 +1293,6 @@ function createEpisodicSmallHelpers(
     return outputs;
   }
 
-
   function fallbackRules(): string[] {
     return [
       "Use concise, coherent narration.",
@@ -1328,23 +1342,63 @@ function createEpisodicSmallHelpers(
     );
   }
 
-
-  return { cloneSemanticRule, cloneConflict, toPlaceholder, normalizeRuleText, isConfidenceInRange, clampConfidence, isDirectContradiction, emitDistillProgress, logDegradeEvent, invalidateSemanticCache, resolveScopePriority, getSemanticRules, getConflictQueue, upsertSemanticRule, enqueueConflict, defaultDistillLlm, fallbackRules, validateRecordInput, scoreEpisode };
+  return {
+    cloneSemanticRule,
+    cloneConflict,
+    toPlaceholder,
+    normalizeRuleText,
+    isConfidenceInRange,
+    clampConfidence,
+    isDirectContradiction,
+    emitDistillProgress,
+    logDegradeEvent,
+    invalidateSemanticCache,
+    resolveScopePriority,
+    getSemanticRules,
+    getConflictQueue,
+    upsertSemanticRule,
+    enqueueConflict,
+    defaultDistillLlm,
+    fallbackRules,
+    validateRecordInput,
+    scoreEpisode,
+  };
 }
 
+// eslint-disable-next-line max-lines-per-function -- Keep episodic execution helpers co-located for transactional consistency.
 function createEpisodicExecHelpers(
   args: EpisodicServiceArgs,
   state: EpisodicState,
-  derived: { now: () => number; distillScheduler: (job: () => void) => void; distillLlm: EpisodicServiceArgs['distillLlm'] extends infer T ? NonNullable<T> : never },
+  derived: {
+    now: () => number;
+    distillScheduler: (job: () => void) => void;
+    distillLlm: EpisodicServiceArgs["distillLlm"] extends infer T
+      ? NonNullable<T>
+      : never;
+  },
   helpers: ReturnType<typeof createEpisodicSmallHelpers>,
 ) {
-  const { knownProjectIds, distillingProjects, distillIoDegradedProjects,
-    retryPendingByProject, pendingEpisodeCountByProject,
-    scheduledBatchDistillProjects, projectMutex } = state;
+  const {
+    knownProjectIds,
+    distillingProjects,
+    distillIoDegradedProjects,
+    retryPendingByProject,
+    pendingEpisodeCountByProject,
+    scheduledBatchDistillProjects,
+    projectMutex,
+  } = state;
   const { now, distillScheduler, distillLlm } = derived;
-  const { emitDistillProgress, logDegradeEvent, isConfidenceInRange,
-    getSemanticRules, normalizeRuleText, clampConfidence,
-    upsertSemanticRule, isDirectContradiction, enqueueConflict } = helpers;
+  const {
+    emitDistillProgress,
+    logDegradeEvent,
+    isConfidenceInRange,
+    getSemanticRules,
+    normalizeRuleText,
+    clampConfidence,
+    upsertSemanticRule,
+    isDirectContradiction,
+    enqueueConflict,
+  } = helpers;
 
   function buildClusters(projectId: string): Array<{
     sceneType: string;
@@ -1640,17 +1694,28 @@ function createEpisodicExecHelpers(
     }
   }
 
-  return { buildClusters, executeDistillation, scheduleBatchDistillation, maybeTriggerBatchDistillation };
+  return {
+    buildClusters,
+    executeDistillation,
+    scheduleBatchDistillation,
+    maybeTriggerBatchDistillation,
+  };
 }
 
 function createEpisodicQueryOps(
   ctx: EpisodicCtx,
-): Pick<
-  EpisodicMemoryService,
-  "queryEpisodes"
-> {
+): Pick<EpisodicMemoryService, "queryEpisodes"> {
   const args = ctx;
-  const { now, scoreEpisode, logDegradeEvent, resolveScopePriority, getSemanticRules, toPlaceholder, distillIoDegradedProjects, fallbackRules } = ctx;
+  const {
+    now,
+    scoreEpisode,
+    logDegradeEvent,
+    resolveScopePriority,
+    getSemanticRules,
+    toPlaceholder,
+    distillIoDegradedProjects,
+    fallbackRules,
+  } = ctx;
   return {
     queryEpisodes: (input) => {
       if (input.projectId.trim().length === 0) {
@@ -1770,7 +1835,6 @@ function createEpisodicQueryOps(
         };
       }
     },
-
   };
 }
 
@@ -1778,10 +1842,20 @@ function createEpisodicTriggerOps(
   ctx: EpisodicCtx,
 ): Pick<
   EpisodicMemoryService,
-  "realtimeEvictionTrigger" | "dailyDecayRecomputeTrigger" | "weeklyCompressTrigger" | "monthlyPurgeTrigger"
+  | "realtimeEvictionTrigger"
+  | "dailyDecayRecomputeTrigger"
+  | "weeklyCompressTrigger"
+  | "monthlyPurgeTrigger"
 > {
   const args = ctx;
-  const { now, knownProjectIds, semanticRulesByProject, getSemanticRules, clampConfidence, upsertSemanticRule } = ctx;
+  const {
+    now,
+    knownProjectIds,
+    semanticRulesByProject,
+    getSemanticRules,
+    clampConfidence,
+    upsertSemanticRule,
+  } = ctx;
   return {
     realtimeEvictionTrigger: ({ projectId }) => {
       if (projectId.trim().length === 0) {
@@ -1924,7 +1998,6 @@ function createEpisodicTriggerOps(
         return ipcError("DB_ERROR", "Failed monthly purge trigger");
       }
     },
-
   };
 }
 
@@ -1932,10 +2005,27 @@ function createEpisodicSemanticOps(
   ctx: EpisodicCtx,
 ): Pick<
   EpisodicMemoryService,
-  "listSemanticMemory" | "addSemanticMemory" | "updateSemanticMemory" | "deleteSemanticMemory" | "promoteSemanticMemory"
+  | "listSemanticMemory"
+  | "addSemanticMemory"
+  | "updateSemanticMemory"
+  | "deleteSemanticMemory"
+  | "promoteSemanticMemory"
+  | "resolveSemanticConflict"
 > {
   const args = ctx;
-  const { knownProjectIds, getSemanticRules, cloneSemanticRule, getConflictQueue, cloneConflict, normalizeRuleText, isConfidenceInRange, upsertSemanticRule, now, semanticRulesByProject, invalidateSemanticCache } = ctx;
+  const {
+    knownProjectIds,
+    getSemanticRules,
+    cloneSemanticRule,
+    getConflictQueue,
+    cloneConflict,
+    normalizeRuleText,
+    isConfidenceInRange,
+    upsertSemanticRule,
+    now,
+    semanticRulesByProject,
+    invalidateSemanticCache,
+  } = ctx;
   return {
     listSemanticMemory: ({ projectId }) => {
       if (projectId.trim().length === 0) {
@@ -2078,6 +2168,76 @@ function createEpisodicSemanticOps(
       return { ok: true, data: { item } };
     },
 
+    resolveSemanticConflict: ({ projectId, conflictId, chosenRuleId }) => {
+      if (projectId.trim().length === 0) {
+        return ipcError("INVALID_ARGUMENT", "projectId is required");
+      }
+      if (conflictId.trim().length === 0) {
+        return ipcError("INVALID_ARGUMENT", "conflictId is required");
+      }
+      if (chosenRuleId.trim().length === 0) {
+        return ipcError("INVALID_ARGUMENT", "chosenRuleId is required");
+      }
+
+      const queue = getConflictQueue(projectId);
+      const conflict = queue.find((item) => item.id === conflictId);
+      if (!conflict) {
+        return ipcError("NOT_FOUND", "Conflict item not found", {
+          conflictId,
+        });
+      }
+      if (conflict.status === "resolved") {
+        return ipcError("CONFLICT", "Conflict has already been resolved", {
+          conflictId,
+        });
+      }
+      if (!conflict.ruleIds.includes(chosenRuleId)) {
+        return ipcError("INVALID_ARGUMENT", "chosenRuleId is not in conflict", {
+          conflictId,
+          chosenRuleId,
+        });
+      }
+
+      const rules = getSemanticRules(projectId);
+      const kept = rules.find((rule) => rule.id === chosenRuleId);
+      if (!kept) {
+        return ipcError("NOT_FOUND", "Chosen rule not found", {
+          chosenRuleId,
+        });
+      }
+
+      const removedRuleIds = conflict.ruleIds.filter(
+        (id) => id !== chosenRuleId,
+      );
+      const nextRules = rules.filter(
+        (rule) => !removedRuleIds.includes(rule.id),
+      );
+      semanticRulesByProject.set(projectId, nextRules);
+      for (const ruleId of removedRuleIds) {
+        args.repository.deleteSemanticPlaceholder({
+          projectId,
+          ruleId,
+        });
+      }
+
+      const nextKept: SemanticMemoryRule = {
+        ...kept,
+        conflictMarked: false,
+        userModified: true,
+        updatedAt: now(),
+      };
+      const keptRule = upsertSemanticRule(projectId, nextKept);
+
+      conflict.status = "resolved";
+      conflict.updatedAt = now();
+      return {
+        ok: true,
+        data: {
+          item: cloneConflict(conflict),
+          keptRule,
+        },
+      };
+    },
   };
 }
 
@@ -2085,10 +2245,28 @@ function createEpisodicManagementOps(
   ctx: EpisodicCtx,
 ): Pick<
   EpisodicMemoryService,
-  "getRetryQueueSize" | "clearProjectMemory" | "clearAllMemory" | "distillSemanticMemory" | "listConflictQueue"
+  | "getRetryQueueSize"
+  | "clearProjectMemory"
+  | "clearAllMemory"
+  | "distillSemanticMemory"
+  | "listConflictQueue"
 > {
   const args = ctx;
-  const { retryQueue, semanticRulesByProject, conflictQueueByProject, knownProjectIds, pendingEpisodeCountByProject, retryPendingByProject, scheduledBatchDistillProjects, distillIoDegradedProjects, distillingProjects, projectMutex, executeDistillation, getConflictQueue, cloneConflict } = ctx;
+  const {
+    retryQueue,
+    semanticRulesByProject,
+    conflictQueueByProject,
+    knownProjectIds,
+    pendingEpisodeCountByProject,
+    retryPendingByProject,
+    scheduledBatchDistillProjects,
+    distillIoDegradedProjects,
+    distillingProjects,
+    projectMutex,
+    executeDistillation,
+    getConflictQueue,
+    cloneConflict,
+  } = ctx;
   return {
     getRetryQueueSize: () => retryQueue.length,
 
@@ -2211,7 +2389,9 @@ function createEpisodicManagementOps(
   };
 }
 
-export function createEpisodicMemoryService(args: EpisodicServiceArgs): EpisodicMemoryService {
+export function createEpisodicMemoryService(
+  args: EpisodicServiceArgs,
+): EpisodicMemoryService {
   const now = args.now ?? (() => Date.now());
   const distillScheduler =
     args.distillScheduler ?? ((job: () => void) => queueMicrotask(job));
@@ -2225,7 +2405,6 @@ export function createEpisodicMemoryService(args: EpisodicServiceArgs): Episodic
   const semanticRulesByProject = new Map<string, SemanticMemoryRule[]>();
   const conflictQueueByProject = new Map<string, SemanticConflictQueueItem[]>();
   const distillIoDegradedProjects = new Set<string>();
-
 
   const state: EpisodicState = {
     retryQueue,
@@ -2243,9 +2422,17 @@ export function createEpisodicMemoryService(args: EpisodicServiceArgs): Episodic
   const smallHelpers = createEpisodicSmallHelpers(args, state, now);
   const distillLlm = args.distillLlm ?? smallHelpers.defaultDistillLlm;
   const derived = { now, distillScheduler, distillLlm };
-  const execHelpers = createEpisodicExecHelpers(args, state, derived, smallHelpers);
+  const execHelpers = createEpisodicExecHelpers(
+    args,
+    state,
+    derived,
+    smallHelpers,
+  );
 
-  const { validateRecordInput, maybeTriggerBatchDistillation } = { ...smallHelpers, ...execHelpers };
+  const { validateRecordInput, maybeTriggerBatchDistillation } = {
+    ...smallHelpers,
+    ...execHelpers,
+  };
 
   function ensureCapacity(projectId: string): ServiceResult<void> {
     const eviction = service.realtimeEvictionTrigger({ projectId });
@@ -2433,7 +2620,6 @@ export function createEpisodicMemoryService(args: EpisodicServiceArgs): Episodic
         );
       });
     },
-
 
     ...createEpisodicQueryOps(ctx),
     ...createEpisodicTriggerOps(ctx),

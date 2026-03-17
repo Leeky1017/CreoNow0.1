@@ -29,10 +29,6 @@ const KEYWORD_RULES: ReadonlyArray<{
     skillId: "builtin:brainstorm",
   },
   {
-    keywords: ["大纲", "提纲", "outline"],
-    skillId: "builtin:outline",
-  },
-  {
     keywords: ["总结", "摘要", "summarize", "summary"],
     skillId: "builtin:summarize",
   },
@@ -47,6 +43,38 @@ const KEYWORD_RULES: ReadonlyArray<{
   {
     keywords: ["缩写", "精简", "condense"],
     skillId: "builtin:condense",
+  },
+  {
+    keywords: ["大纲", "简介", "synopsis"],
+    skillId: "builtin:synopsis",
+  },
+  {
+    keywords: ["缩短", "压缩", "shrink"],
+    skillId: "builtin:shrink",
+  },
+  {
+    keywords: ["点评", "评价", "批评", "critique"],
+    skillId: "builtin:critique",
+  },
+  {
+    keywords: ["描写", "描述", "describe"],
+    skillId: "builtin:describe",
+  },
+  {
+    keywords: ["对话", "对白", "dialogue"],
+    skillId: "builtin:dialogue",
+  },
+  {
+    keywords: ["扮演", "角色扮演", "roleplay"],
+    skillId: "builtin:roleplay",
+  },
+  {
+    keywords: ["风格转换", "改风格", "style transfer"],
+    skillId: "builtin:style-transfer",
+  },
+  {
+    keywords: ["写一段", "帮我写", "write"],
+    skillId: "builtin:write",
   },
 ];
 
@@ -147,9 +175,26 @@ export function isNegated(
 }
 
 function keywordMatchesWithoutNegation(input: string, kw: string): boolean {
-  const idx = input.indexOf(kw);
-  if (idx < 0) return false;
-  return !isNegated(input, idx, kw);
+  const hasChinese = /[\u4e00-\u9fff]/.test(kw);
+
+  if (hasChinese) {
+    const idx = input.indexOf(kw);
+    if (idx < 0) return false;
+    return !isNegated(input, idx, kw);
+  }
+
+  const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const pattern = new RegExp(`\\b${escaped}\\b`, "g");
+  let match = pattern.exec(input);
+
+  while (match) {
+    if (!isNegated(input, match.index, kw)) {
+      return true;
+    }
+    match = pattern.exec(input);
+  }
+
+  return false;
 }
 
 // ── 路由主函数 ───────────────────────────────────────────────────

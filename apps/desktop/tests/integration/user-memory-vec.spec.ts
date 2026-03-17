@@ -80,9 +80,12 @@ const logger = createLogger();
     ts: Date.now(),
   });
 
-  assert.equal(res.ok, false);
-  if (!res.ok) {
-    assert.equal(res.error.code, "MODEL_NOT_READY");
+  assert.equal(res.ok, true);
+  if (res.ok) {
+    assert.equal(res.data.dimension, 64);
+    assert.equal(res.data.matches.length, 1);
+    assert.equal(res.data.matches[0]?.memoryId, "m1");
+    assert.equal(res.data.matches[0]?.score, 1);
   }
 }
 

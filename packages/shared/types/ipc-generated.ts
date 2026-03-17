@@ -123,6 +123,8 @@ export const IPC_CHANNELS = [
   "ai:chat:clear",
   "ai:chat:list",
   "ai:chat:send",
+  "ai:chat:sessions",
+  "ai:chatsession:delete",
   "ai:config:get",
   "ai:config:test",
   "ai:config:update",
@@ -199,6 +201,7 @@ export const IPC_CHANNELS = [
   "knowledge:suggestion:dismiss",
   "memory:clear:all",
   "memory:clear:project",
+  "memory:conflict:resolve",
   "memory:distill:progress",
   "memory:entry:create",
   "memory:entry:delete",
@@ -272,6 +275,7 @@ export type IpcChannelSpec = {
   "ai:chat:clear": {
     request: {
       projectId: string;
+      sessionId?: string;
     };
     response: {
       cleared: true;
@@ -281,6 +285,7 @@ export type IpcChannelSpec = {
   "ai:chat:list": {
     request: {
       projectId: string;
+      sessionId?: string;
     };
     response: {
       items: Array<{
@@ -299,11 +304,37 @@ export type IpcChannelSpec = {
       documentId?: string;
       message: string;
       projectId: string;
+      sessionId?: string;
     };
     response: {
       accepted: true;
       echoed: string;
       messageId: string;
+      sessionId: string;
+    };
+  };
+  "ai:chat:sessions": {
+    request: {
+      projectId: string;
+      query?: string;
+    };
+    response: {
+      sessions: Array<{
+        createdAt: number;
+        projectId: string;
+        sessionId: string;
+        title: string;
+        updatedAt: number;
+      }>;
+    };
+  };
+  "ai:chatsession:delete": {
+    request: {
+      projectId: string;
+      sessionId: string;
+    };
+    response: {
+      deleted: true;
     };
   };
   "ai:config:get": {
@@ -1438,6 +1469,8 @@ export type IpcChannelSpec = {
       filter?: {
         aiContextLevel?: "always" | "when_detected" | "manual_only" | "never";
       };
+      limit?: number;
+      offset?: number;
       projectId: string;
     };
     response: {
@@ -1455,6 +1488,7 @@ export type IpcChannelSpec = {
         updatedAt: string;
         version: number;
       }>;
+      totalCount: number;
     };
   };
   "knowledge:entity:read": {
@@ -1680,6 +1714,8 @@ export type IpcChannelSpec = {
   };
   "knowledge:relation:list": {
     request: {
+      limit?: number;
+      offset?: number;
       projectId: string;
     };
     response: {
@@ -1692,6 +1728,7 @@ export type IpcChannelSpec = {
         sourceEntityId: string;
         targetEntityId: string;
       }>;
+      totalCount: number;
     };
   };
   "knowledge:relation:update": {
@@ -1785,6 +1822,37 @@ export type IpcChannelSpec = {
       deletedEpisodes: number;
       deletedRules: number;
       ok: true;
+    };
+  };
+  "memory:conflict:resolve": {
+    request: {
+      chosenRuleId: string;
+      conflictId: string;
+      projectId: string;
+    };
+    response: {
+      item: {
+        id: string;
+        ruleIds: Array<string>;
+        status: "pending" | "resolved";
+      };
+      keptRule: {
+        category: "style" | "structure" | "character" | "pacing" | "vocabulary";
+        confidence: number;
+        conflictMarked?: boolean;
+        contradictingEpisodes: Array<string>;
+        createdAt: number;
+        id: string;
+        projectId: string;
+        recentlyUpdated?: boolean;
+        rule: string;
+        scope: "global" | "project";
+        supportingEpisodes: Array<string>;
+        updatedAt: number;
+        userConfirmed: boolean;
+        userModified: boolean;
+        version: 1;
+      };
     };
   };
   "memory:distill:progress": {

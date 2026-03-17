@@ -201,6 +201,22 @@ function validateProjectId(projectId: string): Err | null {
   return null;
 }
 
+function validatePaginationArgs(
+  limit: number | undefined,
+  offset: number | undefined,
+): Err | null {
+  if (limit !== undefined && (!Number.isInteger(limit) || limit <= 0)) {
+    return ipcError("INVALID_ARGUMENT", "limit must be a positive integer");
+  }
+  if (offset !== undefined && (!Number.isInteger(offset) || offset < 0)) {
+    return ipcError(
+      "INVALID_ARGUMENT",
+      "offset must be a non-negative integer",
+    );
+  }
+  return null;
+}
+
 function validateEntityName(name: string): Err | null {
   const normalized = normalizeText(name);
   if (normalized.length === 0) {
@@ -525,34 +541,72 @@ function listProjectEntities(
   filter?: {
     aiContextLevel?: AiContextLevel;
   },
+  pagination?: {
+    limit?: number;
+    offset?: number;
+  },
 ): KnowledgeEntity[] {
-  const rows = filter?.aiContextLevel
-    ? db
-        .prepare<
-          [string, AiContextLevel],
-          EntityRow
-        >("SELECT id, project_id as projectId, type, name, description, attributes_json as attributesJson, last_seen_state as lastSeenState, ai_context_level as aiContextLevel, aliases as aliasesJson, version, created_at as createdAt, updated_at as updatedAt FROM kg_entities WHERE project_id = ? AND ai_context_level = ? ORDER BY updated_at DESC, id ASC")
-        .all(projectId, filter.aiContextLevel)
-    : db
-        .prepare<
-          [string],
-          EntityRow
-        >("SELECT id, project_id as projectId, type, name, description, attributes_json as attributesJson, last_seen_state as lastSeenState, ai_context_level as aiContextLevel, aliases as aliasesJson, version, created_at as createdAt, updated_at as updatedAt FROM kg_entities WHERE project_id = ? ORDER BY updated_at DESC, id ASC")
-        .all(projectId);
+  const whereSql = filter?.aiContextLevel
+    ? "WHERE project_id = ? AND ai_context_level = ?"
+    : "WHERE project_id = ?";
+  const params: Array<string | number> = filter?.aiContextLevel
+    ? [projectId, filter.aiContextLevel]
+    : [projectId];
+
+  let paginationSql = "";
+  if (typeof pagination?.limit === "number") {
+    paginationSql = " LIMIT ? OFFSET ?";
+    params.push(pagination.limit, pagination.offset ?? 0);
+  }
+
+  const rows = db
+    .prepare(
+      `SELECT id, project_id as projectId, type, name, description, attributes_json as attributesJson, last_seen_state as lastSeenState, ai_context_level as aiContextLevel, aliases as aliasesJson, version, created_at as createdAt, updated_at as updatedAt FROM kg_entities ${whereSql} ORDER BY updated_at DESC, id ASC${paginationSql}`,
+    )
+    .all(...params) as EntityRow[];
   return rows.map(rowToEntity);
 }
 
 function listProjectRelations(
   db: Database.Database,
   projectId: string,
+  pagination?: {
+    limit?: number;
+    offset?: number;
+  },
 ): KnowledgeRelation[] {
+  const params: Array<string | number> = [projectId];
+  let paginationSql = "";
+  if (typeof pagination?.limit === "number") {
+    paginationSql = " LIMIT ? OFFSET ?";
+    params.push(pagination.limit, pagination.offset ?? 0);
+  }
+
   const rows = db
-    .prepare<
-      [string],
-      RelationRow
-    >("SELECT id, project_id as projectId, source_entity_id as sourceEntityId, target_entity_id as targetEntityId, relation_type as relationType, description, created_at as createdAt FROM kg_relations WHERE project_id = ? ORDER BY created_at DESC, id ASC")
-    .all(projectId);
+    .prepare(
+      `SELECT id, project_id as projectId, source_entity_id as sourceEntityId, target_entity_id as targetEntityId, relation_type as relationType, description, created_at as createdAt FROM kg_relations WHERE project_id = ? ORDER BY created_at DESC, id ASC${paginationSql}`,
+    )
+    .all(...params) as RelationRow[];
   return rows.map(rowToRelation);
+}
+
+function countProjectEntities(
+  db: Database.Database,
+  projectId: string,
+  filter?: {
+    aiContextLevel?: AiContextLevel;
+  },
+): number {
+  if (filter?.aiContextLevel) {
+    const row = db
+      .prepare<
+        [string, AiContextLevel],
+        { count: number }
+      >("SELECT COUNT(1) as count FROM kg_entities WHERE project_id = ? AND ai_context_level = ?")
+      .get(projectId, filter.aiContextLevel);
+    return row?.count ?? 0;
+  }
+  return countEntities(db, projectId);
 }
 
 function listEntitiesByIds(
@@ -642,6 +696,7 @@ type QueryPathValidationResult = {
 type QueryPathSearchResult = {
   pathEntityIds: string[];
   expansions: number;
+  degraded: boolean;
 };
 
 function validateAndNormalizeQueryPathArgs(args: {
@@ -738,12 +793,14 @@ function queryPathWithinAdjacency(args: {
 
     expansions += 1;
     if (expansions > args.maxExpansions) {
-      return ipcError("KG_QUERY_TIMEOUT", "query timeout", {
-        reason: "MAX_EXPANSIONS_EXCEEDED",
-        expansions,
-        maxExpansions: args.maxExpansions,
-        suggestion: "reduce graph scope or use keyword filtering",
-      });
+      return {
+        ok: true,
+        data: {
+          pathEntityIds: [],
+          expansions,
+          degraded: true,
+        },
+      };
     }
 
     if (nodeId === args.targetEntityId) {
@@ -790,6 +847,7 @@ function queryPathWithinAdjacency(args: {
       data: {
         pathEntityIds: [],
         expansions,
+        degraded: false,
       },
     };
   }
@@ -807,6 +865,7 @@ function queryPathWithinAdjacency(args: {
     data: {
       pathEntityIds: path,
       expansions,
+      degraded: false,
     },
   };
 }
@@ -847,9 +906,7 @@ function validateEntityPatchFields(
   }
 
   if (typeof patch.description === "string") {
-    const invalidDescription = validateDescription(
-      patch.description.trim(),
-    );
+    const invalidDescription = validateDescription(patch.description.trim());
     if (invalidDescription) {
       return invalidDescription;
     }
@@ -861,9 +918,7 @@ function validateEntityPatchFields(
     if (invalidLastSeenState) {
       return invalidLastSeenState;
     }
-    normalizedPatchLastSeenState = normalizeLastSeenState(
-      patch.lastSeenState,
-    );
+    normalizedPatchLastSeenState = normalizeLastSeenState(patch.lastSeenState);
   }
 
   if (typeof patch.type === "string") {
@@ -875,9 +930,7 @@ function validateEntityPatchFields(
 
   let normalizedPatchAiContextLevel: AiContextLevel | undefined;
   if (patch.aiContextLevel !== undefined) {
-    const parsedAiContextLevel = normalizeAiContextLevel(
-      patch.aiContextLevel,
-    );
+    const parsedAiContextLevel = normalizeAiContextLevel(patch.aiContextLevel);
     if (!parsedAiContextLevel) {
       return ipcError(
         "VALIDATION_ERROR",
@@ -891,8 +944,7 @@ function validateEntityPatchFields(
     normalizedPatchAiContextLevel = parsedAiContextLevel;
   }
 
-  let normalizedAttributes: ServiceResult<Record<string, string>> | null =
-    null;
+  let normalizedAttributes: ServiceResult<Record<string, string>> | null = null;
   if (patch.attributes) {
     normalizedAttributes = validateAndNormalizeAttributes({
       attributes: patch.attributes,
@@ -919,7 +971,9 @@ function validateEntityPatchFields(
     data: {
       normalizedPatchLastSeenState,
       normalizedPatchAiContextLevel,
-      normalizedAttributes: normalizedAttributes?.ok ? normalizedAttributes.data : null,
+      normalizedAttributes: normalizedAttributes?.ok
+        ? normalizedAttributes.data
+        : null,
       normalizedAliases: normalizedAliases?.ok ? normalizedAliases.data : null,
     },
   };
@@ -1108,10 +1162,20 @@ function createEntityOps(
       }
     },
 
-    entityList: ({ projectId, filter }) => {
+    entityList: ({ projectId, filter, limit, offset }) => {
       const invalidProjectId = validateProjectId(projectId);
       if (invalidProjectId) {
         return invalidProjectId;
+      }
+
+      if (limit !== undefined && (!Number.isInteger(limit) || limit <= 0)) {
+        return ipcError("INVALID_ARGUMENT", "limit must be a positive integer");
+      }
+      if (offset !== undefined && (!Number.isInteger(offset) || offset < 0)) {
+        return ipcError(
+          "INVALID_ARGUMENT",
+          "offset must be a non-negative integer",
+        );
       }
 
       const normalizedProjectId = projectId.trim();
@@ -1142,7 +1206,18 @@ function createEntityOps(
         return {
           ok: true,
           data: {
-            items: listProjectEntities(args.db, normalizedProjectId, {
+            items: listProjectEntities(
+              args.db,
+              normalizedProjectId,
+              {
+                aiContextLevel: normalizedFilterAiContextLevel,
+              },
+              {
+                limit,
+                offset,
+              },
+            ),
+            totalCount: countProjectEntities(args.db, normalizedProjectId, {
               aiContextLevel: normalizedFilterAiContextLevel,
             }),
           },
@@ -1207,10 +1282,7 @@ function createEntityOps(
 
 function createEntityUpdateOps(
   ctx: KgCoreCtx,
-): Pick<
-  KnowledgeGraphService,
-  "entityUpdate"
-> {
+): Pick<KnowledgeGraphService, "entityUpdate"> {
   const args = ctx;
   const limits = ctx.limits;
 
@@ -1365,12 +1437,10 @@ function createRelationOps(
       if (invalidProjectId) {
         return invalidProjectId;
       }
-
       const normalizedSource = sourceEntityId.trim();
       const normalizedTarget = targetEntityId.trim();
       const normalizedType = relationType.trim();
       const normalizedDescription = normalizeText(description ?? "");
-
       if (normalizedSource.length === 0) {
         return ipcError("INVALID_ARGUMENT", "sourceEntityId is required");
       }
@@ -1393,22 +1463,18 @@ function createRelationOps(
       if (invalidDescription) {
         return invalidDescription;
       }
-
       const normalizedProjectId = projectId.trim();
-
       try {
         const projectExists = ensureProjectExists(args.db, normalizedProjectId);
         if (projectExists) {
           return projectExists;
         }
-
         if (countRelations(args.db, normalizedProjectId) >= limits.edgeLimit) {
           return ipcError("KG_CAPACITY_EXCEEDED", "edge capacity exceeded", {
             kind: "edge",
             limit: limits.edgeLimit,
           });
         }
-
         const sourceEntity = ensureEntityInProject(args.db, {
           projectId: normalizedProjectId,
           entityId: normalizedSource,
@@ -1473,10 +1539,15 @@ function createRelationOps(
       }
     },
 
-    relationList: ({ projectId }) => {
+    relationList: ({ projectId, limit, offset }) => {
       const invalidProjectId = validateProjectId(projectId);
       if (invalidProjectId) {
         return invalidProjectId;
+      }
+
+      const invalidPagination = validatePaginationArgs(limit, offset);
+      if (invalidPagination) {
+        return invalidPagination;
       }
 
       const normalizedProjectId = projectId.trim();
@@ -1489,7 +1560,13 @@ function createRelationOps(
 
         return {
           ok: true,
-          data: { items: listProjectRelations(args.db, normalizedProjectId) },
+          data: {
+            items: listProjectRelations(args.db, normalizedProjectId, {
+              limit,
+              offset,
+            }),
+            totalCount: countRelations(args.db, normalizedProjectId),
+          },
         };
       } catch (error) {
         args.logger.error("kg_relation_list_failed", {
@@ -1669,10 +1746,7 @@ function createRelationOps(
 
 function createQueryGraphOps(
   ctx: KgCoreCtx,
-): Pick<
-  KnowledgeGraphService,
-  "querySubgraph" | "queryPath" | "queryByIds"
-> {
+): Pick<KnowledgeGraphService, "querySubgraph" | "queryPath" | "queryByIds"> {
   const args = ctx;
   const limits = ctx.limits;
 
@@ -1857,7 +1931,7 @@ function createQueryGraphOps(
           data: {
             pathEntityIds: queried.data.pathEntityIds,
             expansions: queried.data.expansions,
-            degraded: false,
+            degraded: queried.data.degraded,
             queryCostMs: Date.now() - startedAt,
           },
         };
@@ -1930,10 +2004,7 @@ function createQueryGraphOps(
 
 function createQueryValidateOps(
   ctx: KgCoreCtx,
-): Pick<
-  KnowledgeGraphService,
-  "queryValidate"
-> {
+): Pick<KnowledgeGraphService, "queryValidate"> {
   const args = ctx;
   const limits = ctx.limits;
 
@@ -2088,10 +2159,7 @@ function createQueryValidateOps(
 
 function createQueryTextOps(
   ctx: KgCoreCtx,
-): Pick<
-  KnowledgeGraphService,
-  "queryRelevant" | "buildRulesInjection"
-> {
+): Pick<KnowledgeGraphService, "queryRelevant" | "buildRulesInjection"> {
   const args = ctx;
 
   return {
@@ -2381,5 +2449,4 @@ export function createKnowledgeGraphCoreService(args: {
     ...createQueryValidateOps(ctx),
     ...createQueryTextOps(ctx),
   };
-
 }
