@@ -59,6 +59,24 @@ export type AiRunRequestSnapshot = {
 
 export type { IpcInvoke };
 
+export type ChatSessionItem = {
+  sessionId: string;
+  projectId: string;
+  title: string;
+  createdAt: number;
+  updatedAt: number;
+};
+
+export type ChatMessageItem = {
+  messageId: string;
+  projectId: string;
+  role: "user" | "assistant";
+  content: string;
+  skillId?: string;
+  timestamp: number;
+  traceId: string;
+};
+
 export type AiState = {
   status: AiStatus;
   stream: boolean;
@@ -83,6 +101,10 @@ export type AiState = {
   queuePosition: number | null;
   queuedCount: number;
   globalRunningCount: number;
+  chatSessions: ChatSessionItem[];
+  chatSessionsStatus: "idle" | "loading" | "ready";
+  activeChatSessionId: string | null;
+  activeChatMessages: ChatMessageItem[];
 };
 
 export type AiActions = {
@@ -124,6 +146,19 @@ export type AiActions = {
   }) => Promise<void>;
   cancel: () => Promise<void>;
   onStreamEvent: (event: AiStreamEvent) => void;
+  loadChatSessions: (args: {
+    projectId: string;
+    query?: string;
+  }) => Promise<void>;
+  selectChatSession: (args: {
+    projectId: string;
+    sessionId: string;
+  }) => Promise<void>;
+  deleteChatSession: (args: {
+    projectId: string;
+    sessionId: string;
+  }) => Promise<void>;
+  clearActiveChatSession: () => void;
 };
 
 export type AiStore = AiState & AiActions;
@@ -617,6 +652,65 @@ function createAiStoreStreamHandler(
  * Why: UI must support stream/cancel/timeout/upstream-error with deterministic
  * state transitions for Windows E2E.
  */
+function createAiStoreChatActions(
+  deps: { invoke: IpcInvoke },
+  set: AiStoreSetter,
+): Pick<
+  AiActions,
+  | "loadChatSessions"
+  | "selectChatSession"
+  | "deleteChatSession"
+  | "clearActiveChatSession"
+> {
+  return {
+    loadChatSessions: async (args) => {
+      set({ chatSessionsStatus: "loading" });
+      const res = await deps.invoke("ai:chat:sessions", {
+        projectId: args.projectId,
+        ...(args.query ? { query: args.query } : {}),
+      });
+      if (res.ok) {
+        set({
+          chatSessions: res.data.sessions,
+          chatSessionsStatus: "ready",
+        });
+      } else {
+        set({ chatSessionsStatus: "ready" });
+      }
+    },
+    selectChatSession: async (args) => {
+      set({ activeChatSessionId: args.sessionId });
+      const res = await deps.invoke("ai:chat:list", {
+        projectId: args.projectId,
+        sessionId: args.sessionId,
+      });
+      if (res.ok) {
+        set({ activeChatMessages: res.data.items });
+      }
+    },
+    deleteChatSession: async (args) => {
+      await deps.invoke("ai:chatsession:delete", {
+        projectId: args.projectId,
+        sessionId: args.sessionId,
+      });
+      set((state) => ({
+        chatSessions: state.chatSessions.filter(
+          (s) => s.sessionId !== args.sessionId,
+        ),
+        ...(state.activeChatSessionId === args.sessionId
+          ? { activeChatSessionId: null, activeChatMessages: [] }
+          : {}),
+      }));
+    },
+    clearActiveChatSession: () => {
+      set({
+        activeChatSessionId: null,
+        activeChatMessages: [],
+      });
+    },
+  };
+}
+
 export function createAiStore(deps: { invoke: IpcInvoke }) {
   return create<AiStore>((set, get) => ({
     status: "idle",
@@ -642,6 +736,10 @@ export function createAiStore(deps: { invoke: IpcInvoke }) {
     queuePosition: null,
     queuedCount: 0,
     globalRunningCount: 0,
+    chatSessions: [],
+    chatSessionsStatus: "idle",
+    activeChatSessionId: null,
+    activeChatMessages: [],
 
     setStream: (enabled) => set({ stream: enabled }),
     setSelectedSkillId: (skillId) => set({ selectedSkillId: skillId }),
@@ -670,6 +768,7 @@ export function createAiStore(deps: { invoke: IpcInvoke }) {
     ...createAiStoreSkillActions(deps, set, get),
     ...createAiStoreRunActions(deps, set, get),
     ...createAiStoreStreamHandler(set, get),
+    ...createAiStoreChatActions(deps, set),
   }));
 }
 
