@@ -30,6 +30,7 @@ export interface PreflightInput {
   provider: string;
   model: string;
   apiKey: string | undefined;
+  allowMissingApiKey?: boolean;
 }
 
 export interface ApiKeyPreflightInput {
@@ -90,6 +91,7 @@ export function validateProviderPreflight(
   const apiKeyValidation = validateProviderApiKeyPreflight({
     provider: input.provider,
     apiKey: input.apiKey,
+    allowMissingApiKey: input.allowMissingApiKey,
   });
   if (!apiKeyValidation.ok) {
     return apiKeyValidation;

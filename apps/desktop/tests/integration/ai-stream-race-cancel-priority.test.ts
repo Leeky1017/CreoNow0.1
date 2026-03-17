@@ -143,7 +143,7 @@ async function withStreamingServer(args: {
         env: {
           CREONOW_AI_PROVIDER: "openai",
           CREONOW_AI_BASE_URL: baseUrl,
-          CREONOW_AI_API_KEY: "test-key",
+          CREONOW_AI_API_KEY: "sk-test-key-01",
         },
       });
 

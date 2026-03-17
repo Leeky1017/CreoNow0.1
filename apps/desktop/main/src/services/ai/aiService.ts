@@ -1634,6 +1634,7 @@ function createAiRunSkillOp(
       provider: primaryCfg.provider,
       model: args.model,
       apiKey: primaryCfg.apiKey,
+      allowMissingApiKey: deps.env.CREONOW_E2E === "1",
     });
     if (!preflight.ok) {
       return ipcError(preflight.error.code, preflight.error.message, {

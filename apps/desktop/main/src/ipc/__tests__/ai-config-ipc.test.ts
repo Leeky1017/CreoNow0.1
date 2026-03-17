@@ -374,7 +374,10 @@ async function main(): Promise<void> {
       assert.equal(updated.ok, false);
       assert.equal(updated.error?.code, "INVALID_ARGUMENT");
       assert.deepEqual(updated.error?.details?.unknownKeys, ["unknownField"]);
-      assert.equal(harness.db.readJson("app", "creonow.ai.proxy.enabled"), null);
+      assert.equal(
+        harness.db.readJson("app", "creonow.ai.proxy.enabled"),
+        null,
+      );
     },
   );
 
