@@ -17,6 +17,12 @@
   --space-16: 64px;
   --space-20: 80px; /* 页面间距 */
 
+  /* 语义间距 — 给布局组件使用的别名 */
+  --space-panel-padding: var(--space-4); /* 面板内边距 */
+  --space-section-gap: var(--space-6); /* 区块间距 */
+  --space-item-gap: var(--space-2); /* 列表项间距 */
+  --space-inline-gap: var(--space-1); /* 行内元素间距 */
+
   /* Radius */
   --radius-none: 0px;
   --radius-sm: 4px;
@@ -102,6 +108,47 @@
   --text-mono-size: 13px;
   --text-mono-weight: 400;
   --text-mono-line-height: 1.5;
+
+  /* 页面大标题（展示级） */
+  --text-display-size: 48px;
+  --text-display-weight: 300;
+  --text-display-line-height: 1.1;
+  --text-display-letter-spacing: -0.03em;
+
+  /* 区块标题 — 与 --text-page-title-* 同值，语义别名 */
+  --text-heading-size: 24px;
+  --text-heading-weight: 600;
+  --text-heading-line-height: 1.2;
+  --text-heading-letter-spacing: -0.02em;
+
+  /* 导航元素 */
+  --text-nav-size: 13px;
+  --text-nav-weight: 500;
+  --text-nav-line-height: 1.4;
+  --text-nav-letter-spacing: 0;
+
+  /* 元数据（时间戳、字数统计等） */
+  --text-metadata-size: 12px;
+  --text-metadata-weight: 400;
+  --text-metadata-line-height: 1.4;
+  --text-metadata-letter-spacing: 0.02em;
+
+  /* 独立字重 */
+  --weight-light: 300; /* 展示级标题 */
+  --weight-normal: 400; /* 正文 */
+  --weight-medium: 500; /* 小标题、导航 */
+  --weight-semibold: 600; /* 标题 */
+
+  /* 独立字间距（Tracking） */
+  --tracking-tight: -0.03em; /* 大号展示文字 */
+  --tracking-normal: 0; /* 正文默认 */
+  --tracking-wide: 0.05em; /* 宽松间距 */
+  --tracking-wider: 0.1em; /* 大写标签 */
+
+  /* 独立行高（Leading） */
+  --leading-tight: 1.1; /* 标题紧凑 */
+  --leading-normal: 1.5; /* 正文默认 */
+  --leading-relaxed: 1.8; /* 编辑器长文 */
 
   /* z-index 层级 §5.1 */
   --z-base: 0; /* 默认层 */

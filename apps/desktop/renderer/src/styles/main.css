@@ -21,14 +21,69 @@
 
   /* 动效 */
   --ease-default: cubic-bezier(0.2, 0, 0.2, 1);
+  --duration-instant: 50ms;
   --duration-fast: 100ms;
   --duration-normal: 200ms;
   --duration-slow: 300ms;
+  --duration-slower: 500ms;
 
   /* 字体 */
   --font-family-ui: "Inter", system-ui, sans-serif;
   --font-family-body: "Lora", "Crimson Pro", Georgia, serif;
   --font-family-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+
+/*
+ * Tailwind v4 桥接层 — 引用 tokens.css 中的 CSS 变量
+ *
+ * @theme inline 保留 var() 引用，运行时解析；
+ * 命名遵循 Tailwind v4 namespace（见 node_modules/tailwindcss/theme.css）：
+ *   字体尺寸: --text-<name> / --text-<name>--line-height / --text-<name>--letter-spacing / --text-<name>--font-weight
+ *   字重:     --font-weight-<name>
+ *   字间距:   --tracking-<name>
+ *   行高:     --leading-<name>
+ */
+@theme inline {
+  /* Typography — 展示级标题 → utility: text-display */
+  --text-display: var(--text-display-size);
+  --text-display--line-height: var(--text-display-line-height);
+  --text-display--letter-spacing: var(--text-display-letter-spacing);
+  --text-display--font-weight: var(--text-display-weight);
+
+  /* Typography — 区块标题 → utility: text-heading */
+  --text-heading: var(--text-heading-size);
+  --text-heading--line-height: var(--text-heading-line-height);
+  --text-heading--letter-spacing: var(--text-heading-letter-spacing);
+  --text-heading--font-weight: var(--text-heading-weight);
+
+  /* Typography — 导航 → utility: text-nav */
+  --text-nav: var(--text-nav-size);
+  --text-nav--line-height: var(--text-nav-line-height);
+  --text-nav--letter-spacing: var(--text-nav-letter-spacing);
+  --text-nav--font-weight: var(--text-nav-weight);
+
+  /* Typography — 元数据 → utility: text-metadata */
+  --text-metadata: var(--text-metadata-size);
+  --text-metadata--line-height: var(--text-metadata-line-height);
+  --text-metadata--letter-spacing: var(--text-metadata-letter-spacing);
+  --text-metadata--font-weight: var(--text-metadata-weight);
+
+  /* 独立字重 → utility: font-light / font-normal / font-medium / font-semibold */
+  --font-weight-light: var(--weight-light);
+  --font-weight-normal: var(--weight-normal);
+  --font-weight-medium: var(--weight-medium);
+  --font-weight-semibold: var(--weight-semibold);
+
+  /* 独立字间距 → utility: tracking-tight / tracking-normal / tracking-wide / tracking-wider */
+  --tracking-tight: var(--tracking-tight);
+  --tracking-normal: var(--tracking-normal);
+  --tracking-wide: var(--tracking-wide);
+  --tracking-wider: var(--tracking-wider);
+
+  /* 独立行高 → utility: leading-tight / leading-normal / leading-relaxed */
+  --leading-tight: var(--leading-tight);
+  --leading-normal: var(--leading-normal);
+  --leading-relaxed: var(--leading-relaxed);
 }
 
 /* === 全局基础样式 === */
