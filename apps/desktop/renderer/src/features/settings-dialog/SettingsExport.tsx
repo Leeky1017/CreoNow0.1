@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Toggle } from "../../components/primitives/Toggle";
-import { Text } from "../../components/primitives";
+import { Button, Text } from "../../components/primitives";
 
 import { File, FileCode, FileText } from "lucide-react";
 /**
@@ -48,7 +48,6 @@ const dividerStyles = [
   "bg-[var(--color-separator)]",
   "my-12",
 ].join(" ");
-
 
 /**
  * Format icon component
@@ -99,33 +98,51 @@ export function SettingsExport({
   };
 
   const formats: { value: ExportFormat; label: string; sublabel: string }[] = [
-    { value: "pdf", label: t('settingsDialog.export.formatPdf'), sublabel: t('settingsDialog.export.formatPdfSub') },
-    { value: "markdown", label: t('settingsDialog.export.formatMarkdown'), sublabel: ".md" },
-    { value: "word", label: t('settingsDialog.export.formatWord'), sublabel: ".docx" },
-    { value: "txt", label: t('settingsDialog.export.formatTxt'), sublabel: ".txt" },
+    {
+      value: "pdf",
+      label: t("settingsDialog.export.formatPdf"),
+      sublabel: t("settingsDialog.export.formatPdfSub"),
+    },
+    {
+      value: "markdown",
+      label: t("settingsDialog.export.formatMarkdown"),
+      sublabel: ".md",
+    },
+    {
+      value: "word",
+      label: t("settingsDialog.export.formatWord"),
+      sublabel: ".docx",
+    },
+    {
+      value: "txt",
+      label: t("settingsDialog.export.formatTxt"),
+      sublabel: ".txt",
+    },
   ];
 
   return (
     <div className="max-w-[560px]">
       {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">
-        {t('settingsDialog.export.title')}
+        {t("settingsDialog.export.title")}
       </h1>
       <p className="text-[var(--color-fg-subtle)] text-sm mb-12 font-light">
-        {t('settingsDialog.export.subtitle')}
+        {t("settingsDialog.export.subtitle")}
       </p>
 
       {/* Default Export Format */}
       <div className="mb-14">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.export.defaultFormat')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.export.defaultFormat")}
+        </h4>
 
         <div className="grid grid-cols-2 gap-4">
           {formats.map(({ value, label, sublabel }) => {
             const isSelected = settings.defaultFormat === value;
             return (
-              <button
+              <Button
                 key={value}
-                type="button"
+                variant="ghost"
                 onClick={() => updateSetting("defaultFormat", value)}
                 className={`${formatCardBaseStyles} ${
                   isSelected
@@ -146,7 +163,7 @@ export function SettingsExport({
                     {sublabel}
                   </Text>
                 </div>
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -156,12 +173,14 @@ export function SettingsExport({
 
       {/* Export Options */}
       <div className="mb-6">
-        <h4 className={sectionLabelStyles}>{t('settingsDialog.export.options')}</h4>
+        <h4 className={sectionLabelStyles}>
+          {t("settingsDialog.export.options")}
+        </h4>
 
         <div className="flex flex-col gap-8">
           <Toggle
-            label={t('settingsDialog.export.includeMetadata')}
-            description={t('settingsDialog.export.includeMetadataDescription')}
+            label={t("settingsDialog.export.includeMetadata")}
+            description={t("settingsDialog.export.includeMetadataDescription")}
             checked={settings.includeMetadata}
             onCheckedChange={(checked) =>
               updateSetting("includeMetadata", checked)
@@ -169,8 +188,10 @@ export function SettingsExport({
           />
 
           <Toggle
-            label={t('settingsDialog.export.autoGenerateFilename')}
-            description={t('settingsDialog.export.autoGenerateFilenameDescription')}
+            label={t("settingsDialog.export.autoGenerateFilename")}
+            description={t(
+              "settingsDialog.export.autoGenerateFilenameDescription",
+            )}
             checked={settings.autoGenerateFilename}
             onCheckedChange={(checked) =>
               updateSetting("autoGenerateFilename", checked)
