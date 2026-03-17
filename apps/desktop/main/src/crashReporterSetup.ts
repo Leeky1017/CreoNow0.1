@@ -1,5 +1,6 @@
 import path from "node:path";
 import { crashReporter, app } from "electron";
+import type { CrashReporterStartOptions } from "electron";
 
 export type CrashReporterConfig = {
   /** Directory where crash dumps are written. Defaults to `<userData>/crashes`. */
@@ -17,15 +18,18 @@ export function initCrashReporter(config?: CrashReporterConfig): string {
   const dumpsDir =
     config?.crashDumpsDir ?? path.join(app.getPath("userData"), "crashes");
 
-  crashReporter.start({
+  const options: CrashReporterStartOptions & { crashesDirectory: string } = {
     productName: "CreoNow",
     uploadToServer: false,
+    crashesDirectory: dumpsDir,
     extra: {
       appVersion: app.getVersion(),
       platform: process.platform,
       arch: process.arch,
     },
-  });
+  };
+
+  crashReporter.start(options);
 
   return dumpsDir;
 }

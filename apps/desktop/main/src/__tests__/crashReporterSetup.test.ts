@@ -25,6 +25,7 @@ describe("initCrashReporter", () => {
     const opts = mockStart.mock.calls[0][0];
     expect(opts.productName).toBe("CreoNow");
     expect(opts.uploadToServer).toBe(false);
+    expect(opts.crashesDirectory).toBe("/fake/userData/crashes");
     expect(opts.extra).toEqual(
       expect.objectContaining({
         appVersion: "0.0.1-test",
@@ -44,5 +45,8 @@ describe("initCrashReporter", () => {
     const { initCrashReporter } = await import("../crashReporterSetup");
     const dir = initCrashReporter({ crashDumpsDir: "/custom/path" });
     expect(dir).toBe("/custom/path");
+
+    const opts = mockStart.mock.calls[0][0];
+    expect(opts.crashesDirectory).toBe("/custom/path");
   });
 });
