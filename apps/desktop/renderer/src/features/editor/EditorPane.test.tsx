@@ -447,7 +447,9 @@ describe("EditorPane", () => {
       expect(editor.isActive("link")).toBe(false);
     });
   });
+});
 
+describe("EditorPane — selection and inline AI", () => {
   it("S2-BA-1 should hide Bubble Menu when selection is collapsed", async () => {
     const store = createReadyEditorStore({ onSave: () => {} });
     const versionStore = createVersionStoreForEditorPaneTests();
