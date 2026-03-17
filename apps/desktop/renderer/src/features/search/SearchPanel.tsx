@@ -257,12 +257,18 @@ function DocumentResultItem(props: {
 function MemoryResultItem(props: {
   item: SearchResultItem;
   query: string;
+  onClick: () => void;
 }): JSX.Element {
   const { t } = useTranslation();
-  const { item, query } = props;
+  const { item, query, onClick } = props;
 
   return (
-    <ListItem className="group w-full text-left mx-2 mt-1 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3">
+    <ListItem
+      interactive
+      onClick={onClick}
+      data-testid={`search-result-item-${item.documentId ?? item.id}`}
+      className="group w-full text-left mx-2 mt-1 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3"
+    >
       {/* Icon */}
       <div className="mt-1 w-8 h-8 rounded flex items-center justify-center text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] border border-[var(--color-separator)] shrink-0 transition-colors">
         <Lightbulb className="w-4 h-4" size={16} strokeWidth={1.5} />
@@ -306,12 +312,18 @@ function MemoryResultItem(props: {
 function KnowledgeResultItem(props: {
   item: SearchResultItem;
   query: string;
+  onClick: () => void;
 }): JSX.Element {
   const { t } = useTranslation();
-  const { item, query } = props;
+  const { item, query, onClick } = props;
 
   return (
-    <ListItem className="group w-full text-left mx-2 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3">
+    <ListItem
+      interactive
+      onClick={onClick}
+      data-testid={`search-result-item-${item.documentId ?? item.id}`}
+      className="group w-full text-left mx-2 !p-2 !h-auto !rounded-lg border border-transparent hover:!bg-[var(--color-separator)] hover:border-[var(--color-separator)] !items-start !gap-3"
+    >
       {/* Icon */}
       <div className="mt-1 w-8 h-8 rounded bg-[var(--color-separator)] flex items-center justify-center text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] border border-[var(--color-separator)] shrink-0 transition-colors">
         <Share2 className="w-4 h-4" size={16} strokeWidth={1.5} />
@@ -402,7 +414,7 @@ function SearchResultsArea(props: {
   documentItems: SearchResultItem[];
   memoryItems: SearchResultItem[];
   knowledgeItems: SearchResultItem[];
-  onItemClick: (documentId: string) => void;
+  onItemClick: (itemId: string) => void;
   onRetrySearch: () => void;
   onClearQuery: () => void;
 }): JSX.Element {
@@ -540,6 +552,7 @@ function SearchResultsArea(props: {
                 key={item.id}
                 item={item}
                 query={props.effectiveQuery}
+                onClick={() => props.onItemClick(item.id)}
               />
             ))}
           </ResultGroup>
@@ -559,6 +572,7 @@ function SearchResultsArea(props: {
                 key={item.id}
                 item={item}
                 query={props.effectiveQuery}
+                onClick={() => props.onItemClick(item.id)}
               />
             ))}
           </ResultGroup>
@@ -761,19 +775,25 @@ export function SearchPanel(props: {
 
   function handleInputKeyDown(e: React.KeyboardEvent): void {
     if (e.key === "Enter") {
-      void runFulltext({ projectId, limit: 20 });
+      void runFulltext({ projectId, limit: 20, scope: searchScope });
     }
   }
 
   const handleItemClick = React.useCallback(
-    (documentId: string): void => {
-      const result = items.find((item) => item.id === documentId);
-      if (!result || result.type !== "document") {
+    (itemId: string): void => {
+      const result = items.find((item) => item.id === itemId);
+      if (!result) {
         onClose?.();
         return;
       }
 
-      const targetDocumentId = result.documentId ?? result.id;
+      const targetDocumentId =
+        result.documentId ?? (result.type === "document" ? result.id : null);
+      if (!targetDocumentId) {
+        onClose?.();
+        return;
+      }
+
       void navigateSearchResult({
         projectId,
         result: {
@@ -790,7 +810,7 @@ export function SearchPanel(props: {
 
   function handleRetrySearch(): void {
     clearError();
-    void runFulltext({ projectId, limit: 20 });
+    void runFulltext({ projectId, limit: 20, scope: searchScope });
   }
 
   // Handle keyboard shortcuts — only when panel is open

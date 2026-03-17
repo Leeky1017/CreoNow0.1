@@ -84,4 +84,51 @@ describe("Search Panel navigation (S3-SEARCH-PANEL-S2)", () => {
     });
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it("navigates when clicking memory and knowledge items with linked documentId", async () => {
+    const onClose = vi.fn();
+    render(
+      <SearchPanel
+        projectId="proj_1"
+        open={true}
+        onClose={onClose}
+        mockResults={[
+          {
+            id: "mem-1",
+            documentId: "doc_from_memory",
+            type: "memory",
+            title: "Memory Insight",
+            snippet: "Memory linked snippet",
+          },
+          {
+            id: "kg-1",
+            documentId: "doc_from_knowledge",
+            type: "knowledge",
+            title: "Knowledge Entity",
+            meta: "Character",
+          },
+        ]}
+        mockQuery="insight"
+      />,
+    );
+
+    fireEvent.click(screen.getByTestId("search-result-item-doc_from_memory"));
+    await waitFor(() => {
+      expect(mockSetCurrent).toHaveBeenCalledWith({
+        projectId: "proj_1",
+        documentId: "doc_from_memory",
+      });
+    });
+
+    fireEvent.click(
+      screen.getByTestId("search-result-item-doc_from_knowledge"),
+    );
+    await waitFor(() => {
+      expect(mockSetCurrent).toHaveBeenCalledWith({
+        projectId: "proj_1",
+        documentId: "doc_from_knowledge",
+      });
+    });
+    expect(onClose).toHaveBeenCalledTimes(2);
+  });
 });

@@ -27,7 +27,11 @@ export type SearchState = {
 export type SearchActions = {
   setQuery: (query: string) => void;
   setScope: (scope: SearchScope) => void;
-  runFulltext: (args: { projectId: string; limit?: number }) => Promise<void>;
+  runFulltext: (args: {
+    projectId: string;
+    limit?: number;
+    scope?: SearchScope;
+  }) => Promise<void>;
   clearResults: () => void;
   clearError: () => void;
 };
@@ -77,8 +81,9 @@ export function createSearchStore(deps: { invoke: IpcInvoke }) {
 
     clearError: () => set({ lastError: null }),
 
-    runFulltext: async ({ projectId, limit }) => {
+    runFulltext: async ({ projectId, limit, scope }) => {
       const query = get().query;
+      const effectiveScope = scope ?? get().scope;
       if (query.trim().length === 0) {
         latestSearchRequestId += 1;
         activeSearchController?.abort();
@@ -109,6 +114,7 @@ export function createSearchStore(deps: { invoke: IpcInvoke }) {
           query,
           limit,
           offset: 0,
+          scope: effectiveScope,
         });
 
         const shouldCommit =

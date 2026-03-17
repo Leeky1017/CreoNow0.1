@@ -73,6 +73,7 @@ describe("Search Panel status rendering (S3-SEARCH-PANEL-S3)", () => {
       expect(mockSearchState.runFulltext).toHaveBeenCalledWith({
         projectId: "proj_1",
         limit: 20,
+        scope: "current",
       });
     });
   });
