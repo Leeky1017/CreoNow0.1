@@ -114,7 +114,12 @@ function createDbStub(args?: {
     logger: createLogger(),
   });
 
-  const res = svc.search({ projectId: "proj-1", query: "月光", limit: 2, offset: 0 });
+  const res = svc.search({
+    projectId: "proj-1",
+    query: "月光",
+    limit: 2,
+    offset: 0,
+  });
   assert.equal(res.ok, true);
   if (!res.ok) throw new Error("unreachable");
 
@@ -220,7 +225,9 @@ function createDbStub(args?: {
 // S6: FTS syntax error from DB returns INVALID_ARGUMENT
 {
   const svc = createFtsService({
-    db: createDbStub({ searchError: new Error("fts5: syntax error near 'AND'") }),
+    db: createDbStub({
+      searchError: new Error("fts5: syntax error near 'AND'"),
+    }),
     logger: createLogger(),
   });
 
