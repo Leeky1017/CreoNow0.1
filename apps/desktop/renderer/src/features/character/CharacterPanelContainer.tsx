@@ -13,6 +13,7 @@ import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { useDeferredLoading } from "../../lib/useDeferredLoading";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useKgStore } from "../../stores/kgStore";
+import { useEditorStore } from "../../stores/editorStore";
 import { CharacterPanelContent } from "./CharacterPanel";
 import { CharacterPanelSkeleton } from "./CharacterPanelSkeleton";
 import { kgToCharacters, characterToMetadataJson } from "./characterFromKg";
@@ -50,11 +51,31 @@ export function CharacterPanelContainer(
   const entityUpdate = useKgStore((s) => s.entityUpdate);
   const entityDelete = useKgStore((s) => s.entityDelete);
 
+  // Editor store for document navigation
+  const openDocument = useEditorStore((s) => s.openDocument);
+  const editorDocumentId = useEditorStore((s) => s.documentId);
+  const editorBootstrapStatus = useEditorStore((s) => s.bootstrapStatus);
+
   // Confirm dialog for delete
   const { confirm, dialogProps } = useConfirmDialog();
 
   // Local state
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const [navigationWarning, setNavigationWarning] = React.useState<
+    string | null
+  >(null);
+  const latestEditorDocumentIdRef = React.useRef<string | null>(
+    editorDocumentId,
+  );
+  const latestEditorBootstrapStatusRef = React.useRef(editorBootstrapStatus);
+
+  React.useEffect(() => {
+    latestEditorDocumentIdRef.current = editorDocumentId;
+  }, [editorDocumentId]);
+
+  React.useEffect(() => {
+    latestEditorBootstrapStatusRef.current = editorBootstrapStatus;
+  }, [editorBootstrapStatus]);
 
   // Bootstrap KG on mount
   React.useEffect(() => {
@@ -137,6 +158,20 @@ export function CharacterPanelContainer(
     setSelectedId(characterId);
   }, []);
 
+  const handleNavigateToChapter = React.useCallback(
+    async (chapterId: string) => {
+      setNavigationWarning(null);
+      await openDocument({ projectId, documentId: chapterId });
+      const navigationFailed =
+        latestEditorBootstrapStatusRef.current === "error" ||
+        latestEditorDocumentIdRef.current !== chapterId;
+      if (navigationFailed) {
+        setNavigationWarning(t("character.detail.navigationDegraded"));
+      }
+    },
+    [openDocument, projectId, t],
+  );
+
   const showLoading = useDeferredLoading(bootstrapStatus === "loading");
 
   // Loading state
@@ -200,6 +235,8 @@ export function CharacterPanelContainer(
         onCreate={() => void handleCreate()}
         onUpdate={(char) => void handleUpdate(char)}
         onDelete={(id) => void handleDelete(id)}
+        onNavigateToChapter={handleNavigateToChapter}
+        navigationWarning={navigationWarning}
       />
       <SystemDialog {...dialogProps} />
     </>
