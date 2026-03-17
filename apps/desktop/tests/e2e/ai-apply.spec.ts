@@ -44,7 +44,7 @@ async function launchApp(userDataDir: string) {
       CREONOW_E2E: "1",
       CREONOW_OPEN_DEVTOOLS: "0",
       CREONOW_USER_DATA_DIR: userDataDir,
-      CREONOW_AI_PROVIDER: "anthropic",
+      CREONOW_AI_PROVIDER: "openai",
     },
   });
 
