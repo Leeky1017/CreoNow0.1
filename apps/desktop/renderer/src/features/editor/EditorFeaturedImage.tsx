@@ -28,9 +28,8 @@ export function EditorFeaturedImage({
     >
       <div
         data-testid="editor-featured-image-overlay"
-        className="absolute inset-0 opacity-80"
+        className="absolute inset-0 opacity-80 z-[var(--z-overlay)]"
         style={{
-          zIndex: "var(--z-overlay)" as unknown as number,
           background:
             "linear-gradient(to bottom, transparent, var(--color-bg-base))",
         }}
