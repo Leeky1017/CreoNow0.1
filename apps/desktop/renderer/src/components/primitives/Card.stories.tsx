@@ -566,12 +566,18 @@ export const WithEmoji: Story = {
 // 完整矩阵展示（用于 AI 自检）
 // ============================================================================
 
-const variants: CardVariant[] = ["default", "raised", "bordered"];
+const variants: CardVariant[] = [
+  "default",
+  "raised",
+  "bordered",
+  "bento",
+  "compact",
+];
 
 /**
  * 完整 Variant 矩阵
  *
- * 展示所有 3 种 variant 的组合
+ * 展示所有 5 种 variant 的组合
  */
 export const VariantMatrix: Story = {
   args: {
