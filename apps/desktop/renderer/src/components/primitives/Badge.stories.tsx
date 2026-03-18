@@ -107,6 +107,7 @@ const variants: BadgeVariant[] = [
   "warning",
   "error",
   "info",
+  "pill",
 ];
 const sizes: BadgeSize[] = ["sm", "md"];
 

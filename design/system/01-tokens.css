@@ -7,7 +7,7 @@
  * 使用方式:
  * - MUST 使用 CSS Variable，禁止硬编码颜色值
  * - 主题切换: 在 <html> 设置 data-theme="dark" | "light"
- * - Tailwind 映射: tailwind.config.ts 中通过 theme.extend 引用
+ * - Tailwind 映射: 在 main.css 通过 @theme / @theme inline 桥接引用
  */
 
 /* ============================================

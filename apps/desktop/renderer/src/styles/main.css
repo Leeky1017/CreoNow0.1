@@ -68,6 +68,66 @@
   --text-metadata--letter-spacing: var(--text-metadata-letter-spacing);
   --text-metadata--font-weight: var(--text-metadata-weight);
 
+  /* Typography — 页面标题 → utility: text-page-title */
+  --text-page-title: var(--text-page-title-size);
+  --text-page-title--line-height: var(--text-page-title-line-height);
+  --text-page-title--letter-spacing: var(--text-page-title-letter-spacing);
+  --text-page-title--font-weight: var(--text-page-title-weight);
+
+  /* Typography — 卡片标题 → utility: text-card-title */
+  --text-card-title: var(--text-card-title-size);
+  --text-card-title--line-height: var(--text-card-title-line-height);
+  --text-card-title--letter-spacing: var(--text-card-title-letter-spacing);
+  --text-card-title--font-weight: var(--text-card-title-weight);
+
+  /* Typography — 小标题 → utility: text-subtitle */
+  --text-subtitle: var(--text-subtitle-size);
+  --text-subtitle--line-height: var(--text-subtitle-line-height);
+  --text-subtitle--letter-spacing: var(--tracking-normal);
+  --text-subtitle--font-weight: var(--text-subtitle-weight);
+
+  /* Typography — UI 正文 → utility: text-body */
+  --text-body: var(--text-body-size);
+  --text-body--line-height: var(--text-body-line-height);
+  --text-body--letter-spacing: var(--tracking-normal);
+  --text-body--font-weight: var(--text-body-weight);
+
+  /* Typography — 编辑器正文 → utility: text-editor */
+  --text-editor: var(--text-editor-size);
+  --text-editor--line-height: var(--text-editor-line-height);
+  --text-editor--letter-spacing: var(--tracking-normal);
+  --text-editor--font-weight: var(--text-editor-weight);
+
+  /* Typography — 辅助信息 → utility: text-caption */
+  --text-caption: var(--text-caption-size);
+  --text-caption--line-height: var(--text-caption-line-height);
+  --text-caption--letter-spacing: var(--tracking-normal);
+  --text-caption--font-weight: var(--text-caption-weight);
+
+  /* Typography — 大写标签 → utility: text-label */
+  --text-label: var(--text-label-size);
+  --text-label--line-height: var(--text-label-line-height);
+  --text-label--letter-spacing: var(--text-label-letter-spacing);
+  --text-label--font-weight: var(--text-label-weight);
+
+  /* Typography — 侧栏树节点 → utility: text-tree */
+  --text-tree: var(--text-tree-size);
+  --text-tree--line-height: var(--text-tree-line-height);
+  --text-tree--letter-spacing: var(--tracking-normal);
+  --text-tree--font-weight: var(--text-tree-weight);
+
+  /* Typography — 状态栏 → utility: text-status */
+  --text-status: var(--text-status-size);
+  --text-status--line-height: var(--text-status-line-height);
+  --text-status--letter-spacing: var(--tracking-normal);
+  --text-status--font-weight: var(--text-status-weight);
+
+  /* Typography — 等宽文本 → utility: text-mono */
+  --text-mono: var(--text-mono-size);
+  --text-mono--line-height: var(--text-mono-line-height);
+  --text-mono--letter-spacing: var(--tracking-normal);
+  --text-mono--font-weight: var(--text-mono-weight);
+
   /* 独立字重 → utility: font-light / font-normal / font-medium / font-semibold */
   --font-weight-light: var(--weight-light);
   --font-weight-normal: var(--weight-normal);

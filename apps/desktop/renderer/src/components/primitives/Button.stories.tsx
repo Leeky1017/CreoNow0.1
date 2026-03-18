@@ -184,6 +184,7 @@ export const AllVariants: Story = {
       <Button variant="secondary">Secondary</Button>
       <Button variant="ghost">Ghost</Button>
       <Button variant="danger">Danger</Button>
+      <Button variant="pill">Pill</Button>
     </div>
   ),
 };
@@ -198,6 +199,9 @@ export const AllSizes: Story = {
       <Button size="sm">Small</Button>
       <Button size="md">Medium</Button>
       <Button size="lg">Large</Button>
+      <Button size="icon" aria-label="Icon size sample">
+        +
+      </Button>
     </div>
   ),
 };
@@ -206,13 +210,19 @@ export const AllSizes: Story = {
 // 完整矩阵展示（Variant × Size × State）
 // ============================================================================
 
-const variants: ButtonVariant[] = ["primary", "secondary", "ghost", "danger"];
-const sizes: ButtonSize[] = ["sm", "md", "lg"];
+const variants: ButtonVariant[] = [
+  "primary",
+  "secondary",
+  "ghost",
+  "danger",
+  "pill",
+];
+const sizes: ButtonSize[] = ["sm", "md", "lg", "icon"];
 
 /**
  * 完整 Variant × Size 矩阵
  *
- * 展示所有 4 种 variant 和 3 种 size 的组合（共 12 种）
+ * 展示所有 5 种 variant 和 4 种 size 的组合（共 20 种）
  */
 export const VariantSizeMatrix: Story = {
   args: {
