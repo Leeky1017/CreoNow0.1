@@ -44,6 +44,7 @@ import {
   resolveEditorLineHeightToken,
   resolveEditorScaleFactor,
 } from "./typography";
+import { EditorFeaturedImage } from "./EditorFeaturedImage";
 import { buildAiStreamUndoCheckpoint, undoAiStream } from "./aiStreamUndo";
 import type { AiStreamCheckpoint } from "./aiStreamUndo";
 import {
@@ -1467,7 +1468,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
       )}
       <div
         data-testid="editor-content-region"
-        className="relative flex-1 min-h-0 font-[var(--font-family-body)] text-[length:var(--editor-font-size)] leading-[var(--editor-line-height)]"
+        className="relative flex-1 min-h-0 font-[var(--editor-active-font-family)] text-[length:var(--editor-font-size)] leading-[var(--editor-line-height)]"
         style={editorTypographyVars}
         onMouseEnter={() => core.setWriteHovering(true)}
         onMouseLeave={() => core.setWriteHovering(false)}
@@ -1478,6 +1479,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
             viewportTestId="editor-content-scroll-viewport"
             className="h-full"
           >
+            <EditorFeaturedImage />
             <EditorContent editor={core.editor} className="h-full" />
           </ScrollArea>
         </EditorContextMenu>

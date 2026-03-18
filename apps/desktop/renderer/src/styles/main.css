@@ -541,9 +541,27 @@ textarea:focus-visible {
 }
 
 .ProseMirror {
+  max-width: var(--editor-content-max-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--editor-content-padding-x);
+  padding-right: var(--editor-content-padding-x);
   caret-color: var(--color-caret);
+}
+
+/* Editor H1 — display-level typography (v1-04) */
+.ProseMirror h1 {
+  font-size: var(--text-display-size);
+  font-weight: var(--text-display-weight);
+  letter-spacing: var(--text-display-letter-spacing);
+  line-height: var(--text-display-line-height);
 }
 
 .ProseMirror p + p {
   margin-top: var(--text-editor-paragraph-spacing);
+}
+
+/* Serif/sans-serif font switch — class controlled by v1-07 Settings UI */
+.editor-font-sans {
+  --editor-active-font-family: var(--font-family-ui);
 }
