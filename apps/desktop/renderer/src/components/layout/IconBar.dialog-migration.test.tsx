@@ -219,7 +219,7 @@ describe("IconBar dialog migration", () => {
 
     const memoryDialog = await screen.findByTestId("leftpanel-dialog-memory");
     fireEvent.click(
-      within(memoryDialog).getByRole("button", { name: "Close" }),
+      within(memoryDialog).getByTestId("leftpanel-dialog-close"),
     );
 
     await waitFor(() => {

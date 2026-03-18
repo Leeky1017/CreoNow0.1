@@ -3,6 +3,9 @@ import { useTranslation } from "react-i18next";
 
 import type { IpcError, IpcResponseData } from "@shared/types/ipc-generated";
 import { Button, Card, Text } from "../../components/primitives";
+import { EmptyState } from "../../components/patterns/EmptyState";
+import { LoadingState } from "../../components/patterns/LoadingState";
+import { ErrorState } from "../../components/patterns/ErrorState";
 import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useProjectStore } from "../../stores/projectStore";
@@ -570,23 +573,15 @@ function MemoryRulesCard(props: {
       className="flex-1 min-h-0 overflow-auto p-2.5 bg-[var(--color-bg-surface)]"
     >
       {props.state.status === "loading" ? (
-        <div className="h-full flex items-center justify-center">
-          <Text size="small" color="muted">
-            {props.t("memory.panel.loading")}
-          </Text>
-        </div>
+        <LoadingState variant="spinner" size="sm" text={props.t("memory.panel.loading")} className="h-full" />
       ) : props.state.filteredRules.length === 0 ? (
-        <div className="h-full min-h-45 flex flex-col items-center justify-center gap-3 text-center">
-          <div className="w-9 h-9 rounded-[var(--radius-sm)] bg-[var(--color-bg-raised)] flex items-center justify-center text-[var(--color-fg-muted)]">
-            {props.t("memory.panel.emptyIcon")}
-          </div>
-          <Text size="small" color="muted">
-            {props.t("memory.panel.aiLearningHint")}
-          </Text>
-          <Button size="sm" onClick={() => props.state.setComposerOpen(true)}>
-            {props.t("memory.panel.addRuleManually")}
-          </Button>
-        </div>
+        <EmptyState
+          variant="generic"
+          title={props.t("memory.panel.aiLearningHint")}
+          actionLabel={props.t("memory.panel.addRuleManually")}
+          onAction={() => props.state.setComposerOpen(true)}
+          className="h-full min-h-45"
+        />
       ) : (
         <div className="flex flex-col gap-3">
           {props.state.groupedRules.map((group) => (
@@ -878,21 +873,13 @@ export function MemoryPanel(): JSX.Element {
       <MemoryConflictSection t={t} state={state} />
 
       {state.error ? (
-        <Card noPadding className="shrink-0 p-2.5">
-          <div className="flex items-center gap-2">
-            <Text data-testid="memory-error-code" size="code" color="muted">
-              {getHumanErrorMessage(state.error)}
-            </Text>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="ml-auto"
-              onClick={() => state.setError(null)}
-            >
-              {t("memory.panel.dismissError")}
-            </Button>
-          </div>
-        </Card>
+        <ErrorState
+          variant="banner"
+          message={getHumanErrorMessage(state.error)}
+          dismissible
+          onDismiss={() => state.setError(null)}
+          className="shrink-0"
+        />
       ) : null}
 
       <MemoryRulesCard t={t} state={state} />

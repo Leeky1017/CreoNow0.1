@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ScrollArea } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 import { SearchInput } from "../../components/composites/SearchInput";
+import { EmptyState as EmptyStatePattern } from "../../components/patterns/EmptyState";
 
 import {
   ChevronDown,
@@ -509,16 +510,14 @@ function OutlineItemRow({
 function EmptyState() {
   const { t } = useTranslation();
   return (
-    <div
-      className="flex flex-col items-center justify-center py-6 text-center border border-dashed border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] mx-3 my-3"
-      data-testid="outline-empty-state"
-    >
-      <EmptyDocumentIcon />
-      <p className="text-[11px] text-[var(--color-fg-subtle)] leading-tight px-2">
-        {t("outline.emptyTitle")}
-        <br />
-        {t("outline.emptyDescription")}
-      </p>
+    <div data-testid="outline-empty-state">
+      <EmptyStatePattern
+        variant="generic"
+        title={t("outline.emptyTitle")}
+        description={t("outline.emptyDescription")}
+        illustration={<EmptyDocumentIcon />}
+        className="mx-3 my-3"
+      />
     </div>
   );
 }
@@ -529,11 +528,11 @@ function EmptyState() {
 function NoResultsState({ query }: { query: string }) {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col items-center justify-center py-6 text-center mx-3">
-      <p className="text-[11px] text-[var(--color-fg-subtle)] leading-tight">
-        {t("outline.noResults", { query })}
-      </p>
-    </div>
+    <EmptyStatePattern
+      variant="search"
+      title={t("outline.noResults", { query })}
+      className="mx-3"
+    />
   );
 }
 /**

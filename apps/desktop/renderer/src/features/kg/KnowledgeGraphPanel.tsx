@@ -1,6 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
+import { EmptyState } from "../../components/patterns/EmptyState";
+import { ErrorState } from "../../components/patterns/ErrorState";
 
 import { Button, Card, Input, Select, Text } from "../../components/primitives";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
@@ -1001,27 +1003,13 @@ function KgListView(props: {
       </div>
 
       {lastError ? (
-        <div
-          role="alert"
-          className="p-3 border-b border-[var(--color-separator)]"
-        >
-          <div className="flex gap-2 items-center">
-            <Text data-testid="kg-error-code" size="code" color="muted">
-              {getHumanErrorMessage(lastError)}
-            </Text>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={clearError}
-              className="ml-auto"
-            >
-              {t("kg.panel.dismiss")}
-            </Button>
-          </div>
-          <Text size="small" className="mt-1.5 block">
-            {getHumanErrorMessage(lastError)}
-          </Text>
-        </div>
+        <ErrorState
+          variant="banner"
+          message={getHumanErrorMessage(lastError)}
+          dismissible
+          onDismiss={clearError}
+          className="border-b border-[var(--color-separator)]"
+        />
       ) : null}
 
       <div className="flex-1 overflow-auto min-h-0">
@@ -1070,9 +1058,11 @@ function KgListView(props: {
           </div>
 
           {entities.length === 0 ? (
-            <Text size="small" color="muted" className="mt-3 block">
-              {t("kg.panel.noEntities")}
-            </Text>
+            <EmptyState
+              variant="generic"
+              title={t("kg.panel.noEntities")}
+              className="mt-3"
+            />
           ) : (
             <div className="mt-3 flex flex-col gap-2">
               {entities.map((e) => (

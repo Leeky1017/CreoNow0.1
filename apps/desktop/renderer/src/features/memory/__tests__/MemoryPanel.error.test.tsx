@@ -52,9 +52,9 @@ describe("MemoryPanel error handling", () => {
     render(<MemoryPanel />);
 
     await waitFor(() => {
-      expect(screen.getByTestId("memory-error-code")).toHaveTextContent(
-        "Internal error. Please try again later.",
-      );
+      expect(
+        screen.getByText("Internal error. Please try again later."),
+      ).toBeInTheDocument();
     });
   });
 });

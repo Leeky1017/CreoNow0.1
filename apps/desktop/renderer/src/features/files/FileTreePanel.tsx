@@ -12,7 +12,8 @@ import {
   type ContextMenuItem,
 } from "../../components/primitives";
 import { PanelContainer } from "../../components/composites/PanelContainer";
-import { EmptyState } from "../../components/composites/EmptyState";
+import { EmptyState } from "../../components/patterns/EmptyState";
+import { LoadingState } from "../../components/patterns/LoadingState";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { useEditorStore } from "../../stores/editorStore";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
@@ -1345,23 +1346,14 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
         className="flex-1 overflow-auto min-h-0 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-ring-focus)]"
       >
         {state.bootstrapStatus !== "ready" ? (
-          <Text size="small" color="muted" className="p-3 block">
-            {t("files.tree.loading")}
-          </Text>
+          <LoadingState variant="spinner" size="sm" text={t("files.tree.loading")} className="p-3" />
         ) : state.items.length === 0 ? (
           <EmptyState
+            variant="files"
             title={t("files.tree.emptyTitle")}
             description={t("files.tree.emptyDescription")}
-            action={
-              <Button
-                data-testid="file-create-empty"
-                variant="secondary"
-                size="sm"
-                onClick={() => void state.onCreate("chapter")}
-              >
-                {t("files.tree.newFile")}
-              </Button>
-            }
+            actionLabel={t("files.tree.newFile")}
+            onAction={() => void state.onCreate("chapter")}
           />
         ) : (
           <div className="flex flex-col gap-1 p-2">

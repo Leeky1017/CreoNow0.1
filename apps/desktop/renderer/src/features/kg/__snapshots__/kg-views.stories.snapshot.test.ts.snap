@@ -135,29 +135,43 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
     data-testid="character-card-list-empty"
   >
     <div
-      class="flex flex-col items-center justify-center gap-3 p-6 text-center "
-      role="status"
+      class="flex flex-col items-center justify-center py-12 px-6 text-center"
     >
+      <div
+        class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-bg-hover)]"
+      >
+        <svg
+          class="h-8 w-8 text-[var(--color-fg-muted)]"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="8"
+            fill="none"
+            r="4"
+            stroke-width="1.5"
+          />
+          <path
+            d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+          />
+        </svg>
+      </div>
       <h3
-        class="text-sm font-semibold text-[color:var(--color-fg-default)]"
+        class="font-[var(--font-family-ui)] text-sm font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] mb-2"
       >
         No Characters
       </h3>
       <p
-        class="text-xs text-[color:var(--color-fg-muted)] max-w-[240px] leading-relaxed"
+        class="text-[13px] leading-[1.5] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] mb-6 max-w-xs"
       >
         Create your first character
       </p>
-      <div
-        class="mt-1"
-      >
-        <button
-          class="focus-ring px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
-          type="button"
-        >
-          Create Character
-        </button>
-      </div>
     </div>
   </section>
 </div>
