@@ -1,11 +1,7 @@
-/**
- * ImageUpload — drag/drop zone + file validation.
- *
- * Preview rendering extracted to ImagePreview.tsx (AC-20).
- */
+/** ImageUpload — drag/drop zone + file validation. Preview + placeholder in ImagePreview.tsx. */
 import React, { useCallback, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ImagePreview, UploadIcon } from "./ImagePreview";
+import { ImagePreview, ImageUploadPlaceholder } from "./ImagePreview";
 
 export interface ImageUploadProps {
   value?: File | string | null;
@@ -84,18 +80,13 @@ export function ImageUpload({
 
   const handleFile = useCallback(
     (file: File | null) => {
-      if (!file) {
-        onChange?.(null);
-        return;
-      }
-      if (validateFile(file)) {
-        onChange?.(file);
-      }
+      if (!file) return onChange?.(null);
+      if (validateFile(file)) onChange?.(file);
     },
     [onChange, validateFile],
   );
 
-  const handleDragEnter = useCallback(
+  const handleDragActivate = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
@@ -109,15 +100,6 @@ export function ImageUpload({
     e.stopPropagation();
     setIsDragging(false);
   }, []);
-
-  const handleDragOver = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (!disabled) setIsDragging(true);
-    },
-    [disabled],
-  );
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -163,26 +145,17 @@ export function ImageUpload({
     [handleClick],
   );
 
-  const baseStyles = [
-    "relative group cursor-pointer border-2 border-dashed rounded-[var(--radius-sm)]",
+  const containerStyles = [
     // eslint-disable-next-line creonow/no-hardcoded-dimension -- Primitive: minimum upload area for usability
-    "min-h-[140px] flex flex-col items-center justify-center",
-    "transition-all duration-[var(--duration-fast)]",
-    "focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)]",
-    "focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)]",
-  ];
-
-  const stateStyles = disabled
-    ? [
-        "border-[var(--color-border-default)] bg-[var(--color-bg-disabled)] cursor-not-allowed opacity-50",
-      ]
-    : isDragging
-      ? ["border-[var(--color-accent)] bg-[var(--color-accent-subtle)]"]
-      : [
-          "border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)]",
-        ];
-
-  const containerStyles = [...baseStyles, ...stateStyles, className]
+    "relative group cursor-pointer border-2 border-dashed rounded-[var(--radius-sm)] min-h-[140px] flex flex-col items-center justify-center",
+    "transition-all duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)]",
+    disabled
+      ? "border-[var(--color-border-default)] bg-[var(--color-bg-disabled)] cursor-not-allowed opacity-50"
+      : isDragging
+        ? "border-[var(--color-accent)] bg-[var(--color-accent-subtle)]"
+        : "border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)]",
+    className,
+  ]
     .filter(Boolean)
     .join(" ");
 
@@ -191,9 +164,9 @@ export function ImageUpload({
       role="button"
       tabIndex={disabled ? -1 : 0}
       className={containerStyles}
-      onDragEnter={handleDragEnter}
+      onDragEnter={handleDragActivate}
       onDragLeave={handleDragLeave}
-      onDragOver={handleDragOver}
+      onDragOver={handleDragActivate}
       onDrop={handleDrop}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
@@ -217,17 +190,10 @@ export function ImageUpload({
           onRemove={handleRemove}
         />
       ) : (
-        <div className="flex flex-col items-center gap-3 text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] transition-colors p-6">
-          <div className="w-10 h-10 rounded-[var(--radius-full)] bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] flex items-center justify-center group-hover:border-[var(--color-border-hover)] transition-colors">
-            <UploadIcon />
-          </div>
-          <div className="text-center">
-            <p className="text-xs font-medium">{resolvedPlaceholder}</p>
-            <p className="text-[10px] text-[var(--color-fg-subtle)] mt-1">
-              {resolvedHint}
-            </p>
-          </div>
-        </div>
+        <ImageUploadPlaceholder
+          placeholder={resolvedPlaceholder}
+          hint={resolvedHint}
+        />
       )}
     </div>
   );

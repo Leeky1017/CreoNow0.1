@@ -26,12 +26,12 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["primary", "secondary", "ghost", "danger"],
+      options: ["primary", "secondary", "ghost", "danger", "pill"],
       description: "Visual style variant",
     },
     size: {
       control: "select",
-      options: ["sm", "md", "lg"],
+      options: ["sm", "md", "lg", "icon"],
       description: "Size of the button",
     },
     loading: {

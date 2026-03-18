@@ -49,6 +49,29 @@ export function ImagePreview({
   );
 }
 
+export interface ImageUploadPlaceholderProps {
+  placeholder: string;
+  hint: string;
+}
+
+/** Empty-state placeholder with upload icon + text. */
+export function ImageUploadPlaceholder({
+  placeholder,
+  hint,
+}: ImageUploadPlaceholderProps): JSX.Element {
+  return (
+    <div className="flex flex-col items-center gap-3 text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)] transition-colors p-6">
+      <div className="w-10 h-10 rounded-[var(--radius-full)] bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] flex items-center justify-center group-hover:border-[var(--color-border-hover)] transition-colors">
+        <UploadIcon />
+      </div>
+      <div className="text-center">
+        <p className="text-xs font-medium">{placeholder}</p>
+        <p className="text-[10px] text-[var(--color-fg-subtle)] mt-1">{hint}</p>
+      </div>
+    </div>
+  );
+}
+
 /** Upload icon for the empty state */
 export function UploadIcon(): JSX.Element {
   return (

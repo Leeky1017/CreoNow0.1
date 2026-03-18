@@ -18,7 +18,7 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "success", "warning", "error", "info"],
+      options: ["default", "success", "warning", "error", "info", "pill"],
       description: "Visual style variant",
     },
     size: {
