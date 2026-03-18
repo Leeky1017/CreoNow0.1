@@ -110,18 +110,18 @@ describe("Card", () => {
   // Padding 测试
   // ===========================================================================
   describe("padding", () => {
-    it("默认应该有 p-6 padding", () => {
+    it("默认应该有 section-gap padding", () => {
       render(<Card>With Padding</Card>);
 
       const card = screen.getByText("With Padding").closest("div");
-      expect(card).toHaveClass("p-6");
+      expect(card!.className).toContain("p-[var(--space-section-gap)]");
     });
 
-    it("noPadding 模式不应该有 p-6", () => {
+    it("noPadding 模式不应该有 padding", () => {
       render(<Card noPadding>No Padding</Card>);
 
       const card = screen.getByText("No Padding").closest("div");
-      expect(card).not.toHaveClass("p-6");
+      expect(card!.className).not.toContain("p-[var(");
     });
   });
 

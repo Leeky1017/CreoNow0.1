@@ -2,8 +2,8 @@
  * v1-02 Card 变体行为测试 —— 边界完整版
  *
  * 覆盖范围：
- * - bento variant：radius-2xl、p-8、hover 边框变亮
- * - compact variant：p-3、space-y-1、radius-md
+ * - bento variant：radius-2xl、space-8 token、hover 边框变亮
+ * - compact variant：space-3 token、space-y-1 token、radius-md
  * - hoverable × 新 variant 组合
  * - noPadding × 新 variant 组合
  * - 回归：现有 variant 不受影响
@@ -28,10 +28,10 @@ describe("Card v1-02 行为测试", () => {
       expect(card.className).toContain("rounded-[var(--radius-2xl)]");
     });
 
-    it("默认 padding 为 p-8", () => {
+    it("默认 padding 使用 space-8 token", () => {
       render(<Card variant="bento">Bento</Card>);
       const card = screen.getByText("Bento").closest("div")!;
-      expect(card).toHaveClass("p-8");
+      expect(card.className).toContain("p-[var(--space-8)]");
     });
 
     it("有边框", () => {
@@ -68,15 +68,15 @@ describe("Card v1-02 行为测试", () => {
       );
     });
 
-    it("noPadding 时移除 p-8", () => {
+    it("noPadding 时移除 padding", () => {
       render(
         <Card variant="bento" noPadding>
           Bento
         </Card>,
       );
       const card = screen.getByText("Bento").closest("div")!;
-      expect(card).not.toHaveClass("p-8");
-      expect(card).not.toHaveClass("p-6");
+      expect(card.className).not.toContain("p-[var(--space-8)]");
+      expect(card.className).not.toContain("p-[var(--space-section-gap)]");
     });
 
     it("不使用 radius-xl（那是 default 的圆角）", () => {
@@ -110,16 +110,16 @@ describe("Card v1-02 行为测试", () => {
       expect(card.className).toContain("rounded-[var(--radius-md)]");
     });
 
-    it("padding 为 p-3", () => {
+    it("padding 使用 space-3 token", () => {
       render(<Card variant="compact">Compact</Card>);
       const card = screen.getByText("Compact").closest("div")!;
-      expect(card).toHaveClass("p-3");
+      expect(card.className).toContain("p-[var(--space-3)]");
     });
 
-    it("子元素间距为 space-y-1", () => {
+    it("子元素间距使用 space-1 token", () => {
       render(<Card variant="compact">Compact</Card>);
       const card = screen.getByText("Compact").closest("div")!;
-      expect(card).toHaveClass("space-y-1");
+      expect(card.className).toContain("space-y-[var(--space-1)]");
     });
 
     it("有边框", () => {
@@ -135,7 +135,7 @@ describe("Card v1-02 行为测试", () => {
         </Card>,
       );
       const card = screen.getByText("Compact").closest("div")!;
-      expect(card).not.toHaveClass("p-3");
+      expect(card).not.toHaveClass("p-[var(--space-3)]");
     });
 
     it("compact hoverable 时有 cursor-pointer", () => {
@@ -164,10 +164,10 @@ describe("Card v1-02 行为测试", () => {
   // 回归：现有 variant 不受影响
   // ===========================================================================
   describe("回归：现有 variant 行为不变", () => {
-    it("default variant 使用 p-6", () => {
+    it("default variant 使用 section-gap padding", () => {
       render(<Card variant="default">Default</Card>);
       const card = screen.getByText("Default").closest("div")!;
-      expect(card).toHaveClass("p-6");
+      expect(card.className).toContain("p-[var(--space-section-gap)]");
     });
 
     it("default variant 使用 radius-xl", () => {
@@ -191,7 +191,7 @@ describe("Card v1-02 行为测试", () => {
     it("默认 variant 为 default", () => {
       render(<Card>NoVariant</Card>);
       const card = screen.getByText("NoVariant").closest("div")!;
-      expect(card).toHaveClass("p-6");
+      expect(card.className).toContain("p-[var(--space-section-gap)]");
     });
 
     it("默认 hoverable 为 false", () => {

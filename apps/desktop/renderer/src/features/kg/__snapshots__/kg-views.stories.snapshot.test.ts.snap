@@ -365,7 +365,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           </button>
         </div>
         <button
-          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] border-0 hover:bg-[var(--color-fg-muted)] active:bg-[var(--color-fg-subtle)] h-7 px-3 text-xs rounded-[var(--radius-sm)] whitespace-nowrap flex-shrink-0"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] border-0 hover:bg-[var(--color-fg-muted)] active:bg-[var(--color-fg-subtle)] h-7 px-[var(--space-3)] text-[var(--text-caption-size)] rounded-[var(--radius-sm)] whitespace-nowrap flex-shrink-0"
           type="button"
         >
           <span
@@ -620,7 +620,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           </button>
         </div>
         <button
-          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] border-0 hover:bg-[var(--color-fg-muted)] active:bg-[var(--color-fg-subtle)] h-7 px-3 text-xs rounded-[var(--radius-sm)] whitespace-nowrap flex-shrink-0"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] border-0 hover:bg-[var(--color-fg-muted)] active:bg-[var(--color-fg-subtle)] h-7 px-[var(--space-3)] text-[var(--text-caption-size)] rounded-[var(--radius-sm)] whitespace-nowrap flex-shrink-0"
           type="button"
         >
           <span
@@ -964,7 +964,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           </button>
         </div>
         <button
-          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] border-0 hover:bg-[var(--color-fg-muted)] active:bg-[var(--color-fg-subtle)] h-7 px-3 text-xs rounded-[var(--radius-sm)] whitespace-nowrap flex-shrink-0"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] border-0 hover:bg-[var(--color-fg-muted)] active:bg-[var(--color-fg-subtle)] h-7 px-[var(--space-3)] text-[var(--text-caption-size)] rounded-[var(--radius-sm)] whitespace-nowrap flex-shrink-0"
           type="button"
         >
           <span
