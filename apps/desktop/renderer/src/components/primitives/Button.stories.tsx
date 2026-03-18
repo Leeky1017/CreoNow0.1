@@ -583,3 +583,57 @@ export const FullMatrix: Story = {
     </div>
   ),
 };
+
+/** Pill variant — 胶囊按钮 */
+export const Pill: Story = {
+  args: {
+    variant: "pill",
+    children: "Pill Button",
+  },
+};
+
+/** Pill variant 各状态 */
+export const PillStates: Story = {
+  args: { children: "Pill" },
+  render: () => (
+    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+      <Button variant="pill">Default</Button>
+      <Button variant="pill" disabled>
+        Disabled
+      </Button>
+      <Button variant="pill" loading>
+        Loading
+      </Button>
+    </div>
+  ),
+};
+
+/** Icon-only 按钮 */
+export const IconOnly: Story = {
+  args: {
+    size: "icon",
+    variant: "ghost",
+    children: "✕",
+  },
+};
+
+/** Icon-only 各 variant */
+export const IconOnlyVariants: Story = {
+  args: { children: "✕" },
+  render: () => (
+    <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+      <Button size="icon" variant="primary">
+        ✕
+      </Button>
+      <Button size="icon" variant="secondary">
+        ✕
+      </Button>
+      <Button size="icon" variant="ghost">
+        ✕
+      </Button>
+      <Button size="icon" variant="pill">
+        ✕
+      </Button>
+    </div>
+  ),
+};

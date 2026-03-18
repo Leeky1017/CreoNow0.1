@@ -9,7 +9,13 @@ import React from "react";
  * - error: 错误状态（红色）
  * - info: 信息状态（蓝色）
  */
-export type BadgeVariant = "default" | "success" | "warning" | "error" | "info";
+export type BadgeVariant =
+  | "default"
+  | "success"
+  | "warning"
+  | "error"
+  | "info"
+  | "pill";
 
 /**
  * Badge sizes
@@ -62,6 +68,13 @@ const variantStyles: Record<BadgeVariant, string> = {
     " ",
   ),
   info: ["bg-[var(--color-info-subtle)]", "text-[var(--color-info)]"].join(" "),
+  pill: [
+    "bg-[var(--color-bg-hover)]",
+    "text-[var(--color-fg-muted)]",
+    "uppercase",
+    "tracking-[var(--tracking-wide)]",
+    "font-[var(--weight-semibold)]",
+  ].join(" "),
 };
 
 /**
@@ -70,6 +83,14 @@ const variantStyles: Record<BadgeVariant, string> = {
 const sizeStyles: Record<BadgeSize, string> = {
   sm: "h-[18px] px-1.5 text-[10px]",
   md: "h-[22px] px-2 text-xs",
+};
+
+/**
+ * Pill variant 使用独立的尺寸（设计稿：padding 6px 14px）
+ */
+const pillSizeStyles: Record<BadgeSize, string> = {
+  sm: "py-1 px-2.5 text-[10px]",
+  md: "py-1.5 px-3.5 text-[var(--text-label-size)]",
 };
 
 /**
@@ -88,10 +109,13 @@ export function Badge({
   children,
   ...props
 }: BadgeProps): JSX.Element {
+  const resolvedSizeStyles =
+    variant === "pill" ? pillSizeStyles[size] : sizeStyles[size];
+
   const classes = [
     baseStyles,
     variantStyles[variant],
-    sizeStyles[size],
+    resolvedSizeStyles,
     className,
   ]
     .filter(Boolean)

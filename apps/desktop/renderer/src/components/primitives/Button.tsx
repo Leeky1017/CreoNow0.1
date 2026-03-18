@@ -8,7 +8,12 @@ import React from "react";
  * - ghost: Lightweight actions, no border
  * - danger: Destructive actions, red tinted
  */
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "ghost"
+  | "danger"
+  | "pill";
 
 /**
  * Button sizes as defined in design spec §6.1
@@ -19,7 +24,7 @@ export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
  * | md   | 36px   | 16px      | 13px      | --radius-md   |
  * | lg   | 44px   | 20px      | 14px      | --radius-md   |
  */
-export type ButtonSize = "sm" | "md" | "lg";
+export type ButtonSize = "sm" | "md" | "lg" | "icon";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Visual style variant */
@@ -97,15 +102,37 @@ const variantStyles: Record<ButtonVariant, string> = {
     "hover:bg-[var(--color-error-subtle)]",
     "active:bg-[var(--color-error-subtle)]",
   ].join(" "),
+  pill: [
+    "bg-transparent",
+    "text-[var(--color-fg-default)]",
+    "border",
+    "border-[var(--color-border-default)]",
+    "hover:border-[var(--color-border-hover)]",
+    "hover:bg-[var(--color-bg-hover)]",
+    "active:bg-[var(--color-bg-active)]",
+  ].join(" "),
 };
 
 /**
  * Size-specific styles (design spec §6.1)
+ *
+ * 注意：border-radius 由 sizeRounded 单独管理，pill variant 统一覆盖为 radius-full。
  */
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "h-7 px-3 text-xs rounded-[var(--radius-sm)]",
-  md: "h-9 px-4 text-[13px] rounded-[var(--radius-md)]",
-  lg: "h-11 px-5 text-sm rounded-[var(--radius-md)]",
+  sm: "h-7 px-3 text-xs",
+  md: "h-9 px-4 text-[13px]",
+  lg: "h-11 px-5 text-sm",
+  icon: "h-10 w-10 p-0 text-[13px]",
+};
+
+/**
+ * Size-specific border-radius（与 variant 解耦）
+ */
+const sizeRounded: Record<ButtonSize, string> = {
+  sm: "rounded-[var(--radius-sm)]",
+  md: "rounded-[var(--radius-md)]",
+  lg: "rounded-[var(--radius-md)]",
+  icon: "rounded-[var(--radius-md)]",
 };
 
 /**
@@ -167,10 +194,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ): JSX.Element {
     const isDisabled = disabled || loading;
 
+    const rounded =
+      variant === "pill" ? "rounded-[var(--radius-full)]" : sizeRounded[size];
+
     const classes = [
       baseStyles,
       variantStyles[variant],
       sizeStyles[size],
+      rounded,
       fullWidth ? "w-full" : "",
       className,
     ]

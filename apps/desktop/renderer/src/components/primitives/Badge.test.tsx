@@ -136,6 +136,7 @@ describe("Badge", () => {
       "warning",
       "error",
       "info",
+      "pill",
     ];
     const sizes: BadgeSize[] = ["sm", "md"];
 
@@ -155,5 +156,50 @@ describe("Badge", () => {
         expect(screen.getByText("Test")).toBeInTheDocument();
       },
     );
+  });
+
+  // ===========================================================================
+  // pill variant 专项测试
+  // ===========================================================================
+  describe("pill variant", () => {
+    it("pill 应该有 uppercase", () => {
+      render(<Badge variant="pill">Tag</Badge>);
+
+      const badge = screen.getByText("Tag");
+      expect(badge).toHaveClass("uppercase");
+    });
+
+    it("pill 应该有 tracking-wide", () => {
+      render(<Badge variant="pill">Tag</Badge>);
+
+      const badge = screen.getByText("Tag");
+      expect(badge.className).toContain("tracking-[var(--tracking-wide)]");
+    });
+
+    it("pill 应该有 weight-semibold", () => {
+      render(<Badge variant="pill">Tag</Badge>);
+
+      const badge = screen.getByText("Tag");
+      expect(badge.className).toContain("font-[var(--weight-semibold)]");
+    });
+
+    it("pill 应该有 radius-full 圆角", () => {
+      render(<Badge variant="pill">Tag</Badge>);
+
+      const badge = screen.getByText("Tag");
+      expect(badge.className).toContain("rounded-[var(--radius-full)]");
+    });
+
+    it("pill md 应该有正确的 padding", () => {
+      render(
+        <Badge variant="pill" size="md">
+          Tag
+        </Badge>,
+      );
+
+      const badge = screen.getByText("Tag");
+      expect(badge).toHaveClass("px-3.5");
+      expect(badge).toHaveClass("py-1.5");
+    });
   });
 });

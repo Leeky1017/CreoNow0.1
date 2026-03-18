@@ -986,3 +986,41 @@ export const SettingsCardScenario: Story = {
     </div>
   ),
 };
+
+/** Bento variant — 大圆角卡片 */
+export const Bento: Story = {
+  args: {
+    variant: "bento",
+    children: "Bento card with 24px radius and 32px padding",
+  },
+};
+
+/** Bento + Hoverable */
+export const BentoHoverable: Story = {
+  args: {
+    variant: "bento",
+    hoverable: true,
+    children: "Hover me — border color transitions",
+  },
+};
+
+/** Compact variant — 紧凑统计卡片 */
+export const Compact: Story = {
+  args: { children: "Compact" },
+  render: () => (
+    <div style={{ display: "flex", gap: "1rem" }}>
+      <Card variant="compact" style={{ width: "160px" }}>
+        <div style={{ fontSize: "28px", fontWeight: 600 }}>42</div>
+        <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
+          Total Projects
+        </div>
+      </Card>
+      <Card variant="compact" style={{ width: "160px" }}>
+        <div style={{ fontSize: "28px", fontWeight: 600 }}>1.2M</div>
+        <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
+          Total Words
+        </div>
+      </Card>
+    </div>
+  ),
+};

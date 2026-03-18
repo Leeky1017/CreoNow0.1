@@ -49,6 +49,7 @@ describe("Button", () => {
       "secondary",
       "ghost",
       "danger",
+      "pill",
     ];
 
     it.each(variants)("应该渲染 %s variant", (variant) => {
@@ -76,6 +77,7 @@ describe("Button", () => {
       sm: "h-7",
       md: "h-9",
       lg: "h-11",
+      icon: "h-10",
     };
 
     it.each(Object.entries(sizeClasses))(
@@ -93,6 +95,15 @@ describe("Button", () => {
 
       const button = screen.getByRole("button");
       expect(button).toHaveClass("h-9");
+    });
+
+    it("icon size 应该有相等的宽高", () => {
+      render(<Button size="icon">X</Button>);
+
+      const button = screen.getByRole("button");
+      expect(button).toHaveClass("h-10");
+      expect(button).toHaveClass("w-10");
+      expect(button).toHaveClass("p-0");
     });
   });
 
@@ -301,12 +312,14 @@ describe("Button", () => {
       "secondary",
       "ghost",
       "danger",
+      "pill",
     ];
-    const sizes: ButtonSize[] = ["sm", "md", "lg"];
+    const sizes: ButtonSize[] = ["sm", "md", "lg", "icon"];
     const sizeClasses: Record<ButtonSize, string> = {
       sm: "h-7",
       md: "h-9",
       lg: "h-11",
+      icon: "h-10",
     };
 
     // 生成所有组合的测试用例

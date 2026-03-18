@@ -196,3 +196,26 @@ export const NumberBadges: Story = {
     </div>
   ),
 };
+
+/** Pill variant — 分类标签 */
+export const Pill: Story = {
+  args: {
+    variant: "pill",
+    children: "CATEGORY",
+  },
+};
+
+/** Pill variant 各种标签 */
+export const PillVariations: Story = {
+  args: { children: "Pill" },
+  render: () => (
+    <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+      <Badge variant="pill">NOVEL</Badge>
+      <Badge variant="pill">SHORT STORY</Badge>
+      <Badge variant="pill" size="sm">
+        DRAFT
+      </Badge>
+      <Badge variant="pill">SCREENPLAY</Badge>
+    </div>
+  ),
+};

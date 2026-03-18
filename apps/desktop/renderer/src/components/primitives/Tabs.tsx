@@ -16,6 +16,14 @@ export interface TabItem {
 }
 
 /**
+ * Tabs visual variant
+ *
+ * - default: 背景色高亮 + 阴影（当前行为）
+ * - underline: 底线指示器风格（active tab 下方 2px accent 色线）
+ */
+export type TabsVariant = "default" | "underline";
+
+/**
  * Tabs component props
  *
  * A tabbed interface component built on Radix UI Tabs primitive.
@@ -29,6 +37,8 @@ export interface TabsProps {
   onValueChange?: (value: string) => void;
   /** Default active tab (uncontrolled) */
   defaultValue?: string;
+  /** Visual variant */
+  variant?: TabsVariant;
   /** Orientation of tabs. Default: "horizontal" */
   orientation?: "horizontal" | "vertical";
   /** Full width tabs (stretch to fill container) */
@@ -114,6 +124,50 @@ const triggerStyles = [
 const panelStyles = ["mt-4", "focus:outline-none"].join(" ");
 
 /**
+ * Underline variant - list styles
+ */
+const underlineListStylesHorizontal = [
+  "inline-flex",
+  "items-center",
+  "gap-4",
+  "border-b",
+  "border-[var(--color-separator)]",
+].join(" ");
+
+/**
+ * Underline variant - trigger styles
+ */
+const underlineTriggerStyles = [
+  "relative",
+  "inline-flex",
+  "items-center",
+  "justify-center",
+  "whitespace-nowrap",
+  "px-1",
+  "pb-3",
+  "text-[13px]",
+  "font-medium",
+  "text-[var(--color-fg-muted)]",
+  "cursor-pointer",
+  "select-none",
+  "transition-colors",
+  "duration-[var(--duration-fast)]",
+  // Hover
+  "hover:text-[var(--color-fg-default)]",
+  // Active/Selected: accent 底线通过 after 伪元素实现
+  "data-[state=active]:text-[var(--color-fg-default)]",
+  // Focus visible
+  "focus-visible:outline",
+  "focus-visible:outline-[length:var(--ring-focus-width)]",
+  "focus-visible:outline-offset-[var(--ring-focus-offset)]",
+  "focus-visible:outline-[var(--color-ring-focus)]",
+  // Disabled
+  "disabled:opacity-50",
+  "disabled:cursor-not-allowed",
+  "disabled:hover:text-[var(--color-fg-muted)]",
+].join(" ");
+
+/**
  * Tabs component
  *
  * A tabbed interface built on Radix UI Tabs for proper accessibility and keyboard navigation.
@@ -149,6 +203,7 @@ export function Tabs({
   value,
   onValueChange,
   defaultValue,
+  variant = "default",
   orientation = "horizontal",
   fullWidth = false,
   className = "",
@@ -158,13 +213,22 @@ export function Tabs({
   // Use first tab as default if not specified
   const effectiveDefaultValue = defaultValue ?? tabs[0]?.value;
 
-  const listBaseStyles =
-    orientation === "horizontal" ? listStylesHorizontal : listStylesVertical;
+  const isUnderline = variant === "underline";
+
+  const listBaseStyles = isUnderline
+    ? underlineListStylesHorizontal
+    : orientation === "horizontal"
+      ? listStylesHorizontal
+      : listStylesVertical;
+
   const listClasses = [listBaseStyles, fullWidth ? "w-full" : "", listClassName]
     .filter(Boolean)
     .join(" ");
 
-  const triggerClasses = [triggerStyles, fullWidth ? "flex-1" : ""]
+  const baseTriggerClasses = isUnderline
+    ? underlineTriggerStyles
+    : triggerStyles;
+  const triggerClasses = [baseTriggerClasses, fullWidth ? "flex-1" : ""]
     .filter(Boolean)
     .join(" ");
 
@@ -187,6 +251,12 @@ export function Tabs({
             className={triggerClasses}
           >
             {tab.label}
+            {isUnderline && (
+              <span
+                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--color-accent)] scale-x-0 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-default)] [[data-state=active]>&]:scale-x-100"
+                aria-hidden="true"
+              />
+            )}
           </TabsPrimitive.Trigger>
         ))}
       </TabsPrimitive.List>
