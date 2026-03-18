@@ -68,7 +68,7 @@ export function InlineAiDiffPreview(
 
       <div
         data-testid="inline-ai-diff-content"
-        className="font-[var(--font-family-body)] text-[length:var(--text-editor-size)] leading-[var(--text-editor-line-height)]"
+        className="font-[var(--editor-active-font-family)] text-[length:var(--text-editor-size)] leading-[var(--text-editor-line-height)]"
       >
         {originalText !== suggestedText && (
           <span
