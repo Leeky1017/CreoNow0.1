@@ -2,12 +2,10 @@ import { readFileSync } from "fs";
 import { resolve } from "path";
 import { describe, it, expect } from "vitest";
 
-const src = readFileSync(resolve(__dirname, "DashboardPage.tsx"), "utf-8");
+const src = readFileSync(resolve(__dirname, "DashboardHero.tsx"), "utf-8");
 
-// Find the HeroCard section — from "function HeroCard" to next "function " or end of module export
-const heroCardMatch = src.match(
-  /function HeroCard[\s\S]*?(?=\nfunction |\nexport )/,
-);
+// Find the HeroCard section — from "function HeroCard" or "export function HeroCard" onwards
+const heroCardMatch = src.match(/(?:export )?function HeroCard[\s\S]*/);
 const heroCardSrc = heroCardMatch ? heroCardMatch[0] : "";
 
 describe("HeroCard responsive guard", () => {

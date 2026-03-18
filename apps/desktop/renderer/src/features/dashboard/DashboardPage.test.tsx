@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { DashboardPage } from "./DashboardPage";
@@ -213,7 +219,8 @@ describe("DashboardPage", () => {
 
       // Hero card should show most recent project
       expect(screen.getByTestId("dashboard-hero-card")).toBeInTheDocument();
-      expect(screen.getByText("My First Novel")).toBeInTheDocument();
+      const heroCard = screen.getByTestId("dashboard-hero-card");
+      expect(within(heroCard).getByText("My First Novel")).toBeInTheDocument();
 
       // Project cards should show remaining projects
       const projectCards = screen.getAllByTestId("dashboard-project-card");

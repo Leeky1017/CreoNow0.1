@@ -5,7 +5,7 @@
  * for the Dashboard to Editor flow.
  */
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { render, screen, waitFor, act } from "@testing-library/react";
+import { render, screen, waitFor, act, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 
@@ -265,7 +265,8 @@ describe("Dashboard → Editor Flow", () => {
 
       // Should show hero card with most recent project
       expect(screen.getByTestId("dashboard-hero-card")).toBeInTheDocument();
-      expect(screen.getByText("测试小说")).toBeInTheDocument();
+      const heroCard = screen.getByTestId("dashboard-hero-card");
+      expect(within(heroCard).getByText("测试小说")).toBeInTheDocument();
     });
 
     it("should show Dashboard empty state when no projects exist", async () => {
