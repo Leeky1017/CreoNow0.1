@@ -57,7 +57,7 @@
   /* 字体族 */
   --font-family-ui:
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-family-body: "Lora", "Crimson Pro", Georgia, serif;
+  --font-family-body: "Lora", "Crimson Pro", Georgia, ui-serif, serif;
   --font-family-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
   /* Typography 预设 — 来源: DESIGN_DECISIONS.md §4.2 */
