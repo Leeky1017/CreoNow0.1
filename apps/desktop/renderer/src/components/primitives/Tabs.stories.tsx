@@ -25,6 +25,12 @@ const meta = {
   },
   tags: ["autodocs"],
   argTypes: {
+    variant: {
+      control: "select",
+      options: ["default", "underline"],
+      description:
+        "Visual variant — default (background highlight) or underline (accent indicator)",
+    },
     orientation: {
       control: "select",
       options: ["horizontal", "vertical"],
@@ -589,5 +595,17 @@ export const UnderlineFullWidth: Story = {
     tabs: basicTabs,
     variant: "underline",
     fullWidth: true,
+  },
+};
+
+/** Underline + Vertical — 右侧 accent 指示线 */
+export const UnderlineVertical: Story = {
+  args: {
+    tabs: settingsTabs,
+    variant: "underline",
+    orientation: "vertical",
+  },
+  parameters: {
+    layout: "padded",
   },
 };

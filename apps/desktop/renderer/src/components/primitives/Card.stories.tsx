@@ -27,7 +27,7 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "raised", "bordered"],
+      options: ["default", "raised", "bordered", "bento", "compact"],
       description: "Visual style variant",
     },
     hoverable: {

@@ -124,7 +124,7 @@ const triggerStyles = [
 const panelStyles = ["mt-4", "focus:outline-none"].join(" ");
 
 /**
- * Underline variant - list styles
+ * Underline variant - list styles (horizontal)
  */
 const underlineListStylesHorizontal = [
   "inline-flex",
@@ -135,9 +135,20 @@ const underlineListStylesHorizontal = [
 ].join(" ");
 
 /**
- * Underline variant - trigger styles
+ * Underline variant - list styles (vertical)
  */
-const underlineTriggerStyles = [
+const underlineListStylesVertical = [
+  "flex",
+  "flex-col",
+  "gap-4",
+  "border-r",
+  "border-[var(--color-separator)]",
+].join(" ");
+
+/**
+ * Underline variant - trigger styles (horizontal)
+ */
+const underlineTriggerStylesHorizontal = [
   "relative",
   "inline-flex",
   "items-center",
@@ -162,6 +173,34 @@ const underlineTriggerStyles = [
   "focus-visible:outline-offset-[var(--ring-focus-offset)]",
   "focus-visible:outline-[var(--color-ring-focus)]",
   // Disabled
+  "disabled:opacity-50",
+  "disabled:cursor-not-allowed",
+  "disabled:hover:text-[var(--color-fg-muted)]",
+].join(" ");
+
+/**
+ * Underline variant - trigger styles (vertical: pr-3 代替 pb-3)
+ */
+const underlineTriggerStylesVertical = [
+  "relative",
+  "inline-flex",
+  "items-center",
+  "whitespace-nowrap",
+  "px-1",
+  "pr-3",
+  "text-[13px]",
+  "font-medium",
+  "text-[var(--color-fg-muted)]",
+  "cursor-pointer",
+  "select-none",
+  "transition-colors",
+  "duration-[var(--duration-fast)]",
+  "hover:text-[var(--color-fg-default)]",
+  "data-[state=active]:text-[var(--color-fg-default)]",
+  "focus-visible:outline",
+  "focus-visible:outline-[length:var(--ring-focus-width)]",
+  "focus-visible:outline-offset-[var(--ring-focus-offset)]",
+  "focus-visible:outline-[var(--color-ring-focus)]",
   "disabled:opacity-50",
   "disabled:cursor-not-allowed",
   "disabled:hover:text-[var(--color-fg-muted)]",
@@ -214,19 +253,24 @@ export function Tabs({
   const effectiveDefaultValue = defaultValue ?? tabs[0]?.value;
 
   const isUnderline = variant === "underline";
+  const isVertical = orientation === "vertical";
 
   const listBaseStyles = isUnderline
-    ? underlineListStylesHorizontal
-    : orientation === "horizontal"
-      ? listStylesHorizontal
-      : listStylesVertical;
+    ? isVertical
+      ? underlineListStylesVertical
+      : underlineListStylesHorizontal
+    : isVertical
+      ? listStylesVertical
+      : listStylesHorizontal;
 
   const listClasses = [listBaseStyles, fullWidth ? "w-full" : "", listClassName]
     .filter(Boolean)
     .join(" ");
 
   const baseTriggerClasses = isUnderline
-    ? underlineTriggerStyles
+    ? isVertical
+      ? underlineTriggerStylesVertical
+      : underlineTriggerStylesHorizontal
     : triggerStyles;
   const triggerClasses = [baseTriggerClasses, fullWidth ? "flex-1" : ""]
     .filter(Boolean)
@@ -253,7 +297,11 @@ export function Tabs({
             {tab.label}
             {isUnderline && (
               <span
-                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--color-accent)] scale-x-0 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-default)] [[data-state=active]>&]:scale-x-100"
+                className={
+                  isVertical
+                    ? "absolute right-0 top-0 bottom-0 w-0.5 bg-[var(--color-accent)] scale-y-0 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-default)] [[data-state=active]>&]:scale-y-100"
+                    : "absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--color-accent)] scale-x-0 transition-transform duration-[var(--duration-fast)] ease-[var(--ease-default)] [[data-state=active]>&]:scale-x-100"
+                }
                 aria-hidden="true"
               />
             )}
