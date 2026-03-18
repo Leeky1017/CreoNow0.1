@@ -17,6 +17,13 @@ function readCSS(filePath: string): string {
   return readFileSync(filePath, "utf8");
 }
 
+function extractTokenValue(css: string, token: string): string {
+  const escapedToken = token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = css.match(new RegExp(`${escapedToken}:\\s*([^;]+);`));
+  expect(match, `缺少 token: ${token}`).not.toBeNull();
+  return match![1].trim();
+}
+
 describe("v1-01 Design Token 完整性 guard", () => {
   const designTokens = readCSS(DESIGN_TOKENS);
   const rendererTokens = readCSS(RENDERER_TOKENS);
@@ -121,8 +128,33 @@ describe("v1-01 Design Token 完整性 guard", () => {
 
     it("typography 使用 Tailwind v4 text namespace（--text-<name> + 双横线子属性）", () => {
       const themeInline = extractThemeInlineBlock(mainCSS);
-      const textGroups = ["display", "heading", "nav", "metadata"];
-      for (const name of textGroups) {
+      const textGroups = [
+        { name: "display", letterSpacingVar: "text-display-letter-spacing" },
+        { name: "heading", letterSpacingVar: "text-heading-letter-spacing" },
+        {
+          name: "page-title",
+          letterSpacingVar: "text-page-title-letter-spacing",
+        },
+        {
+          name: "card-title",
+          letterSpacingVar: "text-card-title-letter-spacing",
+        },
+        { name: "subtitle", letterSpacingVar: "tracking-normal" },
+        { name: "body", letterSpacingVar: "tracking-normal" },
+        { name: "editor", letterSpacingVar: "tracking-normal" },
+        { name: "caption", letterSpacingVar: "tracking-normal" },
+        { name: "label", letterSpacingVar: "text-label-letter-spacing" },
+        { name: "tree", letterSpacingVar: "tracking-normal" },
+        { name: "status", letterSpacingVar: "tracking-normal" },
+        { name: "mono", letterSpacingVar: "tracking-normal" },
+        { name: "nav", letterSpacingVar: "text-nav-letter-spacing" },
+        {
+          name: "metadata",
+          letterSpacingVar: "text-metadata-letter-spacing",
+        },
+      ] as const;
+      for (const group of textGroups) {
+        const name = group.name;
         expect(themeInline, `缺少 --text-${name} 主尺寸映射`).toMatch(
           new RegExp(`--text-${name}:\\s*var\\(--text-${name}-size\\)`),
         );
@@ -133,7 +165,7 @@ describe("v1-01 Design Token 完整性 guard", () => {
         );
         expect(themeInline, `缺少 --text-${name}--letter-spacing`).toMatch(
           new RegExp(
-            `--text-${name}--letter-spacing:\\s*var\\(--text-${name}-letter-spacing\\)`,
+            `--text-${name}--letter-spacing:\\s*var\\(--${group.letterSpacingVar}\\)`,
           ),
         );
         expect(themeInline, `缺少 --text-${name}--font-weight`).toMatch(
@@ -261,6 +293,44 @@ describe("v1-01 Design Token 完整性 guard", () => {
         expect(rendererMatch![1].trim(), `${token} 值不一致`).toBe(
           designMatch![1].trim(),
         );
+      }
+    });
+  });
+
+  describe("heading/page-title 别名 guard", () => {
+    const aliasPairs = ["size", "weight", "line-height", "letter-spacing"];
+
+    it("design token 中 heading 与 page-title 保持同值", () => {
+      for (const prop of aliasPairs) {
+        const heading = extractTokenValue(
+          designTokens,
+          `--text-heading-${prop}`,
+        );
+        const pageTitle = extractTokenValue(
+          designTokens,
+          `--text-page-title-${prop}`,
+        );
+        expect(
+          heading,
+          `design token drift: --text-heading-${prop} 应与 --text-page-title-${prop} 同值`,
+        ).toBe(pageTitle);
+      }
+    });
+
+    it("renderer token 中 heading 与 page-title 保持同值", () => {
+      for (const prop of aliasPairs) {
+        const heading = extractTokenValue(
+          rendererTokens,
+          `--text-heading-${prop}`,
+        );
+        const pageTitle = extractTokenValue(
+          rendererTokens,
+          `--text-page-title-${prop}`,
+        );
+        expect(
+          heading,
+          `renderer token drift: --text-heading-${prop} 应与 --text-page-title-${prop} 同值`,
+        ).toBe(pageTitle);
       }
     });
   });

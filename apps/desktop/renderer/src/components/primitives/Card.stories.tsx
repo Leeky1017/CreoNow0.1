@@ -12,6 +12,8 @@ import { Card } from "./Card";
  * - default: 标准边框（无阴影）
  * - raised: 带阴影的悬浮样式
  * - bordered: 加粗边框
+ * - bento: 大圆角、大内边距卡片
+ * - compact: 紧凑型信息卡片
  *
  * 状态矩阵（MUST 全部实现）：
  * - default: 正常样式
@@ -245,6 +247,34 @@ export const AllVariants: Story = {
             }}
           >
             Prominent border
+          </p>
+        </div>
+      </Card>
+      <Card variant="bento">
+        <div style={{ minWidth: "150px" }}>
+          <strong>Bento</strong>
+          <p
+            style={{
+              margin: "0.5rem 0 0",
+              fontSize: "14px",
+              color: "var(--color-fg-muted)",
+            }}
+          >
+            Spacious content card
+          </p>
+        </div>
+      </Card>
+      <Card variant="compact">
+        <div style={{ minWidth: "150px" }}>
+          <strong>Compact</strong>
+          <p
+            style={{
+              margin: "0.5rem 0 0",
+              fontSize: "14px",
+              color: "var(--color-fg-muted)",
+            }}
+          >
+            Dense information card
           </p>
         </div>
       </Card>
