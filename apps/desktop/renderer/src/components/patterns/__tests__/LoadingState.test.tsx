@@ -4,10 +4,9 @@ import { LoadingState, Skeleton, ProgressBar } from "../LoadingState";
 
 describe("LoadingState", () => {
   describe("variant='spinner'（默认）", () => {
-    it("渲染旋转加载指示器", () => {
-      const { container } = render(<LoadingState variant="spinner" />);
-      // spinner variant 渲染一个视觉加载指示器（不绑定 SVG 实现）
-      expect(container.firstChild).toBeInTheDocument();
+    it("渲染 role=status 的加载状态容器", () => {
+      render(<LoadingState variant="spinner" />);
+      expect(screen.getByRole("status")).toBeInTheDocument();
     });
 
     it("传入 text 时渲染加载提示文字", () => {
@@ -20,25 +19,24 @@ describe("LoadingState", () => {
       expect(screen.queryByText(/.+/)).not.toBeInTheDocument();
     });
 
-    it("size='sm' 渲染小尺寸 spinner", () => {
-      const { container: smContainer } = render(
-        <LoadingState variant="spinner" size="sm" />,
-      );
-      const { container: lgContainer } = render(
-        <LoadingState variant="spinner" size="lg" />,
-      );
-      // 不同 size 渲染不同尺寸的加载指示器——两者均存在即可
-      expect(smContainer.firstChild).toBeInTheDocument();
-      expect(lgContainer.firstChild).toBeInTheDocument();
+    it("size='sm' 在 status 容器上反映 data-size 属性", () => {
+      render(<LoadingState variant="spinner" size="sm" />);
+      expect(screen.getByRole("status")).toHaveAttribute("data-size", "sm");
+    });
+
+    it("size='lg' 在 status 容器上反映 data-size 属性", () => {
+      render(<LoadingState variant="spinner" size="lg" />);
+      expect(screen.getByRole("status")).toHaveAttribute("data-size", "lg");
     });
   });
 
   describe("variant='skeleton'", () => {
-    it("渲染骨架占位结构", () => {
-      const { container } = render(<LoadingState variant="skeleton" />);
-      // skeleton variant 渲染占位块（非空内容）
-      expect(container.firstChild).toBeInTheDocument();
-      expect(container.firstChild).not.toBeEmptyDOMElement();
+    it("渲染 role=status 的骨架占位结构（默认 3 行）", () => {
+      render(<LoadingState variant="skeleton" />);
+      const status = screen.getByRole("status");
+      expect(status).toBeInTheDocument();
+      // skeleton 内部为 paragraph 型结构，默认 3 行
+      expect(status.firstChild?.childNodes).toHaveLength(3);
     });
   });
 
@@ -50,18 +48,17 @@ describe("LoadingState", () => {
   });
 
   describe("variant='inline'", () => {
-    it("渲染内联加载指示器", () => {
-      const { container } = render(<LoadingState variant="inline" />);
-      expect(container.firstChild).toBeInTheDocument();
+    it("渲染内联指示器（不包含 role=status 居中容器）", () => {
+      render(<LoadingState variant="inline" />);
+      // inline 用于按钮/文字内嵌，不渲染独立 status 容器
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
     });
   });
 
   describe("className 传递", () => {
     it("spinner variant 接收 className", () => {
-      const { container } = render(
-        <LoadingState variant="spinner" className="my-custom" />,
-      );
-      expect(container.firstChild).toHaveClass("my-custom");
+      render(<LoadingState variant="spinner" className="my-custom" />);
+      expect(screen.getByRole("status")).toHaveClass("my-custom");
     });
   });
 });

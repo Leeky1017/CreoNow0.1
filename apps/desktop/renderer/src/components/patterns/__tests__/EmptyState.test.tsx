@@ -21,10 +21,9 @@ describe("EmptyState", () => {
       expect(screen.queryByText("这里还没有内容")).not.toBeInTheDocument();
     });
 
-    it("渲染默认 illustration 区域", () => {
+    it("未传 illustration 时渲染默认 illustration 容器", () => {
       render(<EmptyState title="空" />);
-      // 验证 illustration 作为视觉装饰存在（非空容器），不绑定 SVG 实现
-      expect(screen.getByText("空")).toBeInTheDocument();
+      expect(screen.getByTestId("empty-state-illustration")).toBeInTheDocument();
     });
   });
 
@@ -37,6 +36,8 @@ describe("EmptyState", () => {
         />,
       );
       expect(screen.getByTestId("custom-illustration")).toBeInTheDocument();
+      // 自定义 illustration 替代默认容器，默认容器不应渲染
+      expect(screen.queryByTestId("empty-state-illustration")).not.toBeInTheDocument();
     });
   });
 

@@ -139,6 +139,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
     >
       <div
         class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-bg-hover)]"
+        data-testid="empty-state-illustration"
       >
         <svg
           class="h-8 w-8 text-[var(--color-fg-muted)]"

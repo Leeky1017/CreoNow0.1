@@ -7,13 +7,13 @@ const CURRENT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const FEATURES_DIR = path.resolve(CURRENT_DIR, "..");
 
 /**
- * AC-9/10/11 全量迁移门禁：Features 层不得存在碎片化空/加载/错误状态实现。
+ * AC-9/10/11 composites/* 清零门禁:
+ * Features 层已迁移 composites/{Empty,Loading,Error}State 的所有历史引用至 patterns/*
+ * 本门禁作为回归防护，确保 composites/* 引用不被重新引入。
  *
- * 该门禁扫描 features/ 下所有 .tsx 文件，检测以下反模式：
- * - 直接导入 composites/EmptyState（应使用 patterns/EmptyState）
- * - 非 Pattern 组件的 inline 状态渲染（纯文字型 empty/loading 占位）
- *
- * 排除清单（含技术理由）见 DOMAIN_EXCLUSIONS。
+ * 注：领域专用实现（DashboardEmptyState 混合态、AI 错误引导组件、Settings 表单验证反馈等）
+ * 因从未使用 composites/* 且与通用 pattern 接口不兼容，不在本门禁验证范围。
+ * 排除理由见 DOMAIN_EXCLUSIONS。
  */
 
 /**
@@ -80,14 +80,14 @@ function isExcluded(relPath: string): boolean {
   );
 }
 
-describe("state-pattern-migration-guard (AC-9/10/11)", () => {
+describe("composites-state-import-regression-guard (AC-9/10/11)", () => {
   const files = collectFeatureTsx(FEATURES_DIR);
 
   it("features/ 目录下存在可扫描的 .tsx 文件", () => {
     expect(files.length).toBeGreaterThan(0);
   });
 
-  it("AC-9: 无碎片化 composites/EmptyState 导入（应使用 patterns/EmptyState）", () => {
+  it("AC-9: features/ 下零处 composites/EmptyState 导入（迁移成功且无回归）", () => {
     const violations: { file: string; line: number; text: string }[] = [];
 
     for (const file of files) {
@@ -113,7 +113,7 @@ describe("state-pattern-migration-guard (AC-9/10/11)", () => {
     }
   });
 
-  it("AC-10: 无碎片化 composites/LoadingState 导入（应使用 patterns/LoadingState）", () => {
+  it("AC-10: features/ 下零处 composites/LoadingState 导入（迁移成功且无回归）", () => {
     const violations: { file: string; line: number; text: string }[] = [];
 
     for (const file of files) {
@@ -139,7 +139,7 @@ describe("state-pattern-migration-guard (AC-9/10/11)", () => {
     }
   });
 
-  it("AC-11: 无碎片化 composites/ErrorState 导入（应使用 patterns/ErrorState）", () => {
+  it("AC-11: features/ 下零处 composites/ErrorState 导入（迁移成功且无回归）", () => {
     const violations: { file: string; line: number; text: string }[] = [];
 
     for (const file of files) {

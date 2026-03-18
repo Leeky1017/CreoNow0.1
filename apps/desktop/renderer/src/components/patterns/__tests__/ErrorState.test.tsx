@@ -151,24 +151,20 @@ describe("ErrorState", () => {
     });
   });
 
-  describe("severity 视觉区分", () => {
-    it("三种 severity 各渲染 role=alert 元素", () => {
-      const { unmount: u1 } = render(
-        <ErrorState variant="card" severity="error" message="e" />,
-      );
-      expect(screen.getByRole("alert")).toBeInTheDocument();
-      u1();
+  describe("severity 标识区分", () => {
+    it("severity='error' 在 alert 上设置 data-severity=error", () => {
+      render(<ErrorState variant="card" severity="error" message="e" />);
+      expect(screen.getByRole("alert")).toHaveAttribute("data-severity", "error");
+    });
 
-      const { unmount: u2 } = render(
-        <ErrorState variant="card" severity="warning" message="w" />,
-      );
-      expect(screen.getByRole("alert")).toBeInTheDocument();
-      u2();
+    it("severity='warning' 在 alert 上设置 data-severity=warning", () => {
+      render(<ErrorState variant="card" severity="warning" message="w" />);
+      expect(screen.getByRole("alert")).toHaveAttribute("data-severity", "warning");
+    });
 
-      render(
-        <ErrorState variant="card" severity="info" message="i" />,
-      );
-      expect(screen.getByRole("alert")).toBeInTheDocument();
+    it("severity='info' 在 alert 上设置 data-severity=info", () => {
+      render(<ErrorState variant="card" severity="info" message="i" />);
+      expect(screen.getByRole("alert")).toHaveAttribute("data-severity", "info");
     });
   });
 
