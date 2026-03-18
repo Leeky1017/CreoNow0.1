@@ -36,7 +36,7 @@ export function DashboardEmptyState(
       {lastError ? (
         <div role="alert" className="w-full max-w-xl mb-[var(--space-8)]">
           <div className="p-[var(--space-3)] border border-[var(--color-separator)] rounded-[var(--radius-md)] bg-[var(--color-bg-surface)]">
-            <Text size="small" className="mb-2 block">
+            <Text size="small" className="mb-[var(--space-2)] block">
               {getHumanErrorMessage(lastError)}
             </Text>
             <Button

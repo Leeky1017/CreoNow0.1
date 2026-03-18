@@ -143,7 +143,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
             role="alert"
             className="px-[var(--space-12)] py-[var(--space-3)] border-b border-[var(--color-separator)]"
           >
-            <Text size="small" className="mb-2 block">
+            <Text size="small" className="mb-[var(--space-2)] block">
               {getHumanErrorMessage(lastError)}
             </Text>
             <Button variant="secondary" size="sm" onClick={() => clearError()}>
