@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { FileText, Plus, FolderOpen } from "lucide-react";
 
 import { Button, Text } from "../../components/primitives";
+import { invoke } from "../../lib/ipcClient";
 import type { ProjectListItem } from "../../stores/projectStore";
 
 // =============================================================================
@@ -137,7 +138,9 @@ export function DashboardSidebar(props: DashboardSidebarProps): JSX.Element {
             variant="ghost"
             size="sm"
             className="justify-start"
-            onClick={() => {}}
+            onClick={async () => {
+              await invoke("dialog:folder:open", {});
+            }}
             aria-label={t("dashboard.sidebar.openFolder")}
           >
             <FolderOpen className="w-4 h-4" strokeWidth={1.5} />

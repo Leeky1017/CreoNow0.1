@@ -1,14 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Search } from "lucide-react";
 
 import {
   Button,
-  Input,
   Text,
 } from "../../components/primitives";
-import { useDeferredLoading } from "../../lib/useDeferredLoading";
-import { DashboardSkeleton } from "./DashboardSkeleton";
 import { useProjectStore } from "../../stores/projectStore";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 
@@ -20,6 +16,7 @@ import {
 } from "./DashboardProjectGrid";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { DashboardEmptyState } from "./DashboardEmptyState";
+import { DashboardLoadingState, SearchBar } from "./DashboardInternals";
 import { useDashboardActions, DashboardDialogs } from "./useDashboardActions";
 import { useDashboardLayout } from "./useDashboardLayout";
 
@@ -33,48 +30,6 @@ export { formatRelativeTime } from "./dashboardUtils";
 interface DashboardPageProps {
   /** Called when a project is selected to open */
   onProjectSelect?: (projectId: string) => void;
-}
-
-// =============================================================================
-// Internal Components
-// =============================================================================
-
-function DashboardLoadingState(): JSX.Element {
-  const showSkeleton = useDeferredLoading(true, 200);
-
-  if (!showSkeleton) {
-    return (
-      <div
-        data-testid="dashboard-loading"
-        className="flex-1 flex items-center justify-center"
-      />
-    );
-  }
-
-  return (
-    <div data-testid="dashboard-loading" className="flex-1">
-      <DashboardSkeleton />
-    </div>
-  );
-}
-
-function SearchBar(props: {
-  value: string;
-  onChange: (value: string) => void;
-}): JSX.Element {
-  const { t } = useTranslation();
-  return (
-    <div className="flex items-center gap-[var(--space-3)] text-[var(--color-fg-muted)]">
-      <Search className="w-4 h-4 shrink-0" size={16} strokeWidth={1.5} />
-      <Input
-        data-testid="dashboard-search"
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-        placeholder={t("dashboard.searchPlaceholder")}
-        className="bg-transparent border-none text-sm w-75 placeholder:text-[var(--color-fg-faint)]"
-      />
-    </div>
-  );
 }
 
 // =============================================================================
