@@ -218,9 +218,7 @@ describe("IconBar dialog migration", () => {
     fireEvent.click(screen.getByTestId("icon-bar-memory"));
 
     const memoryDialog = await screen.findByTestId("leftpanel-dialog-memory");
-    fireEvent.click(
-      within(memoryDialog).getByTestId("leftpanel-dialog-close"),
-    );
+    fireEvent.click(within(memoryDialog).getByTestId("leftpanel-dialog-close"));
 
     await waitFor(() => {
       expect(

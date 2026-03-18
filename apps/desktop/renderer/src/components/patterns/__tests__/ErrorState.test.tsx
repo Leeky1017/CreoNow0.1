@@ -54,7 +54,9 @@ describe("ErrorState", () => {
         />,
       );
       const closeLabel = t("patterns.errorState.close");
-      const closeBtn = screen.getByRole("button", { name: new RegExp(closeLabel, "i") });
+      const closeBtn = screen.getByRole("button", {
+        name: new RegExp(closeLabel, "i"),
+      });
       expect(closeBtn).toBeInTheDocument();
       await user.click(closeBtn);
       expect(onDismiss).toHaveBeenCalledOnce();
@@ -79,7 +81,9 @@ describe("ErrorState", () => {
     it("不传 dismissible 时不渲染关闭按钮", () => {
       render(<ErrorState variant="banner" message="错误" />);
       const closeLabel = t("patterns.errorState.close");
-      expect(screen.queryByRole("button", { name: new RegExp(closeLabel, "i") })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: new RegExp(closeLabel, "i") }),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -154,17 +158,26 @@ describe("ErrorState", () => {
   describe("severity 标识区分", () => {
     it("severity='error' 在 alert 上设置 data-severity=error", () => {
       render(<ErrorState variant="card" severity="error" message="e" />);
-      expect(screen.getByRole("alert")).toHaveAttribute("data-severity", "error");
+      expect(screen.getByRole("alert")).toHaveAttribute(
+        "data-severity",
+        "error",
+      );
     });
 
     it("severity='warning' 在 alert 上设置 data-severity=warning", () => {
       render(<ErrorState variant="card" severity="warning" message="w" />);
-      expect(screen.getByRole("alert")).toHaveAttribute("data-severity", "warning");
+      expect(screen.getByRole("alert")).toHaveAttribute(
+        "data-severity",
+        "warning",
+      );
     });
 
     it("severity='info' 在 alert 上设置 data-severity=info", () => {
       render(<ErrorState variant="card" severity="info" message="i" />);
-      expect(screen.getByRole("alert")).toHaveAttribute("data-severity", "info");
+      expect(screen.getByRole("alert")).toHaveAttribute(
+        "data-severity",
+        "info",
+      );
     });
   });
 

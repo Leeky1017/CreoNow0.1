@@ -1346,7 +1346,12 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
         className="flex-1 overflow-auto min-h-0 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-ring-focus)]"
       >
         {state.bootstrapStatus !== "ready" ? (
-          <LoadingState variant="spinner" size="sm" text={t("files.tree.loading")} className="p-3" />
+          <LoadingState
+            variant="spinner"
+            size="sm"
+            text={t("files.tree.loading")}
+            className="p-3"
+          />
         ) : state.items.length === 0 ? (
           <EmptyState
             variant="files"

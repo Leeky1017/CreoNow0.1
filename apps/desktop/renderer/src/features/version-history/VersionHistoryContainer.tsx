@@ -612,7 +612,12 @@ export function VersionHistoryContainer(
 
   if (status === "loading") {
     return (
-      <LoadingState variant="spinner" size="sm" text={t("versionHistory.container.loadingVersions")} className="p-3" />
+      <LoadingState
+        variant="spinner"
+        size="sm"
+        text={t("versionHistory.container.loadingVersions")}
+        className="p-3"
+      />
     );
   }
 

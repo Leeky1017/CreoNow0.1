@@ -471,7 +471,9 @@ function SearchResultsArea(props: {
         <EmptyState
           variant="search"
           title={t("search.noResults.title")}
-          description={t("search.noResultsQuery", { query: props.effectiveQuery })}
+          description={t("search.noResultsQuery", {
+            query: props.effectiveQuery,
+          })}
         />
         <div className="mt-6 p-4 bg-[var(--color-separator)] rounded-lg border border-[var(--color-separator)]">
           <p className="text-[10px] text-[var(--color-fg-placeholder)] font-medium uppercase tracking-wider mb-2">

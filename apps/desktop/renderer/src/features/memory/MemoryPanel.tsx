@@ -573,7 +573,12 @@ function MemoryRulesCard(props: {
       className="flex-1 min-h-0 overflow-auto p-2.5 bg-[var(--color-bg-surface)]"
     >
       {props.state.status === "loading" ? (
-        <LoadingState variant="spinner" size="sm" text={props.t("memory.panel.loading")} className="h-full" />
+        <LoadingState
+          variant="spinner"
+          size="sm"
+          text={props.t("memory.panel.loading")}
+          className="h-full"
+        />
       ) : props.state.filteredRules.length === 0 ? (
         <EmptyState
           variant="generic"

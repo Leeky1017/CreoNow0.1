@@ -65,23 +65,48 @@ describe("LoadingState", () => {
 
 describe("Skeleton", () => {
   describe("type='text'（默认）", () => {
-    it("渲染单行文本骨架", () => {
+    it("渲染单行文本骨架（高度为 h-4 结构）", () => {
       const { container } = render(<Skeleton type="text" />);
-      expect(container.firstChild).toBeInTheDocument();
+      // text 骨架是一个单一块，不含子行
+      expect(container.firstChild?.childNodes).toHaveLength(0);
+    });
+
+    it("width prop 通过 style.width 应用", () => {
+      const { container } = render(<Skeleton type="text" width="200px" />);
+      expect((container.firstChild as HTMLElement).style.width).toBe("200px");
+    });
+
+    it("height prop 通过 style.height 应用", () => {
+      const { container } = render(<Skeleton type="text" height="32px" />);
+      expect((container.firstChild as HTMLElement).style.height).toBe("32px");
+    });
+
+    it("className prop 传递到骨架根元素", () => {
+      const { container } = render(
+        <Skeleton type="text" className="my-skeleton" />,
+      );
+      expect(container.firstChild).toHaveClass("my-skeleton");
     });
   });
 
   describe("type='title'", () => {
-    it("渲染标题骨架", () => {
+    it("渲染标题骨架（宽度受 3/4 约束，无子元素）", () => {
       const { container } = render(<Skeleton type="title" />);
-      expect(container.firstChild).toBeInTheDocument();
+      // title 是单一块，无子行
+      expect(container.firstChild?.childNodes).toHaveLength(0);
+    });
+
+    it("className prop 传递到骨架根元素", () => {
+      const { container } = render(
+        <Skeleton type="title" className="title-skel" />,
+      );
+      expect(container.firstChild).toHaveClass("title-skel");
     });
   });
 
   describe("type='paragraph'", () => {
     it("默认渲染 3 行骨架", () => {
       const { container } = render(<Skeleton type="paragraph" />);
-      // paragraph 默认 3 行，每行 1 个子元素
       expect(container.firstChild?.childNodes).toHaveLength(3);
     });
 
@@ -92,23 +117,33 @@ describe("Skeleton", () => {
   });
 
   describe("type='avatar'", () => {
-    it("渲染头像骨架", () => {
+    it("渲染单一圆形头像块（无子元素）", () => {
       const { container } = render(<Skeleton type="avatar" />);
-      expect(container.firstChild).toBeInTheDocument();
+      expect(container.firstChild?.childNodes).toHaveLength(0);
+    });
+
+    it("width/height props 自定义头像尺寸", () => {
+      const { container } = render(
+        <Skeleton type="avatar" width="48px" height="48px" />,
+      );
+      const el = container.firstChild as HTMLElement;
+      expect(el.style.width).toBe("48px");
+      expect(el.style.height).toBe("48px");
     });
   });
 
   describe("type='card'", () => {
-    it("渲染卡片骨架（含多层结构）", () => {
+    it("渲染卡片骨架（内部包含多个占位块）", () => {
       const { container } = render(<Skeleton type="card" />);
-      expect(container.firstChild).not.toBeEmptyDOMElement();
+      // card 类型：外层 div > div.space-y-4 > 多个子块
+      const inner = container.firstChild?.firstChild as HTMLElement;
+      expect(inner?.childNodes.length).toBeGreaterThanOrEqual(2);
     });
   });
 
   describe("type='list'", () => {
     it("默认渲染 3 个列表项骨架", () => {
       const { container } = render(<Skeleton type="list" />);
-      // 每个列表项渲染为一个 flex 行
       expect(container.firstChild?.childNodes).toHaveLength(3);
     });
 
@@ -141,5 +176,10 @@ describe("ProgressBar", () => {
     const fill = bar.firstElementChild as HTMLElement;
     expect(fill).toBeInTheDocument();
     expect(fill.style.width).toBe("100%");
+  });
+
+  it("className prop 传递到 progressbar 根元素", () => {
+    render(<ProgressBar className="custom-progress" />);
+    expect(screen.getByRole("progressbar")).toHaveClass("custom-progress");
   });
 });

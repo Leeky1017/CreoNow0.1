@@ -98,7 +98,11 @@ describe("composites-state-import-regression-guard (AC-9/10/11)", () => {
       const lines = source.split("\n");
       for (let i = 0; i < lines.length; i++) {
         if (lines[i].includes("composites/EmptyState")) {
-          violations.push({ file: relPath, line: i + 1, text: lines[i].trim() });
+          violations.push({
+            file: relPath,
+            line: i + 1,
+            text: lines[i].trim(),
+          });
         }
       }
     }
@@ -124,7 +128,11 @@ describe("composites-state-import-regression-guard (AC-9/10/11)", () => {
       const lines = source.split("\n");
       for (let i = 0; i < lines.length; i++) {
         if (lines[i].includes("composites/LoadingState")) {
-          violations.push({ file: relPath, line: i + 1, text: lines[i].trim() });
+          violations.push({
+            file: relPath,
+            line: i + 1,
+            text: lines[i].trim(),
+          });
         }
       }
     }
@@ -150,7 +158,11 @@ describe("composites-state-import-regression-guard (AC-9/10/11)", () => {
       const lines = source.split("\n");
       for (let i = 0; i < lines.length; i++) {
         if (lines[i].includes("composites/ErrorState")) {
-          violations.push({ file: relPath, line: i + 1, text: lines[i].trim() });
+          violations.push({
+            file: relPath,
+            line: i + 1,
+            text: lines[i].trim(),
+          });
         }
       }
     }

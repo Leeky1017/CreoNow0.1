@@ -138,7 +138,10 @@ function DefaultIllustration({
   };
 
   return (
-    <div data-testid="empty-state-illustration" className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-bg-hover)]">
+    <div
+      data-testid="empty-state-illustration"
+      className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-bg-hover)]"
+    >
       <svg
         className="h-8 w-8 text-[var(--color-fg-muted)]"
         viewBox="0 0 24 24"
