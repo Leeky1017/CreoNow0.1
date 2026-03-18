@@ -277,6 +277,14 @@
       "renaming": "重命名中...",
       "rename": "重命名",
       "projectName": "项目名称"
+    },
+    "sidebar": {
+      "recentDocs": "最近文档",
+      "quickActions": "快捷操作",
+      "newProject": "新建项目",
+      "openFolder": "打开文件夹",
+      "statistics": "统计",
+      "totalProjects": "项目总数"
     }
   },
   "search": {

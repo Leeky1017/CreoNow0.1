@@ -277,6 +277,14 @@
       "renaming": "Renaming...",
       "rename": "Rename",
       "projectName": "Project Name"
+    },
+    "sidebar": {
+      "recentDocs": "Recent Documents",
+      "quickActions": "Quick Actions",
+      "newProject": "New Project",
+      "openFolder": "Open Folder",
+      "statistics": "Statistics",
+      "totalProjects": "Total Projects"
     }
   },
   "search": {
