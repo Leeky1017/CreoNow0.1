@@ -15,7 +15,7 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { TabItem } from "./Tabs";
 import { Tabs } from "./Tabs";
@@ -230,10 +230,12 @@ describe("Tabs v1-02 行为测试", () => {
       render(<Tabs tabs={basicTabs} variant="underline" />);
 
       const tab1 = screen.getByRole("tab", { name: "Tab 1" });
-      tab1.focus();
+      await act(async () => { tab1.focus(); });
       await user.keyboard("{ArrowRight}");
 
-      expect(screen.getByRole("tab", { name: "Tab 2" })).toHaveFocus();
+      await waitFor(() => {
+        expect(screen.getByRole("tab", { name: "Tab 2" })).toHaveFocus();
+      });
     });
 
     it("← 键移动到上一个 tab", async () => {
@@ -247,10 +249,12 @@ describe("Tabs v1-02 行为测试", () => {
       );
 
       const tab2 = screen.getByRole("tab", { name: "Tab 2" });
-      tab2.focus();
+      await act(async () => { tab2.focus(); });
       await user.keyboard("{ArrowLeft}");
 
-      expect(screen.getByRole("tab", { name: "Tab 1" })).toHaveFocus();
+      await waitFor(() => {
+        expect(screen.getByRole("tab", { name: "Tab 1" })).toHaveFocus();
+      });
     });
 
     it("跳过 disabled tab", async () => {
@@ -258,11 +262,13 @@ describe("Tabs v1-02 行为测试", () => {
       render(<Tabs tabs={tabsWithDisabled} variant="underline" />);
 
       const tab1 = screen.getByRole("tab", { name: "Active" });
-      tab1.focus();
+      await act(async () => { tab1.focus(); });
       await user.keyboard("{ArrowRight}");
 
       // 应跳过 Disabled，聚焦到 Another
-      expect(screen.getByRole("tab", { name: "Another" })).toHaveFocus();
+      await waitFor(() => {
+        expect(screen.getByRole("tab", { name: "Another" })).toHaveFocus();
+      });
     });
 
     it("Home 键聚焦第一个可用 tab", async () => {
@@ -270,17 +276,25 @@ describe("Tabs v1-02 行为测试", () => {
       render(
         <Tabs tabs={basicTabs} variant="underline" defaultValue="tab3" />,
       );
-      screen.getByRole("tab", { name: "Tab 3" }).focus();
+      await act(async () => {
+        screen.getByRole("tab", { name: "Tab 3" }).focus();
+      });
       await user.keyboard("{Home}");
-      expect(screen.getByRole("tab", { name: "Tab 1" })).toHaveFocus();
+      await waitFor(() => {
+        expect(screen.getByRole("tab", { name: "Tab 1" })).toHaveFocus();
+      });
     });
 
     it("End 键聚焦最后一个可用 tab", async () => {
       const user = userEvent.setup();
       render(<Tabs tabs={basicTabs} variant="underline" />);
-      screen.getByRole("tab", { name: "Tab 1" }).focus();
+      await act(async () => {
+        screen.getByRole("tab", { name: "Tab 1" }).focus();
+      });
       await user.keyboard("{End}");
-      expect(screen.getByRole("tab", { name: "Tab 3" })).toHaveFocus();
+      await waitFor(() => {
+        expect(screen.getByRole("tab", { name: "Tab 3" })).toHaveFocus();
+      });
     });
 
     it("vertical 模式下 ArrowDown 移动到下一个 tab", async () => {
@@ -292,9 +306,13 @@ describe("Tabs v1-02 行为测试", () => {
           orientation="vertical"
         />,
       );
-      screen.getByRole("tab", { name: "Tab 1" }).focus();
+      await act(async () => {
+        screen.getByRole("tab", { name: "Tab 1" }).focus();
+      });
       await user.keyboard("{ArrowDown}");
-      expect(screen.getByRole("tab", { name: "Tab 2" })).toHaveFocus();
+      await waitFor(() => {
+        expect(screen.getByRole("tab", { name: "Tab 2" })).toHaveFocus();
+      });
     });
 
     it("vertical 模式下 ArrowUp 移动到上一个 tab", async () => {
@@ -307,9 +325,13 @@ describe("Tabs v1-02 行为测试", () => {
           defaultValue="tab3"
         />,
       );
-      screen.getByRole("tab", { name: "Tab 3" }).focus();
+      await act(async () => {
+        screen.getByRole("tab", { name: "Tab 3" }).focus();
+      });
       await user.keyboard("{ArrowUp}");
-      expect(screen.getByRole("tab", { name: "Tab 2" })).toHaveFocus();
+      await waitFor(() => {
+        expect(screen.getByRole("tab", { name: "Tab 2" })).toHaveFocus();
+      });
     });
   });
 

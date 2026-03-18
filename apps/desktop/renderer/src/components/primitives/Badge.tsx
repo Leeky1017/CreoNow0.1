@@ -45,7 +45,7 @@ const baseStyles = [
   "justify-center",
   "font-medium",
   "select-none",
-  "rounded-[var(--radius-md)]",
+  "rounded-[var(--radius-full)]",
   "whitespace-nowrap",
 ].join(" ");
 

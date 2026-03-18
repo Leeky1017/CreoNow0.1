@@ -274,26 +274,28 @@ describe("v1-01 Design Token 边界测试", () => {
       "--space-panel-padding",
     ];
 
-    it("v1-01 新增 token 的所在区块应有中文注释", () => {
-      // 检查 token 前后 5 行内是否存在中文字符
+    it("v1-01 新增 token 的所在区块应有中文 CSS 注释", () => {
+      // 检查 CSS 注释语法（/* 中文 */），而非仅有中文字符
+      const isCssChineseComment = (line: string): boolean =>
+        /\/\*[^*]*[\u4e00-\u9fff]/.test(line);
+
       for (const token of v1_01_tokens) {
         const lines = designTokens.split("\n");
         const lineIndex = lines.findIndex((l) => l.includes(token));
         expect(lineIndex, `找不到 ${token} 所在行`).toBeGreaterThan(-1);
 
-        // 向前搜索最多 10 行寻找中文注释
+        // 向前搜索最多 10 行，必须找到 /* 中文 */ 格式的 CSS 注释
         let foundComment = false;
         for (let i = Math.max(0, lineIndex - 10); i <= lineIndex; i++) {
-          if (/[\u4e00-\u9fff]/.test(lines[i])) {
+          if (isCssChineseComment(lines[i])) {
             foundComment = true;
             break;
           }
         }
-        // 行内注释也算
-        if (/[\u4e00-\u9fff]/.test(lines[lineIndex])) {
-          foundComment = true;
-        }
-        expect(foundComment, `${token} 附近缺少中文注释`).toBe(true);
+        expect(
+          foundComment,
+          `${token} 附近缺少 CSS 中文注释（需要 /* 中文 */ 格式）`,
+        ).toBe(true);
       }
     });
   });
@@ -415,10 +417,10 @@ describe("v1-01 Design Token 边界测试", () => {
       "metadata",
     ];
 
-    const props = ["size", "weight", "line-height"];
+    const props = ["size", "weight", "line-height", "letter-spacing"];
 
     for (const preset of presets) {
-      it(`--text-${preset} 至少有 size/weight/line-height 三个属性`, () => {
+      it(`--text-${preset} 具备 size/weight/line-height/letter-spacing 四件组`, () => {
         for (const prop of props) {
           const token = `--text-${preset}-${prop}`;
           expect(designTokens, `缺少 ${token}`).toContain(`${token}:`);

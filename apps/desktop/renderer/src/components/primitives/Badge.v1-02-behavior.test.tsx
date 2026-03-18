@@ -168,6 +168,15 @@ describe("Badge v1-02 行为测试", () => {
         expect(screen.getByText(`t-${variant}`)).not.toHaveClass("uppercase");
       }
     });
+
+    it("现有 variant（非 pill）保持 radius-full 圆角", () => {
+      for (const variant of existingVariants) {
+        render(<Badge variant={variant}>{`r-${variant}`}</Badge>);
+        const badge = screen.getByText(`r-${variant}`);
+        expect(badge.className).toContain("rounded-[var(--radius-full)]");
+        expect(badge.className).not.toContain("rounded-[var(--radius-md)]");
+      }
+    });
   });
 
   // ===========================================================================
