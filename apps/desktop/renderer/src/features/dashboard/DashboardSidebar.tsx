@@ -20,10 +20,7 @@ interface DashboardSidebarProps {
 // StatItem
 // =============================================================================
 
-function StatItem(props: {
-  label: string;
-  value: string;
-}): JSX.Element {
+function StatItem(props: { label: string; value: string }): JSX.Element {
   return (
     <div className="flex flex-col gap-[var(--space-1)]">
       <span
@@ -63,10 +60,7 @@ export function DashboardSidebar(props: DashboardSidebarProps): JSX.Element {
   const { projects, onCreateProject, onProjectSelect } = props;
 
   const recentDocs = React.useMemo(
-    () =>
-      [...projects]
-        .sort((a, b) => b.updatedAt - a.updatedAt)
-        .slice(0, 5),
+    () => [...projects].sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 5),
     [projects],
   );
 
@@ -99,11 +93,7 @@ export function DashboardSidebar(props: DashboardSidebarProps): JSX.Element {
                 className="w-full justify-start"
               >
                 <FileText className="w-4 h-4 shrink-0" strokeWidth={1.5} />
-                <Text
-                  size="small"
-                  color="muted"
-                  className="truncate"
-                >
+                <Text size="small" color="muted" className="truncate">
                   {project.name || t("dashboard.untitledProject")}
                 </Text>
               </Button>

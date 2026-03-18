@@ -1,10 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  Button,
-  Text,
-} from "../../components/primitives";
+import { Button, Text } from "../../components/primitives";
 import { useProjectStore } from "../../stores/projectStore";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 

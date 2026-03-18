@@ -39,11 +39,7 @@ export function DashboardEmptyState(
             <Text size="small" className="mb-[var(--space-2)] block">
               {getHumanErrorMessage(lastError)}
             </Text>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={onClearError}
-            >
+            <Button variant="secondary" size="sm" onClick={onClearError}>
               {t("dashboard.dismiss")}
             </Button>
           </div>
@@ -53,10 +49,7 @@ export function DashboardEmptyState(
       {/* Illustrative icon (AC-6: aligned to 26-empty-states.html) */}
       <div className="text-[var(--color-fg-faint)] mb-[var(--space-6)] relative">
         <div className="w-24 h-24 rounded-full border border-[var(--color-separator)] flex items-center justify-center">
-          <PenTool
-            className="w-10 h-10 opacity-40"
-            strokeWidth={1.5}
-          />
+          <PenTool className="w-10 h-10 opacity-40" strokeWidth={1.5} />
         </div>
       </div>
 
@@ -68,7 +61,11 @@ export function DashboardEmptyState(
       >
         {t("dashboard.emptyTitle")}
       </Text>
-      <Text size="small" color="muted" className="mb-[var(--space-8)] text-center max-w-sm">
+      <Text
+        size="small"
+        color="muted"
+        className="mb-[var(--space-8)] text-center max-w-sm"
+      >
         {t("dashboard.emptySubtitle")}
       </Text>
 

@@ -5,9 +5,7 @@ import { describe, it, expect } from "vitest";
 const src = readFileSync(resolve(__dirname, "DashboardHero.tsx"), "utf-8");
 
 // Find the HeroCard section — from "function HeroCard" or "export function HeroCard" onwards
-const heroCardMatch = src.match(
-  /(?:export )?function HeroCard[\s\S]*/,
-);
+const heroCardMatch = src.match(/(?:export )?function HeroCard[\s\S]*/);
 const heroCardSrc = heroCardMatch ? heroCardMatch[0] : "";
 
 describe("HeroCard responsive guard", () => {
