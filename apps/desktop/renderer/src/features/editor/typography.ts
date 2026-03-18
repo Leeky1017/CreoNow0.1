@@ -26,3 +26,22 @@ export function resolveEditorScaleFactor(
   }
   return "var(--text-scale-factor-default)";
 }
+
+/**
+ * Build CSS custom property object for editor typography.
+ */
+export function resolveEditorTypographyVars(): Record<string, string> {
+  const locale =
+    (typeof document !== "undefined" && document.documentElement.lang) ||
+    (typeof navigator !== "undefined" ? navigator.language : null);
+  const scalePercent =
+    typeof window !== "undefined"
+      ? Math.round((window.devicePixelRatio || 1) * 100)
+      : 100;
+  return {
+    "--editor-line-height": resolveEditorLineHeightToken(locale),
+    "--editor-scale-factor": resolveEditorScaleFactor(scalePercent),
+    "--editor-font-size":
+      "calc(var(--text-editor-size) * var(--editor-scale-factor))",
+  };
+}

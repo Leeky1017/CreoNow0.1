@@ -61,11 +61,13 @@ describe("editor typography contracts", () => {
   it("[ED-TYPO-02] EditorPane should consume typography vars for scalable rendering", () => {
     expect(existsSync(TYPOGRAPHY_HELPER_PATH)).toBe(true);
     const editorPaneSource = read(EDITOR_PANE_PATH);
+    const typographySource = read(TYPOGRAPHY_HELPER_PATH);
 
-    expect(editorPaneSource).toContain("resolveEditorLineHeightToken");
-    expect(editorPaneSource).toContain("resolveEditorScaleFactor");
-    expect(editorPaneSource).toContain("--editor-scale-factor");
-    expect(editorPaneSource).toContain("--editor-font-size");
+    expect(editorPaneSource).toContain("resolveEditorTypographyVars");
+    expect(typographySource).toContain("resolveEditorLineHeightToken");
+    expect(typographySource).toContain("resolveEditorScaleFactor");
+    expect(typographySource).toContain("--editor-scale-factor");
+    expect(typographySource).toContain("--editor-font-size");
     expect(editorPaneSource).toContain("text-[length:var(--editor-font-size)]");
     expect(editorPaneSource).toContain("leading-[var(--editor-line-height)]");
     expect(editorPaneSource).not.toContain("line-clamp");

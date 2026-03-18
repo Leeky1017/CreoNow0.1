@@ -7,7 +7,7 @@ import { join, resolve } from "node:path";
  * keyboard interaction is tightly coupled to transient UI state
  * (autocomplete menus, etc.) and does not represent a configurable shortcut.
  */
-const FEATURE_WHITELIST = new Set(["EditorPane.tsx"]);
+const FEATURE_WHITELIST = new Set(["EditorPane.tsx", "useEntityCompletion.ts"]);
 
 function getFilesRecursively(dir: string, ext: string): string[] {
   const result: string[] = [];
