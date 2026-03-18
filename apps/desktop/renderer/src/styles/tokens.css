@@ -205,7 +205,6 @@
   --editor-content-max-width: 760px;
   --editor-content-padding-x: var(--space-12); /* 48px */
   --editor-active-font-family: var(--font-family-body);
-  --editor-featured-image-height: 260px;
 
   /* 阴影系统 §3.7 - 几何保持一致，颜色来自主题内 --color-shadow */
   --shadow-sm: 0 1px 2px var(--color-shadow);

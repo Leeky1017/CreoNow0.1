@@ -7,7 +7,6 @@ const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const TOKENS_PATH = resolve(CURRENT_DIR, "../../../styles/tokens.css");
 const MAIN_CSS_PATH = resolve(CURRENT_DIR, "../../../styles/main.css");
 const FONTS_CSS_PATH = resolve(CURRENT_DIR, "../../../styles/fonts.css");
-const EDITOR_PANE_PATH = resolve(CURRENT_DIR, "../EditorPane.tsx");
 
 function read(path: string): string {
   return readFileSync(path, "utf8");
@@ -82,9 +81,11 @@ describe("v1-04 editor typography and layout contracts", () => {
       );
     });
 
-    it("[ED-SERIF-04] EditorPane uses --editor-active-font-family var", () => {
-      const src = read(EDITOR_PANE_PATH);
-      expect(src).toContain("--editor-active-font-family");
+    it("[ED-SERIF-04] tokens.css defines --editor-active-font-family referencing --font-family-body", () => {
+      const css = read(TOKENS_PATH);
+      expect(css).toMatch(
+        /--editor-active-font-family:\s*var\(--font-family-body\)/,
+      );
     });
   });
 
@@ -111,10 +112,27 @@ describe("v1-04 editor typography and layout contracts", () => {
     });
   });
 
-  describe("AC-7: no new arbitrary typography values", () => {
-    it("[ED-TOK-01] EditorPane has no text-4xl class", () => {
-      const src = read(EDITOR_PANE_PATH);
-      expect(src).not.toContain("text-4xl");
+  describe("AC-7: all typography values via design tokens", () => {
+    it("[ED-TOK-01] main.css ProseMirror rules use only token references, no raw px for layout", () => {
+      const css = read(MAIN_CSS_PATH);
+      const proseMirrorBlock = css.match(/\.ProseMirror\s*\{([^}]+)\}/s);
+      expect(proseMirrorBlock).not.toBeNull();
+      const rules = proseMirrorBlock![1];
+      expect(rules).toContain("var(--editor-content-max-width)");
+      expect(rules).toContain("var(--editor-content-padding-x)");
+      expect(rules).not.toMatch(/max-width:\s*\d+px/);
+      expect(rules).not.toMatch(/padding-(?:left|right):\s*\d+px/);
+    });
+
+    it("[ED-TOK-02] main.css ProseMirror h1 uses only display tokens, no raw values", () => {
+      const css = read(MAIN_CSS_PATH);
+      const h1Block = css.match(/\.ProseMirror\s+h1\s*\{([^}]+)\}/s);
+      expect(h1Block).not.toBeNull();
+      const rules = h1Block![1];
+      expect(rules).toContain("var(--text-display-size)");
+      expect(rules).toContain("var(--text-display-weight)");
+      expect(rules).not.toMatch(/font-size:\s*\d+px/);
+      expect(rules).not.toMatch(/font-weight:\s*\d+;/);
     });
   });
 });
