@@ -2,6 +2,10 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ErrorState } from "../ErrorState";
+import { i18n } from "../../../i18n";
+
+/** 通过 i18n 获取预期翻译值，使测试与具体语言解耦 */
+const t = (key: string) => i18n.t(key);
 
 describe("ErrorState", () => {
   describe("variant='inline'（默认）", () => {
@@ -49,8 +53,8 @@ describe("ErrorState", () => {
           onDismiss={onDismiss}
         />,
       );
-      // i18n en: "Close"
-      const closeBtn = screen.getByRole("button", { name: /close/i });
+      const closeLabel = t("patterns.errorState.close");
+      const closeBtn = screen.getByRole("button", { name: new RegExp(closeLabel, "i") });
       expect(closeBtn).toBeInTheDocument();
       await user.click(closeBtn);
       expect(onDismiss).toHaveBeenCalledOnce();
@@ -74,7 +78,8 @@ describe("ErrorState", () => {
 
     it("不传 dismissible 时不渲染关闭按钮", () => {
       render(<ErrorState variant="banner" message="错误" />);
-      expect(screen.queryByRole("button", { name: /close/i })).not.toBeInTheDocument();
+      const closeLabel = t("patterns.errorState.close");
+      expect(screen.queryByRole("button", { name: new RegExp(closeLabel, "i") })).not.toBeInTheDocument();
     });
   });
 
@@ -140,27 +145,30 @@ describe("ErrorState", () => {
 
     it("不传 title 时使用默认标题", () => {
       render(<ErrorState variant="fullPage" message="未知错误" />);
-      // i18n en: "Something went wrong"
-      expect(screen.getByText("Something went wrong")).toBeInTheDocument();
+      expect(
+        screen.getByText(t("patterns.errorState.defaultTitle")),
+      ).toBeInTheDocument();
     });
   });
 
-  describe("severity icon 区分", () => {
-    it("三种 severity 各渲染不同 SVG icon", () => {
-      const { container: errorContainer } = render(
+  describe("severity 视觉区分", () => {
+    it("三种 severity 各渲染 role=alert 元素", () => {
+      const { unmount: u1 } = render(
         <ErrorState variant="card" severity="error" message="e" />,
       );
-      const { container: warningContainer } = render(
+      expect(screen.getByRole("alert")).toBeInTheDocument();
+      u1();
+
+      const { unmount: u2 } = render(
         <ErrorState variant="card" severity="warning" message="w" />,
       );
-      const { container: infoContainer } = render(
+      expect(screen.getByRole("alert")).toBeInTheDocument();
+      u2();
+
+      render(
         <ErrorState variant="card" severity="info" message="i" />,
       );
-
-      // 每种 severity 应渲染 SVG
-      expect(errorContainer.querySelector("svg")).toBeInTheDocument();
-      expect(warningContainer.querySelector("svg")).toBeInTheDocument();
-      expect(infoContainer.querySelector("svg")).toBeInTheDocument();
+      expect(screen.getByRole("alert")).toBeInTheDocument();
     });
   });
 

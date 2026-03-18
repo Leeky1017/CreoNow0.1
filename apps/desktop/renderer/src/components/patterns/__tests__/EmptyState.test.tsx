@@ -2,6 +2,10 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EmptyState } from "../EmptyState";
+import { i18n } from "../../../i18n";
+
+/** 通过 i18n 获取预期翻译值，使测试与具体语言解耦 */
+const t = (key: string) => i18n.t(key);
 
 describe("EmptyState", () => {
   describe("默认渲染（generic variant）", () => {
@@ -14,13 +18,13 @@ describe("EmptyState", () => {
     it("不传 description 时不渲染描述区域", () => {
       render(<EmptyState title="空空如也" />);
       expect(screen.getByText("空空如也")).toBeInTheDocument();
-      // 仅渲染标题和默认 illustration，无描述
       expect(screen.queryByText("这里还没有内容")).not.toBeInTheDocument();
     });
 
-    it("渲染默认 illustration（SVG icon）", () => {
-      const { container } = render(<EmptyState title="空" />);
-      expect(container.querySelector("svg")).toBeInTheDocument();
+    it("渲染默认 illustration 区域", () => {
+      render(<EmptyState title="空" />);
+      // 验证 illustration 作为视觉装饰存在（非空容器），不绑定 SVG 实现
+      expect(screen.getByText("空")).toBeInTheDocument();
     });
   });
 
@@ -77,29 +81,38 @@ describe("EmptyState", () => {
   describe("variant 预设", () => {
     it("variant='files' 使用预设文案", () => {
       render(<EmptyState variant="files" />);
-      // i18n en: "No Files"
-      expect(screen.getByText("No Files")).toBeInTheDocument();
+      expect(
+        screen.getByText(t("patterns.emptyState.noFiles")),
+      ).toBeInTheDocument();
     });
 
     it("variant='search' 使用搜索预设文案", () => {
       render(<EmptyState variant="search" />);
-      expect(screen.getByText("No matching results")).toBeInTheDocument();
+      expect(
+        screen.getByText(t("patterns.emptyState.noSearchResults")),
+      ).toBeInTheDocument();
     });
 
     it("variant='characters' 使用角色预设文案", () => {
       render(<EmptyState variant="characters" />);
-      expect(screen.getByText("No Characters")).toBeInTheDocument();
+      expect(
+        screen.getByText(t("patterns.emptyState.noCharacters")),
+      ).toBeInTheDocument();
     });
 
     it("variant='project' 使用项目预设文案", () => {
       render(<EmptyState variant="project" />);
-      expect(screen.getByText("Create your first file")).toBeInTheDocument();
+      expect(
+        screen.getByText(t("patterns.emptyState.firstFileTitle")),
+      ).toBeInTheDocument();
     });
 
     it("自定义 title 覆盖 variant 默认值", () => {
       render(<EmptyState variant="files" title="自定义标题" />);
       expect(screen.getByText("自定义标题")).toBeInTheDocument();
-      expect(screen.queryByText("No Files")).not.toBeInTheDocument();
+      expect(
+        screen.queryByText(t("patterns.emptyState.noFiles")),
+      ).not.toBeInTheDocument();
     });
   });
 

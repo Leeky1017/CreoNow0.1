@@ -10,9 +10,9 @@
 
 | ID    | 标准                                                                                                                                                                   | 验证方式           |
 | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| AC-1  | `<EmptyState>` 组件存在于 `renderer/src/components/patterns/EmptyState.tsx`，支持 `icon` / `title` / `description` / `action` props                                    | 代码审查           |
-| AC-2  | `<LoadingState>` 组件存在于 `renderer/src/components/patterns/LoadingState.tsx`，支持 `variant` (`spinner` / `skeleton`) / `skeletonRows` / `message` props            | 代码审查           |
-| AC-3  | `<ErrorState>` 组件存在于 `renderer/src/components/patterns/ErrorState.tsx`，支持 `severity` (`error` / `warning` / `info`) / `title` / `description` / `action` props | 代码审查           |
+| AC-1  | `<EmptyState>` 组件存在于 `renderer/src/components/patterns/EmptyState.tsx`，支持 `variant` / `illustration` / `title` / `description` / `actionLabel` / `onAction` props | 代码审查           |
+| AC-2  | `<LoadingState>` 组件存在于 `renderer/src/components/patterns/LoadingState.tsx`，支持 `variant` (`spinner` / `skeleton` / `progress` / `inline`) / `text` / `size` props；另导出 `<Skeleton>` (`type` / `lines`) 和 `<ProgressBar>` (`indeterminate` / `value`) | 代码审查           |
+| AC-3  | `<ErrorState>` 组件存在于 `renderer/src/components/patterns/ErrorState.tsx`，支持 `variant` (`inline` / `banner` / `card` / `fullPage`) / `severity` (`error` / `warning` / `info`) / `title` / `message` (required) / `actionLabel` / `onAction` / `dismissible` / `onDismiss` props | 代码审查           |
 | AC-4  | `<EmptyState>` 视觉符合 `26-empty-states.html`：居中 flex column、48px+ icon、13-14px 描述、max-width 280px                                                            | Storybook 视觉验证 |
 | AC-5  | `<LoadingState variant="spinner">` 渲染 24px 圆环动画                                                                                                                  | Storybook 视觉验证 |
 | AC-6  | `<LoadingState variant="skeleton">` 渲染 shimmer 动画骨架行                                                                                                            | Storybook 视觉验证 |
