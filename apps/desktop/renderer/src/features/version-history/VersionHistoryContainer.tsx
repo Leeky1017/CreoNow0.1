@@ -21,6 +21,9 @@ import { RESTORE_VERSION_CONFIRM_COPY } from "./restoreConfirmCopy";
 import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore";
 import { i18n } from "../../i18n";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
+import { EmptyState } from "../../components/patterns/EmptyState";
+import { LoadingState } from "../../components/patterns/LoadingState";
+import { ErrorState } from "../../components/patterns/ErrorState";
 
 /**
  * Map backend actor to UI author type.
@@ -599,33 +602,42 @@ export function VersionHistoryContainer(
 
   if (!documentId) {
     return (
-      <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-        {t("versionHistory.container.openDocumentToViewHistory")}
-      </div>
+      <EmptyState
+        variant="generic"
+        title={t("versionHistory.container.openDocumentToViewHistory")}
+        className="p-3"
+      />
     );
   }
 
   if (status === "loading") {
     return (
-      <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-        {t("versionHistory.container.loadingVersions")}
-      </div>
+      <LoadingState
+        variant="spinner"
+        size="sm"
+        text={t("versionHistory.container.loadingVersions")}
+        className="p-3"
+      />
     );
   }
 
   if (status === "error") {
     return (
-      <div className="p-3 text-xs text-[var(--color-error)]">
-        {t("versionHistory.container.failedToLoadHistory")}
-      </div>
+      <ErrorState
+        variant="inline"
+        message={t("versionHistory.container.failedToLoadHistory")}
+        className="p-3"
+      />
     );
   }
 
   if (items.length === 0) {
     return (
-      <div className="p-3 text-xs text-[var(--color-fg-muted)]">
-        {t("versionHistory.container.noVersionsYet")}
-      </div>
+      <EmptyState
+        variant="generic"
+        title={t("versionHistory.container.noVersionsYet")}
+        className="p-3"
+      />
     );
   }
 

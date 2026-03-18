@@ -305,12 +305,18 @@ export function LoadingState({
       return <Spinner size={size} className={className} />;
 
     case "skeleton":
-      return <Skeleton type="paragraph" className={className} />;
+      return (
+        <div role="status" className={className}>
+          <Skeleton type="paragraph" />
+        </div>
+      );
 
     case "spinner":
     default:
       return (
         <div
+          role="status"
+          data-size={size}
           className={[
             "flex flex-col items-center justify-center gap-3",
             "py-12",

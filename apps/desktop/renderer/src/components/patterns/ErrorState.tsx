@@ -210,6 +210,7 @@ function InlineError({
         .filter(Boolean)
         .join(" ")}
       role="alert"
+      data-severity={severity}
     >
       <SeverityIcon severity={severity} className="w-3.5 h-3.5 shrink-0" />
       <Text
@@ -259,6 +260,7 @@ function BannerError({
         .filter(Boolean)
         .join(" ")}
       role="alert"
+      data-severity={severity ?? "error"}
     >
       <SeverityIcon
         severity={severity ?? "error"}
@@ -331,6 +333,7 @@ function CardError({
         .filter(Boolean)
         .join(" ")}
       role="alert"
+      data-severity={severity ?? "error"}
     >
       {/* Icon container */}
       <div
@@ -411,6 +414,7 @@ function FullPageError({
         .filter(Boolean)
         .join(" ")}
       role="alert"
+      data-severity={severity ?? "error"}
     >
       {/* Large icon */}
       <div

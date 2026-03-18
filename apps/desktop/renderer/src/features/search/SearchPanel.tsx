@@ -7,6 +7,9 @@ import { Input } from "../../components/primitives/Input";
 import { ListItem } from "../../components/primitives/ListItem";
 import { Spinner } from "../../components/primitives/Spinner";
 import { Toggle } from "../../components/primitives/Toggle";
+import { EmptyState } from "../../components/patterns/EmptyState";
+import { LoadingState } from "../../components/patterns/LoadingState";
+import { ErrorState } from "../../components/patterns/ErrorState";
 import { useFileStore } from "../../stores/fileStore";
 import {
   useSearchStore,
@@ -21,13 +24,10 @@ import {
   CornerDownLeft,
   FileText,
   Folder,
-  Frown,
   Lightbulb,
-  RefreshCw,
   Search,
   Share2,
   Sparkles,
-  TriangleAlert,
   X,
 } from "lucide-react";
 /**
@@ -422,59 +422,42 @@ function SearchResultsArea(props: {
 
   if (!props.hasQuery && !props.hasResults) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 px-8">
-        <Search
-          className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4"
-          size={24}
-          strokeWidth={1.5}
-        />
-        <p className="text-sm text-[var(--color-fg-muted)] text-center">
-          {t("search.emptyStateHint")}
-        </p>
-      </div>
+      <EmptyState
+        variant="search"
+        title={t("search.emptyStateHint")}
+        illustration={
+          <Search
+            className="w-16 h-16 text-[var(--color-fg-placeholder)]"
+            size={24}
+            strokeWidth={1.5}
+          />
+        }
+        className="py-16 px-8"
+      />
     );
   }
 
   if (props.hasQuery && props.effectiveIndexState === "rebuilding") {
     return (
-      <div className="flex flex-col items-center justify-center py-16 px-8">
-        <RefreshCw
-          className="w-16 h-16 text-[var(--color-info)] mb-4 motion-safe:animate-pulse"
-          size={24}
-          strokeWidth={1.5}
-        />
-        <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
-          {t("search.rebuildingIndex")}
-        </p>
-        <p className="text-xs text-[var(--color-fg-muted)] text-center">
-          {t("search.rebuildingQuery", { query: props.effectiveQuery })}
-        </p>
-      </div>
+      <LoadingState
+        variant="spinner"
+        text={`${t("search.rebuildingIndex")}\n${t("search.rebuildingQuery", { query: props.effectiveQuery })}`}
+        className="py-16 px-8"
+      />
     );
   }
 
   if (props.hasQuery && props.hasError) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 px-8">
-        <TriangleAlert
-          className="w-16 h-16 text-[var(--color-error)] mb-4"
-          size={24}
-          strokeWidth={1.5}
-        />
-        <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
-          {t("search.errorTitle")}
-        </p>
-        <p className="text-xs text-[var(--color-fg-muted)] text-center">
-          {props.lastError?.message}
-        </p>
-        <Button
-          variant="primary"
-          onClick={props.onRetrySearch}
-          className="mt-6 !px-4 !py-2 !h-auto !bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] !text-sm !font-medium !rounded-lg hover:!bg-[var(--color-info)] hover:!brightness-110"
-        >
-          {t("search.retrySearch")}
-        </Button>
-      </div>
+      <ErrorState
+        variant="card"
+        severity="error"
+        title={t("search.errorTitle")}
+        message={props.lastError?.message ?? ""}
+        actionLabel={t("search.retrySearch")}
+        onAction={props.onRetrySearch}
+        className="py-16 px-8"
+      />
     );
   }
 
@@ -485,17 +468,13 @@ function SearchResultsArea(props: {
   ) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-8">
-        <Frown
-          className="w-16 h-16 text-[var(--color-fg-placeholder)] mb-4"
-          size={24}
-          strokeWidth={1.5}
+        <EmptyState
+          variant="search"
+          title={t("search.noResults.title")}
+          description={t("search.noResultsQuery", {
+            query: props.effectiveQuery,
+          })}
         />
-        <p className="text-sm font-medium text-[var(--color-fg-default)] text-center mb-2">
-          {t("search.noResults.title")}
-        </p>
-        <p className="text-xs text-[var(--color-fg-muted)] text-center">
-          {t("search.noResultsQuery", { query: props.effectiveQuery })}
-        </p>
         <div className="mt-6 p-4 bg-[var(--color-separator)] rounded-lg border border-[var(--color-separator)]">
           <p className="text-[10px] text-[var(--color-fg-placeholder)] font-medium uppercase tracking-wider mb-2">
             {t("search.suggestionsTitle")}

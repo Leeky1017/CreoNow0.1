@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { EmptyState } from "../../components/composites/EmptyState";
+import { EmptyState } from "../../components/patterns/EmptyState";
 
 export interface CharacterCardSummary {
   id: string;
@@ -46,18 +46,11 @@ export function CharacterCardList({
         className={`h-full flex items-center justify-center p-4 bg-[var(--color-bg-base)] ${className}`}
       >
         <EmptyState
+          variant="characters"
           title={t("character.cardList.emptyTitle")}
           description={t("character.cardList.emptyDescription")}
-          action={
-            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-            <button
-              type="button"
-              onClick={onCreateCharacter}
-              className="focus-ring px-4 py-2 text-sm font-medium rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] transition-colors"
-            >
-              {t("character.cardList.createCharacter")}
-            </button>
-          }
+          actionLabel={t("character.cardList.createCharacter")}
+          onAction={onCreateCharacter}
         />
       </section>
     );
