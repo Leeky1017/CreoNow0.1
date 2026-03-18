@@ -7,18 +7,18 @@ import { join, resolve } from "node:path";
  * keyboard interaction is tightly coupled to transient UI state
  * (autocomplete menus, etc.) and does not represent a configurable shortcut.
  */
-const FEATURE_WHITELIST = new Set(["EditorPane.tsx", "useEntityCompletion.ts"]);
+const FEATURE_WHITELIST = new Set(["useEntityCompletion.ts"]);
 
-function getFilesRecursively(dir: string, ext: string): string[] {
+function getFilesRecursively(dir: string, exts: string[]): string[] {
   const result: string[] = [];
   try {
     for (const entry of readdirSync(dir)) {
       const fullPath = join(dir, entry);
       try {
         if (statSync(fullPath).isDirectory()) {
-          result.push(...getFilesRecursively(fullPath, ext));
+          result.push(...getFilesRecursively(fullPath, exts));
         } else if (
-          fullPath.endsWith(ext) &&
+          exts.some((ext) => fullPath.endsWith(ext)) &&
           !fullPath.includes(".test.") &&
           !fullPath.includes(".stories.")
         ) {
@@ -41,7 +41,7 @@ function basename(p: string): string {
 describe("hotkey listener guard", () => {
   it("no raw addEventListener keydown in features (except whitelisted)", () => {
     const featuresDir = resolve(__dirname, "../../features");
-    const files = getFilesRecursively(featuresDir, ".tsx");
+    const files = getFilesRecursively(featuresDir, [".ts", ".tsx"]);
     const violations: string[] = [];
 
     for (const file of files) {
@@ -57,7 +57,7 @@ describe("hotkey listener guard", () => {
 
   it("no raw addEventListener keydown in components", () => {
     const componentsDir = resolve(__dirname, "../../components");
-    const files = getFilesRecursively(componentsDir, ".tsx");
+    const files = getFilesRecursively(componentsDir, [".ts", ".tsx"]);
     const violations: string[] = [];
 
     for (const file of files) {
