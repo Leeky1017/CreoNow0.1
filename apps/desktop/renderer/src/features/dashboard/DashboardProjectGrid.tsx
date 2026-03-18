@@ -131,11 +131,8 @@ export function ProjectCard(props: {
     >
       <div className="flex justify-between items-start mb-[var(--space-4)]">
         <div
-          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)]"
-          style={{
-            fontSize: "var(--text-label-size)",
-            fontWeight: "var(--text-label-weight)" as unknown as number,
-          }}
+          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] font-[var(--text-label-weight)]"
+          style={{ fontSize: "var(--text-label-size)" }}
         >
           {dateStr}
         </div>
@@ -156,10 +153,9 @@ export function ProjectCard(props: {
       </div>
 
       <h3
-        className="text-[var(--color-fg-default)] mb-[var(--space-2)] leading-snug line-clamp-2"
+        className="text-[var(--color-fg-default)] mb-[var(--space-2)] leading-snug line-clamp-2 font-[var(--text-card-title-weight)]"
         style={{
           fontSize: "var(--text-card-title-size)",
-          fontWeight: "var(--text-card-title-weight)" as unknown as number,
           letterSpacing: "var(--text-card-title-letter-spacing)",
         }}
       >
@@ -226,11 +222,8 @@ export function NewDraftCard(props: { onClick: () => void }): JSX.Element {
         strokeWidth={1.5}
       />
       <div
-        className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] relative"
-        style={{
-          fontSize: "var(--text-label-size)",
-          fontWeight: "var(--text-label-weight)" as unknown as number,
-        }}
+        className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] relative font-[var(--text-label-weight)]"
+        style={{ fontSize: "var(--text-label-size)" }}
       >
         {t("dashboard.newDraft")}
       </div>

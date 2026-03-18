@@ -24,11 +24,8 @@ function StatItem(props: { label: string; value: string }): JSX.Element {
   return (
     <div className="flex flex-col gap-[var(--space-1)]">
       <span
-        className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)]"
-        style={{
-          fontSize: "var(--text-label-size)",
-          fontWeight: "var(--text-label-weight)" as unknown as number,
-        }}
+        className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] font-[var(--text-label-weight)]"
+        style={{ fontSize: "var(--text-label-size)" }}
       >
         {props.label}
       </span>
@@ -74,11 +71,8 @@ export function DashboardSidebar(props: DashboardSidebarProps): JSX.Element {
       {/* Recent Documents */}
       <div>
         <div
-          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] mb-[var(--space-4)]"
-          style={{
-            fontSize: "var(--text-label-size)",
-            fontWeight: "var(--text-label-weight)" as unknown as number,
-          }}
+          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] mb-[var(--space-4)] font-[var(--text-label-weight)]"
+          style={{ fontSize: "var(--text-label-size)" }}
         >
           {t("dashboard.sidebar.recentDocs")}
         </div>
@@ -105,11 +99,8 @@ export function DashboardSidebar(props: DashboardSidebarProps): JSX.Element {
       {/* Quick Actions */}
       <div>
         <div
-          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] mb-[var(--space-4)]"
-          style={{
-            fontSize: "var(--text-label-size)",
-            fontWeight: "var(--text-label-weight)" as unknown as number,
-          }}
+          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] mb-[var(--space-4)] font-[var(--text-label-weight)]"
+          style={{ fontSize: "var(--text-label-size)" }}
         >
           {t("dashboard.sidebar.quickActions")}
         </div>
@@ -145,11 +136,8 @@ export function DashboardSidebar(props: DashboardSidebarProps): JSX.Element {
       {/* Statistics (AC-5: stat display + monospace meta) */}
       <div>
         <div
-          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] mb-[var(--space-4)]"
-          style={{
-            fontSize: "var(--text-label-size)",
-            fontWeight: "var(--text-label-weight)" as unknown as number,
-          }}
+          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] mb-[var(--space-4)] font-[var(--text-label-weight)]"
+          style={{ fontSize: "var(--text-label-size)" }}
         >
           {t("dashboard.sidebar.statistics")}
         </div>

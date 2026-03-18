@@ -33,10 +33,9 @@ export function HeroCard(props: {
     >
       <div className="flex-1 min-w-0 p-[var(--space-10)] flex flex-col justify-center">
         <div
-          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-faint)] mb-[var(--space-3)]"
+          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-faint)] mb-[var(--space-3)] font-[var(--text-label-weight)]"
           style={{
             fontSize: "var(--text-label-size)",
-            fontWeight: "var(--text-label-weight)" as unknown as number,
             lineHeight: "var(--text-label-line-height)",
           }}
         >
