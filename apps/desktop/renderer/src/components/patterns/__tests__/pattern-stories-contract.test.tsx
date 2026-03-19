@@ -8,7 +8,11 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import { EmptyState, type EmptyStateVariant } from "../EmptyState";
-import { ErrorState, type ErrorVariant, type ErrorSeverity } from "../ErrorState";
+import {
+  ErrorState,
+  type ErrorVariant,
+  type ErrorSeverity,
+} from "../ErrorState";
 import { LoadingState } from "../LoadingState";
 
 import * as EmptyStateStories from "../EmptyState.stories";
@@ -43,8 +47,9 @@ describe("EmptyState story → component API 契约", () => {
   it("每个合法 variant 至少有一个 story 覆盖", () => {
     const storyVariants = new Set(
       Object.values(EmptyStateStories)
-        .filter((v): v is { args: { variant: string } } =>
-          typeof v === "object" && v !== null && "args" in v,
+        .filter(
+          (v): v is { args: { variant: string } } =>
+            typeof v === "object" && v !== null && "args" in v,
         )
         .map((s) => s.args?.variant)
         .filter(Boolean),
@@ -64,7 +69,12 @@ describe("EmptyState story → component API 契约", () => {
 });
 
 describe("ErrorState story → component API 契约", () => {
-  const validVariants: ErrorVariant[] = ["inline", "banner", "card", "fullPage"];
+  const validVariants: ErrorVariant[] = [
+    "inline",
+    "banner",
+    "card",
+    "fullPage",
+  ];
   const validSeverities: ErrorSeverity[] = ["error", "warning", "info"];
 
   it("所有导出的 story 使用的 variant 都是合法枚举值", () => {

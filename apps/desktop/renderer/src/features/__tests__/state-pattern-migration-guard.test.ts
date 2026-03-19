@@ -6,10 +6,7 @@ import { describe, expect, it } from "vitest";
 const CURRENT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const FEATURES_DIR = path.resolve(CURRENT_DIR, "..");
 const RENDERER_SRC = path.resolve(CURRENT_DIR, "../..");
-const COMPONENTS_FEATURES_DIR = path.join(
-  RENDERER_SRC,
-  "components/features",
-);
+const COMPONENTS_FEATURES_DIR = path.join(RENDERER_SRC, "components/features");
 
 /**
  * AC-9/10/11 composites/* 清零门禁:
@@ -107,7 +104,8 @@ describe("composites-state-import-regression-guard (AC-9/10/11)", () => {
     })),
     ...componentFeatureFiles.map((f) => ({
       absPath: f,
-      relPath: "components/features/" + getRelativePath(f, COMPONENTS_FEATURES_DIR),
+      relPath:
+        "components/features/" + getRelativePath(f, COMPONENTS_FEATURES_DIR),
     })),
   ];
 
@@ -129,7 +127,11 @@ describe("composites-state-import-regression-guard (AC-9/10/11)", () => {
       const lines = source.split("\n");
       for (let i = 0; i < lines.length; i++) {
         if (lines[i].includes("composites/EmptyState")) {
-          violations.push({ file: relPath, line: i + 1, text: lines[i].trim() });
+          violations.push({
+            file: relPath,
+            line: i + 1,
+            text: lines[i].trim(),
+          });
         }
       }
     }
@@ -154,7 +156,11 @@ describe("composites-state-import-regression-guard (AC-9/10/11)", () => {
       const lines = source.split("\n");
       for (let i = 0; i < lines.length; i++) {
         if (lines[i].includes("composites/LoadingState")) {
-          violations.push({ file: relPath, line: i + 1, text: lines[i].trim() });
+          violations.push({
+            file: relPath,
+            line: i + 1,
+            text: lines[i].trim(),
+          });
         }
       }
     }
@@ -179,7 +185,11 @@ describe("composites-state-import-regression-guard (AC-9/10/11)", () => {
       const lines = source.split("\n");
       for (let i = 0; i < lines.length; i++) {
         if (lines[i].includes("composites/ErrorState")) {
-          violations.push({ file: relPath, line: i + 1, text: lines[i].trim() });
+          violations.push({
+            file: relPath,
+            line: i + 1,
+            text: lines[i].trim(),
+          });
         }
       }
     }

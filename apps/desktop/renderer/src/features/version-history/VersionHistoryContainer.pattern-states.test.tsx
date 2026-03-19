@@ -69,9 +69,7 @@ describe("VersionHistoryContainer pattern state rendering", () => {
 
     // LoadingState spinner variant renders a role="status" element
     expect(screen.getByRole("status")).toBeInTheDocument();
-    expect(
-      screen.getByText("Loading versions..."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Loading versions...")).toBeInTheDocument();
   });
 
   it("renders ErrorState when version fetch fails", async () => {

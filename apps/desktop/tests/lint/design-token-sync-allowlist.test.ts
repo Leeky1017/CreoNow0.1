@@ -98,9 +98,7 @@ function extractRootTokenValues(css: string): Map<string, string> {
   const withoutMedia = css.replace(/@media\s*\([^)]*\)\s*\{[\s\S]*?\n\}/g, "");
 
   // Match plain :root blocks only (no data-theme attribute)
-  for (const rootMatch of withoutMedia.matchAll(
-    /:root\s*\{([^}]*)\}/g,
-  )) {
+  for (const rootMatch of withoutMedia.matchAll(/:root\s*\{([^}]*)\}/g)) {
     // Skip themed blocks like :root[data-theme="dark"]
     const fullMatch = rootMatch[0];
     if (fullMatch.includes("[")) continue;

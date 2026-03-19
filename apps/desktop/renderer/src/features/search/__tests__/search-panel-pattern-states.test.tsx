@@ -55,12 +55,18 @@ describe("SearchPanel pattern state rendering", () => {
   });
 
   it("renders patterns/EmptyState when no query and no results", () => {
-    mockSearchState = createSearchState({ query: "", items: [], status: "idle" });
+    mockSearchState = createSearchState({
+      query: "",
+      items: [],
+      status: "idle",
+    });
     render(<SearchPanel projectId="proj_1" open={true} />);
 
     // SearchPanel passes a custom illustration, so EmptyState renders
     // the search hint title (from i18n search.emptyStateHint)
-    expect(screen.getByText("Enter a search term to find documents")).toBeInTheDocument();
+    expect(
+      screen.getByText("Enter a search term to find documents"),
+    ).toBeInTheDocument();
   });
 
   it("renders patterns/LoadingState when index is rebuilding", () => {
