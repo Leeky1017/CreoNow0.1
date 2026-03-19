@@ -35,8 +35,8 @@ describe("v1-02 variant story export guard", () => {
       expect(source).toMatch(/export\s+const\s+Pill\s*:\s*Story/);
     });
 
-    it("exports an icon-only variants story", () => {
-      expect(source).toMatch(/export\s+const\s+IconOnlyVariants\s*:\s*Story/);
+    it("exports a dedicated IconOnly story", () => {
+      expect(source).toMatch(/export\s+const\s+IconOnly\s*:\s*Story/);
     });
   });
 
