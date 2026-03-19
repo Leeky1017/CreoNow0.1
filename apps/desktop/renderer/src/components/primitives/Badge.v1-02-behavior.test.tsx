@@ -244,9 +244,7 @@ describe("Badge v1-02 行为测试", () => {
       for (const variant of allVariants) {
         render(<Badge variant={variant}>{`hex-${variant}`}</Badge>);
         const badge = screen.getByText(`hex-${variant}`);
-        expect(badge.className).not.toMatch(
-          /#[0-9a-fA-F]{3,6}(?![0-9a-fA-F])/,
-        );
+        expect(badge.className).not.toMatch(/#[0-9a-fA-F]{3,6}(?![0-9a-fA-F])/);
       }
     });
   });

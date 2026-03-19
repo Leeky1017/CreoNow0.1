@@ -244,7 +244,9 @@ describe("Button v1-02 行为测试", () => {
     for (const variant of existingVariants) {
       it(`${variant} 仍可正常渲染`, () => {
         render(<Button variant={variant}>{variant}</Button>);
-        expect(screen.getByRole("button", { name: variant })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: variant }),
+        ).toBeInTheDocument();
       });
     }
 
@@ -362,7 +364,9 @@ describe("Button v1-02 行为测试", () => {
 
     it("emoji children 正常渲染", () => {
       render(<Button>🚀 Launch</Button>);
-      expect(screen.getByRole("button", { name: "🚀 Launch" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "🚀 Launch" }),
+      ).toBeInTheDocument();
     });
 
     it("focus-visible 有 outline", () => {

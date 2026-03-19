@@ -37,10 +37,7 @@ const tabsWithDisabled: TabItem[] = [
   { value: "b", label: "Another", content: <div>Another content</div> },
 ];
 
-describe("Tabs v1-02 行为测试", () => {
-  // ===========================================================================
-  // underline variant — 视觉结构
-  // ===========================================================================
+function registerUnderlineVisualStructureCases(): void {
   describe("underline variant — 视觉结构", () => {
     it("tablist 有 border-b（水平方向）", () => {
       render(<Tabs tabs={basicTabs} variant="underline" />);
@@ -95,10 +92,9 @@ describe("Tabs v1-02 行为测试", () => {
       expect(indicator?.className).toContain("transition-transform");
     });
   });
+}
 
-  // ===========================================================================
-  // underline variant — 交互行为
-  // ===========================================================================
+function registerUnderlineInteractionCases(): void {
   describe("underline variant — 交互行为", () => {
     it("点击 tab 切换内容", async () => {
       const user = userEvent.setup();
@@ -147,10 +143,9 @@ describe("Tabs v1-02 行为测试", () => {
       expect(disabledTab).toBeDisabled();
     });
   });
+}
 
-  // ===========================================================================
-  // underline + vertical 组合
-  // ===========================================================================
+function registerUnderlineVerticalCases(): void {
   describe("underline + vertical", () => {
     it("tablist 有 border-r（右侧边框）", () => {
       render(
@@ -203,10 +198,9 @@ describe("Tabs v1-02 行为测试", () => {
       expect(indicator?.className).toContain("w-0.5");
     });
   });
+}
 
-  // ===========================================================================
-  // underline + fullWidth
-  // ===========================================================================
+function registerUnderlineFullWidthCases(): void {
   describe("underline + fullWidth", () => {
     it("tablist 有 w-full", () => {
       render(<Tabs tabs={basicTabs} variant="underline" fullWidth />);
@@ -220,17 +214,18 @@ describe("Tabs v1-02 行为测试", () => {
       expect(tab).toHaveClass("flex-1");
     });
   });
+}
 
-  // ===========================================================================
-  // 键盘导航
-  // ===========================================================================
+function registerKeyboardNavigationCases(): void {
   describe("键盘导航（underline variant）", () => {
     it("→ 键移动到下一个 tab", async () => {
       const user = userEvent.setup();
       render(<Tabs tabs={basicTabs} variant="underline" />);
 
       const tab1 = screen.getByRole("tab", { name: "Tab 1" });
-      await act(async () => { tab1.focus(); });
+      await act(async () => {
+        tab1.focus();
+      });
       await user.keyboard("{ArrowRight}");
 
       await waitFor(() => {
@@ -240,16 +235,12 @@ describe("Tabs v1-02 行为测试", () => {
 
     it("← 键移动到上一个 tab", async () => {
       const user = userEvent.setup();
-      render(
-        <Tabs
-          tabs={basicTabs}
-          variant="underline"
-          defaultValue="tab2"
-        />,
-      );
+      render(<Tabs tabs={basicTabs} variant="underline" defaultValue="tab2" />);
 
       const tab2 = screen.getByRole("tab", { name: "Tab 2" });
-      await act(async () => { tab2.focus(); });
+      await act(async () => {
+        tab2.focus();
+      });
       await user.keyboard("{ArrowLeft}");
 
       await waitFor(() => {
@@ -262,7 +253,9 @@ describe("Tabs v1-02 行为测试", () => {
       render(<Tabs tabs={tabsWithDisabled} variant="underline" />);
 
       const tab1 = screen.getByRole("tab", { name: "Active" });
-      await act(async () => { tab1.focus(); });
+      await act(async () => {
+        tab1.focus();
+      });
       await user.keyboard("{ArrowRight}");
 
       // 应跳过 Disabled，聚焦到 Another
@@ -273,9 +266,7 @@ describe("Tabs v1-02 行为测试", () => {
 
     it("Home 键聚焦第一个可用 tab", async () => {
       const user = userEvent.setup();
-      render(
-        <Tabs tabs={basicTabs} variant="underline" defaultValue="tab3" />,
-      );
+      render(<Tabs tabs={basicTabs} variant="underline" defaultValue="tab3" />);
       await act(async () => {
         screen.getByRole("tab", { name: "Tab 3" }).focus();
       });
@@ -300,11 +291,7 @@ describe("Tabs v1-02 行为测试", () => {
     it("vertical 模式下 ArrowDown 移动到下一个 tab", async () => {
       const user = userEvent.setup();
       render(
-        <Tabs
-          tabs={basicTabs}
-          variant="underline"
-          orientation="vertical"
-        />,
+        <Tabs tabs={basicTabs} variant="underline" orientation="vertical" />,
       );
       await act(async () => {
         screen.getByRole("tab", { name: "Tab 1" }).focus();
@@ -334,10 +321,9 @@ describe("Tabs v1-02 行为测试", () => {
       });
     });
   });
+}
 
-  // ===========================================================================
-  // 回归：default variant 行为不变
-  // ===========================================================================
+function registerDefaultVariantRegressionCases(): void {
   describe("回归：default variant 不变", () => {
     it("不传 variant 等同于 variant='default'", () => {
       const { container: c1 } = render(<Tabs tabs={basicTabs} />);
@@ -376,10 +362,9 @@ describe("Tabs v1-02 行为测试", () => {
       expect(tab.className).toContain("data-[state=active]:shadow");
     });
   });
+}
 
-  // ===========================================================================
-  // 可访问性
-  // ===========================================================================
+function registerAccessibilityCases(): void {
   describe("可访问性", () => {
     it("root 包含 tablist role", () => {
       render(<Tabs tabs={basicTabs} variant="underline" />);
@@ -416,10 +401,9 @@ describe("Tabs v1-02 行为测试", () => {
       expect(indicator).toHaveAttribute("aria-hidden", "true");
     });
   });
+}
 
-  // ===========================================================================
-  // 边界情况
-  // ===========================================================================
+function registerBoundaryCases(): void {
   describe("边界情况", () => {
     it("单个 tab 正常渲染", () => {
       const singleTab: TabItem[] = [
@@ -431,9 +415,7 @@ describe("Tabs v1-02 行为测试", () => {
     });
 
     it("defaultValue 指定非首 tab 正常工作", () => {
-      render(
-        <Tabs tabs={basicTabs} variant="underline" defaultValue="tab3" />,
-      );
+      render(<Tabs tabs={basicTabs} variant="underline" defaultValue="tab3" />);
       expect(screen.getByText("Content 3")).toBeInTheDocument();
     });
 
@@ -451,11 +433,7 @@ describe("Tabs v1-02 行为测试", () => {
 
     it("className 透传到 root", () => {
       const { container } = render(
-        <Tabs
-          tabs={basicTabs}
-          variant="underline"
-          className="custom-root"
-        />,
+        <Tabs tabs={basicTabs} variant="underline" className="custom-root" />,
       );
       const root = container.firstChild as HTMLElement;
       expect(root).toHaveClass("custom-root");
@@ -472,4 +450,15 @@ describe("Tabs v1-02 行为测试", () => {
       expect(tablists).toHaveLength(2);
     });
   });
+}
+
+describe("Tabs v1-02 行为测试", () => {
+  registerUnderlineVisualStructureCases();
+  registerUnderlineInteractionCases();
+  registerUnderlineVerticalCases();
+  registerUnderlineFullWidthCases();
+  registerKeyboardNavigationCases();
+  registerDefaultVariantRegressionCases();
+  registerAccessibilityCases();
+  registerBoundaryCases();
 });

@@ -236,17 +236,14 @@ describe("Card v1-02 行为测试", () => {
       expect(screen.getByText("Test")).toBeInTheDocument();
     });
 
-    it.each(allVariants)(
-      "%s + hoverable + noPadding 渲染不报错",
-      (variant) => {
-        render(
-          <Card variant={variant} hoverable noPadding>
-            Test
-          </Card>,
-        );
-        expect(screen.getByText("Test")).toBeInTheDocument();
-      },
-    );
+    it.each(allVariants)("%s + hoverable + noPadding 渲染不报错", (variant) => {
+      render(
+        <Card variant={variant} hoverable noPadding>
+          Test
+        </Card>,
+      );
+      expect(screen.getByText("Test")).toBeInTheDocument();
+    });
   });
 
   // ===========================================================================
@@ -287,7 +284,9 @@ describe("Card v1-02 行为测试", () => {
     it("空 children 不报错", () => {
       render(<Card>{""}</Card>);
       // 应该渲染一个 div（即使内容为空）
-      const cards = document.querySelectorAll("div.bg-\\[var\\(--color-bg-surface\\)\\]");
+      const cards = document.querySelectorAll(
+        "div.bg-\\[var\\(--color-bg-surface\\)\\]",
+      );
       expect(cards.length).toBeGreaterThan(0);
     });
 
@@ -309,9 +308,7 @@ describe("Card v1-02 行为测试", () => {
         "compact",
       ];
       for (const variant of variants) {
-        const { container } = render(
-          <Card variant={variant}>T</Card>,
-        );
+        const { container } = render(<Card variant={variant}>T</Card>);
         const card = container.firstChild as HTMLElement;
         expect(
           card.className.includes("transition"),

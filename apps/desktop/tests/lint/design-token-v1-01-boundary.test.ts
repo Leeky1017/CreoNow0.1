@@ -50,18 +50,20 @@ function extractThemeInlineBlock(css: string): string {
   return match![1];
 }
 
-describe("v1-01 Design Token 边界测试", () => {
-  const designTokens = readCSS(DESIGN_TOKENS);
-  const rendererTokens = readCSS(RENDERER_TOKENS);
-  const mainCSS = readCSS(MAIN_CSS);
+const designTokens = readCSS(DESIGN_TOKENS);
+const rendererTokens = readCSS(RENDERER_TOKENS);
+const mainCSS = readCSS(MAIN_CSS);
 
-  // ===========================================================================
-  // 1. Typography 四件组精确值校验
-  // ===========================================================================
+function registerTypographyPrecisionCases(): void {
   describe("typography token 精确值校验", () => {
     const typographySpec: Record<
       string,
-      { size: string; weight: string; lineHeight: string; letterSpacing: string }
+      {
+        size: string;
+        weight: string;
+        lineHeight: string;
+        letterSpacing: string;
+      }
     > = {
       display: {
         size: "48px",
@@ -92,10 +94,7 @@ describe("v1-01 Design Token 边界测试", () => {
     for (const [name, spec] of Object.entries(typographySpec)) {
       describe(`--text-${name}-* 精确值`, () => {
         it(`size 应该是 ${spec.size}`, () => {
-          const value = extractTokenValue(
-            designTokens,
-            `--text-${name}-size`,
-          );
+          const value = extractTokenValue(designTokens, `--text-${name}-size`);
           expect(value).toBe(spec.size);
         });
 
@@ -125,10 +124,9 @@ describe("v1-01 Design Token 边界测试", () => {
       });
     }
   });
+}
 
-  // ===========================================================================
-  // 2. 独立 token 精确值校验
-  // ===========================================================================
+function registerIndependentTokenPrecisionCases(): void {
   describe("独立 weight/tracking/leading 精确值", () => {
     const weightExpected: Record<string, string> = {
       "--weight-light": "300",
@@ -168,19 +166,23 @@ describe("v1-01 Design Token 边界测试", () => {
       });
     }
   });
+}
 
-  // ===========================================================================
-  // 3. 语义间距引用链合法性
-  // ===========================================================================
+function registerSemanticSpacingCases(): void {
   describe("语义间距引用链校验", () => {
-    const semanticSpacing: Record<string, { ref: string; resolvedValue: string }> = {
+    const semanticSpacing: Record<
+      string,
+      { ref: string; resolvedValue: string }
+    > = {
       "--space-panel-padding": { ref: "var(--space-4)", resolvedValue: "16px" },
       "--space-section-gap": { ref: "var(--space-6)", resolvedValue: "24px" },
       "--space-item-gap": { ref: "var(--space-2)", resolvedValue: "8px" },
       "--space-inline-gap": { ref: "var(--space-1)", resolvedValue: "4px" },
     };
 
-    for (const [token, { ref, resolvedValue }] of Object.entries(semanticSpacing)) {
+    for (const [token, { ref, resolvedValue }] of Object.entries(
+      semanticSpacing,
+    )) {
       it(`${token} 通过 var() 引用基础间距 ${ref}`, () => {
         const value = extractTokenValue(designTokens, token);
         expect(value).toBe(ref);
@@ -202,10 +204,9 @@ describe("v1-01 Design Token 边界测试", () => {
       }
     });
   });
+}
 
-  // ===========================================================================
-  // 4. @theme duration 精确值与完整性
-  // ===========================================================================
+function registerThemeDurationCases(): void {
   describe("@theme duration 值精确校验", () => {
     it("--duration-instant 为 50ms", () => {
       expect(mainCSS).toContain("--duration-instant: 50ms");
@@ -228,10 +229,9 @@ describe("v1-01 Design Token 边界测试", () => {
       }
     });
   });
+}
 
-  // ===========================================================================
-  // 5. @theme inline 不泄露内部 token 名
-  // ===========================================================================
+function registerThemeInlineSafetyCases(): void {
   describe("@theme inline token 命名安全", () => {
     it("不应该以 --text-*-size 作为 @theme 变量名", () => {
       const themeInline = extractThemeInlineBlock(mainCSS);
@@ -258,10 +258,9 @@ describe("v1-01 Design Token 边界测试", () => {
       expect(themeInline).not.toMatch(/^\s*--text-\w+-letter-spacing:/m);
     });
   });
+}
 
-  // ===========================================================================
-  // 6. 新增 token 注释要求（AC-8）
-  // ===========================================================================
+function registerChineseCommentCases(): void {
   describe("新增 token 中文注释（AC-8）", () => {
     const v1_01_tokens = [
       "--text-display-size",
@@ -299,10 +298,9 @@ describe("v1-01 Design Token 边界测试", () => {
       }
     });
   });
+}
 
-  // ===========================================================================
-  // 7. 同步一致性精确值比对（设计 ↔ 渲染器）
-  // ===========================================================================
+function registerTokenSyncCases(): void {
   describe("设计与渲染器 token 值精确同步", () => {
     const syncTokens = [
       "--text-display-size",
@@ -348,10 +346,9 @@ describe("v1-01 Design Token 边界测试", () => {
       });
     }
   });
+}
 
-  // ===========================================================================
-  // 8. 基础 token 完整性守卫（防止 v1-01 修改误删周边 token）
-  // ===========================================================================
+function registerPeripheralTokenGuardCases(): void {
   describe("周边 token 完整性守卫", () => {
     it("基础间距系统 --space-0 到 --space-20 完整", () => {
       const expected = [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20];
@@ -393,10 +390,9 @@ describe("v1-01 Design Token 边界测试", () => {
       expect(designTokens).toContain("--font-family-mono:");
     });
   });
+}
 
-  // ===========================================================================
-  // 9. Typography 四件组完整性矩阵（所有预设全量检查）
-  // ===========================================================================
+function registerTypographyCompletenessCases(): void {
   describe("typography 四件组完整性矩阵", () => {
     /**
      * 这里检查 design/system/01-tokens.css 中已定义的所有 typography 预设
@@ -428,10 +424,9 @@ describe("v1-01 Design Token 边界测试", () => {
       });
     }
   });
+}
 
-  // ===========================================================================
-  // 10. 不应出现重复定义
-  // ===========================================================================
+function registerTokenUniquenessCases(): void {
   describe("token 定义唯一性", () => {
     const tokensToCheck = [
       "--text-display-size",
@@ -458,10 +453,9 @@ describe("v1-01 Design Token 边界测试", () => {
       });
     }
   });
+}
 
-  // ===========================================================================
-  // 11. @theme inline typography mapping 覆盖全部 14 个预设
-  // ===========================================================================
+function registerThemeInlineTypographyMappingCases(): void {
   describe("@theme inline 映射全部 14 个 typography 预设", () => {
     const themeInline = extractThemeInlineBlock(mainCSS);
     const presets = [
@@ -507,10 +501,9 @@ describe("v1-01 Design Token 边界测试", () => {
       });
     }
   });
+}
 
-  // ===========================================================================
-  // 12. @theme inline 字重/字间距/行高映射精确校验
-  // ===========================================================================
+function registerThemeInlinePrecisionCases(): void {
   describe("@theme inline 字重/字间距/行高映射", () => {
     const themeInline = extractThemeInlineBlock(mainCSS);
 
@@ -550,4 +543,19 @@ describe("v1-01 Design Token 边界测试", () => {
       );
     });
   });
+}
+
+describe("v1-01 Design Token 边界测试", () => {
+  registerTypographyPrecisionCases();
+  registerIndependentTokenPrecisionCases();
+  registerSemanticSpacingCases();
+  registerThemeDurationCases();
+  registerThemeInlineSafetyCases();
+  registerChineseCommentCases();
+  registerTokenSyncCases();
+  registerPeripheralTokenGuardCases();
+  registerTypographyCompletenessCases();
+  registerTokenUniquenessCases();
+  registerThemeInlineTypographyMappingCases();
+  registerThemeInlinePrecisionCases();
 });
