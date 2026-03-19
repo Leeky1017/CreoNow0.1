@@ -81,7 +81,7 @@ function collectTsxFiles(dir: string): string[] {
 }
 
 /**
- * 将文件路径转换为相对路径（用于排除清单匹配）  
+ * 将文件路径转换为相对路径（用于排除清单匹配）
  * features/ 下的文件相对于 FEATURES_DIR
  * components/features/ 下的文件前缀 "components/features/"
  */
