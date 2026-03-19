@@ -27,37 +27,53 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const FirstFile: Story = {
+/** variant="project" — 新项目首文件引导 */
+export const Project: Story = {
   args: {
-    variant: "first-file",
+    variant: "project",
     onAction: () => {},
   },
 };
 
-export const NoFiles: Story = {
+/** variant="files" — 无文件提示 */
+export const Files: Story = {
   args: {
-    variant: "no-files",
+    variant: "files",
     onAction: () => {},
   },
 };
 
-export const NoSearchResults: Story = {
+/** variant="search" — 搜索无结果提示 */
+export const Search: Story = {
   args: {
-    variant: "no-search-results",
+    variant: "search",
     onAction: () => {},
   },
 };
 
-export const NoCharacters: Story = {
+/** variant="characters" — 无角色提示 */
+export const Characters: Story = {
   args: {
-    variant: "no-characters",
+    variant: "characters",
     onAction: () => {},
   },
 };
 
-export const NoContent: Story = {
+/** variant="generic" — 通用空态 */
+export const Generic: Story = {
   args: {
-    variant: "no-content",
+    variant: "generic",
+    onAction: () => {},
+  },
+};
+
+/** 自定义 title + description 覆盖 variant 默认值 */
+export const CustomContent: Story = {
+  args: {
+    variant: "generic",
+    title: "暂无数据",
+    description: "请添加内容以开始使用",
+    actionLabel: "开始添加",
     onAction: () => {},
   },
 };

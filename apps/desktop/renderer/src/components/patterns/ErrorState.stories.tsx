@@ -27,32 +27,59 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Region: Story = {
+/** variant="inline" — 表单字段内联错误 */
+export const Inline: Story = {
   args: {
-    variant: "region",
-    title: "Failed to load panel",
-    message: "An unexpected error occurred while rendering this section.",
-    onRetry: () => {},
+    variant: "inline",
+    severity: "error",
+    message: "此字段为必填项",
   },
 };
 
-export const Page: Story = {
+/** variant="banner" — 页面/区域级错误横幅 */
+export const Banner: Story = {
   args: {
-    variant: "page",
-    title: "Something went wrong",
-    message:
-      "The application encountered an unexpected error. Please try reloading.",
-    onRetry: () => {},
+    variant: "banner",
+    severity: "warning",
+    title: "连接不稳定",
+    message: "部分功能可能受影响",
+    dismissible: true,
     onDismiss: () => {},
   },
 };
 
-export const Critical: Story = {
+/** variant="card" — 独立错误卡片，含操作按钮 */
+export const Card: Story = {
   args: {
-    variant: "page",
-    severity: "critical",
-    title: "Critical Error",
-    message: "Unable to access the file system. Data may be at risk.",
-    onRetry: () => {},
+    variant: "card",
+    severity: "error",
+    title: "加载失败",
+    message: "无法获取数据，请重试",
+    actionLabel: "重试",
+    onAction: () => {},
+  },
+};
+
+/** variant="fullPage" — 全页错误状态 */
+export const FullPage: Story = {
+  args: {
+    variant: "fullPage",
+    severity: "error",
+    title: "页面不存在",
+    message: "您访问的页面可能已被删除或移动",
+    actionLabel: "返回首页",
+    onAction: () => {},
+  },
+};
+
+/** severity="info" — 信息级提示 */
+export const InfoBanner: Story = {
+  args: {
+    variant: "banner",
+    severity: "info",
+    title: "提示",
+    message: "系统将在 5 分钟后进行维护",
+    actionLabel: "了解详情",
+    onAction: () => {},
   },
 };

@@ -1,6 +1,11 @@
 /**
  * v1-01 Design Token 补完 —— 边界测试
  *
+ * 作用域：仅覆盖 v1-01 新增 token 子集的精确值、引用链、矩阵完整性等
+ * 边界场景。不覆盖两文件之间的全量同步。
+ *
+ * 全量同步由 design-token-sync-allowlist.test.ts 负责。
+ *
  * 本文件补齐 design-token-completeness.test.ts 未覆盖的边界场景：
  * - Token 值精确校验（不仅存在，值必须正确）
  * - 语义间距 var() 引用链合法性

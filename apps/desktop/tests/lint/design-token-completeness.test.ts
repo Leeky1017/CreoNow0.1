@@ -1,3 +1,13 @@
+/**
+ * v1-01 Design Token 完整性 guard
+ *
+ * 作用域：仅覆盖 v1-01 新增的 token 子集（typography / weight / tracking /
+ * leading / semantic spacing / @theme inline / heading alias）。
+ *
+ * Spec §Token 同步契约 要求 design source 与 renderer 完全同步。
+ * 完整同步验证由 design-token-sync-allowlist.test.ts 负责，本文件只守
+ * v1-01 子集的存在性和值一致性。
+ */
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";

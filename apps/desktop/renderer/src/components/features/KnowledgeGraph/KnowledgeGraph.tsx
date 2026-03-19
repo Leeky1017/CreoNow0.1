@@ -6,6 +6,7 @@ import { GraphCanvas } from "./GraphCanvas";
 import { GraphLegend } from "./GraphLegend";
 import { NodeDetailCard } from "./NodeDetailCard";
 import { NodeEditDialog } from "./NodeEditDialog";
+import { EmptyState as PatternEmptyState } from "../../patterns/EmptyState";
 import { zoomAroundCursor } from "../../../features/kg/graphRenderAdapter";
 import type {
   KnowledgeGraphProps,
@@ -36,57 +37,26 @@ const containerStyles = [
 const mainStyles = ["flex-1", "relative", "overflow-hidden"].join(" ");
 
 /**
- * Empty state component
+ * 知识图谱专用空态 illustration
  */
-function EmptyState({ onAddNode }: { onAddNode: () => void }): JSX.Element {
-  const { t } = useTranslation();
+function KgEmptyIllustration(): JSX.Element {
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <div className="w-16 h-16 mx-auto rounded-full border-2 border-dashed border-[var(--color-border-default)] flex items-center justify-center">
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            className="text-[var(--color-fg-subtle)]"
-          >
-            <circle cx="12" cy="5" r="3" />
-            <circle cx="5" cy="19" r="3" />
-            <circle cx="19" cy="19" r="3" />
-            <line x1="12" y1="8" x2="5" y2="16" />
-            <line x1="12" y1="8" x2="19" y2="16" />
-          </svg>
-        </div>
-        <div>
-          <p className="text-sm text-[var(--color-fg-muted)]">
-            {t("kg.graph.emptyTitle")}
-          </p>
-          <p className="text-xs text-[var(--color-fg-subtle)] mt-1">
-            {t("kg.graph.emptyHint")}
-          </p>
-        </div>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-        <button
-          onClick={onAddNode}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] text-sm font-medium rounded-[var(--radius-md)] hover:bg-[var(--color-fg-muted)] transition-colors"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          {t("kg.graph.addNode")}
-        </button>
-      </div>
+    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-dashed border-[var(--color-border-default)]">
+      <svg
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        className="text-[var(--color-fg-subtle)]"
+      >
+        <circle cx="12" cy="5" r="3" />
+        <circle cx="5" cy="19" r="3" />
+        <circle cx="19" cy="19" r="3" />
+        <line x1="12" y1="8" x2="5" y2="16" />
+        <line x1="12" y1="8" x2="19" y2="16" />
+      </svg>
     </div>
   );
 }
@@ -372,7 +342,14 @@ export function KnowledgeGraph({
       {/* Main canvas area */}
       <main className={mainStyles}>
         {isEmpty ? (
-          <EmptyState onAddNode={handleAddNode} />
+          <PatternEmptyState
+            title={t("kg.graph.emptyTitle")}
+            description={t("kg.graph.emptyHint")}
+            illustration={<KgEmptyIllustration />}
+            actionLabel={t("kg.graph.addNode")}
+            onAction={handleAddNode}
+            className="absolute inset-0"
+          />
         ) : (
           <>
             {/* Canvas */}
