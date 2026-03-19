@@ -120,6 +120,7 @@ export function VersionHistoryContainer(
   }, [documentId, props.projectId]);
 
   const timeGroups = React.useMemo(
+    // TODO(#571): calculate actual word diff instead of the placeholder mapping in versionHistoryHelpers.
     () => convertToTimeGroups(items, currentHash),
     [items, currentHash],
   );
