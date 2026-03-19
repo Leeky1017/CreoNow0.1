@@ -401,89 +401,71 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       class="flex-1 relative overflow-hidden"
     >
       <div
-        class="absolute inset-0 flex items-center justify-center"
+        class="flex flex-col items-center justify-center py-12 px-6 text-center absolute inset-0"
       >
         <div
-          class="text-center space-y-4"
+          class="mb-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-dashed border-[var(--color-border-default)]"
         >
-          <div
-            class="w-16 h-16 mx-auto rounded-full border-2 border-dashed border-[var(--color-border-default)] flex items-center justify-center"
+          <svg
+            class="text-[var(--color-fg-subtle)]"
+            fill="none"
+            height="32"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            width="32"
           >
-            <svg
-              class="text-[var(--color-fg-subtle)]"
-              fill="none"
-              height="32"
-              stroke="currentColor"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              width="32"
-            >
-              <circle
-                cx="12"
-                cy="5"
-                r="3"
-              />
-              <circle
-                cx="5"
-                cy="19"
-                r="3"
-              />
-              <circle
-                cx="19"
-                cy="19"
-                r="3"
-              />
-              <line
-                x1="12"
-                x2="5"
-                y1="8"
-                y2="16"
-              />
-              <line
-                x1="12"
-                x2="19"
-                y1="8"
-                y2="16"
-              />
-            </svg>
-          </div>
-          <div>
-            <p
-              class="text-sm text-[var(--color-fg-muted)]"
-            >
-              No entities yet. Click to add your first character or location
-            </p>
-            <p
-              class="text-xs text-[var(--color-fg-subtle)] mt-1"
-            >
-              You can drag nodes and create relationships in the graph
-            </p>
-          </div>
+            <circle
+              cx="12"
+              cy="5"
+              r="3"
+            />
+            <circle
+              cx="5"
+              cy="19"
+              r="3"
+            />
+            <circle
+              cx="19"
+              cy="19"
+              r="3"
+            />
+            <line
+              x1="12"
+              x2="5"
+              y1="8"
+              y2="16"
+            />
+            <line
+              x1="12"
+              x2="19"
+              y1="8"
+              y2="16"
+            />
+          </svg>
+        </div>
+        <h3
+          class="font-[var(--font-family-ui)] text-sm font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] mb-2"
+        >
+          No entities yet. Click to add your first character or location
+        </h3>
+        <p
+          class="text-[13px] leading-[1.5] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] mb-6 max-w-xs"
+        >
+          You can drag nodes and create relationships in the graph
+        </p>
+        <div
+          class="flex items-center gap-3"
+        >
           <button
-            class="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] text-sm font-medium rounded-[var(--radius-md)] hover:bg-[var(--color-fg-muted)] transition-colors"
+            class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] border-0 hover:bg-[var(--color-fg-muted)] active:bg-[var(--color-fg-subtle)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)]"
+            type="button"
           >
-            <svg
-              fill="none"
-              height="16"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              width="16"
+            <span
+              class="inline-flex items-center gap-2 truncate"
             >
-              <line
-                x1="12"
-                x2="12"
-                y1="5"
-                y2="19"
-              />
-              <line
-                x1="5"
-                x2="19"
-                y1="12"
-                y2="12"
-              />
-            </svg>
-            Add Node
+              Add Node
+            </span>
           </button>
         </div>
       </div>

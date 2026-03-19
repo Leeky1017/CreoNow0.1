@@ -111,7 +111,7 @@
 - [ ] 扩展 `ButtonVariant` type：`"primary" | "secondary" | "ghost" | "danger" | "pill"`
 - [ ] 扩展 `ButtonSize` type：`"sm" | "md" | "lg" | "icon"`
 - [ ] 在 `variantStyles` map 中添加 `pill` 键：`rounded-[var(--radius-full)]` + 继承 secondary 的背景/边框/hover 样式
-- [ ] 在 `sizeStyles` map 中添加 `icon` 键：`w-10 h-10 p-0 flex items-center justify-center`（md 基准），sm 变体 `w-8 h-8 p-0`
+- [ ] 在 `sizeStyles` map 中添加 `icon` 键：`w-10 h-10 p-0`（== `--size-icon-button: 40px`，单一尺寸；proposal 中提及的 sm=32×32 最终未纳入，设计 token 仅定义 40px）
 - [ ] 更新 JSDoc 注释和使用示例
 
 **文件**: `renderer/src/components/primitives/Button.tsx`
