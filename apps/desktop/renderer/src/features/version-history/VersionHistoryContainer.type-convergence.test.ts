@@ -8,6 +8,11 @@ const containerSource = readFileSync(
   "utf8",
 );
 
+const helpersSource = readFileSync(
+  path.resolve(__dirname, "versionHistoryHelpers.ts"),
+  "utf8",
+);
+
 describe("VersionHistoryContainer type convergence", () => {
   it("Scenario S2-1: uses imported VersionListItem from versionStore", () => {
     expect(containerSource).toMatch(
@@ -19,8 +24,8 @@ describe("VersionHistoryContainer type convergence", () => {
     expect(containerSource).not.toMatch(
       /^\s*type\s+VersionListItem\s*=\s*|^\s*interface\s+VersionListItem\s*\{/m,
     );
-    expect(containerSource).toMatch(
-      /convertToTimeGroups\(\s*items:\s*VersionListItem\[\]/,
+    expect(helpersSource).toMatch(
+      /convertToTimeGroups\(\s*\n?\s*items:\s*VersionListItem\[\]/,
     );
     expect(containerSource).toMatch(/useState<VersionListItem\[\]>\(\[\]\)/);
   });

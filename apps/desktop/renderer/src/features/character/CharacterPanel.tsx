@@ -1,10 +1,13 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { CharacterCard } from "./CharacterCard";
 import { CharacterDetailDialog } from "./CharacterDetailDialog";
-import type { Character, CharacterGroup } from "./types";
-
-import { Plus } from "lucide-react";
+import type { Character } from "./types";
+import { PanelHeader } from "../../components/patterns/PanelHeader";
+import {
+  groupCharacters,
+  CharacterGroupSection,
+  AddCharacterButton,
+} from "./CharacterPanelSections";
 
 export interface CharacterPanelProps {
   /** List of characters */
@@ -23,139 +26,6 @@ export interface CharacterPanelProps {
   onNavigateToChapter?: (chapterId: string) => void;
   /** Panel width in pixels */
   width?: number;
-}
-
-/**
- * Group characters by their group property
- */
-function groupCharacters(
-  characters: Character[],
-): Record<CharacterGroup, Character[]> {
-  return characters.reduce(
-    (acc, char) => {
-      acc[char.group].push(char);
-      return acc;
-    },
-    {
-      main: [] as Character[],
-      supporting: [] as Character[],
-      others: [] as Character[],
-    },
-  );
-}
-
-/**
- * Group configuration for display
- */
-function getGroupConfig(
-  t: (key: string) => string,
-): Record<CharacterGroup, { label: string }> {
-  return {
-    main: { label: t("character.panel.groupMain") },
-    supporting: { label: t("character.panel.groupSupporting") },
-    others: { label: t("character.panel.groupOthers") },
-  };
-}
-
-/**
- * Plus icon for add button
- */
-function PlusIcon() {
-  return <Plus size={16} strokeWidth={1.5} />;
-}
-
-/**
- * Empty state for a group with no characters
- */
-function EmptyGroupState({ onClick }: { onClick?: () => void }) {
-  const { t } = useTranslation();
-
-  return (
-    // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-    <button
-      type="button"
-      onClick={onClick}
-      className={[
-        "focus-ring",
-        "w-full",
-        "px-4",
-        "py-8",
-        "border",
-        "border-dashed",
-        "border-[var(--color-border-default)]",
-        "rounded-[var(--radius-md)]",
-        "flex",
-        "flex-col",
-        "items-center",
-        "justify-center",
-        "gap-2",
-        "text-[var(--color-fg-placeholder)]",
-        "hover:text-[var(--color-fg-muted)]",
-        "hover:border-[var(--color-border-hover)]",
-        "hover:bg-[var(--color-bg-surface)]",
-        "cursor-pointer",
-        "transition-colors",
-      ].join(" ")}
-    >
-      <span className="text-[11px]">{t("character.panel.noCharacters")}</span>
-    </button>
-  );
-}
-
-/**
- * Character group section
- */
-function CharacterGroupSection({
-  group,
-  characters,
-  selectedId,
-  onSelect,
-  onEdit,
-  onDelete,
-  onCreate,
-}: {
-  group: CharacterGroup;
-  characters: Character[];
-  selectedId?: string | null;
-  onSelect?: (characterId: string) => void;
-  onEdit?: (character: Character) => void;
-  onDelete?: (characterId: string) => void;
-  onCreate?: () => void;
-}) {
-  const { t } = useTranslation();
-  const config = getGroupConfig(t)[group];
-
-  return (
-    <div>
-      {/* Group header */}
-      <div className="px-2 mb-3 flex items-center justify-between group">
-        <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold">
-          {config.label}
-        </div>
-        <span className="text-[10px] text-[var(--color-fg-placeholder)] group-hover:text-[var(--color-fg-muted)] transition-colors">
-          {characters.length}
-        </span>
-      </div>
-
-      {/* Character list */}
-      <div className="space-y-1">
-        {characters.length > 0 ? (
-          characters.map((character) => (
-            <CharacterCard
-              key={character.id}
-              character={character}
-              selected={selectedId === character.id}
-              onClick={() => onSelect?.(character.id)}
-              onEdit={() => onEdit?.(character)}
-              onDelete={() => onDelete?.(character.id)}
-            />
-          ))
-        ) : (
-          <EmptyGroupState onClick={onCreate} />
-        )}
-      </div>
-    </div>
-  );
 }
 
 /**
@@ -249,34 +119,10 @@ export function CharacterPanelContent({
         data-testid="character-panel-content"
       >
         {/* Header */}
-        <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--color-border-default)] shrink-0">
-          <span className="font-medium text-sm tracking-wide text-[var(--color-fg-default)]">
-            {t("character.panel.title")}
-          </span>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
-            type="button"
-            onClick={onCreate}
-            className={[
-              "focus-ring",
-              "flex",
-              "items-center",
-              "justify-center",
-              "w-7",
-              "h-7",
-              "hover:bg-[var(--color-bg-hover)]",
-              "rounded",
-              "text-[var(--color-fg-default)]",
-              "transition-colors",
-              "border",
-              "border-transparent",
-              "hover:border-[var(--color-border-hover)]",
-            ].join(" ")}
-            aria-label={t("character.panel.addCharacter")}
-          >
-            <PlusIcon />
-          </button>
-        </div>
+        <PanelHeader
+          title={t("character.panel.title")}
+          actions={<AddCharacterButton onClick={onCreate} />}
+        />
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto p-3 space-y-8">

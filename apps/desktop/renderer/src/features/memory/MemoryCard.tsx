@@ -1,0 +1,107 @@
+import { Button, Card, Text, Textarea } from "../../components/primitives";
+import type { SemanticRule } from "./memoryPanelTypes";
+import type { MemoryPanelState } from "./useMemoryState";
+
+interface MemoryCardProps {
+  t: (key: string, opts?: Record<string, unknown>) => string;
+  rule: SemanticRule;
+  state: MemoryPanelState;
+}
+
+export function MemoryCard({ t, rule, state }: MemoryCardProps): JSX.Element {
+  const isEditing = state.editingRuleId === rule.id;
+
+  return (
+    <Card
+      data-testid={`memory-rule-${rule.id}`}
+      noPadding
+      className="p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
+    >
+      <div className="flex items-start gap-2">
+        <div className="flex-1 min-w-0">
+          {isEditing ? (
+            <div className="flex flex-col gap-2">
+              {/* eslint-disable-next-line creonow/no-native-html-element -- no Label primitive */}
+              <label
+                className="text-xs text-[var(--color-fg-muted)]"
+                htmlFor={`memory-edit-${rule.id}`}
+              >
+                {t("memory.panel.ruleText")}
+              </label>
+              <Textarea
+                id={`memory-edit-${rule.id}`}
+                aria-label={t("memory.panel.ruleText")}
+                value={state.editingText}
+                onChange={(event) => state.setEditingText(event.target.value)}
+              />
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  onClick={() => void state.handleSaveEdit(rule.id)}
+                >
+                  {t("memory.panel.saveChanges")}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    state.setEditingRuleId(null);
+                    state.setEditingText("");
+                  }}
+                >
+                  {t("memory.panel.cancel")}
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Text size="small" className="whitespace-pre-wrap break-words">
+                {rule.rule}
+              </Text>
+              <div className="mt-2 flex items-center gap-2 text-xs text-[var(--color-fg-muted)]">
+                <span>
+                  {t("memory.panel.confidence", {
+                    value: Math.round(rule.confidence * 100),
+                  })}
+                </span>
+                {rule.userConfirmed ? (
+                  <span>{t("memory.panel.confirmed")}</span>
+                ) : null}
+                {rule.userModified ? (
+                  <span>{t("memory.panel.modified")}</span>
+                ) : null}
+              </div>
+            </>
+          )}
+        </div>
+
+        {!isEditing ? (
+          <div className="shrink-0 flex flex-col gap-1">
+            <Button
+              size="sm"
+              variant="secondary"
+              disabled={rule.userConfirmed}
+              onClick={() => void state.handleConfirmRule(rule.id)}
+            >
+              {t("memory.panel.confirm")}
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => state.startEdit(rule)}
+            >
+              {t("memory.panel.modify")}
+            </Button>
+            <Button
+              size="sm"
+              variant="danger"
+              onClick={() => void state.handleDeleteRule(rule.id)}
+            >
+              {t("memory.panel.delete")}
+            </Button>
+          </div>
+        ) : null}
+      </div>
+    </Card>
+  );
+}

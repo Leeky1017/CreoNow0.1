@@ -110,6 +110,7 @@ const HEADING_TITLE_COMPONENTS = new Set([
   "Dialog",
   "ConfirmDialog",
   "PanelContainer",
+  "PanelHeader",
   "EmptyState",
   "EmptyStatePattern",
   "ErrorState",
