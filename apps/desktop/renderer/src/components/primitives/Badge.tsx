@@ -74,6 +74,7 @@ const variantStyles: Record<BadgeVariant, string> = {
     "uppercase",
     "tracking-[var(--tracking-wide)]",
     "font-[var(--weight-semibold)]",
+    "rounded-[var(--radius-full)]",
   ].join(" "),
 };
 
@@ -81,15 +82,15 @@ const variantStyles: Record<BadgeVariant, string> = {
  * Size-specific styles
  */
 const sizeStyles: Record<BadgeSize, string> = {
-  sm: "h-[18px] px-1.5 text-[10px]",
-  md: "h-[22px] px-2 text-xs",
+  sm: "h-[18px] px-1.5 text-[var(--text-label-size)]",
+  md: "h-[22px] px-2 text-[var(--text-caption-size)]",
 };
 
 /**
  * Pill variant 使用独立的尺寸（设计稿：padding 6px 14px）
  */
 const pillSizeStyles: Record<BadgeSize, string> = {
-  sm: "py-1 px-2.5 text-[10px]",
+  sm: "py-1 px-2.5 text-[var(--text-label-size)]",
   md: "py-1.5 px-3.5 text-[var(--text-label-size)]",
 };
 

@@ -57,8 +57,8 @@ export interface TabsProps {
 const listStylesHorizontal = [
   "inline-flex",
   "items-center",
-  "gap-1",
-  "p-1",
+  "gap-[var(--space-1)]",
+  "p-[var(--space-1)]",
   "bg-[var(--color-bg-surface)]",
   "border",
   "border-[var(--color-border-default)]",
@@ -71,8 +71,8 @@ const listStylesHorizontal = [
 const listStylesVertical = [
   "flex",
   "flex-col",
-  "gap-1",
-  "p-1",
+  "gap-[var(--space-1)]",
+  "p-[var(--space-1)]",
   "bg-[var(--color-bg-surface)]",
   "border",
   "border-[var(--color-border-default)]",
@@ -87,9 +87,9 @@ const triggerStyles = [
   "items-center",
   "justify-center",
   "whitespace-nowrap",
-  "px-4",
-  "py-2",
-  "text-[13px]",
+  "px-[var(--space-4)]",
+  "py-[var(--space-2)]",
+  "text-[var(--text-body-size)]",
   "font-medium",
   "text-[var(--color-fg-muted)]",
   "rounded-[var(--radius-sm)]",
@@ -121,7 +121,7 @@ const triggerStyles = [
  * Note: Tab panels use simple opacity transition. Complex slide animations
  * would require additional CSS keyframes.
  */
-const panelStyles = ["mt-4", "focus:outline-none"].join(" ");
+const panelStyles = ["mt-[var(--space-4)]", "focus:outline-none"].join(" ");
 
 /**
  * Underline variant - list styles (horizontal)
@@ -129,7 +129,7 @@ const panelStyles = ["mt-4", "focus:outline-none"].join(" ");
 const underlineListStylesHorizontal = [
   "inline-flex",
   "items-center",
-  "gap-4",
+  "gap-[var(--space-4)]",
   "border-b",
   "border-[var(--color-separator)]",
 ].join(" ");
@@ -140,7 +140,7 @@ const underlineListStylesHorizontal = [
 const underlineListStylesVertical = [
   "flex",
   "flex-col",
-  "gap-4",
+  "gap-[var(--space-4)]",
   "border-r",
   "border-[var(--color-separator)]",
 ].join(" ");
@@ -154,9 +154,9 @@ const underlineTriggerStylesHorizontal = [
   "items-center",
   "justify-center",
   "whitespace-nowrap",
-  "px-1",
-  "pb-3",
-  "text-[13px]",
+  "px-[var(--space-1)]",
+  "pb-[var(--space-3)]",
+  "text-[var(--text-body-size)]",
   "font-medium",
   "text-[var(--color-fg-muted)]",
   "cursor-pointer",
@@ -186,9 +186,9 @@ const underlineTriggerStylesVertical = [
   "inline-flex",
   "items-center",
   "whitespace-nowrap",
-  "px-1",
-  "pr-3",
-  "text-[13px]",
+  "px-[var(--space-1)]",
+  "pr-[var(--space-3)]",
+  "text-[var(--text-body-size)]",
   "font-medium",
   "text-[var(--color-fg-muted)]",
   "cursor-pointer",

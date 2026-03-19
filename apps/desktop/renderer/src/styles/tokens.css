@@ -49,6 +49,7 @@
   --text-editor-weight: 400;
   --text-editor-line-height: 1.8;
   --text-editor-line-height-cjk: 1.95;
+  --text-editor-letter-spacing: 0;
   --text-scale-factor-default: 1;
   --text-scale-factor-125: 1.25;
   --text-scale-factor-150: 1.5;
@@ -77,16 +78,19 @@
   --text-subtitle-size: 14px;
   --text-subtitle-weight: 500;
   --text-subtitle-line-height: 1.4;
+  --text-subtitle-letter-spacing: 0;
 
   /* UI 正文 */
   --text-body-size: 13px;
   --text-body-weight: 400;
   --text-body-line-height: 1.5;
+  --text-body-letter-spacing: 0;
 
   /* 辅助信息 */
   --text-caption-size: 12px;
   --text-caption-weight: 400;
   --text-caption-line-height: 1.4;
+  --text-caption-letter-spacing: 0;
 
   /* 大写标签 */
   --text-label-size: 10px;
@@ -98,6 +102,7 @@
   --text-tree-size: 13px;
   --text-tree-weight: 400;
   --text-tree-line-height: 1.3;
+  --text-tree-letter-spacing: 0;
 
   /* 状态栏 */
   --text-status-size: 11px;

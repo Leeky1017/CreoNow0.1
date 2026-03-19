@@ -29,7 +29,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
  * Base card styles (design spec §6.3)
  *
  * - Border radius: --radius-xl (16px)
- * - Padding: --space-6 (24px)
+ * - Padding: var(--space-section-gap) (24px)
  * - Background: --color-bg-surface
  */
 const baseStyles = [
@@ -106,10 +106,10 @@ export function Card({
   const paddingClass = noPadding
     ? ""
     : variant === "bento"
-      ? "p-8"
+      ? "p-[var(--space-8)]"
       : variant === "compact"
-        ? "p-3 space-y-1"
-        : "p-6";
+        ? "p-[var(--space-3)] space-y-[var(--space-1)]"
+        : "p-[var(--space-section-gap)]";
 
   const classes = [
     baseStyles,

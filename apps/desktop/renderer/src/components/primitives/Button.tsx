@@ -119,10 +119,10 @@ const variantStyles: Record<ButtonVariant, string> = {
  * 注意：border-radius 由 sizeRounded 单独管理，pill variant 统一覆盖为 radius-full。
  */
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "h-7 px-3 text-xs",
-  md: "h-9 px-4 text-[13px]",
-  lg: "h-11 px-5 text-sm",
-  icon: "h-10 w-10 p-0 text-[13px]",
+  sm: "h-7 px-[var(--space-3)] text-[var(--text-caption-size)]",
+  md: "h-9 px-[var(--space-4)] text-[var(--text-body-size)]",
+  lg: "h-11 px-[var(--space-5)] text-[var(--text-subtitle-size)]",
+  icon: "h-10 w-10 p-0 text-[var(--text-body-size)]",
 };
 
 /**

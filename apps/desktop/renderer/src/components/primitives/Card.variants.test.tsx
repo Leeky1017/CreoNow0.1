@@ -14,11 +14,11 @@ describe("Card bento/compact variants", () => {
       expect(card.className).toContain("rounded-[var(--radius-2xl)]");
     });
 
-    it("bento 应该有 p-8 padding", () => {
+    it("bento 应该有 space-8 padding", () => {
       render(<Card variant="bento">Bento</Card>);
 
       const card = screen.getByText("Bento").closest("div")!;
-      expect(card).toHaveClass("p-8");
+      expect(card.className).toContain("p-[var(--space-8)]");
     });
 
     it("bento + hoverable 应该工作", () => {
@@ -40,7 +40,7 @@ describe("Card bento/compact variants", () => {
       );
 
       const card = screen.getByText("Bento").closest("div")!;
-      expect(card).not.toHaveClass("p-8");
+      expect(card).not.toHaveClass("p-[var(--space-8)]");
     });
   });
 
@@ -48,18 +48,18 @@ describe("Card bento/compact variants", () => {
   // compact variant 测试
   // ===========================================================================
   describe("compact variant", () => {
-    it("compact 应该有 p-3 padding", () => {
+    it("compact 应该有 space-3 padding", () => {
       render(<Card variant="compact">Compact</Card>);
 
       const card = screen.getByText("Compact").closest("div")!;
-      expect(card).toHaveClass("p-3");
+      expect(card.className).toContain("p-[var(--space-3)]");
     });
 
-    it("compact 应该有 space-y-1 间距", () => {
+    it("compact 应该有 space-1 间距", () => {
       render(<Card variant="compact">Compact</Card>);
 
       const card = screen.getByText("Compact").closest("div")!;
-      expect(card).toHaveClass("space-y-1");
+      expect(card.className).toContain("space-y-[var(--space-1)]");
     });
 
     it("compact 应该有 radius-md 圆角", () => {
