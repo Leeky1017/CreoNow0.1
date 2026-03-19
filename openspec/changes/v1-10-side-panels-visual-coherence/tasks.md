@@ -27,7 +27,7 @@
 | AC-15 | VersionHistoryPanel diff 摘要 line-clamp 有 "展开" 按钮                                                                                                                | 视觉交互验证         |
 | AC-16 | VersionHistoryPanel hover action buttons 有 ≥150ms fade-in 过渡                                                                                                        | 视觉交互验证         |
 | AC-17 | VersionHistoryPanel "No changes" badge contrast ratio ≥ 4.5:1                                                                                                          | 对比度工具检查       |
-| AC-18 | 5 个面板 eslint-disable 从 93 处降至 ≤10                                                                                                                               | `grep` 统计          |
+| AC-18 | 5 个面板 eslint-disable 从 61 处降至 ≤30（剩余 29 处均为无对应 Primitive 的原生 HTML：表单 label / select / option / textarea 等）                                       | `grep` 统计          |
 | AC-19 | 所有新增视觉元素使用语义化 Design Token，0 处新增 arbitrary 值                                                                                                         | grep 验证            |
 | AC-20 | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                                                                      | CI 命令              |
 | AC-21 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                                                             | CI 命令              |

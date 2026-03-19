@@ -191,7 +191,7 @@ export function CharacterDetailDialog({
           </div>
 
           {/* Scrollable content */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-8">
+          <div className="flex-1 overflow-y-auto scroll-shadow-y p-6 space-y-8">
             <CharacterBasicInfo
               character={editedCharacter}
               isExpanded={isProfileExpanded}

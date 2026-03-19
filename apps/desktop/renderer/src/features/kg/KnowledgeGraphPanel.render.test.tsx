@@ -100,4 +100,23 @@ describe("KnowledgeGraphPanel.render", () => {
       "var(--color-node-character)",
     );
   });
+
+  describe("v1-10 PanelHeader unification (AC-1)", () => {
+    it("should render unified PanelHeader with panel title", () => {
+      render(<KnowledgeGraphPanel projectId="project-1" />);
+
+      const header = document.querySelector(".panel-header");
+      expect(header).toBeInTheDocument();
+      expect(header).toHaveTextContent("Knowledge Graph");
+    });
+
+    it("should render a 40px-high header with bottom border separator", () => {
+      render(<KnowledgeGraphPanel projectId="project-1" />);
+
+      const header = document.querySelector(".panel-header");
+      expect(header).toBeInTheDocument();
+      expect(header).toHaveClass("h-10");
+      expect(header).toHaveClass("border-b");
+    });
+  });
 });

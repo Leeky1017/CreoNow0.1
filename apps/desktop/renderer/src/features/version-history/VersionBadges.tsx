@@ -1,8 +1,10 @@
 /**
  * Badge and metadata sub-components for version history cards.
  */
+import React from "react";
 import { Bot, Columns2, Eye, RotateCcw, Shield, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../components/primitives/Button";
 import type { VersionAuthorType, WordChange } from "./versionHistoryTypes";
 
 // ============================================================================
@@ -156,6 +158,7 @@ export function VersionMeta({
  */
 export function DiffSummaryPreview({ summary }: { summary?: string }) {
   const { t } = useTranslation();
+  const [expanded, setExpanded] = React.useState(false);
   if (!summary) return null;
 
   return (
@@ -163,7 +166,23 @@ export function DiffSummaryPreview({ summary }: { summary?: string }) {
       <span className="text-[var(--color-fg-placeholder)] text-[9px] uppercase tracking-wider block mb-1">
         {t("versionHistory.panel.changePreview")}
       </span>
-      <span className="line-clamp-2">{summary}</span>
+      <span
+        data-testid="version-diff-summary"
+        className={expanded ? "" : "line-clamp-2"}
+      >
+        {summary}
+      </span>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="!mt-2 !h-auto !px-0 !py-0 text-[10px]"
+        onClick={() => setExpanded((value) => !value)}
+        aria-expanded={expanded}
+      >
+        {expanded
+          ? t("versionHistory.panel.collapsePreview")
+          : t("versionHistory.panel.expandPreview")}
+      </Button>
     </div>
   );
 }
@@ -175,7 +194,10 @@ export function WordChangeBadge({ change }: { change: WordChange }) {
   const { t } = useTranslation();
   if (change.type === "none") {
     return (
-      <span className="text-[10px] text-[var(--color-fg-muted)] font-mono bg-[var(--color-zen-hover)] px-1 rounded">
+      <span
+        data-testid="version-no-changes-badge"
+        className="text-[10px] text-[var(--color-fg-default)] font-mono bg-[var(--color-bg-overlay)] border border-[var(--color-separator)] px-1 rounded"
+      >
         {t("versionHistory.panel.noChanges")}
       </span>
     );

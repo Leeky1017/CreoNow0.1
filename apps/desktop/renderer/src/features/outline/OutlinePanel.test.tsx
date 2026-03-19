@@ -500,3 +500,42 @@ describe("OutlinePanel — Header Actions", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("v1-10 PanelHeader unification (AC-1)", () => {
+  it("should render unified PanelHeader with panel title", () => {
+    render(<OutlinePanel items={SAMPLE_ITEMS} />);
+
+    const header = document.querySelector(".panel-header");
+    expect(header).toBeInTheDocument();
+    expect(screen.getByText("Outline")).toBeInTheDocument();
+  });
+
+  it("should render a 40px-high header with bottom border separator", () => {
+    render(<OutlinePanel items={SAMPLE_ITEMS} />);
+
+    const header = document.querySelector(".panel-header");
+    expect(header).toBeInTheDocument();
+    expect(header).toHaveClass("h-10");
+    expect(header).toHaveClass("border-b");
+  });
+
+  it("should render action buttons inside PanelHeader", () => {
+    render(<OutlinePanel items={SAMPLE_ITEMS} />);
+
+    const header = document.querySelector(".panel-header");
+    expect(header).toBeInTheDocument();
+
+    const expandBtn = screen.getByLabelText("Expand all outline items");
+    const collapseBtn = screen.getByLabelText("Collapse all outline items");
+    expect(header).toContainElement(expandBtn);
+    expect(header).toContainElement(collapseBtn);
+  });
+
+  it("should render per-item collapse toggle at 24px size", () => {
+    render(<OutlinePanel items={SAMPLE_ITEMS} />);
+
+    const toggle = screen.getAllByLabelText("Collapse")[0];
+    expect(toggle).toHaveClass("!w-6");
+    expect(toggle).toHaveClass("!h-6");
+  });
+});

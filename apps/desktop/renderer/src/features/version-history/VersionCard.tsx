@@ -34,6 +34,7 @@ function HoverActions({
   const { t } = useTranslation();
   return (
     <div
+      data-testid={`version-card-hover-actions-${versionId}`}
       className={[
         "absolute",
         "inset-0",

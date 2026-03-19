@@ -43,7 +43,7 @@ export function MemoryConflictSection(props: {
         <Card
           noPadding
           data-testid="memory-conflict-resolution-panel"
-          className="shrink-0 p-2.5 border-[var(--color-warning)]"
+          className="shrink-0 sticky top-0 z-[var(--z-sticky)] p-2.5 border-[var(--color-warning)] bg-[var(--color-bg-surface)]"
         >
           <div className="flex flex-col gap-2">
             <Text size="small" color="muted">

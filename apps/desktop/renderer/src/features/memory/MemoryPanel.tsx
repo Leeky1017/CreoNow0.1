@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Card, Text } from "../../components/primitives";
 import { PanelHeader } from "../../components/patterns/PanelHeader";
 import { ErrorState } from "../../components/patterns/ErrorState";
+import { LoadingState } from "../../components/patterns/LoadingState";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useProjectStore } from "../../stores/projectStore";
 import { formatUpdatedAt } from "./memoryPanelTypes";
@@ -122,6 +123,15 @@ export function MemoryPanel(): JSX.Element {
         ) : null}
 
         <MemoryRulesCard t={t} state={state} />
+
+        {state.distilling ? (
+          <LoadingState
+            variant="spinner"
+            size="sm"
+            text={t("memory.panel.distilling")}
+            className="shrink-0"
+          />
+        ) : null}
 
         <MemoryPanelFooter t={t} state={state} />
 

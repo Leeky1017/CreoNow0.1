@@ -6,6 +6,7 @@ import { Button } from "../../components/primitives/Button";
 import { Input } from "../../components/primitives/Input";
 import type { BranchMergeConflict } from "../../stores/versionStore";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
+import type { IpcError } from "@shared/types/ipc-generated";
 import type { ConflictFormEntry } from "./useConflictResolution";
 
 // ============================================================================
@@ -138,7 +139,7 @@ export function BranchMergeSection({
   targetBranchName: string;
   onTargetChange: (value: string) => void;
   branchMergeStatus: string;
-  branchMergeError: import("@shared/types/ipc-generated").IpcError | null;
+  branchMergeError: IpcError | null;
   onMergeBranches: () => void;
   mergeConflicts: BranchMergeConflict[];
   conflictForm: Record<string, ConflictFormEntry>;

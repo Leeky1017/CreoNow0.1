@@ -82,4 +82,44 @@ describe("CharacterDetailDialog", () => {
 
     expect(screen.getByText("Darius")).toBeInTheDocument();
   });
+
+  it("should render scroll shadow on the dialog body", () => {
+    render(
+      <CharacterDetailDialog
+        open
+        onOpenChange={vi.fn()}
+        character={elara}
+        availableCharacters={[elara, darius]}
+      />,
+    );
+
+    const scrollArea = document.querySelector(".scroll-shadow-y");
+    expect(scrollArea).toBeInTheDocument();
+  });
+
+  it("should render relationship avatars with unified grayscale and opacity styling", () => {
+    const withRelationship: Character = {
+      ...elara,
+      relationships: [
+        {
+          characterId: "darius",
+          characterName: "Darius",
+          characterRole: "deuteragonist",
+          type: "friend",
+        },
+      ],
+    };
+
+    render(
+      <CharacterDetailDialog
+        open
+        onOpenChange={vi.fn()}
+        character={withRelationship}
+        availableCharacters={[withRelationship, darius]}
+      />,
+    );
+
+    const avatar = document.querySelector(".grayscale.opacity-60");
+    expect(avatar).toBeInTheDocument();
+  });
 });

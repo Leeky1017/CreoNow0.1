@@ -75,7 +75,7 @@ function CollapseToggle({
         e.stopPropagation();
         onToggle();
       }}
-      className="!w-4 !h-4 !p-0 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors shrink-0 mr-0.5"
+      className="!w-6 !h-6 !p-0 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors shrink-0 mr-0.5"
       aria-label={isCollapsed ? t("outline.expand") : t("outline.collapse")}
     >
       {isCollapsed ? <ChevronRight size={ICON_SIZE} strokeWidth={ICON_STROKE} /> : <ChevronDown size={ICON_SIZE} strokeWidth={ICON_STROKE} />}

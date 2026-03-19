@@ -250,3 +250,31 @@ describe("CharacterCard", () => {
     expect(screen.getByText("EV")).toBeInTheDocument();
   });
 });
+
+describe("v1-10 PanelHeader unification (AC-1)", () => {
+  it("should render unified PanelHeader with panel title", () => {
+    render(<CharacterPanel characters={[]} />);
+
+    const header = document.querySelector(".panel-header");
+    expect(header).toBeInTheDocument();
+    expect(screen.getByText("CHARACTERS")).toBeInTheDocument();
+  });
+
+  it("should render PanelHeader with add character action button", () => {
+    const onCreateMock = vi.fn();
+    render(<CharacterPanel characters={[]} onCreate={onCreateMock} />);
+
+    const header = document.querySelector(".panel-header");
+    expect(header).toBeInTheDocument();
+    expect(screen.getByLabelText("Add new character")).toBeInTheDocument();
+  });
+
+  it("should render a 40px-high header with bottom border separator", () => {
+    render(<CharacterPanel characters={[]} />);
+
+    const header = document.querySelector(".panel-header");
+    expect(header).toBeInTheDocument();
+    expect(header).toHaveClass("h-10");
+    expect(header).toHaveClass("border-b");
+  });
+});
