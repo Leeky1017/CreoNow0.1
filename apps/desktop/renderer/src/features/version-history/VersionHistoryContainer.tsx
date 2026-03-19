@@ -16,10 +16,7 @@ import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { EmptyState } from "../../components/patterns/EmptyState";
 import { LoadingState } from "../../components/patterns/LoadingState";
 import { ErrorState } from "../../components/patterns/ErrorState";
-import {
-  formatTimestamp,
-  convertToTimeGroups,
-} from "./versionHistoryHelpers";
+import { formatTimestamp, convertToTimeGroups } from "./versionHistoryHelpers";
 import { useConflictResolution } from "./useConflictResolution";
 import { BranchMergeSection } from "./BranchMergeSection";
 

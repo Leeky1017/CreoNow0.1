@@ -2,7 +2,11 @@
  * Helper functions for VersionHistory data transformation.
  */
 import { i18n } from "../../i18n";
-import type { VersionAuthorType, VersionEntry, TimeGroup } from "./versionHistoryTypes";
+import type {
+  VersionAuthorType,
+  VersionEntry,
+  TimeGroup,
+} from "./versionHistoryTypes";
 import type { VersionListItem } from "../../stores/versionStore";
 
 /**

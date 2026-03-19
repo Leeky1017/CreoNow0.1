@@ -48,7 +48,9 @@ export interface CharacterBasicInfoProps {
   ) => void;
 }
 
-export function CharacterBasicInfo(props: CharacterBasicInfoProps): JSX.Element {
+export function CharacterBasicInfo(
+  props: CharacterBasicInfoProps,
+): JSX.Element {
   const { t } = useTranslation();
   const c = props.character;
 
@@ -88,7 +90,11 @@ export function CharacterBasicInfo(props: CharacterBasicInfoProps): JSX.Element 
         {props.isExpanded ? (
           <ExpandedProfile {...props} />
         ) : (
-          <CollapsedProfile character={c} zodiacLabel={props.zodiacLabel} archetypeLabel={props.archetypeLabel} />
+          <CollapsedProfile
+            character={c}
+            zodiacLabel={props.zodiacLabel}
+            archetypeLabel={props.archetypeLabel}
+          />
         )}
       </div>
     </div>
@@ -130,7 +136,10 @@ function ExpandedProfile(props: CharacterBasicInfoProps): JSX.Element {
           onValueChange={(val) =>
             props.onFieldChange("zodiac", val ? (val as ZodiacSign) : undefined)
           }
-          options={ZODIAC_OPTIONS.map((z) => ({ value: z.value, label: z.label }))}
+          options={ZODIAC_OPTIONS.map((z) => ({
+            value: z.value,
+            label: z.label,
+          }))}
           placeholder={t("character.detail.selectZodiacPlaceholder")}
           fullWidth
           layer="modal"
@@ -140,7 +149,10 @@ function ExpandedProfile(props: CharacterBasicInfoProps): JSX.Element {
         <Select
           value={c.archetype ?? ""}
           onValueChange={(val) => props.onFieldChange("archetype", val)}
-          options={ARCHETYPE_OPTIONS.map((a) => ({ value: a.value, label: a.label }))}
+          options={ARCHETYPE_OPTIONS.map((a) => ({
+            value: a.value,
+            label: a.label,
+          }))}
           placeholder={t("character.detail.selectArchetypePlaceholder")}
           fullWidth
           layer="modal"
@@ -149,7 +161,11 @@ function ExpandedProfile(props: CharacterBasicInfoProps): JSX.Element {
       <ProfileTableRow label={t("character.detail.features")}>
         <div className="flex flex-wrap gap-2">
           {(c.features ?? []).map((feature) => (
-            <TraitTag key={feature} trait={feature} onRemove={() => props.onRemoveFeature(feature)} />
+            <TraitTag
+              key={feature}
+              trait={feature}
+              onRemove={() => props.onRemoveFeature(feature)}
+            />
           ))}
           <Input
             type="text"
@@ -165,7 +181,11 @@ function ExpandedProfile(props: CharacterBasicInfoProps): JSX.Element {
       <ProfileTableRow label={t("character.detail.personality")}>
         <div className="flex flex-wrap gap-2">
           {c.traits.map((trait) => (
-            <TraitTag key={trait} trait={trait} onRemove={() => props.onRemoveTrait(trait)} />
+            <TraitTag
+              key={trait}
+              trait={trait}
+              onRemove={() => props.onRemoveTrait(trait)}
+            />
           ))}
           <Input
             type="text"
@@ -195,12 +215,30 @@ function CollapsedProfile({
   return (
     <div className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-3">
       <div className="flex flex-wrap gap-2">
-        <ProfileSummaryItem label={t("character.detail.age")} value={c.age !== undefined ? String(c.age) : "—"} />
-        <ProfileSummaryItem label={t("character.detail.birth")} value={c.birthDate ?? "—"} />
-        <ProfileSummaryItem label={t("character.detail.zodiac")} value={zodiacLabel ?? "—"} />
-        <ProfileSummaryItem label={t("character.detail.archetype")} value={archetypeLabel ?? "—"} />
-        <ProfileSummaryItem label={t("character.detail.features")} value={String((c.features ?? []).length)} />
-        <ProfileSummaryItem label={t("character.detail.traits")} value={String(c.traits.length)} />
+        <ProfileSummaryItem
+          label={t("character.detail.age")}
+          value={c.age !== undefined ? String(c.age) : "—"}
+        />
+        <ProfileSummaryItem
+          label={t("character.detail.birth")}
+          value={c.birthDate ?? "—"}
+        />
+        <ProfileSummaryItem
+          label={t("character.detail.zodiac")}
+          value={zodiacLabel ?? "—"}
+        />
+        <ProfileSummaryItem
+          label={t("character.detail.archetype")}
+          value={archetypeLabel ?? "—"}
+        />
+        <ProfileSummaryItem
+          label={t("character.detail.features")}
+          value={String((c.features ?? []).length)}
+        />
+        <ProfileSummaryItem
+          label={t("character.detail.traits")}
+          value={String(c.traits.length)}
+        />
       </div>
     </div>
   );

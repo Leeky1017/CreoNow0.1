@@ -35,9 +35,7 @@ export function PanelHeader({ title, subtitle, actions }: PanelHeaderProps) {
         )}
       </div>
       {actions && (
-        <div className="flex items-center gap-1 shrink-0">
-          {actions}
-        </div>
+        <div className="flex items-center gap-1 shrink-0">{actions}</div>
       )}
     </div>
   );

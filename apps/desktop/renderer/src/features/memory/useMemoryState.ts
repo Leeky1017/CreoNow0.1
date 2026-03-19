@@ -72,8 +72,16 @@ export function useMemoryState(
         invoke("memory:semantic:list", { projectId }),
         invoke("memory:settings:get", {}),
       ]);
-      if (!listRes.ok) { setStatus("error"); setError(listRes.error); return; }
-      if (!settingsRes.ok) { setStatus("error"); setError(settingsRes.error); return; }
+      if (!listRes.ok) {
+        setStatus("error");
+        setError(listRes.error);
+        return;
+      }
+      if (!settingsRes.ok) {
+        setStatus("error");
+        setError(settingsRes.error);
+        return;
+      }
       setRules(listRes.data.items);
       setConflictQueue(listRes.data.conflictQueue);
       setConflictCount(
@@ -122,9 +130,14 @@ export function useMemoryState(
   async function handleConfirmRule(ruleId: string): Promise<void> {
     if (!projectId) return;
     const res = await invoke("memory:semantic:update", {
-      projectId, ruleId, patch: { userConfirmed: true },
+      projectId,
+      ruleId,
+      patch: { userConfirmed: true },
     });
-    if (!res.ok) { setError(res.error); return; }
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
     setRules((prev) =>
       prev.map((rule) => (rule.id === ruleId ? res.data.item : rule)),
     );
@@ -146,9 +159,14 @@ export function useMemoryState(
       return;
     }
     const res = await invoke("memory:semantic:update", {
-      projectId, ruleId, patch: { rule: normalized, userModified: true },
+      projectId,
+      ruleId,
+      patch: { rule: normalized, userModified: true },
     });
-    if (!res.ok) { setError(res.error); return; }
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
     setRules((prev) =>
       prev.map((rule) => (rule.id === ruleId ? res.data.item : rule)),
     );
@@ -161,7 +179,10 @@ export function useMemoryState(
     const confirmed = window.confirm(t("memory.panel.confirmDeleteRule"));
     if (!confirmed) return;
     const res = await invoke("memory:semantic:delete", { projectId, ruleId });
-    if (!res.ok) { setError(res.error); return; }
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
     setRules((prev) => prev.filter((rule) => rule.id !== ruleId));
   }
 
@@ -184,7 +205,10 @@ export function useMemoryState(
       userConfirmed: true,
       userModified: false,
     });
-    if (!res.ok) { setError(res.error); return; }
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
     setRules((prev) => [res.data.item, ...prev]);
     setComposerOpen(false);
     setDraftRule("");
@@ -195,10 +219,14 @@ export function useMemoryState(
     if (!projectId) return;
     setDistilling(true);
     const res = await invoke("memory:semantic:distill", {
-      projectId, trigger: "manual",
+      projectId,
+      trigger: "manual",
     });
     setDistilling(false);
-    if (!res.ok) { setError(res.error); return; }
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
     await loadPanelData();
   }
 
@@ -207,7 +235,10 @@ export function useMemoryState(
     const res = await invoke("memory:settings:update", {
       patch: { preferenceLearningEnabled: !settings.preferenceLearningEnabled },
     });
-    if (!res.ok) { setError(res.error); return; }
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
     setSettings(res.data);
   }
 
@@ -219,9 +250,14 @@ export function useMemoryState(
     const conflict = conflictQueue.find((item) => item.id === conflictId);
     if (!conflict) return;
     const res = await invoke("memory:conflict:resolve", {
-      projectId, conflictId, chosenRuleId,
+      projectId,
+      conflictId,
+      chosenRuleId,
     });
-    if (!res.ok) { setError(res.error); return; }
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
     const removedRuleIds = conflict.ruleIds.filter((id) => id !== chosenRuleId);
     setRules((prev) => {
       const replaced = prev.map((rule) =>
@@ -230,9 +266,7 @@ export function useMemoryState(
       return replaced.filter((rule) => !removedRuleIds.includes(rule.id));
     });
     setConflictQueue((prev) =>
-      prev.map((item) =>
-        item.id === res.data.item.id ? res.data.item : item,
-      ),
+      prev.map((item) => (item.id === res.data.item.id ? res.data.item : item)),
     );
     setConflictCount((prev) => Math.max(0, prev - 1));
   }
@@ -243,18 +277,40 @@ export function useMemoryState(
   );
 
   return {
-    status, error, setError,
-    activeScope, setActiveScope, settings,
-    composerOpen, setComposerOpen,
-    conflictCount, conflictQueue, pendingConflicts,
-    conflictPanelOpen, setConflictPanelOpen,
-    groupedRules, filteredRules,
-    editingRuleId, editingText, setEditingText, setEditingRuleId,
-    interactionCount, latestUpdateAt, distilling,
-    draftRule, setDraftRule, draftCategory, setDraftCategory,
-    handleConfirmRule, startEdit, handleSaveEdit,
-    handleDeleteRule, handleCreateRule,
-    handleDistill, handleLearningToggle, handleResolveConflict,
+    status,
+    error,
+    setError,
+    activeScope,
+    setActiveScope,
+    settings,
+    composerOpen,
+    setComposerOpen,
+    conflictCount,
+    conflictQueue,
+    pendingConflicts,
+    conflictPanelOpen,
+    setConflictPanelOpen,
+    groupedRules,
+    filteredRules,
+    editingRuleId,
+    editingText,
+    setEditingText,
+    setEditingRuleId,
+    interactionCount,
+    latestUpdateAt,
+    distilling,
+    draftRule,
+    setDraftRule,
+    draftCategory,
+    setDraftCategory,
+    handleConfirmRule,
+    startEdit,
+    handleSaveEdit,
+    handleDeleteRule,
+    handleCreateRule,
+    handleDistill,
+    handleLearningToggle,
+    handleResolveConflict,
   };
 }
 

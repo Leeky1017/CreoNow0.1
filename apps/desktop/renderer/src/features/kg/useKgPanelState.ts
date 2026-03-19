@@ -7,9 +7,16 @@ import type { EditingState, ViewMode } from "./kgTypes";
 import type { TimelineEventItem } from "./TimelineView";
 import { buildForceDirectedGraph } from "./graphRenderAdapter";
 import { kgToGraph } from "./kgToGraph";
-import { loadKgViewPreferences, saveKgViewPreferences } from "./kgViewPreferences";
+import {
+  loadKgViewPreferences,
+  saveKgViewPreferences,
+} from "./kgViewPreferences";
 import { createKgGraphActions } from "./kgGraphActions";
-import { parseAliasesInput, parseMetadataJson, shouldClearRelationEditingAfterDelete } from "./kgUtils";
+import {
+  parseAliasesInput,
+  parseMetadataJson,
+  shouldClearRelationEditingAfterDelete,
+} from "./kgUtils";
 
 export function useKgPanelState(
   projectId: string,
@@ -35,8 +42,14 @@ export function useKgPanelState(
 
   const [editing, setEditing] = React.useState<EditingState>({ mode: "idle" });
   const [viewMode, setViewMode] = React.useState<ViewMode>("graph");
-  const [selectedNodeId, setSelectedNodeId] = React.useState<string | null>(null);
-  const [graphTransform, setGraphTransform] = React.useState<CanvasTransform>({ scale: 1, translateX: 0, translateY: 0 });
+  const [selectedNodeId, setSelectedNodeId] = React.useState<string | null>(
+    null,
+  );
+  const [graphTransform, setGraphTransform] = React.useState<CanvasTransform>({
+    scale: 1,
+    translateX: 0,
+    translateY: 0,
+  });
 
   const [createName, setCreateName] = React.useState("");
   const [createType, setCreateType] = React.useState("");
@@ -197,8 +210,14 @@ export function useKgPanelState(
     return e ? e.name : entityId;
   }
 
-  const baseGraphData = React.useMemo(() => kgToGraph(entities, relations), [entities, relations]);
-  const graphData = React.useMemo(() => buildForceDirectedGraph(baseGraphData), [baseGraphData]);
+  const baseGraphData = React.useMemo(
+    () => kgToGraph(entities, relations),
+    [entities, relations],
+  );
+  const graphData = React.useMemo(
+    () => buildForceDirectedGraph(baseGraphData),
+    [baseGraphData],
+  );
 
   const timelineEvents = React.useMemo<TimelineEventItem[]>(() => {
     return entities

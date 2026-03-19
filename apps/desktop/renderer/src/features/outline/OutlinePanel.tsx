@@ -13,7 +13,8 @@ import { OutlineTree, handleOutlineKeyDown } from "./OutlineTree";
 
 export type { OutlineItem, OutlineLevel, DropPosition };
 
-const headerActionCls = "!w-auto !h-auto !p-0 text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors";
+const headerActionCls =
+  "!w-auto !h-auto !p-0 text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors";
 
 export interface OutlinePanelProps {
   items: OutlineItem[];
@@ -131,18 +132,24 @@ export function OutlinePanel({
       }
     } else if (isCtrlOrCmd) {
       setSelectedIds((prev) => {
-          const next = new Set(prev);
-          if (next.has(itemId)) next.delete(itemId);
-          else next.add(itemId);
-          return next;
-        });
+        const next = new Set(prev);
+        if (next.has(itemId)) next.delete(itemId);
+        else next.add(itemId);
+        return next;
+      });
       setLastSelectedId(itemId);
     }
   };
 
-  const clearSelection = () => { setSelectedIds(new Set()); setLastSelectedId(null); };
+  const clearSelection = () => {
+    setSelectedIds(new Set());
+    setLastSelectedId(null);
+  };
 
-  const startEditing = (item: OutlineItem) => { setEditingId(item.id); setEditValue(item.title); };
+  const startEditing = (item: OutlineItem) => {
+    setEditingId(item.id);
+    setEditValue(item.title);
+  };
 
   const commitEdit = () => {
     if (editingId && editValue.trim()) {
@@ -152,7 +159,10 @@ export function OutlinePanel({
     setEditValue("");
   };
 
-  const cancelEdit = () => { setEditingId(null); setEditValue(""); };
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditValue("");
+  };
 
   const handleDelete = (itemId: string) => {
     if (selectedIds.size > 0 && selectedIds.has(itemId)) {
@@ -201,15 +211,33 @@ export function OutlinePanel({
         actions={
           <>
             <Tooltip content={t("outline.expandAll")}>
-              <Button variant="ghost" size="icon" onClick={expandAll}
-                className={headerActionCls} aria-label={t("outline.expandAllAria")}>
-                <ChevronsDownUp size={16} strokeWidth={1.5} className="rotate-180" />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={expandAll}
+                className={headerActionCls}
+                aria-label={t("outline.expandAllAria")}
+              >
+                <ChevronsDownUp
+                  size={16}
+                  strokeWidth={1.5}
+                  className="rotate-180"
+                />
               </Button>
             </Tooltip>
             <Tooltip content={t("outline.collapseAll")}>
-              <Button variant="ghost" size="icon" onClick={collapseAll}
-                className={headerActionCls} aria-label={t("outline.collapseAllAria")}>
-                <ChevronsUpDown size={16} strokeWidth={1.5} className="rotate-180" />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={collapseAll}
+                className={headerActionCls}
+                aria-label={t("outline.collapseAllAria")}
+              >
+                <ChevronsUpDown
+                  size={16}
+                  strokeWidth={1.5}
+                  className="rotate-180"
+                />
               </Button>
             </Tooltip>
           </>

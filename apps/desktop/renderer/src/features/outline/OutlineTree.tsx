@@ -203,11 +203,7 @@ export interface OutlineTreeProps {
   ) => void;
   onDragStart: (e: React.DragEvent, itemId: string) => void;
   onDragEnd: (e: React.DragEvent) => void;
-  onDragOver: (
-    e: React.DragEvent,
-    itemId: string,
-    level: OutlineLevel,
-  ) => void;
+  onDragOver: (e: React.DragEvent, itemId: string, level: OutlineLevel) => void;
   onDragLeave: () => void;
   onDrop: (e: React.DragEvent, targetId: string) => void;
 }
