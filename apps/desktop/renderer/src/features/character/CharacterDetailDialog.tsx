@@ -78,7 +78,10 @@ export function CharacterDetailDialog({
   }, [character]);
 
   React.useEffect(() => {
-    if (!open) { setNewTrait(""); setNewFeature(""); }
+    if (!open) {
+      setNewTrait("");
+      setNewFeature("");
+    }
   }, [open]);
 
   React.useEffect(() => {
@@ -103,37 +106,60 @@ export function CharacterDetailDialog({
   };
 
   const handleRemoveTrait = (trait: string) => {
-    handleFieldChange("traits", editedCharacter.traits.filter((t) => t !== trait));
+    handleFieldChange(
+      "traits",
+      editedCharacter.traits.filter((t) => t !== trait),
+    );
   };
 
   const handleAddFeature = () => {
     const trimmed = newFeature.trim();
     if (!trimmed) return;
     const current = editedCharacter.features ?? [];
-    if (current.includes(trimmed)) { setNewFeature(""); return; }
+    if (current.includes(trimmed)) {
+      setNewFeature("");
+      return;
+    }
     handleFieldChange("features", [...current, trimmed]);
     setNewFeature("");
   };
 
   const handleRemoveFeature = (feature: string) => {
     const current = editedCharacter.features ?? [];
-    handleFieldChange("features", current.filter((f) => f !== feature));
+    handleFieldChange(
+      "features",
+      current.filter((f) => f !== feature),
+    );
   };
 
   const handleRemoveRelationship = (characterId: string) => {
     handleFieldChange(
       "relationships",
-      editedCharacter.relationships.filter((r) => r.characterId !== characterId),
+      editedCharacter.relationships.filter(
+        (r) => r.characterId !== characterId,
+      ),
     );
   };
 
-  const handleSave = () => { onSave?.(editedCharacter); onOpenChange(false); };
-  const handleDelete = () => { onDelete?.(editedCharacter.id); onOpenChange(false); };
+  const handleSave = () => {
+    onSave?.(editedCharacter);
+    onOpenChange(false);
+  };
+  const handleDelete = () => {
+    onDelete?.(editedCharacter.id);
+    onOpenChange(false);
+  };
   const handleTraitKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") { e.preventDefault(); handleAddTrait(); }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddTrait();
+    }
   };
   const handleFeatureKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") { e.preventDefault(); handleAddFeature(); }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddFeature();
+    }
   };
 
   const hasContainer = container !== undefined && container !== null;
@@ -163,7 +189,11 @@ export function CharacterDetailDialog({
                 />
               </div>
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <Camera className="text-[var(--color-fg-on-accent)] w-5 h-5 drop-shadow-md" size={20} strokeWidth={1.5} />
+                <Camera
+                  className="text-[var(--color-fg-on-accent)] w-5 h-5 drop-shadow-md"
+                  size={20}
+                  strokeWidth={1.5}
+                />
               </div>
             </div>
             <div className="flex-1 min-w-0 pt-1">
@@ -183,9 +213,17 @@ export function CharacterDetailDialog({
                 </DialogPrimitive.Close>
               </div>
               <div className="flex items-center gap-2">
-                <RoleSelector value={editedCharacter.role} onChange={(role) => handleFieldChange("role", role)} layer="modal" />
+                <RoleSelector
+                  value={editedCharacter.role}
+                  onChange={(role) => handleFieldChange("role", role)}
+                  layer="modal"
+                />
                 <div className="h-3 w-[1px] bg-[var(--color-border-hover)]" />
-                <GroupSelector value={editedCharacter.group} onChange={(group) => handleFieldChange("group", group)} layer="modal" />
+                <GroupSelector
+                  value={editedCharacter.group}
+                  onChange={(group) => handleFieldChange("group", group)}
+                  layer="modal"
+                />
               </div>
             </div>
           </div>
@@ -214,11 +252,15 @@ export function CharacterDetailDialog({
             <div className="space-y-3">
               <div className={sectionHeaderStyles}>
                 {/* eslint-disable-next-line creonow/no-native-html-element -- semantic label, no Label primitive */}
-                <label className={labelStyles}>{t("character.detail.appearanceDescription")}</label>
+                <label className={labelStyles}>
+                  {t("character.detail.appearanceDescription")}
+                </label>
               </div>
               <Textarea
                 value={editedCharacter.description ?? ""}
-                onChange={(e) => handleFieldChange("description", e.target.value)}
+                onChange={(e) =>
+                  handleFieldChange("description", e.target.value)
+                }
                 placeholder={t("character.detail.descriptionPlaceholder")}
                 fullWidth
                 className="min-h-20 focus:min-h-25 transition-[min-height] resize-none"
@@ -239,20 +281,35 @@ export function CharacterDetailDialog({
 
           {/* Footer */}
           <div className="p-4 border-t border-[var(--color-border-default)] bg-[var(--color-bg-surface)] flex items-center justify-between shrink-0">
-            <Button variant="ghost" size="sm" onClick={handleDelete} className="text-[var(--color-error)] opacity-60 hover:opacity-100">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDelete}
+              className="text-[var(--color-error)] opacity-60 hover:opacity-100"
+            >
               <span className="inline-flex items-center gap-1.5">
                 <Trash2 size={16} strokeWidth={1.5} />
                 {t("character.detail.delete")}
               </span>
             </Button>
             <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>{t("character.detail.cancel")}</Button>
-              <Button variant="secondary" size="sm" onClick={handleSave}>{t("character.detail.saveChanges")}</Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onOpenChange(false)}
+              >
+                {t("character.detail.cancel")}
+              </Button>
+              <Button variant="secondary" size="sm" onClick={handleSave}>
+                {t("character.detail.saveChanges")}
+              </Button>
             </div>
           </div>
 
           <DialogPrimitive.Title className="sr-only">
-            {t("character.detail.editCharacterTitle", { name: editedCharacter.name })}
+            {t("character.detail.editCharacterTitle", {
+              name: editedCharacter.name,
+            })}
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="sr-only">
             {t("character.detail.editCharacterDescription")}

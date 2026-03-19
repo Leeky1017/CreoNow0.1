@@ -82,7 +82,9 @@ describe("KnowledgeGraphPanel behavior", () => {
 
     expect(screen.getByRole("alert")).toBeInTheDocument();
     expect(
-      screen.getByText("Something unexpected happened. Please try again later."),
+      screen.getByText(
+        "Something unexpected happened. Please try again later.",
+      ),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
   });

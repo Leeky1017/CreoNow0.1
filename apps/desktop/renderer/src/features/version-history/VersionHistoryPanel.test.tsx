@@ -563,7 +563,8 @@ describe("VersionHistoryPanel — display and metadata", () => {
             authorName: "AI Assistant",
             description: "Expanded the section overview",
             wordChange: { type: "added", count: 124 },
-            diffSummary: "Added a long explanatory paragraph to clarify the system boundaries and note the failure modes in a single concise block.",
+            diffSummary:
+              "Added a long explanatory paragraph to clarify the system boundaries and note the failure modes in a single concise block.",
           },
         ],
       },
@@ -583,7 +584,9 @@ describe("VersionHistoryPanel — display and metadata", () => {
     await user.click(screen.getByRole("button", { name: "Expand" }));
 
     expect(summary).not.toHaveClass("line-clamp-2");
-    expect(screen.getByRole("button", { name: "Collapse" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Collapse" }),
+    ).toBeInTheDocument();
   });
 
   it("should render hover actions with fade transition classes", () => {
@@ -594,7 +597,9 @@ describe("VersionHistoryPanel — display and metadata", () => {
       />,
     );
 
-    const hoverActions = screen.getByTestId("version-card-hover-actions-v-1042");
+    const hoverActions = screen.getByTestId(
+      "version-card-hover-actions-v-1042",
+    );
     expect(hoverActions).toHaveClass("transition-opacity");
     expect(hoverActions).toHaveClass("duration-[var(--duration-fast)]");
   });

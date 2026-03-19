@@ -18,11 +18,24 @@ const ICON_SIZE = 16;
 const ICON_STROKE = 1.5;
 
 function DocumentIcon() {
-  return <FileText className="w-3.5 h-3.5 mr-2 opacity-70 shrink-0" size={ICON_SIZE} strokeWidth={ICON_STROKE} />;
+  return (
+    <FileText
+      className="w-3.5 h-3.5 mr-2 opacity-70 shrink-0"
+      size={ICON_SIZE}
+      strokeWidth={ICON_STROKE}
+    />
+  );
 }
 
 function DotIcon({ opacity = 0.5 }: { opacity?: number }) {
-  return <Dot className="w-3.5 h-3.5 mr-2 shrink-0" style={{ opacity }} size={ICON_SIZE} strokeWidth={ICON_STROKE} />;
+  return (
+    <Dot
+      className="w-3.5 h-3.5 mr-2 shrink-0"
+      style={{ opacity }}
+      size={ICON_SIZE}
+      strokeWidth={ICON_STROKE}
+    />
+  );
 }
 
 function DragIndicator({ position }: { position: DropPosition | null }) {
@@ -78,7 +91,11 @@ function CollapseToggle({
       className="!w-6 !h-6 !p-0 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors shrink-0 mr-0.5"
       aria-label={isCollapsed ? t("outline.expand") : t("outline.collapse")}
     >
-      {isCollapsed ? <ChevronRight size={ICON_SIZE} strokeWidth={ICON_STROKE} /> : <ChevronDown size={ICON_SIZE} strokeWidth={ICON_STROKE} />}
+      {isCollapsed ? (
+        <ChevronRight size={ICON_SIZE} strokeWidth={ICON_STROKE} />
+      ) : (
+        <ChevronDown size={ICON_SIZE} strokeWidth={ICON_STROKE} />
+      )}
     </Button>
   );
 }

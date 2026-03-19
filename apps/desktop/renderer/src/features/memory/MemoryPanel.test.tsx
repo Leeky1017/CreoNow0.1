@@ -166,9 +166,13 @@ describe("MemoryPanel", () => {
     render(<MemoryPanel />);
 
     await screen.findByTestId("memory-panel");
-    await user.click(screen.getByRole("button", { name: "Update Preferences" }));
+    await user.click(
+      screen.getByRole("button", { name: "Update Preferences" }),
+    );
 
-    expect(await screen.findByText("Distilling preferences...")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Distilling preferences..."),
+    ).toBeInTheDocument();
   });
 
   it("should label unconfirmed rules as auto-generated", async () => {
@@ -193,7 +197,9 @@ describe("MemoryPanel", () => {
 
     render(<MemoryPanel />);
 
-    await user.click(await screen.findByTestId("memory-open-conflict-resolution"));
+    await user.click(
+      await screen.findByTestId("memory-open-conflict-resolution"),
+    );
 
     const panel = await screen.findByTestId("memory-conflict-resolution-panel");
     expect(panel).toHaveClass("sticky");

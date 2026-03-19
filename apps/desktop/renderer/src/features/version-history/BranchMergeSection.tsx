@@ -218,11 +218,7 @@ export function BranchMergeSection({
             <div className="text-xs font-semibold text-[var(--color-fg-default)]">
               {t("versionHistory.container.mergeConflictDiff")}
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onDismissConflicts}
-            >
+            <Button variant="ghost" size="sm" onClick={onDismissConflicts}>
               {t("versionHistory.container.dismiss")}
             </Button>
           </div>
