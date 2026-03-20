@@ -152,7 +152,10 @@ export function AiSettingsSection(): JSX.Element {
         {t("settings.ai.title")}
       </Text>
 
-      <FormField label={t("settings.aiSection.provider")} htmlFor="ai-provider-mode">
+      <FormField
+        label={t("settings.aiSection.provider")}
+        htmlFor="ai-provider-mode"
+      >
         {/* eslint-disable-next-line creonow/no-native-html-element -- provider mode select dropdown */}
         <select
           id="ai-provider-mode"

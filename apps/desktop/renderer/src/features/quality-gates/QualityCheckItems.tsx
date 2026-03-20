@@ -9,7 +9,12 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../components/primitives";
-import type { CheckIssue, CheckItem, CheckStatus, PanelStatus } from "./qualityGatesTypes";
+import type {
+  CheckIssue,
+  CheckItem,
+  CheckStatus,
+  PanelStatus,
+} from "./qualityGatesTypes";
 
 function CheckCircleIcon() {
   return <CircleCheck size={16} strokeWidth={1.5} />;
@@ -84,13 +89,29 @@ export function PanelStatusIndicator({
 export function CheckStatusIcon({ status }: { status: CheckStatus }) {
   switch (status) {
     case "passed":
-      return <span className="text-[var(--color-success)]"><CheckCircleIcon /></span>;
+      return (
+        <span className="text-[var(--color-success)]">
+          <CheckCircleIcon />
+        </span>
+      );
     case "warning":
-      return <span className="text-[var(--color-warning)]"><WarningIcon /></span>;
+      return (
+        <span className="text-[var(--color-warning)]">
+          <WarningIcon />
+        </span>
+      );
     case "error":
-      return <span className="text-[var(--color-error)]"><ErrorIcon /></span>;
+      return (
+        <span className="text-[var(--color-error)]">
+          <ErrorIcon />
+        </span>
+      );
     case "running":
-      return <span className="text-[var(--color-info)]"><SpinnerIcon /></span>;
+      return (
+        <span className="text-[var(--color-info)]">
+          <SpinnerIcon />
+        </span>
+      );
     default:
       return null;
   }
@@ -115,7 +136,9 @@ export function IssueCard({
   if (issue.ignored) {
     return (
       <div className="p-3 bg-[var(--color-bg-raised)] rounded-lg border border-[var(--color-separator)] opacity-50">
-        <p className="text-[12px] text-[var(--color-fg-muted)] line-through">{issue.description}</p>
+        <p className="text-[12px] text-[var(--color-fg-muted)] line-through">
+          {issue.description}
+        </p>
         <span className="text-[10px] text-[var(--color-fg-placeholder)] mt-1 inline-block">
           {t("qualityGates.ignored")}
         </span>
@@ -131,7 +154,9 @@ export function IssueCard({
       }`}
       data-testid={`issue-card-${issue.id}`}
     >
-      <p className="text-[12px] text-[var(--color-fg-default)] leading-relaxed">{issue.description}</p>
+      <p className="text-[12px] text-[var(--color-fg-default)] leading-relaxed">
+        {issue.description}
+      </p>
       {issue.location && (
         <div className="flex items-center gap-1 mt-2 text-[10px] text-[var(--color-fg-muted)]">
           <LocationIcon />
@@ -146,13 +171,29 @@ export function IssueCard({
         </div>
       )}
       <div className="flex items-center gap-2 mt-3">
-        <Button variant="secondary" size="sm" onClick={() => onFix?.(checkId, issue.id)} loading={isFixing} className="!h-6 !text-[10px] !px-2">
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => onFix?.(checkId, issue.id)}
+          loading={isFixing}
+          className="!h-6 !text-[10px] !px-2"
+        >
           {t("qualityGates.fixIssue")}
         </Button>
-        <Button variant="ghost" size="sm" onClick={() => onIgnore?.(checkId, issue.id)} className="!h-6 !text-[10px] !px-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onIgnore?.(checkId, issue.id)}
+          className="!h-6 !text-[10px] !px-2"
+        >
           {t("qualityGates.ignore")}
         </Button>
-        <Button variant="ghost" size="sm" onClick={() => onViewInEditor?.(checkId, issue.id)} className="!h-6 !text-[10px] !px-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onViewInEditor?.(checkId, issue.id)}
+          className="!h-6 !text-[10px] !px-2"
+        >
           {t("qualityGates.viewInEditor")}
         </Button>
       </div>
@@ -183,26 +224,37 @@ export function CheckItemRow({
   const issueCount = activeIssues.length;
 
   return (
-    <div className="border-b border-[var(--color-separator)] last:border-b-0" data-testid={`check-item-${check.id}`}>
+    <div
+      className="border-b border-[var(--color-separator)] last:border-b-0"
+      data-testid={`check-item-${check.id}`}
+    >
       {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
       <button
         type="button"
         onClick={() => hasIssues && onToggle?.(check.id)}
         disabled={!hasIssues}
         className={`w-full px-3 py-3 flex items-start gap-3 text-left transition-colors duration-[var(--duration-fast)] ${
-          hasIssues ? "hover:bg-[var(--color-bg-hover)] cursor-pointer" : "cursor-default"
+          hasIssues
+            ? "hover:bg-[var(--color-bg-hover)] cursor-pointer"
+            : "cursor-default"
         }`}
       >
-        <div className="mt-0.5"><CheckStatusIcon status={check.status} /></div>
+        <div className="mt-0.5">
+          <CheckStatusIcon status={check.status} />
+        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-[13px] font-medium text-[var(--color-fg-default)]">{check.name}</span>
+            <span className="text-[13px] font-medium text-[var(--color-fg-default)]">
+              {check.name}
+            </span>
             {issueCount > 0 && (
-              <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
-                check.status === "error"
-                  ? "bg-[var(--color-error-subtle)] text-[var(--color-error)]"
-                  : "bg-[var(--color-warning-subtle)] text-[var(--color-warning)]"
-              }`}>
+              <span
+                className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
+                  check.status === "error"
+                    ? "bg-[var(--color-error-subtle)] text-[var(--color-error)]"
+                    : "bg-[var(--color-warning-subtle)] text-[var(--color-warning)]"
+                }`}
+              >
                 {issueCount}
               </span>
             )}
@@ -212,12 +264,20 @@ export function CheckItemRow({
               </span>
             )}
           </div>
-          <p className="text-[11px] text-[var(--color-fg-muted)] mt-0.5 leading-relaxed">{check.description}</p>
+          <p className="text-[11px] text-[var(--color-fg-muted)] mt-0.5 leading-relaxed">
+            {check.description}
+          </p>
           {check.resultValue && check.status === "passed" && (
-            <span className="text-[11px] text-[var(--color-success)] mt-1 inline-block">{check.resultValue}</span>
+            <span className="text-[11px] text-[var(--color-success)] mt-1 inline-block">
+              {check.resultValue}
+            </span>
           )}
         </div>
-        {hasIssues && <div className="mt-1"><ChevronIcon expanded={isExpanded} /></div>}
+        {hasIssues && (
+          <div className="mt-1">
+            <ChevronIcon expanded={isExpanded} />
+          </div>
+        )}
       </button>
       {isExpanded && hasIssues && (
         <div className="px-3 pb-3 space-y-2">

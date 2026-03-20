@@ -8,7 +8,10 @@ import { Text } from "../../components/primitives/Text";
 import { useJudgeEnsure } from "../../hooks/useJudgeEnsure";
 import { invoke } from "../../lib/ipcClient";
 import { useProjectStore } from "../../stores/projectStore";
-import { QualityGatesPanelContent, type QualitySettings } from "../quality-gates/QualityGatesPanel";
+import {
+  QualityGatesPanelContent,
+  type QualitySettings,
+} from "../quality-gates/QualityGatesPanel";
 import {
   type JudgeModelState,
   type ConstraintsData,

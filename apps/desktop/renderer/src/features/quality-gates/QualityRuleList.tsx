@@ -2,7 +2,11 @@
 import { ChevronDown, Play, Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { CheckItemRow } from "./QualityCheckItems";
-import type { CheckFrequency, CheckGroup, QualitySettings } from "./qualityGatesTypes";
+import type {
+  CheckFrequency,
+  CheckGroup,
+  QualitySettings,
+} from "./qualityGatesTypes";
 
 function ChevronIcon({ expanded }: { expanded: boolean }) {
   return (
@@ -48,9 +52,14 @@ export function CheckGroupAccordion({
     >
       <div className="px-4 py-3 bg-[var(--color-bg-raised)] border-b border-[var(--color-separator)]">
         <div className="flex items-center justify-between">
-          <span className="text-[13px] font-medium text-[var(--color-fg-default)]">{group.name}</span>
+          <span className="text-[13px] font-medium text-[var(--color-fg-default)]">
+            {group.name}
+          </span>
           <span className="text-[11px] text-[var(--color-fg-muted)]">
-            {t("qualityGates.checksCount", { passed: passedCount, total: checkCount })}
+            {t("qualityGates.checksCount", {
+              passed: passedCount,
+              total: checkCount,
+            })}
           </span>
         </div>
       </div>
@@ -148,7 +157,9 @@ export function SettingsSection({
       >
         <div className="flex items-center gap-2">
           <SettingsIcon />
-          <span className="text-[13px] font-medium text-[var(--color-fg-default)]">{t("qualityGates.settings")}</span>
+          <span className="text-[13px] font-medium text-[var(--color-fg-default)]">
+            {t("qualityGates.settings")}
+          </span>
         </div>
         <ChevronIcon expanded={expanded} />
       </button>
@@ -159,28 +170,42 @@ export function SettingsSection({
               id="run-on-save"
               label={t("qualityGates.runOnSave")}
               checked={settings.runOnSave}
-              onChange={(checked) => onSettingsChange?.({ ...settings, runOnSave: checked })}
+              onChange={(checked) =>
+                onSettingsChange?.({ ...settings, runOnSave: checked })
+              }
             />
             <SettingsToggle
               id="block-on-errors"
               label={t("qualityGates.blockOnErrors")}
               checked={settings.blockOnErrors}
-              onChange={(checked) => onSettingsChange?.({ ...settings, blockOnErrors: checked })}
+              onChange={(checked) =>
+                onSettingsChange?.({ ...settings, blockOnErrors: checked })
+              }
             />
             <div className="flex items-center justify-between">
               {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-              <label htmlFor="check-frequency" className="text-[13px] text-[var(--color-fg-default)]">
+              <label
+                htmlFor="check-frequency"
+                className="text-[13px] text-[var(--color-fg-default)]"
+              >
                 {t("qualityGates.checkFrequency")}
               </label>
               {/* eslint-disable-next-line creonow/no-native-html-element -- specialized select */}
               <select
                 id="check-frequency"
                 value={settings.frequency}
-                onChange={(e) => onSettingsChange?.({ ...settings, frequency: e.target.value as CheckFrequency })}
+                onChange={(e) =>
+                  onSettingsChange?.({
+                    ...settings,
+                    frequency: e.target.value as CheckFrequency,
+                  })
+                }
                 className="text-[12px] bg-[var(--color-bg-hover)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] px-2 py-1 text-[var(--color-fg-default)] focus:outline-none focus:border-[var(--color-border-focus)]"
               >
                 {frequencyOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
                 ))}
               </select>
             </div>

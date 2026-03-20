@@ -1,7 +1,10 @@
 /**
  * Quality Gates Panel feature exports
  */
-export { QualityGatesPanel, QualityGatesPanelContent } from "./QualityGatesPanel";
+export {
+  QualityGatesPanel,
+  QualityGatesPanelContent,
+} from "./QualityGatesPanel";
 export type {
   QualityGatesPanelProps,
   QualityGatesPanelContentProps,

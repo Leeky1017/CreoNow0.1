@@ -79,7 +79,13 @@ function DocumentInfoSection(props: {
 
   return (
     <section>
-      <Text size="small" weight="semibold" color="muted" as="p" className="mb-2">
+      <Text
+        size="small"
+        weight="semibold"
+        color="muted"
+        as="p"
+        className="mb-2"
+      >
         {t("rightPanel.info.currentDocument")}
       </Text>
       <Card className="p-3 rounded-[var(--radius-md)]">
@@ -111,33 +117,64 @@ function TodayStatsSection(props: {
 
   if (loading) {
     cardContent = (
-      <Text size="small" color="muted" className="text-center">{t("rightPanel.info.loading")}</Text>
+      <Text size="small" color="muted" className="text-center">
+        {t("rightPanel.info.loading")}
+      </Text>
     );
   } else if (error) {
     cardContent = (
-      <Text data-testid="info-panel-stats-error" size="small" color="muted" className="text-center">
+      <Text
+        data-testid="info-panel-stats-error"
+        size="small"
+        color="muted"
+        className="text-center"
+      >
         {getHumanErrorMessage(error)}
       </Text>
     );
     cardExtra = " border-[var(--color-error)]/20";
   } else if (!stats) {
     cardContent = (
-      <Text size="small" color="muted" className="text-center">{t("rightPanel.info.noStatsAvailable")}</Text>
+      <Text size="small" color="muted" className="text-center">
+        {t("rightPanel.info.noStatsAvailable")}
+      </Text>
     );
   } else {
     cardContent = (
       <>
-        <StatItem label={t("rightPanel.info.wordsWritten")} value={stats.wordsWritten.toLocaleString()} testId="info-panel-words-written" />
-        <StatItem label={t("rightPanel.info.writingTime")} value={formatDuration(stats.writingSeconds)} testId="info-panel-writing-time" />
-        <StatItem label={t("rightPanel.info.skillsUsed")} value={stats.skillsUsed} testId="info-panel-skills-used" />
-        <StatItem label={t("rightPanel.info.documentsCreated")} value={stats.documentsCreated} testId="info-panel-docs-created" />
+        <StatItem
+          label={t("rightPanel.info.wordsWritten")}
+          value={stats.wordsWritten.toLocaleString()}
+          testId="info-panel-words-written"
+        />
+        <StatItem
+          label={t("rightPanel.info.writingTime")}
+          value={formatDuration(stats.writingSeconds)}
+          testId="info-panel-writing-time"
+        />
+        <StatItem
+          label={t("rightPanel.info.skillsUsed")}
+          value={stats.skillsUsed}
+          testId="info-panel-skills-used"
+        />
+        <StatItem
+          label={t("rightPanel.info.documentsCreated")}
+          value={stats.documentsCreated}
+          testId="info-panel-docs-created"
+        />
       </>
     );
   }
 
   return (
     <section>
-      <Text size="small" weight="semibold" color="muted" as="p" className="mb-2">
+      <Text
+        size="small"
+        weight="semibold"
+        color="muted"
+        as="p"
+        className="mb-2"
+      >
         {t("rightPanel.info.todaysProgress")}
       </Text>
       <Card className={`p-3 rounded-[var(--radius-md)]${cardExtra}`}>
@@ -202,10 +239,7 @@ export function InfoPanel(props: InfoPanelProps = {}): JSX.Element {
   }, []);
 
   return (
-    <div
-      data-testid="info-panel"
-      className="flex flex-col h-full"
-    >
+    <div data-testid="info-panel" className="flex flex-col h-full">
       <PanelHeader title={t("rightPanel.info.panelTitle")} />
 
       <div className="flex flex-col gap-[var(--space-section-gap)] p-4 overflow-auto">

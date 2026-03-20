@@ -74,7 +74,8 @@ export interface QualityGatesPanelContentProps {
   showCloseButton?: boolean;
 }
 
-export const panelContentStyles = "bg-[var(--color-bg-surface)] flex flex-col h-full";
+export const panelContentStyles =
+  "bg-[var(--color-bg-surface)] flex flex-col h-full";
 
 export const panelContainerStyles = [
   "bg-[var(--color-bg-surface)]",

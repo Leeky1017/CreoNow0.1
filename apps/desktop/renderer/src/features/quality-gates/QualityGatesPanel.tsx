@@ -3,7 +3,11 @@ import { CircleCheck, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../../components/primitives";
 import { PanelStatusIndicator } from "./QualityCheckItems";
-import { CheckGroupAccordion, PlayIcon, SettingsSection } from "./QualityRuleList";
+import {
+  CheckGroupAccordion,
+  PlayIcon,
+  SettingsSection,
+} from "./QualityRuleList";
 import {
   panelContentStyles,
   panelContainerStyles,
@@ -57,19 +61,30 @@ export function QualityGatesPanelContent({
 }: QualityGatesPanelContentProps): JSX.Element {
   const { t } = useTranslation();
   return (
-    <div className={panelContentStyles} data-testid="quality-gates-panel-content">
+    <div
+      className={panelContentStyles}
+      data-testid="quality-gates-panel-content"
+    >
       <div className={headerStyles}>
         <div>
           <h2 className="text-[15px] font-semibold text-[var(--color-fg-default)] tracking-tight">
             {t("qualityGates.title")}
           </h2>
           <div className="mt-2">
-            <PanelStatusIndicator status={panelStatus} issuesCount={issuesCount} />
+            <PanelStatusIndicator
+              status={panelStatus}
+              issuesCount={issuesCount}
+            />
           </div>
         </div>
         {showCloseButton && (
           // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-          <button type="button" onClick={onClose} className={closeButtonStyles} aria-label={t("qualityGates.closeAriaLabel")}>
+          <button
+            type="button"
+            onClick={onClose}
+            className={closeButtonStyles}
+            aria-label={t("qualityGates.closeAriaLabel")}
+          >
             <CloseIcon />
           </button>
         )}
@@ -92,7 +107,9 @@ export function QualityGatesPanelContent({
         {panelStatus === "all-passed" && (
           <div className="p-4 bg-[var(--color-success-subtle)] border border-[var(--color-success)]/20 rounded-[var(--radius-lg)] text-center">
             <CheckCircleIcon />
-            <p className="text-[13px] text-[var(--color-success)] mt-2">{t("qualityGates.allPassedMessage")}</p>
+            <p className="text-[13px] text-[var(--color-success)] mt-2">
+              {t("qualityGates.allPassedMessage")}
+            </p>
           </div>
         )}
 
@@ -139,7 +156,11 @@ export function QualityGatesPanel({
   fixingIssueId,
 }: QualityGatesPanelProps): JSX.Element {
   return (
-    <aside className={panelContainerStyles} style={{ width }} data-testid="quality-gates-panel">
+    <aside
+      className={panelContainerStyles}
+      style={{ width }}
+      data-testid="quality-gates-panel"
+    >
       <QualityGatesPanelContent
         checkGroups={checkGroups}
         panelStatus={panelStatus}
