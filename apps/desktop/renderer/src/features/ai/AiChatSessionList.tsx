@@ -8,9 +8,7 @@ type AiChatSessionListProps = {
   onSelectSession: (sessionId: string) => void;
 };
 
-export function AiChatSessionList(
-  props: AiChatSessionListProps,
-): JSX.Element {
+export function AiChatSessionList(props: AiChatSessionListProps): JSX.Element {
   const { projectId, onSelectSession } = props;
   const { t } = useTranslation();
 
@@ -32,8 +30,7 @@ export function AiChatSessionList(
     [deleteChatSession, projectId],
   );
 
-  const isEmpty =
-    chatSessions.length === 0 && chatSessionsStatus === "ready";
+  const isEmpty = chatSessions.length === 0 && chatSessionsStatus === "ready";
 
   return (
     <div
