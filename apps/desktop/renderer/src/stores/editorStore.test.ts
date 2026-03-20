@@ -323,4 +323,43 @@ describe("editorStore bootstrap and autosave scenarios", () => {
     expect(state.documentId).toBe("doc-b");
     expect(state.bootstrapStatus).toBe("ready");
   });
+
+  it("should set documentCoverImageUrl from file:document:read response", async () => {
+    const invoke: IpcInvoke = async (channel, _payload) => {
+      if (channel === "file:document:getcurrent") {
+        return ok(channel, { documentId: "doc-cover" });
+      }
+      if (channel === "file:document:read") {
+        return ok(channel, {
+          ...createReadPayload("doc-cover"),
+          coverImageUrl: "https://example.com/cover.jpg",
+        });
+      }
+      throw new Error(`Unexpected channel: ${channel}`);
+    };
+
+    const store = createEditorStore({ invoke });
+    await store.getState().bootstrapForProject("project-1");
+
+    expect(store.getState().documentCoverImageUrl).toBe(
+      "https://example.com/cover.jpg",
+    );
+  });
+
+  it("should set documentCoverImageUrl to null when response has no coverImageUrl", async () => {
+    const invoke: IpcInvoke = async (channel, _payload) => {
+      if (channel === "file:document:getcurrent") {
+        return ok(channel, { documentId: "doc-no-cover" });
+      }
+      if (channel === "file:document:read") {
+        return ok(channel, createReadPayload("doc-no-cover"));
+      }
+      throw new Error(`Unexpected channel: ${channel}`);
+    };
+
+    const store = createEditorStore({ invoke });
+    await store.getState().bootstrapForProject("project-1");
+
+    expect(store.getState().documentCoverImageUrl).toBeNull();
+  });
 });

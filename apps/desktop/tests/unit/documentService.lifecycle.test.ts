@@ -22,6 +22,7 @@ type DocRow = {
   parentId: string | null;
   createdAt: number;
   updatedAt: number;
+  coverImageUrl: string | null;
 };
 
 type VersionRow = {
@@ -78,6 +79,7 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
           parentId,
           createdAt,
           updatedAt,
+          coverImageUrl: null,
         });
         return { changes: 1 };
       },
@@ -132,6 +134,7 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
           parentId: null,
           createdAt,
           updatedAt,
+          coverImageUrl: null,
         });
         return { changes: 1 };
       },
@@ -140,7 +143,7 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
 
   if (
     sql ===
-    "SELECT document_id as documentId, type, title, status, sort_order as sortOrder, parent_id as parentId, updated_at as updatedAt FROM documents WHERE project_id = ? ORDER BY sort_order ASC, updated_at DESC, document_id ASC"
+    "SELECT document_id as documentId, type, title, status, sort_order as sortOrder, parent_id as parentId, updated_at as updatedAt, cover_image_url as coverImageUrl FROM documents WHERE project_id = ? ORDER BY sort_order ASC, updated_at DESC, document_id ASC"
   ) {
     return {
       all(projectId: string) {
@@ -155,6 +158,7 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
             sortOrder: d.sortOrder,
             parentId: d.parentId,
             updatedAt: d.updatedAt,
+            coverImageUrl: d.coverImageUrl,
           }));
       },
     };
@@ -162,7 +166,7 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
 
   if (
     sql ===
-    "SELECT document_id as documentId, project_id as projectId, type, title, status, sort_order as sortOrder, parent_id as parentId, content_json as contentJson, content_text as contentText, content_md as contentMd, content_hash as contentHash, created_at as createdAt, updated_at as updatedAt FROM documents WHERE project_id = ? AND document_id = ?"
+    "SELECT document_id as documentId, project_id as projectId, type, title, status, sort_order as sortOrder, parent_id as parentId, content_json as contentJson, content_text as contentText, content_md as contentMd, content_hash as contentHash, created_at as createdAt, updated_at as updatedAt, cover_image_url as coverImageUrl FROM documents WHERE project_id = ? AND document_id = ?"
   ) {
     return {
       get(projectId: string, documentId: string) {
@@ -186,6 +190,7 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
           contentHash: row.contentHash,
           createdAt: row.createdAt,
           updatedAt: row.updatedAt,
+          coverImageUrl: row.coverImageUrl,
         };
       },
     };

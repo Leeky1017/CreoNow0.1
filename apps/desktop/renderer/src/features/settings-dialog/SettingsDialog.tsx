@@ -2,9 +2,13 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
-import { Button, Text } from "../../components/primitives";
 import { AnalyticsPageContent } from "../analytics/AnalyticsPage";
-import { AppearanceSection } from "../settings/AppearanceSection";
+import {
+  SettingsAppearancePage,
+  defaultAppearanceSettings,
+  type AppearanceSettings,
+} from "./SettingsAppearancePage";
+import { useThemeStore } from "../../stores/themeStore";
 import { AiSettingsSection } from "../settings/AiSettingsSection";
 import { JudgeSection } from "../settings/JudgeSection";
 import {
@@ -24,13 +28,18 @@ import {
 } from "./SettingsExport";
 import { ShortcutsPanel } from "../shortcuts/ShortcutsPanel";
 import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore";
-import { useProjectStore } from "../../stores/projectStore";
 import { useAppToast } from "../../components/providers/AppToastProvider";
 import { usePreferences } from "../../contexts/PreferencesContext";
-import { invoke } from "../../lib/ipcClient";
 import type { PreferenceStore } from "../../lib/preferences";
 
 import { X } from "lucide-react";
+import { SettingsNavigation } from "./SettingsNavigation";
+import {
+  overlayStyles,
+  contentStyles,
+  closeButtonStyles,
+} from "./settingsDialogStyles";
+import { useSettingsBackup } from "./useSettingsBackup";
 /**
  * Settings tab values.
  */
@@ -55,119 +64,6 @@ export interface SettingsDialogProps {
   /** Initial active tab */
   defaultTab?: SettingsTab;
 }
-
-type TFunction = (key: string, options?: Record<string, unknown>) => string;
-
-/**
- * Nav item configuration.
- */
-function getNavItems(
-  t: TFunction,
-): Array<{ value: SettingsTab; label: string }> {
-  return [
-    { value: "general", label: t("settingsDialog.dialog.navGeneral") },
-    { value: "appearance", label: t("settingsDialog.dialog.navAppearance") },
-    { value: "ai", label: t("settingsDialog.dialog.navAi") },
-    { value: "judge", label: t("settingsDialog.dialog.navJudge") },
-    { value: "analytics", label: t("settingsDialog.dialog.navAnalytics") },
-    { value: "account", label: t("settingsDialog.dialog.navAccount") },
-    { value: "export", label: t("settingsDialog.dialog.navExport") },
-    { value: "shortcuts", label: t("settingsDialog.dialog.navShortcuts") },
-  ];
-}
-
-/**
- * Overlay styles.
- */
-const overlayStyles = [
-  "fixed",
-  "inset-0",
-  "z-[var(--z-modal)]",
-  "bg-[var(--color-scrim)]",
-  "backdrop-blur-sm",
-  "transition-opacity",
-  "duration-[var(--duration-normal)]",
-  "ease-[var(--ease-default)]",
-  "data-[state=open]:opacity-100",
-  "data-[state=closed]:opacity-0",
-].join(" ");
-
-/**
- * Content styles.
- */
-const contentStyles = [
-  "fixed",
-  "left-1/2",
-  "top-1/2",
-  "-translate-x-1/2",
-  "-translate-y-1/2",
-  "z-[var(--z-modal)]",
-  "w-[calc(100vw-2rem)]",
-  "max-w-5xl",
-  "h-[85vh]",
-  "max-h-[52rem]",
-  "bg-[var(--color-bg-surface)]",
-  "border",
-  "border-[var(--color-border-default)]",
-  "rounded-[var(--radius-lg)]",
-  "shadow-[var(--shadow-xl)]",
-  "flex",
-  "overflow-hidden",
-  // Animation
-  "transition-[opacity,transform]",
-  "duration-[var(--duration-normal)]",
-  "ease-[var(--ease-default)]",
-  "data-[state=open]:opacity-100",
-  "data-[state=open]:scale-100",
-  "data-[state=closed]:opacity-0",
-  "data-[state=closed]:scale-95",
-  "focus:outline-none",
-].join(" ");
-
-/**
- * Sidebar styles.
- */
-const sidebarStyles = [
-  "w-64",
-  "bg-[var(--color-bg-base)]",
-  "border-r",
-  "border-[var(--color-separator)]",
-  "flex",
-  "flex-col",
-  "py-8",
-  "shrink-0",
-].join(" ");
-
-/**
- * Nav button styles.
- */
-const navButtonBaseStyles = [
-  "w-full",
-  "text-left",
-  "px-8",
-  "py-3",
-  "text-[13px]",
-  "border-r-2",
-  "transition-colors",
-  "duration-[var(--duration-fast)]",
-].join(" ");
-
-/**
- * Close button styles.
- * Positioned at dialog's top-right corner (outside content padding).
- */
-const closeButtonStyles = [
-  "absolute",
-  "top-4",
-  "right-4",
-  "p-2",
-  "text-[var(--color-fg-placeholder)]",
-  "hover:text-[var(--color-fg-default)]",
-  "transition-colors",
-  "z-[var(--z-overlay)]",
-  "hover:bg-[var(--color-bg-hover)]",
-  "rounded-full",
-].join(" ");
 
 /**
  * Read persisted GeneralSettings from PreferenceStore, falling back to defaults.
@@ -214,6 +110,15 @@ function writeGeneralSettings(
   prefs.set("creonow.settings.interfaceScale", settings.interfaceScale);
 }
 
+function readAppearancePrefs(prefs: PreferenceStore) {
+  const d = defaultAppearanceSettings;
+  return {
+    accentColor:
+      prefs.get<string>("creonow.settings.accentColor") ?? d.accentColor,
+    fontSize: prefs.get<number>("creonow.settings.fontSize") ?? d.fontSize,
+  };
+}
+
 /**
  * SettingsDialog is the single-path Settings surface.
  *
@@ -228,7 +133,6 @@ export function SettingsDialog({
   const { t } = useTranslation();
   const { showToast } = useAppToast();
   const preferences = usePreferences();
-  const navItems = getNavItems(t);
   const [activeTab, setActiveTab] = React.useState<SettingsTab>(defaultTab);
   const [generalSettings, setGeneralSettings] = React.useState<GeneralSettings>(
     () => readGeneralSettings(preferences),
@@ -239,13 +143,20 @@ export function SettingsDialog({
   const [exportSettings, setExportSettings] = React.useState<ExportSettings>(
     defaultExportSettings,
   );
-  const [manualBackupLoading, setManualBackupLoading] =
-    React.useState<boolean>(false);
-  const [manualRestoreLoading, setManualRestoreLoading] =
-    React.useState<boolean>(false);
-  const currentProjectId = useProjectStore((s) => s.current?.projectId ?? null);
+  const {
+    currentProjectId,
+    manualBackupLoading,
+    manualRestoreLoading,
+    handleManualBackup,
+    handleManualRestore,
+  } = useSettingsBackup();
   const showAiMarks = useVersionPreferencesStore((s) => s.showAiMarks);
   const setShowAiMarks = useVersionPreferencesStore((s) => s.setShowAiMarks);
+  const themeMode = useThemeStore((s) => s.mode);
+  const setThemeMode = useThemeStore((s) => s.setMode);
+  const [appPrefs, setAppPrefs] = React.useState(() =>
+    readAppearancePrefs(preferences),
+  );
 
   const handleSettingsChange = React.useCallback(
     (settings: GeneralSettings) => {
@@ -268,96 +179,21 @@ export function SettingsDialog({
     [setShowAiMarks, showToast, t],
   );
 
-  const handleManualBackup = React.useCallback(async () => {
-    if (!currentProjectId) {
-      showToast({
-        title: t("toast.settings.backup.noProject.title"),
-        variant: "warning",
-      });
-      return;
-    }
-
-    setManualBackupLoading(true);
-    try {
-      const label = `manual-${new Date().toISOString()}`;
-      const result = await invoke("backup:snapshot:create", {
-        projectId: currentProjectId,
-        label,
-      });
-      if (!result.ok) {
-        showToast({
-          title: t("toast.settings.backup.createError.title"),
-          description: result.error.message,
-          variant: "error",
-        });
-        return;
-      }
-      showToast({
-        title: t("toast.settings.backup.createSuccess.title"),
-        variant: "success",
-      });
-    } finally {
-      setManualBackupLoading(false);
-    }
-  }, [currentProjectId, showToast, t]);
-
-  const handleManualRestore = React.useCallback(async () => {
-    if (!currentProjectId) {
-      showToast({
-        title: t("toast.settings.backup.noProject.title"),
-        variant: "warning",
-      });
-      return;
-    }
-
-    setManualRestoreLoading(true);
-    try {
-      const listResult = await invoke("backup:snapshot:list", {
-        projectId: currentProjectId,
-      });
-      if (!listResult.ok) {
-        showToast({
-          title: t("toast.settings.backup.restoreError.title"),
-          description: listResult.error.message,
-          variant: "error",
-        });
-        return;
-      }
-
-      const latest = listResult.data[0];
-      if (!latest) {
-        showToast({
-          title: t("toast.settings.backup.noSnapshot.title"),
-          variant: "warning",
-        });
-        return;
-      }
-
-      const restoreResult = await invoke("backup:snapshot:restore", {
-        backupId: latest.id,
-      });
-      if (!restoreResult.ok) {
-        showToast({
-          title: t("toast.settings.backup.restoreError.title"),
-          description: restoreResult.error.message,
-          variant: "error",
-        });
-        return;
-      }
-
-      showToast({
-        title: t("toast.settings.backup.restoreSuccess.title"),
-        variant: "success",
-      });
-    } finally {
-      setManualRestoreLoading(false);
-    }
-  }, [currentProjectId, showToast, t]);
+  const handleAppearanceChange = React.useCallback(
+    (s: AppearanceSettings) => {
+      setThemeMode(s.themeMode);
+      setAppPrefs({ accentColor: s.accentColor, fontSize: s.fontSize });
+      preferences.set("creonow.settings.accentColor", s.accentColor);
+      preferences.set("creonow.settings.fontSize", s.fontSize);
+    },
+    [preferences, setThemeMode],
+  );
 
   React.useEffect(() => {
     if (open) {
       setActiveTab(defaultTab);
       setGeneralSettings(readGeneralSettings(preferences));
+      setAppPrefs(readAppearancePrefs(preferences));
     }
   }, [defaultTab, open, preferences]);
 
@@ -378,7 +214,12 @@ export function SettingsDialog({
           />
         );
       case "appearance":
-        return <AppearanceSection />;
+        return (
+          <SettingsAppearancePage
+            settings={{ themeMode, ...appPrefs }}
+            onSettingsChange={handleAppearanceChange}
+          />
+        );
       case "ai":
         return <AiSettingsSection />;
       case "judge":
@@ -421,40 +262,10 @@ export function SettingsDialog({
           data-testid="settings-dialog"
           className={contentStyles}
         >
-          {/* Sidebar Navigation */}
-          <div className={sidebarStyles}>
-            <div className="px-8 mb-8">
-              <Text
-                size="label"
-                color="placeholder"
-                weight="semibold"
-                className="tracking-[0.15em]"
-              >
-                {t("settingsDialog.dialog.title")}
-              </Text>
-            </div>
-
-            <nav className="flex flex-col w-full">
-              {navItems.map(({ value, label }) => {
-                const isActive = activeTab === value;
-                return (
-                  <Button
-                    key={value}
-                    onClick={() => setActiveTab(value)}
-                    data-testid={`settings-nav-${value}`}
-                    variant="ghost"
-                    className={`${navButtonBaseStyles} ${
-                      isActive
-                        ? "text-[var(--color-fg-default)] bg-[var(--color-bg-hover)] border-[var(--color-fg-default)]"
-                        : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-surface)] border-transparent"
-                    }`}
-                  >
-                    {label}
-                  </Button>
-                );
-              })}
-            </nav>
-          </div>
+          <SettingsNavigation
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
 
           {/* Main Content Area */}
           <div className="flex-1 bg-[var(--color-bg-surface)] flex flex-col relative min-w-0">

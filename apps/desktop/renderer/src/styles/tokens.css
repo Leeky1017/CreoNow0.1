@@ -22,6 +22,9 @@
   --space-section-gap: var(--space-6); /* 区块间距 */
   --space-item-gap: var(--space-2); /* 列表项间距 */
   --space-inline-gap: var(--space-1); /* 行内元素间距 */
+  --space-editor-padding-x: var(--space-12); /* 编辑器水平内边距 48px */
+  --editor-content-max-width: 760px; /* 编辑器正文最大宽度 */
+  --space-featured-image-height: 280px; /* 特色图片区域高度 */
 
   /* Radius */
   --radius-none: 0px;
@@ -176,12 +179,14 @@
   --color-info: #3b82f6;
   --color-info-subtle: rgba(59, 130, 246, 0.1);
 
-  /* 强调色（知识图谱节点）§3.6 */
+  /* 强调色（知识图谱节点 + UI 色板）§3.6 */
+  --color-accent-white: #ffffff;
   --color-accent-blue: #3b82f6;
   --color-accent-green: #22c55e;
   --color-accent-orange: #f97316;
   --color-accent-cyan: #06b6d4;
   --color-accent-purple: #8b5cf6;
+  --color-accent-pink: #ec4899;
 
   /* 知识图谱节点色 - 保持多色区分 */
   --color-node-character: #3b82f6; /* 角色 - 蓝色 */

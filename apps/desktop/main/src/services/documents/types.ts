@@ -51,6 +51,7 @@ export type DocumentListItem = {
   sortOrder: number;
   parentId?: string;
   updatedAt: number;
+  coverImageUrl?: string;
 };
 
 export type DocumentRead = {
@@ -67,6 +68,7 @@ export type DocumentRead = {
   contentHash: string;
   createdAt: number;
   updatedAt: number;
+  coverImageUrl?: string;
 };
 
 export type VersionListItem = {
