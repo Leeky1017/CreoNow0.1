@@ -44,6 +44,7 @@ import {
   resolveEditorLineHeightToken,
   resolveEditorScaleFactor,
 } from "./typography";
+import { EditorFeaturedImage } from "./EditorFeaturedImage";
 import { buildAiStreamUndoCheckpoint, undoAiStream } from "./aiStreamUndo";
 import type { AiStreamCheckpoint } from "./aiStreamUndo";
 import {
@@ -1478,6 +1479,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
             viewportTestId="editor-content-scroll-viewport"
             className="h-full"
           >
+            <EditorFeaturedImage src={undefined} />
             <EditorContent editor={core.editor} className="h-full" />
           </ScrollArea>
         </EditorContextMenu>
