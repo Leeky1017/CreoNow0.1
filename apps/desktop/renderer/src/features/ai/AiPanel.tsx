@@ -12,15 +12,17 @@ import type { AiModel, AiModelOption } from "./ModelPicker";
 import { useAiStream } from "./useAiStream";
 import { formatSelectionPreview } from "./aiPanelFormatting";
 import { buildAiErrorConfigs, type ModelsListError } from "./aiPanelHelpers";
-import { useAiPanelEffects, createAiPanelActions, isRunning } from "./useAiPanelEffects";
+import {
+  useAiPanelEffects,
+  createAiPanelActions,
+  isRunning,
+} from "./useAiPanelEffects";
 import { AiMessageList } from "./AiMessageList";
 import { AiInputArea } from "./AiInputArea";
-import { AiPanelTabBar } from "./AiPanelTabBar";
 export { formatDbErrorDescription } from "./aiPanelHelpers";
 export { CodeBlock } from "./CodeBlock";
-type AiPanelProps = { newChatSignal?: number };
 
-export function AiPanel(props: AiPanelProps = {}): JSX.Element {
+export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
   useAiStream();
   const { t } = useTranslation();
   const openSettings = useOpenSettings();
@@ -55,7 +57,9 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   const persistAiApply = useAiStore((s) => s.persistAiApply);
   const logAiApplyConflict = useAiStore((s) => s.logAiApplyConflict);
   const run = useAiStore((s) => s.run);
-  const regenerateWithStrongNegative = useAiStore((s) => s.regenerateWithStrongNegative);
+  const regenerateWithStrongNegative = useAiStore(
+    (s) => s.regenerateWithStrongNegative,
+  );
   const cancel = useAiStore((s) => s.cancel);
   const editor = useEditorStore((s) => s.editor);
   const bootstrapStatus = useEditorStore((s) => s.bootstrapStatus);
@@ -66,7 +70,6 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   const currentProject = useProjectStore((s) => s.current);
   const [skillsOpen, setSkillsOpen] = React.useState(false);
   const [skillManagerOpen, setSkillManagerOpen] = React.useState(false);
-  const [activeTab, setActiveTab] = React.useState<"chat" | "history">("chat");
   const [modeOpen, setModeOpen] = React.useState(false);
   const [modelOpen, setModelOpen] = React.useState(false);
   const [selectedMode, setSelectedMode] = React.useState<AiMode>("ask");
@@ -76,11 +79,17 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   const [availableModels, setAvailableModels] = React.useState<AiModelOption[]>(
     [],
   );
-  const [modelsStatus, setModelsStatus] = React.useState<"idle" | "loading" | "ready" | "error">("idle");
-  const [modelsLastError, setModelsLastError] = React.useState<ModelsListError | null>(null);
+  const [modelsStatus, setModelsStatus] = React.useState<
+    "idle" | "loading" | "ready" | "error"
+  >("idle");
+  const [modelsLastError, setModelsLastError] =
+    React.useState<ModelsListError | null>(null);
   const [lastRequest, setLastRequest] = React.useState<string | null>(null);
-  const [inlineDiffConfirmOpen, setInlineDiffConfirmOpen] = React.useState(false);
-  const [judgeResult, setJudgeResult] = React.useState<JudgeResultEvent | null>(null);
+  const [inlineDiffConfirmOpen, setInlineDiffConfirmOpen] =
+    React.useState(false);
+  const [judgeResult, setJudgeResult] = React.useState<JudgeResultEvent | null>(
+    null,
+  );
   const evaluatedRunIdRef = React.useRef<string | null>(null);
   const pendingSelectionSnapshotRef = React.useRef<{
     selectionRef: SelectionRef;
@@ -91,8 +100,6 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
     lastCandidates[0] ??
     null;
   const activeOutputText = selectedCandidate?.text ?? outputText;
-  const historyMessages = activeChatSessionId ? activeChatMessages : [];
-  const activeRunId = selectedCandidate?.runId ?? lastRunId;
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const lastHandledNewChatSignalRef = React.useRef(props.newChatSignal ?? 0);
   const handleNewChatRef = React.useRef<() => void>(() => {});
@@ -126,7 +133,7 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
     setSelectedCandidateId,
     status,
     proposal,
-    activeRunId,
+    activeRunId: selectedCandidate?.runId ?? lastRunId,
     activeOutputText,
     selectionRef,
     selectionText,
@@ -217,10 +224,9 @@ export function AiPanel(props: AiPanelProps = {}): JSX.Element {
   return (
     <PanelContainer data-testid="ai-panel" title="AI">
       <div className="flex flex-col h-full min-h-0">
-        <AiPanelTabBar activeTab={activeTab} onTabChange={setActiveTab} />
         <div className="flex-1 flex flex-col min-h-0">
           <AiMessageList
-            historyMessages={historyMessages}
+            historyMessages={activeChatSessionId ? activeChatMessages : []}
             lastRequest={lastRequest}
             working={working}
             status={status}

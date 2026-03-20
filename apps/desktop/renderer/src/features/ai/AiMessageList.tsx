@@ -1,9 +1,7 @@
 import React from "react";
 import type { SettingsTab } from "../settings-dialog/SettingsDialog";
 
-import {
-  AiErrorCard,
-} from "../../components/features/AiDialogs";
+import { AiErrorCard } from "../../components/features/AiDialogs";
 
 import { Button, Spinner, Text } from "../../components/primitives";
 
@@ -73,7 +71,9 @@ export function ErrorGuideCard(props: {
       className={`w-full rounded-[var(--radius-md)] ${bgColorMap[sev]}`}
     >
       <div className="flex">
-        <div className={`w-1.5 rounded-l-[var(--radius-md)] ${borderColorMap[sev]}`} />
+        <div
+          className={`w-1.5 rounded-l-[var(--radius-md)] ${borderColorMap[sev]}`}
+        />
         <div className="flex-1 px-3 py-2.5">
           <h4 className="text-[13px] font-semibold text-[var(--color-fg-default)]">
             {props.title}
@@ -352,11 +352,7 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
       ) : !hasHistoryReplay ? (
         !props.lastRequest &&
         !props.working && (
-          <div
-            data-testid="ai-output"
-            aria-live="polite"
-            aria-atomic="false"
-          >
+          <div data-testid="ai-output" aria-live="polite" aria-atomic="false">
             <AiEmptyState />
           </div>
         )

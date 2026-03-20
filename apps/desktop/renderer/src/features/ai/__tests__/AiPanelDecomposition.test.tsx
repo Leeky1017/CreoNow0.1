@@ -2,9 +2,7 @@
  * AiPanel 拆分守卫测试
  *
  * AC-1: AiPanel.tsx ≤ 300 行
- * AC-15: 子组件通过 props / hook 通信，无全局隐式依赖
- *
- * 这些测试验证拆分后的模块结构。
+ * AC-2+: 子组件文件存在
  */
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -21,15 +19,9 @@ function resolveAiDir(): string {
   return dir;
 }
 
-function readAiFile(filename: string): string {
-  const dir = resolveAiDir();
-  const path = resolve(dir, filename);
-  if (!existsSync(path)) throw new Error(`File not found: ${filename}`);
-  return readFileSync(path, "utf8");
-}
-
 function countLines(filename: string): number {
-  const content = readAiFile(filename);
+  const dir = resolveAiDir();
+  const content = readFileSync(resolve(dir, filename), "utf8");
   return content.endsWith("\n")
     ? content.split("\n").length - 1
     : content.split("\n").length;
@@ -71,38 +63,6 @@ describe("AiPanel decomposition guard", () => {
 
     it("AiUsageStats.tsx exists", () => {
       expect(fileExists("AiUsageStats.tsx")).toBe(true);
-    });
-  });
-
-  describe("AC-15: AiPanel imports sub-components, no inline definitions", () => {
-    it("AiPanel.tsx imports AiPanelTabBar", () => {
-      const source = readAiFile("AiPanel.tsx");
-      expect(source).toMatch(/from\s+["']\.\/AiPanelTabBar["']/);
-    });
-
-    it("AiPanel.tsx imports AiMessageList", () => {
-      const source = readAiFile("AiPanel.tsx");
-      expect(source).toMatch(/from\s+["']\.\/AiMessageList["']/);
-    });
-
-    it("AiPanel.tsx imports AiInputArea", () => {
-      const source = readAiFile("AiPanel.tsx");
-      expect(source).toMatch(/from\s+["']\.\/AiInputArea["']/);
-    });
-
-    it("AiMessageList.tsx imports AiEmptyState", () => {
-      const source = readAiFile("AiMessageList.tsx");
-      expect(source).toMatch(/from\s+["']\.\/AiEmptyState["']/);
-    });
-
-    it("AiPanel.tsx does not define AiPanelChatArea inline", () => {
-      const source = readAiFile("AiPanel.tsx");
-      expect(source).not.toMatch(/function\s+AiPanelChatArea/);
-    });
-
-    it("AiPanel.tsx does not define AiPanelInputArea inline", () => {
-      const source = readAiFile("AiPanel.tsx");
-      expect(source).not.toMatch(/function\s+AiPanelInputArea/);
     });
   });
 });

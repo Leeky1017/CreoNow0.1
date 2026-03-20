@@ -4,9 +4,7 @@ import type { SettingsTab } from "../settings-dialog/SettingsDialog";
 
 import { Tooltip } from "../../components/primitives/Tooltip";
 
-import type {
-  AiMode,
-} from "./ModePicker";
+import type { AiMode } from "./ModePicker";
 import { ModePicker, getModeName } from "./ModePicker";
 
 import {
@@ -47,6 +45,11 @@ function SendStopButton(props: {
       <button
         data-testid="ai-send-stop"
         type="button"
+        aria-label={
+          props.isWorking
+            ? t("ai.input.stop", "Stop generation")
+            : t("ai.input.send", "Send message")
+        }
         className="focus-ring w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         onClick={props.isWorking ? props.onStop : props.onSend}
         disabled={props.disabled}
@@ -181,6 +184,7 @@ export const AiInputArea = React.forwardRef<
         <textarea
           ref={ref}
           data-testid="ai-input"
+          aria-label={t("ai.input.ariaLabel", "AI input")}
           value={props.input}
           onChange={(e) => props.setInput(e.target.value)}
           onKeyDown={props.handleKeyDown}

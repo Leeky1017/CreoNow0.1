@@ -2,9 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Sun } from "lucide-react";
 import { Text } from "../../components/primitives";
 
-export function AiEmptyState(props: {
-  className?: string;
-}): JSX.Element {
+export function AiEmptyState(props: { className?: string }): JSX.Element {
   const { t } = useTranslation();
   return (
     <div

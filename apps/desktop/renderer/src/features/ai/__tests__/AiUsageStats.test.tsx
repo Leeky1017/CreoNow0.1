@@ -61,7 +61,9 @@ describe("AiUsageStats", () => {
   it("token count and cost are in separate rows (not same flex row)", () => {
     const { container } = render(<AiUsageStats {...baseProps} />);
     // Each stat should be in its own row — using flex-col or space-y layout
-    const rows = container.querySelectorAll("[data-testid='ai-usage-stats'] > *");
+    const rows = container.querySelectorAll(
+      "[data-testid='ai-usage-stats'] > *",
+    );
     expect(rows.length).toBeGreaterThanOrEqual(2);
   });
 
@@ -69,5 +71,19 @@ describe("AiUsageStats", () => {
     render(<AiUsageStats {...baseProps} />);
     const annotation = screen.getByTestId("ai-usage-annotation");
     expect(annotation).toBeInTheDocument();
+  });
+
+  it("does not render cost when estimatedCostUsd is undefined", () => {
+    const { promptTokens, completionTokens, sessionTotalTokens } = baseProps;
+    render(
+      <AiUsageStats
+        promptTokens={promptTokens}
+        completionTokens={completionTokens}
+        sessionTotalTokens={sessionTotalTokens}
+      />,
+    );
+    expect(
+      screen.queryByTestId("ai-usage-estimated-cost"),
+    ).not.toBeInTheDocument();
   });
 });

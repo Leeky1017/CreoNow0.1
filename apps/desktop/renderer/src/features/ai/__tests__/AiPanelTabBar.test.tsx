@@ -10,8 +10,8 @@ vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const map: Record<string, string> = {
-        "ai.tab.chat": "Chat",
-        "ai.tab.history": "History",
+        "ai.tabChat": "Chat",
+        "ai.tabHistory": "History",
       };
       return map[key] ?? key;
     },
@@ -22,9 +22,7 @@ import { AiPanelTabBar } from "../AiPanelTabBar";
 
 describe("AiPanelTabBar", () => {
   it("renders Chat and History tabs", () => {
-    render(
-      <AiPanelTabBar activeTab="chat" onTabChange={vi.fn()} />,
-    );
+    render(<AiPanelTabBar activeTab="chat" onTabChange={vi.fn()} />);
     const tabs = screen.getAllByRole("tab");
     expect(tabs).toHaveLength(2);
     expect(screen.getByRole("tab", { name: /chat/i })).toBeInTheDocument();
@@ -33,26 +31,20 @@ describe("AiPanelTabBar", () => {
 
   it("clicking History tab triggers onTabChange('history')", () => {
     const onTabChange = vi.fn();
-    render(
-      <AiPanelTabBar activeTab="chat" onTabChange={onTabChange} />,
-    );
+    render(<AiPanelTabBar activeTab="chat" onTabChange={onTabChange} />);
     fireEvent.click(screen.getByRole("tab", { name: /history/i }));
     expect(onTabChange).toHaveBeenCalledWith("history");
   });
 
   it("clicking Chat tab triggers onTabChange('chat')", () => {
     const onTabChange = vi.fn();
-    render(
-      <AiPanelTabBar activeTab="history" onTabChange={onTabChange} />,
-    );
+    render(<AiPanelTabBar activeTab="history" onTabChange={onTabChange} />);
     fireEvent.click(screen.getByRole("tab", { name: /chat/i }));
     expect(onTabChange).toHaveBeenCalledWith("chat");
   });
 
   it("active tab has aria-selected=true", () => {
-    render(
-      <AiPanelTabBar activeTab="chat" onTabChange={vi.fn()} />,
-    );
+    render(<AiPanelTabBar activeTab="chat" onTabChange={vi.fn()} />);
     const chatTab = screen.getByRole("tab", { name: /chat/i });
     expect(chatTab).toHaveAttribute("aria-selected", "true");
     const historyTab = screen.getByRole("tab", { name: /history/i });
@@ -60,9 +52,7 @@ describe("AiPanelTabBar", () => {
   });
 
   it("active tab has accent underline indicator", () => {
-    render(
-      <AiPanelTabBar activeTab="chat" onTabChange={vi.fn()} />,
-    );
+    render(<AiPanelTabBar activeTab="chat" onTabChange={vi.fn()} />);
     const chatTab = screen.getByRole("tab", { name: /chat/i });
     // Active tab should have accent-colored bottom border
     expect(chatTab.className).toMatch(/color-accent/);
