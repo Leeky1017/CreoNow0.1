@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Text } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 import { Slider } from "../../components/primitives/Slider";
+import { ACCENT_PALETTE, DEFAULT_ACCENT_COLOR } from "./accentPalette";
 
 /**
  * Theme mode types
@@ -69,49 +70,31 @@ const themeButtonBaseStyles = [
 type TFunction = (key: string, options?: Record<string, unknown>) => string;
 
 /**
- * Accent color options
- * intentional: theme preview swatches — hex values are the actual color choices
+ * Accent color options — derived from ACCENT_PALETTE constant.
  */
 function getAccentColors(t: TFunction) {
-  return [
-    { value: "#ffffff", label: t("settingsDialog.appearance.colorWhite") },
-    { value: "#3b82f6", label: t("settingsDialog.appearance.colorBlue") },
-    { value: "#22c55e", label: t("settingsDialog.appearance.colorGreen") },
-    { value: "#f97316", label: t("settingsDialog.appearance.colorOrange") },
-    { value: "#8b5cf6", label: t("settingsDialog.appearance.colorPurple") },
-    { value: "#ec4899", label: t("settingsDialog.appearance.colorPink") },
-  ];
+  return ACCENT_PALETTE.map((entry) => ({
+    value: entry.value,
+    label: t(entry.labelKey),
+  }));
 }
 
 /**
- * Theme preview component
+ * Theme preview component — uses data-theme to inherit Design Tokens.
  */
 function ThemePreview({ mode }: { mode: ThemeMode }): JSX.Element {
-  const isDark = mode === "dark" || mode === "system";
-  // intentional: theme preview swatch — hex values represent actual theme appearance
-  const bgColor = isDark ? "#0f0f0f" : "#ffffff";
-  const fgColor = isDark ? "#ffffff" : "#1a1a1a";
-  const mutedColor = isDark ? "#666666" : "#888888";
+  const themeAttr = mode === "system" ? "dark" : mode;
 
   return (
     <div
-      className="w-16 h-12 rounded border border-[var(--color-border-default)] overflow-hidden"
-      style={{ backgroundColor: bgColor }}
+      data-theme={themeAttr}
+      className="w-16 h-12 rounded border border-[var(--color-border-default)] overflow-hidden bg-[var(--color-bg-base)]"
     >
       {/* Mini preview content */}
       <div className="p-1.5">
-        <div
-          className="h-1 w-8 rounded-sm mb-1"
-          style={{ backgroundColor: fgColor }}
-        />
-        <div
-          className="h-0.5 w-12 rounded-sm mb-0.5"
-          style={{ backgroundColor: mutedColor }}
-        />
-        <div
-          className="h-0.5 w-10 rounded-sm"
-          style={{ backgroundColor: mutedColor }}
-        />
+        <div className="h-1 w-8 rounded-sm mb-1 bg-[var(--color-fg-default)]" />
+        <div className="h-0.5 w-12 rounded-sm mb-0.5 bg-[var(--color-fg-muted)]" />
+        <div className="h-0.5 w-10 rounded-sm bg-[var(--color-fg-muted)]" />
       </div>
     </div>
   );
@@ -170,7 +153,7 @@ export function SettingsAppearancePage({
                 onClick={() => updateSetting("themeMode", mode)}
                 className={`${themeButtonBaseStyles} ${
                   isSelected
-                    ? "border-[var(--color-fg-default)] bg-[var(--color-bg-selected)]"
+                    ? "border-[var(--color-fg-default)] bg-[var(--color-bg-selected)] shadow-[var(--shadow-sm)]"
                     : "border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)]"
                 }`}
               >
@@ -260,6 +243,6 @@ export function SettingsAppearancePage({
  */
 export const defaultAppearanceSettings: AppearanceSettings = {
   themeMode: "dark",
-  accentColor: "#ffffff",
+  accentColor: DEFAULT_ACCENT_COLOR,
   fontSize: 16,
 };
