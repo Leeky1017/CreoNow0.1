@@ -22,6 +22,9 @@
   --space-section-gap: var(--space-6); /* 区块间距 */
   --space-item-gap: var(--space-2); /* 列表项间距 */
   --space-inline-gap: var(--space-1); /* 行内元素间距 */
+  --space-editor-padding-x: var(--space-12); /* 编辑器水平内边距 48px */
+  --editor-content-max-width: 760px; /* 编辑器正文最大宽度 */
+  --space-featured-image-height: 280px; /* 特色图片区域高度 */
 
   /* Radius */
   --radius-none: 0px;

@@ -167,6 +167,9 @@
       "finalDocumentHint": "This document is final. Confirm before editing.",
       "editAnyway": "Edit Anyway"
     },
+    "featuredImage": {
+      "alt": "Featured image"
+    },
     "toolbar": {
       "horizontalRule": "Horizontal Rule",
       "more": "More"

@@ -59,8 +59,11 @@ const RENDERER_ONLY_ALLOWLIST = new Set([
   "--zen-label-size",
   "--zen-title-size",
 
-  // Editor-specific layout token
+  // Editor-specific layout tokens
   "--text-editor-paragraph-spacing",
+  "--space-featured-image-height",
+  "--space-editor-padding-x",
+  "--editor-content-max-width",
 
   // Z-index for overlay layer
   "--z-overlay",
