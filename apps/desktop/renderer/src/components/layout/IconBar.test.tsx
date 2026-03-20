@@ -46,7 +46,8 @@ describe("IconBar", () => {
       renderWithWrapper();
 
       const iconBar = screen.getByTestId("icon-bar");
-      expect(iconBar).toHaveStyle({ width: "48px" });
+      expect(iconBar.className).toContain("w-12");
+      expect(iconBar.className).toContain("shrink-0");
     });
   });
 

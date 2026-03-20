@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 
 import {
   useLayoutStore,
-  LAYOUT_DEFAULTS,
   type DialogType,
   type LeftPanelType,
 } from "../../stores/layoutStore";
@@ -224,8 +223,7 @@ export function IconBar({
 
   return (
     <div
-      className="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full"
-      style={{ width: LAYOUT_DEFAULTS.iconBarWidth }}
+      className="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full shrink-0 w-12"
       data-testid="icon-bar"
     >
       {/* Main navigation icons */}

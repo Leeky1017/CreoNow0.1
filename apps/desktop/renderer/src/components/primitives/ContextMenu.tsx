@@ -29,6 +29,8 @@ export interface ContextMenuItem {
   destructive?: boolean;
   /** Optional icon element */
   icon?: React.ReactNode;
+  /** Optional keyboard shortcut label (e.g. "F2", "Del") */
+  shortcut?: string;
 }
 
 /**
@@ -142,7 +144,12 @@ export function ContextMenu({
               disabled={item.disabled}
             >
               {item.icon}
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {item.shortcut ? (
+                <span aria-hidden="true" className="ml-auto pl-4 text-[11px] text-[var(--color-fg-muted)]">
+                  {item.shortcut}
+                </span>
+              ) : null}
             </ContextMenuPrimitive.Item>
           ))}
         </ContextMenuPrimitive.Content>
