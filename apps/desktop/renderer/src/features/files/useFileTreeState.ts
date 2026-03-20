@@ -22,7 +22,9 @@ export function useFileTreeState(
 
   function resolveMoveTargetFolder(documentId: string): string | null {
     const sourceNode = core.tree.nodeById.get(documentId);
-    const descendants = sourceNode ? collectDescendantIds(sourceNode) : new Set<string>();
+    const descendants = sourceNode
+      ? collectDescendantIds(sourceNode)
+      : new Set<string>();
     const candidates = [...core.tree.nodeById.values()]
       .filter((n) => n.documentId !== documentId)
       .filter((n) => !descendants.has(n.documentId))
@@ -36,11 +38,19 @@ export function useFileTreeState(
     if (!res.ok) return;
     await core.openDocument({ projectId, documentId: res.data.documentId });
     core.setFocusedDocumentId(res.data.documentId);
-    core.setEditing({ mode: "rename", documentId: res.data.documentId, title: t(defaultTitleI18nKey(type)) });
+    core.setEditing({
+      mode: "rename",
+      documentId: res.data.documentId,
+      title: t(defaultTitleI18nKey(type)),
+    });
   }
 
   async function onCopy(item: DocumentListItem): Promise<void> {
-    const res = await core.createAndSetCurrent({ projectId, type: item.type, title: t("files.tree.copySuffix", { title: item.title }) });
+    const res = await core.createAndSetCurrent({
+      projectId,
+      type: item.type,
+      title: t("files.tree.copySuffix", { title: item.title }),
+    });
     if (!res.ok) return;
     await core.openDocument({ projectId, documentId: res.data.documentId });
     core.setFocusedDocumentId(res.data.documentId);
@@ -55,7 +65,11 @@ export function useFileTreeState(
 
   async function onCommitRename(): Promise<void> {
     if (core.editing.mode !== "rename") return;
-    const res = await core.rename({ projectId, documentId: core.editing.documentId, title: core.editing.title });
+    const res = await core.rename({
+      projectId,
+      documentId: core.editing.documentId,
+      title: core.editing.title,
+    });
     if (res.ok) core.setEditing({ mode: "idle" });
   }
 
@@ -71,21 +85,39 @@ export function useFileTreeState(
     if (res.ok) await core.openCurrentForProject(projectId);
   }
 
-  async function onToggleStatus(args: { documentId: string; next: "draft" | "final" }): Promise<void> {
-    const res = await core.updateStatus({ projectId, documentId: args.documentId, status: args.next });
+  async function onToggleStatus(args: {
+    documentId: string;
+    next: "draft" | "final";
+  }): Promise<void> {
+    const res = await core.updateStatus({
+      projectId,
+      documentId: args.documentId,
+      status: args.next,
+    });
     if (!res.ok) return;
     if (core.currentDocumentId === args.documentId) {
       await core.openDocument({ projectId, documentId: args.documentId });
     }
   }
 
-  async function onMoveDocumentToFolder(args: { documentId: string; parentId: string }): Promise<void> {
+  async function onMoveDocumentToFolder(args: {
+    documentId: string;
+    parentId: string;
+  }): Promise<void> {
     const sourceNode = core.tree.nodeById.get(args.documentId);
     if (!sourceNode || args.documentId === args.parentId) return;
     if (collectDescendantIds(sourceNode).has(args.parentId)) return;
-    const res = await core.moveToFolder({ projectId, documentId: args.documentId, parentId: args.parentId });
+    const res = await core.moveToFolder({
+      projectId,
+      documentId: args.documentId,
+      parentId: args.parentId,
+    });
     if (res.ok) {
-      core.setExpandedFolderIds((prev) => { const next = new Set(prev); next.add(args.parentId); return next; });
+      core.setExpandedFolderIds((prev) => {
+        const next = new Set(prev);
+        next.add(args.parentId);
+        return next;
+      });
     }
   }
 

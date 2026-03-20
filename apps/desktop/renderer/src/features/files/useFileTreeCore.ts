@@ -77,7 +77,10 @@ export function useFileTreeCore(
       if (next.size === prev.size) {
         let unchanged = true;
         for (const id of next) {
-          if (!prev.has(id)) { unchanged = false; break; }
+          if (!prev.has(id)) {
+            unchanged = false;
+            break;
+          }
         }
         if (unchanged) return prev;
       }
@@ -87,11 +90,22 @@ export function useFileTreeCore(
 
   // Initial rename trigger
   React.useEffect(() => {
-    if (!initialRenameDocumentId || initialRenameAppliedRef.current || editing.mode !== "idle") return;
-    const doc = items.find((item) => item.documentId === initialRenameDocumentId);
+    if (
+      !initialRenameDocumentId ||
+      initialRenameAppliedRef.current ||
+      editing.mode !== "idle"
+    )
+      return;
+    const doc = items.find(
+      (item) => item.documentId === initialRenameDocumentId,
+    );
     if (!doc) return;
     initialRenameAppliedRef.current = true;
-    setEditing({ mode: "rename", documentId: doc.documentId, title: doc.title });
+    setEditing({
+      mode: "rename",
+      documentId: doc.documentId,
+      title: doc.title,
+    });
   }, [editing.mode, items, initialRenameDocumentId]);
 
   // Focus rename input
@@ -103,11 +117,15 @@ export function useFileTreeCore(
 
   // Sync focusedDocumentId with visible nodes
   React.useEffect(() => {
-    if (visibleNodes.length === 0) { setFocusedDocumentId(null); return; }
+    if (visibleNodes.length === 0) {
+      setFocusedDocumentId(null);
+      return;
+    }
     const visibleIdSet = new Set(visibleNodes.map((e) => e.node.documentId));
     setFocusedDocumentId((prev) => {
       if (prev && visibleIdSet.has(prev)) return prev;
-      if (currentDocumentId && visibleIdSet.has(currentDocumentId)) return currentDocumentId;
+      if (currentDocumentId && visibleIdSet.has(currentDocumentId))
+        return currentDocumentId;
       return visibleNodes[0]?.node.documentId ?? null;
     });
   }, [currentDocumentId, visibleNodes]);
@@ -123,23 +141,42 @@ export function useFileTreeCore(
 
   return {
     // store data
-    items, currentDocumentId, bootstrapStatus, lastError, clearError,
+    items,
+    currentDocumentId,
+    bootstrapStatus,
+    lastError,
+    clearError,
     // store actions
-    createAndSetCurrent, rename, updateStatus, deleteDocument: deleteDocument,
-    setCurrent, reorder, moveToFolder,
-    openDocument, confirm, dialogProps, openCurrentForProject,
+    createAndSetCurrent,
+    rename,
+    updateStatus,
+    deleteDocument: deleteDocument,
+    setCurrent,
+    reorder,
+    moveToFolder,
+    openDocument,
+    confirm,
+    dialogProps,
+    openCurrentForProject,
     // local state
-    editing, setEditing,
-    expandedFolderIds, setExpandedFolderIds,
-    focusedDocumentId, setFocusedDocumentId,
-    draggingDocumentId, setDraggingDocumentId,
-    dropTarget, setDropTarget,
+    editing,
+    setEditing,
+    expandedFolderIds,
+    setExpandedFolderIds,
+    focusedDocumentId,
+    setFocusedDocumentId,
+    draggingDocumentId,
+    setDraggingDocumentId,
+    dropTarget,
+    setDropTarget,
     inputRef,
     // derived
-    tree, visibleNodes,
+    tree,
+    visibleNodes,
     // actions
     toggleFolderExpanded,
     // params
-    projectId, t,
+    projectId,
+    t,
   };
 }

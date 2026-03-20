@@ -146,7 +146,10 @@ export function ContextMenu({
               {item.icon}
               <span className="flex-1">{item.label}</span>
               {item.shortcut ? (
-                <span aria-hidden="true" className="ml-auto pl-4 text-[11px] text-[var(--color-fg-muted)]">
+                <span
+                  aria-hidden="true"
+                  className="ml-auto pl-4 text-[11px] text-[var(--color-fg-muted)]"
+                >
                   {item.shortcut}
                 </span>
               ) : null}
