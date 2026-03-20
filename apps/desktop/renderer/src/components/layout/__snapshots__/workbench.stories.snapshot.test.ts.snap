@@ -12,9 +12,8 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
       class=""
     >
       <div
-        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full"
+        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full shrink-0 w-12"
         data-testid="icon-bar"
-        style="width: 48px;"
       >
         <div
           class="flex flex-col items-center gap-1"
@@ -338,9 +337,8 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
       class=""
     >
       <div
-        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full"
+        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full shrink-0 w-12"
         data-testid="icon-bar"
-        style="width: 48px;"
       >
         <div
           class="flex flex-col items-center gap-1"
@@ -664,9 +662,8 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
       class="[&_[data-testid='icon-bar-files']]:outline [&_[data-testid='icon-bar-files']]:outline-[length:var(--ring-focus-width)] [&_[data-testid='icon-bar-files']]:outline-offset-[var(--ring-focus-offset)] [&_[data-testid='icon-bar-files']]:outline-[var(--color-ring-focus)]"
     >
       <div
-        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full"
+        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full shrink-0 w-12"
         data-testid="icon-bar"
-        style="width: 48px;"
       >
         <div
           class="flex flex-col items-center gap-1"
@@ -990,9 +987,8 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
       class=""
     >
       <div
-        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full"
+        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full shrink-0 w-12"
         data-testid="icon-bar"
-        style="width: 48px;"
       >
         <div
           class="flex flex-col items-center gap-1"
@@ -1316,9 +1312,8 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
       class=""
     >
       <div
-        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full"
+        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full shrink-0 w-12"
         data-testid="icon-bar"
-        style="width: 48px;"
       >
         <div
           class="flex flex-col items-center gap-1"
@@ -1642,9 +1637,8 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
       class="[&_[data-testid='icon-bar-search']]:bg-[var(--color-bg-hover)] [&_[data-testid='icon-bar-search']]:text-[var(--color-fg-default)]"
     >
       <div
-        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full"
+        class="flex flex-col items-center pt-2 pb-2 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] h-full shrink-0 w-12"
         data-testid="icon-bar"
-        style="width: 48px;"
       >
         <div
           class="flex flex-col items-center gap-1"
