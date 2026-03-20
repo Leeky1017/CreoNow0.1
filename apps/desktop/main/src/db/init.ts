@@ -39,6 +39,7 @@ import tracePersistenceSql from "./migrations/0021_s3_trace_persistence.sql?raw"
 import synopsisInjectionSql from "./migrations/0022_s3_synopsis_injection.sql?raw";
 import kgTypeOtherToFactionSql from "./migrations/0023_kg_type_other_to_faction.sql?raw";
 import chatHistoryPersistenceSql from "./migrations/0024_chat_history_persistence.sql?raw";
+import documentCoverImageSql from "./migrations/0025_document_cover_image.sql?raw";
 
 export type DbInitOk = {
   ok: true;
@@ -146,6 +147,11 @@ const MIGRATIONS_BASE: readonly Migration[] = [
     version: 24,
     name: "0024_chat_history_persistence",
     sql: chatHistoryPersistenceSql,
+  },
+  {
+    version: 25,
+    name: "0025_document_cover_image",
+    sql: documentCoverImageSql,
   },
 ];
 

@@ -49,6 +49,7 @@ vi.mock("../../stores/aiStore", () => ({
       run: vi.fn().mockResolvedValue({ ok: true }),
       regenerateWithStrongNegative: vi.fn().mockResolvedValue(undefined),
       cancel: vi.fn().mockResolvedValue({ ok: true }),
+      selectChatSession: vi.fn().mockResolvedValue(undefined),
     };
     return selector(state);
   }),
@@ -112,16 +113,18 @@ describe("AiPanel", () => {
       expect(screen.getByTestId("ai-send-stop")).toBeInTheDocument();
     });
 
-    it("不应在 AiPanel 内显示 History/New Chat 按钮", () => {
+    it("应渲染 Chat/History 标签页", () => {
       render(<AiPanel />);
 
-      expect(screen.queryByTestId("ai-history-toggle")).not.toBeInTheDocument();
-      expect(
-        screen.queryByRole("button", { name: /history|历史/i }),
-      ).not.toBeInTheDocument();
-      expect(
-        screen.queryByRole("button", { name: /new chat|新建对话|新对话/i }),
-      ).not.toBeInTheDocument();
+      expect(screen.getByRole("tablist")).toBeInTheDocument();
+      expect(screen.getAllByRole("tab")).toHaveLength(2);
+    });
+
+    it("默认显示 Chat 标签页", () => {
+      render(<AiPanel />);
+
+      const tabs = screen.getAllByRole("tab");
+      expect(tabs[0]).toHaveAttribute("aria-selected", "true");
     });
 
     it("应该显示输入框", () => {
@@ -205,6 +208,7 @@ describe("AiPanel", () => {
           run: vi.fn(),
           regenerateWithStrongNegative: vi.fn().mockResolvedValue(undefined),
           cancel: vi.fn(),
+          selectChatSession: vi.fn(),
         };
         return selector(state as unknown as AiStore);
       });
@@ -266,6 +270,7 @@ describe("AiPanel", () => {
           run: vi.fn(),
           regenerateWithStrongNegative: vi.fn().mockResolvedValue(undefined),
           cancel: vi.fn(),
+          selectChatSession: vi.fn(),
         };
         return selector(state as unknown as AiStore);
       });
@@ -315,6 +320,7 @@ describe("AiPanel", () => {
           run: vi.fn(),
           regenerateWithStrongNegative: vi.fn().mockResolvedValue(undefined),
           cancel: mockCancel,
+          selectChatSession: vi.fn(),
         };
         return selector(state as unknown as AiStore);
       });

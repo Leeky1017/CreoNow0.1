@@ -56,6 +56,7 @@ export type EditorState = {
   projectId: string | null;
   documentId: string | null;
   documentStatus: DocumentStatus | null;
+  documentCoverImageUrl: string | null;
   documentContentJson: string | null;
   editor: Editor | null;
   lastSavedOrQueuedJson: string | null;
@@ -154,6 +155,7 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
       projectId: null,
       documentId: null,
       documentStatus: null,
+      documentCoverImageUrl: null,
       documentContentJson: null,
       editor: null,
       lastSavedOrQueuedJson: null,
@@ -246,6 +248,7 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
             projectId,
             documentId: null,
             documentStatus: null,
+            documentCoverImageUrl: null,
           });
           return;
         }
@@ -265,6 +268,7 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
           projectId,
           documentId,
           documentStatus: readRes.data.status,
+          documentCoverImageUrl: readRes.data.coverImageUrl ?? null,
           documentContentJson: readRes.data.contentJson,
           lastSavedOrQueuedJson: readRes.data.contentJson,
           documentCharacterCount: 0,
@@ -305,6 +309,7 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
           projectId,
           documentId,
           documentStatus: readRes.data.status,
+          documentCoverImageUrl: readRes.data.coverImageUrl ?? null,
           documentContentJson: readRes.data.contentJson,
           lastSavedOrQueuedJson: readRes.data.contentJson,
           documentCharacterCount: 0,
@@ -335,6 +340,7 @@ export function createEditorStore(deps: { invoke: IpcInvoke }) {
             projectId,
             documentId: null,
             documentStatus: null,
+            documentCoverImageUrl: null,
             documentContentJson: null,
             lastSavedOrQueuedJson: null,
             documentCharacterCount: 0,
