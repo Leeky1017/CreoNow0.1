@@ -167,6 +167,9 @@
       "finalDocumentHint": "此文档已定稿，编辑前请确认。",
       "editAnyway": "仍然编辑"
     },
+    "featuredImage": {
+      "alt": "文档特色图片"
+    },
     "toolbar": {
       "horizontalRule": "分隔线",
       "more": "更多"

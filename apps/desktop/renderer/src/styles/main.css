@@ -565,6 +565,23 @@ textarea:focus-visible {
 
 /* === ProseMirror editor token overrides === */
 
+/* AC-1: editor content max-width constraint + centering */
+[data-testid="editor-content-region"] .ProseMirror {
+  max-width: var(--editor-content-max-width, 760px);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-editor-padding-x, 48px);
+  padding-right: var(--space-editor-padding-x, 48px);
+}
+
+/* AC-2: H1 heading uses display typography tokens */
+.ProseMirror h1 {
+  font-size: var(--text-display-size);
+  font-weight: var(--text-display-weight);
+  letter-spacing: var(--text-display-letter-spacing);
+  line-height: var(--text-display-line-height);
+}
+
 .ProseMirror ::selection {
   background: var(--color-selection);
 }

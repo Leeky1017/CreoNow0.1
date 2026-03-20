@@ -47,6 +47,7 @@ function createDb(): Database.Database {
       parent_id TEXT,
       created_at INTEGER NOT NULL,
       updated_at INTEGER NOT NULL,
+      cover_image_url TEXT,
       FOREIGN KEY(project_id) REFERENCES projects(project_id) ON DELETE CASCADE
     );
 
