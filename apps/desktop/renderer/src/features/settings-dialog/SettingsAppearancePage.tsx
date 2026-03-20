@@ -150,6 +150,7 @@ export function SettingsAppearancePage({
               <button
                 key={mode}
                 type="button"
+                data-testid={`theme-mode-${mode}`}
                 onClick={() => updateSetting("themeMode", mode)}
                 className={`${themeButtonBaseStyles} ${
                   isSelected
