@@ -3,9 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { JudgeResultEvent } from "@shared/types/judge";
 import { PanelContainer } from "../../components/composites/PanelContainer";
 import { useOpenSettings } from "../../contexts/OpenSettingsContext";
-import { useAiStore, type SelectionRef } from "../../stores/aiStore";
-import { useEditorStore } from "../../stores/editorStore";
-import { useProjectStore } from "../../stores/projectStore";
+import type { SelectionRef } from "../../stores/aiStore";
 import { unifiedDiff } from "../../lib/diff/unifiedDiff";
 import type { AiMode } from "./ModePicker";
 import type { AiModel, AiModelOption } from "./ModelPicker";
@@ -21,6 +19,7 @@ import { AiMessageList } from "./AiMessageList";
 import { AiInputArea } from "./AiInputArea";
 import { AiPanelTabBar } from "./AiPanelTabBar";
 import { AiChatSessionList } from "./AiChatSessionList";
+import { useAiPanelSelectors } from "./useAiPanelSelectors";
 export { formatDbErrorDescription } from "./aiPanelHelpers";
 export { CodeBlock } from "./CodeBlock";
 
@@ -28,49 +27,7 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
   useAiStream();
   const { t } = useTranslation();
   const openSettings = useOpenSettings();
-  const status = useAiStore((s) => s.status);
-  const selectedSkillId = useAiStore((s) => s.selectedSkillId);
-  const skills = useAiStore((s) => s.skills);
-  const skillsStatus = useAiStore((s) => s.skillsStatus);
-  const skillsLastError = useAiStore((s) => s.skillsLastError);
-  const input = useAiStore((s) => s.input);
-  const outputText = useAiStore((s) => s.outputText);
-  const lastRunId = useAiStore((s) => s.lastRunId);
-  const lastCandidates = useAiStore((s) => s.lastCandidates);
-  const usageStats = useAiStore((s) => s.usageStats);
-  const queuePosition = useAiStore((s) => s.queuePosition);
-  const queuedCount = useAiStore((s) => s.queuedCount);
-  const activeChatSessionId = useAiStore((s) => s.activeChatSessionId);
-  const activeChatMessages = useAiStore((s) => s.activeChatMessages);
-  const selectedCandidateId = useAiStore((s) => s.selectedCandidateId);
-  const lastError = useAiStore((s) => s.lastError);
-  const selectionRef = useAiStore((s) => s.selectionRef);
-  const selectionText = useAiStore((s) => s.selectionText);
-  const proposal = useAiStore((s) => s.proposal);
-  const applyStatus = useAiStore((s) => s.applyStatus);
-  const setInput = useAiStore((s) => s.setInput);
-  const setSelectedSkillId = useAiStore((s) => s.setSelectedSkillId);
-  const refreshSkills = useAiStore((s) => s.refreshSkills);
-  const clearError = useAiStore((s) => s.clearError);
-  const setError = useAiStore((s) => s.setError);
-  const setSelectionSnapshot = useAiStore((s) => s.setSelectionSnapshot);
-  const setProposal = useAiStore((s) => s.setProposal);
-  const setSelectedCandidateId = useAiStore((s) => s.setSelectedCandidateId);
-  const persistAiApply = useAiStore((s) => s.persistAiApply);
-  const logAiApplyConflict = useAiStore((s) => s.logAiApplyConflict);
-  const run = useAiStore((s) => s.run);
-  const regenerateWithStrongNegative = useAiStore(
-    (s) => s.regenerateWithStrongNegative,
-  );
-  const cancel = useAiStore((s) => s.cancel);
-  const selectChatSession = useAiStore((s) => s.selectChatSession);
-  const editor = useEditorStore((s) => s.editor);
-  const bootstrapStatus = useEditorStore((s) => s.bootstrapStatus);
-  const compareMode = useEditorStore((s) => s.compareMode);
-  const setCompareMode = useEditorStore((s) => s.setCompareMode);
-  const projectId = useEditorStore((s) => s.projectId);
-  const documentId = useEditorStore((s) => s.documentId);
-  const currentProject = useProjectStore((s) => s.current);
+  const sel = useAiPanelSelectors();
   const [activeTab, setActiveTab] = React.useState<"chat" | "history">("chat");
   const [skillsOpen, setSkillsOpen] = React.useState(false);
   const [skillManagerOpen, setSkillManagerOpen] = React.useState(false);
@@ -100,10 +57,10 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
     selectionText: string;
   } | null>(null);
   const selectedCandidate =
-    lastCandidates.find((item) => item.id === selectedCandidateId) ??
-    lastCandidates[0] ??
+    sel.lastCandidates.find((item) => item.id === sel.selectedCandidateId) ??
+    sel.lastCandidates[0] ??
     null;
-  const activeOutputText = selectedCandidate?.text ?? outputText;
+  const activeOutputText = selectedCandidate?.text ?? sel.outputText;
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const lastHandledNewChatSignalRef = React.useRef(props.newChatSignal ?? 0);
   const handleNewChatRef = React.useRef<() => void>(() => {});
@@ -112,12 +69,15 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
   }, []);
   const handleSelectSession = React.useCallback(
     (sessionId: string) => {
-      if (projectId) {
-        void selectChatSession({ projectId, sessionId });
+      if (sel.projectId) {
+        void sel.selectChatSession({
+          projectId: sel.projectId,
+          sessionId,
+        });
         setActiveTab("chat");
       }
     },
-    [selectChatSession, projectId],
+    [sel.selectChatSession, sel.projectId],
   );
   const clearEvaluatedRunId = React.useCallback(() => {
     evaluatedRunIdRef.current = null;
@@ -129,7 +89,7 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
     [],
   );
   useAiPanelEffects({
-    refreshSkills,
+    refreshSkills: sel.refreshSkills,
     selectedModel,
     setModelsStatus,
     setModelsLastError,
@@ -138,26 +98,26 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
     setRecentModelIds,
     setCandidateCount,
     candidateCount,
-    editor,
-    bootstrapStatus,
-    setSelectionSnapshot,
-    lastCandidates,
-    selectedCandidateId,
-    setSelectedCandidateId,
-    status,
-    proposal,
-    activeRunId: selectedCandidate?.runId ?? lastRunId,
+    editor: sel.editor,
+    bootstrapStatus: sel.bootstrapStatus,
+    setSelectionSnapshot: sel.setSelectionSnapshot,
+    lastCandidates: sel.lastCandidates,
+    selectedCandidateId: sel.selectedCandidateId,
+    setSelectedCandidateId: sel.setSelectedCandidateId,
+    status: sel.status,
+    proposal: sel.proposal,
+    activeRunId: selectedCandidate?.runId ?? sel.lastRunId,
     activeOutputText,
-    selectionRef,
-    selectionText,
-    setProposal,
-    setCompareMode,
+    selectionRef: sel.selectionRef,
+    selectionText: sel.selectionText,
+    setProposal: sel.setProposal,
+    setCompareMode: sel.setCompareMode,
     pendingSelectionSnapshotRef,
     inlineDiffConfirmOpen,
     setInlineDiffConfirmOpen,
-    lastRunId,
-    projectId,
-    outputText,
+    lastRunId: sel.lastRunId,
+    projectId: sel.projectId,
+    outputText: sel.outputText,
     lastRequest,
     evaluatedRunIdRef,
     setJudgeResult,
@@ -168,39 +128,39 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
   });
   // eslint-disable-next-line react-hooks/refs -- ref-taint false positive; callbacks only invoked from event handlers
   const actions = createAiPanelActions({
-    input,
-    selectedSkillId,
-    selectionRef,
-    selectionText,
-    editor,
-    bootstrapStatus,
-    status,
-    projectId,
-    documentId,
+    input: sel.input,
+    selectedSkillId: sel.selectedSkillId,
+    selectionRef: sel.selectionRef,
+    selectionText: sel.selectionText,
+    editor: sel.editor,
+    bootstrapStatus: sel.bootstrapStatus,
+    status: sel.status,
+    projectId: sel.projectId,
+    documentId: sel.documentId,
     selectedMode,
     selectedModel,
     candidateCount,
-    currentProject,
-    proposal,
+    currentProject: sel.currentProject,
+    proposal: sel.proposal,
     inlineDiffConfirmOpen,
-    applyStatus,
-    setInput,
-    setSelectedSkillId,
-    setSelectionSnapshot,
+    applyStatus: sel.applyStatus,
+    setInput: sel.setInput,
+    setSelectedSkillId: sel.setSelectedSkillId,
+    setSelectionSnapshot: sel.setSelectionSnapshot,
     setLastRequest,
     setJudgeResult,
-    setProposal,
-    setCompareMode,
+    setProposal: sel.setProposal,
+    setCompareMode: sel.setCompareMode,
     setInlineDiffConfirmOpen,
-    setSelectedCandidateId,
-    setError,
-    clearError,
+    setSelectedCandidateId: sel.setSelectedCandidateId,
+    setError: sel.setError,
+    clearError: sel.clearError,
     setSkillsOpen,
-    run,
-    regenerateWithStrongNegative,
-    refreshSkills,
-    persistAiApply,
-    logAiApplyConflict,
+    run: sel.run,
+    regenerateWithStrongNegative: sel.regenerateWithStrongNegative,
+    refreshSkills: sel.refreshSkills,
+    persistAiApply: sel.persistAiApply,
+    logAiApplyConflict: sel.logAiApplyConflict,
     clearEvaluatedRunId,
     setPendingSelectionSnapshot,
     focusTextarea,
@@ -210,30 +170,30 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
     // eslint-disable-next-line react-hooks/refs
     handleNewChatRef.current = actions.handleNewChat;
   }, [actions.handleNewChat]);
-  const working = isRunning(status);
+  const working = isRunning(sel.status);
   const hasSelectionReference =
-    !!selectionRef && selectionText.trim().length > 0;
+    !!sel.selectionRef && sel.selectionText.trim().length > 0;
   const selectionPreview = hasSelectionReference
-    ? formatSelectionPreview(selectionText.trim())
+    ? formatSelectionPreview(sel.selectionText.trim())
     : "";
   const errorConfigs = buildAiErrorConfigs({
-    skillsLastError,
+    skillsLastError: sel.skillsLastError,
     modelsLastError,
-    lastError,
+    lastError: sel.lastError,
     t,
   });
-  const diffText = proposal
+  const diffText = sel.proposal
     ? unifiedDiff({
-        oldText: proposal.selectionText,
-        newText: proposal.replacementText,
+        oldText: sel.proposal.selectionText,
+        newText: sel.proposal.replacementText,
       })
     : "";
   const canApply =
-    !!editor &&
-    !!proposal &&
-    !!projectId &&
-    !!documentId &&
-    applyStatus !== "applying";
+    !!sel.editor &&
+    !!sel.proposal &&
+    !!sel.projectId &&
+    !!sel.documentId &&
+    sel.applyStatus !== "applying";
   return (
     <PanelContainer data-testid="ai-panel" title="AI">
       <div className="flex flex-col h-full min-h-0">
@@ -241,25 +201,27 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
         {activeTab === "chat" ? (
           <div className="flex-1 flex flex-col min-h-0">
             <AiMessageList
-              historyMessages={activeChatSessionId ? activeChatMessages : []}
+              historyMessages={
+                sel.activeChatSessionId ? sel.activeChatMessages : []
+              }
               lastRequest={lastRequest}
               working={working}
-              status={status}
-              queuePosition={queuePosition}
-              queuedCount={queuedCount}
+              status={sel.status}
+              queuePosition={sel.queuePosition}
+              queuedCount={sel.queuedCount}
               errorConfigs={errorConfigs}
-              lastCandidates={lastCandidates}
+              lastCandidates={sel.lastCandidates}
               selectedCandidate={selectedCandidate}
               activeOutputText={activeOutputText}
               judgeResult={judgeResult}
-              usageStats={usageStats}
-              applyStatus={applyStatus}
-              proposal={proposal}
-              compareMode={compareMode}
+              usageStats={sel.usageStats}
+              applyStatus={sel.applyStatus}
+              proposal={sel.proposal}
+              compareMode={sel.compareMode}
               diffText={diffText}
               canApply={canApply}
               inlineDiffConfirmOpen={inlineDiffConfirmOpen}
-              clearError={clearError}
+              clearError={sel.clearError}
               openSettings={openSettings}
               onSelectCandidate={actions.onSelectCandidate}
               onRegenerateAll={() => void actions.onRegenerateAll()}
@@ -271,13 +233,13 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
               ref={textareaRef}
               hasSelectionReference={hasSelectionReference}
               selectionPreview={selectionPreview}
-              setSelectionSnapshot={() => setSelectionSnapshot(null)}
-              input={input}
-              setInput={setInput}
+              setSelectionSnapshot={() => sel.setSelectionSnapshot(null)}
+              input={sel.input}
+              setInput={sel.setInput}
               handleKeyDown={actions.handleKeyDown}
               working={working}
               onRun={() => void actions.onRun()}
-              cancel={cancel}
+              cancel={sel.cancel}
               modeOpen={modeOpen}
               modelOpen={modelOpen}
               skillsOpen={skillsOpen}
@@ -289,11 +251,11 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
               modelsStatus={modelsStatus}
               selectedModel={selectedModel}
               setSelectedModel={setSelectedModel}
-              skillsStatus={skillsStatus}
+              skillsStatus={sel.skillsStatus}
               availableModels={availableModels}
               recentModelIds={recentModelIds}
-              selectedSkillId={selectedSkillId}
-              skills={skills}
+              selectedSkillId={sel.selectedSkillId}
+              skills={sel.skills}
               handleSkillSelect={(skillId) =>
                 void actions.handleSkillSelect(skillId)
               }
@@ -304,14 +266,14 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
               openSettings={openSettings}
               skillManagerOpen={skillManagerOpen}
               setSkillManagerOpen={setSkillManagerOpen}
-              currentProject={currentProject}
-              projectId={projectId}
-              refreshSkills={refreshSkills}
+              currentProject={sel.currentProject}
+              projectId={sel.projectId}
+              refreshSkills={sel.refreshSkills}
             />
           </div>
         ) : (
           <AiChatSessionList
-            projectId={projectId ?? ""}
+            projectId={sel.projectId ?? ""}
             onSelectSession={handleSelectSession}
           />
         )}
