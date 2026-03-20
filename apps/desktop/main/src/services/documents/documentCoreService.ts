@@ -1002,7 +1002,10 @@ function createDocCrudOps(
         const rows = args.db
           .prepare<
             [string],
-            DocumentListItem & { parentId: string | null; coverImageUrl: string | null }
+            DocumentListItem & {
+              parentId: string | null;
+              coverImageUrl: string | null;
+            }
           >("SELECT document_id as documentId, type, title, status, sort_order as sortOrder, parent_id as parentId, updated_at as updatedAt, cover_image_url as coverImageUrl FROM documents WHERE project_id = ? ORDER BY sort_order ASC, updated_at DESC, document_id ASC")
           .all(projectId);
         return {
