@@ -8,10 +8,7 @@ import {
   ProjectStoreProvider,
   createProjectStore,
 } from "../stores/projectStore";
-import {
-  ThemeStoreProvider,
-  createThemeStore,
-} from "../stores/themeStore";
+import { ThemeStoreProvider, createThemeStore } from "../stores/themeStore";
 
 const setShowAiMarks = vi.fn(() => true);
 
