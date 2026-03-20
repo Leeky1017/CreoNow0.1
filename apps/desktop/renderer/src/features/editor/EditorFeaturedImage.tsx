@@ -41,7 +41,7 @@ export function EditorFeaturedImage({ src, alt }: EditorFeaturedImageProps) {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(to bottom, transparent 40%, var(--color-bg-base, #0f0f0f) 100%)",
+            "linear-gradient(to bottom, transparent 40%, var(--color-bg-base) 100%)",
         }}
       />
     </div>
