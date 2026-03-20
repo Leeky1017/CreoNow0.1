@@ -296,7 +296,6 @@ describe("useFileTreeState — shape & CRUD", () => {
       expect(mockSetEditing).not.toHaveBeenCalled();
     });
   });
-
 });
 
 describe("useFileTreeState — select, status & move", () => {
@@ -491,7 +490,6 @@ describe("useFileTreeState — select, status & move", () => {
       expect(mockMoveToFolder).not.toHaveBeenCalled();
     });
   });
-
 });
 
 describe("useFileTreeState — resolve & copy", () => {
