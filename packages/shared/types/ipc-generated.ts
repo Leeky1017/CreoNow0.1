@@ -1157,6 +1157,7 @@ export type IpcChannelSpec = {
     };
     response: {
       items: Array<{
+        coverImageUrl?: string;
         documentId: string;
         parentId?: string;
         sortOrder: number;
@@ -1177,6 +1178,7 @@ export type IpcChannelSpec = {
       contentJson: string;
       contentMd: string;
       contentText: string;
+      coverImageUrl?: string;
       createdAt: number;
       documentId: string;
       parentId?: string;

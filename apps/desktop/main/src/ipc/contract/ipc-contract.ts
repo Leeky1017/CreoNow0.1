@@ -831,6 +831,7 @@ const DOCUMENT_LIST_ITEM_SCHEMA = s.object({
   sortOrder: s.number(),
   parentId: s.optional(s.string()),
   updatedAt: s.number(),
+  coverImageUrl: s.optional(s.string()),
 });
 
 const AI_CHAT_ROLE_SCHEMA = s.union(s.literal("user"), s.literal("assistant"));
@@ -2199,6 +2200,7 @@ export const ipcContract = {
         contentHash: s.string(),
         createdAt: s.number(),
         updatedAt: s.number(),
+        coverImageUrl: s.optional(s.string()),
       }),
     },
     "file:document:update": {
