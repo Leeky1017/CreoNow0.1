@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { VersionHistoryPanel, type TimeGroup } from "./VersionHistoryPanel";
 
 /**
@@ -532,5 +533,88 @@ describe("VersionHistoryPanel — display and metadata", () => {
     expect(
       screen.queryByTestId("ai-mark-tag-v-ai-mark-default"),
     ).not.toBeInTheDocument();
+  });
+
+  it("should render unified PanelHeader with title, subtitle, and close action", () => {
+    render(
+      <VersionHistoryPanel
+        documentTitle="Test Document"
+        timeGroups={SAMPLE_TIME_GROUPS}
+      />,
+    );
+
+    const header = document.querySelector(".panel-header");
+    expect(header).toBeInTheDocument();
+    expect(screen.getByText("Version History")).toBeInTheDocument();
+    expect(screen.getByText("Test Document")).toBeInTheDocument();
+    expect(screen.getByLabelText("Close version history")).toBeInTheDocument();
+  });
+
+  it("should render expandable diff preview for selected version summaries", async () => {
+    const user = userEvent.setup();
+    const groupsWithDiffSummary: TimeGroup[] = [
+      {
+        label: "Today",
+        versions: [
+          {
+            id: "v-diff-summary",
+            timestamp: "10:42 AM",
+            authorType: "ai",
+            authorName: "AI Assistant",
+            description: "Expanded the section overview",
+            wordChange: { type: "added", count: 124 },
+            diffSummary:
+              "Added a long explanatory paragraph to clarify the system boundaries and note the failure modes in a single concise block.",
+          },
+        ],
+      },
+    ];
+
+    render(
+      <VersionHistoryPanel
+        documentTitle="Test Document"
+        timeGroups={groupsWithDiffSummary}
+        selectedId="v-diff-summary"
+      />,
+    );
+
+    const summary = screen.getByTestId("version-diff-summary");
+    expect(summary).toHaveClass("line-clamp-2");
+
+    await user.click(screen.getByRole("button", { name: "Expand" }));
+
+    expect(summary).not.toHaveClass("line-clamp-2");
+    expect(
+      screen.getByRole("button", { name: "Collapse" }),
+    ).toBeInTheDocument();
+  });
+
+  it("should render hover actions with fade transition classes", () => {
+    render(
+      <VersionHistoryPanel
+        documentTitle="Test Document"
+        timeGroups={SAMPLE_TIME_GROUPS}
+      />,
+    );
+
+    const hoverActions = screen.getByTestId(
+      "version-card-hover-actions-v-1042",
+    );
+    expect(hoverActions).toHaveClass("transition-opacity");
+    expect(hoverActions).toHaveClass("duration-[var(--duration-fast)]");
+  });
+
+  it("should render no-changes badge with high-contrast token classes", () => {
+    render(
+      <VersionHistoryPanel
+        documentTitle="Test Document"
+        timeGroups={SAMPLE_TIME_GROUPS}
+      />,
+    );
+
+    const badge = screen.getByTestId("version-no-changes-badge");
+    expect(badge).toHaveClass("text-[var(--color-fg-default)]");
+    expect(badge).toHaveClass("bg-[var(--color-bg-overlay)]");
+    expect(badge).toHaveClass("border");
   });
 });

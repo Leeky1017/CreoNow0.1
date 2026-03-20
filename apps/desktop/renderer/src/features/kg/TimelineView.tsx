@@ -133,10 +133,24 @@ export function TimelineView({
               draggable
               data-testid={`timeline-event-${event.id}`}
               onDragStart={() => setDraggingId(event.id)}
+              onDragEnd={() => setDraggingId(null)}
               onDragOver={(mouseEvent) => mouseEvent.preventDefault()}
               onDrop={() => handleDrop(event.id)}
               onClick={() => onOpenEvent?.(event.id)}
-              className="w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+              className={[
+                "w-full",
+                "text-left",
+                "p-3",
+                "rounded-[var(--radius-xl)]",
+                "border",
+                "border-[var(--color-border-default)]",
+                "bg-[var(--color-bg-surface)]",
+                "hover:border-[var(--color-border-hover)]",
+                "transition-[border-color,box-shadow,transform,opacity]",
+                draggingId === event.id
+                  ? "shadow-[var(--shadow-xl)] scale-[1.02] opacity-90"
+                  : "",
+              ].join(" ")}
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm text-[var(--color-fg-default)] font-medium">

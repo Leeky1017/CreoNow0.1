@@ -1,27 +1,58 @@
-import { readFileSync } from "node:fs";
-import path from "node:path";
-
+import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import React from "react";
 
-const containerSource = readFileSync(
-  path.resolve(__dirname, "VersionHistoryContainer.tsx"),
-  "utf8",
-);
+import {
+  VersionHistoryPanelContent,
+  type TimeGroup,
+} from "./VersionHistoryPanel";
 
-describe("VersionHistoryContainer type convergence", () => {
-  it("Scenario S2-1: uses imported VersionListItem from versionStore", () => {
-    expect(containerSource).toMatch(
-      /import\s*\{[^}]*type\s+VersionListItem[^}]*\}\s*from\s*["']\.\.\/\.\.\/stores\/versionStore["']/s,
+describe("VersionHistoryContainer follow-up behavior coverage", () => {
+  const timeGroups: TimeGroup[] = [
+    {
+      label: "Today",
+      versions: [
+        {
+          id: "v-1",
+          timestamp: "10:42 AM",
+          authorType: "user",
+          authorName: "You",
+          description: "Refined the opening paragraph",
+          wordChange: { type: "added", count: 18 },
+        },
+      ],
+    },
+  ];
+
+  it("renders panel content with a runtime version list instead of source-level assertions", () => {
+    render(
+      React.createElement(VersionHistoryPanelContent, {
+        documentTitle: "Test Document",
+        timeGroups,
+      }),
     );
+
+    expect(screen.getByText("Version History")).toBeInTheDocument();
+    expect(
+      screen.getByText("Refined the opening paragraph"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("10:42 AM")).toBeInTheDocument();
   });
 
-  it("Scenario S2-2: does not keep a local VersionListItem duplicate", () => {
-    expect(containerSource).not.toMatch(
-      /^\s*type\s+VersionListItem\s*=\s*|^\s*interface\s+VersionListItem\s*\{/m,
+  it("renders auto-save footer controls as user-visible behavior", () => {
+    render(
+      React.createElement(VersionHistoryPanelContent, {
+        documentTitle: "Test Document",
+        timeGroups,
+        lastSavedText: "2m ago",
+      }),
     );
-    expect(containerSource).toMatch(
-      /convertToTimeGroups\(\s*items:\s*VersionListItem\[\]/,
-    );
-    expect(containerSource).toMatch(/useState<VersionListItem\[\]>\(\[\]\)/);
+
+    expect(
+      screen.getByText("Auto-save on (last saved 2m ago)"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Configure auto-save settings" }),
+    ).toBeInTheDocument();
   });
 });

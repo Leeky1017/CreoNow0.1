@@ -607,8 +607,17 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
   },
 
   // ============================================================
-  // Patterns（6 个）
+  // Patterns（7 个）
   // ============================================================
+  {
+    id: "panelHeader",
+    kind: "overlay",
+    entryPoints: [
+      { type: "storybookOnly", description: "Shared panel header pattern" },
+    ],
+    testId: "panel-header",
+    storybookTitle: "Patterns/PanelHeader",
+  },
   {
     id: "errorBoundary",
     kind: "overlay",
