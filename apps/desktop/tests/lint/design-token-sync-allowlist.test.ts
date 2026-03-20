@@ -35,7 +35,9 @@ const RENDERER_ONLY_ALLOWLIST = new Set([
   "--color-accent-cyan",
   "--color-accent-green",
   "--color-accent-orange",
+  "--color-accent-pink",
   "--color-accent-purple",
+  "--color-accent-white",
 
   // Overlay / selection / caret — runtime UI primitives
   "--color-bg-overlay",

@@ -8,6 +8,10 @@ import {
   ProjectStoreProvider,
   createProjectStore,
 } from "../stores/projectStore";
+import {
+  ThemeStoreProvider,
+  createThemeStore,
+} from "../stores/themeStore";
 
 const setShowAiMarks = vi.fn(() => true);
 
@@ -28,6 +32,13 @@ vi.mock("../stores/versionPreferencesStore", () => ({
  * AC-7: 设置保存成功后出现 success Toast
  */
 describe("toast-settings integration", () => {
+  const mockPreferences = {
+    get: <T,>(): T | null => null,
+    set: (): void => {},
+    remove: (): void => {},
+    clear: (): void => {},
+  };
+
   function renderSettingsDialogForTest() {
     const invoke = vi.fn(async () => ({ ok: true, data: {} })) as Parameters<
       typeof createProjectStore
@@ -35,11 +46,14 @@ describe("toast-settings integration", () => {
     const projectStore = createProjectStore({
       invoke,
     });
+    const themeStore = createThemeStore(mockPreferences);
 
     return render(
       <AppToastProvider>
         <ProjectStoreProvider store={projectStore}>
-          <SettingsDialog open onOpenChange={() => {}} defaultTab="general" />
+          <ThemeStoreProvider store={themeStore}>
+            <SettingsDialog open onOpenChange={() => {}} defaultTab="general" />
+          </ThemeStoreProvider>
         </ProjectStoreProvider>
       </AppToastProvider>,
     );
