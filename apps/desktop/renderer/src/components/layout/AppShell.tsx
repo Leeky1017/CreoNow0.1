@@ -1026,7 +1026,15 @@ function AppShellMainContent(props: {
     );
   }
 
-  return <EditorPane projectId={props.currentProject.projectId} />;
+  const documentCoverImageUrl = useEditorStore(
+    (s) => s.documentCoverImageUrl,
+  );
+  return (
+    <EditorPane
+      projectId={props.currentProject.projectId}
+      coverImage={documentCoverImageUrl}
+    />
+  );
 }
 
 /**

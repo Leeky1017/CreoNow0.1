@@ -197,6 +197,7 @@ type DocumentRow = {
   contentHash: string;
   createdAt: number;
   updatedAt: number;
+  coverImageUrl: string | null;
 };
 
 type LatestVersionRow = {
@@ -1001,8 +1002,8 @@ function createDocCrudOps(
         const rows = args.db
           .prepare<
             [string],
-            DocumentListItem & { parentId: string | null }
-          >("SELECT document_id as documentId, type, title, status, sort_order as sortOrder, parent_id as parentId, updated_at as updatedAt FROM documents WHERE project_id = ? ORDER BY sort_order ASC, updated_at DESC, document_id ASC")
+            DocumentListItem & { parentId: string | null; coverImageUrl: string | null }
+          >("SELECT document_id as documentId, type, title, status, sort_order as sortOrder, parent_id as parentId, updated_at as updatedAt, cover_image_url as coverImageUrl FROM documents WHERE project_id = ? ORDER BY sort_order ASC, updated_at DESC, document_id ASC")
           .all(projectId);
         return {
           ok: true,
@@ -1010,6 +1011,7 @@ function createDocCrudOps(
             items: rows.map((row) => ({
               ...row,
               parentId: normalizeParentId(row.parentId),
+              coverImageUrl: row.coverImageUrl ?? undefined,
             })),
           },
         };
@@ -1028,7 +1030,7 @@ function createDocCrudOps(
           .prepare<
             [string, string],
             DocumentRow
-          >("SELECT document_id as documentId, project_id as projectId, type, title, status, sort_order as sortOrder, parent_id as parentId, content_json as contentJson, content_text as contentText, content_md as contentMd, content_hash as contentHash, created_at as createdAt, updated_at as updatedAt FROM documents WHERE project_id = ? AND document_id = ?")
+          >("SELECT document_id as documentId, project_id as projectId, type, title, status, sort_order as sortOrder, parent_id as parentId, content_json as contentJson, content_text as contentText, content_md as contentMd, content_hash as contentHash, created_at as createdAt, updated_at as updatedAt, cover_image_url as coverImageUrl FROM documents WHERE project_id = ? AND document_id = ?")
           .get(projectId, documentId);
         if (!row) {
           return documentError("NOT_FOUND", "Document not found");
@@ -1039,6 +1041,7 @@ function createDocCrudOps(
           data: {
             ...row,
             parentId: normalizeParentId(row.parentId),
+            coverImageUrl: row.coverImageUrl ?? undefined,
           },
         };
       } catch (error) {
