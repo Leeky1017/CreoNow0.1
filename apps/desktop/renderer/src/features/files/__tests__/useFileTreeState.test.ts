@@ -103,7 +103,7 @@ const { useFileTreeState } = await import("../useFileTreeState");
 // Tests
 // ---------------------------------------------------------------------------
 
-describe("useFileTreeState", () => {
+describe("useFileTreeState — shape & CRUD", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     coreMockReturn = buildCoreMock();
@@ -297,6 +297,14 @@ describe("useFileTreeState", () => {
     });
   });
 
+});
+
+describe("useFileTreeState — select, status & move", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    coreMockReturn = buildCoreMock();
+  });
+
   // =========================================================================
   // onSelect
   // =========================================================================
@@ -482,6 +490,14 @@ describe("useFileTreeState", () => {
 
       expect(mockMoveToFolder).not.toHaveBeenCalled();
     });
+  });
+
+});
+
+describe("useFileTreeState — resolve & copy", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    coreMockReturn = buildCoreMock();
   });
 
   // =========================================================================
