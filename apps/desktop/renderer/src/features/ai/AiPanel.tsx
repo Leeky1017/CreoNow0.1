@@ -19,6 +19,8 @@ import {
 } from "./useAiPanelEffects";
 import { AiMessageList } from "./AiMessageList";
 import { AiInputArea } from "./AiInputArea";
+import { AiPanelTabBar } from "./AiPanelTabBar";
+import { AiChatSessionList } from "./AiChatSessionList";
 export { formatDbErrorDescription } from "./aiPanelHelpers";
 export { CodeBlock } from "./CodeBlock";
 
@@ -57,10 +59,9 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
   const persistAiApply = useAiStore((s) => s.persistAiApply);
   const logAiApplyConflict = useAiStore((s) => s.logAiApplyConflict);
   const run = useAiStore((s) => s.run);
-  const regenerateWithStrongNegative = useAiStore(
-    (s) => s.regenerateWithStrongNegative,
-  );
+  const regenerateWithStrongNegative = useAiStore((s) => s.regenerateWithStrongNegative);
   const cancel = useAiStore((s) => s.cancel);
+  const selectChatSession = useAiStore((s) => s.selectChatSession);
   const editor = useEditorStore((s) => s.editor);
   const bootstrapStatus = useEditorStore((s) => s.bootstrapStatus);
   const compareMode = useEditorStore((s) => s.compareMode);
@@ -68,6 +69,9 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
   const projectId = useEditorStore((s) => s.projectId);
   const documentId = useEditorStore((s) => s.documentId);
   const currentProject = useProjectStore((s) => s.current);
+  const [activeTab, setActiveTab] = React.useState<"chat" | "history">(
+    "chat",
+  );
   const [skillsOpen, setSkillsOpen] = React.useState(false);
   const [skillManagerOpen, setSkillManagerOpen] = React.useState(false);
   const [modeOpen, setModeOpen] = React.useState(false);
@@ -76,29 +80,19 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
   const [selectedModel, setSelectedModel] = React.useState<AiModel>("gpt-5.2");
   const [candidateCount, setCandidateCount] = React.useState(1);
   const [recentModelIds, setRecentModelIds] = React.useState<string[]>([]);
-  const [availableModels, setAvailableModels] = React.useState<AiModelOption[]>(
-    [],
-  );
-  const [modelsStatus, setModelsStatus] = React.useState<
-    "idle" | "loading" | "ready" | "error"
-  >("idle");
-  const [modelsLastError, setModelsLastError] =
-    React.useState<ModelsListError | null>(null);
+  const [availableModels, setAvailableModels] = React.useState<AiModelOption[]>([]);
+  const [modelsStatus, setModelsStatus] =
+    React.useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [modelsLastError, setModelsLastError] = React.useState<ModelsListError | null>(null);
   const [lastRequest, setLastRequest] = React.useState<string | null>(null);
-  const [inlineDiffConfirmOpen, setInlineDiffConfirmOpen] =
-    React.useState(false);
-  const [judgeResult, setJudgeResult] = React.useState<JudgeResultEvent | null>(
-    null,
-  );
+  const [inlineDiffConfirmOpen, setInlineDiffConfirmOpen] = React.useState(false);
+  const [judgeResult, setJudgeResult] =
+    React.useState<JudgeResultEvent | null>(null);
   const evaluatedRunIdRef = React.useRef<string | null>(null);
-  const pendingSelectionSnapshotRef = React.useRef<{
-    selectionRef: SelectionRef;
-    selectionText: string;
-  } | null>(null);
-  const selectedCandidate =
-    lastCandidates.find((item) => item.id === selectedCandidateId) ??
-    lastCandidates[0] ??
-    null;
+  const pendingSelectionSnapshotRef =
+    React.useRef<{ selectionRef: SelectionRef; selectionText: string } | null>(null);
+  const selectedCandidate = lastCandidates.find((item) => item.id === selectedCandidateId)
+    ?? lastCandidates[0] ?? null;
   const activeOutputText = selectedCandidate?.text ?? outputText;
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
   const lastHandledNewChatSignalRef = React.useRef(props.newChatSignal ?? 0);
@@ -106,6 +100,15 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
   const focusTextarea = React.useCallback(() => {
     textareaRef.current?.focus();
   }, []);
+  const handleSelectSession = React.useCallback(
+    (sessionId: string) => {
+      if (projectId) {
+        void selectChatSession({ projectId, sessionId });
+        setActiveTab("chat");
+      }
+    },
+    [selectChatSession, projectId],
+  );
   const clearEvaluatedRunId = React.useCallback(() => {
     evaluatedRunIdRef.current = null;
   }, []);
@@ -198,32 +201,18 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
     handleNewChatRef.current = actions.handleNewChat;
   }, [actions.handleNewChat]);
   const working = isRunning(status);
-  const hasSelectionReference =
-    !!selectionRef && selectionText.trim().length > 0;
-  const selectionPreview = hasSelectionReference
-    ? formatSelectionPreview(selectionText.trim())
-    : "";
-  const errorConfigs = buildAiErrorConfigs({
-    skillsLastError,
-    modelsLastError,
-    lastError,
-    t,
-  });
+  const hasSelectionReference = !!selectionRef && selectionText.trim().length > 0;
+  const selectionPreview = hasSelectionReference ? formatSelectionPreview(selectionText.trim()) : "";
+  const errorConfigs = buildAiErrorConfigs({ skillsLastError, modelsLastError, lastError, t });
   const diffText = proposal
-    ? unifiedDiff({
-        oldText: proposal.selectionText,
-        newText: proposal.replacementText,
-      })
+    ? unifiedDiff({ oldText: proposal.selectionText, newText: proposal.replacementText })
     : "";
-  const canApply =
-    !!editor &&
-    !!proposal &&
-    !!projectId &&
-    !!documentId &&
-    applyStatus !== "applying";
+  const canApply = !!editor && !!proposal && !!projectId && !!documentId && applyStatus !== "applying";
   return (
     <PanelContainer data-testid="ai-panel" title="AI">
       <div className="flex flex-col h-full min-h-0">
+        <AiPanelTabBar activeTab={activeTab} onTabChange={setActiveTab} />
+        {activeTab === "chat" ? (
         <div className="flex-1 flex flex-col min-h-0">
           <AiMessageList
             historyMessages={activeChatSessionId ? activeChatMessages : []}
@@ -294,6 +283,12 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
             refreshSkills={refreshSkills}
           />
         </div>
+        ) : (
+          <AiChatSessionList
+            projectId={projectId ?? ""}
+            onSelectSession={handleSelectSession}
+          />
+        )}
       </div>
     </PanelContainer>
   );
