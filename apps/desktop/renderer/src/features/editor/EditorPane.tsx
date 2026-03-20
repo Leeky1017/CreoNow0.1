@@ -1327,7 +1327,11 @@ export function InlineAiOverlay(props: {
 /**
  * EditorPane mounts TipTap editor and wires autosave to the DB SSOT.
  */
-export function EditorPane(props: { projectId: string }): JSX.Element {
+export function EditorPane(props: {
+  projectId: string;
+  /** Cover image URL. Wired through to EditorFeaturedImage; undefined = hidden. */
+  coverImage?: string | null;
+}): JSX.Element {
   const core = useEditorPaneCore(props.projectId);
   const zenMode = core.zenMode;
   const inlineAiPhase = core.inlineAiStore((s) => s.phase);
@@ -1479,7 +1483,7 @@ export function EditorPane(props: { projectId: string }): JSX.Element {
             viewportTestId="editor-content-scroll-viewport"
             className="h-full"
           >
-            <EditorFeaturedImage src={undefined} />
+            <EditorFeaturedImage src={props.coverImage} />
             <EditorContent editor={core.editor} className="h-full" />
           </ScrollArea>
         </EditorContextMenu>

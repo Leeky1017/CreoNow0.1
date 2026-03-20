@@ -954,3 +954,42 @@ describe("EditorPane — advanced", () => {
     });
   });
 });
+
+describe("EditorPane — coverImage integration", () => {
+  it("renders EditorFeaturedImage when coverImage prop is provided", async () => {
+    const store = createReadyEditorStore({ onSave: () => {} });
+    const versionStore = createVersionStoreForEditorPaneTests();
+
+    render(
+      <VersionStoreProvider store={versionStore}>
+        <EditorStoreProvider store={store}>
+          <EditorPane
+            projectId="project-1"
+            coverImage="https://example.com/cover.jpg"
+          />
+        </EditorStoreProvider>
+      </VersionStoreProvider>,
+    );
+
+    await screen.findByTestId("editor-pane");
+    expect(screen.getByTestId("featured-image-container")).toBeInTheDocument();
+  });
+
+  it("does not render EditorFeaturedImage when coverImage is not provided", async () => {
+    const store = createReadyEditorStore({ onSave: () => {} });
+    const versionStore = createVersionStoreForEditorPaneTests();
+
+    render(
+      <VersionStoreProvider store={versionStore}>
+        <EditorStoreProvider store={store}>
+          <EditorPane projectId="project-1" />
+        </EditorStoreProvider>
+      </VersionStoreProvider>,
+    );
+
+    await screen.findByTestId("editor-pane");
+    expect(
+      screen.queryByTestId("featured-image-container"),
+    ).not.toBeInTheDocument();
+  });
+});
