@@ -1,12 +1,7 @@
 import React from "react";
 import type { Editor } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react";
-import { useTranslation } from "react-i18next";
 
-import { InlineFormatButton } from "./InlineFormatButton";
-import { Button } from "../../components/primitives/Button";
-import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
-import { captureSelectionRef } from "../ai/applySelection";
 import { useEditorStore } from "../../stores/editorStore";
 import { useOptionalAiStore } from "../../stores/aiStore";
 import { useOptionalLayoutStore } from "../../stores/layoutStore";
@@ -14,40 +9,10 @@ import {
   readPrefersReducedMotion,
   resolveReducedMotionDurationPair,
 } from "../../lib/motion/reducedMotion";
+import { BubbleMenuFormatActions } from "./BubbleMenuFormatActions";
+import { BubbleMenuAiActions } from "./BubbleMenuAiActions";
 
-import {
-  Bold,
-  Check,
-  Code,
-  Italic,
-  Link,
-  Strikethrough,
-  Underline,
-  X,
-} from "lucide-react";
 export const EDITOR_INLINE_BUBBLE_MENU_PLUGIN_KEY = "cn-editor-inline-bubble";
-const BUBBLE_AI_SKILLS = [
-  {
-    id: "builtin:polish",
-    labelKey: "editor.bubbleMenu.polish",
-    testId: "bubble-ai-polish",
-  },
-  {
-    id: "builtin:rewrite",
-    labelKey: "editor.bubbleMenu.rewrite",
-    testId: "bubble-ai-rewrite",
-  },
-  {
-    id: "builtin:describe",
-    labelKey: "editor.bubbleMenu.describe",
-    testId: "bubble-ai-describe",
-  },
-  {
-    id: "builtin:dialogue",
-    labelKey: "editor.bubbleMenu.dialogue",
-    testId: "bubble-ai-dialogue",
-  },
-] as const;
 
 type BubblePlacement = "top" | "bottom";
 
@@ -58,9 +23,6 @@ const IS_VITEST_RUNTIME =
 
 /**
  * Resolve bubble placement based on current selection top edge.
- *
- * Why: jsdom cannot verify popper's runtime flip behavior reliably; keeping this
- * pure helper makes placement fallback deterministic and testable.
  */
 export function resolveBubbleMenuPlacement(
   selectionTop: number,
@@ -70,12 +32,6 @@ export function resolveBubbleMenuPlacement(
   return hasSpaceAbove ? "top" : "bottom";
 }
 
-/**
- * Read selection top from current DOM selection range.
- *
- * Why: BubbleMenu placement needs viewport-relative coordinates and TipTap
- * selection positions alone are not sufficient.
- */
 function readSelectionTop(): number | null {
   const domSelection = window.getSelection();
   if (!domSelection || domSelection.rangeCount === 0) {
@@ -90,15 +46,11 @@ function readSelectionTop(): number | null {
 
 /**
  * Inline Bubble Menu bound to TipTap selection.
- *
- * Why: writers need near-selection formatting controls without moving cursor
- * focus to the fixed toolbar.
  */
 export function EditorBubbleMenu(props: {
   editor: Editor | null;
 }): JSX.Element | null {
   const { editor } = props;
-  const { t } = useTranslation();
   const [visible, setVisible] = React.useState(false);
   const [placement, setPlacement] = React.useState<BubblePlacement>("top");
   const projectId = useEditorStore((s) => s.projectId);
@@ -143,95 +95,12 @@ export function EditorBubbleMenu(props: {
     };
   }, [editor, updateVisibilityAndPlacement]);
 
-  const [linkInputOpen, setLinkInputOpen] = React.useState(false);
-  const [linkUrl, setLinkUrl] = React.useState("");
-  const linkInputRef = React.useRef<HTMLInputElement>(null);
-
   if (!editor) {
     return null;
   }
 
-  // Keep BubbleMenu mounted and drive visibility via shouldShow to avoid
-  // unmount/remount races while ProseMirror selection updates.
-  // Hide in zen mode to keep the distraction-free aesthetic.
   const shouldShowBubble = visible && editor.isEditable && !zenMode;
   const inlineDisabled = !editor.isEditable || editor.isActive("codeBlock");
-
-  const openLinkInput = () => {
-    const existingHref = editor.getAttributes("link").href as
-      | string
-      | undefined;
-    setLinkUrl(existingHref ?? "");
-    setLinkInputOpen(true);
-    requestAnimationFrame(() => linkInputRef.current?.focus());
-  };
-
-  const applyLink = () => {
-    const trimmed = linkUrl.trim();
-    if (trimmed.length === 0) {
-      editor.chain().focus().unsetLink().run();
-    } else {
-      editor.chain().focus().setLink({ href: trimmed }).run();
-    }
-    setLinkInputOpen(false);
-    setLinkUrl("");
-  };
-
-  const removeLink = () => {
-    editor.chain().focus().unsetLink().run();
-    setLinkInputOpen(false);
-    setLinkUrl("");
-  };
-
-  const handleLinkKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      applyLink();
-    } else if (e.key === "Escape") {
-      e.preventDefault();
-      setLinkInputOpen(false);
-      setLinkUrl("");
-      editor.commands.focus();
-    }
-  };
-
-  const aiDisabled =
-    inlineDisabled ||
-    aiStatus === "running" ||
-    aiStatus === "streaming" ||
-    !setSelectionSnapshot ||
-    !setSelectedSkillId ||
-    !runSkill;
-
-  const handleAiSkillClick = (skillId: string) => {
-    if (aiDisabled) {
-      return;
-    }
-
-    const captured = captureSelectionRef(editor);
-    if (!captured.ok) {
-      return;
-    }
-
-    const selectionText = captured.data.selectionText.trim();
-    if (selectionText.length === 0) {
-      return;
-    }
-
-    setSelectionSnapshot({
-      selectionRef: captured.data.selectionRef,
-      selectionText,
-    });
-    setSelectedSkillId(skillId);
-
-    void runSkill({
-      inputOverride: selectionText,
-      context: {
-        projectId: projectId ?? undefined,
-        documentId: documentId ?? undefined,
-      },
-    });
-  };
 
   const bubbleContent = (
     <div
@@ -239,125 +108,21 @@ export function EditorBubbleMenu(props: {
       data-bubble-placement={placement}
       className="z-[var(--z-dropdown)] flex items-center gap-0.5 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-1 shadow-[var(--shadow-lg)]"
     >
-      <InlineFormatButton
-        testId="bubble-bold"
-        label={EDITOR_SHORTCUTS.bold.label}
-        shortcut={EDITOR_SHORTCUTS.bold.display()}
-        isActive={editor.isActive("bold")}
-        disabled={inlineDisabled}
-        onClick={() => editor.chain().focus().toggleBold().run()}
-      >
-        {icons.bold}
-      </InlineFormatButton>
-      <InlineFormatButton
-        testId="bubble-italic"
-        label={EDITOR_SHORTCUTS.italic.label}
-        shortcut={EDITOR_SHORTCUTS.italic.display()}
-        isActive={editor.isActive("italic")}
-        disabled={inlineDisabled}
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-      >
-        {icons.italic}
-      </InlineFormatButton>
-      <InlineFormatButton
-        testId="bubble-underline"
-        label={EDITOR_SHORTCUTS.underline.label}
-        shortcut={EDITOR_SHORTCUTS.underline.display()}
-        isActive={editor.isActive("underline")}
-        disabled={inlineDisabled}
-        onClick={() => editor.chain().focus().toggleMark("underline").run()}
-      >
-        {icons.underline}
-      </InlineFormatButton>
-      <InlineFormatButton
-        testId="bubble-strike"
-        label={EDITOR_SHORTCUTS.strikethrough.label}
-        shortcut={EDITOR_SHORTCUTS.strikethrough.display()}
-        isActive={editor.isActive("strike")}
-        disabled={inlineDisabled}
-        onClick={() => editor.chain().focus().toggleStrike().run()}
-      >
-        {icons.strike}
-      </InlineFormatButton>
-      <InlineFormatButton
-        testId="bubble-code"
-        // eslint-disable-next-line creonow/no-raw-error-code-in-ui -- false positive: EDITOR_SHORTCUTS.code refers to code-formatting shortcut, not error code
-        label={EDITOR_SHORTCUTS.code.label}
-        // eslint-disable-next-line creonow/no-raw-error-code-in-ui -- false positive: EDITOR_SHORTCUTS.code refers to code-formatting shortcut, not error code
-        shortcut={EDITOR_SHORTCUTS.code.display()}
-        isActive={editor.isActive("code")}
-        disabled={inlineDisabled}
-        onClick={() => editor.chain().focus().toggleCode().run()}
-      >
-        {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- false positive: icons.code is the code-formatting icon */}
-        {icons.code}
-      </InlineFormatButton>
-      <InlineFormatButton
-        testId="bubble-link"
-        label={t("editor.bubbleMenu.link")}
-        isActive={editor.isActive("link")}
-        disabled={inlineDisabled}
-        onClick={openLinkInput}
-      >
-        {icons.link}
-      </InlineFormatButton>
-      {linkInputOpen && (
-        <div
-          className="flex items-center gap-1 px-1"
-          data-testid="link-input-container"
-        >
-          {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: inline link URL input with custom compact styling */}
-          <input
-            ref={linkInputRef}
-            type="url"
-            value={linkUrl}
-            onChange={(e) => setLinkUrl(e.target.value)}
-            onKeyDown={handleLinkKeyDown}
-            placeholder={t("editor.link.placeholder")}
-            aria-label={t("editor.link.placeholder")}
-            className="h-6 w-40 px-2 text-[11px] rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] border border-[var(--color-border-default)] focus-visible:border-[var(--color-border-focus)] focus-visible:outline-none"
-          />
-          <Button
-            data-testid="link-apply"
-            onClick={applyLink}
-            aria-label={t("editor.link.apply")}
-            variant="ghost"
-            size="sm"
-            className="h-6 min-w-0 px-1 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
-          >
-            <Check size={16} strokeWidth={1.5} />
-          </Button>
-          {editor.isActive("link") && (
-            <Button
-              data-testid="link-remove"
-              onClick={removeLink}
-              aria-label={t("editor.link.remove")}
-              variant="ghost"
-              size="sm"
-              className="h-6 min-w-0 px-1 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-danger)]"
-            >
-              <X size={16} strokeWidth={1.5} />
-            </Button>
-          )}
-        </div>
-      )}
+      <BubbleMenuFormatActions
+        editor={editor}
+        inlineDisabled={inlineDisabled}
+      />
       <div className="mx-1 h-5 w-px bg-[var(--color-border-default)]" />
-      <div className="flex items-center gap-1">
-        {BUBBLE_AI_SKILLS.map((skill) => (
-          // eslint-disable-next-line creonow/no-native-html-element -- Editor: AI skill inline button with custom compact styling
-          <button
-            key={skill.id}
-            type="button"
-            data-testid={skill.testId}
-            aria-label={`AI ${t(skill.labelKey)}`}
-            disabled={aiDisabled}
-            className="rounded-[var(--radius-sm)] px-2 py-1 text-xs text-[var(--color-fg-default)] transition-colors duration-[var(--duration-fast)] hover:bg-[var(--color-bg-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-raised)] disabled:cursor-not-allowed disabled:opacity-40"
-            onClick={() => handleAiSkillClick(skill.id)}
-          >
-            {t(skill.labelKey)}
-          </button>
-        ))}
-      </div>
+      <BubbleMenuAiActions
+        editor={editor}
+        inlineDisabled={inlineDisabled}
+        aiStatus={aiStatus}
+        projectId={projectId}
+        documentId={documentId}
+        setSelectionSnapshot={setSelectionSnapshot}
+        setSelectedSkillId={setSelectedSkillId}
+        runSkill={runSkill}
+      />
     </div>
   );
 
@@ -378,7 +143,7 @@ export function EditorBubbleMenu(props: {
       tippyOptions={{
         placement,
         duration: bubbleDurations,
-        zIndex: 400, // maps to --z-modal; tippy.js API requires number
+        zIndex: 400,
         appendTo: () => document.body,
         popperOptions: {
           modifiers: [
@@ -403,12 +168,3 @@ export function EditorBubbleMenu(props: {
     </BubbleMenu>
   );
 }
-
-const icons = {
-  bold: <Bold size={16} strokeWidth={1.5} />,
-  italic: <Italic size={16} strokeWidth={1.5} />,
-  underline: <Underline size={16} strokeWidth={1.5} />,
-  strike: <Strikethrough size={16} strokeWidth={1.5} />,
-  code: <Code size={16} strokeWidth={1.5} />,
-  link: <Link size={16} strokeWidth={1.5} />,
-};
