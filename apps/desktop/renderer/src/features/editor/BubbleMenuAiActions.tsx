@@ -34,7 +34,10 @@ export function BubbleMenuAiActions(props: {
   documentId: string | null;
   setSelectionSnapshot:
     | ((snapshot: {
-        selectionRef: { range: { from: number; to: number }; selectionTextHash: string };
+        selectionRef: {
+          range: { from: number; to: number };
+          selectionTextHash: string;
+        };
         selectionText: string;
       }) => void)
     | null;

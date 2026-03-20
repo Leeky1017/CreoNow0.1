@@ -4,7 +4,10 @@ import {
   useOptionalAiStore,
   useOptionalAiStoreApi,
 } from "../../stores/aiStore";
-import type { UseInlineAiStore, SelectionRef as InlineAiSelectionRef } from "./inlineAiStore";
+import type {
+  UseInlineAiStore,
+  SelectionRef as InlineAiSelectionRef,
+} from "./inlineAiStore";
 import { InlineAiInput } from "./InlineAiInput";
 import { InlineAiDiffPreview } from "./InlineAiDiffPreview";
 import { applySelection } from "../ai/applySelection";

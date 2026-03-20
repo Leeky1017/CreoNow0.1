@@ -6,12 +6,8 @@ import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import BubbleMenuExtension from "@tiptap/extension-bubble-menu";
 
-import {
-  useOptionalAiStore,
-} from "../../stores/aiStore";
-import {
-  useEditorStore,
-} from "../../stores/editorStore";
+import { useOptionalAiStore } from "../../stores/aiStore";
+import { useEditorStore } from "../../stores/editorStore";
 import { useOptionalLayoutStore } from "../../stores/layoutStore";
 import { useVersionStore } from "../../stores/versionStore";
 import { useAutosave } from "./useAutosave";
@@ -19,22 +15,16 @@ import { EDITOR_INLINE_BUBBLE_MENU_PLUGIN_KEY } from "./EditorBubbleMenu";
 import { SlashCommandExtension } from "./extensions/slashCommand";
 import { DragHandleExtension } from "./extensions/dragHandle";
 import { InlineDiffExtension } from "./extensions/inlineDiff";
-import {
-  createInlineAiStore,
-  type UseInlineAiStore,
-} from "./inlineAiStore";
+import { createInlineAiStore, type UseInlineAiStore } from "./inlineAiStore";
 import { useEntityCompletion } from "./useEntityCompletion";
 import { useEditorKeybindings } from "./useEditorKeybindings";
 import {
   isAiRunning,
   parseEditorContentJsonSafely,
-  chunkLargePasteText,
   shouldWarnDocumentCapacity,
-  shouldConfirmOverflowPaste,
   sanitizePastedHtml,
-  LARGE_PASTE_THRESHOLD_CHARS,
-  EDITOR_DOCUMENT_CHARACTER_LIMIT,
 } from "./editorPaneHelpers";
+import { handleEditorPaste } from "./editorPasteHandler";
 
 const IS_VITEST_RUNTIME =
   typeof process !== "undefined" && Boolean(process.env.VITEST);
@@ -46,13 +36,23 @@ export function useEditorSetup(projectId: string) {
   const documentStatus = useEditorStore((s) => s.documentStatus);
   const documentContentJson = useEditorStore((s) => s.documentContentJson);
   const save = useEditorStore((s) => s.save);
-  const setDocumentCharacterCount = useEditorStore((s) => s.setDocumentCharacterCount);
+  const setDocumentCharacterCount = useEditorStore(
+    (s) => s.setDocumentCharacterCount,
+  );
   const setCapacityWarning = useEditorStore((s) => s.setCapacityWarning);
-  const entityCompletionSession = useEditorStore((s) => s.entityCompletionSession);
-  const setEntityCompletionSession = useEditorStore((s) => s.setEntityCompletionSession);
-  const clearEntityCompletionSession = useEditorStore((s) => s.clearEntityCompletionSession);
+  const entityCompletionSession = useEditorStore(
+    (s) => s.entityCompletionSession,
+  );
+  const setEntityCompletionSession = useEditorStore(
+    (s) => s.setEntityCompletionSession,
+  );
+  const clearEntityCompletionSession = useEditorStore(
+    (s) => s.clearEntityCompletionSession,
+  );
   const listKnowledgeEntities = useEditorStore((s) => s.listKnowledgeEntities);
-  const downgradeFinalStatusForEdit = useEditorStore((s) => s.downgradeFinalStatusForEdit);
+  const downgradeFinalStatusForEdit = useEditorStore(
+    (s) => s.downgradeFinalStatusForEdit,
+  );
   const setEditorInstance = useEditorStore((s) => s.setEditorInstance);
   const previewStatus = useVersionStore((s) => s.previewStatus);
   const previewTimestamp = useVersionStore((s) => s.previewTimestamp);
@@ -69,8 +69,11 @@ export function useEditorSetup(projectId: string) {
   const [isSlashPanelOpen, setIsSlashPanelOpen] = React.useState(false);
   const [slashSearchQuery, setSlashSearchQuery] = React.useState("");
   const slashPanelOpenRef = React.useRef(false);
-  const isPreviewMode = previewStatus === "ready" && previewContentJson !== null;
-  const activeContentJson = isPreviewMode ? previewContentJson : documentContentJson;
+  const isPreviewMode =
+    previewStatus === "ready" && previewContentJson !== null;
+  const activeContentJson = isPreviewMode
+    ? previewContentJson
+    : documentContentJson;
 
   const syncCapacityState = React.useCallback(
     (nextCount: number) => {
@@ -133,50 +136,7 @@ export function useEditorSetup(projectId: string) {
     autofocus: true,
     editorProps: {
       transformPastedHTML: sanitizePastedHtml,
-      handlePaste(view, event) {
-        const clipboardText = event.clipboardData?.getData("text/plain") ?? "";
-        if (clipboardText.length < LARGE_PASTE_THRESHOLD_CHARS) {
-          return false;
-        }
-
-        event.preventDefault();
-
-        const currentLength = view.state.doc.textContent.length;
-        const chunks = chunkLargePasteText(clipboardText);
-        if (chunks.length === 0) {
-          return true;
-        }
-
-        const overflow = shouldConfirmOverflowPaste({
-          currentLength,
-          pasteLength: clipboardText.length,
-        });
-        const shouldContinueOverflow =
-          !overflow || window.confirm(t("editor.pane.pasteLimitExceeded"));
-
-        const allowedLength = shouldContinueOverflow
-          ? clipboardText.length
-          : Math.max(EDITOR_DOCUMENT_CHARACTER_LIMIT - currentLength, 0);
-        if (allowedLength <= 0) {
-          return true;
-        }
-
-        let remaining = allowedLength;
-        for (const chunk of chunks) {
-          if (remaining <= 0) {
-            break;
-          }
-          const nextChunk = chunk.slice(0, remaining);
-          const tr = view.state.tr.insertText(
-            nextChunk,
-            view.state.selection.from,
-            view.state.selection.to,
-          );
-          view.dispatch(tr);
-          remaining -= nextChunk.length;
-        }
-        return true;
-      },
+      handlePaste: (view, event) => handleEditorPaste(t, view, event),
       attributes: {
         "data-testid": "tiptap-editor",
         class: "h-full outline-none p-4 text-[var(--color-fg-default)]",

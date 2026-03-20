@@ -4,104 +4,11 @@ import type { Editor } from "@tiptap/react";
 
 import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
 import { InlineFormatButton } from "./InlineFormatButton";
-import { createToggleButtonA11yProps } from "./a11y";
-import { Tooltip } from "../../components/primitives/Tooltip";
+import { ToolbarButton, ToolbarSeparator } from "./ToolbarButton";
+import { toolbarIcons } from "./toolbarIcons";
 
-import {
-  Bold,
-  Code,
-  Heading1,
-  Heading2,
-  Heading3,
-  Italic,
-  List,
-  ListOrdered,
-  Minus,
-  Quote,
-  Redo,
-  SquareCode,
-  Strikethrough,
-  Underline,
-  Undo,
-} from "lucide-react";
-
-/* ------------------------------------------------------------------ */
-/* ToolbarButton                                                       */
-/* ------------------------------------------------------------------ */
-
-interface ToolbarButtonProps {
-  label: string;
-  shortcut?: string;
-  isActive?: boolean;
-  disabled?: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  testId?: string;
-}
-
-export function ToolbarButton({
-  label,
-  shortcut,
-  isActive,
-  disabled,
-  onClick,
-  children,
-  testId,
-}: ToolbarButtonProps): JSX.Element {
-  const tooltipContent = shortcut ? `${label} (${shortcut})` : label;
-
-  return (
-    <Tooltip content={tooltipContent}>
-      {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: ToolbarButton is a specialized toggle with aria-pressed */}
-      <button
-        type="button"
-        data-testid={testId}
-        {...createToggleButtonA11yProps({ label, pressed: isActive })}
-        disabled={disabled}
-        onClick={onClick}
-        className={`
-          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-          ${isActive ? "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]" : "text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]"}
-          ${disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer"}
-        `}
-      >
-        {children}
-      </button>
-    </Tooltip>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* ToolbarSeparator                                                    */
-/* ------------------------------------------------------------------ */
-
-export function ToolbarSeparator(): JSX.Element {
-  return <div className="mx-1 h-4 w-px bg-[var(--color-border-default)]" />;
-}
-
-/* ------------------------------------------------------------------ */
-/* Icons                                                               */
-/* ------------------------------------------------------------------ */
-
-export const toolbarIcons = {
-  bold: <Bold size={16} strokeWidth={1.5} />,
-  italic: <Italic size={16} strokeWidth={1.5} />,
-  underline: <Underline size={16} strokeWidth={1.5} />,
-  strikethrough: <Strikethrough size={16} strokeWidth={1.5} />,
-  heading1: <Heading1 size={16} strokeWidth={1.5} />,
-  heading2: <Heading2 size={16} strokeWidth={1.5} />,
-  heading3: <Heading3 size={16} strokeWidth={1.5} />,
-  bulletList: <List size={16} strokeWidth={1.5} />,
-  orderedList: <ListOrdered size={16} strokeWidth={1.5} />,
-  blockquote: <Quote size={16} strokeWidth={1.5} />,
-  code: <Code size={16} strokeWidth={1.5} />,
-  codeBlock: <SquareCode size={16} strokeWidth={1.5} />,
-  horizontalRule: <Minus size={16} strokeWidth={1.5} />,
-  undo: <Undo size={16} strokeWidth={1.5} />,
-  redo: <Redo size={16} strokeWidth={1.5} />,
-};
+export { ToolbarButton, ToolbarSeparator } from "./ToolbarButton";
+export { toolbarIcons } from "./toolbarIcons";
 
 /* ------------------------------------------------------------------ */
 /* Data-driven toolbar item definitions                                */
