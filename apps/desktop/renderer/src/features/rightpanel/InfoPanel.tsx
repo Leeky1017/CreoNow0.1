@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import type { IpcError, IpcResponseData } from "@shared/types/ipc-generated";
 import { Card } from "../../components/primitives/Card";
-import { Heading } from "../../components/primitives/Heading";
 import { Text } from "../../components/primitives/Text";
+import { PanelHeader } from "../../components/patterns/PanelHeader";
 import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useFileStore, type DocumentListItem } from "../../stores/fileStore";
@@ -12,9 +12,6 @@ import "../../i18n";
 
 type StatsSummary = IpcResponseData<"stats:day:gettoday">["summary"];
 
-/**
- * Format seconds into human-readable duration.
- */
 function formatDuration(seconds: number): string {
   const s = Math.max(0, Math.floor(seconds));
   const m = Math.floor(s / 60);
@@ -27,9 +24,6 @@ function formatDuration(seconds: number): string {
   return m > 0 ? `${m}m ${r}s` : `${r}s`;
 }
 
-/**
- * Format timestamp to human-readable date.
- */
 function formatDate(timestamp: number): string {
   return new Date(timestamp).toLocaleDateString(undefined, {
     year: "numeric",
@@ -40,9 +34,6 @@ function formatDate(timestamp: number): string {
   });
 }
 
-/**
- * Single stat item display.
- */
 function StatItem(props: {
   label: string;
   value: React.ReactNode;
@@ -65,9 +56,6 @@ function StatItem(props: {
   );
 }
 
-/**
- * Document info section.
- */
 function DocumentInfoSection(props: {
   document: DocumentListItem | null;
 }): JSX.Element {
@@ -91,9 +79,9 @@ function DocumentInfoSection(props: {
 
   return (
     <section>
-      <Heading level="h4" className="mb-2 font-semibold text-[13px]">
+      <Text size="small" weight="semibold" color="muted" as="p" className="mb-2">
         {t("rightPanel.info.currentDocument")}
-      </Heading>
+      </Text>
       <Card className="p-3 rounded-[var(--radius-md)]">
         <StatItem
           label={t("rightPanel.info.title")}
@@ -110,9 +98,6 @@ function DocumentInfoSection(props: {
   );
 }
 
-/**
- * Today's stats section.
- */
 function TodayStatsSection(props: {
   stats: StatsSummary | null;
   error: IpcError | null;
@@ -121,101 +106,47 @@ function TodayStatsSection(props: {
   const { t } = useTranslation();
   const { stats, error, loading } = props;
 
+  let cardContent: React.ReactNode;
+  let cardExtra = "";
+
   if (loading) {
-    return (
-      <section>
-        <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-          {t("rightPanel.info.todaysProgress")}
-        </Heading>
-        <Card className="p-3 rounded-[var(--radius-md)]">
-          <Text size="small" color="muted" className="text-center">
-            {t("rightPanel.info.loading")}
-          </Text>
-        </Card>
-      </section>
+    cardContent = (
+      <Text size="small" color="muted" className="text-center">{t("rightPanel.info.loading")}</Text>
     );
-  }
-
-  if (error) {
-    return (
-      <section>
-        <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-          {t("rightPanel.info.todaysProgress")}
-        </Heading>
-        <Card className="p-3 rounded-[var(--radius-md)] border-[var(--color-error)]/20">
-          <Text
-            data-testid="info-panel-stats-error"
-            size="small"
-            color="muted"
-            className="text-center"
-          >
-            {getHumanErrorMessage(error)}
-          </Text>
-        </Card>
-      </section>
+  } else if (error) {
+    cardContent = (
+      <Text data-testid="info-panel-stats-error" size="small" color="muted" className="text-center">
+        {getHumanErrorMessage(error)}
+      </Text>
     );
-  }
-
-  if (!stats) {
-    return (
-      <section>
-        <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-          {t("rightPanel.info.todaysProgress")}
-        </Heading>
-        <Card className="p-3 rounded-[var(--radius-md)]">
-          <Text size="small" color="muted" className="text-center">
-            {t("rightPanel.info.noStatsAvailable")}
-          </Text>
-        </Card>
-      </section>
+    cardExtra = " border-[var(--color-error)]/20";
+  } else if (!stats) {
+    cardContent = (
+      <Text size="small" color="muted" className="text-center">{t("rightPanel.info.noStatsAvailable")}</Text>
+    );
+  } else {
+    cardContent = (
+      <>
+        <StatItem label={t("rightPanel.info.wordsWritten")} value={stats.wordsWritten.toLocaleString()} testId="info-panel-words-written" />
+        <StatItem label={t("rightPanel.info.writingTime")} value={formatDuration(stats.writingSeconds)} testId="info-panel-writing-time" />
+        <StatItem label={t("rightPanel.info.skillsUsed")} value={stats.skillsUsed} testId="info-panel-skills-used" />
+        <StatItem label={t("rightPanel.info.documentsCreated")} value={stats.documentsCreated} testId="info-panel-docs-created" />
+      </>
     );
   }
 
   return (
     <section>
-      <Heading level="h4" className="mb-2 font-semibold text-[13px]">
+      <Text size="small" weight="semibold" color="muted" as="p" className="mb-2">
         {t("rightPanel.info.todaysProgress")}
-      </Heading>
-      <Card className="p-3 rounded-[var(--radius-md)]">
-        <StatItem
-          label={t("rightPanel.info.wordsWritten")}
-          value={stats.wordsWritten.toLocaleString()}
-          testId="info-panel-words-written"
-        />
-        <StatItem
-          label={t("rightPanel.info.writingTime")}
-          value={formatDuration(stats.writingSeconds)}
-          testId="info-panel-writing-time"
-        />
-        <StatItem
-          label={t("rightPanel.info.skillsUsed")}
-          value={stats.skillsUsed}
-          testId="info-panel-skills-used"
-        />
-        <StatItem
-          label={t("rightPanel.info.documentsCreated")}
-          value={stats.documentsCreated}
-          testId="info-panel-docs-created"
-        />
+      </Text>
+      <Card className={`p-3 rounded-[var(--radius-md)]${cardExtra}`}>
+        {cardContent}
       </Card>
     </section>
   );
 }
 
-/**
- * InfoPanel displays document information and writing statistics.
- *
- * Why: P0-010 requires the Info tab to show real data instead of placeholder,
- * with proper error handling that is observable in UI (not silent failure).
- *
- * IPC dependencies:
- * - stats:day:gettoday: fetch today's writing statistics
- *
- * @example
- * ```tsx
- * <InfoPanel />
- * ```
- */
 export interface InfoPanelProps {
   onOpenVersionHistory?: () => void;
 }
@@ -273,29 +204,29 @@ export function InfoPanel(props: InfoPanelProps = {}): JSX.Element {
   return (
     <div
       data-testid="info-panel"
-      className="flex flex-col gap-4 p-4 h-full overflow-auto"
+      className="flex flex-col h-full"
     >
-      <Heading level="h3" className="font-bold text-[15px]">
-        {t("rightPanel.info.panelTitle")}
-      </Heading>
+      <PanelHeader title={t("rightPanel.info.panelTitle")} />
 
-      <DocumentInfoSection document={currentDocument} />
-      <TodayStatsSection stats={stats} error={statsError} loading={loading} />
+      <div className="flex flex-col gap-[var(--space-section-gap)] p-4 overflow-auto">
+        <DocumentInfoSection document={currentDocument} />
+        <TodayStatsSection stats={stats} error={statsError} loading={loading} />
 
-      {/* eslint-disable-next-line creonow/no-native-html-element -- minimal inline link-style button */}
-      <button
-        type="button"
-        className="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
-        disabled={!currentDocument}
-        onClick={() => {
-          if (!currentDocument) {
-            return;
-          }
-          props.onOpenVersionHistory?.();
-        }}
-      >
-        {t("workbench.infoPanel.openVersionHistory")}
-      </button>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- minimal inline link-style button */}
+        <button
+          type="button"
+          className="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
+          disabled={!currentDocument}
+          onClick={() => {
+            if (!currentDocument) {
+              return;
+            }
+            props.onOpenVersionHistory?.();
+          }}
+        >
+          {t("workbench.infoPanel.openVersionHistory")}
+        </button>
+      </div>
     </div>
   );
 }

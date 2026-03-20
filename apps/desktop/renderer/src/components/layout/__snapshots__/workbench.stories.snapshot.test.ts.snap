@@ -2382,47 +2382,59 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-testid="right-panel-scroll-viewport"
       >
         <div
-          class="flex flex-col gap-4 p-4 h-full overflow-auto"
+          class="flex flex-col h-full"
           data-testid="info-panel"
         >
-          <h3
-            class="font-[var(--font-family-ui)] text-sm font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] font-bold text-[15px]"
-          >
-            Info
-          </h3>
           <div
-            class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
+            class="panel-header h-10 flex items-center justify-between px-3 border-b border-[var(--color-separator)] shrink-0"
           >
-            <span
-              class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
-              data-testid="info-panel-no-document"
+            <div
+              class="flex flex-col justify-center min-w-0"
             >
-              No document selected
-            </span>
+              <span
+                class="text-[var(--text-subtitle)] font-semibold leading-tight text-[var(--color-fg-default)] truncate"
+              >
+                Info
+              </span>
+            </div>
           </div>
-          <section>
-            <h4
-              class="font-[var(--font-family-ui)] text-[13px] font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] mb-2 font-semibold text-[13px]"
-            >
-              Today's Progress
-            </h4>
+          <div
+            class="flex flex-col gap-[var(--space-section-gap)] p-4 overflow-auto"
+          >
             <div
               class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
             >
               <span
                 class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
+                data-testid="info-panel-no-document"
               >
-                Loading...
+                No document selected
               </span>
             </div>
-          </section>
-          <button
-            class="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
-            disabled=""
-            type="button"
-          >
-            View Version History
-          </button>
+            <section>
+              <p
+                class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] font-semibold mb-2"
+              >
+                Today's Progress
+              </p>
+              <div
+                class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
+              >
+                <span
+                  class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
+                >
+                  Loading...
+                </span>
+              </div>
+            </section>
+            <button
+              class="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
+              disabled=""
+              type="button"
+            >
+              View Version History
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -2487,47 +2499,59 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-testid="right-panel-scroll-viewport"
       >
         <div
-          class="flex flex-col gap-4 p-4 h-full overflow-auto"
+          class="flex flex-col h-full"
           data-testid="info-panel"
         >
-          <h3
-            class="font-[var(--font-family-ui)] text-sm font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] font-bold text-[15px]"
-          >
-            Info
-          </h3>
           <div
-            class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
+            class="panel-header h-10 flex items-center justify-between px-3 border-b border-[var(--color-separator)] shrink-0"
           >
-            <span
-              class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
-              data-testid="info-panel-no-document"
+            <div
+              class="flex flex-col justify-center min-w-0"
             >
-              No document selected
-            </span>
+              <span
+                class="text-[var(--text-subtitle)] font-semibold leading-tight text-[var(--color-fg-default)] truncate"
+              >
+                Info
+              </span>
+            </div>
           </div>
-          <section>
-            <h4
-              class="font-[var(--font-family-ui)] text-[13px] font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] mb-2 font-semibold text-[13px]"
-            >
-              Today's Progress
-            </h4>
+          <div
+            class="flex flex-col gap-[var(--space-section-gap)] p-4 overflow-auto"
+          >
             <div
               class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
             >
               <span
                 class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
+                data-testid="info-panel-no-document"
               >
-                Loading...
+                No document selected
               </span>
             </div>
-          </section>
-          <button
-            class="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
-            disabled=""
-            type="button"
-          >
-            View Version History
-          </button>
+            <section>
+              <p
+                class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] font-semibold mb-2"
+              >
+                Today's Progress
+              </p>
+              <div
+                class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
+              >
+                <span
+                  class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
+                >
+                  Loading...
+                </span>
+              </div>
+            </section>
+            <button
+              class="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
+              disabled=""
+              type="button"
+            >
+              View Version History
+            </button>
+          </div>
         </div>
       </div>
     </div>

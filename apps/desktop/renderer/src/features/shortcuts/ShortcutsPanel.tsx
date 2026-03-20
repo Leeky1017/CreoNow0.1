@@ -51,7 +51,7 @@ export function ShortcutsPanel(): JSX.Element {
             <kbd
               className="inline-flex items-center px-[var(--spacing-xs)] py-[2px] rounded-[var(--radius-xs)] text-[length:var(--font-size-xs)] font-mono"
               style={{
-                backgroundColor: "var(--color-bg-subtle)",
+                backgroundColor: "var(--color-bg-raised)",
                 color: "var(--color-fg-muted)",
                 border: "1px solid var(--color-separator)",
               }}
