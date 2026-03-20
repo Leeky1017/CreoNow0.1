@@ -179,12 +179,14 @@
   --color-info: #3b82f6;
   --color-info-subtle: rgba(59, 130, 246, 0.1);
 
-  /* 强调色（知识图谱节点）§3.6 */
+  /* 强调色（知识图谱节点 + UI 色板）§3.6 */
+  --color-accent-white: #ffffff;
   --color-accent-blue: #3b82f6;
   --color-accent-green: #22c55e;
   --color-accent-orange: #f97316;
   --color-accent-cyan: #06b6d4;
   --color-accent-purple: #8b5cf6;
+  --color-accent-pink: #ec4899;
 
   /* 知识图谱节点色 - 保持多色区分 */
   --color-node-character: #3b82f6; /* 角色 - 蓝色 */
