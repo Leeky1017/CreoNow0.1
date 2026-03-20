@@ -80,13 +80,19 @@ export function SearchResultsArea(props: {
     );
   }
 
-  if (props.hasQuery && !props.hasResults && props.effectiveStatus !== "loading") {
+  if (
+    props.hasQuery &&
+    !props.hasResults &&
+    props.effectiveStatus !== "loading"
+  ) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-8">
         <EmptyState
           variant="search"
           title={t("search.noResults.title")}
-          description={t("search.noResultsQuery", { query: props.effectiveQuery })}
+          description={t("search.noResultsQuery", {
+            query: props.effectiveQuery,
+          })}
         />
         <div className="mt-6 p-4 bg-[var(--color-separator)] rounded-lg border border-[var(--color-separator)]">
           <p className="text-[10px] text-[var(--color-fg-placeholder)] font-medium uppercase tracking-wider mb-2">

@@ -14,7 +14,10 @@ import type { SearchResultItem } from "./searchPanelTypes";
 /**
  * Highlight matching text in a snippet using the search query.
  */
-export function HighlightText(props: { text: string; query: string }): JSX.Element {
+export function HighlightText(props: {
+  text: string;
+  query: string;
+}): JSX.Element {
   const { text, query } = props;
 
   if (!query.trim()) {

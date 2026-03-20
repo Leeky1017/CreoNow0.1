@@ -1,7 +1,12 @@
 /**
  * Search category filter options.
  */
-export type SearchCategory = "all" | "documents" | "memories" | "knowledge" | "assets";
+export type SearchCategory =
+  | "all"
+  | "documents"
+  | "memories"
+  | "knowledge"
+  | "assets";
 
 /**
  * Result item data structure for different types.

@@ -12,11 +12,18 @@ import { useSearchStore, type SearchStatus } from "../../stores/searchStore";
 
 import type { SearchCategory, SearchResultItem } from "./searchPanelTypes";
 import { navigateSearchResult } from "./searchPanelTypes";
-import { CategoryButton, SearchFilterBar, SearchFooter } from "./SearchPanelParts";
+import {
+  CategoryButton,
+  SearchFilterBar,
+  SearchFooter,
+} from "./SearchPanelParts";
 import { SearchResultsArea } from "./SearchResultsArea";
 
 // Re-export for external consumers
-export type { SearchResultItem, NavigateSearchResultArgs } from "./searchPanelTypes";
+export type {
+  SearchResultItem,
+  NavigateSearchResultArgs,
+} from "./searchPanelTypes";
 export { navigateSearchResult } from "./searchPanelTypes";
 
 export function SearchPanel(props: {
@@ -30,8 +37,14 @@ export function SearchPanel(props: {
   mockIndexState?: "ready" | "rebuilding";
 }): JSX.Element | null {
   const {
-    projectId, open, onClose, mockResults, mockQuery, mockStatus,
-    mockIndexState, focusNonce = 0,
+    projectId,
+    open,
+    onClose,
+    mockResults,
+    mockQuery,
+    mockStatus,
+    mockIndexState,
+    focusNonce = 0,
   } = props;
   const { t } = useTranslation();
 
@@ -90,14 +103,22 @@ export function SearchPanel(props: {
   const handleItemClick = React.useCallback(
     (itemId: string): void => {
       const result = items.find((item) => item.id === itemId);
-      if (!result) { onClose?.(); return; }
+      if (!result) {
+        onClose?.();
+        return;
+      }
       const targetDocumentId =
         result.documentId ?? (result.type === "document" ? result.id : null);
-      if (!targetDocumentId) { onClose?.(); return; }
+      if (!targetDocumentId) {
+        onClose?.();
+        return;
+      }
       void navigateSearchResult({
         projectId,
         result: { documentId: targetDocumentId, anchor: result.anchor },
-        setCurrent, setFlashKey, onClose,
+        setCurrent,
+        setFlashKey,
+        onClose,
       });
     },
     [items, projectId, setCurrent, onClose],
@@ -109,40 +130,55 @@ export function SearchPanel(props: {
   }
 
   useHotkey(
-    "search:close", { key: "Escape" },
+    "search:close",
+    { key: "Escape" },
     React.useCallback(() => {
       if (effectiveQuery.trim().length > 0) setQuery("");
       else onClose?.();
     }, [effectiveQuery, setQuery, onClose]),
-    "global", 25, open,
+    "global",
+    25,
+    open,
   );
 
   useHotkey(
-    "search:nav-down", { key: "ArrowDown" },
-    React.useCallback((e: KeyboardEvent) => {
-      e.preventDefault();
-      setActiveIndex((prev) => Math.min(prev + 1, totalResults - 1));
-    }, [totalResults]),
-    "global", 25, open,
+    "search:nav-down",
+    { key: "ArrowDown" },
+    React.useCallback(
+      (e: KeyboardEvent) => {
+        e.preventDefault();
+        setActiveIndex((prev) => Math.min(prev + 1, totalResults - 1));
+      },
+      [totalResults],
+    ),
+    "global",
+    25,
+    open,
   );
 
   useHotkey(
-    "search:nav-up", { key: "ArrowUp" },
+    "search:nav-up",
+    { key: "ArrowUp" },
     React.useCallback((e: KeyboardEvent) => {
       e.preventDefault();
       setActiveIndex((prev) => Math.max(prev - 1, 0));
     }, []),
-    "global", 25, open,
+    "global",
+    25,
+    open,
   );
 
   useHotkey(
-    "search:activate", { key: "Enter" },
+    "search:activate",
+    { key: "Enter" },
     React.useCallback(() => {
       if (hasResults && activeIndex >= 0 && activeIndex < items.length) {
         handleItemClick(items[activeIndex].id);
       }
     }, [hasResults, activeIndex, items, handleItemClick]),
-    "global", 25, open && hasResults,
+    "global",
+    25,
+    open && hasResults,
   );
 
   if (!open) return null;
@@ -162,7 +198,11 @@ export function SearchPanel(props: {
         {/* Header */}
         <div className="flex flex-col border-b border-[var(--color-separator)] bg-[var(--color-bg-surface)]">
           <div className="flex items-center px-4 py-4 gap-3">
-            <Search className="w-5 h-5 text-[var(--color-fg-muted)]" size={20} strokeWidth={1.5} />
+            <Search
+              className="w-5 h-5 text-[var(--color-fg-muted)]"
+              size={20}
+              strokeWidth={1.5}
+            />
             <Input
               ref={inputRef}
               data-testid="search-input"
@@ -178,7 +218,9 @@ export function SearchPanel(props: {
             {effectiveStatus === "loading" && <Spinner size="sm" />}
             {onClose && (
               <Button
-                variant="ghost" size="sm" onClick={onClose}
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
                 className="!p-1 !h-auto !rounded-md !text-[var(--color-fg-placeholder)] hover:!text-[var(--color-fg-default)] hover:!bg-[var(--color-separator)]"
               >
                 <X className="w-5 h-5" size={20} strokeWidth={1.5} />
@@ -186,27 +228,62 @@ export function SearchPanel(props: {
             )}
           </div>
           <div className="flex items-center gap-2 px-4 pb-4 overflow-x-auto">
-            <CategoryButton label={t("search.categories.all")} active={category === "all"} onClick={() => setCategory("all")} />
-            <CategoryButton label={t("search.categories.documents")} active={category === "documents"} onClick={() => setCategory("documents")} />
-            <CategoryButton label={t("search.categories.memories")} active={category === "memories"} onClick={() => setCategory("memories")} />
-            <CategoryButton label={t("search.categories.knowledge")} active={category === "knowledge"} onClick={() => setCategory("knowledge")} />
-            <CategoryButton label={t("search.categories.assets")} active={category === "assets"} onClick={() => setCategory("assets")} />
+            <CategoryButton
+              label={t("search.categories.all")}
+              active={category === "all"}
+              onClick={() => setCategory("all")}
+            />
+            <CategoryButton
+              label={t("search.categories.documents")}
+              active={category === "documents"}
+              onClick={() => setCategory("documents")}
+            />
+            <CategoryButton
+              label={t("search.categories.memories")}
+              active={category === "memories"}
+              onClick={() => setCategory("memories")}
+            />
+            <CategoryButton
+              label={t("search.categories.knowledge")}
+              active={category === "knowledge"}
+              onClick={() => setCategory("knowledge")}
+            />
+            <CategoryButton
+              label={t("search.categories.assets")}
+              active={category === "assets"}
+              onClick={() => setCategory("assets")}
+            />
           </div>
           <SearchFilterBar
-            semanticSearch={semanticSearch} includeArchived={includeArchived}
-            scope={searchScope} onSemanticChange={setSemanticSearch}
-            onArchivedChange={setIncludeArchived} onScopeChange={setSearchScope}
+            semanticSearch={semanticSearch}
+            includeArchived={includeArchived}
+            scope={searchScope}
+            onSemanticChange={setSemanticSearch}
+            onArchivedChange={setIncludeArchived}
+            onScopeChange={setSearchScope}
           />
         </div>
-        <div aria-live="polite" className="flex-1 overflow-y-auto bg-[var(--color-bg-surface)]">
+        <div
+          aria-live="polite"
+          className="flex-1 overflow-y-auto bg-[var(--color-bg-surface)]"
+        >
           <SearchResultsArea
-            hasQuery={hasQuery} hasResults={hasResults} hasError={hasError}
-            effectiveQuery={effectiveQuery} effectiveStatus={effectiveStatus}
-            effectiveIndexState={effectiveIndexState} lastError={lastError}
-            category={category} activeIndex={activeIndex} flashKey={flashKey}
-            totalResults={totalResults} documentItems={documentItems}
-            memoryItems={memoryItems} knowledgeItems={knowledgeItems}
-            onItemClick={handleItemClick} onRetrySearch={handleRetrySearch}
+            hasQuery={hasQuery}
+            hasResults={hasResults}
+            hasError={hasError}
+            effectiveQuery={effectiveQuery}
+            effectiveStatus={effectiveStatus}
+            effectiveIndexState={effectiveIndexState}
+            lastError={lastError}
+            category={category}
+            activeIndex={activeIndex}
+            flashKey={flashKey}
+            totalResults={totalResults}
+            documentItems={documentItems}
+            memoryItems={memoryItems}
+            knowledgeItems={knowledgeItems}
+            onItemClick={handleItemClick}
+            onRetrySearch={handleRetrySearch}
             onClearQuery={() => setQuery("")}
           />
         </div>

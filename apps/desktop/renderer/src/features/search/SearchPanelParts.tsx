@@ -157,11 +157,15 @@ export function SearchFooter(props: {
           label=""
         />
         <KeyHint
-          icon={<ChevronDown className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />}
+          icon={
+            <ChevronDown className="w-2.5 h-2.5" size={16} strokeWidth={1.5} />
+          }
           label={t("search.footer.toNavigate")}
         />
         <KeyHint
-          icon={<CornerDownLeft className="w-3 h-3" size={16} strokeWidth={1.5} />}
+          icon={
+            <CornerDownLeft className="w-3 h-3" size={16} strokeWidth={1.5} />
+          }
           label={t("search.footer.toOpen")}
         />
         <KeyHint text="esc" label={t("search.footer.toClose")} />

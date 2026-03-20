@@ -6,8 +6,17 @@ import { CommandItem as CommandItemComposite } from "../../components/composites
 import { useProjectStore } from "../../stores/projectStore";
 import "../../i18n";
 import type { CommandPaletteProps, CommandItem } from "./commandPaletteTypes";
-import { PAGE_SIZE, GROUP_TRANSLATION_KEYS, validateCommandItems } from "./commandPaletteTypes";
-import { getModKey, highlightMatch, groupCommands, filterCommands } from "./commandPaletteHelpers";
+import {
+  PAGE_SIZE,
+  GROUP_TRANSLATION_KEYS,
+  validateCommandItems,
+} from "./commandPaletteTypes";
+import {
+  getModKey,
+  highlightMatch,
+  groupCommands,
+  filterCommands,
+} from "./commandPaletteHelpers";
 import { SearchIcon, buildDefaultCommands } from "./commandPaletteCommands";
 
 // Re-export for external consumers
@@ -198,7 +207,11 @@ export function CommandPalette({
         >
           {errorText && (
             <div className="px-3 py-2 mb-2 bg-[var(--color-error-subtle)] rounded-[var(--radius-sm)]">
-              <Text data-testid="command-palette-error" size="small" color="error">
+              <Text
+                data-testid="command-palette-error"
+                size="small"
+                color="error"
+              >
                 {errorText}
               </Text>
             </div>

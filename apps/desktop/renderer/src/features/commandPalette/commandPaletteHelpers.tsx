@@ -15,10 +15,7 @@ export function getModKey(): string {
 /**
  * 高亮匹配文字
  */
-export function highlightMatch(
-  text: string,
-  query: string,
-): React.ReactNode {
+export function highlightMatch(text: string, query: string): React.ReactNode {
   if (!query.trim()) {
     return text;
   }

@@ -10,10 +10,7 @@ import {
   SquarePen,
 } from "lucide-react";
 
-import type {
-  CommandItem,
-  CommandPaletteProps,
-} from "./commandPaletteTypes";
+import type { CommandItem, CommandPaletteProps } from "./commandPaletteTypes";
 import { GROUP_IDS, GROUP_ICON_COLORS } from "./commandPaletteTypes";
 
 // =============================================================================
