@@ -10,126 +10,15 @@ import {
   useTemplateStore,
   type TemplateStructure,
 } from "../../stores/templateStore";
-
-import { X } from "lucide-react";
-
-// =============================================================================
-// Types
-// =============================================================================
+import { TemplateListItem, TemplateAddItemInput } from "./TemplateMetadataForm";
 
 interface CreateTemplateDialogProps {
-  /** Whether the dialog is open */
   open: boolean;
-  /** Callback when open state changes */
   onOpenChange: (open: boolean) => void;
-  /** Callback when template is created successfully */
   onCreated?: (templateId: string) => void;
 }
 
-// =============================================================================
-// Folder/File List Item
-// =============================================================================
-
-interface ListItemProps {
-  value: string;
-  onRemove: () => void;
-  disabled?: boolean;
-}
-
-function ListItem({ value, onRemove, disabled }: ListItemProps): JSX.Element {
-  const { t } = useTranslation();
-  return (
-    <div className="flex items-center gap-2 px-3 py-2 bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)]">
-      <span className="flex-1 text-sm text-[var(--color-fg-default)] truncate">
-        {value}
-      </span>
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-      <button
-        type="button"
-        onClick={onRemove}
-        disabled={disabled}
-        className="text-[var(--color-fg-muted)] hover:text-[var(--color-error)] transition-colors disabled:opacity-50"
-        aria-label={t("projects.template.removeItem", { value })}
-      >
-        <X size={16} strokeWidth={1.5} />
-      </button>
-    </div>
-  );
-}
-
-// =============================================================================
-// Add Item Input
-// =============================================================================
-
-interface AddItemInputProps {
-  placeholder: string;
-  onAdd: (value: string) => void;
-  disabled?: boolean;
-}
-
-function AddItemInput({
-  placeholder,
-  onAdd,
-  disabled,
-}: AddItemInputProps): JSX.Element {
-  const { t } = useTranslation();
-  const [value, setValue] = useState("");
-
-  const handleAdd = useCallback(() => {
-    const trimmed = value.trim();
-    if (trimmed) {
-      onAdd(trimmed);
-      setValue("");
-    }
-  }, [value, onAdd]);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleAdd();
-      }
-    },
-    [handleAdd],
-  );
-
-  return (
-    <div className="flex items-center gap-2">
-      <Input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        disabled={disabled}
-        fullWidth
-        className="flex-1"
-      />
-      <Button
-        type="button"
-        variant="secondary"
-        size="sm"
-        onClick={handleAdd}
-        disabled={disabled || !value.trim()}
-      >
-        {t("projects.template.add")}
-      </Button>
-    </div>
-  );
-}
-
-// =============================================================================
-// CreateTemplateDialog Component
-// =============================================================================
-
-/**
- * Dialog for creating custom project templates
- *
- * Allows users to define:
- * - Template name (required)
- * - Description (optional)
- * - Initial folders
- * - Initial files
- */
+/** Dialog for creating custom project templates */
 export function CreateTemplateDialog({
   open,
   onOpenChange,
@@ -321,14 +210,14 @@ export function CreateTemplateDialog({
           </label>
           <div className="space-y-2">
             {folders.map((folder) => (
-              <ListItem
+              <TemplateListItem
                 key={folder}
                 value={folder}
                 onRemove={() => handleRemoveFolder(folder)}
                 disabled={submitting}
               />
             ))}
-            <AddItemInput
+            <TemplateAddItemInput
               placeholder={t("projects.template.folderPlaceholder")}
               onAdd={handleAddFolder}
               disabled={submitting}
@@ -349,14 +238,14 @@ export function CreateTemplateDialog({
           </label>
           <div className="space-y-2">
             {files.map((file) => (
-              <ListItem
+              <TemplateListItem
                 key={file}
                 value={file}
                 onRemove={() => handleRemoveFile(file)}
                 disabled={submitting}
               />
             ))}
-            <AddItemInput
+            <TemplateAddItemInput
               placeholder={t("projects.template.filePlaceholder")}
               onAdd={handleAddFile}
               disabled={submitting}

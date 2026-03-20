@@ -1,15 +1,18 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { Toggle } from "../../components/primitives/Toggle";
-import { Slider } from "../../components/primitives/Slider";
-import { Button, Select } from "../../components/primitives";
+import { Select } from "../../components/primitives";
 import { FormField } from "../../components/composites/FormField";
 import { i18n } from "../../i18n";
 import {
   getLanguagePreference,
   setLanguagePreference,
 } from "../../i18n/languagePreference";
+import {
+  WritingExperienceSection,
+  DataStorageSection,
+  EditorDefaultsSection,
+} from "./SettingsGeneralSections";
 
 /**
  * Settings state for General page
@@ -28,68 +31,20 @@ export interface GeneralSettings {
  * SettingsGeneral page props
  */
 export interface SettingsGeneralProps {
-  /** Current settings values */
   settings: GeneralSettings;
-  /** Whether to distinguish AI edits in version history */
   showAiMarks: boolean;
-  /** Callback for AI mark preference updates */
   onShowAiMarksChange: (enabled: boolean) => void;
-  /** Callback when settings change */
   onSettingsChange: (settings: GeneralSettings) => void;
-  /** Trigger manual backup snapshot creation */
   onManualBackup?: () => void | Promise<void>;
-  /** Trigger manual restore from latest snapshot */
   onManualRestore?: () => void | Promise<void>;
-  /** Busy flag while manual backup is running */
   manualBackupLoading?: boolean;
-  /** Busy flag while manual restore is running */
   manualRestoreLoading?: boolean;
-  /** Disable backup actions when no project is active */
   backupActionsDisabled?: boolean;
 }
 
-/**
- * Section label styles (uppercase label from design spec)
- */
-const sectionLabelStyles = [
-  "text-[10px]",
-  "uppercase",
-  "tracking-[0.15em]",
-  "text-[var(--color-fg-placeholder)]",
-  "font-semibold",
-  "mb-6",
-].join(" ");
+const sectionLabelStyles = "text-[10px] uppercase tracking-[0.15em] text-[var(--color-fg-placeholder)] font-semibold mb-6";
+const dividerStyles = "w-full h-px bg-[var(--color-separator)] my-12";
 
-/**
- * Divider styles
- */
-const dividerStyles = [
-  "w-full",
-  "h-px",
-  "bg-[var(--color-separator)]",
-  "my-12",
-].join(" ");
-
-/**
- * Backup interval option values.
- */
-const BACKUP_INTERVAL_VALUES = ["5min", "15min", "1hour"] as const;
-
-/**
- * Typography options
- */
-const typographyOptions = [
-  { value: "inter", label: "Inter (Sans-Serif)" },
-  { value: "merriweather", label: "Merriweather (Serif)" },
-  { value: "jetbrains", label: "JetBrains Mono (Monospace)" },
-];
-
-/**
- * SettingsGeneral page component
- *
- * General settings page with Writing Experience, Data & Storage, and Editor Defaults sections.
- * Uses real content from the design spec.
- */
 export function SettingsGeneral({
   settings,
   showAiMarks,
@@ -131,7 +86,6 @@ export function SettingsGeneral({
   return (
     // eslint-disable-next-line creonow/no-hardcoded-dimension -- settings content width per design spec
     <div className="max-w-[560px]">
-      {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">
         {t("settingsDialog.general.title")}
       </h1>
@@ -160,158 +114,28 @@ export function SettingsGeneral({
 
       <div className={dividerStyles} />
 
-      {/* Writing Experience Section */}
-      <div className="mb-14">
-        <h4 className={sectionLabelStyles}>
-          {t("settingsDialog.general.writingExperience")}
-        </h4>
-
-        <div className="flex flex-col gap-8">
-          <Toggle
-            label={t("settings.general.focusMode")}
-            description={t("settings.general.focusModeDescription")}
-            checked={settings.focusMode}
-            onCheckedChange={(checked) => updateSetting("focusMode", checked)}
-          />
-
-          <Toggle
-            label={t("settings.general.typewriterScroll")}
-            description={t("settings.general.typewriterScrollDescription")}
-            checked={settings.typewriterScroll}
-            onCheckedChange={(checked) =>
-              updateSetting("typewriterScroll", checked)
-            }
-          />
-
-          <Toggle
-            label={t("settings.general.smartPunctuation")}
-            description={t("settings.general.smartPunctuationDescription")}
-            checked={settings.smartPunctuation}
-            onCheckedChange={(checked) =>
-              updateSetting("smartPunctuation", checked)
-            }
-          />
-        </div>
-      </div>
+      <WritingExperienceSection settings={settings} onUpdate={updateSetting} />
 
       <div className={dividerStyles} />
 
-      {/* Data & Storage Section */}
-      <div className="mb-14">
-        <h4 className={sectionLabelStyles}>
-          {t("settingsDialog.general.dataAndStorage")}
-        </h4>
-
-        <div className="flex flex-col gap-6">
-          <Toggle
-            label={t("settings.general.localAutoSave")}
-            description={t("settings.general.localAutoSaveDescription")}
-            checked={settings.localAutoSave}
-            onCheckedChange={(checked) =>
-              updateSetting("localAutoSave", checked)
-            }
-          />
-
-          <FormField
-            label={t("settings.general.backupInterval")}
-            htmlFor="backup-interval"
-            help={t("settings.general.backupIntervalHelp")}
-          >
-            <Select
-              options={BACKUP_INTERVAL_VALUES.map((v) => ({
-                value: v,
-                label: t(`settings.general.backupOption_${v}`),
-              }))}
-              value={settings.backupInterval}
-              onValueChange={(value) => updateSetting("backupInterval", value)}
-              fullWidth
-            />
-          </FormField>
-
-          <FormField
-            label={t("settings.general.manualBackup")}
-            htmlFor="manual-backup-actions"
-            help={t("settings.general.manualBackupHelp")}
-          >
-            <div
-              id="manual-backup-actions"
-              className="grid grid-cols-1 gap-3 sm:grid-cols-2"
-            >
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  void onManualBackup?.();
-                }}
-                loading={manualBackupLoading}
-                disabled={backupActionsDisabled}
-              >
-                {t("settings.general.backupNow")}
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  void onManualRestore?.();
-                }}
-                loading={manualRestoreLoading}
-                disabled={backupActionsDisabled}
-              >
-                {t("settings.general.restoreLatest")}
-              </Button>
-            </div>
-          </FormField>
-        </div>
-      </div>
+      <DataStorageSection
+        settings={settings}
+        onUpdate={updateSetting}
+        onManualBackup={onManualBackup}
+        onManualRestore={onManualRestore}
+        manualBackupLoading={manualBackupLoading}
+        manualRestoreLoading={manualRestoreLoading}
+        backupActionsDisabled={backupActionsDisabled}
+      />
 
       <div className={dividerStyles} />
 
-      {/* Editor Defaults Section */}
-      <div className="mb-6">
-        <h4 className={sectionLabelStyles}>
-          {t("settingsDialog.general.editorDefaults")}
-        </h4>
-
-        <div className="flex flex-col gap-8 mb-8">
-          <Toggle
-            label={t("settings.general.differentiateAiEdits")}
-            description={t(
-              "settingsDialog.general.differentiateAiEditsDescription",
-              { marker: t("settingsDialog.general.aiModifyMarker") },
-            )}
-            checked={showAiMarks}
-            onCheckedChange={onShowAiMarksChange}
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-8">
-          <FormField
-            label={t("settings.general.defaultTypography")}
-            htmlFor="default-typography"
-          >
-            <Select
-              options={typographyOptions}
-              value={settings.defaultTypography}
-              onValueChange={(value) =>
-                updateSetting("defaultTypography", value)
-              }
-              fullWidth
-            />
-          </FormField>
-
-          <FormField
-            label={t("settings.general.interfaceScale")}
-            htmlFor="interface-scale"
-          >
-            <Slider
-              min={80}
-              max={120}
-              step={10}
-              value={settings.interfaceScale}
-              onValueChange={(value) => updateSetting("interfaceScale", value)}
-              showLabels
-            />
-          </FormField>
-        </div>
-      </div>
+      <EditorDefaultsSection
+        settings={settings}
+        showAiMarks={showAiMarks}
+        onShowAiMarksChange={onShowAiMarksChange}
+        onUpdate={updateSetting}
+      />
     </div>
   );
 }

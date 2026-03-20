@@ -9,6 +9,10 @@ import { ExportDialog } from "./ExportDialog";
 import * as ipcClient from "../../lib/ipcClient";
 import { i18n } from "../../i18n";
 
+// =============================================================================
+// Mock 设置
+// =============================================================================
+
 vi.mock("@radix-ui/react-dialog", async (importOriginal) => {
   const actual = (await importOriginal()) as Record<string, unknown>;
 
@@ -129,6 +133,11 @@ vi.mock("@radix-ui/react-radio-group", async () => {
     },
   };
 });
+
+// =============================================================================
+// 测试生命周期
+// =============================================================================
+
 beforeAll(async () => {
   await act(async () => {
     await i18n.changeLanguage("en");
@@ -137,6 +146,7 @@ beforeAll(async () => {
 
 afterEach(async () => {
   cleanup();
+  vi.restoreAllMocks();
   await act(async () => {
     await i18n.changeLanguage("en");
   });
@@ -147,148 +157,464 @@ function renderWithToastProvider(ui: JSX.Element) {
 }
 
 describe("ExportDialog", () => {
-  it("renders config view with Markdown selected by default", () => {
-    renderWithToastProvider(
-      <ExportDialog
-        open={true}
-        onOpenChange={() => {}}
-        projectId="test-project"
-        documentTitle="Test Document"
-      />,
-    );
+  // ===========================================================================
+  // 渲染 — 基础渲染与默认状态
+  // ===========================================================================
+  describe("渲染", () => {
+    it("open 为 true 时渲染对话框", () => {
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test-project"
+          documentTitle="Test Document"
+        />,
+      );
 
-    expect(screen.getByTestId("export-dialog")).toBeInTheDocument();
-    expect(screen.getByText("Export Document")).toBeInTheDocument();
-    expect(screen.getByText("Test Document")).toBeInTheDocument();
+      expect(screen.getByTestId("export-dialog")).toBeInTheDocument();
+      expect(screen.getByText("Export Document")).toBeInTheDocument();
+      expect(screen.getByText("Test Document")).toBeInTheDocument();
+    });
 
-    expect(screen.getByTestId("export-format-markdown")).toHaveAttribute(
-      "data-state",
-      "checked",
-    );
-    expect(screen.getByText("MARKDOWN • A4")).toBeInTheDocument();
-  });
+    it("默认选中 Markdown 格式", () => {
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test-project"
+        />,
+      );
 
-  it("enables all export formats (pdf/docx/txt/markdown)", () => {
-    renderWithToastProvider(
-      <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
-    );
+      expect(screen.getByTestId("export-format-markdown")).toHaveAttribute(
+        "data-state",
+        "checked",
+      );
+    });
 
-    expect(screen.getByTestId("export-format-pdf")).not.toBeDisabled();
-    expect(screen.getByTestId("export-format-docx")).not.toBeDisabled();
-    expect(screen.getByTestId("export-format-txt")).not.toBeDisabled();
-    expect(screen.getByTestId("export-format-markdown")).not.toBeDisabled();
-  });
+    it("预览区显示当前格式和页面尺寸", () => {
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test-project"
+        />,
+      );
 
-  it("disables Export when projectId is missing", () => {
-    renderWithToastProvider(
-      <ExportDialog open={true} onOpenChange={() => {}} />,
-    );
+      expect(screen.getByText("MARKDOWN • A4")).toBeInTheDocument();
+    });
 
-    expect(screen.getByTestId("export-submit")).toBeDisabled();
-    expect(screen.getByText("Please open a project first")).toBeInTheDocument();
-  });
-
-  it("renders controlled progress view", () => {
-    renderWithToastProvider(
-      <ExportDialog
-        open={true}
-        onOpenChange={() => {}}
-        projectId="test"
-        view="progress"
-        progress={42}
-        progressStep="Exporting..."
-      />,
-    );
-
-    // "Exporting Document" appears twice: sr-only title + visible heading
-    expect(screen.getAllByText("Exporting Document")).toHaveLength(2);
-    expect(screen.getByText("Exporting...")).toBeInTheDocument();
-  });
-
-  it("renders controlled success view with result fields", () => {
-    renderWithToastProvider(
-      <ExportDialog
-        open={true}
-        onOpenChange={() => {}}
-        projectId="test"
-        view="success"
-        result={{ relativePath: "exports/test/doc.md", bytesWritten: 99 }}
-      />,
-    );
-
-    expect(screen.getByTestId("export-success")).toBeInTheDocument();
-    expect(
-      screen.getByTestId("export-success-relative-path"),
-    ).toHaveTextContent("exports/test/doc.md");
-    expect(
-      screen.getByTestId("export-success-bytes-written"),
-    ).toHaveTextContent("99");
-  });
-
-  it("renders error banner in config view when error is provided", () => {
-    const error: IpcError = { code: "IO_ERROR", message: "failed" };
-
-    renderWithToastProvider(
-      <ExportDialog
-        open={true}
-        onOpenChange={() => {}}
-        projectId="test"
-        error={error}
-      />,
-    );
-
-    expect(screen.getByTestId("export-error")).toBeInTheDocument();
-    expect(screen.queryByTestId("export-error-code")).not.toBeInTheDocument();
-    expect(screen.getByTestId("export-error-message")).toHaveTextContent(
-      "Read/write operation failed. Please try again.",
-    );
-    expect(screen.getByRole("button", { name: "Dismiss" })).toBeInTheDocument();
-  });
-
-  describe("format description labels (A0-19)", () => {
-    it("shows structured capability hint for PDF format", () => {
+    it("所有 4 种导出格式均可用（无禁用项）", () => {
       renderWithToastProvider(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
-      const pdfCard = screen.getByTestId("export-format-pdf");
-      expect(pdfCard).toHaveTextContent(
+      expect(screen.getByTestId("export-format-pdf")).not.toBeDisabled();
+      expect(screen.getByTestId("export-format-docx")).not.toBeDisabled();
+      expect(screen.getByTestId("export-format-txt")).not.toBeDisabled();
+      expect(screen.getByTestId("export-format-markdown")).not.toBeDisabled();
+    });
+
+    it("缺少 documentTitle 时使用默认标题", () => {
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      expect(screen.getByText("Untitled Document")).toBeInTheDocument();
+    });
+
+    it("显示设置选项区域（元数据 / 版本历史 / 嵌入图片）", () => {
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      expect(screen.getByText("Include metadata")).toBeInTheDocument();
+      expect(screen.getByText("Version history")).toBeInTheDocument();
+      expect(screen.getByText("Embed images")).toBeInTheDocument();
+    });
+
+    it("显示页面尺寸选择器", () => {
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      expect(screen.getByTestId("export-page-size-select")).toBeInTheDocument();
+    });
+  });
+
+  // ===========================================================================
+  // 交互 — 格式切换与选项变更
+  // ===========================================================================
+  describe("交互", () => {
+    it("点击格式卡片切换选中格式", async () => {
+      const user = userEvent.setup();
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      await user.click(screen.getByTestId("export-format-pdf"));
+
+      expect(screen.getByTestId("export-format-pdf")).toHaveAttribute(
+        "data-state",
+        "checked",
+      );
+      expect(screen.getByTestId("export-format-markdown")).toHaveAttribute(
+        "data-state",
+        "unchecked",
+      );
+    });
+
+    it("非 PDF 格式时页面尺寸选择器禁用", () => {
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      // Markdown is default — page size should be disabled
+      expect(screen.getByTestId("export-page-size-select")).toBeDisabled();
+    });
+
+    it("切换到 PDF 格式后页面尺寸选择器启用", async () => {
+      const user = userEvent.setup();
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      await user.click(screen.getByTestId("export-format-pdf"));
+
+      expect(screen.getByTestId("export-page-size-select")).not.toBeDisabled();
+    });
+
+    it("切换页面尺寸后预览区更新", async () => {
+      const user = userEvent.setup();
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      await user.click(screen.getByTestId("export-format-pdf"));
+      await user.selectOptions(
+        screen.getByTestId("export-page-size-select"),
+        "letter",
+      );
+
+      expect(screen.getByText("PDF • LETTER")).toBeInTheDocument();
+    });
+
+    it("点击 Cancel 按钮调用 onOpenChange(false)", async () => {
+      const user = userEvent.setup();
+      const onOpenChange = vi.fn();
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={onOpenChange}
+          projectId="test"
+        />,
+      );
+
+      await user.click(screen.getByRole("button", { name: "Cancel" }));
+
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    });
+  });
+
+  // ===========================================================================
+  // 验证 — 导出前置条件检查
+  // ===========================================================================
+  describe("验证", () => {
+    it("缺少 projectId 时导出按钮禁用并显示提示", () => {
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} />,
+      );
+
+      expect(screen.getByTestId("export-submit")).toBeDisabled();
+      expect(
+        screen.getByText("Please open a project first"),
+      ).toBeInTheDocument();
+    });
+
+    it("projectId 为空字符串时导出按钮禁用", () => {
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="" />,
+      );
+
+      expect(screen.getByTestId("export-submit")).toBeDisabled();
+    });
+
+    it("projectId 存在时导出按钮启用", () => {
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="p1" />,
+      );
+
+      expect(screen.getByTestId("export-submit")).not.toBeDisabled();
+    });
+  });
+
+  // ===========================================================================
+  // 导出流程 — IPC 调用与状态转换
+  // ===========================================================================
+  describe("导出流程", () => {
+    it("点击导出按钮后进入进度视图", async () => {
+      const user = userEvent.setup();
+      vi.spyOn(ipcClient, "invoke").mockImplementation(
+        () => new Promise(() => {}),
+      );
+
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test-project"
+          documentId="doc-1"
+        />,
+      );
+
+      await user.click(screen.getByTestId("export-submit"));
+
+      expect(screen.getAllByText("Exporting Document")).toHaveLength(2);
+    });
+
+    it("导出成功后进入成功视图并显示结果", async () => {
+      const user = userEvent.setup();
+      vi.spyOn(ipcClient, "invoke").mockResolvedValueOnce({
+        ok: true,
+        data: { relativePath: "exports/doc.md", bytesWritten: 1024 },
+      });
+
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test-project"
+          documentId="doc-1"
+        />,
+      );
+
+      await user.click(screen.getByTestId("export-submit"));
+
+      expect(await screen.findByTestId("export-success")).toBeInTheDocument();
+      expect(
+        screen.getByTestId("export-success-relative-path"),
+      ).toHaveTextContent("exports/doc.md");
+      expect(
+        screen.getByTestId("export-success-bytes-written"),
+      ).toHaveTextContent("1024");
+    });
+
+    it("成功视图点击 Done 关闭对话框", async () => {
+      const user = userEvent.setup();
+      const onOpenChange = vi.fn();
+      vi.spyOn(ipcClient, "invoke").mockResolvedValueOnce({
+        ok: true,
+        data: { relativePath: "exports/doc.md", bytesWritten: 100 },
+      });
+
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={onOpenChange}
+          projectId="test-project"
+          documentId="doc-1"
+        />,
+      );
+
+      await user.click(screen.getByTestId("export-submit"));
+      await screen.findByTestId("export-success");
+      await user.click(screen.getByTestId("export-done"));
+
+      expect(onOpenChange).toHaveBeenCalledWith(false);
+    });
+  });
+
+  // ===========================================================================
+  // 受控模式 — view / progress / result props
+  // ===========================================================================
+  describe("受控模式", () => {
+    it("受控进度视图渲染进度步骤标签", () => {
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test"
+          view="progress"
+          progress={42}
+          progressStep="Exporting..."
+        />,
+      );
+
+      expect(screen.getAllByText("Exporting Document")).toHaveLength(2);
+      expect(screen.getByText("Exporting...")).toBeInTheDocument();
+      expect(screen.getByText("42%")).toBeInTheDocument();
+    });
+
+    it("受控成功视图渲染结果字段", () => {
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test"
+          view="success"
+          result={{ relativePath: "exports/test/doc.md", bytesWritten: 99 }}
+        />,
+      );
+
+      expect(screen.getByTestId("export-success")).toBeInTheDocument();
+      expect(
+        screen.getByTestId("export-success-relative-path"),
+      ).toHaveTextContent("exports/test/doc.md");
+      expect(
+        screen.getByTestId("export-success-bytes-written"),
+      ).toHaveTextContent("99");
+    });
+  });
+
+  // ===========================================================================
+  // 错误处理 — 各类 IPC 错误的展示与恢复
+  // ===========================================================================
+  describe("错误处理", () => {
+    it("受控 error prop 渲染错误横幅，显示人类可读消息", () => {
+      const error: IpcError = { code: "IO_ERROR", message: "failed" };
+
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test"
+          error={error}
+        />,
+      );
+
+      expect(screen.getByTestId("export-error")).toBeInTheDocument();
+      expect(screen.queryByTestId("export-error-code")).not.toBeInTheDocument();
+      expect(screen.getByTestId("export-error-message")).toHaveTextContent(
+        "Read/write operation failed. Please try again.",
+      );
+      expect(
+        screen.getByRole("button", { name: "Dismiss" }),
+      ).toBeInTheDocument();
+    });
+
+    it("IPC 抛异常时显示错误并保持在配置视图", async () => {
+      const user = userEvent.setup();
+      vi.spyOn(ipcClient, "invoke").mockRejectedValueOnce(
+        new Error("disk write permission denied"),
+      );
+
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test-project"
+          documentId="doc-1"
+        />,
+      );
+
+      await user.click(screen.getByTestId("export-submit"));
+
+      expect(await screen.findByTestId("export-error")).toBeInTheDocument();
+      expect(screen.getByTestId("export-error-message")).toHaveTextContent(
+        "Read/write operation failed. Please try again.",
+      );
+      expect(screen.queryByTestId("export-success")).not.toBeInTheDocument();
+    });
+
+    it("IPC 返回 ok:false 时显示错误并保持在配置视图", async () => {
+      const user = userEvent.setup();
+      vi.spyOn(ipcClient, "invoke").mockResolvedValueOnce({
+        ok: false,
+        error: {
+          code: "PERMISSION_DENIED",
+          message: "Cannot write to directory",
+        },
+      });
+
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test-project"
+          documentId="doc-1"
+        />,
+      );
+
+      await user.click(screen.getByTestId("export-submit"));
+
+      expect(await screen.findByTestId("export-error")).toBeInTheDocument();
+      expect(screen.queryByTestId("export-success")).not.toBeInTheDocument();
+    });
+
+    it("unsupported-structure 错误本地化后展示具体节点路径", async () => {
+      const user = userEvent.setup();
+      vi.spyOn(ipcClient, "invoke").mockResolvedValueOnce({
+        ok: false,
+        error: {
+          code: "INVALID_ARGUMENT",
+          message:
+            "Export format does not yet support: doc.content.0:table",
+        },
+      });
+
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test-project"
+          documentId="doc-1"
+        />,
+      );
+
+      await user.click(screen.getByTestId("export-submit"));
+
+      expect(await screen.findByTestId("export-error")).toBeInTheDocument();
+      expect(screen.getByTestId("export-error-message")).toHaveTextContent(
+        "This export format cannot write: doc.content.0:table",
+      );
+    });
+
+    it("点击 Dismiss 按钮清除内部错误横幅", async () => {
+      const user = userEvent.setup();
+      vi.spyOn(ipcClient, "invoke").mockRejectedValueOnce(
+        new Error("test error"),
+      );
+
+      renderWithToastProvider(
+        <ExportDialog
+          open={true}
+          onOpenChange={() => {}}
+          projectId="test-project"
+          documentId="doc-1"
+        />,
+      );
+
+      await user.click(screen.getByTestId("export-submit"));
+      expect(await screen.findByTestId("export-error")).toBeInTheDocument();
+
+      await user.click(screen.getByRole("button", { name: "Dismiss" }));
+      expect(screen.queryByTestId("export-error")).not.toBeInTheDocument();
+    });
+  });
+
+  // ===========================================================================
+  // 国际化 — 格式描述标签多语言
+  // ===========================================================================
+  describe("国际化", () => {
+    it("英文模式下各格式显示结构化能力提示", () => {
+      renderWithToastProvider(
+        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      );
+
+      expect(screen.getByTestId("export-format-pdf")).toHaveTextContent(
         "Structured pages · headings, lists, images",
       );
-    });
-
-    it("shows structured capability hint for DOCX format", () => {
-      renderWithToastProvider(
-        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
-      );
-
-      const docxCard = screen.getByTestId("export-format-docx");
-      expect(docxCard).toHaveTextContent(
+      expect(screen.getByTestId("export-format-docx")).toHaveTextContent(
         "Structured Word export · headings, links, images",
       );
-    });
-
-    it("shows structured capability hint for Markdown format", () => {
-      renderWithToastProvider(
-        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
-      );
-
-      const mdCard = screen.getByTestId("export-format-markdown");
-      expect(mdCard).toHaveTextContent(
+      expect(screen.getByTestId("export-format-markdown")).toHaveTextContent(
         "Structured Markdown · headings, lists, links",
       );
-    });
-
-    it("keeps a plain-text boundary hint for TXT format", () => {
-      renderWithToastProvider(
-        <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
+      expect(screen.getByTestId("export-format-txt")).toHaveTextContent(
+        "Plain text only · formatting removed",
       );
-
-      const txtCard = screen.getByTestId("export-format-txt");
-      expect(txtCard).toHaveTextContent("Plain text only · formatting removed");
     });
 
-    it("shows Chinese structured hints after switching to zh-CN locale", async () => {
+    it("切换到 zh-CN 后各格式显示中文结构化提示", async () => {
       await act(async () => {
         await i18n.changeLanguage("zh-CN");
       });
@@ -296,28 +622,21 @@ describe("ExportDialog", () => {
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
 
-      const pdfCard = screen.getByTestId("export-format-pdf");
-      expect(pdfCard).toHaveTextContent("结构化分页 · 保留标题、列表、图片");
-
-      const docxCard = screen.getByTestId("export-format-docx");
-      expect(docxCard).toHaveTextContent(
+      expect(screen.getByTestId("export-format-pdf")).toHaveTextContent(
+        "结构化分页 · 保留标题、列表、图片",
+      );
+      expect(screen.getByTestId("export-format-docx")).toHaveTextContent(
         "结构化 Word 导出 · 保留标题、链接、图片",
       );
-
-      const markdownCard = screen.getByTestId("export-format-markdown");
-      expect(markdownCard).toHaveTextContent(
+      expect(screen.getByTestId("export-format-markdown")).toHaveTextContent(
         "结构化 Markdown · 保留标题、列表、链接",
       );
-
-      const txtCard = screen.getByTestId("export-format-txt");
-      expect(txtCard).toHaveTextContent("纯文本导出 · 自动移除格式");
-
-      await act(async () => {
-        await i18n.changeLanguage("en");
-      });
+      expect(screen.getByTestId("export-format-txt")).toHaveTextContent(
+        "纯文本导出 · 自动移除格式",
+      );
     });
 
-    it("does not show the old plain-text-only copy for PDF or DOCX", () => {
+    it("PDF / DOCX 不显示旧版纯文本描述", () => {
       renderWithToastProvider(
         <ExportDialog open={true} onOpenChange={() => {}} projectId="test" />,
       );
@@ -329,58 +648,5 @@ describe("ExportDialog", () => {
         "Plain text export · no formatting",
       );
     });
-  });
-
-  it("shows explicit error and avoids success state when export IPC throws", async () => {
-    const user = userEvent.setup();
-    vi.spyOn(ipcClient, "invoke").mockRejectedValueOnce(
-      new Error("disk write permission denied"),
-    );
-
-    renderWithToastProvider(
-      <ExportDialog
-        open={true}
-        onOpenChange={() => {}}
-        projectId="test-project"
-        documentId="doc-1"
-      />,
-    );
-
-    await user.click(screen.getByTestId("export-submit"));
-
-    expect(await screen.findByTestId("export-error")).toBeInTheDocument();
-    expect(screen.queryByTestId("export-error-code")).not.toBeInTheDocument();
-    expect(screen.getByTestId("export-error-message")).toHaveTextContent(
-      "Read/write operation failed. Please try again.",
-    );
-    expect(screen.queryByTestId("export-success")).not.toBeInTheDocument();
-  });
-
-  it("localizes unsupported-structure failures before showing them in the error surface", async () => {
-    const user = userEvent.setup();
-    vi.spyOn(ipcClient, "invoke").mockResolvedValueOnce({
-      ok: false,
-      error: {
-        code: "INVALID_ARGUMENT",
-        message: "Export format does not yet support: doc.content.0:table",
-      },
-    });
-
-    renderWithToastProvider(
-      <ExportDialog
-        open={true}
-        onOpenChange={() => {}}
-        projectId="test-project"
-        documentId="doc-1"
-      />,
-    );
-
-    await user.click(screen.getByTestId("export-submit"));
-
-    expect(await screen.findByTestId("export-error")).toBeInTheDocument();
-    expect(screen.queryByTestId("export-error-code")).not.toBeInTheDocument();
-    expect(screen.getByTestId("export-error-message")).toHaveTextContent(
-      "This export format cannot write: doc.content.0:table",
-    );
   });
 });
