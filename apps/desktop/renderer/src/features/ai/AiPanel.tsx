@@ -67,17 +67,15 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
   const focusTextarea = React.useCallback(() => {
     textareaRef.current?.focus();
   }, []);
+  const { projectId, selectChatSession } = sel;
   const handleSelectSession = React.useCallback(
     (sessionId: string) => {
-      if (sel.projectId) {
-        void sel.selectChatSession({
-          projectId: sel.projectId,
-          sessionId,
-        });
+      if (projectId) {
+        void selectChatSession({ projectId, sessionId });
         setActiveTab("chat");
       }
     },
-    [sel.selectChatSession, sel.projectId],
+    [selectChatSession, projectId],
   );
   const clearEvaluatedRunId = React.useCallback(() => {
     evaluatedRunIdRef.current = null;
