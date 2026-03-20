@@ -79,6 +79,7 @@ function prepareFakeDocumentStmt(sql: string, docs: DocRow[]): unknown {
           parentId,
           createdAt,
           updatedAt,
+          coverImageUrl: null,
         });
         return { changes: 1 };
       },
