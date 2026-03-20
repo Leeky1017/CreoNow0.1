@@ -24,7 +24,9 @@ export type PreferenceKey =
       | "backupInterval"
       | "defaultFont"
       | "interfaceScale"
-      | "language"}`
+      | "language"
+      | "accentColor"
+      | "fontSize"}`
   | `${typeof APP_ID}.version`;
 
 export interface PreferenceStore {

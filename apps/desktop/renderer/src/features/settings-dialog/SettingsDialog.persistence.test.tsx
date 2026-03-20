@@ -17,10 +17,15 @@ vi.mock("./SettingsAccount", () => ({
   },
 }));
 
-vi.mock("../settings/AppearanceSection", () => ({
-  AppearanceSection: () => (
-    <div data-testid="mock-appearance-section">Appearance</div>
+vi.mock("./SettingsAppearancePage", () => ({
+  SettingsAppearancePage: () => (
+    <div data-testid="mock-appearance-page">Appearance</div>
   ),
+  defaultAppearanceSettings: {
+    themeMode: "dark",
+    accentColor: "#3b82f6",
+    fontSize: 16,
+  },
 }));
 
 vi.mock("../settings/AiSettingsSection", () => ({
@@ -45,6 +50,12 @@ vi.mock("../../i18n", () => ({
 
 vi.mock("../../stores/projectStore", () => ({
   useProjectStore: vi.fn(() => null),
+}));
+
+vi.mock("../../stores/themeStore", () => ({
+  useThemeStore: (
+    selector: (state: { mode: string; setMode: () => void }) => unknown,
+  ) => selector({ mode: "dark", setMode: vi.fn() }),
 }));
 
 function createBrowserPreferences(): PreferenceStore {

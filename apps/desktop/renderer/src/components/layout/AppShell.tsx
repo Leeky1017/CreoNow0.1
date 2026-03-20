@@ -955,6 +955,8 @@ function AppShellMainContent(props: {
   bootstrapEditor: (projectId: string) => Promise<void>;
   confirm: UseConfirmDialogReturn["confirm"];
 }): JSX.Element {
+  const documentCoverImageUrl = useEditorStore((s) => s.documentCoverImageUrl);
+
   if (!props.currentProject || props.projectItems.length === 0) {
     return <DashboardPage />;
   }
@@ -1026,7 +1028,12 @@ function AppShellMainContent(props: {
     );
   }
 
-  return <EditorPane projectId={props.currentProject.projectId} />;
+  return (
+    <EditorPane
+      projectId={props.currentProject.projectId}
+      coverImage={documentCoverImageUrl}
+    />
+  );
 }
 
 /**

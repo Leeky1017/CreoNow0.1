@@ -19,6 +19,12 @@ vi.mock("../../stores/projectStore", () => ({
   ) => selector({ current: { projectId: "proj-1" } }),
 }));
 
+vi.mock("../../stores/themeStore", () => ({
+  useThemeStore: (
+    selector: (state: { mode: string; setMode: () => void }) => unknown,
+  ) => selector({ mode: "dark", setMode: vi.fn() }),
+}));
+
 vi.mock("./SettingsGeneral", () => ({
   SettingsGeneral: (props: {
     onManualBackup?: () => void | Promise<void>;
@@ -66,10 +72,15 @@ vi.mock("./SettingsAccount", () => ({
   },
 }));
 
-vi.mock("../settings/AppearanceSection", () => ({
-  AppearanceSection: () => (
-    <div data-testid="mock-appearance-section">Appearance</div>
+vi.mock("./SettingsAppearancePage", () => ({
+  SettingsAppearancePage: () => (
+    <div data-testid="mock-appearance-page">Appearance</div>
   ),
+  defaultAppearanceSettings: {
+    themeMode: "dark",
+    accentColor: "#3b82f6",
+    fontSize: 16,
+  },
 }));
 
 vi.mock("../settings/AiSettingsSection", () => ({
@@ -239,7 +250,7 @@ describe("SettingsDialog", () => {
     );
 
     await user.click(screen.getByTestId("settings-nav-appearance"));
-    expect(screen.getByTestId("mock-appearance-section")).toBeInTheDocument();
+    expect(screen.getByTestId("mock-appearance-page")).toBeInTheDocument();
 
     await user.click(screen.getByTestId("settings-nav-ai"));
     expect(screen.getByTestId("mock-ai-settings-section")).toBeInTheDocument();
@@ -276,5 +287,16 @@ describe("SettingsDialog", () => {
 
     await user.click(screen.getByRole("button", { name: "Close" }));
     expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it("renders SettingsAppearancePage when defaultTab is appearance", () => {
+    renderWithToastProvider(
+      <SettingsDialog
+        open={true}
+        onOpenChange={vi.fn()}
+        defaultTab="appearance"
+      />,
+    );
+    expect(screen.getByTestId("mock-appearance-page")).toBeInTheDocument();
   });
 });
