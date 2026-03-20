@@ -33,7 +33,10 @@ function renderPage(
 ) {
   return {
     ...render(
-      <SettingsAppearancePage settings={settings} onSettingsChange={onChange} />,
+      <SettingsAppearancePage
+        settings={settings}
+        onSettingsChange={onChange}
+      />,
     ),
     onChange,
   };
@@ -61,9 +64,7 @@ describe("SettingsAppearancePage — theme selection", () => {
     const settings = createSettings({ themeMode: "dark" });
     const { onChange } = renderPage(settings);
 
-    await user.click(
-      screen.getByText("settingsDialog.appearance.themeLight"),
-    );
+    await user.click(screen.getByText("settingsDialog.appearance.themeLight"));
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({ themeMode: "light" }),
     );
@@ -75,9 +76,13 @@ describe("SettingsAppearancePage — theme selection", () => {
 describe("SettingsAppearancePage — accent color selection", () => {
   it("renders 6 accent color swatches", () => {
     renderPage();
-    const swatches = screen.getAllByRole("button").filter((btn) =>
-      btn.getAttribute("aria-label")?.includes("settingsDialog.appearance.selectAccentColor"),
-    );
+    const swatches = screen
+      .getAllByRole("button")
+      .filter((btn) =>
+        btn
+          .getAttribute("aria-label")
+          ?.includes("settingsDialog.appearance.selectAccentColor"),
+      );
     expect(swatches).toHaveLength(6);
   });
 
@@ -159,17 +164,13 @@ describe("SettingsAppearancePage — section headers (AC-4)", () => {
 
   it("section headers have uppercase text-transform", () => {
     renderPage();
-    const themeHeader = screen.getByText(
-      "settingsDialog.appearance.theme",
-    );
+    const themeHeader = screen.getByText("settingsDialog.appearance.theme");
     expect(themeHeader.className).toContain("uppercase");
   });
 
   it("section headers have letter-spacing", () => {
     renderPage();
-    const themeHeader = screen.getByText(
-      "settingsDialog.appearance.theme",
-    );
+    const themeHeader = screen.getByText("settingsDialog.appearance.theme");
     expect(themeHeader.className).toMatch(/tracking-/);
   });
 });
@@ -182,8 +183,7 @@ describe("SettingsAppearancePage — ThemePreview (AC-3/AC-5)", () => {
     const themeButtons = screen
       .getAllByRole("button")
       .filter(
-        (btn) =>
-          !btn.getAttribute("aria-label")?.includes("selectAccentColor"),
+        (btn) => !btn.getAttribute("aria-label")?.includes("selectAccentColor"),
       );
     expect(themeButtons.length).toBeGreaterThanOrEqual(3);
   });

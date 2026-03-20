@@ -3,7 +3,12 @@ import { useTranslation } from "react-i18next";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 import { AnalyticsPageContent } from "../analytics/AnalyticsPage";
-import { AppearanceSection } from "../settings/AppearanceSection";
+import {
+  SettingsAppearancePage,
+  defaultAppearanceSettings,
+  type AppearanceSettings,
+} from "./SettingsAppearancePage";
+import { useThemeStore } from "../../stores/themeStore";
 import { AiSettingsSection } from "../settings/AiSettingsSection";
 import { JudgeSection } from "../settings/JudgeSection";
 import {
@@ -105,6 +110,15 @@ function writeGeneralSettings(
   prefs.set("creonow.settings.interfaceScale", settings.interfaceScale);
 }
 
+function readAppearancePrefs(prefs: PreferenceStore) {
+  const d = defaultAppearanceSettings;
+  return {
+    accentColor:
+      prefs.get<string>("creonow.settings.accentColor") ?? d.accentColor,
+    fontSize: prefs.get<number>("creonow.settings.fontSize") ?? d.fontSize,
+  };
+}
+
 /**
  * SettingsDialog is the single-path Settings surface.
  *
@@ -138,6 +152,11 @@ export function SettingsDialog({
   } = useSettingsBackup();
   const showAiMarks = useVersionPreferencesStore((s) => s.showAiMarks);
   const setShowAiMarks = useVersionPreferencesStore((s) => s.setShowAiMarks);
+  const themeMode = useThemeStore((s) => s.mode);
+  const setThemeMode = useThemeStore((s) => s.setMode);
+  const [appPrefs, setAppPrefs] = React.useState(() =>
+    readAppearancePrefs(preferences),
+  );
 
   const handleSettingsChange = React.useCallback(
     (settings: GeneralSettings) => {
@@ -160,10 +179,21 @@ export function SettingsDialog({
     [setShowAiMarks, showToast, t],
   );
 
+  const handleAppearanceChange = React.useCallback(
+    (s: AppearanceSettings) => {
+      setThemeMode(s.themeMode);
+      setAppPrefs({ accentColor: s.accentColor, fontSize: s.fontSize });
+      preferences.set("creonow.settings.accentColor", s.accentColor);
+      preferences.set("creonow.settings.fontSize", s.fontSize);
+    },
+    [preferences, setThemeMode],
+  );
+
   React.useEffect(() => {
     if (open) {
       setActiveTab(defaultTab);
       setGeneralSettings(readGeneralSettings(preferences));
+      setAppPrefs(readAppearancePrefs(preferences));
     }
   }, [defaultTab, open, preferences]);
 
@@ -184,7 +214,12 @@ export function SettingsDialog({
           />
         );
       case "appearance":
-        return <AppearanceSection />;
+        return (
+          <SettingsAppearancePage
+            settings={{ themeMode, ...appPrefs }}
+            onSettingsChange={handleAppearanceChange}
+          />
+        );
       case "ai":
         return <AiSettingsSection />;
       case "judge":
