@@ -18,6 +18,7 @@ import {
   filterCommands,
 } from "./commandPaletteHelpers";
 import { SearchIcon, buildDefaultCommands } from "./commandPaletteCommands";
+import { CommandPaletteFooter } from "./CommandPaletteFooter";
 
 // Re-export for external consumers
 export type {
@@ -275,35 +276,7 @@ export function CommandPalette({
           })}
         </div>
 
-        {/* Footer */}
-        <div className="h-9 px-4 flex items-center justify-end gap-4 border-t border-[var(--color-border-default)] bg-[var(--color-bg-surface)]">
-          <div className="flex items-center gap-1.5">
-            <span className="px-1 min-w-4 h-4 flex items-center justify-center text-[11px] text-[var(--color-fg-muted)] bg-[var(--color-zen-hover)] rounded">
-              {/* eslint-disable-next-line i18next/no-literal-string -- decorative navigation arrows */}
-              ↑↓
-            </span>
-            <Text size="tiny" color="placeholder">
-              {t("workbench.commandPalette.footer.navigation")}
-            </Text>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="px-1 min-w-4 h-4 flex items-center justify-center text-[11px] text-[var(--color-fg-muted)] bg-[var(--color-zen-hover)] rounded">
-              {/* eslint-disable-next-line i18next/no-literal-string -- decorative enter arrow */}
-              ↵
-            </span>
-            <Text size="tiny" color="placeholder">
-              {t("workbench.commandPalette.footer.select")}
-            </Text>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="px-1 min-w-4 h-4 flex items-center justify-center text-[11px] text-[var(--color-fg-muted)] bg-[var(--color-zen-hover)] rounded">
-              {t("workbench.commandPalette.footer.escKey")}
-            </span>
-            <Text size="tiny" color="placeholder">
-              {t("workbench.commandPalette.footer.close")}
-            </Text>
-          </div>
-        </div>
+        <CommandPaletteFooter />
       </div>
     </div>
   );
