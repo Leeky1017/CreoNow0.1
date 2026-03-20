@@ -58,4 +58,65 @@ describe("InfoPanel", () => {
       screen.getByRole("button", { name: "View Version History" }),
     ).toBeInTheDocument();
   });
+
+  it("should show no-document message when no document is selected", async () => {
+    useFileStoreMock.mockImplementation(
+      (selector: (state: Record<string, unknown>) => unknown) =>
+        selector({ currentDocumentId: null, items: [] }),
+    );
+
+    render(<InfoPanel />);
+
+    expect(screen.getByTestId("info-panel-no-document")).toBeInTheDocument();
+    expect(screen.getByText("No document selected")).toBeInTheDocument();
+  });
+
+  it("should display document title and update time when document exists", async () => {
+    render(<InfoPanel />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("info-panel-doc-title")).toHaveTextContent(
+        "Doc A",
+      );
+    });
+    expect(screen.getByTestId("info-panel-doc-updated")).toBeInTheDocument();
+  });
+
+  it("should show writing stats after successful IPC fetch", async () => {
+    render(<InfoPanel />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("info-panel-words-written")).toHaveTextContent(
+        "12",
+      );
+    });
+    expect(screen.getByTestId("info-panel-writing-time")).toHaveTextContent(
+      "20s",
+    );
+    expect(screen.getByTestId("info-panel-skills-used")).toHaveTextContent("1");
+    expect(screen.getByTestId("info-panel-docs-created")).toHaveTextContent(
+      "0",
+    );
+  });
+
+  it("should display error message when stats fetch fails", async () => {
+    invokeMock.mockResolvedValue({
+      ok: false,
+      error: { code: "INTERNAL", message: "Server error" },
+    });
+
+    render(<InfoPanel />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId("info-panel-stats-error")).toBeInTheDocument();
+    });
+  });
+
+  it("should show loading indicator while fetching stats", () => {
+    invokeMock.mockReturnValue(new Promise(() => {}));
+
+    render(<InfoPanel />);
+
+    expect(screen.getByText("Loading...")).toBeInTheDocument();
+  });
 });

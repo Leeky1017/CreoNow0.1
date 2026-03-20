@@ -55,8 +55,9 @@ export function ZenModeStatus({
         data-testid="zen-status-bar"
         className="flex items-center gap-6 px-4 py-2 rounded-full"
         style={{
-          backgroundColor: "var(--color-zen-statusbar-bg)",
+          backgroundColor: "var(--color-bg-raised)",
           backdropFilter: "blur(8px)",
+          boxShadow: "var(--shadow-sm)",
         }}
       >
         {/* Word count */}

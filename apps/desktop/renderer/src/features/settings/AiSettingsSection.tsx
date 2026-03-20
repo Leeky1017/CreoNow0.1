@@ -6,6 +6,7 @@ import { Button } from "../../components/primitives/Button";
 import { Card } from "../../components/primitives/Card";
 import { Input } from "../../components/primitives/Input";
 import { Text } from "../../components/primitives/Text";
+import { FormField } from "../../components/composites/FormField";
 import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { emitAiModelCatalogUpdated } from "../ai/modelCatalogEvents";
@@ -151,12 +152,13 @@ export function AiSettingsSection(): JSX.Element {
         {t("settings.ai.title")}
       </Text>
 
-      <div className="flex flex-col gap-1.5">
-        <Text size="small" color="muted">
-          {t("settings.aiSection.provider")}
-        </Text>
+      <FormField
+        label={t("settings.aiSection.provider")}
+        htmlFor="ai-provider-mode"
+      >
         {/* eslint-disable-next-line creonow/no-native-html-element -- provider mode select dropdown */}
         <select
+          id="ai-provider-mode"
           data-testid="ai-provider-mode"
           value={providerMode}
           onChange={(e) =>
@@ -179,26 +181,22 @@ export function AiSettingsSection(): JSX.Element {
             {t("settings.aiSection.providerAnthropicByok")}
           </option>
         </select>
-      </div>
+      </FormField>
 
-      <div className="flex flex-col gap-1.5">
-        <Text size="small" color="muted">
-          {t("settings.aiSection.baseUrl")}
-        </Text>
+      <FormField label={t("settings.aiSection.baseUrl")} htmlFor="ai-base-url">
         <Input
+          id="ai-base-url"
           data-testid="ai-base-url"
           value={baseUrlDraft}
           onChange={(e) => setBaseUrlDraft(e.currentTarget.value)}
           placeholder="https://api.openai.com"
           fullWidth
         />
-      </div>
+      </FormField>
 
-      <div className="flex flex-col gap-1.5">
-        <Text size="small" color="muted">
-          {t("settings.aiSection.apiKey")}
-        </Text>
+      <FormField label={t("settings.aiSection.apiKey")} htmlFor="ai-api-key">
         <Input
+          id="ai-api-key"
           data-testid="ai-api-key"
           type="password"
           value={apiKeyDraft}
@@ -206,7 +204,7 @@ export function AiSettingsSection(): JSX.Element {
           placeholder={resolveApiKeyPlaceholder()}
           fullWidth
         />
-      </div>
+      </FormField>
 
       {errorText ? (
         <Text data-testid="ai-error" size="small" color="muted">
