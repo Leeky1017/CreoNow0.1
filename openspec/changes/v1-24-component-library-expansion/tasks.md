@@ -2,7 +2,7 @@
 
 - **状态**: 📋 已建档（待实施）
 - **分支**: `task/<N>-component-library-expansion`
-- **Delta Spec**: `specs/primitives/spec.md`（需更新新增组件定义）
+- **Delta Spec**: `openspec/specs/design-system/spec.md`（需更新新增组件定义）
 - **上游依赖**: v1-02 ✅ 已合并 | v1-01 ✅ 已合并
 
 ---
