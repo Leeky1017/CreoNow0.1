@@ -336,6 +336,40 @@ textarea:focus-visible {
   color: var(--color-fg-inverse);
 }
 
+/* === V1-12: Global Interaction Motion Utilities === */
+
+.transition-default {
+  transition-property:
+    color, background-color, border-color, opacity, box-shadow, transform;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-default);
+}
+
+.transition-slow {
+  transition-property:
+    color, background-color, border-color, opacity, box-shadow, transform;
+  transition-duration: var(--duration-normal);
+  transition-timing-function: var(--ease-default);
+}
+
+.scroll-shadow-y {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 24px,
+    black calc(100% - 24px),
+    transparent
+  );
+}
+
+/* Reduced motion: disable V1-12 motion utilities */
+@media (prefers-reduced-motion: reduce) {
+  .transition-default,
+  .transition-slow {
+    transition-duration: 0s;
+  }
+}
+
 /* === 实用类 === */
 
 .cn-hairline {

@@ -156,10 +156,8 @@ describe("AiSettingsSection", () => {
       expect(screen.getByTestId("ai-save-btn")).toBeInTheDocument();
     });
 
-    await user.selectOptions(
-      screen.getByTestId("ai-provider-mode"),
-      "openai-byok",
-    );
+    await user.click(screen.getByTestId("ai-provider-mode"));
+    await user.click(screen.getByText("OpenAI (BYOK)"));
     await user.clear(screen.getByTestId("ai-base-url"));
     await user.type(
       screen.getByTestId("ai-base-url"),
@@ -241,10 +239,8 @@ describe("AiSettingsSection", () => {
       expect(screen.getByTestId("ai-save-btn")).toBeInTheDocument();
     });
 
-    await user.selectOptions(
-      screen.getByTestId("ai-provider-mode"),
-      "openai-byok",
-    );
+    await user.click(screen.getByTestId("ai-provider-mode"));
+    await user.click(screen.getByText("OpenAI (BYOK)"));
     await user.clear(screen.getByTestId("ai-base-url"));
     await user.type(
       screen.getByTestId("ai-base-url"),

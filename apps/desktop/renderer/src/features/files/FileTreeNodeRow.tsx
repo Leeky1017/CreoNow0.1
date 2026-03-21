@@ -2,13 +2,13 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-  Button,
   ContextMenu,
   ListItem,
   Popover,
   PopoverClose,
   Text,
 } from "../../components/primitives";
+import { Button } from "../../components/primitives/Button";
 import type {
   DropTargetState,
   EditingState,
@@ -153,8 +153,7 @@ export const FileTreeNodeRow = React.forwardRef<
           className={`h-8 border ${selected ? "border-[var(--color-border-focus)]" : "border-transparent"} group ${dropInto ? "bg-[var(--color-bg-hover)]" : ""} ${isDragging ? "opacity-50" : ""}`}
         >
           {hasChildren ? (
-            // eslint-disable-next-line creonow/no-native-html-element -- tree expand/collapse toggle
-            <button
+            <Button
               type="button"
               data-testid={`file-folder-toggle-${item.documentId}`}
               onClick={(e) => {
@@ -175,7 +174,7 @@ export const FileTreeNodeRow = React.forwardRef<
             >
               {/* eslint-disable-next-line i18next/no-literal-string -- decorative chevron glyph */}
               {"▸"}
-            </button>
+            </Button>
           ) : (
             <span className="shrink-0 w-4" />
           )}

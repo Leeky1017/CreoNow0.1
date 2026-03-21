@@ -278,7 +278,7 @@ export function SettingsDialog({
             </DialogPrimitive.Close>
 
             {/* Scrollable content */}
-            <div className="flex-1 overflow-y-auto px-12 py-10">
+            <div className="flex-1 overflow-y-auto scroll-shadow-y px-12 py-10">
               <div className="flex flex-col gap-3.5">{renderContent()}</div>
             </div>
 

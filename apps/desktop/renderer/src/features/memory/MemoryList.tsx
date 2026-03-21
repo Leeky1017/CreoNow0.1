@@ -41,7 +41,7 @@ export function MemoryRulesCard(props: {
   return (
     <Card
       noPadding
-      className="flex-1 min-h-0 overflow-auto p-2.5 bg-[var(--color-bg-surface)]"
+      className="flex-1 min-h-0 overflow-auto scroll-shadow-y p-2.5 bg-[var(--color-bg-surface)]"
     >
       {props.state.status === "loading" ? (
         <LoadingState

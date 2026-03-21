@@ -15,6 +15,8 @@ import {
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import type { IpcErrorCode } from "@shared/types/ipc-generated";
 import { Plus } from "lucide-react";
+import { Button } from "../../components/primitives/Button";
+import { Label } from "../../components/primitives/Label";
 
 export interface ProjectFormContentProps {
   formId: string;
@@ -143,13 +145,12 @@ export function ProjectFormContent({
     >
       {/* Project Name */}
       <div>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-        <label className="block mb-2">
+        <Label className="block mb-2">
           <Text size="small" color="muted">
             {t("projects.create.projectNameLabel")}{" "}
             <span className="text-[var(--color-error)]">{"*"}</span>
           </Text>
-        </label>
+        </Label>
         <Input
           data-testid="create-project-name"
           value={name}
@@ -177,12 +178,11 @@ export function ProjectFormContent({
 
       {/* Template Selection */}
       <div>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-        <label className="block mb-2">
+        <Label className="block mb-2">
           <Text size="small" color="muted">
             {t("projects.create.templateLabel")}
           </Text>
-        </label>
+        </Label>
 
         <RadioGroupRoot
           value={templateId}
@@ -220,29 +220,27 @@ export function ProjectFormContent({
         )}
 
         <div className="mt-3">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             type="button"
             onClick={onOpenCreateTemplate}
             className="h-10 px-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[var(--color-border-default)] rounded-[var(--radius-sm)] text-sm text-[var(--color-fg-muted)] hover:border-[var(--color-border-hover)] hover:text-[var(--color-fg-default)] transition-colors"
           >
             <Plus size={16} strokeWidth={1.5} />
             {t("projects.create.createTemplateButton")}
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Description */}
       <div>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-        <label className="block mb-2">
+        <Label className="block mb-2">
           <Text size="small" color="muted">
             {t("projects.create.descriptionLabel")}{" "}
             <span className="opacity-50 text-xs">
               {t("projects.create.optionalHint")}
             </span>
           </Text>
-        </label>
+        </Label>
         <Textarea
           data-testid="create-project-description"
           value={description}
@@ -255,15 +253,14 @@ export function ProjectFormContent({
 
       {/* Cover Image */}
       <div>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-        <label className="block mb-2">
+        <Label className="block mb-2">
           <Text size="small" color="muted">
             {t("projects.create.coverImageLabel")}{" "}
             <span className="opacity-50 text-xs">
               {t("projects.create.optionalHint")}
             </span>
           </Text>
-        </label>
+        </Label>
         <ImageUpload
           value={coverImage}
           onChange={setCoverImage}
@@ -301,7 +298,7 @@ export function ProjectFormContent({
         </Text>
       )}
 
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
+      {/* eslint-disable-next-line creonow/no-native-html-element -- <input type="hidden"> 表单语义元素，无对应 Primitive */}
       <input type="hidden" data-submitting={submitting} />
     </form>
   );

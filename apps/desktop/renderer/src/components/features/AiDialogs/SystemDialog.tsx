@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { useTranslation } from "react-i18next";
 import type { SystemDialogProps } from "./types";
+import { Button } from "../../primitives/Button";
 import {
   Spinner,
   getDefaultContent,
@@ -147,8 +148,7 @@ export function SystemDialog({
           <div className={buttonContainerStyles}>
             {type === "delete" && (
               <>
-                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                <button
+                <Button
                   type="button"
                   data-testid="system-dialog-secondary"
                   className={cancelButtonStyles}
@@ -156,9 +156,8 @@ export function SystemDialog({
                   disabled={isLoading}
                 >
                   {displaySecondaryLabel}
-                </button>
-                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                <button
+                </Button>
+                <Button
                   ref={primaryButtonRef}
                   type="button"
                   data-testid="system-dialog-primary"
@@ -167,32 +166,29 @@ export function SystemDialog({
                   disabled={isLoading}
                 >
                   {renderPrimaryButtonContent()}
-                </button>
+                </Button>
               </>
             )}
             {type === "unsaved_changes" && (
               <>
-                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                <button
+                <Button
                   type="button"
                   className={discardButtonStyles}
                   onClick={handleTertiaryAction}
                   disabled={isLoading}
                 >
                   {displayTertiaryLabel}
-                </button>
+                </Button>
                 <div className="flex-1" />
-                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                <button
+                <Button
                   type="button"
                   className={cancelButtonStyles}
                   onClick={handleSecondaryAction}
                   disabled={isLoading}
                 >
                   {displaySecondaryLabel}
-                </button>
-                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                <button
+                </Button>
+                <Button
                   ref={primaryButtonRef}
                   type="button"
                   className={saveButtonStyles}
@@ -200,22 +196,20 @@ export function SystemDialog({
                   disabled={isLoading}
                 >
                   {renderPrimaryButtonContent()}
-                </button>
+                </Button>
               </>
             )}
             {type === "export_complete" && (
               <>
-                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                <button
+                <Button
                   type="button"
                   className={doneButtonStyles}
                   onClick={handleSecondaryAction}
                   disabled={isLoading}
                 >
                   {displaySecondaryLabel}
-                </button>
-                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                <button
+                </Button>
+                <Button
                   ref={primaryButtonRef}
                   type="button"
                   className={openFileButtonStyles}
@@ -223,7 +217,7 @@ export function SystemDialog({
                   disabled={isLoading}
                 >
                   {renderPrimaryButtonContent()}
-                </button>
+                </Button>
               </>
             )}
           </div>

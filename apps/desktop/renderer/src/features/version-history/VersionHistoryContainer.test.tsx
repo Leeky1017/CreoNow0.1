@@ -368,7 +368,7 @@ describe("VersionHistoryContainer", () => {
       expect(screen.getByTestId("branch-conflict-panel")).toBeInTheDocument();
     });
 
-    await user.click(screen.getByTestId("branch-conflict-manual-conflict-1"));
+    await user.click(screen.getByRole("radio", { name: "manual" }));
     await user.type(
       screen.getByTestId("branch-conflict-manual-text-conflict-1"),
       "resolved manual text",

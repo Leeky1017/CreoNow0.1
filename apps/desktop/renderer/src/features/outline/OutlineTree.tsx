@@ -242,7 +242,7 @@ export function OutlineTree({
       data-testid="outline-scroll"
       viewportTestId="outline-scroll-viewport"
       className="flex-1 min-h-0"
-      viewportClassName="h-full w-full overflow-y-auto py-2"
+      viewportClassName="h-full w-full overflow-y-auto scroll-shadow-y py-2"
     >
       {items.length === 0 ? (
         <EmptyState />

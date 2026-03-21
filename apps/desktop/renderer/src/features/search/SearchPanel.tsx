@@ -265,7 +265,7 @@ export function SearchPanel(props: {
         </div>
         <div
           aria-live="polite"
-          className="flex-1 overflow-y-auto bg-[var(--color-bg-surface)]"
+          className="flex-1 overflow-y-auto scroll-shadow-y bg-[var(--color-bg-surface)]"
         >
           <SearchResultsArea
             hasQuery={hasQuery}

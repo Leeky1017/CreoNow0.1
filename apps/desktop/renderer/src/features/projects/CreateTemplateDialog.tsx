@@ -11,6 +11,7 @@ import {
   type TemplateStructure,
 } from "../../stores/templateStore";
 import { TemplateListItem, TemplateAddItemInput } from "./TemplateMetadataForm";
+import { Label } from "../../components/primitives/Label";
 
 interface CreateTemplateDialogProps {
   open: boolean;
@@ -158,13 +159,12 @@ export function CreateTemplateDialog({
       >
         {/* Template Name */}
         <div>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-          <label className="block mb-2">
+          <Label className="block mb-2">
             <Text size="small" color="muted">
               {t("projects.template.templateName")}{" "}
               <span className="text-[var(--color-error)]">*</span>
             </Text>
-          </label>
+          </Label>
           <Input
             data-testid="create-template-name"
             value={name}
@@ -178,15 +178,14 @@ export function CreateTemplateDialog({
 
         {/* Description */}
         <div>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-          <label className="block mb-2">
+          <Label className="block mb-2">
             <Text size="small" color="muted">
               {t("projects.template.templateDescription")}{" "}
               <span className="opacity-50 text-xs">
                 ({t("projects.template.optional")})
               </span>
             </Text>
-          </label>
+          </Label>
           <Textarea
             data-testid="create-template-description"
             value={description}
@@ -199,15 +198,14 @@ export function CreateTemplateDialog({
 
         {/* Initial Folders */}
         <div>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-          <label className="block mb-2">
+          <Label className="block mb-2">
             <Text size="small" color="muted">
               {t("projects.template.initialFolders")}{" "}
               <span className="opacity-50 text-xs">
                 ({t("projects.template.optional")})
               </span>
             </Text>
-          </label>
+          </Label>
           <div className="space-y-2">
             {folders.map((folder) => (
               <TemplateListItem
@@ -227,15 +225,14 @@ export function CreateTemplateDialog({
 
         {/* Initial Files */}
         <div>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-          <label className="block mb-2">
+          <Label className="block mb-2">
             <Text size="small" color="muted">
               {t("projects.template.initialFiles")}{" "}
               <span className="opacity-50 text-xs">
                 ({t("projects.template.optional")})
               </span>
             </Text>
-          </label>
+          </Label>
           <div className="space-y-2">
             {files.map((file) => (
               <TemplateListItem

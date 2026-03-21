@@ -6,6 +6,7 @@ import { Button } from "../../components/primitives/Button";
 import { Card } from "../../components/primitives/Card";
 import { Input } from "../../components/primitives/Input";
 import { Text } from "../../components/primitives/Text";
+import { Select } from "../../components/primitives/Select";
 import { FormField } from "../../components/composites/FormField";
 import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
@@ -156,31 +157,32 @@ export function AiSettingsSection(): JSX.Element {
         label={t("settings.aiSection.provider")}
         htmlFor="ai-provider-mode"
       >
-        {/* eslint-disable-next-line creonow/no-native-html-element -- provider mode select dropdown */}
-        <select
+        <Select
           id="ai-provider-mode"
           data-testid="ai-provider-mode"
           value={providerMode}
-          onChange={(e) =>
+          onValueChange={(val) =>
             setProviderMode(
-              e.currentTarget.value as
-                | "openai-compatible"
-                | "openai-byok"
-                | "anthropic-byok",
+              val as "openai-compatible" | "openai-byok" | "anthropic-byok",
             )
           }
-          className="h-10 w-full px-3 bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] text-[13px] text-[var(--color-fg-default)]"
-        >
-          <option value="openai-compatible">
-            {t("settings.aiSection.providerOpenAiProxy")}
-          </option>
-          <option value="openai-byok">
-            {t("settings.aiSection.providerOpenAiByok")}
-          </option>
-          <option value="anthropic-byok">
-            {t("settings.aiSection.providerAnthropicByok")}
-          </option>
-        </select>
+          options={[
+            {
+              value: "openai-compatible",
+              label: t("settings.aiSection.providerOpenAiProxy"),
+            },
+            {
+              value: "openai-byok",
+              label: t("settings.aiSection.providerOpenAiByok"),
+            },
+            {
+              value: "anthropic-byok",
+              label: t("settings.aiSection.providerAnthropicByok"),
+            },
+          ]}
+          layer="modal"
+          fullWidth
+        />
       </FormField>
 
       <FormField label={t("settings.aiSection.baseUrl")} htmlFor="ai-base-url">

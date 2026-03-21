@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import type { AiInlineConfirmProps, InlineConfirmState } from "./types";
 import { AiInlinePreview } from "./AiInlinePreview";
+import { Button } from "../../primitives/Button";
 
 const CheckIcon = () => (
   <svg
@@ -169,8 +170,7 @@ export function AiInlineConfirm({
       {/* Action toolbar */}
       {!isFinished && (
         <div className={`${toolbarStyles} ${toolbarOpacity}`}>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             type="button"
             className={acceptButtonStyles}
             onClick={handleAccept}
@@ -183,12 +183,11 @@ export function AiInlineConfirm({
                 ? t("ai.inlineConfirm.applying")
                 : t("ai.inlineConfirm.accept")}
             </span>
-          </button>
+          </Button>
 
           <div className={separatorStyles} />
 
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             type="button"
             className={rejectButtonStyles}
             onClick={handleReject}
@@ -197,13 +196,12 @@ export function AiInlineConfirm({
           >
             <XIcon />
             <span className={labelStyles}>{t("ai.inlineConfirm.reject")}</span>
-          </button>
+          </Button>
 
           {onViewDiff && (
             <>
               <div className={separatorStyles} />
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-              <button
+              <Button
                 type="button"
                 className={diffButtonStyles}
                 onClick={onViewDiff}
@@ -211,7 +209,7 @@ export function AiInlineConfirm({
                 title={t("ai.inlineConfirm.viewDiff")}
               >
                 <DiffIcon />
-              </button>
+              </Button>
             </>
           )}
         </div>

@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Button } from "../../primitives/Button";
 
 const Spinner = ({ className = "" }: { className?: string }) => (
   <svg
@@ -93,8 +94,7 @@ export function AiDiffSummary({
     <div className={footerStyles}>
       <div className="flex items-center gap-4">
         <div className="flex gap-2">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             type="button"
             data-testid="ai-reject-all"
             className={rejectAllStyles}
@@ -102,9 +102,8 @@ export function AiDiffSummary({
             disabled={isApplying}
           >
             {t("ai.diff.rejectAll")}
-          </button>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          </Button>
+          <Button
             type="button"
             data-testid="ai-accept-all"
             className={acceptAllStyles}
@@ -112,7 +111,7 @@ export function AiDiffSummary({
             disabled={isApplying}
           >
             {t("ai.diff.acceptAll")}
-          </button>
+          </Button>
         </div>
 
         {/* Statistics */}
@@ -139,18 +138,16 @@ export function AiDiffSummary({
 
       <div className="flex gap-3">
         {onEditManually && (
-          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-          <button
+          <Button
             type="button"
             className={editManuallyStyles}
             onClick={onEditManually}
             disabled={isApplying}
           >
             {t("ai.diff.editManually")}
-          </button>
+          </Button>
         )}
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-        <button
+        <Button
           type="button"
           className={applyChangesStyles}
           onClick={onApplyChanges}
@@ -162,7 +159,7 @@ export function AiDiffSummary({
             : isApplying
               ? t("ai.diff.applying")
               : t("ai.diff.applyChanges")}
-        </button>
+        </Button>
       </div>
     </div>
   );

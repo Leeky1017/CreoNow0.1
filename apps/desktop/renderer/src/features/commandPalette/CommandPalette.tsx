@@ -19,6 +19,7 @@ import {
 } from "./commandPaletteHelpers";
 import { SearchIcon, buildDefaultCommands } from "./commandPaletteCommands";
 import { CommandPaletteFooter } from "./CommandPaletteFooter";
+import { Input } from "../../components/primitives/Input";
 
 // Re-export for external consumers
 export type {
@@ -183,8 +184,7 @@ export function CommandPalette({
                 : "text-[var(--color-fg-muted)] mr-3 shrink-0"
             }
           />
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized search input with custom focus behavior */}
-          <input
+          <Input
             ref={inputRef}
             type="text"
             data-testid="command-palette-search-input"

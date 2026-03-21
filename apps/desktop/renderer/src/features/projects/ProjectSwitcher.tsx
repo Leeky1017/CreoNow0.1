@@ -2,6 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import type { ProjectListItem } from "../../stores/projectStore";
+import { Button } from "../../components/primitives/Button";
+import { Input } from "../../components/primitives/Input";
 
 export interface ProjectSwitcherProps {
   currentProjectId: string | null;
@@ -187,8 +189,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
         </div>
       ) : null}
 
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-      <button
+      <Button
         type="button"
         data-testid="project-switcher-trigger"
         onClick={handleToggle}
@@ -210,7 +211,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
         >
           {open ? "▲" : "▼"}
         </span>
-      </button>
+      </Button>
 
       {open ? (
         <div
@@ -218,8 +219,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
           className="absolute left-0 top-[calc(100%+4px)] z-[var(--z-dropdown)] w-full rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-md)]"
         >
           <div className="border-b border-[var(--color-separator)] p-2">
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
-            <input
+            <Input
               ref={searchInputRef}
               data-testid="project-switcher-search"
               value={query}
@@ -232,14 +232,13 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
           {filteredProjects.length === 0 ? (
             <div className="space-y-2 p-3 text-xs text-[var(--color-fg-muted)]">
               <div>{t("projects.switcher.noProjects")}</div>
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-              <button
+              <Button
                 type="button"
                 onClick={handleCreateProject}
                 className="h-7 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] px-2 text-xs text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
               >
                 {t("projects.switcher.createNew")}
-              </button>
+              </Button>
             </div>
           ) : (
             <div
@@ -249,8 +248,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
               {filteredProjects.map((project) => {
                 const selected = project.projectId === props.currentProjectId;
                 return (
-                  // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-                  <button
+                  <Button
                     key={project.projectId}
                     type="button"
                     data-testid={`project-switcher-option-${project.projectId}`}
@@ -275,7 +273,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
                     <span className="ml-2 shrink-0 text-[10px] text-[var(--color-fg-muted)]">
                       {formatRelativeTime(project.updatedAt)}
                     </span>
-                  </button>
+                  </Button>
                 );
               })}
             </div>

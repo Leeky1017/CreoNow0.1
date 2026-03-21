@@ -2,6 +2,9 @@
 import { ChevronDown, Play, Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { CheckItemRow } from "./QualityCheckItems";
+import { Button } from "../../components/primitives/Button";
+import { Label } from "../../components/primitives/Label";
+import { Select } from "../../components/primitives/Select";
 import type {
   CheckFrequency,
   CheckGroup,
@@ -96,15 +99,13 @@ function SettingsToggle({
 }) {
   return (
     <div className="flex items-center justify-between">
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-      <label
+      <Label
         htmlFor={id}
         className={`text-[13px] text-[var(--color-fg-default)] select-none cursor-pointer ${disabled ? "opacity-50" : ""}`}
       >
         {label}
-      </label>
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-      <button
+      </Label>
+      <Button
         type="button"
         id={id}
         role="switch"
@@ -124,7 +125,7 @@ function SettingsToggle({
               : "translate-x-0 bg-[var(--color-fg-subtle)]"
           }`}
         />
-      </button>
+      </Button>
     </div>
   );
 }
@@ -149,8 +150,7 @@ export function SettingsSection({
 
   return (
     <div className="bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] overflow-hidden">
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-      <button
+      <Button
         type="button"
         onClick={onToggle}
         className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-[var(--color-bg-hover)] transition-colors duration-[var(--duration-fast)]"
@@ -162,7 +162,7 @@ export function SettingsSection({
           </span>
         </div>
         <ChevronIcon expanded={expanded} />
-      </button>
+      </Button>
       {expanded && (
         <div className="px-4 pb-4 space-y-4 border-t border-[var(--color-separator)]">
           <div className="pt-4 space-y-4">
@@ -183,31 +183,24 @@ export function SettingsSection({
               }
             />
             <div className="flex items-center justify-between">
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-              <label
+              <Label
                 htmlFor="check-frequency"
                 className="text-[13px] text-[var(--color-fg-default)]"
               >
                 {t("qualityGates.checkFrequency")}
-              </label>
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized select */}
-              <select
+              </Label>
+              <Select
                 id="check-frequency"
                 value={settings.frequency}
-                onChange={(e) =>
+                onValueChange={(val) =>
                   onSettingsChange?.({
                     ...settings,
-                    frequency: e.target.value as CheckFrequency,
+                    frequency: val as CheckFrequency,
                   })
                 }
-                className="text-[12px] bg-[var(--color-bg-hover)] border border-[var(--color-border-default)] rounded-[var(--radius-sm)] px-2 py-1 text-[var(--color-fg-default)] focus:outline-none focus:border-[var(--color-border-focus)]"
-              >
-                {frequencyOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                options={frequencyOptions}
+                className="text-[12px]"
+              />
             </div>
           </div>
         </div>

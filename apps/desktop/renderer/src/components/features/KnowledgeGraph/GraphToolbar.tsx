@@ -120,8 +120,7 @@ export function GraphToolbar({
       <div className="flex items-center gap-4 w-60">
         {onBack && (
           <>
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-            <button
+            <Button
               onClick={onBack}
               className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
               aria-label={t("kg.toolbar.goBack")}
@@ -136,7 +135,7 @@ export function GraphToolbar({
               >
                 <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
-            </button>
+            </Button>
             <div className="h-4 w-px bg-[var(--color-border-hover)]" />
           </>
         )}
@@ -148,8 +147,7 @@ export function GraphToolbar({
       {/* Center section: Filter buttons */}
       <div className="flex items-center gap-2">
         {filterButtons.map(({ filter, label, colorClass }) => (
-          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-          <button
+          <Button
             key={filter}
             onClick={() => onFilterChange(filter)}
             className={`${filterButtonBase} ${
@@ -162,7 +160,7 @@ export function GraphToolbar({
               <span className={`w-1.5 h-1.5 rounded-full ${colorClass}`} />
             )}
             {label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -170,8 +168,7 @@ export function GraphToolbar({
       <div className="flex items-center gap-3 w-60 justify-end">
         {/* Zoom controls */}
         <div className="flex items-center bg-[var(--color-bg-raised)] rounded border border-[var(--color-border-default)]">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             onClick={onZoomOut}
             className="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
             aria-label={t("kg.toolbar.zoomOut")}
@@ -186,12 +183,11 @@ export function GraphToolbar({
             >
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-          </button>
+          </Button>
           <span className="text-[10px] w-8 text-center text-[var(--color-fg-subtle)]">
             {Math.round(zoom * 100)}%
           </span>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             onClick={onZoomIn}
             className="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
             aria-label={t("kg.toolbar.zoomIn")}
@@ -207,7 +203,7 @@ export function GraphToolbar({
               <line x1="12" y1="5" x2="12" y2="19" />
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
-          </button>
+          </Button>
         </div>
 
         {/* Add Node button */}

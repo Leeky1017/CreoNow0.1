@@ -6,7 +6,8 @@
  */
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Popover, Button, Avatar } from "../../components/primitives";
+import { Popover, Avatar } from "../../components/primitives";
+import { Button } from "../../components/primitives/Button";
 import type {
   Character,
   CharacterRelationship,
@@ -154,14 +155,13 @@ export function AddRelationshipPopover({
       portalContainer={portalContainer}
       trigger={
         trigger ?? (
-          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-          <button
+          <Button
             type="button"
             className="text-[10px] text-[var(--color-info)] hover:text-[var(--color-info)]/80 flex items-center gap-1 font-medium transition-colors"
           >
             <PlusIcon />
             {t("character.addRelation.triggerLabel")}
-          </button>
+          </Button>
         )
       }
       align="end"
@@ -186,8 +186,7 @@ export function AddRelationshipPopover({
                 const isSelected = selectedCharacter?.id === character.id;
                 const roleConfig = ROLE_DISPLAY[character.role];
                 return (
-                  // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-                  <button
+                  <Button
                     key={character.id}
                     type="button"
                     onClick={() => setSelectedCharacter(character)}
@@ -222,7 +221,7 @@ export function AddRelationshipPopover({
                     {isSelected && (
                       <span className="w-2 h-2 rounded-full bg-[var(--color-info)] shrink-0" />
                     )}
-                  </button>
+                  </Button>
                 );
               })}
             </div>
@@ -243,8 +242,7 @@ export function AddRelationshipPopover({
               const config = RELATIONSHIP_TYPE_DISPLAY[type];
               const isSelected = selectedType === type;
               return (
-                // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-                <button
+                <Button
                   key={type}
                   type="button"
                   onClick={() => setSelectedType(type)}
@@ -262,7 +260,7 @@ export function AddRelationshipPopover({
                   ].join(" ")}
                 >
                   {config.label}
-                </button>
+                </Button>
               );
             })}
           </div>

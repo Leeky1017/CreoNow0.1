@@ -70,7 +70,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
         role="tree"
         tabIndex={0}
         onKeyDown={state.onTreeKeyDown}
-        className="flex-1 overflow-auto min-h-0 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-ring-focus)]"
+        className="flex-1 overflow-auto scroll-shadow-y min-h-0 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-ring-focus)]"
       >
         {state.bootstrapStatus !== "ready" ? (
           <LoadingState

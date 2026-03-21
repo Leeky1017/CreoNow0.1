@@ -1,6 +1,7 @@
 import { Button, Card, Text, Textarea } from "../../components/primitives";
 import type { SemanticRule } from "./memoryPanelTypes";
 import type { MemoryPanelState } from "./useMemoryState";
+import { Label } from "../../components/primitives/Label";
 
 interface MemoryCardProps {
   t: (key: string, opts?: Record<string, unknown>) => string;
@@ -18,19 +19,18 @@ export function MemoryCard({ t, rule, state }: MemoryCardProps): JSX.Element {
     <Card
       data-testid={`memory-rule-${rule.id}`}
       noPadding
-      className="p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
+      className="p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)] hover:bg-[var(--color-bg-hover)] transition-default"
     >
       <div className="flex items-start gap-2">
         <div className="flex-1 min-w-0">
           {isEditing ? (
             <div className="flex flex-col gap-2">
-              {/* eslint-disable-next-line creonow/no-native-html-element -- no Label primitive */}
-              <label
+              <Label
                 className="text-xs text-[var(--color-fg-muted)]"
                 htmlFor={`memory-edit-${rule.id}`}
               >
                 {t("memory.panel.ruleText")}
-              </label>
+              </Label>
               <Textarea
                 id={`memory-edit-${rule.id}`}
                 aria-label={t("memory.panel.ruleText")}

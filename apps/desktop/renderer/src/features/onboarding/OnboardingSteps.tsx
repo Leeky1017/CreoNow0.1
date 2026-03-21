@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { Button, Heading, Text } from "../../components/primitives";
+import { Heading, Text } from "../../components/primitives";
+import { Button } from "../../components/primitives/Button";
 import { FolderOpen, Pencil, Sparkles } from "lucide-react";
 
 type OnboardingStep = 1 | 2 | 3;
@@ -35,8 +36,7 @@ export function LanguageStep(props: {
         className="flex flex-col gap-3"
       >
         {languages.map((lang) => (
-          // eslint-disable-next-line creonow/no-native-html-element -- language selection card button
-          <button
+          <Button
             key={lang.value}
             type="button"
             data-testid={`onboarding-lang-${lang.value}`}
@@ -60,7 +60,7 @@ export function LanguageStep(props: {
                 {t(`onboarding.langOptions.${lang.key}.description`)}
               </Text>
             </div>
-          </button>
+          </Button>
         ))}
       </div>
     </div>

@@ -3,6 +3,7 @@ import { VersionPane, type VersionContent } from "./VersionPane";
 
 import { X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../components/primitives/Button";
 type MultiVersionCompareProps = {
   /** Versions to compare (2-4) */
   versions: VersionContent[];
@@ -80,14 +81,13 @@ export function MultiVersionCompare(
           )}
         </div>
         {props.onClose && (
-          // eslint-disable-next-line creonow/no-native-html-element -- specialized close button
-          <button
+          <Button
             type="button"
             onClick={props.onClose}
             className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors p-1.5 rounded hover:bg-[var(--color-bg-hover)]"
           >
             <X size={16} strokeWidth={1.5} />
-          </button>
+          </Button>
         )}
       </header>
 

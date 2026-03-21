@@ -152,7 +152,7 @@ export function DashboardPage(props: DashboardPageProps): JSX.Element {
         {/* Content: main area + sidebar (AC-1: fixed sidebar layout) */}
         <div className="flex-1 flex min-h-0">
           {/* Scrollable main content */}
-          <div className="flex-1 overflow-y-auto p-[var(--space-12)]">
+          <div className="flex-1 overflow-y-auto scroll-shadow-y p-[var(--space-12)]">
             {heroProject && (
               <>
                 <SectionTitle className="animate-fade-in-up">

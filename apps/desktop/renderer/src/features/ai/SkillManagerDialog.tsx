@@ -8,6 +8,12 @@ import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import { i18n } from "../../i18n";
 import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
+import { Button } from "../../components/primitives/Button";
+import { Checkbox } from "../../components/primitives/Checkbox";
+import { Input } from "../../components/primitives/Input";
+import { Textarea } from "../../components/primitives/Textarea";
+import { Select } from "../../components/primitives/Select";
+import { Label } from "../../components/primitives/Label";
 
 export type CustomSkillListItem =
   IpcResponseData<"skill:custom:list">["items"][number];
@@ -109,11 +115,9 @@ function SkillFormFields(props: {
         {props.heading}
       </Text>
 
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-      <label className="block text-xs text-[var(--color-fg-muted)]">
+      <Label className="block text-xs text-[var(--color-fg-muted)]">
         {t("ai.skillManager.fieldName")}
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
-        <input
+        <Input
           value={props.form.name}
           onChange={(e) =>
             props.onFormChange((prev) => ({ ...prev, name: e.target.value }))
@@ -126,13 +130,11 @@ function SkillFormFields(props: {
             {props.fieldErrors.name}
           </span>
         )}
-      </label>
+      </Label>
 
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-      <label className="block text-xs text-[var(--color-fg-muted)]">
+      <Label className="block text-xs text-[var(--color-fg-muted)]">
         {t("ai.skillManager.fieldDescription")}
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
-        <input
+        <Input
           value={props.form.description}
           onChange={(e) =>
             props.onFormChange((prev) => ({
@@ -148,13 +150,11 @@ function SkillFormFields(props: {
             {props.fieldErrors.description}
           </span>
         )}
-      </label>
+      </Label>
 
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-      <label className="block text-xs text-[var(--color-fg-muted)]">
+      <Label className="block text-xs text-[var(--color-fg-muted)]">
         {t("ai.skillManager.fieldPromptTemplate")}
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
-        <textarea
+        <Textarea
           value={props.form.promptTemplate}
           onChange={(e) =>
             props.onFormChange((prev) => ({
@@ -174,59 +174,63 @@ function SkillFormFields(props: {
             {props.fieldErrors.promptTemplate}
           </span>
         )}
-      </label>
+      </Label>
 
       <div className="grid grid-cols-2 gap-2">
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-        <label className="block text-xs text-[var(--color-fg-muted)]">
-          {t("ai.skillManager.fieldInputType")}
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized select */}
-          <select
+        <div className="block text-xs text-[var(--color-fg-muted)]">
+          <Label className="block text-xs text-[var(--color-fg-muted)] mb-1">
+            {t("ai.skillManager.fieldInputType")}
+          </Label>
+          <Select
             value={props.form.inputType}
-            onChange={(e) =>
+            onValueChange={(val) =>
               props.onFormChange((prev) => ({
                 ...prev,
-                inputType: e.target.value as "selection" | "document",
+                inputType: val as "selection" | "document",
               }))
             }
-            className="mt-1 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
+            options={[
+              {
+                value: "selection",
+                label: t("ai.skillManager.inputTypeSelection"),
+              },
+              {
+                value: "document",
+                label: t("ai.skillManager.inputTypeDocument"),
+              },
+            ]}
+            className="mt-1 w-full text-sm"
             data-testid="skill-form-input-type"
-          >
-            <option value="selection">
-              {t("ai.skillManager.inputTypeSelection")}
-            </option>
-            <option value="document">
-              {t("ai.skillManager.inputTypeDocument")}
-            </option>
-          </select>
-        </label>
+            fullWidth
+          />
+        </div>
 
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-        <label className="block text-xs text-[var(--color-fg-muted)]">
-          {t("ai.skillManager.fieldScope")}
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized select */}
-          <select
+        <div className="block text-xs text-[var(--color-fg-muted)]">
+          <Label className="block text-xs text-[var(--color-fg-muted)] mb-1">
+            {t("ai.skillManager.fieldScope")}
+          </Label>
+          <Select
             value={props.form.scope}
-            onChange={(e) =>
+            onValueChange={(val) =>
               props.onFormChange((prev) => ({
                 ...prev,
-                scope: e.target.value as "global" | "project",
+                scope: val as "global" | "project",
               }))
             }
-            className="mt-1 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
+            options={[
+              { value: "project", label: t("ai.skillManager.scopeProject") },
+              { value: "global", label: t("ai.skillManager.scopeGlobal") },
+            ]}
+            className="mt-1 w-full text-sm"
             data-testid="skill-form-scope"
-          >
-            <option value="project">{t("ai.skillManager.scopeProject")}</option>
-            <option value="global">{t("ai.skillManager.scopeGlobal")}</option>
-          </select>
-        </label>
+            fullWidth
+          />
+        </div>
       </div>
 
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-      <label className="block text-xs text-[var(--color-fg-muted)]">
+      <Label className="block text-xs text-[var(--color-fg-muted)]">
         {t("ai.skillManager.fieldContextRules")}
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
-        <textarea
+        <Textarea
           value={props.form.contextRulesText}
           onChange={(e) =>
             props.onFormChange((prev) => ({
@@ -242,24 +246,19 @@ function SkillFormFields(props: {
             {props.fieldErrors.contextRules}
           </span>
         )}
-      </label>
+      </Label>
 
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-      <label className="flex items-center gap-2 text-xs text-[var(--color-fg-muted)]">
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized input */}
-        <input
-          type="checkbox"
-          checked={props.form.enabled}
-          onChange={(e) =>
-            props.onFormChange((prev) => ({
-              ...prev,
-              enabled: e.target.checked,
-            }))
-          }
-          data-testid="skill-form-enabled"
-        />
-        {t("ai.skillManager.enableSkill")}
-      </label>
+      <Checkbox
+        checked={props.form.enabled}
+        onCheckedChange={(val) =>
+          props.onFormChange((prev) => ({
+            ...prev,
+            enabled: val === true,
+          }))
+        }
+        label={t("ai.skillManager.enableSkill")}
+        data-testid="skill-form-enabled"
+      />
     </section>
   );
 }
@@ -308,24 +307,22 @@ function SkillItemList(props: {
                   </Text>
                 </div>
                 <div className="flex items-center gap-2">
-                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                  <button
+                  <Button
                     type="button"
                     className="px-2 py-1 rounded border border-[var(--color-border-default)] text-xs"
                     onClick={() => props.onEdit(item)}
                     data-testid={`skill-item-edit-${item.id}`}
                   >
                     {t("ai.skillManager.edit")}
-                  </button>
-                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                  <button
+                  </Button>
+                  <Button
                     type="button"
                     className="px-2 py-1 rounded border border-[var(--color-error)]/30 text-xs text-[var(--color-error)]"
                     onClick={() => props.onDelete(item)}
                     data-testid={`skill-item-delete-${item.id}`}
                   >
                     {t("ai.skillManager.delete")}
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -543,17 +540,15 @@ export function SkillManagerDialog(props: {
         description={t("ai.skillManager.dialogDescription")}
         footer={
           <>
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-            <button
+            <Button
               type="button"
               className="px-3 py-2 rounded border border-[var(--color-border-default)] text-[var(--color-fg-default)]"
               onClick={resetForm}
               data-testid="skill-manager-reset"
             >
               {t("ai.skillManager.reset")}
-            </button>
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-            <button
+            </Button>
+            <Button
               type="button"
               className="px-3 py-2 rounded bg-[var(--color-accent-emphasis)] text-[var(--color-fg-on-emphasis)] disabled:opacity-50"
               onClick={() => void handleSubmit()}
@@ -565,7 +560,7 @@ export function SkillManagerDialog(props: {
                 : editingId
                   ? t("ai.skillManager.saveChanges")
                   : t("ai.skillManager.createSkill")}
-            </button>
+            </Button>
           </>
         }
       >
@@ -574,23 +569,21 @@ export function SkillManagerDialog(props: {
             <Text size="tiny" color="muted" className="uppercase tracking-wide">
               {t("ai.skillManager.aiAssisted")}
             </Text>
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
-            <textarea
+            <Textarea
               value={aiDescription}
               onChange={(e) => setAiDescription(e.target.value)}
               placeholder={t("ai.skillManager.aiPlaceholder")}
               className="w-full min-h-20 rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2 text-sm"
               data-testid="skill-manager-ai-description"
             />
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-            <button
+            <Button
               type="button"
               className="px-3 py-2 rounded border border-[var(--color-border-default)] text-[var(--color-fg-default)]"
               onClick={() => void handleAiGenerate()}
               data-testid="skill-manager-ai-generate"
             >
               {t("ai.skillManager.aiGenerateConfig")}
-            </button>
+            </Button>
           </section>
 
           <SkillFormFields

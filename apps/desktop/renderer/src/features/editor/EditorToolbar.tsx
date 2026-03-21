@@ -48,7 +48,12 @@ export function EditorToolbar({
   return (
     <div
       data-testid="editor-toolbar"
-      className={`relative flex items-center gap-0.5 border-b border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1.5 ${className ?? ""}`}
+      className={[
+        "relative flex items-center gap-0.5 border-b border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-3 py-1.5",
+        className ?? "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <div
         ref={containerRef}

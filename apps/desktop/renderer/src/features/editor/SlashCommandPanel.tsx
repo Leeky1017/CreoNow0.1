@@ -4,6 +4,8 @@ import {
   type SlashCommandId,
 } from "./slashCommands";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../components/primitives/Button";
+import { Input } from "../../components/primitives/Input";
 
 interface SlashCommandPanelProps {
   open: boolean;
@@ -30,8 +32,7 @@ export function SlashCommandPanel(
       data-testid="slash-command-panel"
       className="border-b border-[var(--color-border-default)] bg-[var(--color-bg-raised)] px-3 py-2"
     >
-      {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: slash command inline search input */}
-      <input
+      <Input
         data-testid="slash-command-search-input"
         type="text"
         value={props.query}
@@ -61,8 +62,7 @@ export function SlashCommandPanel(
               key={candidate.id}
               className="rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)]"
             >
-              {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: slash command item button */}
-              <button
+              <Button
                 type="button"
                 data-testid={`slash-command-item-${candidate.id}`}
                 onClick={() => props.onSelectCommand(candidate.id)}
@@ -74,7 +74,7 @@ export function SlashCommandPanel(
                 <p className="text-xs text-[var(--color-fg-muted)]">
                   {candidate.description}
                 </p>
-              </button>
+              </Button>
             </li>
           ))}
         </ul>

@@ -51,9 +51,11 @@ test("settings-dialog: shortcut opens + theme persists + ai settings errors obse
   // AI settings: invalid empty baseUrl should show human-readable error (observable failure)
   await first.page.getByTestId("settings-nav-ai").click();
   await expect(first.page.getByTestId("ai-save-btn")).toBeVisible();
+  // Radix Select: click trigger → click option
+  await first.page.getByTestId("ai-provider-mode").click();
   await first.page
-    .getByTestId("ai-provider-mode")
-    .selectOption("openai-compatible");
+    .getByRole("option", { name: /OpenAI.compatible.*Proxy|OpenAI 兼容/i })
+    .click();
   await first.page.getByTestId("ai-base-url").fill("");
   await first.page.getByTestId("ai-save-btn").click();
   await expect(first.page.getByTestId("ai-error")).toContainText(

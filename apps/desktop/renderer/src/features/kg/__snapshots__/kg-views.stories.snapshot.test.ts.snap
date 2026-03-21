@@ -9,118 +9,126 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
     data-testid="character-card-list"
   >
     <button
-      class="focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+      class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
       data-testid="character-card-c-1"
       type="button"
     >
-      <div
-        class="flex items-start gap-3"
+      <span
+        class="inline-flex items-center gap-2 truncate"
       >
         <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium border border-[var(--color-border-default)] text-[var(--color-node-character)] bg-[var(--color-bg-base)]"
-        >
-          林
-        </div>
-        <div
-          class="min-w-0 flex-1"
+          class="flex items-start gap-3"
         >
           <div
-            class="flex items-center gap-2"
+            class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium border border-[var(--color-border-default)] text-[var(--color-node-character)] bg-[var(--color-bg-base)]"
           >
-            <p
-              class="text-sm font-medium text-[var(--color-fg-default)] truncate"
-            >
-              林远
-            </p>
-            <span
-              class="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
-            >
-              角色
-            </span>
+            林
           </div>
-          <ul
-            class="mt-2 space-y-1"
+          <div
+            class="min-w-0 flex-1"
           >
-            <li
-              class="text-xs text-[var(--color-fg-subtle)]"
+            <div
+              class="flex items-center gap-2"
             >
-              年龄: 28
-            </li>
-            <li
-              class="text-xs text-[var(--color-fg-subtle)]"
+              <p
+                class="text-sm font-medium text-[var(--color-fg-default)] truncate"
+              >
+                林远
+              </p>
+              <span
+                class="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
+              >
+                角色
+              </span>
+            </div>
+            <ul
+              class="mt-2 space-y-1"
             >
-              定位: protagonist
-            </li>
-            <li
-              class="text-xs text-[var(--color-fg-subtle)]"
+              <li
+                class="text-xs text-[var(--color-fg-subtle)]"
+              >
+                年龄: 28
+              </li>
+              <li
+                class="text-xs text-[var(--color-fg-subtle)]"
+              >
+                定位: protagonist
+              </li>
+              <li
+                class="text-xs text-[var(--color-fg-subtle)]"
+              >
+                特征: 冷静 / 克制
+              </li>
+            </ul>
+            <p
+              class="mt-2 text-xs text-[var(--color-fg-muted)]"
             >
-              特征: 冷静 / 克制
-            </li>
-          </ul>
-          <p
-            class="mt-2 text-xs text-[var(--color-fg-muted)]"
-          >
-            关系 4 条
-          </p>
+              关系 4 条
+            </p>
+          </div>
         </div>
-      </div>
+      </span>
     </button>
     <button
-      class="focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+      class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
       data-testid="character-card-c-2"
       type="button"
     >
-      <div
-        class="flex items-start gap-3"
+      <span
+        class="inline-flex items-center gap-2 truncate"
       >
         <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium border border-[var(--color-border-default)] text-[var(--color-node-character)] bg-[var(--color-bg-base)]"
-        >
-          张
-        </div>
-        <div
-          class="min-w-0 flex-1"
+          class="flex items-start gap-3"
         >
           <div
-            class="flex items-center gap-2"
+            class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium border border-[var(--color-border-default)] text-[var(--color-node-character)] bg-[var(--color-bg-base)]"
           >
-            <p
-              class="text-sm font-medium text-[var(--color-fg-default)] truncate"
-            >
-              张薇
-            </p>
-            <span
-              class="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
-            >
-              角色
-            </span>
+            张
           </div>
-          <ul
-            class="mt-2 space-y-1"
+          <div
+            class="min-w-0 flex-1"
           >
-            <li
-              class="text-xs text-[var(--color-fg-subtle)]"
+            <div
+              class="flex items-center gap-2"
             >
-              年龄: 26
-            </li>
-            <li
-              class="text-xs text-[var(--color-fg-subtle)]"
+              <p
+                class="text-sm font-medium text-[var(--color-fg-default)] truncate"
+              >
+                张薇
+              </p>
+              <span
+                class="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
+              >
+                角色
+              </span>
+            </div>
+            <ul
+              class="mt-2 space-y-1"
             >
-              定位: ally
-            </li>
-            <li
-              class="text-xs text-[var(--color-fg-subtle)]"
+              <li
+                class="text-xs text-[var(--color-fg-subtle)]"
+              >
+                年龄: 26
+              </li>
+              <li
+                class="text-xs text-[var(--color-fg-subtle)]"
+              >
+                定位: ally
+              </li>
+              <li
+                class="text-xs text-[var(--color-fg-subtle)]"
+              >
+                特征: 果断 / 敏锐
+              </li>
+            </ul>
+            <p
+              class="mt-2 text-xs text-[var(--color-fg-muted)]"
             >
-              特征: 果断 / 敏锐
-            </li>
-          </ul>
-          <p
-            class="mt-2 text-xs text-[var(--color-fg-muted)]"
-          >
-            关系 2 条
-          </p>
+              关系 2 条
+            </p>
+          </div>
         </div>
-      </div>
+      </span>
     </button>
   </section>
 </div>
@@ -187,51 +195,55 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
     data-testid="character-card-list"
   >
     <button
-      class="focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
+      class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring w-full text-left p-3 rounded-[var(--radius-xl)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] hover:border-[var(--color-border-hover)] transition-colors"
       data-testid="character-card-c-partial"
       type="button"
     >
-      <div
-        class="flex items-start gap-3"
+      <span
+        class="inline-flex items-center gap-2 truncate"
       >
         <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium border border-[var(--color-border-default)] text-[var(--color-node-character)] bg-[var(--color-bg-base)]"
-        >
-          神
-        </div>
-        <div
-          class="min-w-0 flex-1"
+          class="flex items-start gap-3"
         >
           <div
-            class="flex items-center gap-2"
+            class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium border border-[var(--color-border-default)] text-[var(--color-node-character)] bg-[var(--color-bg-base)]"
           >
-            <p
-              class="text-sm font-medium text-[var(--color-fg-default)] truncate"
-            >
-              神秘老人
-            </p>
-            <span
-              class="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
-            >
-              角色
-            </span>
+            神
           </div>
-          <ul
-            class="mt-2 space-y-1"
+          <div
+            class="min-w-0 flex-1"
           >
-            <li
-              class="text-xs text-[var(--color-fg-subtle)]"
+            <div
+              class="flex items-center gap-2"
             >
-              暂无关键属性
-            </li>
-          </ul>
-          <p
-            class="mt-2 text-xs text-[var(--color-fg-muted)]"
-          >
-            关系 0 条
-          </p>
+              <p
+                class="text-sm font-medium text-[var(--color-fg-default)] truncate"
+              >
+                神秘老人
+              </p>
+              <span
+                class="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
+              >
+                角色
+              </span>
+            </div>
+            <ul
+              class="mt-2 space-y-1"
+            >
+              <li
+                class="text-xs text-[var(--color-fg-subtle)]"
+              >
+                暂无关键属性
+              </li>
+            </ul>
+            <p
+              class="mt-2 text-xs text-[var(--color-fg-muted)]"
+            >
+              关系 0 条
+            </p>
+          </div>
         </div>
-      </div>
+      </span>
     </button>
   </section>
 </div>
@@ -260,49 +272,79 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         class="flex items-center gap-2"
       >
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer bg-[var(--color-bg-raised)] text-[var(--color-fg-default)] border-[var(--color-border-hover)]"
-        >
-          All
-        </button>
-        <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer bg-[var(--color-bg-raised)] text-[var(--color-fg-default)] border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-character)]"
-          />
-          Roles
+            class="inline-flex items-center gap-2 truncate"
+          >
+            All
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-location)]"
-          />
-          Locations
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-character)]"
+            />
+            Roles
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-event)]"
-          />
-          Events
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-location)]"
+            />
+            Locations
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-item)]"
-          />
-          Items
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-event)]"
+            />
+            Events
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-other)]"
-          />
-          Factions
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-item)]"
+            />
+            Items
+          </span>
+        </button>
+        <button
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
+        >
+          <span
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-other)]"
+            />
+            Factions
+          </span>
         </button>
       </div>
       <div
@@ -313,23 +355,28 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         >
           <button
             aria-label="Zoom out"
-            class="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            type="button"
           >
-            <svg
-              fill="none"
-              height="14"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              width="14"
+            <span
+              class="inline-flex items-center gap-2 truncate"
             >
-              <line
-                x1="5"
-                x2="19"
-                y1="12"
-                y2="12"
-              />
-            </svg>
+              <svg
+                fill="none"
+                height="14"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="14"
+              >
+                <line
+                  x1="5"
+                  x2="19"
+                  y1="12"
+                  y2="12"
+                />
+              </svg>
+            </span>
           </button>
           <span
             class="text-[10px] w-8 text-center text-[var(--color-fg-subtle)]"
@@ -339,29 +386,34 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           </span>
           <button
             aria-label="Zoom in"
-            class="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            type="button"
           >
-            <svg
-              fill="none"
-              height="14"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              width="14"
+            <span
+              class="inline-flex items-center gap-2 truncate"
             >
-              <line
-                x1="12"
-                x2="12"
-                y1="5"
-                y2="19"
-              />
-              <line
-                x1="5"
-                x2="19"
-                y1="12"
-                y2="12"
-              />
-            </svg>
+              <svg
+                fill="none"
+                height="14"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="14"
+              >
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="5"
+                  y2="19"
+                />
+                <line
+                  x1="5"
+                  x2="19"
+                  y1="12"
+                  y2="12"
+                />
+              </svg>
+            </span>
           </button>
         </div>
         <button
@@ -497,49 +549,79 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         class="flex items-center gap-2"
       >
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer bg-[var(--color-bg-raised)] text-[var(--color-fg-default)] border-[var(--color-border-hover)]"
-        >
-          All
-        </button>
-        <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer bg-[var(--color-bg-raised)] text-[var(--color-fg-default)] border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-character)]"
-          />
-          Roles
+            class="inline-flex items-center gap-2 truncate"
+          >
+            All
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-location)]"
-          />
-          Locations
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-character)]"
+            />
+            Roles
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-event)]"
-          />
-          Events
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-location)]"
+            />
+            Locations
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-item)]"
-          />
-          Items
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-event)]"
+            />
+            Events
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-other)]"
-          />
-          Factions
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-item)]"
+            />
+            Items
+          </span>
+        </button>
+        <button
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
+        >
+          <span
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-other)]"
+            />
+            Factions
+          </span>
         </button>
       </div>
       <div
@@ -550,23 +632,28 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         >
           <button
             aria-label="Zoom out"
-            class="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            type="button"
           >
-            <svg
-              fill="none"
-              height="14"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              width="14"
+            <span
+              class="inline-flex items-center gap-2 truncate"
             >
-              <line
-                x1="5"
-                x2="19"
-                y1="12"
-                y2="12"
-              />
-            </svg>
+              <svg
+                fill="none"
+                height="14"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="14"
+              >
+                <line
+                  x1="5"
+                  x2="19"
+                  y1="12"
+                  y2="12"
+                />
+              </svg>
+            </span>
           </button>
           <span
             class="text-[10px] w-8 text-center text-[var(--color-fg-subtle)]"
@@ -576,29 +663,34 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           </span>
           <button
             aria-label="Zoom in"
-            class="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            type="button"
           >
-            <svg
-              fill="none"
-              height="14"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              width="14"
+            <span
+              class="inline-flex items-center gap-2 truncate"
             >
-              <line
-                x1="12"
-                x2="12"
-                y1="5"
-                y2="19"
-              />
-              <line
-                x1="5"
-                x2="19"
-                y1="12"
-                y2="12"
-              />
-            </svg>
+              <svg
+                fill="none"
+                height="14"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="14"
+              >
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="5"
+                  y2="19"
+                />
+                <line
+                  x1="5"
+                  x2="19"
+                  y1="12"
+                  y2="12"
+                />
+              </svg>
+            </span>
           </button>
         </div>
         <button
@@ -788,29 +880,34 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       >
         <button
           aria-label="Add Node"
-          class="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-[var(--shadow-lg)] flex items-center justify-center transition-transform hover:scale-105"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-[var(--shadow-lg)] flex items-center justify-center transition-transform hover:scale-105"
+          type="button"
         >
-          <svg
-            fill="none"
-            height="20"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="20"
+          <span
+            class="inline-flex items-center gap-2 truncate"
           >
-            <line
-              x1="12"
-              x2="12"
-              y1="5"
-              y2="19"
-            />
-            <line
-              x1="5"
-              x2="19"
-              y1="12"
-              y2="12"
-            />
-          </svg>
+            <svg
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+            >
+              <line
+                x1="12"
+                x2="12"
+                y1="5"
+                y2="19"
+              />
+              <line
+                x1="5"
+                x2="19"
+                y1="12"
+                y2="12"
+              />
+            </svg>
+          </span>
         </button>
       </div>
     </main>
@@ -841,49 +938,79 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         class="flex items-center gap-2"
       >
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer bg-[var(--color-bg-raised)] text-[var(--color-fg-default)] border-[var(--color-border-hover)]"
-        >
-          All
-        </button>
-        <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer bg-[var(--color-bg-raised)] text-[var(--color-fg-default)] border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-character)]"
-          />
-          Roles
+            class="inline-flex items-center gap-2 truncate"
+          >
+            All
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-location)]"
-          />
-          Locations
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-character)]"
+            />
+            Roles
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-event)]"
-          />
-          Events
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-location)]"
+            />
+            Locations
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-item)]"
-          />
-          Items
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-event)]"
+            />
+            Events
+          </span>
         </button>
         <button
-          class="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
         >
           <span
-            class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-other)]"
-          />
-          Factions
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-item)]"
+            />
+            Items
+          </span>
+        </button>
+        <button
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-1 rounded-full text-xs font-medium border transition-all duration-[var(--duration-fast)] flex items-center gap-2 cursor-pointer text-[var(--color-fg-muted)] border-transparent hover:text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+          type="button"
+        >
+          <span
+            class="inline-flex items-center gap-2 truncate"
+          >
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--color-node-other)]"
+            />
+            Factions
+          </span>
         </button>
       </div>
       <div
@@ -894,23 +1021,28 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         >
           <button
             aria-label="Zoom out"
-            class="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            type="button"
           >
-            <svg
-              fill="none"
-              height="14"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              width="14"
+            <span
+              class="inline-flex items-center gap-2 truncate"
             >
-              <line
-                x1="5"
-                x2="19"
-                y1="12"
-                y2="12"
-              />
-            </svg>
+              <svg
+                fill="none"
+                height="14"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="14"
+              >
+                <line
+                  x1="5"
+                  x2="19"
+                  y1="12"
+                  y2="12"
+                />
+              </svg>
+            </span>
           </button>
           <span
             class="text-[10px] w-8 text-center text-[var(--color-fg-subtle)]"
@@ -920,29 +1052,34 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           </span>
           <button
             aria-label="Zoom in"
-            class="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            type="button"
           >
-            <svg
-              fill="none"
-              height="14"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-              width="14"
+            <span
+              class="inline-flex items-center gap-2 truncate"
             >
-              <line
-                x1="12"
-                x2="12"
-                y1="5"
-                y2="19"
-              />
-              <line
-                x1="5"
-                x2="19"
-                y1="12"
-                y2="12"
-              />
-            </svg>
+              <svg
+                fill="none"
+                height="14"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="14"
+              >
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="5"
+                  y2="19"
+                />
+                <line
+                  x1="5"
+                  x2="19"
+                  y1="12"
+                  y2="12"
+                />
+              </svg>
+            </span>
           </button>
         </div>
         <button
@@ -1283,29 +1420,34 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       >
         <button
           aria-label="Add Node"
-          class="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-[var(--shadow-lg)] flex items-center justify-center transition-transform hover:scale-105"
+          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-[var(--shadow-lg)] flex items-center justify-center transition-transform hover:scale-105"
+          type="button"
         >
-          <svg
-            fill="none"
-            height="20"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="20"
+          <span
+            class="inline-flex items-center gap-2 truncate"
           >
-            <line
-              x1="12"
-              x2="12"
-              y1="5"
-              y2="19"
-            />
-            <line
-              x1="5"
-              x2="19"
-              y1="12"
-              y2="12"
-            />
-          </svg>
+            <svg
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+            >
+              <line
+                x1="12"
+                x2="12"
+                y1="5"
+                y2="19"
+              />
+              <line
+                x1="5"
+                x2="19"
+                y1="12"
+                y2="12"
+              />
+            </svg>
+          </span>
         </button>
       </div>
     </main>

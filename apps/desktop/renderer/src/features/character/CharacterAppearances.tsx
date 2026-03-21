@@ -3,6 +3,7 @@ import { Button } from "../../components/primitives";
 import { ArrowRight, FileText } from "lucide-react";
 import { labelStyles, sectionHeaderStyles } from "./character-detail-shared";
 import type { ChapterAppearance } from "./types";
+import { Label } from "../../components/primitives/Label";
 
 function ChapterLink({
   appearance,
@@ -50,10 +51,9 @@ export function CharacterAppearances(
   return (
     <div className="space-y-3 pb-2">
       <div className={sectionHeaderStyles}>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- semantic label, no Label primitive */}
-        <label className={labelStyles}>
+        <Label className={labelStyles}>
           {t("character.detail.appearances")}
-        </label>
+        </Label>
         <span className="text-[10px] text-[var(--color-fg-placeholder)]">
           {props.appearances.length} {t("character.detail.chapters")}
         </span>

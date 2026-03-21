@@ -10,6 +10,7 @@ import {
   AiErrorDetails,
 } from "./AiErrorDetails";
 import { type RetryState, AiErrorCardActions } from "./AiErrorActions";
+import { Button } from "../../primitives/Button";
 
 type CardState = "visible" | "dismissing" | "dismissed";
 
@@ -192,15 +193,14 @@ export function AiErrorCard({
     >
       {/* Dismiss button */}
       {showDismiss && (
-        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-        <button
+        <Button
           type="button"
           className={dismissButtonStyles}
           onClick={handleDismiss}
           title={t("ai.error.dismiss")}
         >
           <CloseIcon />
-        </button>
+        </Button>
       )}
 
       <AiErrorDetails

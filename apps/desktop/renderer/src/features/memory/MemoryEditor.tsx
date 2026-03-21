@@ -1,7 +1,9 @@
 import { Button, Card, Text, Textarea } from "../../components/primitives";
+import { Select } from "../../components/primitives/Select";
 import type { SemanticCategory, SemanticRule } from "./memoryPanelTypes";
 import { CATEGORY_GROUPS } from "./memoryPanelTypes";
 import type { MemoryPanelState } from "./useMemoryState";
+import { Label } from "../../components/primitives/Label";
 
 export function MemoryConflictSection(props: {
   t: (key: string, opts?: Record<string, unknown>) => string;
@@ -113,41 +115,36 @@ export function MemoryComposer(props: {
       className="shrink-0 p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
     >
       <div className="flex flex-col gap-2">
-        {/* eslint-disable-next-line creonow/no-native-html-element -- no Label primitive */}
-        <label
+        <Label
           className="text-xs text-[var(--color-fg-muted)]"
           htmlFor="memory-rule-create-input"
         >
           {props.t("memory.panel.addRule")}
-        </label>
+        </Label>
         <Textarea
           id="memory-rule-create-input"
           aria-label={props.t("memory.panel.addRule")}
           value={props.draftRule}
           onChange={(event) => props.setDraftRule(event.target.value)}
         />
-        {/* eslint-disable-next-line creonow/no-native-html-element -- no Label primitive */}
-        <label
+        <Label
           className="text-xs text-[var(--color-fg-muted)]"
           htmlFor="memory-rule-category"
         >
           {props.t("memory.panel.category")}
-        </label>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized select */}
-        <select
+        </Label>
+        <Select
           id="memory-rule-category"
           value={props.draftCategory}
-          onChange={(event) =>
-            props.setDraftCategory(event.target.value as SemanticCategory)
+          onValueChange={(val) =>
+            props.setDraftCategory(val as SemanticCategory)
           }
-          className="h-8 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 text-sm"
-        >
-          {CATEGORY_GROUPS.map((group) => (
-            <option key={group.category} value={group.category}>
-              {props.t(group.labelKey)}
-            </option>
-          ))}
-        </select>
+          options={CATEGORY_GROUPS.map((group) => ({
+            value: group.category,
+            label: props.t(group.labelKey),
+          }))}
+          className="h-8 text-sm"
+        />
         <div className="flex items-center gap-2">
           <Button size="sm" onClick={() => void props.handleCreateRule()}>
             {props.t("memory.panel.saveRule")}

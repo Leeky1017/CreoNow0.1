@@ -18,6 +18,7 @@ import { CharacterPanelContent } from "./CharacterPanel";
 import { CharacterPanelSkeleton } from "./CharacterPanelSkeleton";
 import { kgToCharacters, characterToMetadataJson } from "./characterFromKg";
 import type { Character } from "./types";
+import { Button } from "../../components/primitives/Button";
 
 export interface CharacterPanelContainerProps {
   /** Project ID for KG scope */
@@ -213,14 +214,13 @@ export function CharacterPanelContainer(
               {t("character.panelContainer.emptyDescription")}
             </p>
           </div>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             type="button"
             onClick={() => void handleCreate()}
             className="focus-ring px-4 py-2 text-sm font-medium bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] rounded-[var(--radius-md)] hover:opacity-90 transition-opacity"
           >
             {t("character.panelContainer.createCharacter")}
-          </button>
+          </Button>
         </div>
         <SystemDialog {...dialogProps} />
       </>

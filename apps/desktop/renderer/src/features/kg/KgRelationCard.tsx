@@ -28,7 +28,7 @@ export function KgRelationCard(props: {
       key={r.id}
       data-testid={`kg-relation-row-${r.id}`}
       noPadding
-      className="p-2.5 flex flex-col gap-2"
+      className="p-2.5 flex flex-col gap-2 hover:bg-[var(--color-bg-hover)] transition-default"
     >
       {isEditing ? (
         <Input

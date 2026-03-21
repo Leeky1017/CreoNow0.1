@@ -4,6 +4,7 @@ import type { Character, CharacterRole } from "./types";
 import { ROLE_DISPLAY } from "./types";
 
 import { Pencil, Trash2 } from "lucide-react";
+import { Button } from "../../components/primitives/Button";
 
 export interface CharacterCardProps {
   /** Character data */
@@ -196,8 +197,7 @@ export function CharacterCard({
         ].join(" ")}
       >
         {onEdit && (
-          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-          <button
+          <Button
             type="button"
             onClick={handleEditClick}
             className={[
@@ -212,11 +212,10 @@ export function CharacterCard({
             aria-label={`Edit ${character.name}`}
           >
             <EditIcon />
-          </button>
+          </Button>
         )}
         {onDelete && (
-          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-          <button
+          <Button
             type="button"
             onClick={handleDeleteClick}
             className={[
@@ -231,7 +230,7 @@ export function CharacterCard({
             aria-label={`Delete ${character.name}`}
           >
             <DeleteIcon />
-          </button>
+          </Button>
         )}
       </div>
     </div>

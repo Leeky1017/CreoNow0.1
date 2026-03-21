@@ -5,6 +5,7 @@ import { AddRelationshipPopover } from "./AddRelationshipPopover";
 import { labelStyles, sectionHeaderStyles } from "./character-detail-shared";
 import type { Character, CharacterRelationship } from "./types";
 import { ROLE_DISPLAY, RELATIONSHIP_TYPE_DISPLAY } from "./types";
+import { Label } from "../../components/primitives/Label";
 
 function RelationshipItem({
   relationship,
@@ -84,10 +85,9 @@ export function CharacterRelationships(
   return (
     <div className="space-y-3">
       <div className={sectionHeaderStyles}>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- semantic label, no Label primitive */}
-        <label className={labelStyles}>
+        <Label className={labelStyles}>
           {t("character.detail.relationships")}
-        </label>
+        </Label>
         {candidates.length > 0 ? (
           <AddRelationshipPopover
             availableCharacters={candidates}

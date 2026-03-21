@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../components/primitives/Button";
 
 export interface TimelineEventItem {
   id: string;
@@ -124,11 +125,10 @@ export function TimelineView({
         </div>
       </div>
 
-      <ul className="flex-1 min-h-0 overflow-auto p-4 space-y-3">
+      <ul className="flex-1 min-h-0 overflow-auto scroll-shadow-y p-4 space-y-3">
         {orderedEvents.map((event) => (
           <li key={event.id}>
-            {/* eslint-disable-next-line creonow/no-native-html-element -- timeline event interactive item */}
-            <button
+            <Button
               type="button"
               draggable
               data-testid={`timeline-event-${event.id}`}
@@ -147,6 +147,7 @@ export function TimelineView({
                 "bg-[var(--color-bg-surface)]",
                 "hover:border-[var(--color-border-hover)]",
                 "transition-[border-color,box-shadow,transform,opacity]",
+                "duration-[var(--duration-fast)]",
                 draggingId === event.id
                   ? "shadow-[var(--shadow-xl)] scale-[1.02] opacity-90"
                   : "",
@@ -165,7 +166,7 @@ export function TimelineView({
                   {event.description}
                 </p>
               ) : null}
-            </button>
+            </Button>
           </li>
         ))}
       </ul>

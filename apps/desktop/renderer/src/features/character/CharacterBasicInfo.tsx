@@ -13,6 +13,7 @@ import {
 } from "./character-detail-shared";
 import type { Character, ZodiacSign } from "./types";
 import { ARCHETYPE_OPTIONS, ZODIAC_OPTIONS } from "./types";
+import { Label } from "../../components/primitives/Label";
 
 function ChevronDownIcon({ className }: { className?: string }): JSX.Element {
   return (
@@ -57,8 +58,7 @@ export function CharacterBasicInfo(
   return (
     <div className="space-y-3">
       <div className={sectionHeaderStyles}>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- semantic label, no Label primitive */}
-        <label className={labelStyles}>{t("character.detail.profile")}</label>
+        <Label className={labelStyles}>{t("character.detail.profile")}</Label>
         <Button
           variant="ghost"
           size="sm"

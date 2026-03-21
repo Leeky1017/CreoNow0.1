@@ -2,6 +2,7 @@ import { ArrowRight, ChevronDown, ChevronUp, Clock, X } from "lucide-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "../../components/primitives/Tooltip";
+import { Button } from "../../components/primitives/Button";
 
 /**
  * View mode for diff display.
@@ -65,8 +66,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
       <div className="flex items-center gap-4">
         {/* Before version selector */}
         <div className="relative">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             type="button"
             onClick={() => setBeforeDropdownOpen((v) => !v)}
             className="flex items-center gap-2 px-3 py-1.5 bg-[var(--color-bg-hover)] rounded border border-[var(--color-border-default)] text-xs text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors whitespace-nowrap"
@@ -82,7 +82,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               strokeWidth={1.5}
               className="text-[var(--color-fg-subtle)]"
             />
-          </button>
+          </Button>
 
           {/* Dropdown */}
           {beforeDropdownOpen && (
@@ -102,8 +102,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
                     const isSelected =
                       version.id === props.selectedBeforeVersion;
                     return (
-                      // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-                      <button
+                      <Button
                         key={version.id}
                         type="button"
                         onClick={() => {
@@ -133,7 +132,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
                               : t("diff.header.manualSave")}
                           </div>
                         </div>
-                      </button>
+                      </Button>
                     );
                   })}
               </div>
@@ -149,8 +148,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
         />
 
         {/* After version (current) */}
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-        <button
+        <Button
           type="button"
           className="flex items-center gap-2 px-3 py-1.5 bg-[var(--color-bg-hover)] rounded border border-[var(--color-border-default)] text-xs text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)] transition-colors whitespace-nowrap"
         >
@@ -162,15 +160,14 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
             strokeWidth={1.5}
             className="text-[var(--color-fg-subtle)]"
           />
-        </button>
+        </Button>
       </div>
 
       {/* Right: View toggle + Navigation + Close */}
       <div className="flex items-center gap-6">
         {/* View mode toggle */}
         <div className="flex items-center gap-1 bg-[var(--color-bg-base)] p-1 rounded-lg border border-[var(--color-border-default)]">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             type="button"
             onClick={() => props.onViewModeChange("split")}
             className={`
@@ -183,9 +180,8 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
             `}
           >
             {t("diff.header.split")}
-          </button>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={() => props.onViewModeChange("unified")}
             className={`
@@ -198,7 +194,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
             `}
           >
             {t("diff.header.unified")}
-          </button>
+          </Button>
         </div>
 
         {/* Separator */}
@@ -207,8 +203,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
         {/* Change navigation */}
         <div className="flex items-center gap-2">
           <Tooltip content={t("diff.header.previousChange")}>
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-            <button
+            <Button
               type="button"
               onClick={props.onPreviousChange}
               disabled={props.currentChangeIndex <= 0}
@@ -216,7 +211,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               aria-label={t("diff.header.previousChange")}
             >
               <ChevronUp size={16} strokeWidth={1.5} />
-            </button>
+            </Button>
           </Tooltip>
           <span className="text-xs font-[var(--font-family-mono)] text-[var(--color-fg-muted)] px-2">
             {t("diff.header.changeLabel")}{" "}
@@ -229,8 +224,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
             </span>
           </span>
           <Tooltip content={t("diff.header.nextChange")}>
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-            <button
+            <Button
               type="button"
               onClick={props.onNextChange}
               disabled={props.currentChangeIndex >= props.totalChanges - 1}
@@ -238,7 +232,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               aria-label={t("diff.header.nextChange")}
             >
               <ChevronDown size={16} strokeWidth={1.5} />
-            </button>
+            </Button>
           </Tooltip>
         </div>
 
@@ -246,14 +240,13 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
         <div className="h-4 w-px bg-[var(--color-separator)]" />
 
         {/* Close button */}
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-        <button
+        <Button
           type="button"
           onClick={props.onClose}
           className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors p-2 rounded hover:bg-[var(--color-bg-hover)]"
         >
           <X size={20} strokeWidth={1.5} />
-        </button>
+        </Button>
       </div>
     </header>
   );
