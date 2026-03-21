@@ -331,3 +331,51 @@ R2 P1 复核 v1-03/04/05 → 级联刷新。v1-12 尚未启动。
 
 - Phase 0~3 全部 [ ] 未启动
 - 无已达成项需勾选（上游完成不直接满足 v1-12 的 AC，仅缩减工作量）
+
+---
+
+## R1+R3 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+R1+R3 合并级联刷新——v1-01/02（R1）与 v1-06/07（R3）四个源 change 全部 PASS。
+
+### 基线更新
+
+**`features/` 层指标与 R2 持平**：
+
+- 原生 `<button>` **69 处** 未变（分布：ai 24、character 11、diff 9、projects 7、editor 6、quality-gates 5、settings-dialog 2、其余 5）
+- 原生 `<input>` **12 处**、`<select>` **6 处**、`<textarea>` **5 处** 均未变
+- `no-native-html-element` eslint-disable **121 处** 未变
+- AppShell.tsx **1,267 行** 未变
+- Button `size="icon"` 使用 **13 处** 维持（v1-02 产出）
+- transition-colors 使用 **20 处**（features/ prod），duration-\* 使用 **30 处**
+
+**`components/features/` 层（v1-06 新增范围）**：
+
+- v1-06 提取 AiDialogs（24 处 `<button>`）+ KnowledgeGraph（9 处 `<button>`）= **33 处**原生 button
+- `no-native-html-element` eslint-disable **38 处**
+- 此路径在 R1/R2 未覆盖，需纳入 v1-12 范围
+
+### AC 基线调整
+
+| AC    | R2 基线                               | R1+R3 基线（含 components/features/）              |
+| ----- | ------------------------------------- | -------------------------------------------------- |
+| AC-8  | `<button>` 69 处 → ≤14                | `<button>` **102 处**（69+33）→ ≤14                |
+| AC-9  | `<input>` 12 处 → ≤3                  | 不变                                               |
+| AC-10 | `<select>` 6 处 → ≤2                  | 不变                                               |
+| AC-11 | `<textarea>` 5 处 → ≤3                | 不变                                               |
+| AC-12 | `no-native-html-element` 121 处 → ≤25 | `no-native-html-element` **159 处**（121+38）→ ≤25 |
+| AC-19 | AppShell.tsx 1,267 行 → ≤250          | 不变                                               |
+
+### 任务工作量变化
+
+- **Part B 替换量增加约 48%**：`<button>` 从 69 扩展至 102 处（v1-06 AiDialogs 24 + KnowledgeGraph 9）
+- **Part B Task 2B.1 新增子任务**：`components/features/AiDialogs/`（24 处）和 `components/features/KnowledgeGraph/`（9 处）需独立处理
+- **Part A/C/D 无变化**：动效铺设、AppShell 拆分、组合 Story 目标不受影响
+- v1-07 使 settings-dialog 仅剩 2 处原生 button，替换工作量极小
+
+### 任务状态
+
+- Phase 0~3 全部 [ ] 未启动
+- 上游四项依赖全部 PASS：Part A 所需 Design Token 已就绪，Part B 所需 Primitive 变体已完备

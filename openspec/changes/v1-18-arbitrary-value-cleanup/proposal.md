@@ -214,3 +214,161 @@ R2 P1 复核 v1-03/04/05 → 级联刷新下游。v1-18 尚未启动，此次为
 ### 结论
 
 v1-18 基线已刷新。总 arbitrary values 从 930 降至 653（-30%），上游 changes 已消化部分工作量。核心任务：`text-[` 501→≤20、`rounded-[` 119→≤10、variant 采用 0→≥15。tasks.md 尚未创建。
+
+---
+
+## R3 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+R3 全面复核。上游 v1-01（Design Token）、v1-02（Primitive Evolution）、v1-06（AI Panel Overhaul）、v1-07（Settings Polish）全部 PASS。v1-18 作为所有前序 visual overhaul 的汇聚清理点，需重新采集全面基线。
+
+### 上游依赖状态
+
+| 上游 Change               | 状态               | 关键成果                                           |
+| ------------------------- | ------------------ | -------------------------------------------------- |
+| v1-01 Design Token        | ✅ PASS ⭐⭐⭐⭐   | tokens.css 469行, 14档 typography, 完整 token 系统 |
+| v1-02 Primitive Evolution | ✅ PASS ⭐⭐⭐⭐⭐ | 7 组件变体完成, 130 处使用, 493 测试全通过         |
+| v1-06 AI Panel Overhaul   | ✅ PASS            | AiPanel 拆分完成(7 子组件), 27 测试文件全通过      |
+| v1-07 Settings Polish     | ✅ PASS            | 0 硬编码 hex, 组件拆分完成, 91 测试全通过          |
+
+### R3 基线重采集
+
+#### Features 层（与 R2 可比口径）
+
+| 度量                                | 原始提案 | R2  | R3  | R2→R3 Delta | 趋势         |
+| ----------------------------------- | -------- | --- | --- | ----------- | ------------ |
+| `text-[`（features prod）           | 667      | 501 | 95  | **-406**    | ⬇⬇⬇ 大幅下降 |
+| `text-[`（features stories）        | —        | 166 | 34  | **-132**    | ⬇⬇           |
+| `rounded-[`（features prod）        | 139      | 119 | 18  | **-101**    | ⬇⬇⬇          |
+| `w-[]/h-[]`（features prod）        | 96       | 55  | 8   | **-47**     | ⬇⬇           |
+| `p-[]/m-[]/gap-[]`（features prod） | 28       | 27  | 1   | **-26**     | ⬇⬇ 近乎归零  |
+| 总 arbitrary（features prod）       | 930      | 653 | 228 | **-425**    | ⬇⬇⬇ -65%     |
+| `shadow-[`（features prod）         | —        | —   | 7   | —           | 首次采集     |
+| v1-02 variant 采用量（features）    | 0        | 0   | 0   | **0**       | ⚠ 仍为零     |
+
+**采集命令**（features 口径）：
+
+```bash
+# text-[ features prod
+grep -rn 'text-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 95
+
+# text-[ features stories
+grep -rn 'text-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep '.stories.' | wc -l
+# → 34
+
+# rounded-[ features prod
+grep -rn 'rounded-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 18
+
+# w-[]/h-[] features prod
+grep -rnE '(w|h)-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 8
+
+# p-[]/m-[]/gap-[] features prod
+grep -rnE '(p|m|gap)-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 1
+
+# total arbitrary features prod
+grep -rnE '\-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 228
+
+# shadow-[ features prod
+grep -rn 'shadow-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 7
+
+# v1-02 variant adoption (features/)
+grep -rn 'variant="pill"\|variant="bento"\|variant="compact"\|variant="underline"\|variant="category"\|size="icon"' apps/desktop/renderer/src/components/features/ | wc -l
+# → 0
+```
+
+#### 全 Components 层（R3 扩展口径）
+
+v1-18 的真正影响面不限于 features/，primitives 和 patterns 层同样残留 arbitrary 值。R3 首次采集全 components/ 口径：
+
+| 度量                    | R3 全 components/ | 其中 features/ | 其中 primitives+patterns/ |
+| ----------------------- | ----------------- | -------------- | ------------------------- |
+| `text-[` prod           | 279               | 95             | 184                       |
+| `text-[` stories        | 47                | 34             | 13                        |
+| `rounded-[` prod        | 75                | 18             | 57                        |
+| `w-[]/h-[]` prod        | 43                | 8              | 35                        |
+| `p-[]/m-[]/gap-[]` prod | 10                | 1              | 9                         |
+| 总 arbitrary prod       | 860               | 228            | 632                       |
+| `shadow-[` prod         | 48                | 7              | 41                        |
+
+**采集命令**（全 components 口径）：
+
+```bash
+# text-[ components prod
+grep -rn 'text-\[' apps/desktop/renderer/src/components/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 279
+
+# rounded-[ components prod
+grep -rn 'rounded-\[' apps/desktop/renderer/src/components/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 75
+
+# w-[]/h-[] components prod
+grep -rnE '(w|h)-\[' apps/desktop/renderer/src/components/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 43
+
+# p-[]/m-[]/gap-[] components prod
+grep -rnE '(p|m|gap)-\[' apps/desktop/renderer/src/components/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 10
+
+# total arbitrary components prod
+grep -rnE '\-\[' apps/desktop/renderer/src/components/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 860
+
+# shadow-[ components prod
+grep -rn 'shadow-\[' apps/desktop/renderer/src/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 48
+
+# v1-02 variant adoption (features/)
+grep -rn 'variant="pill"\|variant="bento"\|variant="compact"\|variant="underline"\|variant="category"\|size="icon"' apps/desktop/renderer/src/components/features/ | wc -l
+# → 0
+```
+
+### Top 10 高密度文件（R3 — features 层 text-[）
+
+| 排名 | 文件                              | `text-[` 数 | R2 对比 |
+| ---- | --------------------------------- | ----------- | ------- |
+| 1    | AiDialogs/SystemDialogContent.tsx | 15          | 新入榜  |
+| 2    | AiDialogs/AiDiffContent.tsx       | 11          | 新入榜  |
+| 3    | AiDialogs/AiDiffSummary.tsx       | 10          | 新入榜  |
+| 4    | AiDialogs/AiErrorDetails.tsx      | 9           | 新入榜  |
+| 5    | KnowledgeGraph/GraphToolbar.tsx   | 8           | 新入榜  |
+| 6    | AiDialogs/AiDiffModal.tsx         | 7           | 新入榜  |
+| 7    | KnowledgeGraph/NodeDetailCard.tsx | 6           | 新入榜  |
+| 7    | AiDialogs/AiInlineConfirm.tsx     | 6           | 新入榜  |
+| 9    | KnowledgeGraph/NodeEditDialog.tsx | 5           | 新入榜  |
+| 9    | AiDialogs/AiInlinePreview.tsx     | 5           | 新入榜  |
+
+**分析**：R2 榜单中的 SearchResultItems(23)、QualityCheckItems(23)、DiffHeader(18)、AiMessageList(18) 等已大幅清理或归零，说明 v1-06/07 的工作已生效。当前热点集中在 AiDialogs（v1-06 拆分产生的子组件）和 KnowledgeGraph 模块。
+
+### AC 目标调整
+
+features 层基线大幅下降（总量 930→228，-75%），AC 目标可更积极：
+
+| AC # | 原目标                 | R3 调整后目标                   | 理由                                           |
+| ---- | ---------------------- | ------------------------------- | ---------------------------------------------- |
+| 1    | `text-[` prod ≤ 20     | `text-[` features prod ≤ 10     | 当前仅 95，热点集中在 AiDialogs/KnowledgeGraph |
+| 2    | `rounded-[` prod ≤ 10  | `rounded-[` features prod ≤ 5   | 当前仅 18，可进一步压缩                        |
+| 3    | `p-[]/m-[]/gap-[]` = 0 | `p-[]/m-[]/gap-[]` features = 0 | 当前仅 1，应完全归零                           |
+| 4    | variant 采用 ≥ 15      | variant 采用 ≥ 15               | 维持不变，当前仍为 0                           |
+| 新增 | —                      | `shadow-[` features prod ≤ 3    | 首次纳入，当前 7                               |
+
+### 结论
+
+上游四大 change 全部 PASS 后，features 层 arbitrary values 从 930（原始）→ 653（R2）→ 228（R3），累计下降 **75%**。「大厦将成，余钉渐稀。」
+
+**核心工作量已大幅收窄**：
+
+- `text-[` 95 处（集中在 AiDialogs 6文件 + KnowledgeGraph 3文件）
+- `rounded-[` 18 处
+- `shadow-[` 7 处
+- `w-[]/h-[]` 8 处
+- `p-[]/m-[]/gap-[]` 1 处（近乎归零）
+- v1-02 variant 采用仍为 0——这是 v1-18 独有的推广任务
+
+**注意**：primitives+patterns 层仍有 632 处 arbitrary（主要是 text-[ 184、rounded-[ 57、shadow-[ 41），但这些可能是 Primitive 组件内部的合理定义（如 Button/Badge/Toast 的内部样式映射），不在 v1-18 的 features 清理范围内。如需扩展范围，应另开 change。

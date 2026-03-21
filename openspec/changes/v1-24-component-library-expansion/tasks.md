@@ -330,3 +330,32 @@
 - [ ] 确认 Input 零回归：不传 prefix/suffix 时行为与 v1-02 完全一致
 - [ ] 确认所有新组件导出注册在 `primitives/index.ts`
 - [ ] 确认所有用户可见文本走 `t()` / i18n
+
+---
+
+## R1 Cascade Refresh 记录（2026-03-21）
+
+### 上游依赖复核
+
+- **v1-01** ✅ 完成（2026-03-20 验收）——Design Token 体系完备，`--color-separator`、`--color-bg-info` 等新组件所需 token 已就位
+- **v1-02** ✅ 完成（2026-03-21 验收）——variant/size/token 标杆模式已建立（Button 229 行、Card 129 行、Tabs 333 行、Badge 130 行）
+
+### 基线指标验证
+
+| 指标                  | 实测值 | 采集命令                                                                                                              |
+| --------------------- | ------ | --------------------------------------------------------------------------------------------------------------------- |
+| Primitive 组件文件数  | 29     | `find primitives/ -maxdepth 1 -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' ! -name '*.behavior.*' \| wc -l` |
+| Primitive 总行数      | 4452   | `find primitives/ -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' -exec wc -l {} + \| tail -1`                 |
+| Input.tsx 行数        | 85     | `wc -l primitives/Input.tsx`                                                                                          |
+| Input prefix/suffix   | 0      | `grep -c 'prefix\|suffix' primitives/Input.tsx`                                                                       |
+| Table 组件            | 不存在 | `find primitives/ -name 'Table*'` → 空                                                                                |
+| Separator 组件        | 不存在 | `find primitives/ -name 'Separator*'` → 空                                                                            |
+| Alert 组件            | 不存在 | `find primitives/ -name 'Alert*'` → 空                                                                                |
+| SegmentedControl 组件 | 不存在 | `find primitives/ -name 'Segment*'` → 空                                                                              |
+| Progress 组件         | 不存在 | `find primitives/ -name 'Progress*'` → 空                                                                             |
+
+所有指标与初始建档一致，无变化。
+
+### Phase 0 调整
+
+无需调整。上游依赖已全部就绪，v1-02 标杆模式可直接参考。建议 Phase 0 增加对 v1-02 新增的 `.behavior.test.tsx` 模式的阅读，作为新组件行为测试的参考。

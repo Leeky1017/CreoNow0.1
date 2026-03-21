@@ -167,3 +167,39 @@ v1-03 在 v1-02 之前已合并（PR #1168），因此 v1-02 的产出（Card be
 ### 偏差记录
 
 - **无偏差**：v1-03 的所有 AC 在 R1 复测中数值与合并时一致，无退化
+
+---
+
+## R1 Cascade Refresh (2026-03-21)
+
+> 上游验证完毕后的正式级联刷新。「积石成山，风雨兴焉。」——荀子
+
+### 上游状态
+
+| 上游 change | 评级       | 状态 |
+| ----------- | ---------- | ---- |
+| v1-01       | ⭐⭐⭐⭐   | PASS |
+| v1-02       | ⭐⭐⭐⭐⭐ | PASS |
+
+### 度量重采集
+
+| 数据点                     | R2 记录 | R1 Cascade 实测 | Delta | 采集命令                                                                                             |
+| -------------------------- | ------- | --------------- | ----- | ---------------------------------------------------------------------------------------------------- |
+| DashboardPage.tsx 行数     | 268     | **268**         | 0     | `wc -l apps/desktop/renderer/src/features/dashboard/DashboardPage.tsx`                               |
+| DashboardHero.tsx          | 85      | **85**          | 0     | `wc -l …/dashboard/DashboardHero.tsx`                                                                |
+| DashboardProjectGrid.tsx   | 232     | **232**         | 0     | `wc -l …/dashboard/DashboardProjectGrid.tsx`                                                         |
+| DashboardSidebar.tsx       | 153     | **153**         | 0     | `wc -l …/dashboard/DashboardSidebar.tsx`                                                             |
+| useDashboardLayout.ts      | 17      | **17**          | 0     | `wc -l …/dashboard/useDashboardLayout.ts`                                                            |
+| eslint-disable（prod）     | 0       | **0**           | 0     | `grep -rn 'eslint-disable' …/dashboard/ --include='*.tsx' --include='*.ts'`（排除 test/guard）       |
+| Arbitrary 值               | 0       | **0**           | 0     | `grep -rn 'p-10\|max-w-\[500px\]\|w-16 h-16\|text-\[11px\]' …/dashboard/ --include='*.tsx'`          |
+| 原生 `<button>`（prod）    | 0       | **0**           | 0     | `grep -rn '<button' …/dashboard/ --include='*.tsx'`（排除 test/guard）                               |
+| 测试文件数                 | 10      | **10**          | 0     | `find …/dashboard/ \( -name '*.test.*' -o -name '*.spec.*' \) \| wc -l`                              |
+| Guard 测试文件             | 3       | **3**           | 0     | `find …/dashboard/ -name '*guard*' \| wc -l`                                                         |
+| Dashboard 目录总行数       | 2,758   | **2,758**       | 0     | `find …/dashboard/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l \| tail -1`                          |
+| v1-02 Primitive 可用性     | ✅      | **✅**          | —     | Button 229, Card 129, Badge 130, Tabs 333；bento/compact/pill/underline 均在 primitives 中可用       |
+| features/ size="icon" 采用 | 13      | **13**          | 0     | `grep -rn 'size="icon"' …/features/ --include='*.tsx' \| wc -l`                                      |
+| features/ 新 variant 采用  | 0       | **0**           | 0     | `grep -rn 'variant="pill"\|variant="bento"\|variant="compact"\|variant="underline"' …/features/` = 0 |
+
+### 结论
+
+✅ **STABLE** — 所有度量与 R2 记录完全一致，零偏差、零退化。v1-01 ⭐⭐⭐⭐ + v1-02 ⭐⭐⭐⭐⭐ 上游确认后，v1-03 全部 12 项 AC 无变化。

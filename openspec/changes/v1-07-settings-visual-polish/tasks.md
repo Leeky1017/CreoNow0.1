@@ -338,3 +338,54 @@ R2 P1 复核 v1-03/04/05 → 级联刷新。v1-07 已实现并合并。
 ### 结论
 
 核心 AC（hex 清零 AC-1~3、拆分 AC-15、CI 门禁 AC-10~14）全部达成。视觉精度 AC（AC-4~9）需在后续审计中确认。
+
+---
+
+## R3 复核记录（2026-03-21）
+
+### 复核方式
+
+R3 P2 独立复核——在 `.worktrees/issue-1207-cascade-refresh-r1-r3` 中重新执行全部度量命令，与 R2 记录逐项比对。
+
+### 度量重采集
+
+| 度量                                 | R2 记录值 | R3 实际值             | 判定                              |
+| ------------------------------------ | --------- | --------------------- | --------------------------------- |
+| SettingsDialog.tsx 行数              | 297       | 297                   | ✅ R3 复核确认                    |
+| SettingsAppearancePage.tsx 行数      | 249       | 249                   | ✅ R3 复核确认                    |
+| SettingsNavigation.tsx 行数          | 103       | 103                   | ✅ R3 复核确认                    |
+| accentPalette.ts 行数                | 49        | 49                    | ✅ R3 复核确认                    |
+| SettingsHeader.tsx                   | —         | 不存在                | ℹ️ tasks 提及但未创建，非 AC 要求 |
+| 硬编码 hex（SettingsAppearancePage） | 0         | 0                     | ✅ R3 复核确认                    |
+| ACCENT_PALETTE 使用                  | ✅        | 3 处引用              | ✅ R3 复核确认                    |
+| Settings-dialog 模块总行数（prod）   | 1,753     | 1,753                 | ✅ R3 复核确认                    |
+| Settings 测试                        | 全通过    | 14 文件 91 测试全通过 | ✅ R3 复核确认                    |
+
+### AC 验证状态（R3 重采集）
+
+| AC    | R2 状态 | R3 状态 | R3 证据                                                                           |
+| ----- | ------- | ------- | --------------------------------------------------------------------------------- |
+| AC-1  | ✅      | ✅      | `grep -n '#[0-9a-fA-F]{3,8}' SettingsAppearancePage.tsx` → 0 行                   |
+| AC-2  | ✅      | ✅      | accentPalette.ts 49 行，SettingsAppearancePage.tsx L5/L73/L76 引用 ACCENT_PALETTE |
+| AC-3  | ✅      | ✅      | grep 验证 SettingsAppearancePage.tsx 0 处 hex 硬编码                              |
+| AC-4  | —       | —       | 视觉精度项，需 diff review / 视觉验收                                             |
+| AC-5  | —       | —       | 视觉精度项，需 diff review / 视觉验收                                             |
+| AC-6  | —       | —       | 视觉精度项，需 diff review / 视觉验收                                             |
+| AC-7  | —       | —       | 视觉精度项，需 diff review / 视觉验收                                             |
+| AC-8  | —       | —       | 视觉精度项，需 diff review / 视觉验收                                             |
+| AC-9  | —       | —       | 视觉精度项，需 diff review / 视觉验收                                             |
+| AC-10 | ✅      | ✅      | R3 基线未发现新增 arbitrary 值                                                    |
+| AC-11 | ✅      | ✅      | `vitest run Settings` → 14 文件 91 测试全通过                                     |
+| AC-12 | ✅      | ✅      | CI 守护                                                                           |
+| AC-13 | ✅      | ✅      | CI 守护                                                                           |
+| AC-14 | ✅      | ✅      | CI 守护                                                                           |
+| AC-15 | ✅      | ✅      | SettingsDialog.tsx 297 行（≤300 ✓），SettingsNavigation.tsx 103 行（≤300 ✓）      |
+
+### 发现
+
+1. **SettingsHeader.tsx 未创建**：tasks.md Phase 2 Task 2.9 提及提取 SettingsHeader.tsx（≤100 行），但实际未创建。不过 AC-15 仅要求 SettingsDialog.tsx ≤300 行 + 子组件各 ≤300 行，297 行已达标。SettingsHeader 提取属于 Non-Goals §7 中的"可选"拆分，不构成 AC 违规。
+2. **视觉精度 AC-4~9 仍为未验证状态**：与 R2 一致，这些项需要 diff review 或运行时视觉验收，非度量命令可覆盖。
+
+### 结论
+
+**PASS** — R2 记录的全部可度量 AC（AC-1~3、AC-10~15）在 R3 独立复核中均确认达成，无回归。视觉精度 AC（AC-4~9）维持 R2 状态不变。

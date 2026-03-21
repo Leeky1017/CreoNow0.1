@@ -292,3 +292,34 @@ const FILE_TYPE_COLORS: Record<string, string> = {
 - [ ] 检查所有新增样式是否使用 Design Token（`grep -rn '#[0-9a-fA-F]\{3,8\}' FileTreePanel.tsx` 应为 0 新增）
 - [ ] 如有独立子组件可提取（如 DragIndicator、FileTypeIcon），做最小化提取以降低 FileTreePanel.tsx 行数，但不做大规模重构
 - [ ] PR 创建，含 `Closes #N`
+
+---
+
+## R3 Cascade Refresh (2026-03-21)
+
+### 上游依赖确认
+
+- ✅ v1-06 AI Panel Overhaul: PASS（27测试文件全通过）
+- ✅ v1-07 Settings Visual Polish: PASS（91测试全通过）
+- 上游依赖（v1-01 Design Token、v1-02 Primitive）已就绪
+
+### 基线指标更新
+
+| 指标                   | tasks.md 原值             | R3 实测值                   | 说明                                |
+| ---------------------- | ------------------------- | --------------------------- | ----------------------------------- |
+| FileTreePanel.tsx 行数 | ~1,402（AC-14 目标 ≤300） | **126**                     | ✅ 已远超达标，壳层仅 126 行        |
+| FileTree 模块总行数    | —                         | **4,350**（含测试/stories） | 首次采集                            |
+| FileTreeNodeRow.tsx    | —                         | **300**                     | 拆分产物，节点渲染（AC-14 ≤300 ✅） |
+| useFileTreeKeyboard.ts | —                         | **139**                     | 拆分产物，键盘导航 hook             |
+| useFileTreeCore.ts     | —                         | **182**                     | 拆分产物，核心状态管理              |
+| fileTreeContextMenu.ts | —                         | **86**                      | 拆分产物，右键菜单                  |
+| FileTree 测试          | —                         | **9 文件 / 79 测试全通过**  | AC-10 ✅                            |
+
+### AC 状态评估
+
+| AC          | 状态        | 说明                                                             |
+| ----------- | ----------- | ---------------------------------------------------------------- |
+| AC-14       | ✅ 已满足   | 主文件 126 行 ≤ 300；子组件均 ≤ 300                              |
+| AC-10       | ✅ 基线良好 | 79 测试全通过，0 失败                                            |
+| AC-1~AC-9   | 🔲 待实现   | 视觉精修项（icon bar、行高、拖拽手柄、箭头动效、文件类型颜色等） |
+| AC-11~AC-13 | 🔲 待验证   | Storybook / typecheck / lint 在实现阶段执行                      |

@@ -281,3 +281,36 @@ interface DensityProviderProps {
 | 大量 Primitives 迁移引入回归        | TDD 先行，每个组件迁移前后跑回归测试                      |
 | DensityProvider 嵌套导致意外覆盖    | 最内层 DensityProvider 生效（CSS specificity 自然保证）   |
 | 性能：大量 CSS custom property 级联 | component token 总量 < 40 个，级联性能可忽略              |
+
+---
+
+## R1 Cascade Refresh (2026-03-21)
+
+### 上游依赖状态
+
+| 依赖  | 状态                                      |
+| ----- | ----------------------------------------- |
+| v1-01 | ✅ 完成（2026-03-20 验收，R1 复核通过）   |
+| v1-02 | ✅ 完成（2026-03-21 验收，⭐⭐⭐⭐⭐）    |
+| v1-24 | ⏳ 待启动（Phase 9 组件库扩展）           |
+| v1-23 | ⏳ 待启动（色彩系统影响 component token） |
+| v1-19 | ⏳ 待启动（a11y 约束影响密度设计）        |
+
+### 基线指标复核
+
+所有指标 R1 复核完成，与初始建档一致：
+
+| 指标                     | R1 建档值 | R1 复核值 | 趋势 | 说明                               |
+| ------------------------ | --------- | --------- | ---- | ---------------------------------- |
+| Component-level token 数 | 0         | 0         | →    | 待本 change 新建 ≥ 20              |
+| `data-density` 使用数    | 0         | 0         | →    | 待本 change 新建                   |
+| DensityProvider          | 不存在    | 不存在    | →    | 待本 change 新建                   |
+| Spacing token 数         | 16        | 16        | →    | 13 numeric + 3 semantic            |
+| Radius token 档位        | 8         | 8         | →    |                                    |
+| Primitives spacing 引用  | 314 处    | 314 处    | →    | 待本 change 迁移为 component token |
+| `:root` / `@media` 块数  | 15        | 15        | →    |                                    |
+| Primitive 组件文件数     | 29        | 29        | →    | v1-24 完成后将增至 ≥ 35            |
+
+### Scope 变更
+
+无需调整。v1-25 仍 blocked by v1-24（组件库扩展），需等待新组件建立后再添加对应 component token。v1-02 完成确认了现有 Primitives 的 spacing 模式，为后续迁移提供了稳定基线。

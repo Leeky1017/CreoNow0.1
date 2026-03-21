@@ -135,3 +135,48 @@ R1 验证通过后，启动级联刷新，覆盖以下依赖 v1-01/v1-02 的 chi
 | v1-23        | 已建档          | 依赖 v1-01/v1-02      |
 | v1-24        | 已建档          | 依赖 v1-01/v1-02      |
 | v1-25        | 已建档          | 依赖 v1-01/v1-02      |
+
+---
+
+## R1+R3 级联刷新记录 (2026-03-21)
+
+> 「流水不腐，户枢不蠹。」——《吕氏春秋》
+
+### R1（P0 复核）—— v1-01 + v1-02
+
+| 源 Change                 | 评级       | 判定                            |
+| ------------------------- | ---------- | ------------------------------- |
+| v1-01 Design Token        | ⭐⭐⭐⭐   | PASS — 8 项核心度量零偏差       |
+| v1-02 Primitive Evolution | ⭐⭐⭐⭐⭐ | PASS — 20/20 AC，493 测试全通过 |
+
+**R1 级联刷新（9 targets）**：
+
+| 下游                       | 状态               | 变化                                    |
+| -------------------------- | ------------------ | --------------------------------------- |
+| v1-03 Dashboard            | ✅ Merged          | 零偏差，11 项度量稳定                   |
+| v1-04 Editor Typography    | ✅ Merged          | 零偏差，12 项度量稳定                   |
+| v1-05 Editor Decomposition | ✅ Merged          | 零偏差，15 项度量稳定                   |
+| v1-12 Motion + Native HTML | 📋 Planned         | 基线更新，native button 目标扩至 102 处 |
+| v1-14 Dialog + Entry       | ✅ Done (审计中)   | 零偏差，14 个文件行数一致               |
+| v1-17 Font Bundling        | 📋 Documented      | 基线确认，DOM snapshot 3→6              |
+| v1-23 Color System         | 📋 Documented      | 基线确认，99 色彩 token                 |
+| v1-24 Component Library    | 📋 Documented      | 基线确认，29 primitives                 |
+| v1-25 Density System       | ⏸️ Blocked (v1-24) | 基线确认，0 component tokens            |
+
+### R3（P2 复核）—— v1-06 + v1-07
+
+| 源 Change                    | 评级 | 判定                                     |
+| ---------------------------- | ---- | ---------------------------------------- |
+| v1-06 AI Panel Overhaul      | ✅   | PASS — 7 子组件全确认，27 测试文件全通过 |
+| v1-07 Settings Visual Polish | ✅   | PASS — 0 硬编码 hex，91 测试全通过       |
+
+**R3 级联刷新（6 targets，其中 v1-12/14 与 R1 共享）**：
+
+| 下游                       | 状态             | 变化                                                          |
+| -------------------------- | ---------------- | ------------------------------------------------------------- |
+| v1-08 File Tree            | 📋 Planned       | FileTreePanel 已从 ~1320→126 行，79 测试全通过                |
+| v1-09 Command Palette      | 📋 Planned       | CommandPalette ~730→283, SearchPanel ~900→294, inline style 0 |
+| v1-12 Motion + Native HTML | 📋 Planned       | v1-06 引入 33 处新 native button + 38 条 eslint-disable       |
+| v1-14 Dialog + Entry       | ✅ Done (审计中) | 与 v1-06/07 无文件交叉                                        |
+| v1-15 AI Overlays          | ✅ Done (审计中) | 4 overlay 已拆分，83 测试全通过                               |
+| v1-18 Arbitrary Cleanup    | 📋 Documented    | text-[ 95, rounded-[ 18, total arbitrary 228 (↓75%)           |

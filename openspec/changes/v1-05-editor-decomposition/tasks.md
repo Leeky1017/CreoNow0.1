@@ -264,3 +264,33 @@ R2 P1 复核：v1-03/04/05 Phase 1 并行复核。重新采集所有度量基线
 - **偏差**：无
 - **Scope 调整**：不变
 - **结论**：✅ **STABLE** — v1-05 全部 AC 无退化，editor 模块基线稳定
+
+---
+
+## R1 Cascade Refresh (2026-03-21)
+
+> 上游 v1-01 ⭐⭐⭐⭐ PASS + v1-02 ⭐⭐⭐⭐⭐ PASS 验证完毕后的正式级联确认。
+
+### 度量重采集
+
+| 文件                         | R2    | R1 Cascade | Delta |
+| ---------------------------- | ----- | ---------- | ----- |
+| EditorPane.tsx               | 232   | 232        | 0     |
+| useEditorSetup.ts            | 290   | 290        | 0     |
+| InlineAiOverlay.tsx          | 200   | 200        | 0     |
+| EntityCompletionPanel.tsx    | 86    | 86         | 0     |
+| useEntityCompletion.ts       | 269   | 269        | 0     |
+| SlashCommandPanel.tsx        | 84    | 84         | 0     |
+| slashCommands.ts             | 107   | 107        | 0     |
+| useEditorKeybindings.ts      | 219   | 219        | 0     |
+| editor/ 目录总行数（含测试） | 9,406 | 9,406      | 0     |
+
+### AC 级联确认
+
+- AC-1 ~ AC-12：全部 ✅ 保持 — R1 级联确认
+- Phase 0 ~ Phase 3：全部完成 — R1 级联确认
+- 遗留项：无
+
+### 结论
+
+✅ **STABLE** — v1-05 在上游 v1-01 + v1-02 正式验证后，所有 AC 无退化，度量零偏差。

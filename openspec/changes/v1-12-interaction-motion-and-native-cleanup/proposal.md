@@ -166,7 +166,8 @@ V1 各 Wave 中的子组件都有独立的 Storybook Story，但组件之间的 
 ## 依赖与影响
 
 - **上游依赖**: v1-01（Design Token）—— 依赖 `--duration-*` / `--ease-*` token；v1-02（Primitives）—— 依赖 Button/Input/Select/Textarea 组件完备 **[已完成 ✅]**
-- **待回补上游**: v1-06（SkillManagerDialog 回补）、v1-08（FileTree 4 AC 回补）、v1-10（OutlinePanel 回补）、v1-16（DiffView 回补）—— 均待各自完成后级联刷新
+- **待回补上游**: v1-08（FileTree 4 AC 回补）、v1-10（OutlinePanel 回补）、v1-16（DiffView 回补）—— 均待各自完成后级联刷新
+- **已完成上游**: v1-06（AI Panel Overhaul）✅ —— 子组件已提取至 `components/features/AiDialogs/`，新增 33 处原生 button 纳入范围；v1-07（Settings Polish）✅ —— SettingsDialog shell 精修完成
 - **被依赖于**: v1-13（eslint-disable 审计）—— 本 change 清理大部分 `eslint-disable` 后，v1-13 负责审计剩余
 - **执行顺序**: 本 change 应先于 v1-13 完成
 - **并行安全**: Part A（动效）与 Part B（HTML 替换）可并行；Part B 与 v1-10（面板统一）可能有文件冲突，建议 Part B 在 v1-10 之后或协调进行
@@ -214,3 +215,70 @@ R2 P1 复核 v1-03/04/05 → 级联刷新下游。v1-12 尚未启动，此次为
 ### 结论
 
 v1-12 基线已刷新。核心工作量：`<button>` 69→≤14（替换 ~55 处）、`<input>` 12→≤3、AppShell 拆分 1,267→≤250。上游完成降低了部分工作量（button 从 186 降至 69）。
+
+---
+
+## R1+R3 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+R1+R3 合并级联刷新——v1-01/02（R1）与 v1-06/07（R3）四个源 change 同时影响 v1-12。
+
+上游验证结果：
+
+- **v1-01（Design Token）**：PASS ⭐⭐⭐⭐ — tokens.css 469 行, 14 档 typography, `--duration-*` / `--ease-*` token 已就绪
+- **v1-02（Primitive Evolution）**：PASS ⭐⭐⭐⭐⭐ — Button/Card/Tabs/Badge 变体完成, 新变体 130 处使用
+- **v1-06（AI Panel Overhaul）**：PASS — 7 子组件拆分至 `components/features/AiDialogs/`, 27 测试文件全通过
+- **v1-07（Settings Polish）**：PASS — 0 硬编码 hex, SettingsGeneralSections 拆分完成, 91 测试全通过
+
+### R1+R3 基线重采集
+
+**`features/` 层（原始范围）**：
+
+| 度量                                     | R2 基线 | R1+R3 实际 | Delta | 采集命令                                                                                                                                      |
+| ---------------------------------------- | ------- | ---------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原生 `<button>`（features/ prod）        | 69      | **69**     | 0     | `grep -rn '<button' apps/desktop/renderer/src/features/ --include='*.tsx' \| grep -v '.stories.' \| grep -v '.test.' \| wc -l`                |
+| 原生 `<input>`（features/ prod）         | 12      | **12**     | 0     | 同上替换 `<input`                                                                                                                             |
+| 原生 `<select>`（features/ prod）        | 6       | **6**      | 0     | 同上替换 `<select`                                                                                                                            |
+| 原生 `<textarea>`（features/ prod）      | 5       | **5**      | 0     | 同上替换 `<textarea`                                                                                                                          |
+| `no-native-html-element` eslint-disable  | 121     | **121**    | 0     | `grep -rn 'no-native-html-element' apps/desktop/renderer/src/features/ --include='*.tsx' \| grep -v '.stories.' \| grep -v '.test.' \| wc -l` |
+| eslint-disable 总数（features/ prod）    | 146     | **142**    | -4    | `grep -rn 'eslint-disable' apps/desktop/renderer/src/features/ --include='*.tsx' \| grep -v '.stories.' \| grep -v '.test.' \| wc -l`         |
+| Button `size="icon"` 使用（features/）   | 13      | **13**     | 0     | `grep -rn 'size="icon"' apps/desktop/renderer/src/features/ --include='*.tsx' \| grep -v '.stories.' \| grep -v '.test.' \| wc -l`            |
+| AppShell.tsx 行数                        | 1,267   | **1,267**  | 0     | `wc -l apps/desktop/renderer/src/components/layout/AppShell.tsx`                                                                              |
+| transition 工具类（CSS 定义）            | 0       | **0**      | 0     | `grep -rn 'transition-default\|transition-slow\|scroll-shadow' apps/desktop/renderer/src/ --include='*.css' \| wc -l`                         |
+| scroll-shadow / mask-image               | 2       | **2**      | 0     | `grep -rn 'scroll-shadow\|mask-image' apps/desktop/renderer/src/ --include='*.tsx' --include='*.css' \| wc -l`                                |
+| transition-colors 使用（features/ prod） | —       | **20**     | —     | 首次采集                                                                                                                                      |
+| duration-\* 使用（features/ prod）       | —       | **30**     | —     | 首次采集                                                                                                                                      |
+
+> `features/` 层指标与 R2 持平——v1-06/v1-07 的改动未影响此路径下的原生 HTML 计数。
+
+**`components/features/` 层（v1-06 新增范围）**：
+
+v1-06 AI Panel 重构将 7 个子组件（AiInlineConfirm、AiDiffContent、AiDiffModal、AiErrorCard、SystemDialog 等）提取至 `components/features/AiDialogs/`，同步创建了 `components/features/KnowledgeGraph/`。此路径在 R1/R2 基线中不存在。
+
+| 度量                                             | R1+R3 实际 | 采集命令                                                                                                                                                 |
+| ------------------------------------------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原生 `<button>`（components/features/ prod）     | **33**     | `grep -rn '<button' apps/desktop/renderer/src/components/features/ --include='*.tsx' \| grep -v '.stories.' \| grep -v '.test.' \| wc -l`                |
+| 分布：AiDialogs                                  | 24         | —                                                                                                                                                        |
+| 分布：KnowledgeGraph                             | 9          | —                                                                                                                                                        |
+| `no-native-html-element` eslint-disable          | **38**     | `grep -rn 'no-native-html-element' apps/desktop/renderer/src/components/features/ --include='*.tsx' \| grep -v '.stories.' \| grep -v '.test.' \| wc -l` |
+| eslint-disable 总数（components/features/ prod） | **39**     | 同上替换 `eslint-disable`                                                                                                                                |
+
+### AC 目标调整
+
+- **原生 `<button>` 合并目标**：`features/` 69 + `components/features/` 33 = **合计 102 处**，替换目标 ≤14。v1-06 新增范围使总工作量较 R2 增加约 48%
+- **原生 `<input>/<select>/<textarea>` 目标维持**：features/ 12/6/5 处未变，components/features/ 无 input/select/textarea
+- **AppShell.tsx 拆分目标维持 ≤250 行**：当前 1,267 行无变化
+- **`no-native-html-element` eslint-disable 合并目标**：features/ 121 + components/features/ 38 = **合计 159 处**，替换目标 ≤25
+- **CSS 动效工具类目标不变**：`.transition-default`、`.transition-slow`、`.scroll-shadow-y` 待定义
+
+### 上游影响评估
+
+- **v1-06（AI Panel Overhaul）✅**：将 AI 子组件提取至 `components/features/AiDialogs/`，引入 33 个新原生 `<button>` 到 v1-12 范围。`features/ai/` 内 24 处原生 button 未变——AI 模块 native HTML 替换工作量总体增加。同时 v1-06 的 7 子组件拆分架构为逐组件替换提供了清晰边界
+- **v1-07（Settings Polish）✅**：SettingsDialog shell 精修完成，提取 `SettingsGeneralSections.tsx`（208 行）。`features/settings-dialog/` 原生 button 仅剩 2 处，替换工作量极小
+- **v1-01（Design Token）✅**：`--duration-fast`、`--duration-normal`、`--ease-default` token 已就绪，Part A 动效铺设可直接引用
+- **v1-02（Primitive Evolution）✅**：Button（pill + icon size）、Select（Trigger/Content/Item）、Radio（RadioGroup/RadioGroupItem）、Badge（pill）、Tabs（underline）变体系统已完备，Part B 替换基础已就绪
+
+### 结论
+
+`features/` 路径指标与 R2 持平。主要变化来自 v1-06：`components/features/` 层新增 33 个原生 `<button>` 和 38 条 `no-native-html-element` eslint-disable，需纳入 v1-12 范围。合并后总替换目标从 69 扩展至 **102 处** `<button>`、eslint-disable 从 121 扩展至 **159 处**。上游四项依赖全部 PASS，Part A 动效所需 token 和 Part B 替换所需 Primitive 变体均已就绪。

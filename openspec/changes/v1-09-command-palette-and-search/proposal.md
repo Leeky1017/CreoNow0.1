@@ -146,3 +146,41 @@ Active filter pill 增加 `--shadow-sm` box-shadow + 蓝色文字（`text-[var(-
 - **被依赖于**: 无直接下游——本 change 是终端叶子节点
 - **并行安全**: CommandPalette 和 SearchPanel 与其他 v1 change 无文件交叉，可并行开发；两个组件之间也可拆为独立 PR 串行提交
 - **风险**: CommandPalette 的分组逻辑修改可能涉及列表渲染结构调整，需谨慎处理键盘导航（↑/↓ 箭头）在分组 header 上的跳过逻辑
+
+---
+
+## R3 Cascade Refresh (2026-03-21)
+
+### 上游依赖状态
+
+| 上游 Change                  | 状态    | 说明                                                                       |
+| ---------------------------- | ------- | -------------------------------------------------------------------------- |
+| v1-06 AI Panel Overhaul      | ✅ PASS | AiPanel 281行, TabBar 50, MessageList 432, InputArea 293, 27测试文件全通过 |
+| v1-07 Settings Visual Polish | ✅ PASS | SettingsDialog 297行, AppearancePage 249, Navigation 103, 91测试全通过     |
+
+### 基线指标更新
+
+| 指标                         | proposal 原值         | R3 实测值                  | 趋势                      | 采集命令                                                                |
+| ---------------------------- | --------------------- | -------------------------- | ------------------------- | ----------------------------------------------------------------------- |
+| CommandPalette.tsx 行数      | ~730                  | **283**                    | ⬇️ 大幅下降（已完成拆分） | `wc -l .../commandPalette/CommandPalette.tsx`                           |
+| CommandPalette inline styles | ~35（含 SearchPanel） | **0**                      | ⬇️ 已清零                 | `grep -cn 'style={{' .../CommandPalette.tsx`                            |
+| CommandPalette 模块总行数    | —                     | **3,170**                  | 📊 首次采集               | `find .../commandPalette/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l` |
+| CommandPaletteFooter.tsx     | —                     | **38**                     | 📊 拆分产物               | `wc -l .../CommandPaletteFooter.tsx`                                    |
+| commandPaletteCommands.tsx   | —                     | **231**                    | 📊 拆分产物               | `wc -l .../commandPaletteCommands.tsx`                                  |
+| commandPaletteHelpers.tsx    | —                     | **95**                     | 📊 拆分产物               | `wc -l .../commandPaletteHelpers.tsx`                                   |
+| fuzzyMatch.ts                | —                     | **160**                    | 📊 拆分产物               | `wc -l .../fuzzyMatch.ts`                                               |
+| CommandPalette 测试          | —                     | **5 文件 / 57 测试全通过** | ✅                        | `npx vitest run --reporter=verbose CommandPalette`                      |
+| SearchPanel.tsx 行数         | ~900                  | **294**                    | ⬇️ 大幅下降（已完成拆分） | `wc -l .../search/SearchPanel.tsx`                                      |
+| SearchPanel inline styles    | —                     | **0**                      | ⬇️ 已清零                 | `grep -cn 'style={{' .../SearchPanel.tsx`                               |
+| SearchPanel 模块总行数       | —                     | **2,807**                  | 📊 首次采集               | `find .../search/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l`         |
+| SearchPanelParts.tsx         | —                     | **175**                    | 📊 拆分产物               | `wc -l .../SearchPanelParts.tsx`                                        |
+| SearchResultItems.tsx        | —                     | **245**                    | 📊 拆分产物               | `wc -l .../SearchResultItems.tsx`                                       |
+| SearchResultsArea.tsx        | —                     | **180**                    | 📊 拆分产物               | `wc -l .../SearchResultsArea.tsx`                                       |
+| SearchPanel 测试             | —                     | **9 文件 / 30 测试全通过** | ✅                        | `npx vitest run --reporter=verbose SearchPanel`                         |
+
+### 分析
+
+CommandPalette.tsx 已从 ~730 行拆分至 **283 行**，SearchPanel.tsx 从 ~900 行拆分至 **294 行**，均接近 AC-16/AC-17 的 ≤300 行目标。inline style 已全部清零（原值 ~35 处）。
+
+**已完成部分**：组件解耦拆分、inline style 迁移。
+**剩余工作聚焦**：视觉精修——CommandPalette 的分组分隔线、active 左蓝线、快捷键 pill、分类图标颜色；SearchPanel 的 filter pills active 样式、match highlight 颜色、toggle 对齐、指示条宽度。

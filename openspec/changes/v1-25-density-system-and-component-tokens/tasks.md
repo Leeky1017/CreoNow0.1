@@ -154,3 +154,33 @@
 3. **用户可配置密度**：Settings 面板中添加密度偏好选项（compact/comfortable/auto），属于 v1-07（Settings Visual Polish）的下游需求
 4. **v1-19 a11y 约束对接**：a11y 审计确认 compact 密度触控目标符合 WCAG 2.5.5，待 v1-19 完成后验证
 5. **v1-23 色彩系统对接**：确认 component token 中的色彩引用与 v1-23 色彩系统一致，待 v1-23 完成后验证
+
+---
+
+## R1 Cascade Refresh 记录（2026-03-21）
+
+### 上游依赖复核
+
+- **v1-01** ✅ 完成（2026-03-20 验收）——13 级 spacing + 7 级 radius + 4 semantic spacing 已就位
+- **v1-02** ✅ 完成（2026-03-21 验收）——29 个 Primitives、314 处 spacing 引用，为 component token 迁移提供稳定基线
+- **v1-24** ⏳ 待启动——本 change 仍 blocked by v1-24（新组件需先建立才能定义 component token）
+- **v1-23** ⏳ 待启动——色彩系统升级对 component token 的色彩引用有影响
+- **v1-19** ⏳ 待启动——a11y 约束对 compact 密度最小尺寸有约束
+
+### 基线指标验证
+
+| 指标                     | 实测值 | 采集命令                                                                                          |
+| ------------------------ | ------ | ------------------------------------------------------------------------------------------------- |
+| Component-level token 数 | 0      | `grep -cE '\-\-(button\|input\|card\|badge\|listitem\|dialog\|tab)-' design/system/01-tokens.css` |
+| `data-density` 使用数    | 0      | `grep -rc 'data-density' apps/desktop/renderer/src/ --include='*.tsx'`                            |
+| DensityProvider          | 不存在 | `find apps/desktop/renderer/src/ -name "*Density*"` → 空                                          |
+| Spacing token 数         | 16     | `grep -c '\-\-space-' design/system/01-tokens.css`                                                |
+| Radius token 档位        | 8      | `grep -c '\-\-radius-' design/system/01-tokens.css`                                               |
+| Primitives spacing 引用  | 314    | `grep -rn 'padding\|gap\|space-' primitives/ --include='*.tsx' \| wc -l`                          |
+| Primitive 组件文件数     | 29     | `ls primitives/*.tsx \| grep -v test \| grep -v stories \| grep -v behavior \| wc -l`             |
+
+所有指标与初始建档一致，无变化。
+
+### Phase 0 调整
+
+无需调整。v1-25 仍处于 blocked 状态（依赖 v1-24），Phase 0 准备任务保持不变。解除阻塞后需重新评估 v1-24 新增组件的 component token 范围。
