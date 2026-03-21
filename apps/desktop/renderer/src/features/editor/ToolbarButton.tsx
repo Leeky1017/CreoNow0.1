@@ -33,13 +33,15 @@ export function ToolbarButton({
         {...createToggleButtonA11yProps({ label, pressed: isActive })}
         disabled={disabled}
         onClick={onClick}
-        className={`
-          flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]
-          transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none
-          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]
-          ${isActive ? "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]" : "text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]"}
-          ${disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer"}
-        `}
+        className={[
+          "flex h-7 w-7 items-center justify-center rounded-[var(--radius-sm)]",
+          "transition-colors duration-[var(--duration-fast)] motion-reduce:transition-none",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring-focus)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--color-bg-surface)]",
+          isActive
+            ? "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]"
+            : "text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] hover:text-[var(--color-fg-default)]",
+          disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer",
+        ].join(" ")}
       >
         {children}
       </Button>

@@ -31,14 +31,12 @@ export function WriteButton(props: {
           data-testid="write-button-trigger"
           disabled={props.disabled}
           onClick={props.onClick}
-          className={`
-            pointer-events-auto inline-flex min-w-22 items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors
-            ${
-              props.disabled
-                ? "cursor-not-allowed border-[var(--color-border-default)] bg-[var(--color-bg-raised)] text-[var(--color-fg-muted)] opacity-70"
-                : "cursor-pointer border-[var(--color-border-accent)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
-            }
-          `}
+          className={[
+            "pointer-events-auto inline-flex min-w-22 items-center justify-center rounded-[var(--radius-md)] border px-3 py-1.5 text-xs font-semibold transition-colors",
+            props.disabled
+              ? "cursor-not-allowed border-[var(--color-border-default)] bg-[var(--color-bg-raised)] text-[var(--color-fg-muted)] opacity-70"
+              : "cursor-pointer border-[var(--color-border-accent)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]",
+          ].join(" ")}
         >
           {props.running
             ? t("editor.writeButton.writing")

@@ -80,15 +80,13 @@ function ToolButton(props: {
     <Button
       data-testid={props.testId}
       type="button"
-      className={`
-        focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
-        transition-colors cursor-pointer
-        ${
-          props.active
-            ? "text-[var(--color-fg-default)] bg-[var(--color-bg-selected)]"
-            : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
-        }
-      `}
+      className={[
+        "focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]",
+        "transition-colors cursor-pointer",
+        props.active
+          ? "text-[var(--color-fg-default)] bg-[var(--color-bg-selected)]"
+          : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]",
+      ].join(" ")}
       onClick={props.onClick}
     >
       {props.children}

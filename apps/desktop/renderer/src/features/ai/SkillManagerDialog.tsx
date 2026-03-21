@@ -9,6 +9,7 @@ import { i18n } from "../../i18n";
 import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { Button } from "../../components/primitives/Button";
+import { Checkbox } from "../../components/primitives/Checkbox";
 import { Input } from "../../components/primitives/Input";
 import { Textarea } from "../../components/primitives/Textarea";
 import { Select } from "../../components/primitives/Select";
@@ -247,21 +248,17 @@ function SkillFormFields(props: {
         )}
       </Label>
 
-      <Label className="flex items-center gap-2 text-xs text-[var(--color-fg-muted)]">
-        {/* eslint-disable-next-line creonow/no-native-html-element -- <input type="checkbox"> 无对应 Primitive */}
-        <input
-          type="checkbox"
-          checked={props.form.enabled}
-          onChange={(e) =>
-            props.onFormChange((prev) => ({
-              ...prev,
-              enabled: e.target.checked,
-            }))
-          }
-          data-testid="skill-form-enabled"
-        />
-        {t("ai.skillManager.enableSkill")}
-      </Label>
+      <Checkbox
+        checked={props.form.enabled}
+        onCheckedChange={(val) =>
+          props.onFormChange((prev) => ({
+            ...prev,
+            enabled: val === true,
+          }))
+        }
+        label={t("ai.skillManager.enableSkill")}
+        data-testid="skill-form-enabled"
+      />
     </section>
   );
 }

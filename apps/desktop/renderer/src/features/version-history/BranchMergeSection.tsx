@@ -4,6 +4,7 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "../../components/primitives/Button";
 import { Input } from "../../components/primitives/Input";
+import { RadioGroup } from "../../components/primitives/Radio";
 import type { BranchMergeConflict } from "../../stores/versionStore";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import type { IpcError } from "@shared/types/ipc-generated";
@@ -65,39 +66,33 @@ function BranchConflictItem(props: {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3 text-[11px] text-[var(--color-fg-default)]">
-        <Label className="inline-flex items-center gap-1">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- <input type="radio"> 无对应 Primitive */}
-          <input
-            type="radio"
-            name={`resolution-${conflict.conflictId}`}
-            checked={selected.resolution === "ours"}
-            onChange={() => onResolutionChange(conflict.conflictId, "ours")}
-          />
-          {t("versionHistory.container.useOurs")}
-        </Label>
-        <Label className="inline-flex items-center gap-1">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- <input type="radio"> 无对应 Primitive */}
-          <input
-            type="radio"
-            name={`resolution-${conflict.conflictId}`}
-            checked={selected.resolution === "theirs"}
-            onChange={() => onResolutionChange(conflict.conflictId, "theirs")}
-          />
-          {t("versionHistory.container.useTheirs")}
-        </Label>
-        <Label className="inline-flex items-center gap-1">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- <input type="radio"> 无对应 Primitive */}
-          <input
-            data-testid={`branch-conflict-manual-${conflict.conflictId}`}
-            type="radio"
-            name={`resolution-${conflict.conflictId}`}
-            checked={selected.resolution === "manual"}
-            onChange={() => onResolutionChange(conflict.conflictId, "manual")}
-          />
-          {t("versionHistory.container.useManual")}
-        </Label>
-      </div>
+      <RadioGroup
+        name={`resolution-${conflict.conflictId}`}
+        value={selected.resolution}
+        onValueChange={(val) =>
+          onResolutionChange(
+            conflict.conflictId,
+            val as "ours" | "theirs" | "manual",
+          )
+        }
+        orientation="horizontal"
+        size="sm"
+        className="text-[11px] text-[var(--color-fg-default)]"
+        options={[
+          {
+            value: "ours",
+            label: t("versionHistory.container.useOurs"),
+          },
+          {
+            value: "theirs",
+            label: t("versionHistory.container.useTheirs"),
+          },
+          {
+            value: "manual",
+            label: t("versionHistory.container.useManual"),
+          },
+        ]}
+      />
       {selected.resolution === "manual" ? (
         <Textarea
           data-testid={`branch-conflict-manual-text-${conflict.conflictId}`}
