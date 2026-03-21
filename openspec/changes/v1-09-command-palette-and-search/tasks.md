@@ -410,3 +410,64 @@ className={cn(
 | AC-1~AC-4                | 🔲 待实现   | CommandPalette 视觉精修（分组线、左蓝线、快捷键 pill、图标颜色）      |
 | AC-6~AC-9                | 🔲 待实现   | SearchPanel 视觉精修（filter pills、match highlight、toggle、指示条） |
 | AC-10~AC-11, AC-13~AC-15 | 🔲 待验证   | Design Token / 键盘导航 / Storybook / typecheck / lint 在实现阶段执行 |
+
+## R4 Cascade Refresh (2026-03-21)
+
+### 上游依赖确认
+
+- ✅ v1-01 Design Token 补完：已就绪（`--color-info`、`--color-accent`、`--color-success`、`--color-warning`、`--color-info-subtle`、`--shadow-sm` 等 token 可用）
+- ✅ v1-02 Primitive 进化：已就绪（Toggle 组件使用 `rounded-full`、`transition-all`、`duration-[var(--duration-slow)]`）
+- ✅ v1-06 AI Panel Overhaul：PASS（上游无回归）
+- ✅ v1-07 Settings Visual Polish：PASS（上游无回归）
+
+### 基线指标更新
+
+| 指标 | R3 值 | R4 实测值 | 说明 |
+| --- | --- | --- | --- |
+| CommandPalette.tsx 行数 | 283 | **283** | 无变化，✅ ≤300 |
+| CommandPalette inline styles | 0 | **0** | 无变化，✅ AC-5 |
+| CommandPalette 模块总行数 | 3,170 | **3,170** | 无变化 |
+| CommandPaletteFooter.tsx | 38 | **38** | 无变化 |
+| commandPaletteCommands.tsx | 231 | **231** | 无变化 |
+| commandPaletteHelpers.tsx | 95 | **95** | 无变化 |
+| fuzzyMatch.ts | 160 | **160** | 无变化 |
+| CommandPalette 测试 | 5 文件 / 57 测试 | **5 文件 / 57 测试全通过** | 无回归 |
+| SearchPanel.tsx 行数 | 294 | **294** | 无变化，✅ ≤300 |
+| SearchPanel inline styles | 0 | **0** | 无变化，✅ AC-5 |
+| SearchPanel 模块总行数 | 2,807 | **2,807** | 无变化 |
+| SearchPanelParts.tsx | 175 | **175** | 无变化 |
+| SearchResultItems.tsx | 245 | **245** | 无变化 |
+| SearchResultsArea.tsx | 180 | **180** | 无变化 |
+| SearchPanel 测试 | 9 文件 / 30 测试 | **9 文件 / 30 测试全通过** | 无回归 |
+| 生产代码硬编码色值 | — | **0**（仅 stories 中存在） | ✅ AC-10 |
+
+### AC 状态评估
+
+> R3 将 AC-1\~AC-4、AC-6\~AC-9 标为「🔲 待实现」。R4 独立复查发现，这些视觉特性的基础实现**已存在于代码中**，但部分实现细节与 proposal spec 存在偏差。以下逐项重新评估。
+
+| AC | 状态 | R3 状态 | R4 说明 |
+| --- | --- | --- | --- |
+| AC-1 | ✅ 已实现 | 🔲 待实现 | `CommandPalette.tsx:238-244` 有 `/* Group header (AC-1) */` 注释 + `text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-muted)]` section header + `h-px bg-[var(--color-border-default)]` 分隔线。完全匹配 spec。 |
+| AC-2 | ✅ 已实现（偏差） | 🔲 待实现 | `CommandItem` 组合组件（`components/composites/CommandItem.tsx:105`）有 `w-0.5 bg-[var(--color-accent-blue)]` 左侧指示条。实现方式为绝对定位 2px bar 而非 `border-l-2`；token 为 `--color-accent-blue` 而非 spec 的 `--color-info`。功能等效，视觉效果一致。测试已覆盖（`"active 项应该有左侧Blue指示器"`）。 |
+| AC-3 | ✅ 已实现 | 🔲 待实现 | `CommandPalette.tsx:267` 通过 `hint={item.shortcut}` 传递快捷键给 `CommandItemComposite`。快捷键数据在 `commandPaletteCommands.tsx` 中定义（6 个命令有 shortcut）。 |
+| AC-4 | ✅ 已实现 | 🔲 待实现 | `commandPaletteTypes.ts:122-128` 定义了 7 个分组颜色映射：suggestions=`--color-info`、layout=`--color-warning`、document=`--color-success`、project=`--color-info`、command=`--color-fg-muted`、file=`--color-success`、recent=`--color-fg-muted`。满足"至少 4 类差异化颜色"要求。 |
+| AC-5 | ✅ R4 确认 | ✅ 已满足 | `grep -cn 'style={{' CommandPalette.tsx` = 0, `SearchPanel.tsx` = 0。 |
+| AC-6 | ✅ 已实现（偏差） | 🔲 待实现 | `SearchPanelParts.tsx:24` active pill 使用 `!bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] shadow-[var(--shadow-lg)]`。使用 `--shadow-lg` 而非 spec 的 `--shadow-sm`；采用实底蓝背景而非仅蓝色文字。设计意图更强，可接受为设计微调。 |
+| AC-7 | ✅ R4 确认 | 🔲 待实现 | `SearchResultItems.tsx:39` 使用 `bg-[var(--color-info-subtle)] text-[var(--color-info)]`。正确使用 `--color-info-subtle` token。 |
+| AC-8 | ✅ R4 确认 | 🔲 待实现 | `SearchPanelParts.tsx:99-106` 使用 Primitive `Toggle` 组件。Toggle 组件有 `rounded-full`、`transition-all`、`duration-[var(--duration-slow)]`。使用 token 化 duration 而非硬编码 0.2s，符合 Design Token 体系。 |
+| AC-9 | ✅ R4 确认 | 🔲 待实现 | `SearchResultItems.tsx:77` 使用 `w-0.5 bg-[var(--color-info)]`。`w-0.5` = 2px，使用正确 token。spec 允许 2px 或 3px，当前 2px 合规。 |
+| AC-10 | ✅ R4 确认 | 🔲 待验证 | 生产代码中 0 处硬编码 hex 色值（`bg-[#...] / text-[#...] / border-[#...]`）。硬编码色值仅存在于 stories 中（non-goal 范围）。 |
+| AC-11 | ✅ R4 确认 | 🔲 待验证 | 键盘导航通过 `flatItems` 数组实现，该数组仅包含命令项不含 group header。Group header 在 JSX 中独立渲染，不参与 `activeIndex` 计算。键盘 ↑/↓ 天然跳过 header——结构正确性保证。 |
+| AC-12 | ✅ R4 确认 | ✅ 基线良好 | CommandPalette 57 + SearchPanel 30 = **87 测试全通过**，0 失败。 |
+| AC-13 | 🔲 待验证 | 🔲 待验证 | Storybook 构建未在本轮执行（非度量命令范围）。 |
+| AC-14 | 🔲 待验证 | 🔲 待验证 | TypeScript 类型检查未在本轮执行。 |
+| AC-15 | 🔲 待验证 | 🔲 待验证 | lint 检查未在本轮执行。 |
+| AC-16 | ✅ R4 确认 | ✅ 已满足 | CommandPalette.tsx **283 行** ≤ 300。子文件均 ≤ 300（最大 231 行）。 |
+| AC-17 | ✅ R4 确认 | ✅ 已满足 | SearchPanel.tsx **294 行** ≤ 300。子文件均 ≤ 300（最大 245 行）。 |
+
+### R4 发现与偏差记录
+
+1. **AC-2 token 偏差（低风险）**：使用 `--color-accent-blue` 而非 spec 的 `--color-info`。两者在当前主题下视觉效果一致（均为蓝色系），但跨主题行为可能不同。建议实现阶段确认是否需要统一。
+2. **AC-6 shadow 偏差（低风险）**：使用 `--shadow-lg` 而非 spec 的 `--shadow-sm`，且 active pill 采用实底蓝背景。这可能是有意的设计增强——视觉区分度更高。
+3. **R3 评估修正**：R3 将 AC-1\~AC-4、AC-6\~AC-9 标为「🔲 待实现」，R4 独立验证后发现这些特性均已有基础实现。R3 可能因搜索范围限于主文件（未追踪组合组件和类型文件）而漏判。
+4. **无新增问题**：所有基线指标与 R3 完全一致，0 回归。

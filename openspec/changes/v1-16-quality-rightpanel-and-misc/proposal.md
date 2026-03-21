@@ -147,3 +147,92 @@ Diff 模块 7 个文件共 1,423 行，单个文件都不大但风格需要与 v
 | QualityGatesPanel 拆分可能影响规则检查功能  | 逻辑提取到 useQualityGates hook，UI 层仅渲染                 |
 | Diff 模块文件虽小但文件多（7 个），改动面广 | 先统一 Design Token 引用，再逐文件微调                       |
 | 低频页面（Analytics/ZenMode）投入回报低     | 这些页面改动量小（总共 ~550 行），视觉对齐即可，不做深度重构 |
+
+---
+
+## R4 Cascade Refresh (2025-07-21)
+
+### 上游依赖状态
+
+| 上游 Change | 状态 | 说明 |
+| --- | --- | --- |
+| v1-08 FileTree Precision | ✅ PASS | R4 复核确认 |
+| v1-09 CommandPalette+Search | ✅ PASS | R4 复核确认 |
+
+### 基线指标更新
+
+#### Part A: Quality 面板（偏差 >30%，已完成拆分重构）
+
+| 文件 | proposal 基线 | R4 实测 | 偏差 | 采集命令 |
+| --- | --- | --- | --- | --- |
+| `QualityGatesPanel.tsx` | 967 行 | **184 行** | **-80.9%** | `wc -l apps/desktop/renderer/src/features/quality-gates/QualityGatesPanel.tsx` |
+| `QualityRuleList.tsx` | (计划提取) | **217 行** | 已提取 | 同上 |
+| `QualityCheckItems.tsx` | (未在计划中) | **299 行** | 新增文件 | 同上 |
+| `qualityGatesTypes.ts` | (未在计划中) | **101 行** | 新增文件 | 同上 |
+| quality-gates 目录总行数 | ~967 | **2337** (含 test+stories) | — | `find … \| xargs wc -l` |
+| `QualityPanel.tsx` | 575 行 | **238 行** | **-58.6%** | `wc -l apps/desktop/renderer/src/features/rightpanel/QualityPanel.tsx` |
+| `QualityPanelSections.tsx` | (计划提取) | **295 行** | 已提取 | 同上 |
+| `InfoPanel.tsx` | 301 行 | **266 行** | -11.6% | `wc -l apps/desktop/renderer/src/features/rightpanel/InfoPanel.tsx` |
+
+> **分析**: QualityGatesPanel（967→184）和 QualityPanel（575→238）已完成破坏性重构拆分，偏差均 >30%。
+> 拆分方案与 proposal 计划略有不同——实际提取了 `QualityCheckItems.tsx`（299 行）而非 `QualityResultCard.tsx`，
+> 但职责一致（检查结果渲染）。`qualityGatesTypes.ts`（101 行）为类型定义提取。
+> InfoPanel 从 301→266 行，缩减 -11.6%，在阈值内。
+
+#### Part B: Diff 模块（偏差 0%，未变动）
+
+| 文件 | proposal 基线 | R4 实测 | 偏差 | 采集命令 |
+| --- | --- | --- | --- | --- |
+| `DiffView.tsx` | 345 行 | **345 行** | 0% | `find … -name '*.tsx' -exec wc -l {} \; \| sort -rn` |
+| `DiffHeader.tsx` | 260 行 | **260 行** | 0% | 同上 |
+| `SplitDiffView.tsx` | 244 行 | **244 行** | 0% | 同上 |
+| `DiffViewPanel.tsx` | 210 行 | **210 行** | 0% | 同上 |
+| `DiffFooter.tsx` | 144 行 | **144 行** | 0% | 同上 |
+| `MultiVersionCompare.tsx` | 121 行 | **121 行** | 0% | 同上 |
+| `VersionPane.tsx` | 99 行 | **99 行** | 0% | 同上 |
+
+> **分析**: Diff 模块 7 个文件行数完全未变，等待 v1-16 实施。
+
+#### Part C: 杂项页面（偏差 <5%，未实质变动）
+
+| 文件 | proposal 基线 | R4 实测 | 偏差 | 采集命令 |
+| --- | --- | --- | --- | --- |
+| `AnalyticsPage.tsx` | 197 行 | **197 行** | 0% | `find … -name 'AnalyticsPage.tsx' \| xargs wc -l` |
+| `ZenMode.tsx` | 226 行 | **226 行** | 0% | 同上 |
+| `ZenModeStatus.tsx` | 121 行 | **122 行** | +0.8% | 同上 |
+| `ShortcutsPanel.tsx` | 66 行 | **66 行** | 0% | 同上 |
+| `AiSettingsSection.tsx` | 245 行 | **243 行** | -0.8% | `find … -name 'AiSettingsSection.tsx' \| xargs wc -l` |
+| `JudgeSection.tsx` | 133 行 | **133 行** | 0% | 同上 |
+| `AppearanceSection.tsx` | 75 行 | **75 行** | 0% | 同上 |
+
+> **分析**: 杂项页面基本无变化，等待 v1-16 实施。
+
+### PanelHeader 采纳状态
+
+| 组件 | 是否使用 PanelHeader | 采集命令 |
+| --- | --- | --- |
+| QualityGatesPanel | ❌ 未采纳 | `grep -rn 'PanelHeader' apps/desktop/renderer/src/features/quality-gates/ --include='*.tsx'` |
+| QualityPanel | ❌ 未采纳 | `grep -rn 'PanelHeader' apps/desktop/renderer/src/features/rightpanel/ --include='*.tsx'` |
+| InfoPanel | ✅ 已采纳 | 同上（第 7/243 行） |
+| DiffViewPanel | ❌ 未采纳 | `grep -rn 'PanelHeader' apps/desktop/renderer/src/features/diff/ --include='*.tsx'` |
+
+### Design Token 违规
+
+- **hardcoded hex (#xxx)**: 仅存在于 Stories 文件（`QualityGatesPanel.stories.tsx:267` 的 `#121212`），非生产代码。
+- **arbitrary pixel values**: Diff 模块和 quality-gates 存在大量 `text-[10px]`/`text-[11px]`/`text-[13px]` 等硬编码字号，以及 `underline-offset-[3px]`、`left-[3px]`、`w-[18px]` 等尺寸残留。这些是 v1-16 实施时需要收口的 pixel 残留。
+
+### 测试状态
+
+| 模块 | 测试结果 | 采集命令 |
+| --- | --- | --- |
+| Quality | **2 files, 32 tests, 全部通过** | `pnpm vitest run --reporter=verbose Quality`（apps/desktop 下执行） |
+| Diff | **8 files, 59 tests, 全部通过** | `pnpm vitest run --reporter=verbose Diff`（apps/desktop 下执行） |
+
+### 刷新结论
+
+**轻度刷新**——Part A 因已完成重构偏差 >30%，但属正向完成，无需升级为全面刷新。Part B/C 偏差均 <5%，proposal 基线仍然有效。
+
+待 v1-16 实施时重点关注：
+1. QualityGatesPanel / QualityPanel / DiffViewPanel 均未采纳 PanelHeader（AC-2/AC-5/AC-9）
+2. Diff 模块 pixel 残留较多，需系统性替换为 Design Token 字号变量
+3. DiffView.tsx（345 行）仍是 Diff 模块最大文件，但未超标（proposal 未要求拆分）

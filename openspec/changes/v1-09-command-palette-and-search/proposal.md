@@ -184,3 +184,58 @@ CommandPalette.tsx 已从 ~730 行拆分至 **283 行**，SearchPanel.tsx 从 ~9
 
 **已完成部分**：组件解耦拆分、inline style 迁移。
 **剩余工作聚焦**：视觉精修——CommandPalette 的分组分隔线、active 左蓝线、快捷键 pill、分类图标颜色；SearchPanel 的 filter pills active 样式、match highlight 颜色、toggle 对齐、指示条宽度。
+
+## R4 Cascade Refresh (2026-03-21)
+
+### 上游依赖状态
+
+| 上游 Change | 状态 | 说明 |
+| --- | --- | --- |
+| v1-01 Design Token 补完 | ✅ PASS | `--color-info`、`--color-accent`、`--color-success`、`--color-warning`、`--color-info-subtle`、`--shadow-sm` 等 token 可用 |
+| v1-02 Primitive 进化 | ✅ PASS | Toggle 组件使用 `rounded-full` + `transition-all` + `duration-[var(--duration-slow)]` |
+| v1-06 AI Panel Overhaul | ✅ PASS | 上游无回归 |
+| v1-07 Settings Visual Polish | ✅ PASS | 上游无回归 |
+
+### 基线指标更新
+
+| 指标 | R3 值 | R4 实测值 | 趋势 | 采集命令 |
+| --- | --- | --- | --- | --- |
+| CommandPalette.tsx 行数 | 283 | **283** | ➡️ 无变化 | `wc -l .../CommandPalette.tsx` |
+| CommandPalette inline styles | 0 | **0** | ➡️ 无变化 | `grep -cn 'style={{' .../CommandPalette.tsx` |
+| CommandPalette 模块总行数 | 3,170 | **3,170** | ➡️ 无变化 | `find .../commandPalette/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l` |
+| CommandPaletteFooter.tsx | 38 | **38** | ➡️ 无变化 | `wc -l .../CommandPaletteFooter.tsx` |
+| commandPaletteCommands.tsx | 231 | **231** | ➡️ 无变化 | `wc -l .../commandPaletteCommands.tsx` |
+| commandPaletteHelpers.tsx | 95 | **95** | ➡️ 无变化 | `wc -l .../commandPaletteHelpers.tsx` |
+| fuzzyMatch.ts | 160 | **160** | ➡️ 无变化 | `wc -l .../fuzzyMatch.ts` |
+| CommandPalette 测试 | 5 文件 / 57 测试 | **5 文件 / 57 测试全通过** | ✅ 无回归 | `npx vitest run --reporter=verbose CommandPalette` |
+| SearchPanel.tsx 行数 | 294 | **294** | ➡️ 无变化 | `wc -l .../SearchPanel.tsx` |
+| SearchPanel inline styles | 0 | **0** | ➡️ 无变化 | `grep -cn 'style={{' .../SearchPanel.tsx` |
+| SearchPanel 模块总行数 | 2,807 | **2,807** | ➡️ 无变化 | `find .../search/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l` |
+| SearchPanelParts.tsx | 175 | **175** | ➡️ 无变化 | `wc -l .../SearchPanelParts.tsx` |
+| SearchResultItems.tsx | 245 | **245** | ➡️ 无变化 | `wc -l .../SearchResultItems.tsx` |
+| SearchResultsArea.tsx | 180 | **180** | ➡️ 无变化 | `wc -l .../SearchResultsArea.tsx` |
+| SearchPanel 测试 | 9 文件 / 30 测试 | **9 文件 / 30 测试全通过** | ✅ 无回归 | `npx vitest run --reporter=verbose SearchPanel` |
+| 生产代码硬编码色值 | — | **0**（仅 stories） | ✅ AC-10 | `grep -rn '#[0-9a-fA-F]{3,8}' .../commandPalette/ .../search/ --include='*.tsx'` |
+
+### 分析
+
+所有基线指标与 R3 **完全一致**，0 回归、0 劣化。
+
+**R3 评估修正**：R3 将 AC-1\~AC-4（CommandPalette 视觉精修）和 AC-6\~AC-9（SearchPanel 视觉精修）标为「🔲 待实现」。R4 独立复查发现，这些特性的基础实现**均已存在**：
+
+- **AC-1**：`CommandPalette.tsx:238-244` 有完整的 section header（10px uppercase + 分隔线），代码注释 `/* Group header (AC-1) */`。
+- **AC-2**：`CommandItem` 组合组件有 `w-0.5 bg-[var(--color-accent-blue)]` 左侧蓝色指示条，测试覆盖。与 spec 的偏差：token 为 `--color-accent-blue` 而非 `--color-info`，实现方式为绝对定位 bar 而非 `border-l-2`。
+- **AC-3**：通过 `hint={item.shortcut}` 传递快捷键给 `CommandItemComposite`，6 个命令有 shortcut 数据。
+- **AC-4**：`commandPaletteTypes.ts:122-128` 有 7 组颜色映射（info/warning/success/fg-muted），覆盖 ≥4 类差异化颜色。
+- **AC-6**：`SearchPanelParts.tsx:24` active pill 使用 `shadow-[var(--shadow-lg)]`（spec 为 `--shadow-sm`），采用实底蓝背景（设计增强）。
+- **AC-7**：`SearchResultItems.tsx:39` 正确使用 `bg-[var(--color-info-subtle)]` token。
+- **AC-8**：使用 Primitive `Toggle` 组件（`rounded-full` + `transition-all`）。
+- **AC-9**：`SearchResultItems.tsx:77` 使用 `w-0.5 bg-[var(--color-info)]`（2px，合规）。
+
+R3 可能因搜索范围限于主文件（未追踪 `CommandItem` 组合组件、`commandPaletteTypes.ts`、`SearchPanelParts.tsx`）而漏判。
+
+**偏差记录**（低风险，不阻断）：
+1. AC-2：`--color-accent-blue` vs spec 的 `--color-info`，跨主题行为待确认
+2. AC-6：`--shadow-lg` vs spec 的 `--shadow-sm`，可能为有意设计增强
+
+**剩余待验证**：AC-13（Storybook）、AC-14（typecheck）、AC-15（lint）需在实现阶段全量执行。
