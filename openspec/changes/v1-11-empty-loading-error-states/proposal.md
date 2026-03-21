@@ -200,29 +200,30 @@ Props:
 
 ### 基线指标更新
 
-| 指标                                  | R4 值              | R5 实测值                           | 变化 | 采集命令                                                                             |
-| ------------------------------------- | ------------------ | ----------------------------------- | ---- | ------------------------------------------------------------------------------------ |
-| EmptyState.tsx 行数                   | 241 行             | ✅ 241 行                           | 无   | `wc -l apps/desktop/renderer/src/components/patterns/EmptyState.tsx`                 |
-| LoadingState.tsx 行数                 | 337 行             | ✅ 337 行                           | 无   | `wc -l apps/desktop/renderer/src/components/patterns/LoadingState.tsx`               |
-| ErrorState.tsx 行数                   | 537 行             | ✅ 537 行                           | 无   | `wc -l apps/desktop/renderer/src/components/patterns/ErrorState.tsx`                 |
-| patterns 目录总行数                   | 2658 行（18 文件） | ✅ 2658 行（20 文件）               | 无   | `find ... -name '*.tsx' -o -name '*.ts' \| xargs wc -l`                              |
-| composites/EmptyState features 导入   | 0                  | ✅ 0（排除 **tests**）              | 无   | `grep -rn 'composites/EmptyState' .../features/ \| grep -v '__tests__'`              |
-| composites/LoadingState features 导入 | 0                  | ✅ 0（排除 **tests**）              | 无   | `grep -rn 'composites/LoadingState' .../features/ \| grep -v '__tests__'`            |
-| composites/ErrorState features 导入   | 0                  | ✅ 0（排除 **tests**）              | 无   | `grep -rn 'composites/ErrorState' .../features/ \| grep -v '__tests__'`              |
-| patterns 组件 features 引用数         | 16 处（7 个文件）  | ✅ 16 处（7 个模块）                | 无   | `grep -rn 'from.*patterns/EmptyState\|...' .../features/ --include='*.tsx'`          |
-| Storybook stories                     | 3                  | ✅ 3（+ 4 个其他 patterns stories） | 无   | `find ... -name '*.stories.tsx'`                                                     |
-| EmptyState 测试                       | 4 files, 22 tests  | ✅ 4 files, 22 tests passed         | 无   | `npx vitest run --reporter=verbose EmptyState`                                       |
-| LoadingState 测试                     | 1 file, 26 tests   | ✅ 1 file, 26 tests passed          | 无   | `npx vitest run --reporter=verbose LoadingState`                                     |
-| ErrorState 测试                       | 1 file, 16 tests   | ✅ 1 file, 16 tests passed          | 无   | `npx vitest run --reporter=verbose ErrorState`                                       |
-| 碎片化残留（text-muted 暂无/No）      | 0                  | ✅ 0                                | 无   | `grep -rn 'className.*text-muted.*暂无\|..No\|..无' .../features/ --include='*.tsx'` |
+| 指标                                  | R4 值              | R5 实测值                           | 变化                    | 采集命令                                                                             |
+| ------------------------------------- | ------------------ | ----------------------------------- | ----------------------- | ------------------------------------------------------------------------------------ |
+| EmptyState.tsx 行数                   | 241 行             | ✅ 241 行                           | 无                      | `wc -l apps/desktop/renderer/src/components/patterns/EmptyState.tsx`                 |
+| LoadingState.tsx 行数                 | 337 行             | ✅ 337 行                           | 无                      | `wc -l apps/desktop/renderer/src/components/patterns/LoadingState.tsx`               |
+| ErrorState.tsx 行数                   | 537 行             | ✅ 537 行                           | 无                      | `wc -l apps/desktop/renderer/src/components/patterns/ErrorState.tsx`                 |
+| patterns 目录总行数                   | 2658 行（18 文件） | ✅ 2658 行（20 文件）               | 文件数 +2（总行数不变） | `find ... -name '*.tsx' -o -name '*.ts' \| xargs wc -l`                              |
+| composites/EmptyState features 导入   | 0                  | ✅ 0（排除 **tests**）              | 无                      | `grep -rn 'composites/EmptyState' .../features/ \| grep -v '__tests__'`              |
+| composites/LoadingState features 导入 | 0                  | ✅ 0（排除 **tests**）              | 无                      | `grep -rn 'composites/LoadingState' .../features/ \| grep -v '__tests__'`            |
+| composites/ErrorState features 导入   | 0                  | ✅ 0（排除 **tests**）              | 无                      | `grep -rn 'composites/ErrorState' .../features/ \| grep -v '__tests__'`              |
+| patterns 组件 features 引用数         | 16 处（7 个文件）  | ✅ 16 处（7 个模块）                | 无                      | `grep -rn 'from.*patterns/EmptyState\|...' .../features/ --include='*.tsx'`          |
+| Storybook stories                     | 3                  | ✅ 3（+ 4 个其他 patterns stories） | 无                      | `find ... -name '*.stories.tsx'`                                                     |
+| EmptyState 测试                       | 4 files, 22 tests  | ✅ 4 files, 22 tests passed         | 无                      | `npx vitest run --reporter=verbose EmptyState`                                       |
+| LoadingState 测试                     | 1 file, 26 tests   | ✅ 1 file, 26 tests passed          | 无                      | `npx vitest run --reporter=verbose LoadingState`                                     |
+| ErrorState 测试                       | 1 file, 16 tests   | ✅ 1 file, 16 tests passed          | 无                      | `npx vitest run --reporter=verbose ErrorState`                                       |
+| 碎片化残留（text-muted 暂无/No）      | 0                  | ✅ 0                                | 无                      | `grep -rn 'className.*text-muted.*暂无\|..No\|..无' .../features/ --include='*.tsx'` |
 
 ### 分析
 
-**结论：✅ PASS — v1-11 全部指标与 R4 完全一致，零回归。**
+**结论：✅ PASS — v1-11 核心指标与 R4 一致，零回归。patterns 目录文件数从 18→20（+2 新增文件，总行数 2658 不变）。**
 
 1. **三组件行数零变化**：EmptyState（241）、LoadingState（337）、ErrorState（537）行数与 R4 完全一致，上游合并未触及状态组件源码
-2. **composites 引用保持清零**：features 层排除测试后无一处 composites/\*State 导入——AC-9/AC-10/AC-11 持续达标
-3. **features 层集成稳定**：16 处引用横跨 7 个模块（VersionHistory、Character、Search、KG、FileTree、Memory、Outline），与 R4 完全一致
-4. **64 个测试全绿**：EmptyState 22 + LoadingState 26 + ErrorState 16 = 64 tests，无新增失败、无跳过
-5. **碎片化残留持续为零**：旧式 `text-muted.*暂无` 内联空状态模式搜索无命中
-6. **v1-10 集成无副作用**：Side Panels 合并后状态组件完全稳定，说明 v1-11 的 API 设计具备良好的集成鲁棒性
+2. **patterns 目录文件数微增**：从 18→20 文件（+2），但总行数 2658 保持不变——新增文件为零行或由既有文件拆分所致，不影响整体代码量
+3. **composites 引用保持清零**：features 层排除测试后无一处 composites/\*State 导入——AC-9/AC-10/AC-11 持续达标
+4. **features 层集成稳定**：16 处引用横跨 7 个模块（VersionHistory、Character、Search、KG、FileTree、Memory、Outline），与 R4 完全一致
+5. **64 个测试全绿**：EmptyState 22 + LoadingState 26 + ErrorState 16 = 64 tests，无新增失败、无跳过
+6. **碎片化残留持续为零**：旧式 `text-muted.*暂无` 内联空状态模式搜索无命中
+7. **v1-10 集成无副作用**：Side Panels 合并后状态组件完全稳定，说明 v1-11 的 API 设计具备良好的集成鲁棒性

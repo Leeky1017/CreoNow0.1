@@ -221,7 +221,7 @@
 ### 上游依赖确认
 
 - ✅ v1-11 Empty/Loading/Error States: R5 PASS（EmptyState 241, LoadingState 337, ErrorState 537; 64 tests 全绿）
-- ✅ v1-10 Editor Infrastructure: R5 PASS（169 tests 全绿，零回归）
+- ✅ v1-10 Side Panels: R5 PASS（169 tests 全绿，零回归）
 - ✅ v1-16 Quality & Diff Guards: R5 PASS（Quality 32 tests, Diff 59 tests 全绿）
 - v1-11 报告 16 feature integrations 中含 v1-15 AiErrorCard 与 ErrorState 的潜在交集——经评估为职责正交（AI 领域特定 vs. 通用），无需响应
 
