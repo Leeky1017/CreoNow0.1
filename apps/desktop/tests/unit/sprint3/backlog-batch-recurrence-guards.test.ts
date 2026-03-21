@@ -33,17 +33,17 @@ assert.match(
   "A3-L-001: precise assertion must exist",
 );
 
-const appShell = readFromRepo(
+const appShellOverlays = readFromRepo(
   repoRoot,
-  "apps/desktop/renderer/src/components/layout/AppShell.tsx",
+  "apps/desktop/renderer/src/components/layout/AppShellOverlays.tsx",
 );
 assert.match(
-  appShell,
+  appShellOverlays,
   /console\.warn\(/,
   "A2-L-001: AppShell JSON parse failures must emit warning",
 );
 assert.match(
-  appShell,
+  appShellOverlays,
   /hasWarnedInvalidZenContent|warnedInvalidZenContent/,
   "A2-L-001: warning must be one-time guarded",
 );
