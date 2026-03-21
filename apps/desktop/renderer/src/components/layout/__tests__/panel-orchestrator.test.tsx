@@ -70,9 +70,14 @@ describe("WB-P2-S5/S6 PanelOrchestrator orchestration", () => {
 
   it("AppShell delegates panel collapse state writes to orchestrator helpers (WB-P2-S5/S6)", () => {
     const appShellSource = readSource("../AppShell.tsx");
+    const layoutHookSource = readSource("../useAppShellLayout.ts");
 
-    expect(appShellSource).toContain("usePanelVisibilityActions");
+    // usePanelVisibilityActions is called in the extracted layout hook
+    expect(layoutHookSource).toContain("usePanelVisibilityActions");
+    // Neither AppShell nor its layout hook directly call low-level collapse setters
     expect(appShellSource).not.toContain("setSidebarCollapsed");
     expect(appShellSource).not.toContain("setPanelCollapsed");
+    expect(layoutHookSource).not.toContain("setSidebarCollapsed");
+    expect(layoutHookSource).not.toContain("setPanelCollapsed");
   });
 });
