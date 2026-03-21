@@ -114,3 +114,34 @@ Settings 左侧导航的 active 项增加 glow 背景或左侧边栏指示器，
 - **上游依赖**: v1-01（Design Token 补完）提供 typography scale token、animation token；v1-02（Primitive 进化）提供 Toggle 增强动效、Tabs 底线指示器
 - **下游影响**: v1-11（空/加载/错误状态统一）可能需要在 Settings 页添加加载状态；v1-12（交互动效收口）将复用本 change 中的 hover / transition 模式
 - **风险控制**: 本 change 涉及的文件行数较少（核心改动集中在 SettingsAppearancePage 265 行 + SettingsDialog 486 行），风险可控。但色板 Token 化需注意：色板值是用户功能选择，Token 化方案需确保用户选中的颜色值仍能正确持久化和回显
+
+---
+
+## R2 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+R2 P1 复核 v1-03/04/05 → 级联刷新下游。v1-07 已于之前合并到 main。
+
+### 实现后基线（R2 重采集）
+
+| 度量                                  | 原始基线 | R2 实际  | 状态 |
+| ------------------------------------- | -------- | -------- | ---- |
+| SettingsDialog.tsx 行数               | 486      | 297      | ✅   |
+| SettingsAppearancePage.tsx 行数        | 265      | 249      | ✅   |
+| 硬编码 hex 值（SettingsAppearancePage）| 10       | 0        | ✅   |
+| SettingsNavigation.tsx（提取）         | —        | 103      | ✅   |
+| accentPalette.ts（新建）              | —        | 49       | ✅   |
+| Settings-dialog 模块总行数            | 2,420    | 1,753    | ↓28% |
+
+### 残余技术债
+
+| 类型               | 数量 | 归属 |
+| ------------------ | ---- | ---- |
+| Arbitrary values   | 33   | v1-18 |
+| eslint-disable     | 6    | v1-13 |
+| Native HTML 元素   | 4    | v1-12 |
+
+### 结论
+
+v1-07 核心 AC（hex 清零 + 拆分 + 视觉精修）已达成。SettingsDialog.tsx 297 行，恰好在 ≤300 目标内。

@@ -234,3 +234,33 @@
 - **基线重采集**: 所有 14 个关键文件行数与合并时记录完全一致，editor/ 目录总行数 9,406 行（含测试），零偏差
 - **AC 影响**: 无。12/12 AC 维持 ✅ 达成
 - **结论**: v1-02 对 v1-05 无影响，无需任何调整
+
+---
+
+## R2 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+R2 P1 复核：v1-03/04/05 Phase 1 并行复核。重新采集所有度量基线。
+
+### 复测结论
+
+- **所有 12 项 AC 保持达标**，零退化
+- **基线 R1→R2 零偏差**：
+
+| 文件                         | R1     | R2     | Delta |
+| ---------------------------- | ------ | ------ | ----- |
+| EditorPane.tsx               | 232    | 232    | 0     |
+| useEditorSetup.ts            | 290    | 290    | 0     |
+| InlineAiOverlay.tsx          | 200    | 200    | 0     |
+| EntityCompletionPanel.tsx    | 86     | 86     | 0     |
+| useEntityCompletion.ts       | 269    | 269    | 0     |
+| SlashCommandPanel.tsx        | 84     | 84     | 0     |
+| slashCommands.ts             | 107    | 107    | 0     |
+| useEditorKeybindings.ts      | 219    | 219    | 0     |
+| editor/ 目录总行数（含测试） | 9,406  | 9,406  | 0     |
+| editor/ prod 总行数          | —      | 4,510  | —     |
+
+- **偏差**：无
+- **Scope 调整**：不变
+- **结论**：✅ **STABLE** — v1-05 全部 AC 无退化，editor 模块基线稳定
