@@ -1,21 +1,23 @@
 # eslint-disable 审计清单
 
 > 审计版本：v1-13（R7 P5b）
-> 审计范围：`apps/desktop/renderer/src/features/` 生产文件
-> 审计前总数：27 处
-> 审计后总数：27 处（全部 KEEP，0 REMOVE，0 TRACK）
+> 审计范围：`apps/desktop/renderer/src/features/` 全量文件（生产 + 测试）
+> 审计前总数：27 处（生产 25 + 测试 2）
+> 审计后总数：27 处（生产 25 + 测试 2），全部 KEEP，0 REMOVE，0 TRACK
 
 ## 总览
 
 | 规则                                    | 审计前 | REMOVE | KEEP   | TRACK | 审计后 |
 | --------------------------------------- | ------ | ------ | ------ | ----- | ------ |
 | `creonow/no-hardcoded-dimension`        | 10     | 0      | 10     | 0     | 10     |
-| `i18next/no-literal-string`             | 4      | 0      | 4      | 0     | 4      |
 | `creonow/no-raw-error-code-in-ui`       | 5      | 0      | 5      | 0     | 5      |
+| `i18next/no-literal-string`             | 4      | 0      | 4      | 0     | 4      |
 | `creonow/no-native-html-element`        | 2      | 0      | 2      | 0     | 2      |
 | `react-hooks/refs`                      | 2      | 0      | 2      | 0     | 2      |
 | `max-lines-per-function`                | 2      | 0      | 2      | 0     | 2      |
+| **生产文件小计**                        | **25** | **0**  | **25** | **0** | **25** |
 | `@typescript-eslint/no-require-imports` | 2      | 0      | 2      | 0     | 2      |
+| **测试文件小计**                        | **2**  | **0**  | **2**  | **0** | **2**  |
 | **合计**                                | **27** | **0**  | **27** | **0** | **27** |
 
 ## 逐条审计记录
@@ -172,7 +174,7 @@
 - **判定**: KEEP
 - **理由**: `↵` 是装饰性 enter 箭头 glyph，不是用户可见的可翻译文本
 
-### #020
+### #020（测试文件）
 
 - **文件**: `features/editor/InlineAi.test.tsx`
 - **行号**: L274
@@ -180,7 +182,7 @@
 - **判定**: KEEP
 - **理由**: 测试文件使用 `require()` 加载 JSON locale 文件进行 key 存在性验证，ESM import 无法在 describe 块内使用
 
-### #021
+### #021（测试文件）
 
 - **文件**: `features/editor/InlineAi.test.tsx`
 - **行号**: L276
