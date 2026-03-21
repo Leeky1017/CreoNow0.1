@@ -85,7 +85,8 @@ export function SettingsGeneral({
   };
 
   return (
-    // eslint-disable-next-line creonow/no-hardcoded-dimension -- settings content width per design spec
+    // 审计：v1-13 #004 KEEP
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：settings content width per design spec (max-w-[560px])
     <div className="max-w-[560px]">
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">
         {t("settingsDialog.general.title")}

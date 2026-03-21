@@ -55,7 +55,8 @@ export function OnboardingPage({
       data-testid="onboarding-page"
       className="flex h-full w-full items-center justify-center bg-[var(--color-bg-base)]"
     >
-      {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- onboarding page layout bounds */}
+      {/* 审计：v1-13 #026 KEEP */}
+      {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：onboarding page layout bounds per design spec (max-h-[900px], max-w-[800px]) */}
       <main className="relative flex h-full max-h-[900px] w-full max-w-[800px] flex-col items-center justify-center p-8">
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center">

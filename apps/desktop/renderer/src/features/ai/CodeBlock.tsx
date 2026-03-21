@@ -50,7 +50,8 @@ export function CodeBlock(props: {
       </div>
       {/* Code content */}
       <pre className="m-0 p-3 overflow-x-auto text-[12px] leading-[1.6] text-[var(--color-fg-default)] font-[var(--font-family-mono)]">
-        {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- props.code is programming code content, not an error code */}
+        {/* 审计：v1-13 #014 KEEP */}
+        {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- 技术原因：false positive; props.code is programming source code content, not an error code */}
         <code>{props.code}</code>
       </pre>
     </div>

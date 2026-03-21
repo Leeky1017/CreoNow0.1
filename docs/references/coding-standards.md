@@ -1,6 +1,5 @@
 # 代码原则
 
-
 ## 通用原则
 
 - 拒绝隐式注入：所有依赖必须显式传入
@@ -40,18 +39,40 @@
 
 项目在 `scripts/eslint-rules/` 维护自定义规则，由 `pnpm lint` 统一执行：
 
-| 规则 | 职责 |
-|------|------|
-| `no-native-html-element` | L3 Feature 组件禁止直接使用 `<button>` 等原生 HTML，必须使用 L1 Primitives |
-| `no-raw-tailwind-tokens` | 禁止使用 Tailwind 内置阴影类，必须走 `--shadow-*` Design Token |
-| `no-hardcoded-dimension` | 禁止硬编码尺寸值 |
-| `no-raw-error-code-in-ui` | 禁止 UI 层直接使用原始错误码字符串 |
+| 规则                      | 职责                                                                       |
+| ------------------------- | -------------------------------------------------------------------------- |
+| `no-native-html-element`  | L3 Feature 组件禁止直接使用 `<button>` 等原生 HTML，必须使用 L1 Primitives |
+| `no-raw-tailwind-tokens`  | 禁止使用 Tailwind 内置阴影类，必须走 `--shadow-*` Design Token             |
+| `no-hardcoded-dimension`  | 禁止硬编码尺寸值                                                           |
+| `no-raw-error-code-in-ui` | 禁止 UI 层直接使用原始错误码字符串                                         |
 
 配合 `lint-ratchet.ts` 实现 warning budget ratchet：新增 warning 阻断，存量逐步收敛。
-
 
 ## 交付隔离约束
 
 - 禁止在控制面 `main` 根目录直接实现受管改动。
 - 任务默认通过 `scripts/agent_task_begin.sh <N> <slug>` 进入 `.worktrees/issue-<N>-<slug>`。
 - 执行 `scripts/agent_task_begin.sh`、`scripts/agent_worktree_setup.sh` 或 `scripts/agent_controlplane_sync.sh` 后，repo-managed git hooks 会阻止控制面根目录提交与直接推送 `main`；紧急热修需显式设置 `CREONOW_ALLOW_CONTROLPLANE_BYPASS=1` 并留下审计说明。
+
+## eslint-disable 使用规范
+
+### 何时可以使用 eslint-disable
+
+1. 浏览器原生 API 必须使用原生 HTML 元素（`<input type="file">`、`<canvas>` 等）
+2. SVG / Canvas 固有尺寸必须硬编码
+3. 动态样式必须使用 inline style（运行时计算值）
+4. 第三方库要求特定 HTML 元素
+5. Design spec 指定的固定尺寸（modal width、menu height 等）
+6. 装饰性 glyph / 分隔符（非用户可见翻译文本）
+7. 测试文件中的技术需求（如 require-imports）
+
+### 使用要求
+
+1. 必须使用 `eslint-disable-next-line`（禁止 `eslint-disable` 块级禁用）
+2. 必须附带 `-- 技术原因：<详细说明>` 注释
+3. PR 中必须在描述中列出所有新增 disable 及理由
+4. 审计 Agent 必须逐条检查新增 disable
+
+### 定期审计
+
+每季度运行一次全局 eslint-disable 审计，更新 `docs/references/eslint-disable-audit.md`。

@@ -193,7 +193,8 @@ export function SearchPanel(props: {
         className="absolute inset-0 bg-[var(--color-scrim)] backdrop-blur-sm"
         onClick={onClose}
       />
-      {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- search modal width per design spec */}
+      {/* 审计：v1-13 #007 KEEP */}
+      {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：search modal width per design spec (w-[640px]) */}
       <div className="relative w-[640px] max-h-[80vh] flex flex-col rounded-xl overflow-hidden z-[var(--z-modal)] bg-[var(--color-bg-surface)] border border-[var(--color-separator)] shadow-[0_24px_48px_-12px_var(--color-shadow)] motion-safe:animate-[slideDown_0.3s_ease-out]">
         {/* Header */}
         <div className="flex flex-col border-b border-[var(--color-separator)] bg-[var(--color-bg-surface)]">

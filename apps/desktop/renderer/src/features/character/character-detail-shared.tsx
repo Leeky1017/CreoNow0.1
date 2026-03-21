@@ -35,7 +35,8 @@ export function getContentStyles(hasContainer: boolean): string {
     "-translate-x-1/2",
     hasContainer ? "translate-y-0" : "-translate-y-1/2",
     "z-[var(--z-modal)]",
-    // eslint-disable-next-line creonow/no-hardcoded-dimension -- dialog content width per design spec
+    // 审计：v1-13 #001 KEEP
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：dialog content width per design spec (w-[560px])
     "w-[560px]",
     hasContainer ? "max-h-[calc(100%-3.5rem)]" : "max-h-[92vh]",
     "bg-[var(--color-bg-surface)]",

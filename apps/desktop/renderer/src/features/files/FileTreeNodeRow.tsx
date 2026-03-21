@@ -172,7 +172,8 @@ export const FileTreeNodeRow = React.forwardRef<
                   : t("files.tree.expand")
               }
             >
-              {/* eslint-disable-next-line i18next/no-literal-string -- decorative chevron glyph */}
+              {/* 审计：v1-13 #009 KEEP */}
+              {/* eslint-disable-next-line i18next/no-literal-string -- 技术原因：decorative chevron glyph, not user-facing translatable text */}
               {"▸"}
             </Button>
           ) : (

@@ -15,6 +15,7 @@ describe("SearchPanel token guard", () => {
       if (
         line.trim().startsWith("//") ||
         line.trim().startsWith("*") ||
+        line.trim().startsWith("{/*") ||
         line.trim().startsWith("import")
       )
         return;

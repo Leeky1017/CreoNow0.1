@@ -114,7 +114,8 @@ export function ErrorGuideCard(props: {
               </Button>
             ) : null}
             <span className="text-[10px] font-mono text-[var(--color-error)]">
-              {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- diagnostic code reference, user-friendly text shown in description/steps above */}
+              {/* 审计：v1-13 #013 KEEP */}
+              {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- 技术原因：diagnostic code reference for AI error display; user-friendly description shown above */}
               {props.errorCode}
             </span>
           </div>

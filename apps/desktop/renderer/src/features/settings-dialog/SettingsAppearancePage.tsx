@@ -127,7 +127,8 @@ export function SettingsAppearancePage({
   const accentColors = getAccentColors(t);
 
   return (
-    // eslint-disable-next-line creonow/no-hardcoded-dimension -- settings content width per design spec
+    // 审计：v1-13 #002 KEEP
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：settings content width per design spec (max-w-[560px])
     <div className="max-w-[560px]">
       {/* Header */}
       <h1 className="text-2xl font-normal text-[var(--color-fg-default)] mb-2 tracking-tight">

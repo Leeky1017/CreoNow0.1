@@ -12,7 +12,8 @@ import {
 import { handleTreeKeyDown } from "./useFileTreeKeyboard";
 import { useFileTreeCore } from "./useFileTreeCore";
 
-// eslint-disable-next-line max-lines-per-function
+// 审计：v1-13 #010 KEEP
+// eslint-disable-next-line max-lines-per-function -- 技术原因：聚合 useFileTreeCore 与 CRUD handlers，已拆分核心逻辑至 useFileTreeCore，进一步拆分会破坏 API 内聚性
 export function useFileTreeState(
   projectId: string,
   t: ReturnType<typeof useTranslation>["t"],

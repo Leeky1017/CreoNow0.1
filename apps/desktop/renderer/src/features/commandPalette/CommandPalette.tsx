@@ -172,7 +172,8 @@ export function CommandPalette({
         aria-modal="true"
         aria-label={t("workbench.commandPalette.ariaLabel")}
         onClick={(e) => e.stopPropagation()}
-        // eslint-disable-next-line creonow/no-hardcoded-dimension -- command palette modal width per design spec
+        // 审计：v1-13 #016 KEEP
+        // eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：command palette modal width per design spec (w-[600px])
         className="w-[600px] max-w-[90vw] flex flex-col bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
       >
         {/* Header */}
@@ -200,7 +201,8 @@ export function CommandPalette({
         {/* Body */}
         <div
           ref={listRef}
-          // eslint-disable-next-line creonow/no-hardcoded-dimension -- command list height per design spec
+          // 审计：v1-13 #017 KEEP
+          // eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：command list height per design spec (max-h-[424px])
           className="max-h-[424px] overflow-y-auto p-2"
           role="listbox"
           data-active-index={activeIndex}

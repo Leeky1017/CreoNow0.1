@@ -410,3 +410,70 @@ v1-12 已于 2026-03-22 合并（PR #1213）。按 proposal 顶部定义的 feat
 ### 结论
 
 R6 的正确结论应是：**v1-18 受益于 v1-12，但并未被 v1-12 替代。** 工作量较原始提案明显收缩，可从“全域清扫”收束为“按热点文件精准治理”，但 AC-4 与大部分 token 收口目标仍需真实实施。
+
+---
+
+## R7 级联刷新记录（2026-03-23）
+
+### 刷新触发
+
+v1-13（eslint-disable 审计清扫，Issue #1216）正在实施。R7 P5b 级联刷新。
+
+### 口径修正
+
+R6 声称采样路径为 `apps/desktop/renderer/src/features`，但未提供显式采集命令，且其数字（text=166 / rounded=3 / w-h=22 / pmgap=7 / shadow=29）无法用该路径复现。R3 使用 `apps/desktop/renderer/src/components/features/`（18 个非测试/非 Story .tsx 文件），有显式命令和可验证结果。
+
+两条路径指向不同目录：
+
+| 路径                                             | 文件数（prod .tsx） | 内容                                     |
+| ------------------------------------------------ | ------------------- | ---------------------------------------- |
+| `apps/desktop/renderer/src/features/`            | 130                 | Features 层（含 token 色值引用）         |
+| `apps/desktop/renderer/src/components/features/` | 18                  | 组件特性层（AiDialogs / KnowledgeGraph） |
+
+R7 统一采用 R3 的验证口径 `apps/desktop/renderer/src/components/features/`，与 R3 基线保持可比性。R6 基线因路径不一致予以撤回。
+
+### R7 基线重采集
+
+采样口径：`apps/desktop/renderer/src/components/features/` 生产文件（排除 `.test.` / `.stories.`）
+
+| 度量             | R3 基线 | R7 实际 | Delta | 说明                                  |
+| ---------------- | ------- | ------- | ----- | ------------------------------------- |
+| text-[           | 95      | 95      | 0     | v1-13 不涉及 arbitrary 值替换，无变化 |
+| rounded-[        | 18      | 18      | 0     | 无变化                                |
+| w-[]/h-[]        | 8       | 8       | 0     | 无变化                                |
+| p-[]/m-[]/gap-[] | 1       | 1       | 0     | 无变化                                |
+| shadow-[         | 7       | 7       | 0     | 无变化                                |
+
+采集命令：
+
+```bash
+# text-[
+grep -rn 'text-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 95
+
+# rounded-[
+grep -rn 'rounded-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 18
+
+# w-[]/h-[]
+grep -rnE '(w|h)-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 8
+
+# p-[]/m-[]/gap-[]
+grep -rnE '(p|m|gap)-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 1
+
+# shadow-[
+grep -rn 'shadow-\[' apps/desktop/renderer/src/components/features/ --include='*.tsx' | grep -v '.stories.' | grep -v '.test.' | wc -l
+# → 7
+```
+
+### v1-13 对 v1-18 的影响
+
+1. **eslint-disable 审批流程**：v1-13 在 `docs/references/coding-standards.md` 中建立了 eslint-disable 使用规范。v1-18 在替换 arbitrary 值时若需新增 disable，必须遵循该审批流程。
+2. **审计清单参考**：v1-13 创建的 `docs/references/eslint-disable-audit.md` 记录了当前所有 feature 层 disable 的审计结论，v1-18 可据此了解哪些 disable 与 arbitrary 值相关。
+3. **scope 无需调整**：v1-13 不直接修改 arbitrary 值，v1-18 的 AC 目标不变。
+
+### 结论
+
+v1-13 为 lint 治理补上了审批流程和审计清单，间接支撑 v1-18 的 lint 收口目标。v1-18 scope 和 AC 不受直接影响，保持原计划。R6 基线因口径错误已撤回，R7 以 R3 为可比基线，零 delta 符合预期（v1-13 不触及 arbitrary 值）。

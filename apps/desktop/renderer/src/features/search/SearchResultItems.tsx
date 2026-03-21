@@ -128,7 +128,8 @@ export function DocumentResultItem(props: {
             {item.editedTime && (
               <>
                 <span className="text-[10px] text-[var(--color-fg-placeholder)] mx-1">
-                  {/* eslint-disable-next-line i18next/no-literal-string -- decorative separator dot */}
+                  {/* 审计：v1-13 #006 KEEP */}
+                  {/* eslint-disable-next-line i18next/no-literal-string -- 技术原因：decorative separator dot, not user-facing translatable text */}
                   •
                 </span>
                 <span className="text-[10px] text-[var(--color-fg-placeholder)]">

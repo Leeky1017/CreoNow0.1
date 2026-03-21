@@ -298,7 +298,8 @@ export function ProjectFormContent({
         </Text>
       )}
 
-      {/* eslint-disable-next-line creonow/no-native-html-element -- <input type="hidden"> 表单语义元素，无对应 Primitive */}
+      {/* 审计：v1-13 #027 KEEP */}
+      {/* eslint-disable-next-line creonow/no-native-html-element -- 技术原因：<input type="hidden"> 是表单语义元素，无对应 Primitive 组件 */}
       <input type="hidden" data-submitting={submitting} />
     </form>
   );

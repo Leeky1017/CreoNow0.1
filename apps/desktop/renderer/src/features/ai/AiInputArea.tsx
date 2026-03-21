@@ -176,7 +176,8 @@ export const AiInputArea = React.forwardRef<
             </div>
           </div>
         ) : null}
-        {/* eslint-disable-next-line creonow/no-native-html-element -- <textarea> 需要 ref 转发用于自动调整高度，Textarea 原语不支持 forwardRef */}
+        {/* 审计：v1-13 #015 KEEP */}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- 技术原因：<textarea> 需要 ref 转发用于自动调整高度，Textarea 原语不支持 forwardRef */}
         <textarea
           ref={ref}
           data-testid="ai-input"
