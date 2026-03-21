@@ -245,3 +245,29 @@ pnpm -C apps/desktop storybook:build
 v1-12 已于 2026-03-22 合并（PR #1213）。按 features 层生产文件口径重采样，proposal 追踪的四大 arbitrary 类别当前合计为 198（相较原始 930 已下降 79%），但 `text-[Npx]` 仍有 166 处、目标变体采用量仍为 0。
 
 R6 的结论是“工作量缩窄，但任务未自动完成”。详细基线、剩余热点与 AC 说明见 `proposal.md` 的 R6 级联刷新记录。
+
+---
+
+## R7 级联刷新记录（2026-03-22）
+
+v1-13（eslint-disable 审计清扫，Issue #1216）正在实施。R7 P5b 级联刷新。
+
+### R7 基线重采集
+
+| 度量 | R6 基线 | R7 实际 | Delta | 说明 |
+| ---- | ------- | ------- | ----- | ---- |
+| text-[Npx] | 166 | 166 | 0 | v1-13 不涉及 arbitrary 值替换 |
+| rounded-[Npx] | 3 | 3 | 0 | 无变化 |
+| w-[]/h-[] | 22 | 22 | 0 | 无变化 |
+| p-[]/m-[]/gap-[] | 7 | 2 | -5 | 中间合并清理了部分 spacing arbitrary |
+| shadow-[...] | 29 | 30 | +1 | 微量波动 |
+
+### v1-13 对 v1-18 的影响
+
+1. **eslint-disable 审批流程**：v1-13 建立了 eslint-disable 使用规范（`docs/references/coding-standards.md`），v1-18 新增 disable 须遵循。
+2. **审计清单参考**：`docs/references/eslint-disable-audit.md` 记录了 feature 层 disable 审计结论，v1-18 可据此了解 disable 残留。
+3. **scope 无需调整**：v1-13 不修改 arbitrary 值，v1-18 AC 目标不变。
+
+### 结论
+
+v1-13 为 lint 治理补上了审批流程和审计清单，间接支撑 v1-18 的 lint 收口目标。v1-18 scope 和 AC 不受直接影响，保持原计划。详细基线与影响分析见 `proposal.md` 的 R7 级联刷新记录。

@@ -410,3 +410,31 @@ v1-12 已于 2026-03-22 合并（PR #1213）。按 proposal 顶部定义的 feat
 ### 结论
 
 R6 的正确结论应是：**v1-18 受益于 v1-12，但并未被 v1-12 替代。** 工作量较原始提案明显收缩，可从“全域清扫”收束为“按热点文件精准治理”，但 AC-4 与大部分 token 收口目标仍需真实实施。
+
+---
+
+## R7 级联刷新记录（2026-03-22）
+
+### 刷新触发
+
+v1-13（eslint-disable 审计清扫，Issue #1216）正在实施。R7 P5b 级联刷新。
+
+### R7 基线重采集
+
+| 度量 | R6 基线 | R7 实际 | Delta | 说明 |
+| ---- | ------- | ------- | ----- | ---- |
+| text-[Npx] | 166 | 166 | 0 | v1-13 不涉及 arbitrary 值替换，无变化 |
+| rounded-[Npx] | 3 | 3 | 0 | 无变化 |
+| w-[]/h-[] | 22 | 22 | 0 | 无变化 |
+| p-[]/m-[]/gap-[] | 7 | 2 | -5 | 中间合并清理了部分 spacing arbitrary |
+| shadow-[...] | 29 | 30 | +1 | 微量波动，在误差范围内 |
+
+### v1-13 对 v1-18 的影响
+
+1. **eslint-disable 审批流程**：v1-13 在 `docs/references/coding-standards.md` 中建立了 eslint-disable 使用规范。v1-18 在替换 arbitrary 值时若需新增 disable，必须遵循该审批流程。
+2. **审计清单参考**：v1-13 创建的 `docs/references/eslint-disable-audit.md` 记录了当前所有 feature 层 disable 的审计结论，v1-18 可据此了解哪些 disable 与 arbitrary 值相关。
+3. **scope 无需调整**：v1-13 不直接修改 arbitrary 值，v1-18 的 AC 目标不变。
+
+### 结论
+
+v1-13 为 lint 治理补上了审批流程和审计清单，间接支撑 v1-18 的 lint 收口目标。v1-18 scope 和 AC 不受直接影响，保持原计划。
