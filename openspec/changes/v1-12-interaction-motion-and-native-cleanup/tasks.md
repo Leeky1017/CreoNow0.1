@@ -379,3 +379,130 @@ R1+R3 合并级联刷新——v1-01/02（R1）与 v1-06/07（R3）四个源 chan
 
 - Phase 0~3 全部 [ ] 未启动
 - 上游四项依赖全部 PASS：Part A 所需 Design Token 已就绪，Part B 所需 Primitive 变体已完备
+
+---
+
+## R4 级联刷新记录（2026-03-21）
+
+> 📋 **R4 全面刷新**：v1-08（直接上游）R4 复核完成，Phase 3 级联触发。
+
+### 刷新触发
+
+R4 P3 复核 v1-08/v1-09/v1-10 → 全面刷新。v1-08 是 v1-12 的直接上游（FileTree AC 回补来源），R4 复核发现 7/9 AC 已满足，回补任务大幅缩减。
+
+### 上游依赖状态（R4 更新）
+
+| 上游 Change                 | 状态    | R4 说明                                                                               |
+| --------------------------- | ------- | ------------------------------------------------------------------------------------- |
+| v1-01 Design Token          | ✅ PASS | `--duration-*` / `--ease-*` / `--color-bg-hover` / `--color-bg-selected` token 已就绪 |
+| v1-02 Primitive Evolution   | ✅ PASS | Button/Select/Radio/Badge 变体完备，66 处使用                                         |
+| v1-06 AI Panel Overhaul     | ✅ PASS | SkillManagerDialog 624 行遗留待回补                                                   |
+| v1-07 Settings Polish       | ✅ PASS | settings-dialog 仅剩 2 处原生 button                                                  |
+| v1-08 FileTree Precision    | ✅ PASS | **R4 复核：7/9 AC 已满足，回补从 4 项缩减至 0~1 项**                                  |
+| v1-09 CommandPalette+Search | ✅ PASS | R4 复核：全部核心 AC 已满足                                                           |
+| v1-10 Side Panels           | ✅ PASS | OutlinePanel 326 行（超标 26 行待回补）                                               |
+
+### AC 基线调整（R4）
+
+| AC    | R1+R3 基线                            | R4 实际                                   | 偏差     | 说明                                                                              |
+| ----- | ------------------------------------- | ----------------------------------------- | -------- | --------------------------------------------------------------------------------- |
+| AC-1  | `.transition-default` 待定义          | **待定义**                                | 0        | main.css 无此类                                                                   |
+| AC-2  | `.transition-slow` 待定义             | **待定义**                                | 0        | main.css 无此类                                                                   |
+| AC-3  | `.scroll-shadow-y` 待定义             | **待定义**                                | 0        | main.css 无此类                                                                   |
+| AC-4  | transition 散落，无统一标准           | **transition-colors prod 72 处**（↑260%） | ⚠️ +260% | Phase 3 组件已自发添加 transition，但缺少统一 duration/easing                     |
+| AC-5  | scroll shadow 2 处                    | **2 处**                                  | 0        | 仍需全面铺设                                                                      |
+| AC-6  | action icons fade-in 缺失             | **FileTree 已有 `transition-opacity`**    | 部分改善 | FileTreeNodeRow.tsx 已实现 `opacity-0 group-hover:opacity-100 transition-opacity` |
+| AC-7  | 折叠动画缺失                          | 待验证                                    | —        | 需逐面板检查                                                                      |
+| AC-8  | `<button>` 102 处 → ≤14               | **102 处**                                | 0        | features/ 69 + components/features/ 33，未变                                      |
+| AC-9  | `<input>` 12 处 → ≤3                  | **12 处**                                 | 0        | 分布：ai 3、version-history 3、editor 3、projects 2、commandPalette 1             |
+| AC-10 | `<select>` 6 处 → ≤2                  | **6 处**                                  | 0        | 分布：ai 3、settings 1、quality-gates 1、memory 1                                 |
+| AC-11 | `<textarea>` 5 处 → ≤3                | **5 处**                                  | 0        | 分布：ai 4、version-history 1                                                     |
+| AC-12 | `no-native-html-element` 159 处 → ≤25 | **159 处**                                | 0        | features/ 121 + components/features/ 38                                           |
+| AC-19 | AppShell.tsx 1,267 行 → ≤250          | **1,267 行**                              | 0        | 未变                                                                              |
+
+### `<button>` 模块分布（R4 确认）
+
+```
+# features/ prod（69 处）
+grep -rn '<button' apps/desktop/renderer/src/features/ --include='*.tsx' | grep -v '.test.\|.stories.\|.guard.' | sed 's|.../features/||' | cut -d/ -f1 | sort | uniq -c | sort -rn
+
+ai              24
+character       11
+diff             9
+projects         7
+editor           6
+quality-gates    5
+settings-dialog  2
+zen-mode         1
+rightpanel       1
+onboarding       1
+kg               1
+files            1
+
+# components/features/ prod（33 处）：AiDialogs 24 + KnowledgeGraph 9
+```
+
+### 回补清单调整（R4）
+
+#### FileTree 回补（来源：v1-08）—— ⬇️ 大幅缩减
+
+R4 复核发现 v1-08 的 AC-1~AC-5/AC-7/AC-9 已全部满足。回补项从原始 4 项缩减至：
+
+- **AC-8（文件类型颜色编码）**：当前 FileTree 使用 emoji 差异化（`data-testid="file-type-icon-*"`），无 color-coded icon。待 Owner 决策 emoji 方案是否等价满足。若接受，**此项清零**。
+- **AC-6（hover/selected 对比度）**：`--color-bg-hover: #1a1a1a` / `--color-bg-selected: #222222` token 已定义于 `tokens.css`。对比度调整归 v1-01 Token 层。**此项归 v1-01，v1-12 不承担。**
+
+> FileTree 回补实际影响：v1-12 的 FileTree 相关工作量从 4 项 AC 缩减至 **0~1 项**。
+
+#### SkillManagerDialog 回补（来源：v1-06）—— 维持
+
+- `SkillManagerDialog.tsx` **624 行**（`wc -l .../features/ai/SkillManagerDialog.tsx`）
+- 测试文件 275 行（`SkillManagerDialog.test.tsx`）
+- 任务：按职责拆分（List + Detail + Shell），各 ≤200 行
+
+#### OutlinePanel 回补（来源：v1-10）—— 维持
+
+- `OutlinePanel.tsx` **326 行**（超标 26 行）
+- 已有提取：OutlinePanelContainer（145 行）、OutlineNodeItem（316 行）、OutlineTree（286 行）
+- 任务：进一步提取 toolbar/filter，目标 ≤300 行
+
+#### DiffView 回补（来源：v1-16）—— 维持
+
+- `DiffView.tsx` **345 行**、`DiffHeader.tsx` **260 行**
+- diff 模块 9 处原生 `<button>`，与 Part B 替换合并处理
+
+### 动效铺设现状评估（R4 新增）
+
+Phase 3 组件重构已自发添加大量 `transition-colors`（prod 20→72 处），但仍存在两个系统性问题：
+
+1. **无标准工具类**：`.transition-default` / `.transition-slow` / `.scroll-shadow-y` 仍未在 main.css 定义
+2. **duration/easing 不统一**：72 处 `transition-colors` 中只有约 30 处配了 `duration-*`，其余依赖 Tailwind v4 的隐式默认值——与设计稿 `0.2-0.3s cubic-bezier(0.2, 0, 0.2, 1)` 标准不一致
+
+Part A 的核心价值不变：定义标准工具类 → 替换散落的 transition → 统一到设计稿标准。
+
+### AC-6 特别说明（R4 新增）
+
+FileTree 中的 action icons fade-in 已部分实现：
+
+```tsx
+// FileTreeNodeRow.tsx:208
+className =
+  "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity shrink-0 w-6 h-6 p-0";
+```
+
+v1-08 已为 FileTree 实现了 AC-6 描述的 fade-in 过渡。v1-12 仍需将此模式推广至所有面板。
+
+### 分析
+
+Phase 3 完成后对 v1-12 的综合影响：
+
+1. **FileTree 回补大幅缩减**（scope ↓）：4 项 → 0~1 项，v1-08 高质量交付近乎清零回补需求
+2. **动效基础改善但未统一**（scope 不变）：transition 使用 ↑260% 但缺少标准工具类，Part A 核心价值不变
+3. **原生 HTML 替换无变化**（scope 不变）：button 102 / input 12 / select 6 / textarea 5 / eslint-disable 159
+4. **AppShell 解耦无变化**（scope 不变）：1,267 行
+5. **总体 scope 评估**：因 FileTree 回补缩减而略微缩小。Part A/B/C/D 四个核心部分不受影响。
+
+### 任务状态
+
+- Phase 0~3 全部 [ ] 未启动
+- 上游七项依赖全部 PASS（R4 新增 v1-08/v1-09/v1-10 三项）
+- FileTree 回补任务因 R4 复核结论大幅缩减，待 Owner AC-8 决策后最终确认

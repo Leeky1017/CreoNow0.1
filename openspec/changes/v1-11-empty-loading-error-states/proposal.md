@@ -140,3 +140,45 @@ Props:
 - **执行顺序**: 本 change 应先于 v1-10 完成
 - **并行安全**: 标准组件建设（Phase 1-2）独立进行；模块迁移（Phase 3）可与其他面板修改并行，但需注意 merge conflict
 - **风险**: 迁移过程中需确保每个替换点的 props 映射正确（现有各处的 icon / 文案不同，需逐一确认）
+
+---
+
+## R4 Cascade Refresh (2026-03-21)
+
+> 「器已定型，量其成效。」——R4 级联刷新，复核 v1-11 全局状态组件标准化落地。
+
+### 上游依赖状态
+
+| 上游 Change                 | 状态    | 说明                |
+| --------------------------- | ------- | ------------------- |
+| v1-08 FileTree Precision    | ✅ PASS | R4 复核确认，已合并 |
+| v1-09 CommandPalette+Search | ✅ PASS | R4 复核确认，已合并 |
+
+### 基线指标更新
+
+| 指标                                  | 预期值 | 实测值                                              | 采集命令                                                                          |
+| ------------------------------------- | ------ | --------------------------------------------------- | --------------------------------------------------------------------------------- |
+| EmptyState.tsx 存在                   | ✅     | ✅ 241 行                                           | `wc -l apps/desktop/renderer/src/components/patterns/EmptyState.tsx`              |
+| LoadingState.tsx 存在                 | ✅     | ✅ 337 行                                           | `wc -l apps/desktop/renderer/src/components/patterns/LoadingState.tsx`            |
+| ErrorState.tsx 存在                   | ✅     | ✅ 537 行                                           | `wc -l apps/desktop/renderer/src/components/patterns/ErrorState.tsx`              |
+| patterns 目录总行数                   | —      | 2658 行（18 文件）                                  | `find ... \| xargs wc -l`                                                         |
+| composites/EmptyState features 导入   | 0      | 0（仅 guard 测试引用）                              | `grep -rn 'composites/EmptyState' apps/desktop/renderer/src/features/`            |
+| composites/LoadingState features 导入 | 0      | 0（仅 guard 测试引用）                              | `grep -rn 'composites/LoadingState' apps/desktop/renderer/src/features/`          |
+| composites/ErrorState features 导入   | 0      | 0（仅 guard 测试引用）                              | `grep -rn 'composites/ErrorState' apps/desktop/renderer/src/features/`            |
+| patterns 组件 features 引用数         | >0     | 16 处（7 个文件）                                   | `grep -rn 'from.*patterns/EmptyState\|...' apps/desktop/renderer/src/features/`   |
+| Storybook stories                     | 3      | 3（EmptyState/LoadingState/ErrorState.stories.tsx） | `find ... -name '*.stories.tsx'`                                                  |
+| EmptyState 测试                       | 全绿   | ✅ 4 files, 22 tests passed                         | `npx vitest run --reporter=verbose EmptyState`                                    |
+| LoadingState 测试                     | 全绿   | ✅ 1 file, 26 tests passed                          | `npx vitest run --reporter=verbose LoadingState`                                  |
+| ErrorState 测试                       | 全绿   | ✅ 1 file, 16 tests passed                          | `npx vitest run --reporter=verbose ErrorState`                                    |
+| 碎片化残留（text-muted 暂无/No）      | 0      | 0                                                   | `grep -rn 'className.*text-muted.*暂无\|...' apps/desktop/renderer/src/features/` |
+
+### 分析
+
+**结论：v1-11 已完全落地，无需修复。**
+
+1. **三组件完备**：EmptyState（241 行）、LoadingState（337 行）、ErrorState（537 行）均已实现，API 远超原 proposal 设想——EmptyState 支持 variant 预设（files/search/characters/project）、LoadingState 扩展了 Skeleton/ProgressBar 子组件、ErrorState 支持 4 种 variant（inline/banner/card/fullPage）
+2. **composites 引用清零**：AC-9/AC-10/AC-11 全部达标——features 层无一处实际导入 composites/\*State，仅 guard 测试中以字符串匹配方式引用（这是防回归断言，不是实际导入）
+3. **features 层广泛集成**：16 处引用横跨 7 个模块——VersionHistory、Character、Search、KG、FileTree、Memory、Outline 均已迁移至 patterns 组件
+4. **测试健壮**：64 个测试全绿（EmptyState 22 + LoadingState 26 + ErrorState 16），覆盖所有 variant、props 组合、交互行为
+5. **碎片化残留为零**：`text-muted.*暂无` 模式搜索无命中，旧式内联空状态已清理完毕
+6. **上游 v1-08/v1-09 合并未引入回归**：三组件测试稳定通过，无冲突

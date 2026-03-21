@@ -235,3 +235,75 @@
 - [ ] 用户路径走查：版本历史 → 查看差异 → 分栏对比
 - [ ] 用户路径走查：Cmd+Shift+Z → ZenMode → 退出
 - [ ] PR 创建，含 `Closes #N`
+
+---
+
+## R4 Cascade Refresh (2026-03-21)
+
+### 基线复核结果
+
+#### Part A: Quality 面板 — 已完成拆分重构（偏差 >30%）
+
+- **QualityGatesPanel.tsx**: 967 → **184 行**（-80.9%）✅ 已拆分
+  - 提取文件：`QualityRuleList.tsx`（217 行）、`QualityCheckItems.tsx`（299 行）、`qualityGatesTypes.ts`（101 行）
+  - 拆分方案与 proposal 略异：实际提取 `QualityCheckItems` 而非 `QualityResultCard`，职责一致
+  - ⚠️ 未提取 `useQualityGates.ts` hook（proposal 计划文件）
+  - ⚠️ **未采纳 PanelHeader 组件**（AC-2 未完成）
+- **QualityPanel.tsx**: 575 → **238 行**（-58.6%）✅ 已拆分
+  - 提取文件：`QualityPanelSections.tsx`（295 行）
+  - ⚠️ **未采纳 PanelHeader 组件**（AC-5 未完成）
+- **InfoPanel.tsx**: 301 → **266 行**（-11.6%）目标 ≤250，差 16 行
+  - ✅ 已采纳 PanelHeader（AC-6 部分完成）
+
+**任务影响**: AC-1/AC-4 行数拆分目标已达成。AC-2/AC-5 PanelHeader 采纳待实施。
+
+#### Part B: Diff 模块 — 未变动（偏差 0%）
+
+- 7 个文件行数与 proposal 基线完全一致，等待 v1-16 实施
+- DiffView.tsx（345 行）为最大文件，未超标
+- ⚠️ **PanelHeader 未采纳**（DiffViewPanel，AC-9 未完成）
+- ⚠️ **pixel 残留严重**: `text-[10px]`/`text-[11px]`/`text-[13px]`/`underline-offset-[3px]` 等 15+ 处硬编码
+- hardcoded hex 色值在生产代码中为 0 处（仅 stories 有 `#121212`）
+
+#### Part C: 杂项页面 — 基本未变（偏差 <5%）
+
+- AnalyticsPage.tsx: 197 行（不变）
+- ZenMode.tsx: 226 行（不变）
+- ZenModeStatus.tsx: 121 → **122 行**（+0.8%）
+- ShortcutsPanel.tsx: 66 行（不变）
+- AiSettingsSection.tsx: 245 → **243 行**（-0.8%）
+- JudgeSection.tsx: 133 行（不变）
+- AppearanceSection.tsx: 75 行（不变）
+
+**任务影响**: proposal 基线有效，所有 AC 待实施。
+
+### 测试基线
+
+| 模块    | 文件数 | 用例数 | 状态        |
+| ------- | ------ | ------ | ----------- |
+| Quality | 2      | 32     | ✅ 全部通过 |
+| Diff    | 8      | 59     | ✅ 全部通过 |
+
+### pixel 残留盘点（EXECUTION_ORDER 提及）
+
+| 文件                  | 残留类型                                                                                          | 数量  |
+| --------------------- | ------------------------------------------------------------------------------------------------- | ----- |
+| DiffView.tsx          | `text-[11px]`/`text-[13px]`/`underline-offset-[3px]`                                              | 5 处  |
+| DiffHeader.tsx        | `text-[10px]`                                                                                     | 2 处  |
+| SplitDiffView.tsx     | `text-[10px]`/`text-[11px]`/`text-[13px]`/`underline-offset-[3px]`                                | 6 处  |
+| VersionPane.tsx       | `text-[10px]`                                                                                     | 1 处  |
+| QualityRuleList.tsx   | `text-[11px]`/`text-[12px]`/`text-[13px]`/`left-[3px]`/`w-[18px]`/`h-[18px]`/`translate-x-[20px]` | 10 处 |
+| QualityGatesPanel.tsx | `text-[13px]`/`text-[15px]`                                                                       | 2 处  |
+
+> 合计 ~26 处 arbitrary pixel 值需在 v1-16 实施时替换为 Design Token 变量。
+
+### 刷新结论
+
+**轻度刷新**。Part A 行数拆分已完成（正向偏差），但 PanelHeader 采纳和 pixel 收口仍为未完成工作项。Part B/C 基线稳定，tasks 无需调整。
+
+v1-16 实施优先级建议：
+
+1. PanelHeader 采纳（QualityGatesPanel、QualityPanel、DiffViewPanel）
+2. Diff 模块 pixel 残留系统性替换
+3. InfoPanel 压缩至 ≤250 行
+4. 杂项页面视觉对齐（按 proposal 执行）

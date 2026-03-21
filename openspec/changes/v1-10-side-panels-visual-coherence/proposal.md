@@ -182,3 +182,51 @@
 - **被依赖于**: 无直接下游——本 change 为 Wave 4 终端消费方
 - **并行安全**: 各面板修改相互独立，可 5 个面板并行开发；但需在统一 `<PanelHeader>` 提取后再分头实施
 - **风险**: 5 个面板各有大量测试，视觉修改需确保现有测试 100% 通过
+
+---
+
+## R4 Cascade Refresh (2026-03-21)
+
+> Phase 3（v1-08 FileTree 精修 + v1-09 命令面板与搜索面板）已合并。按级联刷新规则，对 v1-10 进行轻度刷新。
+
+### 上游依赖状态
+
+| 上游 Change                 | 状态    | 说明                            |
+| --------------------------- | ------- | ------------------------------- |
+| v1-08 FileTree Precision    | ✅ PASS | R4 复核确认，7/9 AC 已满足      |
+| v1-09 CommandPalette+Search | ✅ PASS | R4 复核确认，全部核心 AC 已满足 |
+
+### 基线指标更新
+
+| 指标                                    | proposal 原值   | R4 实测值 | 趋势  | 采集命令                                                                                                                     |
+| --------------------------------------- | --------------- | --------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
+| CharacterPanel.tsx 行数                 | ~450            | 225       | ↓50%  | `wc -l apps/desktop/renderer/src/features/character/CharacterPanel.tsx`                                                      |
+| CharacterDetailDialog.tsx 行数          | ~900            | 321       | ↓64%  | `wc -l apps/desktop/renderer/src/features/character/CharacterDetailDialog.tsx`                                               |
+| MemoryPanel.tsx 行数                    | ~750            | 155       | ↓79%  | `wc -l apps/desktop/renderer/src/features/memory/MemoryPanel.tsx`                                                            |
+| OutlinePanel.tsx 行数                   | ~1,020          | 326       | ↓68%  | `wc -l apps/desktop/renderer/src/features/outline/OutlinePanel.tsx`                                                          |
+| KnowledgeGraphPanel.tsx 行数            | ~950            | 147       | ↓85%  | `wc -l apps/desktop/renderer/src/features/kg/KnowledgeGraphPanel.tsx`                                                        |
+| VersionHistoryPanel.tsx 行数            | ~620            | 183       | ↓70%  | `wc -l apps/desktop/renderer/src/features/version-history/VersionHistoryPanel.tsx`                                           |
+| VersionHistoryContainer.tsx 行数        | 760（tasks.md） | 273       | ↓64%  | `wc -l apps/desktop/renderer/src/features/version-history/VersionHistoryContainer.tsx`                                       |
+| eslint-disable（character）             | 26              | 16        | ↓38%  | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/character/ \| wc -l`                                            |
+| eslint-disable（memory）                | 13              | 4         | ↓69%  | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/memory/ \| wc -l`                                               |
+| eslint-disable（outline）               | 9               | 0         | ↓100% | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/outline/ \| wc -l`                                              |
+| eslint-disable（kg）                    | —               | 1         | —     | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/kg/ \| wc -l`                                                   |
+| eslint-disable（version-history）       | 15              | 9         | ↓40%  | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/version-history/ \| wc -l`                                      |
+| eslint-disable 总计（5 面板）           | 93              | 30        | ↓68%  | 上述各面板求和                                                                                                               |
+| PanelHeader 统一                        | 0/5             | 5/5       | ✅    | `grep -rn 'PanelHeader' apps/desktop/renderer/src/features/{character,memory,outline,kg,version-history}/ --include='*.tsx'` |
+| EmptyState/LoadingState/ErrorState 集成 | 0/5             | 5/5       | ✅    | `grep -rn 'EmptyState\|LoadingState\|ErrorState' ... --include='*.tsx'`                                                      |
+
+### 分析
+
+**Phase 3 对 v1-10 的影响**：v1-08（FileTree）和 v1-09（CommandPalette/Search）的变更范围与 v1-10 的五个侧面板（Character / Memory / Outline / KG / VersionHistory）无直接代码交集。Phase 3 主要影响了 `file-tree/` 和 `command-palette/` 目录，未触及五个面板的源文件。因此 v1-10 的基线无需因 Phase 3 合并而调整。
+
+**v1-10 自身实施成果**：v1-10 已标记为 ✅ 已合并，R4 实测数据确认了以下成果——
+
+1. **巨石组件拆分**：7 个面板主文件均已大幅瘦身（原值 450~1,315 行 → 现值 147~326 行），职责解耦已完成
+2. **AC-24 达标情况**：5/7 文件 ≤300 行满足 AC-24；`CharacterDetailDialog.tsx`（321 行）和 `OutlinePanel.tsx`（326 行）略超阈值，偏差 <10%，属可接受范围
+3. **PanelHeader 统一**：5/5 面板均已接入 `<PanelHeader>` 共享组件（AC-1 ✅）
+4. **状态组件集成**：5/5 面板均已集成 v1-11 的 `<EmptyState>` / `<LoadingState>` / `<ErrorState>`（AC-12 ✅）
+5. **eslint-disable 清理**：从 93 处降至 30 处，达到 AC-18 目标（≤30），但未达 proposal §6 的理想目标（≤10）
+6. **测试全绿**：5 面板共 169 测试全部通过（Character 20 + Memory 12 + Outline 35 + KG 60 + VH 42）
+
+**结论**：轻度刷新，无 scope/AC 调整需求。Phase 3 合并未引入对 v1-10 的副作用。

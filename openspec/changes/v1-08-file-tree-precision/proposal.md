@@ -157,3 +157,42 @@ FileTreePanel.tsx（1,400 行）将节点渲染、右键菜单、拖拽排序、
 FileTreePanel.tsx 已从原始 ~1,320 行大幅拆分至 **126 行**（壳层），远低于 AC-14 要求的 ≤300 行。子组件 FileTreeNodeRow（300行）、useFileTreeKeyboard（139行）、useFileTreeCore（182行）等均在合理范围内。proposal 中描述的"1,320 行巨石组件"问题已在前序工作中解决。
 
 **剩余工作聚焦**：视觉精修（icon bar 宽度、行高统一、拖拽手柄、箭头动效、文件类型颜色映射等 8 项 What），组件解耦已基本完成。
+
+---
+
+## R4 Cascade Refresh (2026-03-21)
+
+### 上游依赖状态
+
+| 上游 Change                  | 状态    | 说明                                                                |
+| ---------------------------- | ------- | ------------------------------------------------------------------- |
+| v1-01 Design Token 补完      | ✅ PASS | `--color-info`、`--color-success`、`--color-warning` 等语义色已在用 |
+| v1-02 Primitive 进化         | ✅ PASS | ContextMenu 组件已支持 `shortcut` 字段渲染（11px muted 样式）       |
+| v1-06 AI Panel Overhaul      | ✅ PASS | 无文件交叉，并行安全                                                |
+| v1-07 Settings Visual Polish | ✅ PASS | 无文件交叉，并行安全                                                |
+
+### 基线指标更新
+
+| 指标                   | R3 值                  | R4 实测值                  | 趋势     | 采集命令                                                                                      |
+| ---------------------- | ---------------------- | -------------------------- | -------- | --------------------------------------------------------------------------------------------- |
+| FileTreePanel.tsx 行数 | 126                    | **126**                    | → 无变化 | `wc -l apps/desktop/renderer/src/features/files/FileTreePanel.tsx`                            |
+| 文件树模块总行数       | 4,350                  | **4,350**                  | → 无变化 | `find apps/desktop/renderer/src/features/files/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l` |
+| FileTreeNodeRow.tsx    | 300                    | **300**                    | → 无变化 | `wc -l .../FileTreeNodeRow.tsx`                                                               |
+| FileTreeRenameRow.tsx  | 88                     | **88**                     | → 无变化 | `wc -l .../FileTreeRenameRow.tsx`                                                             |
+| useFileTreeKeyboard.ts | 139                    | **139**                    | → 无变化 | `wc -l .../useFileTreeKeyboard.ts`                                                            |
+| useFileTreeCore.ts     | 182                    | **182**                    | → 无变化 | `wc -l .../useFileTreeCore.ts`                                                                |
+| fileTreeContextMenu.ts | 86                     | **86**                     | → 无变化 | `wc -l .../fileTreeContextMenu.ts`                                                            |
+| FileTree 测试          | 9 文件 / 79 测试全通过 | **9 文件 / 79 测试全通过** | → 无变化 | `pnpm vitest run --reporter=verbose FileTree`（apps/desktop 目录下）                          |
+
+### 分析
+
+R3 将 AC-1~AC-9 批量标注为「待实现」，R4 对每个 AC 逐项独立验证后发现：**7/9 项视觉精修已在前序组件拆分过程中完成**。这些实现分布在 FileTreeNodeRow.tsx、FileTreeRenameRow.tsx、fileTreeContextMenu.ts 以及 ContextMenu primitive 中，R3 因批量评估而遗漏。
+
+**已确认满足的 AC**：AC-1（Icon Bar w-12）、AC-2（h-8 行高）、AC-3（圆形拖拽手柄）、AC-4（rename focus border）、AC-5（快捷键标注）、AC-7（箭头旋转动效）、AC-9（Design Token 无硬编码色值）。
+
+**待处理项**：
+
+- AC-6（hover/selected 对比度）：文件树已正确使用 design token，对比度由 v1-01 token 值决定
+- AC-8（文件类型图标颜色）：proposal 以代码编辑器范式描述（.ts/.md/.json），但 CreoNow 使用 emoji 图标按文档类型区分（📄chapter、📝note、📘setting 等），需 Owner 确认 AC-8 是否已被等价满足
+
+**结论**：v1-08 的实际剩余工作量从 R3 评估的「9 项待实现」大幅缩减至「1 项待 Owner 决策 + 1 项跨 change 验证 + 3 项构建门禁」。

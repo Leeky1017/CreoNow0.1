@@ -282,3 +282,132 @@ v1-06 AI Panel 重构将 7 个子组件（AiInlineConfirm、AiDiffContent、AiDi
 ### 结论
 
 `features/` 路径指标与 R2 持平。主要变化来自 v1-06：`components/features/` 层新增 33 个原生 `<button>` 和 38 条 `no-native-html-element` eslint-disable，需纳入 v1-12 范围。合并后总替换目标从 69 扩展至 **102 处** `<button>`、eslint-disable 从 121 扩展至 **159 处**。上游四项依赖全部 PASS，Part A 动效所需 token 和 Part B 替换所需 Primitive 变体均已就绪。
+
+---
+
+## R4 Cascade Refresh (2026-03-21)
+
+> 「千里之堤，溃于蚁穴。」——韩非子
+> Phase 3 完成后全面刷新。v1-12 是 v1-08 的直接下游，此次为基线 + AC + scope + 依赖 + 回补的全面刷新。
+
+### 刷新触发
+
+R4 P3 复核 v1-08/v1-09/v1-10 → 级联刷新。v1-08 是 v1-12 的直接上游（FileTree AC 回补来源），R4 复核发现回补任务大幅缩减。
+
+### 上游依赖状态
+
+| 上游 Change                 | 状态    | 说明                                     |
+| --------------------------- | ------- | ---------------------------------------- |
+| v1-01 Design Token          | ✅ PASS | `--duration-*` / `--ease-*` token 已就绪 |
+| v1-02 Primitive Evolution   | ✅ PASS | Button/Select/Radio/Badge 变体完备       |
+| v1-06 AI Panel Overhaul     | ✅ PASS | SkillManagerDialog 624 行遗留待回补      |
+| v1-07 Settings Polish       | ✅ PASS | settings-dialog 仅剩 2 处原生 button     |
+| v1-08 FileTree Precision    | ✅ PASS | **R4 复核：7/9 AC 已满足，回补大幅缩减** |
+| v1-09 CommandPalette+Search | ✅ PASS | R4 复核：全部核心 AC 已满足              |
+| v1-10 Side Panels           | ✅ PASS | OutlinePanel 326 行（超标 26 行待回补）  |
+
+### R4 基线重采集
+
+**Part A: 动效相关**
+
+| 度量                                       | R1+R3 基线    | R4 实际 | Delta        | 采集命令                                                                                                                     |
+| ------------------------------------------ | ------------- | ------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| `transition-colors` 使用（features/）      | 76 处（全量） | **76**  | 0            | `grep -rn 'transition-colors' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`                                |
+| `transition-colors` 使用（features/ prod） | 20 处         | **72**  | +52（↑260%） | 同上 `\| grep -v '.test.\|.stories.'`                                                                                        |
+| `duration-*` 使用（features/）             | 44 处（全量） | **44**  | 0            | `grep -rn 'duration-' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`                                        |
+| `duration-*` 使用（features/ prod）        | 30 处         | **30**  | 0            | 同上 `\| grep -v '.test.\|.stories.'`                                                                                        |
+| scroll shadow / mask-image                 | 2 处          | **2**   | 0            | `grep -rn 'scroll-shadow\|mask-image\|scrollShadow' apps/desktop/renderer/src/ --include='*.tsx' --include='*.css' \| wc -l` |
+| CSS 动效工具类（main.css 定义）            | 0             | **0**   | 0            | `grep -n 'transition-default\|transition-slow\|scroll-shadow' apps/desktop/renderer/src/styles/main.css`                     |
+
+> **分析**：`transition-colors` prod 使用从 20→72（↑260%），说明 Phase 3 的 v1-08/v1-09/v1-10 在组件重构时已大量添加 transition。但 scroll shadow 仍仅 2 处，动效工具类仍未定义——Part A 核心工作不变。
+
+**Part B: 原生 HTML 收口**
+
+| 度量                                             | R1+R3 基线 | R4 实际 | Delta | 采集命令                                                                                                                    |
+| ------------------------------------------------ | ---------- | ------- | ----- | --------------------------------------------------------------------------------------------------------------------------- |
+| 原生 `<button>`（features/ prod）                | 69         | **69**  | 0     | `grep -rn '<button' apps/desktop/renderer/src/features/ --include='*.tsx' \| grep -v '.test.\|.stories.\|.guard.' \| wc -l` |
+| 原生 `<button>`（components/features/ prod）     | 33         | **33**  | 0     | 同上替换 `features/` → `components/features/`                                                                               |
+| 原生 `<button>` 合计（prod）                     | 102        | **102** | 0     | —                                                                                                                           |
+| 原生 `<input>`（features/ prod）                 | 12         | **12**  | 0     | `grep -rn '<input' apps/desktop/renderer/src/features/ --include='*.tsx' \| grep -v '.test.\|.stories.\|.guard.' \| wc -l`  |
+| 原生 `<select>`（features/ prod）                | 6          | **6**   | 0     | 同上替换 `<select`                                                                                                          |
+| 原生 `<textarea>`（features/ prod）              | 5          | **5**   | 0     | 同上替换 `<textarea`                                                                                                        |
+| `no-native-html-element`（features/）            | 121        | **121** | 0     | `grep -r 'no-native-html-element' apps/desktop/renderer/src/features/ \| wc -l`                                             |
+| `no-native-html-element`（components/features/） | 38         | **38**  | 0     | 同上替换路径                                                                                                                |
+| `no-native-html-element` 合计                    | 159        | **159** | 0     | —                                                                                                                           |
+| `eslint-disable` 总数（renderer/src/）           | 229        | **229** | 0     | `grep -r 'eslint-disable' apps/desktop/renderer/src/ \| wc -l`                                                              |
+| Button `size="icon"`（features/）                | 13         | **13**  | 0     | `grep -rn 'size="icon"' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`                                     |
+| v1-02 变体使用（renderer/ 全量）                 | —          | **66**  | —     | `grep -rn 'variant=.\(pill\|bento\|compact\)' apps/desktop/renderer/src/ --include='*.tsx' \| wc -l`                        |
+
+> **分析**：原生 HTML 计数全部与 R1+R3 持平。Phase 3 的 v1-08/v1-09/v1-10 专注于功能与布局重构，未触及原生 HTML 替换——Part B 工作量不变。
+
+**Part C: AppShell 解耦（AC-19）**
+
+| 度量               | R1+R3 基线 | R4 实际   | Delta | 采集命令                                                         |
+| ------------------ | ---------- | --------- | ----- | ---------------------------------------------------------------- |
+| AppShell.tsx 行数  | 1,267      | **1,267** | 0     | `wc -l apps/desktop/renderer/src/components/layout/AppShell.tsx` |
+| layout/ 目录总行数 | —          | **9,353** | —     | `find .../layout/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l`  |
+| layout/ 文件数     | —          | **40**    | —     | 同上                                                             |
+
+> **分析**：AppShell.tsx 未变。layout/ 目录已有 40 个文件（含测试/Stories），拆分后需确保不引入循环依赖。
+
+**Part D: 回补组件行数**
+
+| 组件                   | R1+R3 基线 | R4 实际 | 目标 | 采集命令                                       |
+| ---------------------- | ---------- | ------- | ---- | ---------------------------------------------- |
+| SkillManagerDialog.tsx | 624        | **624** | 拆分 | `wc -l .../features/ai/SkillManagerDialog.tsx` |
+| OutlinePanel.tsx       | —          | **326** | ≤300 | `wc -l .../features/outline/OutlinePanel.tsx`  |
+| DiffView.tsx           | —          | **345** | 评估 | `wc -l .../features/diff/DiffView.tsx`         |
+
+**Part E: FileTree AC 回补确认**
+
+| 检查项                     | R4 状态          | 采集命令 / 证据                                                                                                                                                                           |
+| -------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-8 文件类型颜色编码      | ⚠️ 待 Owner 决策 | `grep -rn 'file-type-icon' apps/desktop/renderer/src/features/files/ --include='*.tsx'` — 当前用 `data-testid="file-type-icon-*"` + emoji 差异化，无 color-coded icon                     |
+| AC-6 hover/selected 对比度 | ↗️ 归 v1-01      | `grep -rn 'bg-hover\|bg-selected' apps/desktop/renderer/src/ --include='*.css'` — token 值 `--color-bg-hover: #1a1a1a` / `--color-bg-selected: #222222` 已定义，对比度调整属 Token 层职责 |
+| AC-1~5/7/9                 | ✅ v1-08 已满足  | R4 复核确认 7/9 项已满足                                                                                                                                                                  |
+
+**Storybook play 函数**
+
+| 度量                     | R1+R3 基线 | R4 实际 | 采集命令                                                                         |
+| ------------------------ | ---------- | ------- | -------------------------------------------------------------------------------- |
+| Storybook `play:` 函数数 | —          | **256** | `grep -rn 'play:' apps/desktop/renderer/src/ --include='*.stories.tsx' \| wc -l` |
+
+### 回补清单调整
+
+#### FileTree 回补（来源：v1-08）
+
+R4 复核发现 v1-08 的 AC-1~AC-5/AC-7/AC-9 已全部满足，回补项从原始 4 项大幅缩减至：
+
+- **AC-8（文件类型颜色编码）**：当前 FileTree 使用 emoji 差异化文件类型（`data-testid="file-type-icon-*"`），无 color-coded icon 方案。待 Owner 决策 emoji 方案是否等价满足，或需实现 color-coded icon。**若 Owner 接受 emoji 方案，此回补项清零。**
+- **AC-6（hover/selected 对比度）**：`--color-bg-hover` / `--color-bg-selected` token 已在 `tokens.css` 定义。对比度调整属 v1-01 Token 层职责，非 v1-12 scope。**此项归 v1-01，v1-12 回补清零。**
+
+> **结论**：FileTree 回补从 4 项缩减至 0~1 项（取决于 AC-8 Owner 决策）。
+
+#### SkillManagerDialog 回补（来源：v1-06）
+
+- `SkillManagerDialog.tsx` **624 行**，未拆分。v1-06 将 AI Panel 其他子组件拆至 `components/features/AiDialogs/`，但 SkillManagerDialog 未纳入。
+- 回补任务：按职责拆分为 SkillManagerList + SkillManagerDetail + SkillManagerDialog（shell），各 ≤200 行。
+
+#### OutlinePanel 回补（来源：v1-10）
+
+- `OutlinePanel.tsx` **326 行**（超标 26 行）。v1-10 完成了 OutlinePanelContainer 提取（145 行）+ OutlineNodeItem 提取（316 行），但主文件仍超 300 行目标。
+- 回补任务：进一步提取 toolbar/filter 逻辑，目标 ≤300 行。
+
+#### DiffView 回补（来源：v1-16）
+
+- `DiffView.tsx` **345 行**，`DiffHeader.tsx` **260 行**。当前 diff 模块有 9 处原生 `<button>`。
+- 回补任务：与 Part B button 替换合并处理。
+
+### 分析
+
+Phase 3 完成后对 v1-12 scope 的影响：
+
+1. **FileTree 回补大幅缩减**：原计划 4 项 AC 回补，R4 确认缩减至 0~1 项。这是本次刷新最显著的变化——v1-08 的高质量交付使 v1-12 的 FileTree 回补任务近乎清零。
+
+2. **动效基础改善**：`transition-colors` prod 使用从 20→72 处（↑260%），说明 Phase 3 组件重构已自发添加过渡效果。但这些 transition 仍缺少统一的 duration/easing 规范（工具类未定义），Part A 的核心价值不变：提供 `.transition-default` / `.scroll-shadow-y` 等标准工具类，让散落的 transition 统一到设计稿标准。
+
+3. **原生 HTML 替换无变化**：所有计数与 R1+R3 持平（button 102、input 12、select 6、textarea 5、eslint-disable 159），Part B 工作量不变。
+
+4. **AppShell 解耦无变化**：1,267 行未动，Part C 工作量不变。
+
+5. **总体 scope 评估**：v1-12 scope 因 FileTree 回补缩减而略微缩小，但 Part A/B/C/D 四个核心部分均不受影响。v1-12 仍为 V1 收口阶段的关键 change。
