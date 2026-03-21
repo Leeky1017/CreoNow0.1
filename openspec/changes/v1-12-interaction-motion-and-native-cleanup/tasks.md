@@ -1,5 +1,7 @@
 # Tasks: V1-12 交互动效铺设与原生 HTML 收口
 
+> 📋 **级联刷新 R1**（2025-07-25）：v1-02 完成后刷新。基线已重采集。
+
 - **GitHub Issue**: 待创建
 - **分支**: `task/<N>-interaction-motion-and-native-cleanup`
 - **Delta Spec**: `openspec/changes/v1-12-interaction-motion-and-native-cleanup/specs/`
@@ -8,31 +10,33 @@
 
 ## 验收标准
 
-| ID    | 标准                                                                                                                     | 验证方式        |
-| ----- | ------------------------------------------------------------------------------------------------------------------------ | --------------- |
-| AC-1  | `main.css` 包含 `.transition-default` utility class，duration 为 `var(--duration-fast)`、easing 为 `var(--ease-default)` | grep main.css   |
-| AC-2  | `main.css` 包含 `.transition-slow` utility class，duration 为 `var(--duration-normal)`                                   | grep main.css   |
-| AC-3  | `main.css` 包含 `.scroll-shadow-y` utility class，实现顶部/底部渐变遮罩                                                  | grep + 视觉验证 |
-| AC-4  | 所有面板列表项 hover 时背景色变化有 smooth transition（非直接跳变）                                                      | 视觉交互验证    |
-| AC-5  | 所有面板可滚动容器有 scroll shadow 指示                                                                                  | 视觉验证        |
-| AC-6  | 列表项 hover 时 action icons 有 fade-in 过渡（opacity 0→1）                                                              | 视觉交互验证    |
-| AC-7  | 面板折叠/展开有 height 过渡动画                                                                                          | 视觉交互验证    |
-| AC-8  | Features 层原生 `<button>` 替换率 ≥ 80%（替换为 `<Button>` / `<IconButton>`）                                            | grep 统计       |
-| AC-9  | Features 层原生 `<input type="text">` 替换率 ≥ 80%（替换为 `<Input>`）                                                   | grep 统计       |
-| AC-10 | Features 层原生 `<select>` 替换率 ≥ 80%（替换为 `<Select>`）                                                             | grep 统计       |
-| AC-11 | Features 层原生 `<textarea>` 替换率 ≥ 80%（替换为 `<Textarea>`）                                                         | grep 统计       |
-| AC-12 | `eslint-disable` 中 `no-native-html-element` 相关从 ~153 降至 ≤30                                                        | grep 统计       |
-| AC-13 | 替换过程中 0 处功能回归（所有现有测试通过）                                                                              | CI 全量测试     |
-| AC-14 | 所有新增视觉元素使用语义化 Design Token                                                                                  | grep 验证       |
-| AC-15 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                               | CI 命令         |
-| AC-16 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                              | CI 命令         |
-| AC-17 | lint 无新增违规（`pnpm lint`）                                                                                           | CI 命令         |
-| AC-18 | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                        | CI 命令         |
-| AC-19 | `AppShell.tsx` 从 1,260 行按职责解耦为 5+ 文件，每个文件只承担一个职责                                                   | 架构            |
-| AC-20 | 布局骨架使用语义化 Design Token（`--space-panel-padding`、`--color-border-subtle`）                                      | 视觉            |
-| AC-21 | 全窗口组合 Story（Dashboard + AppShell）以 `layout: 'fullscreen'` 渲染可构建                                             | Storybook       |
-| AC-22 | 全窗口组合 Story（Editor + FileTree + RightPanel）以 `layout: 'fullscreen'` 渲染可构建                                   | Storybook       |
-| AC-23 | 全窗口组合 Story（AiPanel 展开 + EditorPane）以 `layout: 'fullscreen'` 渲染可构建                                        | Storybook       |
+> R1 刷新：AC-8/9/10/11/12 基线数字已根据 v1-02 完成后实测值调整。
+
+| ID    | 标准                                                                                                                     | 验证方式        | R1 状态 |
+| ----- | ------------------------------------------------------------------------------------------------------------------------ | --------------- | ------- |
+| AC-1  | `main.css` 包含 `.transition-default` utility class，duration 为 `var(--duration-fast)`、easing 为 `var(--ease-default)` | grep main.css   | 待实现  |
+| AC-2  | `main.css` 包含 `.transition-slow` utility class，duration 为 `var(--duration-normal)`                                   | grep main.css   | 待实现  |
+| AC-3  | `main.css` 包含 `.scroll-shadow-y` utility class，实现顶部/底部渐变遮罩                                                  | grep + 视觉验证 | 待实现  |
+| AC-4  | 所有面板列表项 hover 时背景色变化有 smooth transition（非直接跳变）                                                      | 视觉交互验证    | 待实现  |
+| AC-5  | 所有面板可滚动容器有 scroll shadow 指示（R1 基线：仅 2 处）                                                              | 视觉验证        | 待实现  |
+| AC-6  | 列表项 hover 时 action icons 有 fade-in 过渡（opacity 0→1）                                                              | 视觉交互验证    | 待实现  |
+| AC-7  | 面板折叠/展开有 height 过渡动画                                                                                          | 视觉交互验证    | 待实现  |
+| AC-8  | Features 层原生 `<button>`（prod）替换率 ≥ 80%（R1 基线：69 处 prod，目标 ≤14 处）                                       | grep 统计       | 待实现  |
+| AC-9  | Features 层原生 `<input>` 替换率 ≥ 80%（R1 基线：14 处，目标 ≤3 处）                                                     | grep 统计       | 待实现  |
+| AC-10 | Features 层原生 `<select>` 替换率 ≥ 80%（R1 基线：7 处，目标 ≤2 处）                                                     | grep 统计       | 待实现  |
+| AC-11 | Features 层原生 `<textarea>` 替换率 ≥ 80%（R1 基线：12 处，目标 ≤3 处）                                                  | grep 统计       | 待实现  |
+| AC-12 | `no-native-html-element` eslint-disable 从 R1 基线 121 处降至 ≤25                                                        | grep 统计       | 待实现  |
+| AC-13 | 替换过程中 0 处功能回归（所有现有测试通过）                                                                              | CI 全量测试     | 待实现  |
+| AC-14 | 所有新增视觉元素使用语义化 Design Token                                                                                  | grep 验证       | 待实现  |
+| AC-15 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                               | CI 命令         | 待实现  |
+| AC-16 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                              | CI 命令         | 待实现  |
+| AC-17 | lint 无新增违规（`pnpm lint`）                                                                                           | CI 命令         | 待实现  |
+| AC-18 | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                        | CI 命令         | 待实现  |
+| AC-19 | `AppShell.tsx` 从 R1 基线 1,267 行按职责解耦为 5+ 文件，每个文件只承担一个职责                                           | 架构            | 待实现  |
+| AC-20 | 布局骨架使用语义化 Design Token（`--space-panel-padding`、`--color-border-subtle`）                                      | 视觉            | 待实现  |
+| AC-21 | 全窗口组合 Story（Dashboard + AppShell）以 `layout: 'fullscreen'` 渲染可构建                                             | Storybook       | 待实现  |
+| AC-22 | 全窗口组合 Story（Editor + FileTree + RightPanel）以 `layout: 'fullscreen'` 渲染可构建                                   | Storybook       | 待实现  |
+| AC-23 | 全窗口组合 Story（AiPanel 展开 + EditorPane）以 `layout: 'fullscreen'` 渲染可构建                                        | Storybook       | 待实现  |
 
 ---
 
@@ -43,14 +47,16 @@
 - [ ] 抽样阅读设计稿 CSS transition 定义（`01-dashboard.html`、`14-ai-panel.html`、`18-character-manager.html`）——确认 `0.2-0.3s cubic-bezier(0.2, 0, 0.2, 1)` 标准
 - [ ] 统计当前 `eslint-disable` 按规则分布（建立替换前基线）：
   ```bash
+  # R1 基线：121 处 no-native-html-element（features/），229 处 eslint-disable 总计（renderer/src/）
   grep -r 'eslint-disable' --include='*.tsx' --include='*.ts' renderer/src/features/ | \
     sed 's/.*-- //' | sort | uniq -c | sort -rn
   ```
 - [ ] 统计当前原生 HTML 元素数量（建立替换前基线）：
   ```bash
+  # R1 基线：<button> 153（prod 69）、<input> 14、<select> 7、<textarea> 12 = 总计 186
   grep -rn '<button\|<input\|<select\|<textarea' --include='*.tsx' renderer/src/features/ | wc -l
   ```
-- [ ] 确认 Primitives 层 `<Button>` / `<IconButton>` / `<Input>` / `<Select>` / `<Textarea>` 的 API 和 variant 覆盖
+- [x] 确认 Primitives 层 `<Button>` / `<Button size="icon">` / `<Input>` / `<Select>` / `<Textarea>` 的 API 和 variant 覆盖 **[v1-02 已完成 ✅]**
 
 ---
 
@@ -158,32 +164,36 @@
 
 ### Part B: 原生 HTML 替换
 
-#### Task 2B.1: `<button>` → `<Button>` / `<IconButton>` 替换
+#### Task 2B.1: `<button>` → `<Button>` / `<Button size="icon">` 替换
 
 **映射验收标准**: AC-8, AC-12
 
-按模块逐一替换：
+> R1 基线：69 处 prod native `<button>`。v1-02 新增 `Button size="icon"` variant 为 icon-only 按钮提供直接替换路径。
 
-- [ ] CharacterPanel 模块（~20 处）
-- [ ] MemoryPanel 模块（~10 处）
-- [ ] OutlinePanel 模块（~8 处）
-- [ ] KnowledgeGraphPanel 模块（~10 处）
-- [ ] VersionHistoryPanel 模块（~10 处）
-- [ ] FileTreePanel 模块（~15 处）
-- [ ] Settings 模块（~10 处）
-- [ ] 其余模块
+按模块逐一替换（R1 实测 prod 数量）：
+
+- [ ] AI 模块（24 处——最大替换目标）
+- [ ] character 模块（11 处）
+- [ ] diff 模块（9 处——含 v1-16 DiffView 回补）
+- [ ] projects 模块（7 处）
+- [ ] editor 模块（6 处）
+- [ ] settings-dialog 模块（2 处）
+- [ ] 其余模块（zen-mode 1、rightpanel 1、onboarding 1、kg 1、files 1、quality-gates 5 处——quality-gates 为 guard 测试，评估是否需替换）
 - [ ] 每替换一处，移除对应 `eslint-disable-next-line creonow/no-native-html-element`
 - [ ] 替换后运行该模块测试确认无回归
 
 **原则**：
 
-- 纯图标按钮 → `<IconButton icon={...} aria-label="..." />`
-- 文字按钮 → `<Button variant="ghost">` 或 `<Button variant="outline">`
+- 纯图标按钮 → `<Button size="icon" variant="ghost">`（v1-02 新增 variant）
+- 文字按钮 → `<Button variant="ghost">` 或 `<Button variant="pill">`（v1-02 新增 variant）
 - 有特殊样式的按钮 → 评估是否可用 `<Button className="...">` 实现
 
 #### Task 2B.2: `<input>` → `<Input>` 替换
 
 **映射验收标准**: AC-9, AC-12
+
+> R1 基线：仅 14 处（v1-02 Select/Radio/ImageUpload 重构已大幅削减）。
+> 按模块分布：ai 4、version-history 3、editor 3、projects 2、search 1、commandPalette 1。
 
 - [ ] `<input type="text">` → `<Input>`
 - [ ] `<input type="search">` → `<Input type="search">`（如 Primitive 支持）
@@ -194,12 +204,18 @@
 
 **映射验收标准**: AC-10, AC-12
 
-- [ ] 所有 `<select>` → `<Select>` + `<SelectTrigger>` + `<SelectContent>` + `<SelectItem>`
+> R1 基线：仅 7 处（v1-02 Select Primitive 重构已大幅削减）。
+> 按模块分布：ai 3、settings 1、quality-gates 1、memory 1、export 1。
+
+- [ ] 所有 `<select>` → `<Select>` + `<SelectTrigger>` + `<SelectContent>` + `<SelectItem>`（v1-02 重构的组合模式）
 - [ ] 每替换一处，移除对应 eslint-disable
 
 #### Task 2B.4: `<textarea>` → `<Textarea>` 替换
 
 **映射验收标准**: AC-11, AC-12
+
+> R1 基线：12 处。按模块分布：ai 11、version-history 1。
+> AI 模块的 textarea 多为自动扩展场景，需逐一评估。
 
 - [ ] 所有通用 `<textarea>` → `<Textarea>`
 - [ ] 特殊场景（如 AI 输入框的自动扩展 textarea）评估是否可替换
@@ -219,7 +235,7 @@
 
 #### Task C.1: AppShell 结构分析与测试基线
 
-- [ ] 阅读 AppShell.tsx 全文，标注六大职责区域（布局/侧栏/主区域/右面板/resize/快捷键）
+- [ ] 阅读 AppShell.tsx 全文（R1 基线：1,267 行），标注六大职责区域（布局/侧栏/主区域/右面板/resize/快捷键）
 - [ ] 运行现有 AppShell 相关测试基线：`pnpm -C apps/desktop vitest run AppShell`
 - [ ] 记录当前测试覆盖和通过率
 
@@ -290,8 +306,8 @@
 - [ ] 运行 `pnpm typecheck` 类型检查通过
 - [ ] 运行 `pnpm lint` lint 无新增违规
 - [ ] 运行 `pnpm -C apps/desktop storybook:build` Storybook 可构建
-- [ ] 统计替换后 `eslint-disable` 总数（目标 `no-native-html-element` ≤30）
-- [ ] 统计替换后原生 HTML 元素数量，计算替换率（目标 ≥80%）
+- [ ] 统计替换后 `no-native-html-element` eslint-disable 总数（R1 基线 121 处，目标 ≤25）
+- [ ] 统计替换后原生 HTML 元素数量（R1 基线：button 69 prod / input 14 / select 7 / textarea 12），计算替换率（目标 ≥80%）
 - [ ] grep 确认 `.transition-default` / `.scroll-shadow-y` 在各面板中的应用
 - [ ] 逐面板视觉验收：hover 过渡流畅、scroll shadow 可见、action icons fade-in 自然
 - [ ] 确认替换过程中无功能回归（重点检查 click / change / focus / submit 事件链）
