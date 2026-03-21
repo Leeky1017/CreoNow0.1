@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Popover } from "../../components/primitives";
 import type { CharacterRole } from "./types";
 import { ROLE_DISPLAY } from "./types";
+import { Button } from "../../components/primitives/Button";
 
 export interface RoleSelectorProps {
   /** Current role value */
@@ -71,8 +72,7 @@ export function RoleSelector({
       layer={layer}
       portalContainer={portalContainer}
       trigger={
-        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-        <button
+        <Button
           type="button"
           className={[
             "bg-[var(--color-info-subtle)]",
@@ -92,7 +92,7 @@ export function RoleSelector({
           ].join(" ")}
         >
           {currentRole.label}
-        </button>
+        </Button>
       }
       align="start"
       sideOffset={4}
@@ -105,8 +105,7 @@ export function RoleSelector({
           const config = ROLE_DISPLAY[role];
           const isSelected = role === value;
           return (
-            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-            <button
+            <Button
               key={role}
               type="button"
               onClick={() => handleSelect(role)}
@@ -132,7 +131,7 @@ export function RoleSelector({
               <span className={isSelected ? "" : "ml-[14px]"}>
                 {config.label}
               </span>
-            </button>
+            </Button>
           );
         })}
       </div>

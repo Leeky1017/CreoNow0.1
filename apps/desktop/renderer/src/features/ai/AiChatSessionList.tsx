@@ -2,6 +2,7 @@ import { useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Text } from "../../components/primitives";
 import { useAiStore } from "../../stores/aiStore";
+import { Button } from "../../components/primitives/Button";
 
 type AiChatSessionListProps = {
   projectId: string;
@@ -59,23 +60,21 @@ export function AiChatSessionList(props: AiChatSessionListProps): JSX.Element {
           key={session.sessionId}
           className="group flex items-center gap-1 px-3 py-2 hover:bg-[var(--color-bg-hover)] transition-default cursor-pointer"
         >
-          {/* eslint-disable-next-line creonow/no-native-html-element -- lightweight list item button */}
-          <button
+          <Button
             type="button"
             className="flex-1 text-left truncate text-xs text-[var(--color-fg-default)]"
             onClick={() => onSelectSession(session.sessionId)}
           >
             {session.title || t("ai.chatHistory.untitledSession")}
-          </button>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- lightweight delete button */}
-          <button
+          </Button>
+          <Button
             type="button"
             aria-label={t("ai.chatHistory.deleteSession")}
             className="opacity-0 group-hover:opacity-100 shrink-0 text-[var(--color-fg-muted)] hover:text-[var(--color-danger)] text-xs focus-visible:opacity-100 transition-default"
             onClick={() => handleDelete(session.sessionId)}
           >
             <span aria-hidden="true">{"\u2715"}</span>
-          </button>
+          </Button>
         </div>
       ))}
     </div>

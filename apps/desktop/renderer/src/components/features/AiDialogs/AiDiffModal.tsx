@@ -5,6 +5,7 @@ import type { AiDiffModalProps } from "./types";
 import { useAiDiffActions } from "./useAiDiffActions";
 import { AiDiffContent, DiffText as DiffTextComponent } from "./AiDiffContent";
 import { AiDiffSummary } from "./AiDiffSummary";
+import { Button } from "../../primitives/Button";
 
 const ChevronLeftIcon = () => (
   <svg
@@ -174,52 +175,48 @@ function AiDiffModalBody({
         <div className="flex items-center gap-3">
           {totalChanges > 1 && (
             <div className={navContainerStyles}>
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-              <button
+              <Button
                 type="button"
                 className={navButtonStyles}
                 onClick={handlePrev}
                 disabled={currentIndex === 0 || isApplying}
               >
                 <ChevronLeftIcon />
-              </button>
+              </Button>
               <span className={navTextStyles}>
                 {t("ai.diff.changeNav", {
                   current: currentIndex + 1,
                   total: totalChanges,
                 })}
               </span>
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-              <button
+              <Button
                 type="button"
                 className={navButtonStyles}
                 onClick={handleNext}
                 disabled={currentIndex === totalChanges - 1 || isApplying}
               >
                 <ChevronRightIcon />
-              </button>
+              </Button>
             </div>
           )}
           {currentState === "pending" && !isApplying && (
             <div className="flex items-center gap-1">
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-              <button
+              <Button
                 type="button"
                 className={acceptChangeButtonStyles}
                 onClick={() => handleAcceptChange(currentChange.id)}
                 title={t("ai.diff.acceptThisChange")}
               >
                 <CheckIcon />
-              </button>
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-              <button
+              </Button>
+              <Button
                 type="button"
                 className={rejectChangeButtonStyles}
                 onClick={() => handleRejectChange(currentChange.id)}
                 title={t("ai.diff.rejectThisChange")}
               >
                 <XIcon />
-              </button>
+              </Button>
             </div>
           )}
         </div>

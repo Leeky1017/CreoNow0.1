@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { Button, Input, Text } from "../../components/primitives";
+import { Select } from "../../components/primitives/Select";
 
 import { Check } from "lucide-react";
 export type AiModel = string;
@@ -142,18 +143,18 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
               className="h-8"
               fullWidth
             />
-            {/* eslint-disable-next-line creonow/no-native-html-element -- group-by dropdown with minimal styling, Select primitive is overkill */}
-            <select
+            <Select
               data-testid="ai-model-groupby"
-              className="h-8 px-2 text-[11px] rounded-[var(--radius-sm)] bg-[var(--color-bg-base)] border border-[var(--color-border-default)]"
+              className="h-8 text-[11px]"
               value={groupBy}
-              onChange={(e) =>
-                setGroupBy(e.currentTarget.value as "provider" | "none")
+              onValueChange={(val) =>
+                setGroupBy(val as "provider" | "none")
               }
-            >
-              <option value="provider">{t("ai.modelPicker.groupBy")}</option>
-              <option value="none">{t("ai.modelPicker.noGroup")}</option>
-            </select>
+              options={[
+                { value: "provider", label: t("ai.modelPicker.groupBy") },
+                { value: "none", label: t("ai.modelPicker.noGroup") },
+              ]}
+            />
           </div>
           <Text size="tiny" color="muted" className="uppercase tracking-wide">
             {t("ai.modelPicker.modelsTitle")}

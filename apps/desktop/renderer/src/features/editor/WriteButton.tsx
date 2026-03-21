@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "../../components/primitives/Tooltip";
+import { Button } from "../../components/primitives/Button";
 
 export function WriteButton(props: {
   visible: boolean;
@@ -25,8 +26,7 @@ export function WriteButton(props: {
             : t("editor.writeButton.tooltip")
         }
       >
-        {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: WriteButton has specialized conditional styling */}
-        <button
+        <Button
           type="button"
           data-testid="write-button-trigger"
           disabled={props.disabled}
@@ -43,7 +43,7 @@ export function WriteButton(props: {
           {props.running
             ? t("editor.writeButton.writing")
             : t("editor.writeButton.label")}
-        </button>
+        </Button>
       </Tooltip>
     </div>
   );

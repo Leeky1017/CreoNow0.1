@@ -17,6 +17,7 @@ import { CharacterRelationships } from "./CharacterRelationships";
 import { CharacterAppearances } from "./CharacterAppearances";
 import type { Character } from "./types";
 import { ARCHETYPE_OPTIONS, ZODIAC_OPTIONS } from "./types";
+import { Label } from "../../components/primitives/Label";
 
 export interface CharacterDetailDialogProps {
   /** Controlled open state */
@@ -251,10 +252,9 @@ export function CharacterDetailDialog({
             />
             <div className="space-y-3">
               <div className={sectionHeaderStyles}>
-                {/* eslint-disable-next-line creonow/no-native-html-element -- semantic label, no Label primitive */}
-                <label className={labelStyles}>
+                <Label className={labelStyles}>
                   {t("character.detail.appearanceDescription")}
-                </label>
+                </Label>
               </div>
               <Textarea
                 value={editedCharacter.description ?? ""}

@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { Popover } from "../../components/primitives";
 import type { CharacterGroup } from "./types";
 import { GROUP_OPTIONS } from "./types";
+import { Button } from "../../components/primitives/Button";
 
 export interface GroupSelectorProps {
   /** Current group value */
@@ -59,8 +60,7 @@ export function GroupSelector({
       layer={layer}
       portalContainer={portalContainer}
       trigger={
-        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-        <button
+        <Button
           type="button"
           className={[
             "text-[var(--color-fg-placeholder)]",
@@ -78,7 +78,7 @@ export function GroupSelector({
           ].join(" ")}
         >
           {currentGroup?.label}
-        </button>
+        </Button>
       }
       align="start"
       sideOffset={4}
@@ -90,8 +90,7 @@ export function GroupSelector({
         {GROUP_OPTIONS.map((group) => {
           const isSelected = group.value === value;
           return (
-            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-            <button
+            <Button
               key={group.value}
               type="button"
               onClick={() => handleSelect(group.value)}
@@ -118,7 +117,7 @@ export function GroupSelector({
               <span className={isSelected ? "" : "ml-[14px]"}>
                 {group.label}
               </span>
-            </button>
+            </Button>
           );
         })}
       </div>

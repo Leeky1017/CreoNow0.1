@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { EntityCompletionSession } from "../../stores/editorStore";
+import { Button } from "../../components/primitives/Button";
 
 type EntityCompletionPanelProps = {
   session: EntityCompletionSession;
@@ -42,8 +43,7 @@ export function EntityCompletionPanel(
         <ul className="space-y-1">
           {session.candidates.map((candidate, index) => (
             <li key={candidate.id}>
-              {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: completion item with role="option" needs native button */}
-              <button
+              <Button
                 type="button"
                 role="option"
                 aria-selected={session.selectedIndex === index}
@@ -58,7 +58,7 @@ export function EntityCompletionPanel(
                 <span className="ml-2 text-xs text-[var(--color-fg-muted)]">
                   {candidate.type}
                 </span>
-              </button>
+              </Button>
             </li>
           ))}
         </ul>

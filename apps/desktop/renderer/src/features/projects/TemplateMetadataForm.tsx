@@ -21,8 +21,7 @@ export function TemplateListItem({
       <span className="flex-1 text-sm text-[var(--color-fg-default)] truncate">
         {value}
       </span>
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-      <button
+      <Button
         type="button"
         onClick={onRemove}
         disabled={disabled}
@@ -30,7 +29,7 @@ export function TemplateListItem({
         aria-label={t("projects.template.removeItem", { value })}
       >
         <X size={16} strokeWidth={1.5} />
-      </button>
+      </Button>
     </div>
   );
 }

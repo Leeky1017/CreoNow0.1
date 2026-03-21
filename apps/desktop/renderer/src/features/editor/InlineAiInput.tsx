@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Input } from "../../components/primitives/Input";
 
 type InlineAiInputProps = {
   onSubmit: (instruction: string) => void;
@@ -50,8 +51,7 @@ export function InlineAiInput(props: InlineAiInputProps): JSX.Element {
       }}
     >
       <div className="flex items-center gap-2 px-[var(--space-3)] py-[var(--space-2)]">
-        {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: inline AI input with transparent borderless styling */}
-        <input
+        <Input
           ref={inputRef}
           type="text"
           data-testid="inline-ai-instruction-input"

@@ -20,6 +20,7 @@ import { SkillManagerDialog } from "./SkillManagerDialog";
 import type { SkillListItem } from "../../stores/aiStore";
 
 import { ArrowUp } from "lucide-react";
+import { Button } from "../../components/primitives/Button";
 
 // ---------------------------------------------------------------------------
 // SendStopButton
@@ -41,8 +42,7 @@ function SendStopButton(props: {
           : t("ai.panel.sendMessage")
       }
     >
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-      <button
+      <Button
         data-testid="ai-send-stop"
         type="button"
         aria-label={
@@ -61,7 +61,7 @@ function SendStopButton(props: {
         ) : (
           <ArrowUp size={16} strokeWidth={1.5} />
         )}
-      </button>
+      </Button>
     </Tooltip>
   );
 }
@@ -77,8 +77,7 @@ function ToolButton(props: {
   onClick?: () => void;
 }): JSX.Element {
   return (
-    // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-    <button
+    <Button
       data-testid={props.testId}
       type="button"
       className={`
@@ -93,7 +92,7 @@ function ToolButton(props: {
       onClick={props.onClick}
     >
       {props.children}
-    </button>
+    </Button>
   );
 }
 
@@ -167,20 +166,19 @@ export const AiInputArea = React.forwardRef<
                 </div>
               </div>
               <Tooltip content={t("ai.panel.dismissSelection")}>
-                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                <button
+                <Button
                   type="button"
                   data-testid="ai-selection-reference-close"
                   className="focus-ring h-5 w-5 shrink-0 rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
                   onClick={() => props.setSelectionSnapshot(null)}
                 >
                   ×
-                </button>
+                </Button>
               </Tooltip>
             </div>
           </div>
         ) : null}
-        {/* eslint-disable-next-line creonow/no-native-html-element -- specialized textarea */}
+        {/* eslint-disable-next-line creonow/no-native-html-element -- <textarea> 需要 ref 转发用于自动调整高度，Textarea 原语不支持 forwardRef */}
         <textarea
           ref={ref}
           data-testid="ai-input"

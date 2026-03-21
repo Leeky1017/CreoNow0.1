@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Button } from "../../components/primitives/Button";
 
 type AiPanelTabBarProps = {
   activeTab: "chat" | "history";
@@ -32,8 +33,7 @@ function TabButton(props: {
   onClick: () => void;
 }): JSX.Element {
   return (
-    // eslint-disable-next-line creonow/no-native-html-element -- specialized tab button
-    <button
+    <Button
       type="button"
       role="tab"
       aria-selected={props.active}
@@ -45,6 +45,6 @@ function TabButton(props: {
       }`}
     >
       {props.label}
-    </button>
+    </Button>
   );
 }

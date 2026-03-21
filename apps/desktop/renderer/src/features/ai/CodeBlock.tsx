@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Button } from "../../components/primitives/Button";
 
 /**
  * CodeBlock - Renders a code block with Copy and Apply buttons
@@ -29,23 +30,21 @@ export function CodeBlock(props: {
           {props.language || "code"}
         </span>
         <div className="flex items-center gap-1">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             type="button"
             onClick={handleCopy}
             className="focus-ring px-2 py-0.5 text-[11px] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
           >
             {copied ? t("ai.panel.copied") : t("ai.panel.copy")}
-          </button>
+          </Button>
           {props.onApply && (
-            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-            <button
+            <Button
               type="button"
               onClick={props.onApply}
               className="focus-ring px-2 py-0.5 text-[11px] text-[var(--color-fg-accent)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
             >
               {t("ai.panel.applyCode")}
-            </button>
+            </Button>
           )}
         </div>
       </div>

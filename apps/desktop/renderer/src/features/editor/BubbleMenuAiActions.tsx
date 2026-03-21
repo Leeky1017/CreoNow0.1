@@ -2,6 +2,7 @@ import type { Editor } from "@tiptap/react";
 import { useTranslation } from "react-i18next";
 
 import { captureSelectionRef } from "../ai/applySelection";
+import { Button } from "../../components/primitives/Button";
 
 const BUBBLE_AI_SKILLS = [
   {
@@ -102,8 +103,7 @@ export function BubbleMenuAiActions(props: {
   return (
     <div className="flex items-center gap-1">
       {BUBBLE_AI_SKILLS.map((skill) => (
-        // eslint-disable-next-line creonow/no-native-html-element -- Editor: AI skill inline button with custom compact styling
-        <button
+        <Button
           key={skill.id}
           type="button"
           data-testid={skill.testId}
@@ -113,7 +113,7 @@ export function BubbleMenuAiActions(props: {
           onClick={() => handleAiSkillClick(skill.id)}
         >
           {t(skill.labelKey)}
-        </button>
+        </Button>
       ))}
     </div>
   );

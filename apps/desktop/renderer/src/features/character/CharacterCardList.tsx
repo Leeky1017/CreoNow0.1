@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 import { EmptyState } from "../../components/patterns/EmptyState";
+import { Button } from "../../components/primitives/Button";
 
 export interface CharacterCardSummary {
   id: string;
@@ -62,8 +63,7 @@ export function CharacterCardList({
       className={`h-full min-h-0 overflow-auto bg-[var(--color-bg-base)] p-3 space-y-3 ${className}`}
     >
       {cards.map((card) => (
-        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-        <button
+        <Button
           key={card.id}
           type="button"
           data-testid={`character-card-${card.id}`}
@@ -109,7 +109,7 @@ export function CharacterCardList({
               </p>
             </div>
           </div>
-        </button>
+        </Button>
       ))}
     </section>
   );

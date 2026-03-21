@@ -8,6 +8,7 @@ import { NodeDetailCard } from "./NodeDetailCard";
 import { NodeEditDialog } from "./NodeEditDialog";
 import { EmptyState as PatternEmptyState } from "../../patterns/EmptyState";
 import { zoomAroundCursor } from "../../../features/kg/graphRenderAdapter";
+import { Button } from "../../primitives/Button";
 import type {
   KnowledgeGraphProps,
   NodeFilter,
@@ -384,8 +385,7 @@ export function KnowledgeGraph({
 
             {/* Floating add button (bottom-left) */}
             <div className="absolute bottom-6 left-6 z-30">
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-              <button
+              <Button
                 onClick={handleAddNode}
                 className="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-[var(--shadow-lg)] flex items-center justify-center transition-transform hover:scale-105"
                 aria-label={t("kg.graph.addNode")}
@@ -401,7 +401,7 @@ export function KnowledgeGraph({
                   <line x1="12" y1="5" x2="12" y2="19" />
                   <line x1="5" y1="12" x2="19" y2="12" />
                 </svg>
-              </button>
+              </Button>
             </div>
           </>
         )}

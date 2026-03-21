@@ -2,6 +2,7 @@ import React from "react";
 
 import { Tooltip } from "../../components/primitives/Tooltip";
 import { createToggleButtonA11yProps } from "./a11y";
+import { Button } from "../../components/primitives/Button";
 
 interface ToolbarButtonProps {
   label: string;
@@ -26,8 +27,7 @@ export function ToolbarButton({
 
   return (
     <Tooltip content={tooltipContent}>
-      {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: ToolbarButton is a specialized toggle with aria-pressed */}
-      <button
+      <Button
         type="button"
         data-testid={testId}
         {...createToggleButtonA11yProps({ label, pressed: isActive })}
@@ -42,7 +42,7 @@ export function ToolbarButton({
         `}
       >
         {children}
-      </button>
+      </Button>
     </Tooltip>
   );
 }

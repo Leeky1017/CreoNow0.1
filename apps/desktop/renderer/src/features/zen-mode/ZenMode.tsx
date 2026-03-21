@@ -5,6 +5,7 @@ import { ZenModeStatus } from "./ZenModeStatus";
 import { useHotkey } from "../../lib/hotkeys/useHotkey";
 
 import { X } from "lucide-react";
+import { Button } from "../../components/primitives/Button";
 
 /**
  * ZenMode statistics for status bar
@@ -123,8 +124,7 @@ export function ZenMode({
           >
             {t("zenMode.pressEscToExit")}
           </span>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- zen mode exit button */}
-          <button
+          <Button
             data-testid="zen-exit-button"
             onClick={onExit}
             className="focus-ring w-8 h-8 rounded-full flex items-center justify-center transition-colors"
@@ -143,7 +143,7 @@ export function ZenMode({
             aria-label={t("zenMode.exitAriaLabel")}
           >
             <X size={20} strokeWidth={1.5} />
-          </button>
+          </Button>
         </div>
       </div>
 

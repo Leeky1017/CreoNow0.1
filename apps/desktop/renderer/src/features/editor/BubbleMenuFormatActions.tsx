@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { InlineFormatButton } from "./InlineFormatButton";
 import { Button } from "../../components/primitives/Button";
+import { Input } from "../../components/primitives/Input";
 import { EDITOR_SHORTCUTS } from "../../config/shortcuts";
 
 import {
@@ -143,8 +144,7 @@ export function BubbleMenuFormatActions(props: {
           className="flex items-center gap-1 px-1"
           data-testid="link-input-container"
         >
-          {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: inline link URL input with custom compact styling */}
-          <input
+          <Input
             ref={linkInputRef}
             type="url"
             value={linkUrl}

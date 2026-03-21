@@ -1,7 +1,7 @@
 // QualityGatesPanel — Thin shell (re-exports types + orchestrates sub-components)
 import { CircleCheck, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Button } from "../../components/primitives";
+import { Button } from "../../components/primitives/Button";
 import { PanelStatusIndicator } from "./QualityCheckItems";
 import {
   CheckGroupAccordion,
@@ -78,15 +78,14 @@ export function QualityGatesPanelContent({
           </div>
         </div>
         {showCloseButton && (
-          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-          <button
+          <Button
             type="button"
             onClick={onClose}
             className={closeButtonStyles}
             aria-label={t("qualityGates.closeAriaLabel")}
           >
             <CloseIcon />
-          </button>
+          </Button>
         )}
       </div>
 

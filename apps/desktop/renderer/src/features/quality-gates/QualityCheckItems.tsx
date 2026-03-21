@@ -8,7 +8,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Button } from "../../components/primitives";
+import { Button } from "../../components/primitives/Button";
 import type {
   CheckIssue,
   CheckItem,
@@ -160,14 +160,13 @@ export function IssueCard({
       {issue.location && (
         <div className="flex items-center gap-1 mt-2 text-[10px] text-[var(--color-fg-muted)]">
           <LocationIcon />
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             type="button"
             onClick={() => onViewInEditor?.(checkId, issue.id)}
             className="hover:text-[var(--color-fg-default)] hover:underline transition-colors"
           >
             {issue.location}
-          </button>
+          </Button>
         </div>
       )}
       <div className="flex items-center gap-2 mt-3">
@@ -228,8 +227,7 @@ export function CheckItemRow({
       className="border-b border-[var(--color-separator)] last:border-b-0"
       data-testid={`check-item-${check.id}`}
     >
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-      <button
+      <Button
         type="button"
         onClick={() => hasIssues && onToggle?.(check.id)}
         disabled={!hasIssues}
@@ -278,7 +276,7 @@ export function CheckItemRow({
             <ChevronIcon expanded={isExpanded} />
           </div>
         )}
-      </button>
+      </Button>
       {isExpanded && hasIssues && (
         <div className="px-3 pb-3 space-y-2">
           {check.issues?.map((issue) => (

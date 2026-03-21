@@ -1,6 +1,7 @@
 import React from "react";
 import { createToggleButtonA11yProps } from "./a11y";
 import { Tooltip } from "../../components/primitives/Tooltip";
+import { Button } from "../../components/primitives/Button";
 
 export interface InlineFormatButtonProps {
   /** Button label for accessibility */
@@ -41,8 +42,7 @@ export function InlineFormatButton({
 
   return (
     <Tooltip content={tooltipContent}>
-      {/* eslint-disable-next-line creonow/no-native-html-element -- Editor: InlineFormatButton is a specialized toggle with aria-pressed */}
-      <button
+      <Button
         type="button"
         data-testid={testId}
         {...createToggleButtonA11yProps({ label, pressed: isActive })}
@@ -58,7 +58,7 @@ export function InlineFormatButton({
         `}
       >
         {children}
-      </button>
+      </Button>
     </Tooltip>
   );
 }

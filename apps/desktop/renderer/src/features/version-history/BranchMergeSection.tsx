@@ -8,6 +8,8 @@ import type { BranchMergeConflict } from "../../stores/versionStore";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import type { IpcError } from "@shared/types/ipc-generated";
 import type { ConflictFormEntry } from "./useConflictResolution";
+import { Textarea } from "../../components/primitives/Textarea";
+import { Label } from "../../components/primitives/Label";
 
 // ============================================================================
 // BranchConflictItem
@@ -64,9 +66,8 @@ function BranchConflictItem(props: {
       </div>
 
       <div className="flex flex-wrap gap-3 text-[11px] text-[var(--color-fg-default)]">
-        {/* eslint-disable-next-line creonow/no-native-html-element -- no Label primitive */}
-        <label className="inline-flex items-center gap-1">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- radio input */}
+        <Label className="inline-flex items-center gap-1">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- <input type="radio"> 无对应 Primitive */}
           <input
             type="radio"
             name={`resolution-${conflict.conflictId}`}
@@ -74,10 +75,9 @@ function BranchConflictItem(props: {
             onChange={() => onResolutionChange(conflict.conflictId, "ours")}
           />
           {t("versionHistory.container.useOurs")}
-        </label>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- no Label primitive */}
-        <label className="inline-flex items-center gap-1">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- radio input */}
+        </Label>
+        <Label className="inline-flex items-center gap-1">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- <input type="radio"> 无对应 Primitive */}
           <input
             type="radio"
             name={`resolution-${conflict.conflictId}`}
@@ -85,10 +85,9 @@ function BranchConflictItem(props: {
             onChange={() => onResolutionChange(conflict.conflictId, "theirs")}
           />
           {t("versionHistory.container.useTheirs")}
-        </label>
-        {/* eslint-disable-next-line creonow/no-native-html-element -- no Label primitive */}
-        <label className="inline-flex items-center gap-1">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- radio input */}
+        </Label>
+        <Label className="inline-flex items-center gap-1">
+          {/* eslint-disable-next-line creonow/no-native-html-element -- <input type="radio"> 无对应 Primitive */}
           <input
             data-testid={`branch-conflict-manual-${conflict.conflictId}`}
             type="radio"
@@ -97,11 +96,10 @@ function BranchConflictItem(props: {
             onChange={() => onResolutionChange(conflict.conflictId, "manual")}
           />
           {t("versionHistory.container.useManual")}
-        </label>
+        </Label>
       </div>
       {selected.resolution === "manual" ? (
-        // eslint-disable-next-line creonow/no-native-html-element -- Textarea lacks forwardRef; radio-adjacent
-        <textarea
+        <Textarea
           data-testid={`branch-conflict-manual-text-${conflict.conflictId}`}
           className="h-20 w-full rounded border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-2 font-mono text-xs text-[var(--color-fg-default)]"
           value={selected.manualText}
@@ -161,8 +159,7 @@ export function BranchMergeSection({
           {t("versionHistory.container.branchMerge")}
         </div>
         <div className="grid grid-cols-1 gap-2">
-          {/* eslint-disable-next-line creonow/no-native-html-element -- no Label primitive */}
-          <label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
+          <Label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
             {t("versionHistory.container.sourceBranch")}
             <Input
               data-testid="branch-merge-source-input"
@@ -170,9 +167,8 @@ export function BranchMergeSection({
               value={sourceBranchName}
               onChange={(event) => onSourceChange(event.target.value)}
             />
-          </label>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- no Label primitive */}
-          <label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
+          </Label>
+          <Label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
             {t("versionHistory.container.targetBranch")}
             <Input
               data-testid="branch-merge-target-input"
@@ -180,7 +176,7 @@ export function BranchMergeSection({
               value={targetBranchName}
               onChange={(event) => onTargetChange(event.target.value)}
             />
-          </label>
+          </Label>
         </div>
         <Button
           variant="secondary"

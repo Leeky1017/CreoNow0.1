@@ -78,8 +78,7 @@ export function CreateProjectDialog({
               aria-label={t("projects.create.modeLabel")}
               className="flex gap-2"
             >
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-              <button
+              <Button
                 type="button"
                 role="tab"
                 aria-selected={mode === "manual"}
@@ -87,9 +86,8 @@ export function CreateProjectDialog({
                 className="h-8 px-3 text-xs rounded-[var(--radius-sm)] border border-[var(--color-border-default)]"
               >
                 {t("projects.create.manualCreate")}
-              </button>
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-              <button
+              </Button>
+              <Button
                 type="button"
                 role="tab"
                 aria-selected={mode === "ai-assist"}
@@ -97,7 +95,7 @@ export function CreateProjectDialog({
                 className="h-8 px-3 text-xs rounded-[var(--radius-sm)] border border-[var(--color-border-default)]"
               >
                 {t("projects.create.aiAssisted")}
-              </button>
+              </Button>
             </div>
 
             {mode === "manual" ? (

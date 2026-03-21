@@ -3,7 +3,8 @@ import type { SettingsTab } from "../settings-dialog/SettingsDialog";
 
 import { AiErrorCard } from "../../components/features/AiDialogs";
 
-import { Button, Spinner, Text } from "../../components/primitives";
+import { Spinner, Text } from "../../components/primitives";
+import { Button } from "../../components/primitives/Button";
 
 import {
   type AiApplyStatus,
@@ -91,28 +92,26 @@ export function ErrorGuideCard(props: {
               <code className="rounded-[var(--radius-sm)] bg-[var(--color-bg-base)] px-2 py-1 text-[11px] text-[var(--color-fg-default)]">
                 {props.command}
               </code>
-              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-              <button
+              <Button
                 type="button"
                 data-testid={`${props.testId}-copy-command`}
                 className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default"
                 onClick={() => void handleCopyCommand()}
               >
                 {copied ? t("ai.panel.copied") : t("ai.panel.copy")}
-              </button>
+              </Button>
             </div>
           ) : null}
           <div className="mt-2 flex items-center gap-2">
             {props.onAction && props.actionLabel ? (
-              // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-              <button
+              <Button
                 type="button"
                 data-testid={props.actionTestId}
                 className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default"
                 onClick={props.onAction}
               >
                 {props.actionLabel}
-              </button>
+              </Button>
             ) : null}
             <span className="text-[10px] font-mono text-[var(--color-error)]">
               {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- diagnostic code reference, user-friendly text shown in description/steps above */}
@@ -288,8 +287,7 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
           {props.lastCandidates.map((candidate, index) => {
             const isSelected = props.selectedCandidate?.id === candidate.id;
             return (
-              // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-              <button
+              <Button
                 key={candidate.id}
                 data-testid={`ai-candidate-card-${index + 1}`}
                 type="button"
@@ -317,7 +315,7 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
                 >
                   {candidate.summary}
                 </Text>
-              </button>
+              </Button>
             );
           })}
         </div>

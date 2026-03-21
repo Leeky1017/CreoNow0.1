@@ -6,6 +6,7 @@ import { Tooltip } from "../../components/primitives/Tooltip";
 import { resolveSkillsForPicker } from "./scopeResolver";
 
 import { Plus } from "lucide-react";
+import { Button } from "../../components/primitives/Button";
 
 /**
  * SkillItemRow – renders one skill entry with optional action buttons.
@@ -24,8 +25,7 @@ function SkillItemRow(props: {
       className="flex items-center gap-1"
       data-testid={`ai-skill-row-${props.item.id}`}
     >
-      {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-      <button
+      <Button
         type="button"
         data-testid={`ai-skill-${props.item.id}`}
         disabled={disabled}
@@ -55,7 +55,7 @@ function SkillItemRow(props: {
         <Text size="tiny" color="muted">
           {props.subtitle}
         </Text>
-      </button>
+      </Button>
       {props.actionButtons}
     </div>
   );
@@ -115,8 +115,7 @@ export function SkillPicker(props: {
           </Text>
 
           <Tooltip content="SKILL Settings">
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-            <button
+            <Button
               type="button"
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded transition-colors"
               onClick={() => {
@@ -124,7 +123,7 @@ export function SkillPicker(props: {
               }}
             >
               <Plus size={16} strokeWidth={1.5} />
-            </button>
+            </Button>
           </Tooltip>
         </div>
 
@@ -153,8 +152,7 @@ export function SkillPicker(props: {
                     onSelect={() => props.onSelectSkillId(item.id)}
                     actionButtons={
                       props.onToggleSkill ? (
-                        // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-                        <button
+                        <Button
                           type="button"
                           data-testid={`ai-skill-toggle-${item.id}`}
                           className="px-2 py-1 text-[10px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
@@ -165,7 +163,7 @@ export function SkillPicker(props: {
                           {item.enabled
                             ? t("ai.skillPicker.disable")
                             : t("ai.skillPicker.enable")}
-                        </button>
+                        </Button>
                       ) : undefined
                     }
                   />
@@ -184,8 +182,7 @@ export function SkillPicker(props: {
                 <Text size="small" color="muted">
                   {t("ai.skillPicker.noCustomSkillsHint")}
                 </Text>
-                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                <button
+                <Button
                   type="button"
                   className="mt-2 px-2 py-1 text-[11px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-default)]"
                   onClick={() => {
@@ -197,7 +194,7 @@ export function SkillPicker(props: {
                   }}
                 >
                   {t("ai.skillPicker.createSkill")}
-                </button>
+                </Button>
               </div>
             ) : (
               <div className="mt-1.5 space-y-2">
@@ -229,8 +226,7 @@ export function SkillPicker(props: {
                             actionButtons={
                               <>
                                 {props.onUpdateScope && (
-                                  // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-                                  <button
+                                  <Button
                                     type="button"
                                     data-testid={`ai-skill-demote-${item.id}`}
                                     className="px-2 py-1 text-[10px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
@@ -239,11 +235,10 @@ export function SkillPicker(props: {
                                     }
                                   >
                                     {t("ai.skillPicker.demoteToProject")}
-                                  </button>
+                                  </Button>
                                 )}
                                 {props.onToggleSkill && (
-                                  // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-                                  <button
+                                  <Button
                                     type="button"
                                     data-testid={`ai-skill-toggle-${item.id}`}
                                     className="px-2 py-1 text-[10px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
@@ -257,7 +252,7 @@ export function SkillPicker(props: {
                                     {item.enabled
                                       ? t("ai.skillPicker.disable")
                                       : t("ai.skillPicker.enable")}
-                                  </button>
+                                  </Button>
                                 )}
                               </>
                             }
@@ -298,8 +293,7 @@ export function SkillPicker(props: {
                             actionButtons={
                               <>
                                 {props.onUpdateScope && (
-                                  // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-                                  <button
+                                  <Button
                                     type="button"
                                     data-testid={`ai-skill-promote-${item.id}`}
                                     className="px-2 py-1 text-[10px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
@@ -308,11 +302,10 @@ export function SkillPicker(props: {
                                     }
                                   >
                                     {t("ai.skillPicker.promoteToGlobal")}
-                                  </button>
+                                  </Button>
                                 )}
                                 {props.onToggleSkill && (
-                                  // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-                                  <button
+                                  <Button
                                     type="button"
                                     data-testid={`ai-skill-toggle-${item.id}`}
                                     className="px-2 py-1 text-[10px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
@@ -326,7 +319,7 @@ export function SkillPicker(props: {
                                     {item.enabled
                                       ? t("ai.skillPicker.disable")
                                       : t("ai.skillPicker.enable")}
-                                  </button>
+                                  </Button>
                                 )}
                               </>
                             }

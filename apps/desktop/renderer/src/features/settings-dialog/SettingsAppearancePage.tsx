@@ -3,6 +3,7 @@ import { Text } from "../../components/primitives";
 import { Tooltip } from "../../components/primitives/Tooltip";
 import { Slider } from "../../components/primitives/Slider";
 import { ACCENT_PALETTE, DEFAULT_ACCENT_COLOR } from "./accentPalette";
+import { Button } from "../../components/primitives/Button";
 
 /**
  * Theme mode types
@@ -146,8 +147,7 @@ export function SettingsAppearancePage({
           {themes.map(({ mode, label }) => {
             const isSelected = settings.themeMode === mode;
             return (
-              // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-              <button
+              <Button
                 key={mode}
                 type="button"
                 data-testid={`theme-mode-${mode}`}
@@ -166,7 +166,7 @@ export function SettingsAppearancePage({
                 >
                   {label}
                 </Text>
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -185,9 +185,10 @@ export function SettingsAppearancePage({
             const isSelected = settings.accentColor === value;
             return (
               <Tooltip key={value} content={label}>
-                {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                <button
+                <Button
                   type="button"
+                  size="icon"
+                  variant="ghost"
                   onClick={() => updateSetting("accentColor", value)}
                   className={`w-8 h-8 rounded-full border-2 transition-[box-shadow,transform] duration-[var(--duration-fast)] ${
                     isSelected
@@ -198,7 +199,9 @@ export function SettingsAppearancePage({
                   aria-label={t("settingsDialog.appearance.selectAccentColor", {
                     color: label,
                   })}
-                />
+                >
+                  <span className="sr-only">{label}</span>
+                </Button>
               </Tooltip>
             );
           })}

@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import type { AiErrorType } from "./types";
+import { Button } from "../../primitives/Button";
 
 export type RetryState = "idle" | "loading" | "success" | "error";
 
@@ -109,24 +110,22 @@ export function AiErrorCardActions(props: {
       {props.errorType === "usage_limit" && (
         <>
           {props.onUpgradePlan && (
-            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-            <button
+            <Button
               type="button"
               className={upgradeButtonStyles}
               onClick={props.onUpgradePlan}
             >
               {t("ai.error.upgradePlan")}
-            </button>
+            </Button>
           )}
           {props.onViewUsage && (
-            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-            <button
+            <Button
               type="button"
               className={linkButtonStyles}
               onClick={props.onViewUsage}
             >
               {t("ai.error.viewUsage")}
-            </button>
+            </Button>
           )}
         </>
       )}
@@ -134,8 +133,7 @@ export function AiErrorCardActions(props: {
       {props.errorType === "service_error" && (
         <>
           {props.onRetry && (
-            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-            <button
+            <Button
               type="button"
               className={retryButtonStyles}
               onClick={props.handleRetry}
@@ -145,18 +143,17 @@ export function AiErrorCardActions(props: {
                 retryState={props.retryState}
                 isTimeout={false}
               />
-            </button>
+            </Button>
           )}
           {props.onCheckStatus && (
-            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-            <button
+            <Button
               type="button"
               className={linkButtonStyles}
               onClick={props.onCheckStatus}
             >
               {t("ai.error.checkStatus")}
               <ExternalLinkIcon />
-            </button>
+            </Button>
           )}
         </>
       )}
@@ -165,8 +162,7 @@ export function AiErrorCardActions(props: {
         props.errorType === "timeout" ||
         props.errorType === "rate_limit") &&
         props.onRetry && (
-          // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-          <button
+          <Button
             type="button"
             className={retryButtonStyles}
             onClick={props.handleRetry}
@@ -176,7 +172,7 @@ export function AiErrorCardActions(props: {
               retryState={props.retryState}
               isTimeout={props.errorType === "timeout"}
             />
-          </button>
+          </Button>
         )}
     </div>
   );

@@ -2090,19 +2090,27 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
               >
                 <button
                   aria-selected="true"
-                  class="px-3 py-2 text-[13px] font-medium transition-colors duration-[var(--duration-fast)] relative focus-ring text-[var(--color-fg-default)] border-b-2 border-[var(--color-accent)]"
+                  class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-2 text-[13px] font-medium transition-colors duration-[var(--duration-fast)] relative focus-ring text-[var(--color-fg-default)] border-b-2 border-[var(--color-accent)]"
                   role="tab"
                   type="button"
                 >
-                  Chat
+                  <span
+                    class="inline-flex items-center gap-2 truncate"
+                  >
+                    Chat
+                  </span>
                 </button>
                 <button
                   aria-selected="false"
-                  class="px-3 py-2 text-[13px] font-medium transition-colors duration-[var(--duration-fast)] relative focus-ring text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+                  class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-2 text-[13px] font-medium transition-colors duration-[var(--duration-fast)] relative focus-ring text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
                   role="tab"
                   type="button"
                 >
-                  History
+                  <span
+                    class="inline-flex items-center gap-2 truncate"
+                  >
+                    History
+                  </span>
                 </button>
               </div>
               <div
@@ -2195,27 +2203,35 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                         class="flex items-center gap-1"
                       >
                         <button
-                          class="
+                          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] 
         focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
         transition-colors cursor-pointer
         text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
       "
                           type="button"
                         >
-                          Ask
+                          <span
+                            class="inline-flex items-center gap-2 truncate"
+                          >
+                            Ask
+                          </span>
                         </button>
                         <button
-                          class="
+                          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] 
         focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
         transition-colors cursor-pointer
         text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
       "
                           type="button"
                         >
-                          Loading
+                          <span
+                            class="inline-flex items-center gap-2 truncate"
+                          >
+                            Loading
+                          </span>
                         </button>
                         <button
-                          class="
+                          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] 
         focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]
         transition-colors cursor-pointer
         text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
@@ -2223,37 +2239,45 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                           data-testid="ai-skills-toggle"
                           type="button"
                         >
-                          Loading
+                          <span
+                            class="inline-flex items-center gap-2 truncate"
+                          >
+                            Loading
+                          </span>
                         </button>
                       </div>
                       <button
                         aria-label="Send message"
-                        class="focus-ring w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         data-state="closed"
                         data-testid="ai-send-stop"
                         disabled=""
                         type="button"
                       >
-                        <svg
-                          aria-hidden="true"
-                          class="lucide lucide-arrow-up"
-                          fill="none"
-                          height="16"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
-                          viewBox="0 0 24 24"
-                          width="16"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <span
+                          class="inline-flex items-center gap-2 truncate"
                         >
-                          <path
-                            d="m5 12 7-7 7 7"
-                          />
-                          <path
-                            d="M12 19V5"
-                          />
-                        </svg>
+                          <svg
+                            aria-hidden="true"
+                            class="lucide lucide-arrow-up"
+                            fill="none"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="m5 12 7-7 7 7"
+                            />
+                            <path
+                              d="M12 19V5"
+                            />
+                          </svg>
+                        </span>
                       </button>
                     </div>
                   </div>
@@ -2497,11 +2521,15 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
               </div>
             </section>
             <button
-              class="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
+              class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
               disabled=""
               type="button"
             >
-              View Version History
+              <span
+                class="inline-flex items-center gap-2 truncate"
+              >
+                View Version History
+              </span>
             </button>
           </div>
         </div>
@@ -2614,11 +2642,15 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
               </div>
             </section>
             <button
-              class="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
+              class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
               disabled=""
               type="button"
             >
-              View Version History
+              <span
+                class="inline-flex items-center gap-2 truncate"
+              >
+                View Version History
+              </span>
             </button>
           </div>
         </div>

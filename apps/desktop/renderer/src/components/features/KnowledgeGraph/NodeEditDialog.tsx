@@ -6,6 +6,7 @@ import { Input } from "../../primitives/Input";
 import { Select } from "../../primitives/Select";
 import { Textarea } from "../../primitives/Textarea";
 import type { GraphNode, NodeEditDialogProps, NodeType } from "./types";
+import { Label } from "../../primitives/Label";
 
 /**
  * Node type color variables
@@ -178,8 +179,7 @@ export function NodeEditDialog({
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* Name */}
         <div>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-          <label className={labelStyles}>{t("kg.nodeEdit.nameLabel")}</label>
+          <Label className={labelStyles}>{t("kg.nodeEdit.nameLabel")}</Label>
           <Input
             value={label}
             onChange={(e) => setLabel(e.target.value)}
@@ -191,8 +191,7 @@ export function NodeEditDialog({
 
         {/* Type */}
         <div>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-          <label className={labelStyles}>
+          <Label className={labelStyles}>
             <span className="flex items-center gap-2">
               {t("kg.nodeEdit.typeLabel")}
               <span
@@ -200,7 +199,7 @@ export function NodeEditDialog({
                 style={{ backgroundColor: typeColor }}
               />
             </span>
-          </label>
+          </Label>
           <Select
             value={type}
             onValueChange={(value) => setType(value as NodeType)}
@@ -216,8 +215,7 @@ export function NodeEditDialog({
         {/* Role (for characters) */}
         {(type === "character" || type === "faction") && (
           <div>
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-            <label className={labelStyles}>{t("kg.nodeEdit.roleLabel")}</label>
+            <Label className={labelStyles}>{t("kg.nodeEdit.roleLabel")}</Label>
             <Input
               value={role}
               onChange={(e) => setRole(e.target.value)}
@@ -229,10 +227,9 @@ export function NodeEditDialog({
 
         {/* Description */}
         <div>
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-          <label className={labelStyles}>
+          <Label className={labelStyles}>
             {t("kg.nodeEdit.descriptionLabel")}
-          </label>
+          </Label>
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -246,18 +243,16 @@ export function NodeEditDialog({
         {/* Attributes */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized label */}
-            <label className={labelStyles + " mb-0"}>
+            <Label className={labelStyles + " mb-0"}>
               {t("kg.nodeEdit.propertiesLabel")}
-            </label>
-            {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-            <button
+            </Label>
+            <Button
               type="button"
               onClick={handleAddAttribute}
               className="text-[11px] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
             >
               {t("kg.nodeEdit.addProperty")}
-            </button>
+            </Button>
           </div>
 
           {attributes.length === 0 ? (
@@ -285,8 +280,7 @@ export function NodeEditDialog({
                     placeholder={t("kg.nodeEdit.propertyValuePlaceholder")}
                     className="flex-1"
                   />
-                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                  <button
+                  <Button
                     type="button"
                     onClick={() => handleRemoveAttribute(index)}
                     className="w-8 h-8 flex items-center justify-center text-[var(--color-fg-subtle)] hover:text-[var(--color-error)] transition-colors"
@@ -303,7 +297,7 @@ export function NodeEditDialog({
                       <line x1="18" y1="6" x2="6" y2="18" />
                       <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>

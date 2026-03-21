@@ -116,8 +116,7 @@ export function NodeDetailCard({
         <div className="flex items-center gap-1">
           {/* Delete button */}
           {onDelete && (
-            // eslint-disable-next-line creonow/no-native-html-element -- specialized button
-            <button
+            <Button
               onClick={onDelete}
               className="p-1 text-[var(--color-fg-subtle)] hover:text-[var(--color-error)] transition-colors"
               aria-label={t("kg.nodeDetail.deleteNode")}
@@ -136,11 +135,10 @@ export function NodeDetailCard({
                 <line x1="10" y1="11" x2="10" y2="17" />
                 <line x1="14" y1="11" x2="14" y2="17" />
               </svg>
-            </button>
+            </Button>
           )}
           {/* Close button */}
-          {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-          <button
+          <Button
             onClick={onClose}
             className="p-1 text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
             aria-label={t("kg.nodeDetail.close")}
@@ -156,7 +154,7 @@ export function NodeDetailCard({
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
-          </button>
+          </Button>
         </div>
       </div>
 

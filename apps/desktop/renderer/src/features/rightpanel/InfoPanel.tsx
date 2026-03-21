@@ -9,6 +9,7 @@ import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { useFileStore, type DocumentListItem } from "../../stores/fileStore";
 import "../../i18n";
+import { Button } from "../../components/primitives/Button";
 
 type StatsSummary = IpcResponseData<"stats:day:gettoday">["summary"];
 
@@ -246,8 +247,7 @@ export function InfoPanel(props: InfoPanelProps = {}): JSX.Element {
         <DocumentInfoSection document={currentDocument} />
         <TodayStatsSection stats={stats} error={statsError} loading={loading} />
 
-        {/* eslint-disable-next-line creonow/no-native-html-element -- minimal inline link-style button */}
-        <button
+        <Button
           type="button"
           className="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
           disabled={!currentDocument}
@@ -259,7 +259,7 @@ export function InfoPanel(props: InfoPanelProps = {}): JSX.Element {
           }}
         >
           {t("workbench.infoPanel.openVersionHistory")}
-        </button>
+        </Button>
       </div>
     </div>
   );
