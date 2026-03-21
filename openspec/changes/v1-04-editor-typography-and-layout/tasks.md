@@ -1,5 +1,7 @@
 # Tasks: V1-04 编辑器排版与布局
 
+> 📋 **级联刷新 R1**（2026-03-21）：v1-01 + v1-02 完成后刷新。基线已重采集。
+
 > ✅ **已合并** — 评级 ⭐⭐⭐⭐ — 所有 Phase 完成，无遗留项
 
 - **GitHub Issue**: 待创建
@@ -13,12 +15,12 @@
 | ID    | 标准                                                                                                           | 对应 Scenario | 结果                                                  |
 | ----- | -------------------------------------------------------------------------------------------------------------- | ------------- | ----------------------------------------------------- |
 | AC-1  | 编辑器正文区域存在 `max-width: 760px`（或等效 token 值）+ 水平居中                                             | 全局          | ✅ `main.css:570` `--editor-content-max-width: 760px` |
-| AC-2  | 编辑器文档标题使用 `--text-display-*` token（48px / weight 300 / letter-spacing -0.03em），不再使用 `text-4xl` | 全局          | ✅ `main.css:579-581`                                 |
+| AC-2  | 编辑器文档标题使用 `--text-display-*` token（48px / weight 300 / letter-spacing -0.03em），不再使用 `text-4xl` | 全局          | ✅ `main.css:579-581` [由 v1-01 提前达成 token 定义]  |
 | AC-3  | CSS 层面支持 serif 字体（Lora 或等效），通过 CSS 变量或 class 切换                                             | 全局          | ✅ `tokens.css:64` Lora 字体栈                        |
-| AC-4  | 编辑器正文 line-height 为 1.8（使用 `--leading-relaxed` token）                                                | 全局          | ✅ `tokens.css:53` + CJK 1.95                         |
-| AC-5  | 编辑器顶部有 featured image 区域 + gradient overlay，当无图片时优雅降级                                        | 全局          | ✅ `EditorFeaturedImage.tsx`                          |
-| AC-6  | 编辑区域侧边 padding 为 40-48px（使用语义间距 token）                                                          | 全局          | ✅ `tokens.css:25` 48px                               |
-| AC-7  | 所有 typography 修改使用 Design Token，0 处新增 Tailwind arbitrary 字号/色值                                   | 全局          | ✅ 全部通过 token                                     |
+| AC-4  | 编辑器正文 line-height 为 1.8（使用 `--leading-relaxed` token）                                                | 全局          | ✅ `tokens.css:53` + CJK 1.95 [由 v1-01 提前达成 token 定义] |
+| AC-5  | 编辑器顶部有 featured image 区域 + gradient overlay，当无图片时优雅降级                                        | 全局          | ✅ `EditorFeaturedImage.tsx` 49 行                    |
+| AC-6  | 编辑区域侧边 padding 为 40-48px（使用语义间距 token）                                                          | 全局          | ✅ `tokens.css:25` 48px [由 v1-01 提前达成 token 定义] |
+| AC-7  | 所有 typography 修改使用 Design Token，0 处新增 Tailwind arbitrary 字号/色值                                   | 全局          | ✅ 全部通过 token（全局 ~1000 处 text-\[Npx\] 归 v1-18） |
 | AC-8  | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                     | 全局          | ✅                                                    |
 | AC-9  | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                              | 全局          | ✅                                                    |
 | AC-10 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                    | 全局          | ✅                                                    |
@@ -33,7 +35,8 @@
 - [x] 阅读设计稿 `design/Variant/designs/08-editor-workspace.html`，对比两种编辑器布局
 - [x] 阅读 `apps/desktop/renderer/src/features/editor/EditorPane.tsx` 中与 typography/layout 相关的代码段
 - [x] 阅读 `apps/desktop/renderer/src/styles/` 下编辑器相关 CSS 文件
-- [x] 确认 v1-01（Design Token 补完）已合并，`--text-display-*`、`--leading-relaxed` 等 token 可用
+- [x] 确认 v1-01（Design Token 补完）已合并，`--text-display-*`、`--leading-relaxed` 等 token 可用 [由 v1-01 提前达成]
+- [x] 确认 v1-02（Primitive Visual Evolution）已合并，Button/Card/Tabs 原语可用于编辑器工具栏 [由 v1-02 提前达成]
 - [x] 与 v1-05 协调文件修改边界：本 change 只动 typography/layout 行，不做结构性拆分
 
 ---
@@ -180,3 +183,5 @@
 ## EXECUTION_ORDER
 
 无直接下游需刷新。v1-07（Settings 视觉精修）为消费方，不阻塞。
+
+**级联刷新 R1 记录**：v1-01 ✅ + v1-02 ✅ 完成后重采集基线。typography token（`--text-display-*`、`--leading-relaxed`）由 v1-01 提前达成定义；Button/Card/Tabs 原语由 v1-02 提前达成。text-\[Npx\] ~1000 处归 v1-18。

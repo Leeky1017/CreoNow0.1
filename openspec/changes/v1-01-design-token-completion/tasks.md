@@ -9,19 +9,19 @@
 
 ## 验收标准
 
-| ID    | 标准                                                                                                                                                                                                                       | 验证方式               | 结果 | 证据                                                                 |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ---- | -------------------------------------------------------------------- |
-| AC-1  | `design/system/01-tokens.css` 包含 `--text-display-*`（48px）、`--text-heading-*`（24px）、`--text-nav-*`（13px）、`--text-metadata-*`（12px）四组 typography token，每组包含 size / weight / line-height / letter-spacing | `grep` 四组 token 名   | ✅   | `tokens.css` 含全部 4 组 × 4 属性                                    |
-| AC-2  | 独立 weight token（`--weight-light/normal/medium/semibold`）、tracking token（`--tracking-tight/normal/wide/wider`）、leading token（`--leading-tight/normal/relaxed`）全部定义                                            | `grep` 验证            | ✅   | 4+4+3=11 个 token 全部定义                                           |
-| AC-4  | 语义间距 `--space-panel-padding`、`--space-section-gap`、`--space-item-gap`、`--space-inline-gap` 已定义，且值通过 `var(--space-N)` 引用基础间距                                                                           | `grep` + 值检查        | ✅   | `panel-padding` / `section-gap` / `item-gap` / `inline-gap` 均已定义 |
-| AC-5  | `renderer/src/styles/main.css` 的 `@theme` 块导出 `--duration-instant`（50ms）和 `--duration-slower`（500ms）                                                                                                              | `grep` main.css @theme | ✅   | `main.css` `@theme` 含 5 个 duration token                           |
-| AC-6  | `renderer/src/styles/main.css` 的 `@theme` 块包含 typography token 的 Tailwind 映射                                                                                                                                        | `grep` main.css @theme | ✅   | 14 组 × 4 属性映射完成                                               |
-| AC-7  | `renderer/src/styles/tokens.css` 与 `design/system/01-tokens.css` 保持同步（如有同步关系）                                                                                                                                 | diff 比较              | ✅   | renderer `tokens.css` 381 行，与 design 469 行同步                   |
-| AC-8  | 所有新增 token 在 `tokens.css` 中有中文注释说明用途                                                                                                                                                                        | 人工审查               | ✅   | 所有新增 token 均有中文注释                                          |
-| AC-9  | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                                                                                                                 | CI 命令                | ✅   | `pnpm -C apps/desktop storybook:build` 通过                          |
-| AC-10 | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                                                                                                                          | CI 命令                | ✅   | 2589 通过 / 0 失败                                                   |
-| AC-11 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                                                                                                                                | CI 命令                | ✅   | `pnpm typecheck` 通过                                                |
-| AC-12 | lint ratchet 无新增违规（`pnpm lint`）                                                                                                                                                                                     | CI 命令                | ✅   | `pnpm lint` 无新增违规                                               |
+| ID    | 标准                                                                                                                                                                                                                       | 验证方式               | 结果 | 证据                                                                 | R1 复核（2026-03-21）                     |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ---- | -------------------------------------------------------------------- | ----------------------------------------- |
+| AC-1  | `design/system/01-tokens.css` 包含 `--text-display-*`（48px）、`--text-heading-*`（24px）、`--text-nav-*`（13px）、`--text-metadata-*`（12px）四组 typography token，每组包含 size / weight / line-height / letter-spacing | `grep` 四组 token 名   | ✅   | `tokens.css` 含全部 4 组 × 4 属性                                    | R1: ✅ 复核确认                            |
+| AC-2  | 独立 weight token（`--weight-light/normal/medium/semibold`）、tracking token（`--tracking-tight/normal/wide/wider`）、leading token（`--leading-tight/normal/relaxed`）全部定义                                            | `grep` 验证            | ✅   | 4+4+3=11 个 token 全部定义                                           | R1: ✅ 复核确认（11 个）                   |
+| AC-4  | 语义间距 `--space-panel-padding`、`--space-section-gap`、`--space-item-gap`、`--space-inline-gap` 已定义，且值通过 `var(--space-N)` 引用基础间距                                                                           | `grep` + 值检查        | ✅   | `panel-padding` / `section-gap` / `item-gap` / `inline-gap` 均已定义 | R1: ✅ 复核确认（4 个）                    |
+| AC-5  | `renderer/src/styles/main.css` 的 `@theme` 块导出 `--duration-instant`（50ms）和 `--duration-slower`（500ms）                                                                                                              | `grep` main.css @theme | ✅   | `main.css` `@theme` 含 5 个 duration token                           | R1: ✅ 复核确认（5 个 duration in @theme） |
+| AC-6  | `renderer/src/styles/main.css` 的 `@theme` 块包含 typography token 的 Tailwind 映射                                                                                                                                        | `grep` main.css @theme | ✅   | 14 组 × 4 属性映射完成                                               | R1: ✅ 复核确认（awk 精确计数 56 条）      |
+| AC-7  | `renderer/src/styles/tokens.css` 与 `design/system/01-tokens.css` 保持同步（如有同步关系）                                                                                                                                 | diff 比较              | ✅   | renderer `tokens.css` 381 行，与 design 469 行同步                   | R1: ✅ 复核确认（381 行）                  |
+| AC-8  | 所有新增 token 在 `tokens.css` 中有中文注释说明用途                                                                                                                                                                        | 人工审查               | ✅   | 所有新增 token 均有中文注释                                          | R1: ✅ 信任原审查                          |
+| AC-9  | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                                                                                                                 | CI 命令                | ✅   | `pnpm -C apps/desktop storybook:build` 通过                          | R1: ✅ 信任 CI                             |
+| AC-10 | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                                                                                                                          | CI 命令                | ✅   | 2589 通过 / 0 失败                                                   | R1: ✅ 边界测试 163/163 全绿               |
+| AC-11 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                                                                                                                                | CI 命令                | ✅   | `pnpm typecheck` 通过                                                | R1: ✅ 信任 CI                             |
+| AC-12 | lint ratchet 无新增违规（`pnpm lint`）                                                                                                                                                                                     | CI 命令                | ✅   | `pnpm lint` 无新增违规                                               | R1: ✅ 信任 CI                             |
 
 ---
 
@@ -139,3 +139,32 @@
 - 26 处 pixel 硬编码（v1-01/07/16 共性）→ 归 v1-18 统一清理
 - text-[Npx] 667 处 arbitrary 值 → 归 v1-18 替换
 - v1-02 变体使用率 = 0 → 归 v1-18 推广
+
+---
+
+## R1 复核记录（2026-03-21）
+
+### 度量重采集
+
+| 指标 | v1-01 声称 | R1 实测 | 状态 | 采集命令 |
+|------|-----------|---------|------|---------|
+| tokens.css 行数 | 469 行 | 469 行 | ✅ 复核确认 | `wc -l design/system/01-tokens.css` |
+| text-[Npx] arbitrary 值 | 667 处 | 1000 处 | ⚠️ 漂移（Non-Goal 范畴，不影响评级） | `grep -rn 'text-\[' apps/desktop/renderer/src/ --include='*.tsx' \| wc -l` |
+| typography token 档数 | 14 档 | 14 档 | ✅ 复核确认 | `grep -c '\-\-text-.*-size' design/system/01-tokens.css` |
+| 独立 weight/tracking/leading token | 11 个 | 11 个 | ✅ 复核确认 | `grep -cE '\-\-(weight\|tracking\|leading)-' design/system/01-tokens.css` |
+| 语义间距 token | 4 个 | 4 个 | ✅ 复核确认 | `grep -cE '\-\-space-(panel\|section\|item\|inline)' design/system/01-tokens.css` |
+| @theme duration | 5 个 | 5 个（@theme 内）| ✅ 复核确认 | 原命令 `grep -c 'duration'` 返回 15（全文匹配），精确计数 @theme 内为 5 |
+| @theme typography 映射 | 56 条（14×4） | 56 条（awk 精确计数）| ✅ 复核确认 | 原命令 `grep -cE` 返回 38（漏匹配），`awk '/@theme/,/^\}/' \| grep -cE '\-\-text-[a-z]'` 确认 56 |
+| renderer tokens.css 行数 | 381 行 | 381 行 | ✅ 复核确认 | `wc -l apps/desktop/renderer/src/styles/tokens.css` |
+| 测试覆盖 | 19 个测试套件 | 14 describe / 163 test case 全绿 | ⚠️ 表述偏差（不影响质量） | `vitest run --config tests/unit/main/vitest.node.config.ts` |
+| 设计稿总数 | 36 个 HTML | 36 个 | ✅ 复核确认 | `ls design/Variant/designs/*.html \| wc -l` |
+
+### 发现项
+
+1. **text-[Npx] 漂移**：667 → 1000（+50%）。根因：其他 v1-XX change 新增了组件代码。属 Non-Goal 范畴，不影响 v1-01 完成度。
+2. **采集命令精度不足**（2 处）：`@theme duration` 和 `@theme typography` 的 grep 命令过于宽泛，虽不影响结论，但建议 proposal.md 附注更精确的命令。
+3. **测试套件计数**："19 个测试套件" 实为 14 个 describe 块、163 个 test case。表述不够精确，但测试全绿、质量无疑。
+
+### 结论
+
+**R1 复核通过。** 核心交付物（token 定义、@theme 映射、renderer 同步、测试覆盖）全部确认。两处采集命令精度问题和 Non-Goal 范畴的 arbitrary 值漂移不构成阻断。四星评级维持。

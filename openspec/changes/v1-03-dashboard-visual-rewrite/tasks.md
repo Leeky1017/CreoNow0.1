@@ -1,3 +1,5 @@
+> 📋 **级联刷新 R1**（2026-03-21）：v1-02 完成后刷新。基线已重采集。
+
 # Tasks: V1-03 Dashboard 视觉重写
 
 - **状态**: ✅ 已合并（PR #1168）
@@ -10,20 +12,20 @@
 
 ## 验收标准
 
-| ID    | 标准                                                                                                                              | 对应 Scenario | 结果      |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------- | ------------- | --------- |
-| AC-1  | DashboardPage 布局从 `repeat(auto-fill, minmax(280px, 1fr))` 网格改为设计稿 `05-dashboard-sidebar-full.html` 定义的固定侧边栏布局 | 全局          | ✅        |
-| AC-2  | HeroCard 中 0 处 Tailwind arbitrary 值（`p-10`、`max-w-[500px]`、`w-16 h-16`、`text-[11px]` 等全部替换为 Design Token）           | 全局          | ✅        |
-| AC-3  | ProjectCard 中 2 处原生 `<button>` 替换为 Button primitive，对应 `eslint-disable` 注释移除                                        | 全局          | ✅        |
-| AC-4  | 卡片 hover 效果包含 border 变亮 + subtle shadow elevation 双重反馈，shadow 使用 `--shadow-*` Design Token                         | 全局          | ✅        |
-| AC-5  | plus-grid 装饰图案、arrow icon hover 旋转（0.2s）、stat display 区域、monospace meta 字体四项设计稿元素已实现                     | 全局          | ✅        |
-| AC-6  | 空状态页面对齐 `26-empty-states.html` 视觉语言（illustrative icon + 引导文案 + 行动按钮）                                         | 全局          | ✅        |
-| AC-7  | 所有新增/修改的组件使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值/字号                                                 | 全局          | ✅        |
-| AC-8  | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                        | 全局          | ✅        |
-| AC-9  | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                                 | 全局          | ✅        |
-| AC-10 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                                       | 全局          | ✅        |
-| AC-11 | lint 无新增违规（`pnpm lint`）                                                                                                    | 全局          | ✅        |
-| AC-12 | `DashboardPage.tsx` 从 ~929 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行                                                            | 架构          | ✅ 268 行 |
+| ID    | 标准                                                                                                                              | 对应 Scenario | 结果      | R1 复测（2026-03-21） |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------- | ------------- | --------- | --------------------- |
+| AC-1  | DashboardPage 布局从 `repeat(auto-fill, minmax(280px, 1fr))` 网格改为设计稿 `05-dashboard-sidebar-full.html` 定义的固定侧边栏布局 | 全局          | ✅        | ✅ 保持               |
+| AC-2  | HeroCard 中 0 处 Tailwind arbitrary 值（`p-10`、`max-w-[500px]`、`w-16 h-16`、`text-[11px]` 等全部替换为 Design Token）           | 全局          | ✅        | ✅ 保持（0 处）       |
+| AC-3  | ProjectCard 中 2 处原生 `<button>` 替换为 Button primitive，对应 `eslint-disable` 注释移除                                        | 全局          | ✅        | ✅ 保持（0 处）       |
+| AC-4  | 卡片 hover 效果包含 border 变亮 + subtle shadow elevation 双重反馈，shadow 使用 `--shadow-*` Design Token                         | 全局          | ✅        | ✅ 保持               |
+| AC-5  | plus-grid 装饰图案、arrow icon hover 旋转（0.2s）、stat display 区域、monospace meta 字体四项设计稿元素已实现                     | 全局          | ✅        | ✅ 保持               |
+| AC-6  | 空状态页面对齐 `26-empty-states.html` 视觉语言（illustrative icon + 引导文案 + 行动按钮）                                         | 全局          | ✅        | ✅ 保持               |
+| AC-7  | 所有新增/修改的组件使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值/字号                                                 | 全局          | ✅        | ✅ 保持               |
+| AC-8  | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                        | 全局          | ✅        | — 未复测（CI 守护）   |
+| AC-9  | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                                 | 全局          | ✅        | — 未复测（CI 守护）   |
+| AC-10 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                                       | 全局          | ✅        | — 未复测（CI 守护）   |
+| AC-11 | lint 无新增违规（`pnpm lint`）                                                                                                    | 全局          | ✅        | — 未复测（CI 守护）   |
+| AC-12 | `DashboardPage.tsx` 从 ~929 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行                                                            | 架构          | ✅ 268 行 | ✅ 268 行（无变化）   |
 
 ---
 
@@ -35,7 +37,7 @@
 - [x] 阅读 `apps/desktop/renderer/src/features/dashboard/DashboardPage.tsx` 全文（929 行），标注需修改区域
 - [x] 阅读 `apps/desktop/renderer/src/features/dashboard/DashboardToolbar.tsx` 及其他子组件
 - [x] 确认 v1-01（Design Token 补完）已合并，所需 token 可用
-- [x] 确认 v1-02（Primitive 进化）提供的 Card / Button variant 可用
+- [x] 确认 v1-02（Primitive 进化）提供的 Card / Button variant 可用 [由 v1-02 提前达成：Card bento/compact（129 行）、Button pill/icon（229 行）、Badge pill（130 行）、Tabs underline（333 行）均已就位]
 
 ---
 
@@ -184,6 +186,30 @@
 
 ## 遗留项
 
-| 遗留项                   | 说明                                                                                     | 归属  |
-| ------------------------ | ---------------------------------------------------------------------------------------- | ----- |
-| DashboardEmptyState 迁移 | 当前为 Dashboard 内部组件（94 行），需迁移为标准 EmptyState 状态组件，统一空状态视觉语言 | v1-18 |
+| 遗留项                   | 说明                                                                                     | 归属  | R1 状态       |
+| ------------------------ | ---------------------------------------------------------------------------------------- | ----- | ------------- |
+| DashboardEmptyState 迁移 | 当前为 Dashboard 内部组件（94 行），需迁移为标准 EmptyState 状态组件，统一空状态视觉语言 | v1-18 | 待处理（不变）|
+
+---
+
+## R1 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+v1-02（Primitive 视觉进化）已于 2026-03-20 合并，评级 ⭐⭐⭐⭐⭐。按级联刷新规则触发 v1-03 复测。
+
+### 复测结论
+
+- **所有 12 项 AC 保持达标**，无退化
+- **基线数字无变化**：v1-03 在 v1-02 之前合并，后续无 Dashboard 模块修改
+- **v1-02 新 variant 未被 Dashboard 采用**：Dashboard 未使用 bento/compact/pill/underline variant（均为 0 处引用），但这些 variant 现已可用，可供后续迭代选用
+- **偏差**：无
+- **Scope 调整**：不变——v1-03 已完成交付，无需增减
+
+### 任务状态汇总
+
+- Phase 0（准备）：7/7 ✅
+- Phase 1（Red）：10/10 ✅
+- Phase 2（Green）：20/20 ✅
+- Phase 3（Verification）：11/11 ✅
+- **总计**：48/48 全部完成
