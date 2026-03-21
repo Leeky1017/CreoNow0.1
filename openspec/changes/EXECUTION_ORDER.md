@@ -471,15 +471,17 @@ v1-01 → v1-02 → v1-11 → v1-10 → v1-12 → v1-13 → v1-18 → Phase 8
 
 > 以下是已合并 changes 中发现的遗留问题，应在后续 change 中回补，不再重开原 change。
 
-| 遗留项                                                    | 原 Change   | 归入      | 优先级 |
-| --------------------------------------------------------- | ----------- | --------- | ------ |
-| SkillManagerDialog 624 行拆分                             | v1-06       | **v1-12** | 🔴 P0  |
-| FileTree 4 项 AC 未满足（icon bar/handle/chevron/colors） | v1-08       | **v1-12** | 🟡 P1  |
-| OutlinePanel 326→≤300                                     | v1-10       | **v1-12** | 🟢 P2  |
-| DiffView 345→≤300                                         | v1-16       | **v1-12** | 🟢 P2  |
-| DashboardEmptyState/AiEmptyState 迁移到标准组件           | v1-03/v1-06 | **v1-18** | 🟢 P2  |
-| 26 处 pixel 硬编码（v1-01/07/16 共性）                    | v1-01       | **v1-18** | 🟡 P1  |
-| v1-02 变体推广（pill/bento/compact 使用率=0）             | v1-02       | **v1-18** | 🟡 P1  |
+| 遗留项                                                     | 原 Change   | 归入                        | 优先级 |
+| ---------------------------------------------------------- | ----------- | --------------------------- | ------ |
+| SkillManagerDialog 624 行拆分                              | v1-06       | **v1-12**                   | 🔴 P0  |
+| FileTree 4 项 AC 未满足（icon bar/handle/chevron/colors）  | v1-08       | **v1-12**                   | 🟡 P1  |
+| OutlinePanel 326→≤300                                      | v1-10       | **v1-12**                   | 🟢 P2  |
+| DiffView 345→≤300                                          | v1-16       | **v1-12**                   | 🟢 P2  |
+| DashboardEmptyState/AiEmptyState 迁移到标准组件            | v1-03/v1-06 | **v1-18**                   | 🟢 P2  |
+| 26 处 pixel 硬编码（v1-01/07/16 共性）                     | v1-01       | **v1-18**                   | 🟡 P1  |
+| v1-02 变体推广（pill/bento/compact 使用率=0）              | v1-02       | **v1-18**                   | 🟡 P1  |
+| CreateProjectDialog 新建模板后未自动选中新模板             | v1-14       | **#1199 / v1-14 follow-up** | 🟡 P1  |
+| ExportDialog progress 态 Cancel 仅关闭前端，未真实中止导出 | v1-14       | **#1199 / v1-14 follow-up** | 🟡 P1  |
 
 ---
 
