@@ -66,7 +66,7 @@ export function KgListView(props: {
         />
       ) : null}
 
-      <div className="flex-1 overflow-auto min-h-0">
+      <div className="flex-1 overflow-auto scroll-shadow-y min-h-0">
         <div className="p-3">
           <Text size="small" color="muted">
             {t("kg.panel.entities")}

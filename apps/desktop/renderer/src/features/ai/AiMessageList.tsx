@@ -95,7 +95,7 @@ export function ErrorGuideCard(props: {
               <button
                 type="button"
                 data-testid={`${props.testId}-copy-command`}
-                className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default"
                 onClick={() => void handleCopyCommand()}
               >
                 {copied ? t("ai.panel.copied") : t("ai.panel.copy")}
@@ -108,7 +108,7 @@ export function ErrorGuideCard(props: {
               <button
                 type="button"
                 data-testid={props.actionTestId}
-                className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default"
                 onClick={props.onAction}
               >
                 {props.actionLabel}
@@ -227,7 +227,7 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
   const hasHistoryReplay = props.historyMessages.length > 0;
 
   return (
-    <div className="flex-1 overflow-y-auto p-3 space-y-4">
+    <div className="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4">
       {hasHistoryReplay ? (
         <div data-testid="ai-history-replay-list" className="w-full space-y-2">
           {props.historyMessages.map((message) => (

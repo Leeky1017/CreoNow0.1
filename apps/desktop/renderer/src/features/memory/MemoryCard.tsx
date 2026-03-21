@@ -18,7 +18,7 @@ export function MemoryCard({ t, rule, state }: MemoryCardProps): JSX.Element {
     <Card
       data-testid={`memory-rule-${rule.id}`}
       noPadding
-      className="p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)]"
+      className="p-2.5 bg-[var(--color-bg-raised)] rounded-[var(--radius-sm)] hover:bg-[var(--color-bg-hover)] transition-default"
     >
       <div className="flex items-start gap-2">
         <div className="flex-1 min-w-0">

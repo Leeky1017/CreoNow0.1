@@ -41,9 +41,13 @@ const panelStyles = [
   "shrink-0",
 ].join(" ");
 
-const scrollAreaStyles = ["flex-1", "overflow-y-auto", "p-3", "space-y-2"].join(
-  " ",
-);
+const scrollAreaStyles = [
+  "flex-1",
+  "overflow-y-auto",
+  "scroll-shadow-y",
+  "p-3",
+  "space-y-2",
+].join(" ");
 
 const footerStyles = [
   "px-5",

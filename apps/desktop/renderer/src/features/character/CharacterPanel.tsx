@@ -125,7 +125,7 @@ export function CharacterPanelContent({
         />
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-8">
+        <div className="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-8">
           <CharacterGroupSection
             group="main"
             characters={grouped.main}

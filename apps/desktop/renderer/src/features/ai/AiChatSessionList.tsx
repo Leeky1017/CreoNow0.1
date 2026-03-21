@@ -35,7 +35,7 @@ export function AiChatSessionList(props: AiChatSessionListProps): JSX.Element {
   return (
     <div
       data-testid="ai-session-list"
-      className="flex-1 overflow-y-auto min-h-0"
+      className="flex-1 overflow-y-auto scroll-shadow-y min-h-0"
     >
       {chatSessionsStatus === "loading" && (
         <div className="px-4 py-8 text-center">
@@ -57,7 +57,7 @@ export function AiChatSessionList(props: AiChatSessionListProps): JSX.Element {
       {chatSessions.map((session) => (
         <div
           key={session.sessionId}
-          className="group flex items-center gap-1 px-3 py-2 hover:bg-[var(--color-bg-hover)] cursor-pointer"
+          className="group flex items-center gap-1 px-3 py-2 hover:bg-[var(--color-bg-hover)] transition-default cursor-pointer"
         >
           {/* eslint-disable-next-line creonow/no-native-html-element -- lightweight list item button */}
           <button
@@ -71,7 +71,7 @@ export function AiChatSessionList(props: AiChatSessionListProps): JSX.Element {
           <button
             type="button"
             aria-label={t("ai.chatHistory.deleteSession")}
-            className="opacity-0 group-hover:opacity-100 shrink-0 text-[var(--color-fg-muted)] hover:text-[var(--color-danger)] text-xs focus-visible:opacity-100"
+            className="opacity-0 group-hover:opacity-100 shrink-0 text-[var(--color-fg-muted)] hover:text-[var(--color-danger)] text-xs focus-visible:opacity-100 transition-default"
             onClick={() => handleDelete(session.sessionId)}
           >
             <span aria-hidden="true">{"\u2715"}</span>
