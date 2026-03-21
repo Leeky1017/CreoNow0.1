@@ -163,3 +163,46 @@ v1-13 此前无 R4 级联刷新记录，本次为首次级联刷新。
 ### 结论
 
 上游三项 PASS，v1-13 scope 与 AC 不受影响；待 v1-12 合并后重新采集基线即可启动审计。
+
+---
+
+## R6 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+v1-12 已合并（PR #1213）。v1-13 硬依赖 v1-12 完成后重新采集基线。
+
+### R6 基线重采集
+
+| 度量                        | R5 基线 | R6 实际 | Delta       | 说明                        |
+| --------------------------- | ------- | ------- | ----------- | --------------------------- |
+| eslint-disable 总数（prod） | 229     | 59      | -170 (-74%) | v1-12 大规模原生 HTML 替换  |
+| `no-native-html-element`    | 186     | 27      | -159 (-85%) | 几乎全部收口                |
+| `no-hardcoded-dimension`    | 22      | ~10     | -12 (-55%)  | 部分 Primitive 替换顺带清理 |
+| 其他规则                    | 21      | ~22     | +1          | 基本持平                    |
+
+### 27 处 `no-native-html-element` 分类
+
+| 类别               | 数量 | 说明                                                                    |
+| ------------------ | ---- | ----------------------------------------------------------------------- |
+| Primitive 内部包装 | 14   | Button/Input/Textarea/Label/Checkbox/Radio/etc. 封装原生元素，by design |
+| Layout 组件        | 7    | RightPanel/IconBar/AppShellMainArea 等，含 aria-pressed 等语义需求      |
+| Composite 组件     | 4    | FormField/InfoBar/SearchInput，justified                                |
+| Pattern 组件       | 2    | ErrorState dismiss/link，justified                                      |
+
+**全部 27 处均为合理保留**——Primitive/Layout/Composite/Pattern 层封装原生元素是架构设计，不应消除。
+
+### AC 目标调整
+
+| AC #        | 原目标              | R6 调整后目标                       | 理由                                                      |
+| ----------- | ------------------- | ----------------------------------- | --------------------------------------------------------- |
+| AC-1        | eslint-disable ≤ 20 | eslint-disable（non-primitive）≤ 20 | 27 处 Primitive 包装层 disable 为合理保留，不计入审计目标 |
+| AC-2～AC-11 | 不变                | 不变                                | 审计策略不受影响                                          |
+
+### 对 v1-13 scope 的影响
+
+**scope 大幅缩减**。v1-12 消灭了 170 处 eslint-disable（-74%），剩余 59 处中 27 处为合理 Primitive 包装。v1-13 的实际审计目标缩窄为剩余 32 处 non-primitive disable 的逐条审查和清理。
+
+### 结论
+
+v1-12 合并后，v1-13 从「229 处大规模审计」变为「32 处精准审计」。「大鹏已飞，余羽自清。」AC-1 目标从绝对值调整为排除 Primitive 层后的计数。v1-13 现已解除阻断，可启动。

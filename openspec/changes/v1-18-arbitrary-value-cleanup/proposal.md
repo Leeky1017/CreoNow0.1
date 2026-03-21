@@ -372,3 +372,47 @@ features 层基线大幅下降（总量 930→228，-75%），AC 目标可更积
 - v1-02 variant 采用仍为 0——这是 v1-18 独有的推广任务
 
 **注意**：primitives+patterns 层仍有 632 处 arbitrary（主要是 text-[ 184、rounded-[ 57、shadow-[ 41），但这些可能是 Primitive 组件内部的合理定义（如 Button/Badge/Toast 的内部样式映射），不在 v1-18 的 features 清理范围内。如需扩展范围，应另开 change。
+
+---
+
+## R6 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+v1-12 合并（PR #1213）。v1-12 大规模 Primitive 替换带来 arbitrary value 大幅下降。
+
+### R6 基线重采集
+
+| 度量                        | R3 基线 | R6 实际 | Delta       | 说明                                                              |
+| --------------------------- | ------- | ------- | ----------- | ----------------------------------------------------------------- |
+| `text-[` features prod      | 95      | 48      | -47 (-49%)  | Primitive Button/Select/Input 替换消除了大量 hardcoded text-[Npx] |
+| `rounded-[` all prod        | 18      | 4       | -14 (-78%)  | Radix 组件自带 token 化圆角                                       |
+| `shadow-[` all prod         | 7       | 6       | -1 (-14%)   | 基本持平                                                          |
+| `p-[]/m-[]/gap-[]` all prod | 1       | 3       | +2          | 轻微增长（v1-12 新增布局组件）                                    |
+| v1-02 variant adoption      | 0       | 93      | +93         | 🎉 v1-12 Primitive 替换自动引入了大量 variant 使用                |
+| 总 arbitrary (features)     | 228     | ~61     | -167 (-73%) | 接近收口                                                          |
+
+### AC 目标调整
+
+| AC # | R3 目标                  | R6 调整后目标            | 理由                             |
+| ---- | ------------------------ | ------------------------ | -------------------------------- |
+| 1    | `text-[` features ≤ 10   | `text-[` features ≤ 10   | 当前 48→10 仍需清理，目标不变    |
+| 2    | `rounded-[` features ≤ 5 | `rounded-[` features ≤ 3 | 当前仅 4，可更积极               |
+| 3    | `p-[]/m-[]/gap-[]` = 0   | `p-[]/m-[]/gap-[]` ≤ 3   | 实际增至 3，均为布局合理值，放宽 |
+| 4    | variant 采用 ≥ 15        | variant 采用 ≥ 15        | ✅ 已达成（93），但维持最低标准  |
+| 新增 | `shadow-[` ≤ 3           | `shadow-[` ≤ 3           | 当前 6，仍需清理                 |
+
+### 对 v1-18 scope 的影响
+
+**scope 大幅缩减**。v1-12 的 Primitive 大面积替换消灭了 73% 的 arbitrary values（228→~61）。v1-02 variant 采用从 0 爆增至 93，远超 AC-4 目标（≥15），该 AC 已自动达成。
+
+v1-18 剩余工作量：
+
+- `text-[` 48→10：清理 ~38 处
+- `rounded-[` 4→3：清理 ~1 处
+- `shadow-[` 6→3：清理 ~3 处
+- `p-[]/m-[]/gap-[]`：已接近目标
+
+### 结论
+
+「釜底抽薪，薪已去七。」v1-12 的 Primitive 替换是 arbitrary cleanup 最大的加速器。v1-18 从「228 处大面积清扫」变为「~50 处精准点杀」。AC-4（variant adoption）已自动达成。

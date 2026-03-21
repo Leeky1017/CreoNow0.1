@@ -249,3 +249,19 @@ npx vitest run --reporter=verbose 2>&1 | grep -cE '✓.*(AiDiff|AiError|SystemDi
 ### 结论
 
 v1-15 R5 级联刷新：**PASS** ✅ —— 代码基线零漂移，测试稳中有增（83→91），上游无冲突，无需二次拆分。
+
+---
+
+## R6 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+v1-12 合并（PR #1213）。v1-15 已完成（PR #1198 审计中），SOFT 依赖确认。
+
+### 影响评估
+
+v1-12 替换了 AI 面板中的原生 HTML（SkillManagerDialog 等），但 v1-15 的 4 个 overlay 组件（AiDiffModal、AiErrorCard、SystemDialog、AiInlineConfirm）的拆分结构未受影响。测试从 83→91（+8 guard tests），2600 全量通过。
+
+### 结论
+
+**PASS** — v1-15 已合并/审计中，v1-12 无回归影响。
