@@ -125,22 +125,22 @@ R2 P1 复核 v1-03/04/05 → 级联刷新下游。v1-07 已于之前合并到 ma
 
 ### 实现后基线（R2 重采集）
 
-| 度量                                  | 原始基线 | R2 实际  | 状态 |
-| ------------------------------------- | -------- | -------- | ---- |
-| SettingsDialog.tsx 行数               | 486      | 297      | ✅   |
-| SettingsAppearancePage.tsx 行数        | 265      | 249      | ✅   |
-| 硬编码 hex 值（SettingsAppearancePage）| 10       | 0        | ✅   |
-| SettingsNavigation.tsx（提取）         | —        | 103      | ✅   |
-| accentPalette.ts（新建）              | —        | 49       | ✅   |
-| Settings-dialog 模块总行数            | 2,420    | 1,753    | ↓28% |
+| 度量                                    | 原始基线 | R2 实际 | 状态 |
+| --------------------------------------- | -------- | ------- | ---- |
+| SettingsDialog.tsx 行数                 | 486      | 297     | ✅   |
+| SettingsAppearancePage.tsx 行数         | 265      | 249     | ✅   |
+| 硬编码 hex 值（SettingsAppearancePage） | 10       | 0       | ✅   |
+| SettingsNavigation.tsx（提取）          | —        | 103     | ✅   |
+| accentPalette.ts（新建）                | —        | 49      | ✅   |
+| Settings-dialog 模块总行数              | 2,420    | 1,753   | ↓28% |
 
 ### 残余技术债
 
-| 类型               | 数量 | 归属 |
-| ------------------ | ---- | ---- |
-| Arbitrary values   | 33   | v1-18 |
-| eslint-disable     | 6    | v1-13 |
-| Native HTML 元素   | 4    | v1-12 |
+| 类型             | 数量 | 归属  |
+| ---------------- | ---- | ----- |
+| Arbitrary values | 33   | v1-18 |
+| eslint-disable   | 6    | v1-13 |
+| Native HTML 元素 | 4    | v1-12 |
 
 ### 结论
 

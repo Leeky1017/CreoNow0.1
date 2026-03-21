@@ -179,30 +179,30 @@ R2 P1 复核 v1-03/04/05 → 级联刷新下游。v1-18 尚未启动，此次为
 
 ### R2 基线重采集
 
-| 度量                           | 原始提案基线 | R2 实际 | Delta | 说明                                         |
-| ------------------------------ | ------------ | ------- | ----- | -------------------------------------------- |
-| `text-[`（features prod）      | 667          | 501     | -166  | v1-03/04/06/07 等已部分清理                  |
-| `text-[`（features stories）   | —            | 166     | —     | 首次采集；stories 单独统计                   |
-| `rounded-[`（features prod）   | 139          | 119     | -20   | 部分已替换为 `rounded-md/lg/2xl`             |
-| `w-[]/h-[]`（features prod）   | 96           | 55      | -41   | 部分已替换为间距 scale                       |
-| `p-[]/m-[]/gap-[]`（features） | 28           | 27      | -1    | 几乎未变化                                   |
-| 总 arbitrary（features prod）  | 930          | 653     | -277  | 整体下降 30%                                 |
-| v1-02 variant 采用量           | 0            | 0       | 0     | 仍为零——亟需推动 pill/bento/compact 采用     |
+| 度量                           | 原始提案基线 | R2 实际 | Delta | 说明                                     |
+| ------------------------------ | ------------ | ------- | ----- | ---------------------------------------- |
+| `text-[`（features prod）      | 667          | 501     | -166  | v1-03/04/06/07 等已部分清理              |
+| `text-[`（features stories）   | —            | 166     | —     | 首次采集；stories 单独统计               |
+| `rounded-[`（features prod）   | 139          | 119     | -20   | 部分已替换为 `rounded-md/lg/2xl`         |
+| `w-[]/h-[]`（features prod）   | 96           | 55      | -41   | 部分已替换为间距 scale                   |
+| `p-[]/m-[]/gap-[]`（features） | 28           | 27      | -1    | 几乎未变化                               |
+| 总 arbitrary（features prod）  | 930          | 653     | -277  | 整体下降 30%                             |
+| v1-02 variant 采用量           | 0            | 0       | 0     | 仍为零——亟需推动 pill/bento/compact 采用 |
 
 ### Top 10 高密度文件（R2）
 
-| 排名 | 文件                          | `text-[` 数 |
-| ---- | ----------------------------- | ----------- |
-| 1    | SearchResultItems.tsx         | 23          |
-| 2    | QualityCheckItems.tsx         | 23          |
-| 3    | DiffHeader.tsx                | 18          |
-| 4    | AiMessageList.tsx             | 18          |
-| 5    | VersionCard.tsx               | 17          |
-| 6    | SkillManagerDialog.tsx        | 16          |
-| 7    | ExportPreview.tsx             | 14          |
-| 8    | VersionBadges.tsx             | 13          |
-| 9    | BranchMergeSection.tsx        | 13          |
-| 10   | ExportFormatTab.tsx           | 10          |
+| 排名 | 文件                   | `text-[` 数 |
+| ---- | ---------------------- | ----------- |
+| 1    | SearchResultItems.tsx  | 23          |
+| 2    | QualityCheckItems.tsx  | 23          |
+| 3    | DiffHeader.tsx         | 18          |
+| 4    | AiMessageList.tsx      | 18          |
+| 5    | VersionCard.tsx        | 17          |
+| 6    | SkillManagerDialog.tsx | 16          |
+| 7    | ExportPreview.tsx      | 14          |
+| 8    | VersionBadges.tsx      | 13          |
+| 9    | BranchMergeSection.tsx | 13          |
+| 10   | ExportFormatTab.tsx    | 10          |
 
 ### AC 目标调整
 

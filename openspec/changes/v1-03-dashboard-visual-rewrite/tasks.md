@@ -12,20 +12,20 @@
 
 ## 验收标准
 
-| ID    | 标准                                                                                                                              | 对应 Scenario | 结果      | R1 复测（2026-03-21） | R2 复测（2026-03-21） |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------- | ------------- | --------- | --------------------- | --------------------- |
-| AC-1  | DashboardPage 布局从 `repeat(auto-fill, minmax(280px, 1fr))` 网格改为设计稿 `05-dashboard-sidebar-full.html` 定义的固定侧边栏布局 | 全局          | ✅        | ✅ 保持               | ✅ R2 复核确认        |
-| AC-2  | HeroCard 中 0 处 Tailwind arbitrary 值（`p-10`、`max-w-[500px]`、`w-16 h-16`、`text-[11px]` 等全部替换为 Design Token）           | 全局          | ✅        | ✅ 保持（0 处）       | ✅ R2 复核确认（0 处）|
-| AC-3  | ProjectCard 中 2 处原生 `<button>` 替换为 Button primitive，对应 `eslint-disable` 注释移除                                        | 全局          | ✅        | ✅ 保持（0 处）       | ✅ R2 复核确认（0 处）|
-| AC-4  | 卡片 hover 效果包含 border 变亮 + subtle shadow elevation 双重反馈，shadow 使用 `--shadow-*` Design Token                         | 全局          | ✅        | ✅ 保持               | ✅ R2 复核确认        |
-| AC-5  | plus-grid 装饰图案、arrow icon hover 旋转（0.2s）、stat display 区域、monospace meta 字体四项设计稿元素已实现                     | 全局          | ✅        | ✅ 保持               | ✅ R2 复核确认        |
-| AC-6  | 空状态页面对齐 `26-empty-states.html` 视觉语言（illustrative icon + 引导文案 + 行动按钮）                                         | 全局          | ✅        | ✅ 保持               | ✅ R2 复核确认        |
-| AC-7  | 所有新增/修改的组件使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值/字号                                                 | 全局          | ✅        | ✅ 保持               | ✅ R2 复核确认        |
-| AC-8  | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                        | 全局          | ✅        | — 未复测（CI 守护）   | — CI 守护             |
-| AC-9  | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                                 | 全局          | ✅        | — 未复测（CI 守护）   | — CI 守护             |
-| AC-10 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                                       | 全局          | ✅        | — 未复测（CI 守护）   | — CI 守护             |
-| AC-11 | lint 无新增违规（`pnpm lint`）                                                                                                    | 全局          | ✅        | — 未复测（CI 守护）   | — CI 守护             |
-| AC-12 | `DashboardPage.tsx` 从 ~929 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行                                                            | 架构          | ✅ 268 行 | ✅ 268 行（无变化）   | ✅ 268 行（无变化）   |
+| ID    | 标准                                                                                                                              | 对应 Scenario | 结果      | R1 复测（2026-03-21） | R2 复测（2026-03-21）  |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------- | ------------- | --------- | --------------------- | ---------------------- |
+| AC-1  | DashboardPage 布局从 `repeat(auto-fill, minmax(280px, 1fr))` 网格改为设计稿 `05-dashboard-sidebar-full.html` 定义的固定侧边栏布局 | 全局          | ✅        | ✅ 保持               | ✅ R2 复核确认         |
+| AC-2  | HeroCard 中 0 处 Tailwind arbitrary 值（`p-10`、`max-w-[500px]`、`w-16 h-16`、`text-[11px]` 等全部替换为 Design Token）           | 全局          | ✅        | ✅ 保持（0 处）       | ✅ R2 复核确认（0 处） |
+| AC-3  | ProjectCard 中 2 处原生 `<button>` 替换为 Button primitive，对应 `eslint-disable` 注释移除                                        | 全局          | ✅        | ✅ 保持（0 处）       | ✅ R2 复核确认（0 处） |
+| AC-4  | 卡片 hover 效果包含 border 变亮 + subtle shadow elevation 双重反馈，shadow 使用 `--shadow-*` Design Token                         | 全局          | ✅        | ✅ 保持               | ✅ R2 复核确认         |
+| AC-5  | plus-grid 装饰图案、arrow icon hover 旋转（0.2s）、stat display 区域、monospace meta 字体四项设计稿元素已实现                     | 全局          | ✅        | ✅ 保持               | ✅ R2 复核确认         |
+| AC-6  | 空状态页面对齐 `26-empty-states.html` 视觉语言（illustrative icon + 引导文案 + 行动按钮）                                         | 全局          | ✅        | ✅ 保持               | ✅ R2 复核确认         |
+| AC-7  | 所有新增/修改的组件使用语义化 Design Token，0 处新增 Tailwind arbitrary 色值/字号                                                 | 全局          | ✅        | ✅ 保持               | ✅ R2 复核确认         |
+| AC-8  | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                        | 全局          | ✅        | — 未复测（CI 守护）   | — CI 守护              |
+| AC-9  | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                                 | 全局          | ✅        | — 未复测（CI 守护）   | — CI 守护              |
+| AC-10 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                                       | 全局          | ✅        | — 未复测（CI 守护）   | — CI 守护              |
+| AC-11 | lint 无新增违规（`pnpm lint`）                                                                                                    | 全局          | ✅        | — 未复测（CI 守护）   | — CI 守护              |
+| AC-12 | `DashboardPage.tsx` 从 ~929 行拆分至主文件 ≤ 300 行，子组件各 ≤ 300 行                                                            | 架构          | ✅ 268 行 | ✅ 268 行（无变化）   | ✅ 268 行（无变化）    |
 
 ---
 
@@ -227,15 +227,15 @@ R2 P1 复核：v1-03/04/05 Phase 1 并行复核。重新采集所有度量基线
 - **所有 12 项 AC 保持达标**，零退化
 - **基线数字 R1→R2 零偏差**：
 
-| 度量                       | R1     | R2     | Delta |
-| -------------------------- | ------ | ------ | ----- |
-| DashboardPage.tsx 行数     | 268    | 268    | 0     |
-| HeroCard arbitrary values  | 0      | 0      | 0     |
-| 原生 `<button>`（prod）    | 0      | 0      | 0     |
-| `eslint-disable`           | 0      | 0      | 0     |
-| 测试文件数                 | 10     | 10     | 0     |
-| Guard 测试文件             | 3      | 3      | 0     |
-| Dashboard 目录总行数       | —      | 2,758  | —     |
+| 度量                      | R1  | R2    | Delta |
+| ------------------------- | --- | ----- | ----- |
+| DashboardPage.tsx 行数    | 268 | 268   | 0     |
+| HeroCard arbitrary values | 0   | 0     | 0     |
+| 原生 `<button>`（prod）   | 0   | 0     | 0     |
+| `eslint-disable`          | 0   | 0     | 0     |
+| 测试文件数                | 10  | 10    | 0     |
+| Guard 测试文件            | 3   | 3     | 0     |
+| Dashboard 目录总行数      | —   | 2,758 | —     |
 
 - **偏差**：无
 - **Scope 调整**：不变

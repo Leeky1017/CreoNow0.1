@@ -149,17 +149,17 @@ R2 P1 复核 v1-03/04/05 → 级联刷新下游。v1-06 已于之前合并到 ma
 
 ### 实现后基线（R2 重采集）
 
-| 组件 / 文件               | 目标      | 实际      | 状态 |
-| ------------------------- | --------- | --------- | ---- |
-| AiPanel.tsx               | ≤300 行   | 281 行    | ✅   |
-| AiPanelTabBar.tsx         | 独立存在  | 50 行     | ✅   |
-| AiMessageList.tsx         | ≤300 行   | 432 行    | ⚠️   |
-| AiInputArea.tsx           | ≤300 行   | 293 行    | ✅   |
-| AiProposalView.tsx        | 独立存在  | 68 行     | ✅   |
-| AiEmptyState.tsx          | 独立存在  | 25 行     | ✅   |
-| AiUsageStats.tsx          | 独立存在  | 55 行     | ✅   |
-| AI 模块 prod 总行数       | —         | 4,179 行  | —    |
-| 测试文件数                | ≥14       | 27        | ✅   |
+| 组件 / 文件         | 目标     | 实际     | 状态 |
+| ------------------- | -------- | -------- | ---- |
+| AiPanel.tsx         | ≤300 行  | 281 行   | ✅   |
+| AiPanelTabBar.tsx   | 独立存在 | 50 行    | ✅   |
+| AiMessageList.tsx   | ≤300 行  | 432 行   | ⚠️   |
+| AiInputArea.tsx     | ≤300 行  | 293 行   | ✅   |
+| AiProposalView.tsx  | 独立存在 | 68 行    | ✅   |
+| AiEmptyState.tsx    | 独立存在 | 25 行    | ✅   |
+| AiUsageStats.tsx    | 独立存在 | 55 行    | ✅   |
+| AI 模块 prod 总行数 | —        | 4,179 行 | —    |
+| 测试文件数          | ≥14      | 27       | ✅   |
 
 ### 偏差记录
 
@@ -168,11 +168,11 @@ R2 P1 复核 v1-03/04/05 → 级联刷新下游。v1-06 已于之前合并到 ma
 
 ### 残余技术债
 
-| 类型               | 数量 | 归属 |
-| ------------------ | ---- | ---- |
-| Arbitrary values   | ~88  | v1-18 |
-| eslint-disable     | 45   | v1-13 |
-| Native HTML 元素   | 104  | v1-12 |
+| 类型             | 数量 | 归属  |
+| ---------------- | ---- | ----- |
+| Arbitrary values | ~88  | v1-18 |
+| eslint-disable   | 45   | v1-13 |
+| Native HTML 元素 | 104  | v1-12 |
 
 ### 结论
 

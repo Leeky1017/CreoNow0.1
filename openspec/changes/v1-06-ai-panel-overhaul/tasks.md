@@ -319,27 +319,27 @@ R2 P1 复核 v1-03/04/05 → 级联刷新。v1-06 已实现并合并。
 
 ### AC 验证状态（R2 重采集）
 
-| AC    | 状态 | R2 证据                                          |
-| ----- | ---- | ------------------------------------------------ |
-| AC-1  | ✅   | AiPanel.tsx 281 行（≤300）                       |
-| AC-2  | ✅   | AiPanelTabBar.tsx 50 行，独立文件                |
-| AC-3  | ✅   | AiMessageList.tsx 432 行，独立文件（超限 ⚠️）    |
-| AC-4  | ✅   | AiInputArea.tsx 293 行，独立文件                 |
-| AC-5  | ✅   | AiProposalView.tsx 68 行，独立文件               |
-| AC-6  | ✅   | AiEmptyState.tsx 25 行，独立文件                 |
-| AC-7  | ✅   | AiUsageStats.tsx 55 行，独立文件                 |
-| AC-8  | —    | 需 diff review 确认 accent 边框实现              |
-| AC-9  | —    | 需 diff review 确认 monospace 实现               |
-| AC-10 | —    | 需 diff review 确认 chevron + hover 实现         |
-| AC-11 | —    | 需 diff review 确认打字机效果实现                |
-| AC-12 | —    | 需 diff review 确认 ErrorGuideCard 等级化实现    |
-| AC-13 | ✅   | 27 个测试文件全部通过（CI 守护）                 |
-| AC-14 | ✅   | 原 14 个测试扩展至 27 个，行为等价               |
-| AC-15 | ✅   | 子组件通过 props/store 通信                      |
-| AC-16 | ✅   | CI 守护                                          |
-| AC-17 | ✅   | CI 守护                                          |
-| AC-18 | ✅   | CI 守护                                          |
-| AC-19 | —    | 残余 ~88 arbitrary values 归 v1-18               |
+| AC    | 状态 | R2 证据                                       |
+| ----- | ---- | --------------------------------------------- |
+| AC-1  | ✅   | AiPanel.tsx 281 行（≤300）                    |
+| AC-2  | ✅   | AiPanelTabBar.tsx 50 行，独立文件             |
+| AC-3  | ✅   | AiMessageList.tsx 432 行，独立文件（超限 ⚠️） |
+| AC-4  | ✅   | AiInputArea.tsx 293 行，独立文件              |
+| AC-5  | ✅   | AiProposalView.tsx 68 行，独立文件            |
+| AC-6  | ✅   | AiEmptyState.tsx 25 行，独立文件              |
+| AC-7  | ✅   | AiUsageStats.tsx 55 行，独立文件              |
+| AC-8  | —    | 需 diff review 确认 accent 边框实现           |
+| AC-9  | —    | 需 diff review 确认 monospace 实现            |
+| AC-10 | —    | 需 diff review 确认 chevron + hover 实现      |
+| AC-11 | —    | 需 diff review 确认打字机效果实现             |
+| AC-12 | —    | 需 diff review 确认 ErrorGuideCard 等级化实现 |
+| AC-13 | ✅   | 27 个测试文件全部通过（CI 守护）              |
+| AC-14 | ✅   | 原 14 个测试扩展至 27 个，行为等价            |
+| AC-15 | ✅   | 子组件通过 props/store 通信                   |
+| AC-16 | ✅   | CI 守护                                       |
+| AC-17 | ✅   | CI 守护                                       |
+| AC-18 | ✅   | CI 守护                                       |
+| AC-19 | —    | 残余 ~88 arbitrary values 归 v1-18            |
 
 ### 结论
 

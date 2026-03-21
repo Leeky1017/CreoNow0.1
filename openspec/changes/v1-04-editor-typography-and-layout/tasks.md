@@ -199,15 +199,15 @@ R2 P1 复核：v1-03/04/05 Phase 1 并行复核。重新采集所有度量基线
 - **所有 11 项 AC 保持达标**，零退化
 - **基线 R2 重采集**：
 
-| 度量                                  | R1 / 合并时 | R2          | Delta |
-| ------------------------------------- | ----------- | ----------- | ----- |
-| `--editor-content-max-width`（AC-1）  | 760px       | 760px       | 0     |
-| `--text-display-size`（AC-2）         | 48px        | 48px        | 0     |
-| `--font-family-body` 含 Lora（AC-3）  | ✅          | ✅          | 0     |
-| `--text-editor-line-height`（AC-4）   | 1.8         | 1.8         | 0     |
-| EditorFeaturedImage.tsx 行数（AC-5）  | 49          | 49          | 0     |
-| `--space-editor-padding-x`（AC-6）    | 48px        | 48px        | 0     |
-| CJK line-height（AC-4 补充）         | 1.95        | 1.95        | 0     |
+| 度量                                 | R1 / 合并时 | R2    | Delta |
+| ------------------------------------ | ----------- | ----- | ----- |
+| `--editor-content-max-width`（AC-1） | 760px       | 760px | 0     |
+| `--text-display-size`（AC-2）        | 48px        | 48px  | 0     |
+| `--font-family-body` 含 Lora（AC-3） | ✅          | ✅    | 0     |
+| `--text-editor-line-height`（AC-4）  | 1.8         | 1.8   | 0     |
+| EditorFeaturedImage.tsx 行数（AC-5） | 49          | 49    | 0     |
+| `--space-editor-padding-x`（AC-6）   | 48px        | 48px  | 0     |
+| CJK line-height（AC-4 补充）         | 1.95        | 1.95  | 0     |
 
 - **偏差**：无
 - **Scope 调整**：不变

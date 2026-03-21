@@ -188,16 +188,16 @@ R2 P1 复核 v1-03/04/05 → 级联刷新下游。v1-12 尚未启动，此次为
 
 ### R2 基线重采集
 
-| 度量                                    | 原始提案基线 | R2 实际 | Delta  | 说明                                     |
-| --------------------------------------- | ------------ | ------- | ------ | ---------------------------------------- |
-| AppShell.tsx 行数                       | 1,267        | 1,267   | 0      | 未变化                                   |
-| 原生 `<button>`（features prod）        | 186          | 69      | -117   | v1-03/06/07 等已大量替换                 |
-| 原生 `<input>`（features prod）         | —            | 12      | —      | 首次采集                                 |
-| 原生 `<select>`（features prod）        | —            | 6       | —      | 首次采集                                 |
-| 原生 `<textarea>`（features prod）      | —            | 5       | —      | 首次采集                                 |
-| `no-native-html-element` eslint-disable | 121          | 121     | 0      | 未变化                                   |
-| transition 工具类使用                   | 0            | 2       | +2     | 少量已开始使用                           |
-| features 层 eslint-disable 总数         | —            | 146     | —      | 首次采集                                 |
+| 度量                                    | 原始提案基线 | R2 实际 | Delta | 说明                     |
+| --------------------------------------- | ------------ | ------- | ----- | ------------------------ |
+| AppShell.tsx 行数                       | 1,267        | 1,267   | 0     | 未变化                   |
+| 原生 `<button>`（features prod）        | 186          | 69      | -117  | v1-03/06/07 等已大量替换 |
+| 原生 `<input>`（features prod）         | —            | 12      | —     | 首次采集                 |
+| 原生 `<select>`（features prod）        | —            | 6       | —     | 首次采集                 |
+| 原生 `<textarea>`（features prod）      | —            | 5       | —     | 首次采集                 |
+| `no-native-html-element` eslint-disable | 121          | 121     | 0     | 未变化                   |
+| transition 工具类使用                   | 0            | 2       | +2    | 少量已开始使用           |
+| features 层 eslint-disable 总数         | —            | 146     | —     | 首次采集                 |
 
 ### AC 目标调整
 
