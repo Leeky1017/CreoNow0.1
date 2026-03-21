@@ -293,8 +293,8 @@ Diff 模块 7 个文件共 1,423 行，单个文件都不大但风格需要与 v
 
 ### 测试状态
 
-| 模块    | R4 结果                | R5 结果                | 偏差 |
-| ------- | ---------------------- | ---------------------- | ---- |
+| 模块    | R4 结果                 | R5 结果                 | 偏差 |
+| ------- | ----------------------- | ----------------------- | ---- |
 | Quality | 2 files, 32 tests, 全绿 | 2 files, 32 tests, 全绿 | 无   |
 | Diff    | 8 files, 59 tests, 全绿 | 8 files, 59 tests, 全绿 | 无   |
 
@@ -313,10 +313,10 @@ R5 唯一增量发现：pixel 残留精细化盘点从 R4 的 ~26 处修正为 4
 
 ### 上游依赖状态
 
-| 上游 Change         | R5 复核结论 | 关键指标                                       |
-| ------------------- | ----------- | ---------------------------------------------- |
-| v1-11 状态组件      | ✅ PASS     | EmptyState 241, LoadingState 337, ErrorState 537; 64 tests 全绿 |
-| v1-10 侧面板统一    | ✅ PASS     | 侧面板行数无变化; PanelHeader 5/5 统一; eslint-disable 30; 169 tests 全绿 |
+| 上游 Change      | R5 复核结论 | 关键指标                                                                  |
+| ---------------- | ----------- | ------------------------------------------------------------------------- |
+| v1-11 状态组件   | ✅ PASS     | EmptyState 241, LoadingState 337, ErrorState 537; 64 tests 全绿           |
+| v1-10 侧面板统一 | ✅ PASS     | 侧面板行数无变化; PanelHeader 5/5 统一; eslint-disable 30; 169 tests 全绿 |
 
 ### v1-11 状态组件 → v1-16 影响分析
 
@@ -332,12 +332,12 @@ v1-16 的 quality-gates、rightpanel、diff 三个模块目前**未引用** v1-1
 
 **实测**：`grep -rn 'PanelHeader' apps/desktop/renderer/src/features/{quality-gates,rightpanel,diff}/` → **仅 InfoPanel.tsx 命中**（L7 import, L243 使用）
 
-| 面板              | v1-10 PanelHeader 采纳 | v1-16 现状    |
-| ----------------- | ---------------------- | ------------- |
-| QualityGatesPanel | ❌                     | 待 AC-2 实施  |
-| QualityPanel      | ❌                     | 待 AC-5 实施  |
-| InfoPanel         | ✅                     | 已采纳        |
-| DiffViewPanel     | ❌                     | 待 AC-9 实施  |
+| 面板              | v1-10 PanelHeader 采纳 | v1-16 现状   |
+| ----------------- | ---------------------- | ------------ |
+| QualityGatesPanel | ❌                     | 待 AC-2 实施 |
+| QualityPanel      | ❌                     | 待 AC-5 实施 |
+| InfoPanel         | ✅                     | 已采纳       |
+| DiffViewPanel     | ❌                     | 待 AC-9 实施 |
 
 v1-10 R5 确认 PanelHeader 5/5 在其管辖面板中全部统一，API 稳定。v1-16 的采纳差距（1/4）是**实施缺口而非上游问题**——v1-10 已提供完整模式，v1-16 只需按 AC-2/AC-5/AC-9 执行采纳即可。
 

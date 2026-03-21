@@ -328,11 +328,11 @@ v1-16 实施优先级建议：
 
 PanelHeader 采纳状态（与 R4 一致）：
 
-| 组件              | 是否使用 PanelHeader | R5 状态  | 证据                                       |
-| ----------------- | -------------------- | -------- | ------------------------------------------ |
-| QualityGatesPanel | ❌ 未采纳            | R5 确认  | `grep -rn PanelHeader quality-gates/` 无结果 |
-| QualityPanel      | ❌ 未采纳            | R5 确认  | `grep -rn PanelHeader rightpanel/` 仅 InfoPanel 命中 |
-| InfoPanel         | ✅ 已采纳            | R5 确认  | 第 7/243 行                                |
+| 组件              | 是否使用 PanelHeader | R5 状态 | 证据                                                 |
+| ----------------- | -------------------- | ------- | ---------------------------------------------------- |
+| QualityGatesPanel | ❌ 未采纳            | R5 确认 | `grep -rn PanelHeader quality-gates/` 无结果         |
+| QualityPanel      | ❌ 未采纳            | R5 确认 | `grep -rn PanelHeader rightpanel/` 仅 InfoPanel 命中 |
+| InfoPanel         | ✅ 已采纳            | R5 确认 | 第 7/243 行                                          |
 
 #### Part B: Diff 模块 — 与 R4 完全一致（偏差 0%）
 
@@ -350,19 +350,19 @@ PanelHeader：DiffViewPanel ❌ 未采纳（R5 确认，与 R4 一致）。
 
 **Pixel 残留精细盘点**（R5 扩大采集范围，含 R4 遗漏的 QualityCheckItems + DiffFooter + MultiVersionCompare）：
 
-| 文件                  | text-[Npx] 残留 | 其他 arbitrary 残留              | 总计  |
-| --------------------- | --------------- | -------------------------------- | ----- |
-| DiffView.tsx          | 3 处            | 2 处 underline-offset-[3px]      | 5 处  |
-| DiffHeader.tsx        | 2 处            | 0                                | 2 处  |
-| SplitDiffView.tsx     | 5 处            | 2 处 underline-offset-[3px]      | 7 处  |
-| DiffViewPanel.tsx     | 0               | 0                                | 0 处  |
-| DiffFooter.tsx        | 1 处            | 0                                | 1 处  |
-| MultiVersionCompare   | 1 处            | 0                                | 1 处  |
-| VersionPane.tsx       | 1 处            | 0                                | 1 处  |
-| QualityGatesPanel.tsx | 2 处            | 0                                | 2 处  |
-| QualityRuleList.tsx   | 6 处            | left-[3px] w-[18px] h-[18px] translate-x-[20px] | 10 处 |
-| QualityCheckItems.tsx | 12 处           | 0                                | 12 处 |
-| **合计**              | **33**          | **9**                            | **42 处** |
+| 文件                  | text-[Npx] 残留 | 其他 arbitrary 残留                             | 总计      |
+| --------------------- | --------------- | ----------------------------------------------- | --------- |
+| DiffView.tsx          | 3 处            | 2 处 underline-offset-[3px]                     | 5 处      |
+| DiffHeader.tsx        | 2 处            | 0                                               | 2 处      |
+| SplitDiffView.tsx     | 5 处            | 2 处 underline-offset-[3px]                     | 7 处      |
+| DiffViewPanel.tsx     | 0               | 0                                               | 0 处      |
+| DiffFooter.tsx        | 1 处            | 0                                               | 1 处      |
+| MultiVersionCompare   | 1 处            | 0                                               | 1 处      |
+| VersionPane.tsx       | 1 处            | 0                                               | 1 处      |
+| QualityGatesPanel.tsx | 2 处            | 0                                               | 2 处      |
+| QualityRuleList.tsx   | 6 处            | left-[3px] w-[18px] h-[18px] translate-x-[20px] | 10 处     |
+| QualityCheckItems.tsx | 12 处           | 0                                               | 12 处     |
+| **合计**              | **33**          | **9**                                           | **42 处** |
 
 > R4 报告 ~26 处，R5 精细化后为 42 处——差异来自 R4 未统计 QualityCheckItems.tsx（12 处）、DiffFooter（1 处）、MultiVersionCompare（1 处）、SplitDiffView 多统计修正。无新增残留，仅采集范围扩大。
 
@@ -387,27 +387,27 @@ PanelHeader：DiffViewPanel ❌ 未采纳（R5 确认，与 R4 一致）。
 
 ### AC 验证状态
 
-| AC    | 描述                                           | R4 状态                                         | R5 状态                                         | 结论     |
-| ----- | ---------------------------------------------- | ----------------------------------------------- | ----------------------------------------------- | -------- |
-| AC-1  | QualityGatesPanel 拆分 4 文件, 主文件 ≤200     | ✅ 184 行, 已拆分                               | ✅ R5 确认 (184 行, 4 文件)                     | 保持 ✅  |
-| AC-2  | QualityGatesPanel 使用 PanelHeader              | ❌ 未采纳                                       | ❌ R5 确认未采纳                                | 保持 ❌  |
-| AC-3  | QualityResultCard 使用 Card + severity 色彩      | 部分 — QualityCheckItems 有 severity 色彩       | 部分 — R5 确认 (4 种 severity 色彩 var)         | 保持部分 |
-| AC-4  | QualityPanel 拆分 2 文件, 主文件 ≤250           | ✅ 238 行, 已拆分                               | ✅ R5 确认 (238 行, 2 文件)                     | 保持 ✅  |
-| AC-5  | QualityPanel 使用 PanelHeader                   | ❌ 未采纳                                       | ❌ R5 确认未采纳                                | 保持 ❌  |
-| AC-6  | InfoPanel ≤250 行 + PanelHeader                 | 部分 — 266 行 (差 16), PanelHeader ✅           | 部分 — R5 确认 (266 行, PanelHeader ✅)         | 保持部分 |
-| AC-7  | Diff 7 文件全部使用语义化 Design Token           | ❌ 13 处 text-[Npx] 残留                        | ❌ R5 确认 13 处 (与 R4 一致)                   | 保持 ❌  |
-| AC-8  | Diff 高亮统一 success-subtle/danger-subtle       | ❌ 待实施                                       | ❌ R5 确认待实施                                | 保持 ❌  |
-| AC-9  | DiffView 与 VersionHistory 视觉连续              | ❌ DiffViewPanel 未用 PanelHeader               | ❌ R5 确认未采纳                                | 保持 ❌  |
-| AC-10 | AnalyticsPage 使用 Card + Design Token           | ❌ 待实施                                       | ❌ R5 确认 (197 行, 未变动)                     | 保持 ❌  |
-| AC-11 | ZenMode 居中 max-width 760px                     | ❌ 待实施                                       | ❌ R5 确认 (226 行, 未变动)                     | 保持 ❌  |
-| AC-12 | ZenModeStatus 使用 bg-elevated                   | ❌ 待实施                                       | ❌ R5 确认 (122 行, 未变动)                     | 保持 ❌  |
-| AC-13 | ShortcutsPanel Design Token 标签色               | ❌ 待实施                                       | ❌ R5 确认 (66 行, 未变动)                      | 保持 ❌  |
-| AC-14 | Settings 子组件对齐 FormField                    | ❌ 待实施                                       | ❌ R5 确认 (行数未变)                           | 保持 ❌  |
-| AC-15 | 0 新增 arbitrary 色值                            | ❌ 42 处 pixel 残留                             | ❌ R5 确认 42 处 (R4 统计 ~26 因采集范围偏小)   | 保持 ❌  |
-| AC-16 | 现有测试 100% 通过                               | ✅ Quality 32, Diff 59                          | ✅ R5 确认 Quality 32, Diff 59                  | 保持 ✅  |
-| AC-17 | Storybook 可构建                                 | — 待 v1-16 实施后验证                           | — 待 v1-16 实施后验证                           | 保持 —   |
-| AC-18 | TypeScript 类型检查通过                          | — 待 v1-16 实施后验证                           | — 待 v1-16 实施后验证                           | 保持 —   |
-| AC-19 | lint 无新增违规                                  | — 待 v1-16 实施后验证                           | — 待 v1-16 实施后验证                           | 保持 —   |
+| AC    | 描述                                        | R4 状态                                   | R5 状态                                       | 结论     |
+| ----- | ------------------------------------------- | ----------------------------------------- | --------------------------------------------- | -------- |
+| AC-1  | QualityGatesPanel 拆分 4 文件, 主文件 ≤200  | ✅ 184 行, 已拆分                         | ✅ R5 确认 (184 行, 4 文件)                   | 保持 ✅  |
+| AC-2  | QualityGatesPanel 使用 PanelHeader          | ❌ 未采纳                                 | ❌ R5 确认未采纳                              | 保持 ❌  |
+| AC-3  | QualityResultCard 使用 Card + severity 色彩 | 部分 — QualityCheckItems 有 severity 色彩 | 部分 — R5 确认 (4 种 severity 色彩 var)       | 保持部分 |
+| AC-4  | QualityPanel 拆分 2 文件, 主文件 ≤250       | ✅ 238 行, 已拆分                         | ✅ R5 确认 (238 行, 2 文件)                   | 保持 ✅  |
+| AC-5  | QualityPanel 使用 PanelHeader               | ❌ 未采纳                                 | ❌ R5 确认未采纳                              | 保持 ❌  |
+| AC-6  | InfoPanel ≤250 行 + PanelHeader             | 部分 — 266 行 (差 16), PanelHeader ✅     | 部分 — R5 确认 (266 行, PanelHeader ✅)       | 保持部分 |
+| AC-7  | Diff 7 文件全部使用语义化 Design Token      | ❌ 13 处 text-[Npx] 残留                  | ❌ R5 确认 13 处 (与 R4 一致)                 | 保持 ❌  |
+| AC-8  | Diff 高亮统一 success-subtle/danger-subtle  | ❌ 待实施                                 | ❌ R5 确认待实施                              | 保持 ❌  |
+| AC-9  | DiffView 与 VersionHistory 视觉连续         | ❌ DiffViewPanel 未用 PanelHeader         | ❌ R5 确认未采纳                              | 保持 ❌  |
+| AC-10 | AnalyticsPage 使用 Card + Design Token      | ❌ 待实施                                 | ❌ R5 确认 (197 行, 未变动)                   | 保持 ❌  |
+| AC-11 | ZenMode 居中 max-width 760px                | ❌ 待实施                                 | ❌ R5 确认 (226 行, 未变动)                   | 保持 ❌  |
+| AC-12 | ZenModeStatus 使用 bg-elevated              | ❌ 待实施                                 | ❌ R5 确认 (122 行, 未变动)                   | 保持 ❌  |
+| AC-13 | ShortcutsPanel Design Token 标签色          | ❌ 待实施                                 | ❌ R5 确认 (66 行, 未变动)                    | 保持 ❌  |
+| AC-14 | Settings 子组件对齐 FormField               | ❌ 待实施                                 | ❌ R5 确认 (行数未变)                         | 保持 ❌  |
+| AC-15 | 0 新增 arbitrary 色值                       | ❌ 42 处 pixel 残留                       | ❌ R5 确认 42 处 (R4 统计 ~26 因采集范围偏小) | 保持 ❌  |
+| AC-16 | 现有测试 100% 通过                          | ✅ Quality 32, Diff 59                    | ✅ R5 确认 Quality 32, Diff 59                | 保持 ✅  |
+| AC-17 | Storybook 可构建                            | — 待 v1-16 实施后验证                     | — 待 v1-16 实施后验证                         | 保持 —   |
+| AC-18 | TypeScript 类型检查通过                     | — 待 v1-16 实施后验证                     | — 待 v1-16 实施后验证                         | 保持 —   |
+| AC-19 | lint 无新增违规                             | — 待 v1-16 实施后验证                     | — 待 v1-16 实施后验证                         | 保持 —   |
 
 ### 刷新结论
 
@@ -434,10 +434,10 @@ v1-16 实施优先级建议（沿用 R4，无调整）：
 
 ### 上游依赖状态
 
-| 上游 Change         | R5 复核结论 | 关键指标                                       |
-| ------------------- | ----------- | ---------------------------------------------- |
-| v1-11 状态组件      | ✅ PASS     | EmptyState 241, LoadingState 337, ErrorState 537; 64 tests 全绿 |
-| v1-10 侧面板统一    | ✅ PASS     | 侧面板行数无变化; PanelHeader 5/5 统一; eslint-disable 30; 169 tests 全绿 |
+| 上游 Change      | R5 复核结论 | 关键指标                                                                  |
+| ---------------- | ----------- | ------------------------------------------------------------------------- |
+| v1-11 状态组件   | ✅ PASS     | EmptyState 241, LoadingState 337, ErrorState 537; 64 tests 全绿           |
+| v1-10 侧面板统一 | ✅ PASS     | 侧面板行数无变化; PanelHeader 5/5 统一; eslint-disable 30; 169 tests 全绿 |
 
 ### 交叉引用实测
 
@@ -454,13 +454,13 @@ v1-16 实施优先级建议（沿用 R4，无调整）：
 
 ### 对未完成 AC 的影响
 
-| AC   | 上游依赖           | 影响评估                                           |
-| ---- | ------------------ | -------------------------------------------------- |
-| AC-2 | v1-10 PanelHeader  | 上游 API 稳定（R5 PASS），可直接采纳               |
-| AC-5 | v1-10 PanelHeader  | 同上                                               |
-| AC-9 | v1-10 PanelHeader  | 同上，需同时建立与 VersionHistory 的视觉连续性      |
-| AC-7 | v1-01 Design Token | 42 处 pixel 残留为 v1-16 内部问题，与上游无关       |
-| AC-8 | v1-15 AiDiffModal  | diff 高亮色彩对齐，v1-15 已完成                    |
+| AC   | 上游依赖           | 影响评估                                              |
+| ---- | ------------------ | ----------------------------------------------------- |
+| AC-2 | v1-10 PanelHeader  | 上游 API 稳定（R5 PASS），可直接采纳                  |
+| AC-5 | v1-10 PanelHeader  | 同上                                                  |
+| AC-9 | v1-10 PanelHeader  | 同上，需同时建立与 VersionHistory 的视觉连续性        |
+| AC-7 | v1-01 Design Token | 42 处 pixel 残留为 v1-16 内部问题，与上游无关         |
+| AC-8 | v1-15 AiDiffModal  | diff 高亮色彩对齐，v1-15 已完成                       |
 | 空态 | v1-11 状态组件     | Quality/Diff 面板实施时应引入 EmptyState 等，API 稳定 |
 
 ### 结论

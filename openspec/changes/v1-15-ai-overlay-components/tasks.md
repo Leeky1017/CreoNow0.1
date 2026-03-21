@@ -227,32 +227,32 @@
 
 ### 基线指标更新（R5 实测）
 
-| 指标 | R3 实测值 | R5 实测值 | 变化 |
-| --- | --- | --- | --- |
-| AiDiffModal.tsx | 307 | **307** | 无变化 |
-| AiDiffContent.tsx | 227 | **227** | 无变化 |
-| AiDiffSummary.tsx | 169 | **169** | 无变化 |
-| useAiDiffActions.ts | 155 | **155** | 无变化 |
-| AiErrorCard.tsx | 226 | **226** | 无变化 |
-| AiErrorDetails.tsx | 211 | **211** | 无变化 |
-| AiErrorActions.tsx | 183 | **183** | 无变化 |
-| SystemDialog.tsx | 250 | **250** | 无变化 |
-| SystemDialogContent.tsx | 200 | **200** | 无变化 |
-| AiInlineConfirm.tsx | 221 | **221** | 无变化 |
-| AiInlinePreview.tsx | 134 | **134** | 无变化 |
-| AiDialogs 模块总行数 | 4,454 | **4,454** | 无变化 |
-| AiDialogs 相关测试 | 83 tests | **91 tests** | +8（guard/集成测试新增覆盖） |
-| 全量测试 | — | **2,592 tests 全通过** | 零回归 |
+| 指标                    | R3 实测值 | R5 实测值              | 变化                         |
+| ----------------------- | --------- | ---------------------- | ---------------------------- |
+| AiDiffModal.tsx         | 307       | **307**                | 无变化                       |
+| AiDiffContent.tsx       | 227       | **227**                | 无变化                       |
+| AiDiffSummary.tsx       | 169       | **169**                | 无变化                       |
+| useAiDiffActions.ts     | 155       | **155**                | 无变化                       |
+| AiErrorCard.tsx         | 226       | **226**                | 无变化                       |
+| AiErrorDetails.tsx      | 211       | **211**                | 无变化                       |
+| AiErrorActions.tsx      | 183       | **183**                | 无变化                       |
+| SystemDialog.tsx        | 250       | **250**                | 无变化                       |
+| SystemDialogContent.tsx | 200       | **200**                | 无变化                       |
+| AiInlineConfirm.tsx     | 221       | **221**                | 无变化                       |
+| AiInlinePreview.tsx     | 134       | **134**                | 无变化                       |
+| AiDialogs 模块总行数    | 4,454     | **4,454**              | 无变化                       |
+| AiDialogs 相关测试      | 83 tests  | **91 tests**           | +8（guard/集成测试新增覆盖） |
+| 全量测试                | —         | **2,592 tests 全通过** | 零回归                       |
 
 ### AC 状态评估（R5 更新）
 
-| AC | R3 状态 | R5 状态 | 变化 |
-| --- | --- | --- | --- |
-| AC-1（AiDiffModal ≤200） | ⚠️ 307行 | ⚠️ 307行 | 无变化，维持 Non-blocking |
-| AC-4（AiErrorCard ≤200） | ⚠️ 226行 | ⚠️ 226行 | 无变化，维持 Non-blocking |
-| AC-7（SystemDialog ≤250） | ✅ 250行 | ✅ 250行 | 无变化 |
-| AC-9（AiInlineConfirm ≤200） | ⚠️ 221行 | ⚠️ 221行 | 无变化，维持 Non-blocking |
-| AC-12（测试全通过） | ✅ 83 tests | ✅ 91 tests | 增强（+8 tests） |
+| AC                           | R3 状态     | R5 状态     | 变化                      |
+| ---------------------------- | ----------- | ----------- | ------------------------- |
+| AC-1（AiDiffModal ≤200）     | ⚠️ 307行    | ⚠️ 307行    | 无变化，维持 Non-blocking |
+| AC-4（AiErrorCard ≤200）     | ⚠️ 226行    | ⚠️ 226行    | 无变化，维持 Non-blocking |
+| AC-7（SystemDialog ≤250）    | ✅ 250行    | ✅ 250行    | 无变化                    |
+| AC-9（AiInlineConfirm ≤200） | ⚠️ 221行    | ⚠️ 221行    | 无变化，维持 Non-blocking |
+| AC-12（测试全通过）          | ✅ 83 tests | ✅ 91 tests | 增强（+8 tests）          |
 
 ### 结论
 

@@ -282,24 +282,24 @@ v1-10（Side Panels）已合并，该 change 广泛集成了 v1-11 的 EmptyStat
 
 ### AC 验收状态复核
 
-| AC    | 描述                               | R4 状态 | R5 状态 | R5 验证证据                                                                        |
-| ----- | ---------------------------------- | ------- | ------- | ---------------------------------------------------------------------------------- |
-| AC-1  | EmptyState 组件存在 + Props 完备   | ✅      | ✅      | 241 行，零变化（`wc -l ...EmptyState.tsx`）                                        |
-| AC-2  | LoadingState 组件存在 + Props 完备 | ✅      | ✅      | 337 行，零变化（`wc -l ...LoadingState.tsx`）                                      |
-| AC-3  | ErrorState 组件存在 + Props 完备   | ✅      | ✅      | 537 行，零变化（`wc -l ...ErrorState.tsx`）                                        |
-| AC-4  | EmptyState 视觉合规                | ✅      | ✅      | Story 文件存在（`EmptyState.stories.tsx`）                                          |
-| AC-5  | LoadingState spinner 渲染          | ✅      | ✅      | 26 tests passed，含 spinner variant 验证                                            |
-| AC-6  | LoadingState skeleton 渲染         | ✅      | ✅      | 26 tests passed，含 skeleton paragraph/lines 验证                                   |
-| AC-7  | ErrorState 三 severity 色条 + icon | ✅      | ✅      | 16 tests passed，含 `data-severity=error/warning/info` 断言                         |
-| AC-8  | 3 个 Storybook Stories             | ✅      | ✅      | 3 个核心 stories + 4 个辅助 stories 存在                                            |
-| AC-9  | composites/EmptyState 零引用       | ✅      | ✅      | features 层排除 __tests__ 后 0 命中                                                 |
-| AC-10 | composites/LoadingState 零引用     | ✅      | ✅      | features 层排除 __tests__ 后 0 命中                                                 |
-| AC-11 | composites/ErrorState 零引用       | ✅      | ✅      | features 层排除 __tests__ 后 0 命中                                                 |
-| AC-12 | 语义化 Design Token                | ✅      | ✅      | 碎片化残留搜索 0 命中                                                               |
-| AC-13 | 全量测试通过                       | ✅      | ✅      | 64 tests passed（22+26+16）                                                         |
-| AC-14 | Storybook 可构建                   | ⏳      | ⏳      | 待 CI 验证                                                                          |
-| AC-15 | TypeScript 类型检查                | ⏳      | ⏳      | 待 CI 验证                                                                          |
-| AC-16 | lint 无新增违规                    | ⏳      | ⏳      | 待 CI 验证                                                                          |
+| AC    | 描述                               | R4 状态 | R5 状态 | R5 验证证据                                                 |
+| ----- | ---------------------------------- | ------- | ------- | ----------------------------------------------------------- |
+| AC-1  | EmptyState 组件存在 + Props 完备   | ✅      | ✅      | 241 行，零变化（`wc -l ...EmptyState.tsx`）                 |
+| AC-2  | LoadingState 组件存在 + Props 完备 | ✅      | ✅      | 337 行，零变化（`wc -l ...LoadingState.tsx`）               |
+| AC-3  | ErrorState 组件存在 + Props 完备   | ✅      | ✅      | 537 行，零变化（`wc -l ...ErrorState.tsx`）                 |
+| AC-4  | EmptyState 视觉合规                | ✅      | ✅      | Story 文件存在（`EmptyState.stories.tsx`）                  |
+| AC-5  | LoadingState spinner 渲染          | ✅      | ✅      | 26 tests passed，含 spinner variant 验证                    |
+| AC-6  | LoadingState skeleton 渲染         | ✅      | ✅      | 26 tests passed，含 skeleton paragraph/lines 验证           |
+| AC-7  | ErrorState 三 severity 色条 + icon | ✅      | ✅      | 16 tests passed，含 `data-severity=error/warning/info` 断言 |
+| AC-8  | 3 个 Storybook Stories             | ✅      | ✅      | 3 个核心 stories + 4 个辅助 stories 存在                    |
+| AC-9  | composites/EmptyState 零引用       | ✅      | ✅      | features 层排除 **tests** 后 0 命中                         |
+| AC-10 | composites/LoadingState 零引用     | ✅      | ✅      | features 层排除 **tests** 后 0 命中                         |
+| AC-11 | composites/ErrorState 零引用       | ✅      | ✅      | features 层排除 **tests** 后 0 命中                         |
+| AC-12 | 语义化 Design Token                | ✅      | ✅      | 碎片化残留搜索 0 命中                                       |
+| AC-13 | 全量测试通过                       | ✅      | ✅      | 64 tests passed（22+26+16）                                 |
+| AC-14 | Storybook 可构建                   | ⏳      | ⏳      | 待 CI 验证                                                  |
+| AC-15 | TypeScript 类型检查                | ⏳      | ⏳      | 待 CI 验证                                                  |
+| AC-16 | lint 无新增违规                    | ⏳      | ⏳      | 待 CI 验证                                                  |
 
 ### R5 结论
 
