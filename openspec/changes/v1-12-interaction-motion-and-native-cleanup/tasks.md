@@ -506,3 +506,74 @@ Phase 3 完成后对 v1-12 的综合影响：
 - Phase 0~3 全部 [ ] 未启动
 - 上游七项依赖全部 PASS（R4 新增 v1-08/v1-09/v1-10 三项）
 - FileTree 回补任务因 R4 复核结论大幅缩减，待 Owner AC-8 决策后最终确认
+
+---
+
+## R5 级联刷新记录（2026-03-22）
+
+> 📋 **R5 P4 级联刷新**：v1-11 / v1-10 / v1-16 三项 R5 复核全部 PASS，零回归。
+
+### 刷新触发
+
+R5 P4 复核 v1-11（Empty/Loading/Error States）/ v1-10（Side Panels）/ v1-16（Quality/RightPanel）→ 级联刷新。三项上游均 PASS 且零回归。
+
+### 上游复核结论
+
+- **v1-11（Empty/Loading/Error States）**：PASS — EmptyState 241 行, LoadingState 337 行, ErrorState 537 行; 64 tests 全绿; 16 feature 集成; 0 composites 残留
+- **v1-10（Side Panels）**：PASS — 169 tests 全绿; PanelHeader 5/5 统一; eslint-disable 30; OutlinePanel 326（⚠️+9%）; CharacterDetailDialog 321（⚠️+7%）; AC-24 5/7 达标
+- **v1-16（Quality/RightPanel）**：PASS — QualityGatesPanel 184 行, QualityPanel 238 行, InfoPanel 266 行; Quality 32 + Diff 59 tests 全绿; pixel 残留 42 处; DiffView 7 files 无变化
+
+### 基线更新
+
+**与 R4 的对比（仅标注有变化的项）：**
+
+| 度量                           | R4 基线 | R5 实际 | Delta     | 说明                                     |
+| ------------------------------ | ------- | ------- | --------- | ---------------------------------------- |
+| `duration-*`（features/ prod） | 30      | **40**  | **+10** ↑ | v1-10 面板重构主动采纳 Design Token      |
+| layout/ 文件数                 | 40      | **46**  | **+6**    | v1-10/v1-11 期间新增测试文件，总行数不变 |
+
+**全部持平的项（零变化）：**
+
+- 原生 `<button>` 合计 prod：**102** 处（features/ 69 + components/features/ 33）
+- 原生 `<input>`：**12** 处 / `<select>`：**6** 处 / `<textarea>`：**5** 处
+- `no-native-html-element` 合计：**159** 处（features/ 121 + components/features/ 38）
+- `eslint-disable` 总数（renderer/src/）：**229** 处
+- Button `size="icon"`：**13** 处
+- AppShell.tsx：**1,267** 行 / layout/ 总行数：**9,353** 行
+- CSS 动效工具类（main.css）：**0**（待 Part A 定义）
+- scroll shadow：**2** 处（待 Part A 铺设）
+- SkillManagerDialog：**624** 行 / OutlinePanel：**326** 行 / DiffView：**345** 行
+- Storybook play 函数：**256** 个
+
+### 受影响的 Task 条目
+
+| Task / AC | 变化                | 影响                                                                              |
+| --------- | ------------------- | --------------------------------------------------------------------------------- |
+| Task 2A.2 | duration-\* +10     | 积极：上游面板已自发添加 Design Token duration，Part A 统一工具类铺设后替换更顺畅 |
+| Task C.1  | layout/ +6 文件     | 中性：新增测试文件需纳入 AppShell 拆分影响评估                                    |
+| AC-4      | transition 趋势向好 | 不变：72 处 transition-colors + 40 处 duration，但仍缺统一工具类                  |
+| AC-8~12   | 全部持平            | 不变：替换目标不变                                                                |
+| AC-19     | AppShell 1,267 行   | 不变：拆分目标不变                                                                |
+
+### 回补清单确认（R5 维持 R4）
+
+| 回补项                 | R5 状态     | 说明                                             |
+| ---------------------- | ----------- | ------------------------------------------------ |
+| SkillManagerDialog 624 | 维持        | 按职责拆分（List + Detail + Shell），各 ≤200 行  |
+| OutlinePanel 326       | 维持        | R5 确认 +9% 超标在 <10% 容忍区间，回补优先级不变 |
+| DiffView 345           | 维持        | 与 Part B diff 模块 9 处 button 替换合并处理     |
+| FileTree AC-8          | 维持 0~1 项 | 待 Owner emoji 方案决策                          |
+
+### 新增/调整项
+
+无。Phase 4 三项上游复核全部 PASS 且零回归，未产生新的回流或回补需求。
+
+### 任务状态
+
+- Phase 0~3 全部 [ ] 未启动
+- 上游十项依赖全部 PASS（R5 新增 v1-11，R5 确认 v1-10/v1-16）
+- scope 与 R4 完全一致，v1-12 已准备就绪
+
+### 结论
+
+R5 级联刷新确认 v1-12 任务清单无变化。上游 `duration-*` 使用增长（+10）是积极信号，但不影响任何 task 的勾选状态或工作量估算。所有 AC 目标、回补清单、Phase 执行顺序均维持 R4 定义。

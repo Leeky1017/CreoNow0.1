@@ -230,3 +230,38 @@
 6. **测试全绿**：5 面板共 169 测试全部通过（Character 20 + Memory 12 + Outline 35 + KG 60 + VH 42）
 
 **结论**：轻度刷新，无 scope/AC 调整需求。Phase 3 合并未引入对 v1-10 的副作用。
+
+---
+
+## R5 Cascade Refresh (2026-03-21)
+
+> Phase 4 级联复核。独立重新采集全部度量指标，与 R4 记录对比验证。
+
+### 基线指标更新
+
+| 指标                             | R4 实测值 | R5 实测值 | 变化 |
+| -------------------------------- | --------- | --------- | ---- |
+| CharacterPanel.tsx 行数          | 225       | 225       | 无   |
+| CharacterDetailDialog.tsx 行数   | 321       | 321       | 无   |
+| MemoryPanel.tsx 行数             | 155       | 155       | 无   |
+| OutlinePanel.tsx 行数            | 326       | 326       | 无   |
+| KnowledgeGraphPanel.tsx 行数     | 147       | 147       | 无   |
+| VersionHistoryPanel.tsx 行数     | 183       | 183       | 无   |
+| VersionHistoryContainer.tsx 行数 | 273       | 273       | 无   |
+| eslint-disable 总计              | 30        | 30        | 无   |
+| PanelHeader 统一                 | 5/5       | 5/5       | 无   |
+| 状态组件集成                     | 5/5       | 5/5       | 无   |
+| 测试总数                         | 169       | 169       | 无   |
+| 测试通过                         | 169       | 169       | 无   |
+
+### AC 验证状态
+
+- **AC-1** PanelHeader 统一：✅ R5 复核确认
+- **AC-12** 状态组件集成：✅ R5 复核确认
+- **AC-18** eslint-disable ≤30：✅ R5 复核确认（30）
+- **AC-20** 全量测试通过：✅ R5 复核确认（169/169）
+- **AC-24** 面板 ≤300 行：⚠️ R5 复核确认（5/7 达标；CharacterDetailDialog 321、OutlinePanel 326 超标 <10%）
+
+### 结论
+
+**PASS** — R5 全部实测值与 R4 完全一致，无任何回归。Phase 4 未对 v1-10 五个侧面板引入副作用。无 scope/AC 调整需求。

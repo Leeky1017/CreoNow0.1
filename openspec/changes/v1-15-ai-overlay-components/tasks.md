@@ -211,3 +211,49 @@
 ### 审计关注点
 
 行数目标的轻微偏差（多为 10-30 行）属于 Non-blocking——拆分目标的核心意图（单一职责、可维护性）已达成。审计 Agent 应聚焦功能性验证（AC-2/3/5/6/8/10/11 的视觉对齐）而非行数绝对值。
+
+---
+
+## R5 Cascade Refresh (2026-03-22)
+
+**触发**：R5 P4 复核（v1-11 / v1-10 / v1-16 全部 PASS）
+
+### 上游依赖确认
+
+- ✅ v1-11 Empty/Loading/Error States: R5 PASS（EmptyState 241, LoadingState 337, ErrorState 537; 64 tests 全绿）
+- ✅ v1-10 Side Panels: R5 PASS（169 tests 全绿，零回归）
+- ✅ v1-16 Quality & Diff Guards: R5 PASS（Quality 32 tests, Diff 59 tests 全绿）
+- v1-11 报告 16 feature integrations 中含 v1-15 AiErrorCard 与 ErrorState 的潜在交集——经评估为职责正交（AI 领域特定 vs. 通用），无需响应
+
+### 基线指标更新（R5 实测）
+
+| 指标                    | R3 实测值 | R5 实测值              | 变化                         |
+| ----------------------- | --------- | ---------------------- | ---------------------------- |
+| AiDiffModal.tsx         | 307       | **307**                | 无变化                       |
+| AiDiffContent.tsx       | 227       | **227**                | 无变化                       |
+| AiDiffSummary.tsx       | 169       | **169**                | 无变化                       |
+| useAiDiffActions.ts     | 155       | **155**                | 无变化                       |
+| AiErrorCard.tsx         | 226       | **226**                | 无变化                       |
+| AiErrorDetails.tsx      | 211       | **211**                | 无变化                       |
+| AiErrorActions.tsx      | 183       | **183**                | 无变化                       |
+| SystemDialog.tsx        | 250       | **250**                | 无变化                       |
+| SystemDialogContent.tsx | 200       | **200**                | 无变化                       |
+| AiInlineConfirm.tsx     | 221       | **221**                | 无变化                       |
+| AiInlinePreview.tsx     | 134       | **134**                | 无变化                       |
+| AiDialogs 模块总行数    | 4,454     | **4,454**              | 无变化                       |
+| AiDialogs 相关测试      | 83 tests  | **91 tests**           | +8（guard/集成测试新增覆盖） |
+| 全量测试                | —         | **2,592 tests 全通过** | 零回归                       |
+
+### AC 状态评估（R5 更新）
+
+| AC                           | R3 状态     | R5 状态     | 变化                      |
+| ---------------------------- | ----------- | ----------- | ------------------------- |
+| AC-1（AiDiffModal ≤200）     | ⚠️ 307行    | ⚠️ 307行    | 无变化，维持 Non-blocking |
+| AC-4（AiErrorCard ≤200）     | ⚠️ 226行    | ⚠️ 226行    | 无变化，维持 Non-blocking |
+| AC-7（SystemDialog ≤250）    | ✅ 250行    | ✅ 250行    | 无变化                    |
+| AC-9（AiInlineConfirm ≤200） | ⚠️ 221行    | ⚠️ 221行    | 无变化，维持 Non-blocking |
+| AC-12（测试全通过）          | ✅ 83 tests | ✅ 91 tests | 增强（+8 tests）          |
+
+### 结论
+
+v1-15 R5 级联刷新：**PASS** ✅ —— 11 个源文件行数与 R3 完全一致（零漂移），测试从 83 增至 91（guard 体系增强），全量 2,592 tests 零回归，上游三路 PASS 均无冲突，无需二次拆分或额外响应。

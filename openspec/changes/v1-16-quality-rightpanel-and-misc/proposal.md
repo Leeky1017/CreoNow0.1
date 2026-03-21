@@ -237,3 +237,117 @@ Diff 模块 7 个文件共 1,423 行，单个文件都不大但风格需要与 v
 1. QualityGatesPanel / QualityPanel / DiffViewPanel 均未采纳 PanelHeader（AC-2/AC-5/AC-9）
 2. Diff 模块 pixel 残留较多，需系统性替换为 Design Token 字号变量
 3. DiffView.tsx（345 行）仍是 Diff 模块最大文件，但未超标（proposal 未要求拆分）
+
+---
+
+## R5 Cascade Refresh (2026-03-21)
+
+### 上游依赖状态
+
+| 上游 Change                 | 状态    | 说明        |
+| --------------------------- | ------- | ----------- |
+| v1-08 FileTree Precision    | ✅ PASS | R5 复核确认 |
+| v1-09 CommandPalette+Search | ✅ PASS | R5 复核确认 |
+
+### 基线指标更新
+
+#### Part A: Quality 面板（与 R4 完全一致，偏差 0%）
+
+| 文件                       | R4 实测    | R5 实测    | R5-R4 偏差 |
+| -------------------------- | ---------- | ---------- | ---------- |
+| `QualityGatesPanel.tsx`    | **184 行** | **184 行** | 0          |
+| `QualityRuleList.tsx`      | **217 行** | **217 行** | 0          |
+| `QualityCheckItems.tsx`    | **299 行** | **299 行** | 0          |
+| `qualityGatesTypes.ts`     | **101 行** | **101 行** | 0          |
+| `QualityPanel.tsx`         | **238 行** | **238 行** | 0          |
+| `QualityPanelSections.tsx` | **295 行** | **295 行** | 0          |
+| `InfoPanel.tsx`            | **266 行** | **266 行** | 0          |
+
+> R5 确认：所有 Part A 文件行数与 R4 完全一致。PanelHeader 采纳状态无变化（QualityGatesPanel ❌、QualityPanel ❌、InfoPanel ✅）。
+
+#### Part B: Diff 模块（与 R4 完全一致，偏差 0%）
+
+| 文件                      | R4 实测    | R5 实测    | R5-R4 偏差 |
+| ------------------------- | ---------- | ---------- | ---------- |
+| `DiffView.tsx`            | **345 行** | **345 行** | 0          |
+| `DiffHeader.tsx`          | **260 行** | **260 行** | 0          |
+| `SplitDiffView.tsx`       | **244 行** | **244 行** | 0          |
+| `DiffViewPanel.tsx`       | **210 行** | **210 行** | 0          |
+| `DiffFooter.tsx`          | **144 行** | **144 行** | 0          |
+| `MultiVersionCompare.tsx` | **121 行** | **121 行** | 0          |
+| `VersionPane.tsx`         | **99 行**  | **99 行**  | 0          |
+
+> R5 确认：Diff 模块 7 文件零偏差。pixel 残留精细化盘点为 42 处（R4 的 ~26 因未统计 QualityCheckItems 等文件）。DiffViewPanel 仍未采纳 PanelHeader。
+
+#### Part C: 杂项页面（与 R4 完全一致，偏差 0%）
+
+| 文件                    | R4 实测    | R5 实测    | R5-R4 偏差 |
+| ----------------------- | ---------- | ---------- | ---------- |
+| `AnalyticsPage.tsx`     | **197 行** | **197 行** | 0          |
+| `ZenMode.tsx`           | **226 行** | **226 行** | 0          |
+| `ZenModeStatus.tsx`     | **122 行** | **122 行** | 0          |
+| `ShortcutsPanel.tsx`    | **66 行**  | **66 行**  | 0          |
+| `AiSettingsSection.tsx` | **243 行** | **243 行** | 0          |
+| `JudgeSection.tsx`      | **133 行** | **133 行** | 0          |
+| `AppearanceSection.tsx` | **75 行**  | **75 行**  | 0          |
+
+### 测试状态
+
+| 模块    | R4 结果                 | R5 结果                 | 偏差 |
+| ------- | ----------------------- | ----------------------- | ---- |
+| Quality | 2 files, 32 tests, 全绿 | 2 files, 32 tests, 全绿 | 无   |
+| Diff    | 8 files, 59 tests, 全绿 | 8 files, 59 tests, 全绿 | 无   |
+
+### 刷新结论
+
+**零偏差确认**——R5 所有指标与 R4 完全一致，proposal 基线仍然有效。v1-16 各 AC 待实施状态无变化，无回归、无新增问题。
+
+R5 唯一增量发现：pixel 残留精细化盘点从 R4 的 ~26 处修正为 42 处（扩大采集范围至 QualityCheckItems.tsx、DiffFooter.tsx、MultiVersionCompare.tsx），实际无新增残留。
+
+---
+
+## R5 Cascade Refresh（级联刷新）
+
+**触发**：R5 P4 复核（v1-11 / v1-10 全部 PASS）→ 上游基线确认
+**日期**：2026-03-22
+
+### 上游依赖状态
+
+| 上游 Change      | R5 复核结论 | 关键指标                                                                  |
+| ---------------- | ----------- | ------------------------------------------------------------------------- |
+| v1-11 状态组件   | ✅ PASS     | EmptyState 241, LoadingState 337, ErrorState 537; 64 tests 全绿           |
+| v1-10 侧面板统一 | ✅ PASS     | 侧面板行数无变化; PanelHeader 5/5 统一; eslint-disable 30; 169 tests 全绿 |
+
+### v1-11 状态组件 → v1-16 影响分析
+
+**实测**：`grep -rn 'EmptyState\|LoadingState\|ErrorState' apps/desktop/renderer/src/features/{quality-gates,rightpanel,diff}/` → **零命中**
+
+v1-16 的 quality-gates、rightpanel、diff 三个模块目前**未引用** v1-11 的 EmptyState / LoadingState / ErrorState 组件。这意味着：
+
+- v1-11 R5 PASS 对 v1-16 **无直接回归风险**——上游稳定不影响下游
+- v1-16 实施时**应当引入**这些状态组件（proposal 依赖列表已声明 v1-11），但当前代码尚未走到这一步
+- v1-11 的 64 tests 全绿确认了状态组件 API 稳定，v1-16 后续集成无兼容性风险
+
+### v1-10 PanelHeader 模式 → v1-16 影响分析
+
+**实测**：`grep -rn 'PanelHeader' apps/desktop/renderer/src/features/{quality-gates,rightpanel,diff}/` → **仅 InfoPanel.tsx 命中**（L7 import, L243 使用）
+
+| 面板              | v1-10 PanelHeader 采纳 | v1-16 现状   |
+| ----------------- | ---------------------- | ------------ |
+| QualityGatesPanel | ❌                     | 待 AC-2 实施 |
+| QualityPanel      | ❌                     | 待 AC-5 实施 |
+| InfoPanel         | ✅                     | 已采纳       |
+| DiffViewPanel     | ❌                     | 待 AC-9 实施 |
+
+v1-10 R5 确认 PanelHeader 5/5 在其管辖面板中全部统一，API 稳定。v1-16 的采纳差距（1/4）是**实施缺口而非上游问题**——v1-10 已提供完整模式，v1-16 只需按 AC-2/AC-5/AC-9 执行采纳即可。
+
+### 对 v1-16 未完成工作的影响
+
+1. **PanelHeader 采纳（AC-2/AC-5/AC-9）**：v1-10 上游基线已锁定且 API 稳定，v1-16 可直接采纳，无需等待上游变更
+2. **状态组件集成**：v1-11 上游 API 稳定（64 tests），v1-16 的 Quality/Diff 面板在实施空态、加载态、错误态时应复用 v1-11 组件
+3. **Part B/C 未启动**：Diff 7 文件 + 杂项 7 文件均未变动，上游 PASS 不改变实施计划
+4. **Pixel 残留 42 处**：纯 v1-16 内部问题，与 v1-10/v1-11 无关
+
+### 结论
+
+**上游基线已锁定，v1-16 无级联风险。** v1-10 PanelHeader 和 v1-11 状态组件均 R5 PASS、API 稳定，v1-16 实施时可安全依赖。采纳差距（PanelHeader 1/4、状态组件 0/3）是 v1-16 自身待完成工作，不构成上游阻断。

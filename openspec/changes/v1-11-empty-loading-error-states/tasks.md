@@ -269,3 +269,40 @@ v1-08（FileTree Precision）和 v1-09（CommandPalette+Search）已合并。复
 **✅ PASS — v1-11 全面达标，无需修复。**
 
 三大标准组件已完整实现并广泛集成至 features 层，composites 旧引用已清零（guard 测试防回归），64 个单元测试全绿，碎片化残留为零。上游 v1-08/v1-09 合并未引入回归。
+
+---
+
+## R5 Cascade Refresh (2026-03-21)
+
+> 「三度量之而不变，则器之固也。」——R5 级联刷新，v1-10 合并后再验 v1-11 稳定性。
+
+### 上游合并影响
+
+v1-10（Side Panels）已合并，该 change 广泛集成了 v1-11 的 EmptyState/LoadingState/ErrorState 组件。复核确认：三组件源码无变化，测试全绿，无回归。
+
+### AC 验收状态复核
+
+| AC    | 描述                               | R4 状态 | R5 状态 | R5 验证证据                                                 |
+| ----- | ---------------------------------- | ------- | ------- | ----------------------------------------------------------- |
+| AC-1  | EmptyState 组件存在 + Props 完备   | ✅      | ✅      | 241 行，零变化（`wc -l ...EmptyState.tsx`）                 |
+| AC-2  | LoadingState 组件存在 + Props 完备 | ✅      | ✅      | 337 行，零变化（`wc -l ...LoadingState.tsx`）               |
+| AC-3  | ErrorState 组件存在 + Props 完备   | ✅      | ✅      | 537 行，零变化（`wc -l ...ErrorState.tsx`）                 |
+| AC-4  | EmptyState 视觉合规                | ✅      | ✅      | Story 文件存在（`EmptyState.stories.tsx`）                  |
+| AC-5  | LoadingState spinner 渲染          | ✅      | ✅      | 26 tests passed，含 spinner variant 验证                    |
+| AC-6  | LoadingState skeleton 渲染         | ✅      | ✅      | 26 tests passed，含 skeleton paragraph/lines 验证           |
+| AC-7  | ErrorState 三 severity 色条 + icon | ✅      | ✅      | 16 tests passed，含 `data-severity=error/warning/info` 断言 |
+| AC-8  | 3 个 Storybook Stories             | ✅      | ✅      | 3 个核心 stories + 4 个辅助 stories 存在                    |
+| AC-9  | composites/EmptyState 零引用       | ✅      | ✅      | features 层排除 **tests** 后 0 命中                         |
+| AC-10 | composites/LoadingState 零引用     | ✅      | ✅      | features 层排除 **tests** 后 0 命中                         |
+| AC-11 | composites/ErrorState 零引用       | ✅      | ✅      | features 层排除 **tests** 后 0 命中                         |
+| AC-12 | 语义化 Design Token                | ✅      | ✅      | 碎片化残留搜索 0 命中                                       |
+| AC-13 | 全量测试通过                       | ✅      | ✅      | 64 tests passed（22+26+16）                                 |
+| AC-14 | Storybook 可构建                   | ⏳      | ⏳      | 待 CI 验证                                                  |
+| AC-15 | TypeScript 类型检查                | ⏳      | ⏳      | 待 CI 验证                                                  |
+| AC-16 | lint 无新增违规                    | ⏳      | ⏳      | 待 CI 验证                                                  |
+
+### R5 结论
+
+**✅ PASS — v1-11 核心指标与 R4 一致，零回归。**
+
+全部 13 项可本地验证的 AC（AC-1 至 AC-13）持续达标。唯一变化：patterns 目录文件数从 18→20（+2），但总行数 2658 不变。三组件行数、composites 引用、features 集成、测试数量均与 R4 完全一致。v1-10 Side Panels 合并后状态组件保持完全稳定，64 个测试全绿，碎片化残留为零。AC-14/15/16 仍依赖 CI 验证。
