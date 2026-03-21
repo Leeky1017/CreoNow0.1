@@ -156,7 +156,6 @@ function renderWithToastProvider(ui: JSX.Element) {
   return render(<AppToastProvider>{ui}</AppToastProvider>);
 }
 
-describe("ExportDialog", () => {
   // ===========================================================================
   // 渲染 — 基础渲染与默认状态
   // ===========================================================================
@@ -649,4 +648,3 @@ describe("ExportDialog", () => {
       );
     });
   });
-});

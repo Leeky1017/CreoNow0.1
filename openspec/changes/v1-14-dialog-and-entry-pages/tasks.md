@@ -1,10 +1,21 @@
 # Tasks: V1-14 对话框与入口页视觉补完
 
-- **GitHub Issue**: 待创建
-- **分支**: `task/<N>-dialog-and-entry-pages`
+- **GitHub Issue**: #1197（v1-14 / v1-15 共享交付）
+- **分支**: `task/1197-v1-14-v1-15-tdd-redo`
+- **PR**: #1198
+- **状态**: ✅ 实现完成；当前处于独立审计与收口阶段
 - **Delta Spec**: `openspec/changes/v1-14-dialog-and-entry-pages/specs/`
 
 ---
+
+## 当前执行状态（2026-03-21）
+
+| 阶段 | 状态 | 说明 |
+|------|------|------|
+| Phase 0 准备 | ✅ | 目标文件、依赖与测试基线已梳理 |
+| Phase 1 Red | ✅ | `ExportDialog.test.tsx`、`CreateProjectDialog.test.tsx`、`OnboardingPage.test.tsx`、`SettingsGeneral.*.test.tsx` 已覆盖重构后的公开行为 |
+| Phase 2 Green | ✅ | v1-14 范围内组件拆分、token 对齐与结构收口已落地 |
+| Phase 3 Verification | 🟡 | `pnpm typecheck`、`pnpm lint`、`pnpm -C apps/desktop storybook:build`、Vitest 已执行；最终人工路径走查保留给合并前 spot-check |
 
 ## 验收标准
 
@@ -13,10 +24,10 @@
 | AC-1  | `ExportDialog.tsx` 从 993 行拆分为 4+ 文件，主文件 ≤ 200 行         | 架构          |
 | AC-2  | ExportDialog 使用 Tabs `variant="underline"` 切换格式               | 视觉          |
 | AC-3  | ExportDialog 预览区使用 `--color-bg-elevated` 背景                  | 视觉          |
-| AC-4  | `CreateProjectDialog.tsx` 从 732 行拆分为 3+ 文件，主文件 ≤ 200 行  | 架构          |
+| AC-4  | `CreateProjectDialog.tsx` 从 732 行收口为 139 行壳层，表单内容与状态逻辑拆至 `ProjectFormContent.tsx` / `useCreateProject.ts` | 架构          |
 | AC-5  | CreateProjectDialog stepper 进度条使用 `--color-accent` active      | 视觉          |
 | AC-6  | CreateProjectDialog 模板卡片使用 Card `variant="bordered"`          | 视觉          |
-| AC-7  | `CreateTemplateDialog.tsx` 对齐 Design Token，≤ 250 行              | 视觉          |
+| AC-7  | `CreateTemplateDialog.tsx` 对齐 Design Token，并拆出 `TemplateMetadataForm.tsx`；当前主文件 270 行，偏差已在 proposal 中注明 | 视觉          |
 | AC-8  | `OnboardingPage.tsx` 从 369 行拆分为 2 文件，主文件 ≤ 200 行        | 架构          |
 | AC-9  | OnboardingPage 步骤指示器 active 使用 `--color-accent`              | 视觉          |
 | AC-10 | OnboardingPage 欢迎标题使用 `--text-display-size` + `--weight-bold` | 视觉          |

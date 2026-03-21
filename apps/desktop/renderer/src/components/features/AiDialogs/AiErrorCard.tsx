@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useMemo, useReducer } from "react";
 import { useTranslation } from "react-i18next";
 import type { IpcErrorCode } from "@shared/types/ipc-generated";
 
@@ -12,6 +12,47 @@ import {
 import { type RetryState, AiErrorCardActions } from "./AiErrorActions";
 
 type CardState = "visible" | "dismissing" | "dismissed";
+
+type RateLimitState = {
+  version: string;
+  countdown: number;
+  countdownComplete: boolean;
+};
+
+type RateLimitAction = {
+  type: "tick";
+  version: string;
+};
+
+function buildRateLimitState(
+  type: AiErrorCardProps["error"]["type"],
+  countdownSeconds?: number,
+): RateLimitState {
+  const countdown = type === "rate_limit" ? (countdownSeconds ?? 0) : 0;
+  return {
+    version: `${type}:${countdown}`,
+    countdown,
+    countdownComplete: type === "rate_limit" && countdown <= 0,
+  };
+}
+
+function reduceRateLimitState(
+  state: RateLimitState,
+  action: RateLimitAction,
+): RateLimitState {
+  if (action.type !== "tick" || action.version !== state.version) {
+    return state;
+  }
+  if (state.countdown <= 0) {
+    return state.countdownComplete ? state : { ...state, countdownComplete: true };
+  }
+  const nextCountdown = state.countdown - 1;
+  return {
+    ...state,
+    countdown: nextCountdown,
+    countdownComplete: nextCountdown <= 0,
+  };
+}
 
 const CloseIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z" /></svg>);
 const cardStyles = [
@@ -52,44 +93,40 @@ export function AiErrorCard({
 }: AiErrorCardProps): JSX.Element | null {
   const { t } = useTranslation();
 
-  // Initialize countdown from props - use a ref to track the initial value
-  const initialCountdown =
-    error.type === "rate_limit" ? (error.countdownSeconds ?? 0) : 0;
-
-  const [countdown, setCountdown] = useState(initialCountdown);
   const [cardState, setCardState] = useState<CardState>("visible");
   const [retryState, setRetryState] = useState<RetryState>("idle");
-  const [countdownComplete, setCountdownComplete] = useState(false);
-  const prevCountdownRef = useRef(error.countdownSeconds);
+  const requestedRateLimitState = useMemo(
+    () => buildRateLimitState(error.type, error.countdownSeconds),
+    [error.type, error.countdownSeconds],
+  );
+  const [rateLimitState, dispatchRateLimit] = useReducer(
+    reduceRateLimitState,
+    requestedRateLimitState,
+  );
+  const activeRateLimitState =
+    rateLimitState.version === requestedRateLimitState.version
+      ? rateLimitState
+      : requestedRateLimitState;
+  const countdown = activeRateLimitState.countdown;
+  const countdownComplete = activeRateLimitState.countdownComplete;
   const borderColor = getBorderColorByType(error.type);
   const bgColor = getBgColorByType(error.type);
 
   // Countdown timer for rate limit errors
   useEffect(() => {
-    if (error.type !== "rate_limit" || !error.countdownSeconds) {
+    if (error.type !== "rate_limit" || countdown <= 0) {
       return;
     }
 
-    // Only reset countdown if the countdownSeconds prop changed
-    if (prevCountdownRef.current !== error.countdownSeconds) {
-      prevCountdownRef.current = error.countdownSeconds;
-
-      // Use functional update to avoid direct setState in effect
-    }
-
     const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          setCountdownComplete(true);
-          return 0;
-        }
-        return prev - 1;
+      dispatchRateLimit({
+        type: "tick",
+        version: requestedRateLimitState.version,
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [error.type, error.countdownSeconds]);
+  }, [countdown, error.type, requestedRateLimitState.version]);
 
   const isRetryDisabled =
     (error.type === "rate_limit" && countdown > 0) || retryState === "loading";

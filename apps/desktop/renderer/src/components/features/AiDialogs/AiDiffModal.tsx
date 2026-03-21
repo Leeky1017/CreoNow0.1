@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import type { AiDiffModalProps } from "./types";
@@ -61,14 +62,23 @@ const rejectChangeButtonStyles = [
   changeActionButtonStyles,
   "text-[var(--color-fg-muted)] hover:bg-[var(--color-error-subtle)] hover:text-[var(--color-error)]",
 ].join(" ");
-/** AiDiffModal - Side-by-side diff modal with per-change accept/reject.
- * @example `<AiDiffModal open={isOpen} onOpenChange={setIsOpen} changes={[...]} onAcceptAll={fn} onRejectAll={fn} onApplyChanges={fn} />`
- */
-export function AiDiffModal({
-  open, onOpenChange, changes, currentIndex = 0, onCurrentIndexChange,
-  onAcceptAll, onRejectAll, onApplyChanges, onEditManually,
-  simulateDelay = 1000, initialChangeStates = {},
-}: AiDiffModalProps): JSX.Element {
+interface AiDiffModalBodyProps extends Omit<AiDiffModalProps, "open"> {
+  currentIndex: number;
+  initialChangeStates: Record<string, "pending" | "accepted" | "rejected">;
+}
+
+function AiDiffModalBody({
+  onOpenChange,
+  changes,
+  currentIndex,
+  onCurrentIndexChange,
+  onAcceptAll,
+  onRejectAll,
+  onApplyChanges,
+  onEditManually,
+  simulateDelay = 1000,
+  initialChangeStates,
+}: AiDiffModalBodyProps): JSX.Element {
   const { t } = useTranslation();
   const {
     currentChange,
@@ -97,99 +107,147 @@ export function AiDiffModal({
     simulateDelay,
     initialChangeStates,
   });
+
+  return (
+    <>
+      {/* Header */}
+      <div className={headerStyles}>
+        <div className="flex items-center gap-4">
+          <DialogPrimitive.Title className="font-medium text-sm text-[var(--color-fg-default)]">
+            {t("ai.diff.reviewChanges")}
+          </DialogPrimitive.Title>
+          <span className="text-xs text-[var(--color-fg-muted)]">
+            {t("ai.diff.modifyCount", { count: totalChanges })}
+          </span>
+        </div>
+        {/* Navigation */}
+        <div className="flex items-center gap-3">
+          {totalChanges > 1 && (
+            <div className={navContainerStyles}>
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
+              <button
+                type="button"
+                className={navButtonStyles}
+                onClick={handlePrev}
+                disabled={currentIndex === 0 || isApplying}
+              >
+                <ChevronLeftIcon />
+              </button>
+              <span className={navTextStyles}>
+                {t("ai.diff.changeNav", {
+                  current: currentIndex + 1,
+                  total: totalChanges,
+                })}
+              </span>
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
+              <button
+                type="button"
+                className={navButtonStyles}
+                onClick={handleNext}
+                disabled={currentIndex === totalChanges - 1 || isApplying}
+              >
+                <ChevronRightIcon />
+              </button>
+            </div>
+          )}
+          {currentState === "pending" && !isApplying && (
+            <div className="flex items-center gap-1">
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
+              <button
+                type="button"
+                className={acceptChangeButtonStyles}
+                onClick={() => handleAcceptChange(currentChange.id)}
+                title={t("ai.diff.acceptThisChange")}
+              >
+                <CheckIcon />
+              </button>
+              {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
+              <button
+                type="button"
+                className={rejectChangeButtonStyles}
+                onClick={() => handleRejectChange(currentChange.id)}
+                title={t("ai.diff.rejectThisChange")}
+              >
+                <XIcon />
+              </button>
+            </div>
+          )}
+        </div>
+        <DialogPrimitive.Close
+          className={closeButtonStyles}
+          disabled={isApplying}
+        >
+          <CloseIcon />
+        </DialogPrimitive.Close>
+      </div>
+      <AiDiffContent
+        currentChange={currentChange}
+        currentState={currentState}
+      />
+      <AiDiffSummary
+        stats={stats}
+        acceptedCount={acceptedCount}
+        rejectedCount={rejectedCount}
+        isApplying={isApplying}
+        isApplied={isApplied}
+        onAcceptAll={handleAcceptAll}
+        onRejectAll={handleRejectAll}
+        onApplyChanges={handleApplyChanges}
+        onEditManually={onEditManually}
+      />
+    </>
+  );
+}
+
+/** AiDiffModal - Side-by-side diff modal with per-change accept/reject.
+ * @example `<AiDiffModal open={isOpen} onOpenChange={setIsOpen} changes={[...]} onAcceptAll={fn} onRejectAll={fn} onApplyChanges={fn} />`
+ */
+export function AiDiffModal({
+  open,
+  onOpenChange,
+  changes,
+  currentIndex = 0,
+  onCurrentIndexChange,
+  onAcceptAll,
+  onRejectAll,
+  onApplyChanges,
+  onEditManually,
+  simulateDelay = 1000,
+  initialChangeStates = {},
+}: AiDiffModalProps): JSX.Element {
+  const dialogSessionKey = useMemo(
+    () =>
+      JSON.stringify(
+        changes.map((change) => ({
+          id: change.id,
+          before: change.before,
+          after: change.after,
+          state: initialChangeStates[change.id] || "pending",
+        })),
+      ),
+    [changes, initialChangeStates],
+  );
+
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className={overlayStyles} />
         <DialogPrimitive.Content className={contentStyles}>
-          {/* Header */}
-          <div className={headerStyles}>
-            <div className="flex items-center gap-4">
-              <DialogPrimitive.Title className="font-medium text-sm text-[var(--color-fg-default)]">
-                {t("ai.diff.reviewChanges")}
-              </DialogPrimitive.Title>
-              <span className="text-xs text-[var(--color-fg-muted)]">
-                {t("ai.diff.modifyCount", { count: totalChanges })}
-              </span>
-            </div>
-            {/* Navigation */}
-            <div className="flex items-center gap-3">
-              {totalChanges > 1 && (
-                <div className={navContainerStyles}>
-                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                  <button
-                    type="button"
-                    className={navButtonStyles}
-                    onClick={handlePrev}
-                    disabled={currentIndex === 0 || isApplying}
-                  >
-                    <ChevronLeftIcon />
-                  </button>
-                  <span className={navTextStyles}>
-                    {t("ai.diff.changeNav", {
-                      current: currentIndex + 1,
-                      total: totalChanges,
-                    })}
-                  </span>
-                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                  <button
-                    type="button"
-                    className={navButtonStyles}
-                    onClick={handleNext}
-                    disabled={currentIndex === totalChanges - 1 || isApplying}
-                  >
-                    <ChevronRightIcon />
-                  </button>
-                </div>
-              )}
-              {/* Per-change accept/reject buttons */}
-              {currentState === "pending" && !isApplying && (
-                <div className="flex items-center gap-1">
-                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                  <button
-                    type="button"
-                    className={acceptChangeButtonStyles}
-                    onClick={() => handleAcceptChange(currentChange.id)}
-                    title={t("ai.diff.acceptThisChange")}
-                  >
-                    <CheckIcon />
-                  </button>
-                  {/* eslint-disable-next-line creonow/no-native-html-element -- specialized button */}
-                  <button
-                    type="button"
-                    className={rejectChangeButtonStyles}
-                    onClick={() => handleRejectChange(currentChange.id)}
-                    title={t("ai.diff.rejectThisChange")}
-                  >
-                    <XIcon />
-                  </button>
-                </div>
-              )}
-            </div>
-            <DialogPrimitive.Close
-              className={closeButtonStyles}
-              disabled={isApplying}
-            >
-              <CloseIcon />
-            </DialogPrimitive.Close>
-          </div>
-          {/* Diff panels */}
-          <AiDiffContent
-            currentChange={currentChange}
-            currentState={currentState}
-          />
-          {/* Footer */}
-          <AiDiffSummary
-            stats={stats}
-            acceptedCount={acceptedCount}
-            rejectedCount={rejectedCount}
-            isApplying={isApplying}
-            isApplied={isApplied}
-            onAcceptAll={handleAcceptAll}
-            onRejectAll={handleRejectAll}
-            onApplyChanges={handleApplyChanges}
-            onEditManually={onEditManually}
-          />
+          {open ? (
+            <AiDiffModalBody
+              key={dialogSessionKey}
+              onOpenChange={onOpenChange}
+              changes={changes}
+              currentIndex={currentIndex}
+              onCurrentIndexChange={onCurrentIndexChange}
+              onAcceptAll={onAcceptAll}
+              onRejectAll={onRejectAll}
+              onApplyChanges={onApplyChanges}
+              onEditManually={onEditManually}
+              simulateDelay={simulateDelay}
+              initialChangeStates={initialChangeStates}
+            />
+          ) : null}
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>

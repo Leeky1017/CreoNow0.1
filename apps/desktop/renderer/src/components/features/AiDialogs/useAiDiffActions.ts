@@ -2,6 +2,18 @@ import { useState, useCallback, useMemo } from "react";
 import type { DiffChange, DiffChangeState } from "./types";
 
 type ModalState = "reviewing" | "applying" | "applied";
+
+function buildInitialChangeStates(
+  changes: DiffChange[],
+  initialChangeStates: Record<string, DiffChangeState>,
+): Record<string, DiffChangeState> {
+  const states: Record<string, DiffChangeState> = {};
+  for (const change of changes) {
+    states[change.id] = initialChangeStates[change.id] || "pending";
+  }
+  return states;
+}
+
 interface UseAiDiffActionsOptions {
   changes: DiffChange[];
   currentIndex: number;
@@ -58,14 +70,7 @@ export function useAiDiffActions(options: UseAiDiffActionsOptions) {
   const [modalState, setModalState] = useState<ModalState>("reviewing");
   const [changeStates, setChangeStates] = useState<
     Record<string, DiffChangeState>
-  >(() => {
-    const states: Record<string, DiffChangeState> = {};
-    for (const change of changes) {
-      states[change.id] = initialChangeStates[change.id] || "pending";
-    }
-    return states;
-  });
-
+  >(() => buildInitialChangeStates(changes, initialChangeStates));
   const totalChanges = changes.length;
   const currentChange = changes[currentIndex] || {
     id: "",

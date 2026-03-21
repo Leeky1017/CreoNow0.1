@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { AiDiffModal } from "./AiDiffModal";
+import { computeWordDiff } from "./AiDiffContent";
 import type { AiDiffModalProps, DiffChange } from "./types";
 
 // =============================================================================
@@ -75,6 +76,22 @@ describe("AiDiffModal", () => {
       // Word-diff splits into individual word spans; verify unique words from each panel
       expect(screen.getByText("XML")).toBeInTheDocument(); // before content
       expect(screen.getByText("CSV")).toBeInTheDocument(); // after-only word
+    });
+
+
+    it("重复词被删除时只标记被移除的那一次", () => {
+      const { beforeParts, afterParts } = computeWordDiff(
+        "alpha alpha beta",
+        "alpha beta",
+      );
+
+      expect(
+        beforeParts
+          .filter((part) => part.type === "removed")
+          .map((part) => part.text)
+          .filter((textPart) => textPart.trim().length > 0),
+      ).toEqual(["alpha"]);
+      expect(afterParts.filter((part) => part.type === "added")).toEqual([]);
     });
 
     it("统计面板显示 added 和 removed 数量", () => {
@@ -187,6 +204,39 @@ describe("AiDiffModal", () => {
       expect(
         screen.queryByTitle("Reject this change"),
       ).not.toBeInTheDocument();
+    });
+
+
+    it("关闭后重新打开会重置为初始 pending 状态", async () => {
+      const user = userEvent.setup();
+      const { rerender } = renderDiffModal();
+
+      await user.click(screen.getByTitle("Accept this change"));
+      expect(screen.getByText("Accepted")).toBeInTheDocument();
+
+      rerender(
+        <AiDiffModal
+          open={false}
+          onOpenChange={vi.fn()}
+          changes={twoChanges}
+          onAcceptAll={vi.fn()}
+          onRejectAll={vi.fn()}
+          onApplyChanges={vi.fn()}
+        />,
+      );
+      rerender(
+        <AiDiffModal
+          open={true}
+          onOpenChange={vi.fn()}
+          changes={twoChanges}
+          onAcceptAll={vi.fn()}
+          onRejectAll={vi.fn()}
+          onApplyChanges={vi.fn()}
+        />,
+      );
+
+      expect(screen.getByText("Pending")).toBeInTheDocument();
+      expect(screen.getByTitle("Accept this change")).toBeInTheDocument();
     });
   });
 

@@ -49,7 +49,6 @@ const serviceErrorWithCode: AiErrorConfig = {
 // AiErrorCard
 // =============================================================================
 
-describe("AiErrorCard", () => {
   // ---------------------------------------------------------------------------
   // 渲染
   // ---------------------------------------------------------------------------
@@ -385,6 +384,43 @@ describe("AiErrorCard", () => {
       });
       expect(retryButton).not.toBeDisabled();
     });
+
+
+    it("新的 rate-limit 错误到来时重置倒计时与 ready 状态", () => {
+      const { rerender } = render(
+        <AiErrorCard
+          error={{
+            type: "rate_limit",
+            title: "Too Many Requests",
+            description: "Please wait.",
+            countdownSeconds: 2,
+          }}
+          onRetry={vi.fn()}
+        />,
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(3000);
+      });
+      expect(screen.getByText(/Ready to retry/i)).toBeInTheDocument();
+
+      rerender(
+        <AiErrorCard
+          error={{
+            type: "rate_limit",
+            title: "Too Many Requests",
+            description: "Please wait again.",
+            countdownSeconds: 5,
+          }}
+          onRetry={vi.fn()}
+        />,
+      );
+
+      expect(screen.getByText(/Try again in 5s/i)).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /retry/i }),
+      ).toBeDisabled();
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -405,4 +441,3 @@ describe("AiErrorCard", () => {
       expect(hasRetryWillSucceed).toBe(false);
     });
   });
-});

@@ -12,7 +12,6 @@ vi.mock("../../stores/templateStore", () => ({
   useTemplateStore: vi.fn(),
 }));
 
-describe("CreateTemplateDialog", () => {
   const mockCreateTemplate = vi.fn();
   const mockOnOpenChange = vi.fn();
   const mockOnCreated = vi.fn();
@@ -491,4 +490,3 @@ describe("CreateTemplateDialog", () => {
       });
     });
   });
-});

@@ -141,7 +141,6 @@ vi.mock("./CreateTemplateDialog", () => ({
     ) : null,
 }));
 
-describe("CreateProjectDialog", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     templateStoreState = createMockTemplateState();
@@ -633,4 +632,3 @@ describe("CreateProjectDialog", () => {
       expect(clearError).toHaveBeenCalled();
     });
   });
-});
