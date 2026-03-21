@@ -73,9 +73,7 @@ describe("OnboardingPage", () => {
       await user.click(screen.getByTestId("onboarding-next"));
 
       expect(screen.getByTestId("onboarding-step-2")).toBeInTheDocument();
-      expect(
-        screen.queryByTestId("onboarding-step-1"),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId("onboarding-step-1")).not.toBeInTheDocument();
     });
 
     it("Step 2 显示 AI 配置内容和 Skip 按钮", async () => {

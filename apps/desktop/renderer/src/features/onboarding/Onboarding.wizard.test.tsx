@@ -99,20 +99,14 @@ describe("OnboardingPage 向导流程", () => {
     render(<OnboardingPage onComplete={onComplete} />);
 
     // Step 1
-    expect(
-      screen.getByTestId("onboarding-step-indicator"),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("onboarding-step-indicator")).toBeInTheDocument();
 
     // Step 2
     await user.click(screen.getByTestId("onboarding-next"));
-    expect(
-      screen.getByTestId("onboarding-step-indicator"),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("onboarding-step-indicator")).toBeInTheDocument();
 
     // Step 3
     await user.click(screen.getByTestId("onboarding-ai-skip"));
-    expect(
-      screen.getByTestId("onboarding-step-indicator"),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("onboarding-step-indicator")).toBeInTheDocument();
   });
 });

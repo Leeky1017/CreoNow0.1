@@ -11,12 +11,12 @@
 
 ## 当前实现结果（2026-03-21）
 
-| 区域 | 原始行数 | 当前结果 | 备注 |
-|------|---------|---------|------|
-| AiDiffModal | 893 | `AiDiffModal.tsx` 199 / `AiDiffContent.tsx` 190 / `AiDiffSummary.tsx` 146 / `useAiDiffActions.ts` 150 | 已压到壳层 + 内容/摘要/状态逻辑四段式 |
-| AiErrorCard | 855 | `AiErrorCard.tsx` 177 / `AiErrorDetails.tsx` 161 / `AiErrorActions.tsx` 150 | 错误展示与动作区域已拆开 |
-| SystemDialog | 638 | `SystemDialog.tsx` 241 / `SystemDialogContent.tsx` 144 | 已达到原计划主文件 ≤250 行目标 |
-| AiInlineConfirm | 398 | `AiInlineConfirm.tsx` 164 / `AiInlinePreview.tsx` 138 | 已达到原计划主文件 ≤200 行目标 |
+| 区域            | 原始行数 | 当前结果                                                                                              | 备注                                  |
+| --------------- | -------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| AiDiffModal     | 893      | `AiDiffModal.tsx` 199 / `AiDiffContent.tsx` 190 / `AiDiffSummary.tsx` 146 / `useAiDiffActions.ts` 150 | 已压到壳层 + 内容/摘要/状态逻辑四段式 |
+| AiErrorCard     | 855      | `AiErrorCard.tsx` 177 / `AiErrorDetails.tsx` 161 / `AiErrorActions.tsx` 150                           | 错误展示与动作区域已拆开              |
+| SystemDialog    | 638      | `SystemDialog.tsx` 241 / `SystemDialogContent.tsx` 144                                                | 已达到原计划主文件 ≤250 行目标        |
+| AiInlineConfirm | 398      | `AiInlineConfirm.tsx` 164 / `AiInlinePreview.tsx` 138                                                 | 已达到原计划主文件 ≤200 行目标        |
 
 ## Why：为什么必须做
 

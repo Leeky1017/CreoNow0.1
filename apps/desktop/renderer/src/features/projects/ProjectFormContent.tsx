@@ -123,7 +123,15 @@ export function ProjectFormContent({
         setSubmitting(false);
       }
     },
-    [coverImage, cropArea, description, initialType, name, onSubmit, templateId],
+    [
+      coverImage,
+      cropArea,
+      description,
+      initialType,
+      name,
+      onSubmit,
+      templateId,
+    ],
   );
 
   return (

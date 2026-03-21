@@ -16,10 +16,7 @@ vi.mock("../../i18n", () => ({
   i18n: { changeLanguage: vi.fn(() => Promise.resolve()) },
 }));
 
-import {
-  SettingsGeneral,
-  defaultGeneralSettings,
-} from "./SettingsGeneral";
+import { SettingsGeneral, defaultGeneralSettings } from "./SettingsGeneral";
 
 import enLocale from "../../i18n/locales/en.json";
 import zhCNLocale from "../../i18n/locales/zh-CN.json";
@@ -90,9 +87,7 @@ describe("SettingsGeneral 数据与存储", () => {
       const onManualRestore = vi.fn();
       renderSettingsGeneral({ onManualRestore });
 
-      await user.click(
-        screen.getByRole("button", { name: "Restore Latest" }),
-      );
+      await user.click(screen.getByRole("button", { name: "Restore Latest" }));
 
       expect(onManualRestore).toHaveBeenCalledTimes(1);
     });
@@ -100,9 +95,7 @@ describe("SettingsGeneral 数据与存储", () => {
     it("backupActionsDisabled 为 true 时备份按钮禁用", () => {
       renderSettingsGeneral({ backupActionsDisabled: true });
 
-      expect(
-        screen.getByRole("button", { name: "Backup Now" }),
-      ).toBeDisabled();
+      expect(screen.getByRole("button", { name: "Backup Now" })).toBeDisabled();
       expect(
         screen.getByRole("button", { name: "Restore Latest" }),
       ).toBeDisabled();
@@ -190,9 +183,7 @@ describe("i18n 备份键值完整性", () => {
     expect(enLocale.settings.general.backupIntervalHelp).toBe(
       "Last backup: 2 minutes ago",
     );
-    expect(enLocale.settings.general.backupOption_5min).toBe(
-      "Every 5 minutes",
-    );
+    expect(enLocale.settings.general.backupOption_5min).toBe("Every 5 minutes");
     expect(enLocale.settings.general.backupOption_15min).toBe(
       "Every 15 minutes",
     );

@@ -5,16 +5,23 @@ import { Button, Select } from "../../components/primitives";
 import { FormField } from "../../components/composites/FormField";
 import type { GeneralSettings } from "./SettingsGeneral";
 
-const sectionLabelStyles = "text-[10px] uppercase tracking-[0.15em] text-[var(--color-fg-placeholder)] font-semibold mb-6";
+const sectionLabelStyles =
+  "text-[10px] uppercase tracking-[0.15em] text-[var(--color-fg-placeholder)] font-semibold mb-6";
 
 const BACKUP_INTERVAL_VALUES = ["5min", "15min", "1hour"] as const;
 
 interface WritingSectionProps {
   settings: GeneralSettings;
-  onUpdate: <K extends keyof GeneralSettings>(key: K, value: GeneralSettings[K]) => void;
+  onUpdate: <K extends keyof GeneralSettings>(
+    key: K,
+    value: GeneralSettings[K],
+  ) => void;
 }
 
-export function WritingExperienceSection({ settings, onUpdate }: WritingSectionProps): JSX.Element {
+export function WritingExperienceSection({
+  settings,
+  onUpdate,
+}: WritingSectionProps): JSX.Element {
   const { t } = useTranslation();
   return (
     <div className="mb-14">
@@ -47,7 +54,10 @@ export function WritingExperienceSection({ settings, onUpdate }: WritingSectionP
 
 interface DataStorageSectionProps {
   settings: GeneralSettings;
-  onUpdate: <K extends keyof GeneralSettings>(key: K, value: GeneralSettings[K]) => void;
+  onUpdate: <K extends keyof GeneralSettings>(
+    key: K,
+    value: GeneralSettings[K],
+  ) => void;
   onManualBackup?: () => void | Promise<void>;
   onManualRestore?: () => void | Promise<void>;
   manualBackupLoading: boolean;
@@ -103,7 +113,9 @@ export function DataStorageSection({
           >
             <Button
               variant="secondary"
-              onClick={() => { void onManualBackup?.(); }}
+              onClick={() => {
+                void onManualBackup?.();
+              }}
               loading={manualBackupLoading}
               disabled={backupActionsDisabled}
             >
@@ -111,7 +123,9 @@ export function DataStorageSection({
             </Button>
             <Button
               variant="secondary"
-              onClick={() => { void onManualRestore?.(); }}
+              onClick={() => {
+                void onManualRestore?.();
+              }}
               loading={manualRestoreLoading}
               disabled={backupActionsDisabled}
             >
@@ -134,7 +148,10 @@ interface EditorDefaultsSectionProps {
   settings: GeneralSettings;
   showAiMarks: boolean;
   onShowAiMarksChange: (enabled: boolean) => void;
-  onUpdate: <K extends keyof GeneralSettings>(key: K, value: GeneralSettings[K]) => void;
+  onUpdate: <K extends keyof GeneralSettings>(
+    key: K,
+    value: GeneralSettings[K],
+  ) => void;
 }
 
 export function EditorDefaultsSection({

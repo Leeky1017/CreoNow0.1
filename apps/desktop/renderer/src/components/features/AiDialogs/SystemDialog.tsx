@@ -41,10 +41,19 @@ const contentStyles = [
  * @example `<SystemDialog open={isOpen} onOpenChange={setIsOpen} type="delete" onPrimaryAction={fn} onSecondaryAction={fn} />`
  */
 export function SystemDialog({
-  open, onOpenChange, type, title, description,
-  onPrimaryAction, onSecondaryAction, onTertiaryAction,
-  primaryLabel, secondaryLabel, tertiaryLabel,
-  simulateDelay = 0, showKeyboardHints = true,
+  open,
+  onOpenChange,
+  type,
+  title,
+  description,
+  onPrimaryAction,
+  onSecondaryAction,
+  onTertiaryAction,
+  primaryLabel,
+  secondaryLabel,
+  tertiaryLabel,
+  simulateDelay = 0,
+  showKeyboardHints = true,
 }: SystemDialogProps): JSX.Element {
   const { t } = useTranslation();
   const [actionState, setActionState] = useState<ActionState>("idle");

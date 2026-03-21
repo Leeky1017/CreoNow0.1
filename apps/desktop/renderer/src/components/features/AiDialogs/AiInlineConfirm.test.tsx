@@ -46,9 +46,7 @@ describe("AiInlineConfirm", () => {
     it("showComparison=false 时仅显示建议文本，不显示原文", () => {
       renderInlineConfirm({ showComparison: false });
       expect(screen.getByText(sampleSuggestedText)).toBeInTheDocument();
-      expect(
-        screen.queryByText(sampleOriginalText),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText(sampleOriginalText)).not.toBeInTheDocument();
     });
 
     it("渲染 Accept 和 Reject 按钮", () => {
@@ -110,9 +108,7 @@ describe("AiInlineConfirm", () => {
       const user = userEvent.setup();
       renderInlineConfirm({ onViewDiff });
 
-      await user.click(
-        screen.getByRole("button", { name: /view diff/i }),
-      );
+      await user.click(screen.getByRole("button", { name: /view diff/i }));
       expect(onViewDiff).toHaveBeenCalledTimes(1);
     });
   });
@@ -143,9 +139,7 @@ describe("AiInlineConfirm", () => {
 
       await waitFor(() => {
         expect(screen.queryByText("Applying...")).not.toBeInTheDocument();
-        expect(
-          screen.queryByRole("button", { name: /accept/i }),
-        ).toBeNull();
+        expect(screen.queryByRole("button", { name: /accept/i })).toBeNull();
         expect(screen.getByText(sampleSuggestedText)).toBeInTheDocument();
       });
     });
@@ -160,9 +154,7 @@ describe("AiInlineConfirm", () => {
 
       await waitFor(() => {
         expect(screen.queryByText("Applying...")).not.toBeInTheDocument();
-        expect(
-          screen.queryByRole("button", { name: /reject/i }),
-        ).toBeNull();
+        expect(screen.queryByRole("button", { name: /reject/i })).toBeNull();
         expect(screen.getByText(sampleOriginalText)).toBeInTheDocument();
       });
     });
@@ -197,12 +189,8 @@ describe("AiInlineConfirm", () => {
 
       await user.click(screen.getByRole("button", { name: /accept/i }));
 
-      expect(
-        screen.getByRole("button", { name: /applying/i }),
-      ).toBeDisabled();
-      expect(
-        screen.getByRole("button", { name: /reject/i }),
-      ).toBeDisabled();
+      expect(screen.getByRole("button", { name: /applying/i })).toBeDisabled();
+      expect(screen.getByRole("button", { name: /reject/i })).toBeDisabled();
     });
   });
 
@@ -213,9 +201,7 @@ describe("AiInlineConfirm", () => {
   describe("边界情况", () => {
     it("onAccept 抛出异常后恢复 pending 状态，可再次操作", async () => {
       const user = userEvent.setup();
-      const onAccept = vi
-        .fn()
-        .mockRejectedValueOnce(new Error("fail"));
+      const onAccept = vi.fn().mockRejectedValueOnce(new Error("fail"));
       renderInlineConfirm({ onAccept });
 
       await user.click(screen.getByRole("button", { name: /accept/i }));
@@ -229,9 +215,7 @@ describe("AiInlineConfirm", () => {
 
     it("onReject 抛出异常后恢复 pending 状态", async () => {
       const user = userEvent.setup();
-      const onReject = vi
-        .fn()
-        .mockRejectedValueOnce(new Error("fail"));
+      const onReject = vi.fn().mockRejectedValueOnce(new Error("fail"));
       renderInlineConfirm({ onReject });
 
       await user.click(screen.getByRole("button", { name: /reject/i }));
@@ -261,10 +245,12 @@ describe("AiInlineConfirm", () => {
 
   describe("类型安全", () => {
     it("AiInlineConfirmProps 不包含 demo-only 属性 simulateDelay 和 initialState", () => {
-      type HasSimulateDelay =
-        "simulateDelay" extends keyof AiInlineConfirmProps ? true : false;
-      type HasInitialState =
-        "initialState" extends keyof AiInlineConfirmProps ? true : false;
+      type HasSimulateDelay = "simulateDelay" extends keyof AiInlineConfirmProps
+        ? true
+        : false;
+      type HasInitialState = "initialState" extends keyof AiInlineConfirmProps
+        ? true
+        : false;
 
       const hasSimulateDelay: HasSimulateDelay = false;
       const hasInitialState: HasInitialState = false;

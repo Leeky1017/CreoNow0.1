@@ -2,8 +2,28 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { DiffChange, DiffChangeState } from "./types";
 
-const CheckIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z" /></svg>);
-const XIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z" /></svg>);
+const CheckIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    fill="currentColor"
+    viewBox="0 0 256 256"
+  >
+    <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z" />
+  </svg>
+);
+const XIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="14"
+    height="14"
+    fill="currentColor"
+    viewBox="0 0 256 256"
+  >
+    <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z" />
+  </svg>
+);
 
 export function computeWordDiff(
   before: string,
@@ -26,10 +46,7 @@ export function computeWordDiff(
       if (beforeTokens[i] === afterTokens[j]) {
         lcsLengths[i][j] = lcsLengths[i + 1][j + 1] + 1;
       } else {
-        lcsLengths[i][j] = Math.max(
-          lcsLengths[i + 1][j],
-          lcsLengths[i][j + 1],
-        );
+        lcsLengths[i][j] = Math.max(lcsLengths[i + 1][j], lcsLengths[i][j + 1]);
       }
     }
   }
@@ -45,7 +62,10 @@ export function computeWordDiff(
       continue;
     }
 
-    if (lcsLengths[beforeIndex + 1][afterIndex] >= lcsLengths[beforeIndex][afterIndex + 1]) {
+    if (
+      lcsLengths[beforeIndex + 1][afterIndex] >=
+      lcsLengths[beforeIndex][afterIndex + 1]
+    ) {
       beforeParts.push({ text: beforeTokens[beforeIndex], type: "removed" });
       beforeIndex += 1;
     } else {
@@ -168,9 +188,7 @@ export function AiDiffContent({
           {beforeParts.map((part, idx) => (
             <span
               key={idx}
-              className={
-                part.type === "removed" ? removedStyles : undefined
-              }
+              className={part.type === "removed" ? removedStyles : undefined}
             >
               {part.text}
             </span>

@@ -34,16 +34,16 @@ CreoNow 的字体系统声明了三族字体——`Inter`（UI）、`Lora`（正
 
 ### 4. 证据来源
 
-| 数据点                    | 值                                            | 来源                                                     |
-| ------------------------- | --------------------------------------------- | -------------------------------------------------------- |
-| `.woff2` 文件数           | 0                                             | `find renderer -name "*.woff2"` → 空                     |
-| `@font-face` 声明数      | 0                                             | `grep -r "@font-face" renderer/src/ --include="*.css"`   |
-| `fonts.css` body 字体     | `ui-serif, Georgia, serif`（无 Lora）         | `renderer/src/styles/fonts.css`                          |
-| `main.css` body 字体      | `"Lora", "Crimson Pro", Georgia, serif`       | `renderer/src/styles/main.css`                           |
-| 阴影 token 档数           | 4（sm/md/lg/xl）                              | `grep shadow design/system/01-tokens.css`                |
-| `shadow-2xl` arbitrary 用 | 3 处                                          | `grep -r "shadow-2xl" renderer/src/`                     |
-| 视觉回归测试              | 0（仅 3 个 DOM snapshot）                     | `find renderer -name "*snapshot*"`                       |
-| 设计稿指定字体            | Inter / Lora / JetBrains Mono                 | `DESIGN_DECISIONS.md` §4.1                               |
+| 数据点                    | 值                                      | 来源                                                   |
+| ------------------------- | --------------------------------------- | ------------------------------------------------------ |
+| `.woff2` 文件数           | 0                                       | `find renderer -name "*.woff2"` → 空                   |
+| `@font-face` 声明数       | 0                                       | `grep -r "@font-face" renderer/src/ --include="*.css"` |
+| `fonts.css` body 字体     | `ui-serif, Georgia, serif`（无 Lora）   | `renderer/src/styles/fonts.css`                        |
+| `main.css` body 字体      | `"Lora", "Crimson Pro", Georgia, serif` | `renderer/src/styles/main.css`                         |
+| 阴影 token 档数           | 4（sm/md/lg/xl）                        | `grep shadow design/system/01-tokens.css`              |
+| `shadow-2xl` arbitrary 用 | 3 处                                    | `grep -r "shadow-2xl" renderer/src/`                   |
+| 视觉回归测试              | 0（仅 3 个 DOM snapshot）               | `find renderer -name "*snapshot*"`                     |
+| 设计稿指定字体            | Inter / Lora / JetBrains Mono           | `DESIGN_DECISIONS.md` §4.1                             |
 
 ---
 
@@ -107,18 +107,18 @@ CreoNow 的字体系统声明了三族字体——`Inter`（UI）、`Lora`（正
 
 ## AC：验收标准
 
-| # | 验收条件                                                                        | 验证方式                                         |
-|---|--------------------------------------------------------------------------------|------------------------------------------------|
-| 1 | `find renderer -name "*.woff2"` 返回 ≥ 12 个文件，总大小 ≤ 500KB               | 命令行检查                                      |
-| 2 | `grep -r "@font-face" renderer/src/styles/fonts.css` 返回 ≥ 12 条声明          | 命令行检查                                      |
-| 3 | `fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-*` 声明完全一致       | diff 对比                                       |
-| 4 | Storybook 构建通过，字体正确加载（DevTools Network 无外部字体请求）              | `pnpm -C apps/desktop storybook:build` + 手动检查 |
-| 5 | `01-tokens.css` 包含 `--shadow-xs` 和 `--shadow-2xl`                           | grep 验证                                       |
-| 6 | `shadow-[var(--shadow-2xl)]` arbitrary 值残留 = 0                               | `grep -r "shadow-\[" renderer/src/` → 0 匹配    |
-| 7 | `e2e/visual/baselines/` 包含 ≥ 5 个基线截图                                    | 文件计数                                        |
-| 8 | CI workflow 在 PR 时自动运行 screenshot diff                                    | GitHub Actions 验证                              |
-| 9 | 类型检查通过 `pnpm typecheck`                                                   | CI gate                                         |
-| 10 | Electron 离线环境下字体正确渲染（无网络时不 fallback 到系统字体）                 | 手动验证                                        |
+| #   | 验收条件                                                                  | 验证方式                                          |
+| --- | ------------------------------------------------------------------------- | ------------------------------------------------- |
+| 1   | `find renderer -name "*.woff2"` 返回 ≥ 12 个文件，总大小 ≤ 500KB          | 命令行检查                                        |
+| 2   | `grep -r "@font-face" renderer/src/styles/fonts.css` 返回 ≥ 12 条声明     | 命令行检查                                        |
+| 3   | `fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-*` 声明完全一致 | diff 对比                                         |
+| 4   | Storybook 构建通过，字体正确加载（DevTools Network 无外部字体请求）       | `pnpm -C apps/desktop storybook:build` + 手动检查 |
+| 5   | `01-tokens.css` 包含 `--shadow-xs` 和 `--shadow-2xl`                      | grep 验证                                         |
+| 6   | `shadow-[var(--shadow-2xl)]` arbitrary 值残留 = 0                         | `grep -r "shadow-\[" renderer/src/` → 0 匹配      |
+| 7   | `e2e/visual/baselines/` 包含 ≥ 5 个基线截图                               | 文件计数                                          |
+| 8   | CI workflow 在 PR 时自动运行 screenshot diff                              | GitHub Actions 验证                               |
+| 9   | 类型检查通过 `pnpm typecheck`                                             | CI gate                                           |
+| 10  | Electron 离线环境下字体正确渲染（无网络时不 fallback 到系统字体）         | 手动验证                                          |
 
 ---
 

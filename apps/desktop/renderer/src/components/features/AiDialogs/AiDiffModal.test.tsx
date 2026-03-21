@@ -55,9 +55,7 @@ describe("AiDiffModal", () => {
 
     it("open=false 时不渲染 modal 内容", () => {
       renderDiffModal({ open: false });
-      expect(
-        screen.queryByText("Review Changes"),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText("Review Changes")).not.toBeInTheDocument();
     });
 
     it("显示正确的变更数量信息", () => {
@@ -77,7 +75,6 @@ describe("AiDiffModal", () => {
       expect(screen.getByText("XML")).toBeInTheDocument(); // before content
       expect(screen.getByText("CSV")).toBeInTheDocument(); // after-only word
     });
-
 
     it("重复词被删除时只标记被移除的那一次", () => {
       const { beforeParts, afterParts } = computeWordDiff(
@@ -111,9 +108,7 @@ describe("AiDiffModal", () => {
       const user = userEvent.setup();
       renderDiffModal({ onAcceptAll });
 
-      await user.click(
-        screen.getByRole("button", { name: "Accept All" }),
-      );
+      await user.click(screen.getByRole("button", { name: "Accept All" }));
       expect(onAcceptAll).toHaveBeenCalledTimes(1);
     });
 
@@ -122,9 +117,7 @@ describe("AiDiffModal", () => {
       const user = userEvent.setup();
       renderDiffModal({ onRejectAll });
 
-      await user.click(
-        screen.getByRole("button", { name: "Reject All" }),
-      );
+      await user.click(screen.getByRole("button", { name: "Reject All" }));
       expect(onRejectAll).toHaveBeenCalledTimes(1);
     });
 
@@ -133,9 +126,7 @@ describe("AiDiffModal", () => {
       const user = userEvent.setup();
       renderDiffModal({ onApplyChanges, simulateDelay: 10 });
 
-      await user.click(
-        screen.getByRole("button", { name: "Apply Changes" }),
-      );
+      await user.click(screen.getByRole("button", { name: "Apply Changes" }));
 
       await waitFor(() => {
         expect(onApplyChanges).toHaveBeenCalledTimes(1);
@@ -154,9 +145,7 @@ describe("AiDiffModal", () => {
       // The nav container has [prevBtn, counterSpan, nextBtn]
       // At index 0, prev is disabled, next is enabled
       const navContainer = counterText.parentElement!;
-      const navButtons = Array.from(
-        navContainer.querySelectorAll("button"),
-      );
+      const navButtons = Array.from(navContainer.querySelectorAll("button"));
 
       expect(navButtons).toHaveLength(2);
       expect(navButtons[0]).toBeDisabled(); // prev at index 0
@@ -189,9 +178,7 @@ describe("AiDiffModal", () => {
 
       expect(screen.getByText("Accepted")).toBeInTheDocument();
       // Per-change buttons disappear after accepting
-      expect(
-        screen.queryByTitle("Accept this change"),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByTitle("Accept this change")).not.toBeInTheDocument();
     });
 
     it("点击 Reject this change 按钮后当前变更标记为 Rejected", async () => {
@@ -201,11 +188,8 @@ describe("AiDiffModal", () => {
       await user.click(screen.getByTitle("Reject this change"));
 
       expect(screen.getByText("Rejected")).toBeInTheDocument();
-      expect(
-        screen.queryByTitle("Reject this change"),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByTitle("Reject this change")).not.toBeInTheDocument();
     });
-
 
     it("关闭后重新打开会重置为初始 pending 状态", async () => {
       const user = userEvent.setup();
@@ -249,9 +233,7 @@ describe("AiDiffModal", () => {
       const user = userEvent.setup();
       renderDiffModal({ simulateDelay: 100_000 });
 
-      await user.click(
-        screen.getByRole("button", { name: "Apply Changes" }),
-      );
+      await user.click(screen.getByRole("button", { name: "Apply Changes" }));
 
       expect(screen.getByText("Applying...")).toBeInTheDocument();
     });
@@ -260,9 +242,7 @@ describe("AiDiffModal", () => {
       const user = userEvent.setup();
       renderDiffModal();
 
-      await user.click(
-        screen.getByRole("button", { name: "Accept All" }),
-      );
+      await user.click(screen.getByRole("button", { name: "Accept All" }));
 
       expect(screen.getByText("Accepted")).toBeInTheDocument();
       expect(screen.getByText(/2 accepted/i)).toBeInTheDocument();
@@ -272,9 +252,7 @@ describe("AiDiffModal", () => {
       const user = userEvent.setup();
       renderDiffModal();
 
-      await user.click(
-        screen.getByRole("button", { name: "Reject All" }),
-      );
+      await user.click(screen.getByRole("button", { name: "Reject All" }));
 
       expect(screen.getByText("Rejected")).toBeInTheDocument();
       expect(screen.getByText(/2 rejected/i)).toBeInTheDocument();
@@ -296,9 +274,7 @@ describe("AiDiffModal", () => {
     it("单个变更时不显示导航控件", () => {
       renderDiffModal({ changes: singleChange });
       expect(screen.getByText(/1 paragraph/i)).toBeInTheDocument();
-      expect(
-        screen.queryByText(/Change \d+ of \d+/),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText(/Change \d+ of \d+/)).not.toBeInTheDocument();
     });
 
     it("未提供 onEditManually 时不显示 Edit Manually 按钮", () => {

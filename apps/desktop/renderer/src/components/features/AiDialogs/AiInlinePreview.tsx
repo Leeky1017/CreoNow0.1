@@ -103,9 +103,7 @@ export function AiInlinePreview({
       {isPending && (
         <>
           {showComparison && (
-            <span className={`${originalTextStyles} mr-2`}>
-              {originalText}
-            </span>
+            <span className={`${originalTextStyles} mr-2`}>{originalText}</span>
           )}
           <span className={pendingHighlightStyles}>
             <span className="text-[var(--color-fg-default)]">
@@ -130,9 +128,7 @@ export function AiInlinePreview({
       )}
 
       {/* Rejected state: show original text restored */}
-      {isRejected && (
-        <span className={rejectedTextStyles}>{originalText}</span>
-      )}
+      {isRejected && <span className={rejectedTextStyles}>{originalText}</span>}
     </div>
   );
 }

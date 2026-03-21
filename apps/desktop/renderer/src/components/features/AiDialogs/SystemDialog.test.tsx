@@ -35,9 +35,7 @@ describe("SystemDialog", () => {
 
     it("open=false 时不渲染对话框内容", () => {
       renderSystemDialog({ open: false });
-      expect(
-        screen.queryByText("Delete Document?"),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText("Delete Document?")).not.toBeInTheDocument();
     });
 
     it("delete 类型显示正确的默认标题和描述", () => {
@@ -49,17 +47,13 @@ describe("SystemDialog", () => {
     it("unsaved_changes 类型显示正确的默认标题和描述", () => {
       renderSystemDialog({ type: "unsaved_changes" });
       expect(screen.getByText("Unsaved Changes")).toBeInTheDocument();
-      expect(
-        screen.getByText(/You have unsaved changes/i),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/You have unsaved changes/i)).toBeInTheDocument();
     });
 
     it("export_complete 类型显示正确的默认标题和描述", () => {
       renderSystemDialog({ type: "export_complete" });
       expect(screen.getByText("Export Complete")).toBeInTheDocument();
-      expect(
-        screen.getByText(/exported successfully/i),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/exported successfully/i)).toBeInTheDocument();
     });
 
     it("支持自定义标题和描述覆盖默认值", () => {
@@ -69,9 +63,7 @@ describe("SystemDialog", () => {
         description: "Custom description text",
       });
       expect(screen.getByText("Custom Title")).toBeInTheDocument();
-      expect(
-        screen.getByText("Custom description text"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Custom description text")).toBeInTheDocument();
     });
 
     it("支持自定义按钮标签", () => {
@@ -247,12 +239,8 @@ describe("SystemDialog", () => {
 
       await user.click(screen.getByText("Delete"));
 
-      expect(
-        screen.getByTestId("system-dialog-primary"),
-      ).toBeDisabled();
-      expect(
-        screen.getByTestId("system-dialog-secondary"),
-      ).toBeDisabled();
+      expect(screen.getByTestId("system-dialog-primary")).toBeDisabled();
+      expect(screen.getByTestId("system-dialog-secondary")).toBeDisabled();
     });
   });
 });
