@@ -6,7 +6,7 @@
 
 - **GitHub Issue**: 待创建
 - **分支**: `task/<N>-editor-typography-and-layout`
-- **Delta Spec**: `openspec/changes/v1-04-editor-typography-and-layout/specs/`
+- **Delta Spec**: `specs/editor/spec.md`
 
 ---
 

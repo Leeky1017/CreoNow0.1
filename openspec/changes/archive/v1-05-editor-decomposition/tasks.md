@@ -5,7 +5,7 @@
 > 📋 **级联刷新 R1**（2026-03-21）：v1-02 完成后刷新。v1-05 为纯结构重构，v1-02 primitive 新 variant 对本任务无影响，所有 AC 维持达成。基线零偏差。
 
 - **状态**: ✅ 已合并到 main
-- **Delta Spec**: `openspec/changes/v1-05-editor-decomposition/specs/`
+- **Delta Spec**: `specs/NOTE.md`（纯结构重构，无独立 delta spec）
 
 ---
 

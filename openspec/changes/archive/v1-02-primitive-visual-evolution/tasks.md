@@ -4,7 +4,7 @@
 - **评级**: ⭐⭐⭐⭐⭐（标杆级，7/7 AC，20/20 验收全绿）
 - **GitHub Issue**: 已关闭
 - **分支**: `task/<N>-primitive-visual-evolution`
-- **Delta Spec**: `specs/primitives/spec.md`（如需更新 variant 定义）
+- **Delta Spec**: `specs/NOTE.md`（Primitive 层无独立 delta spec）
 
 ---
 

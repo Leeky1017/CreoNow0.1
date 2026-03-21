@@ -47,22 +47,22 @@ v1-02 聚焦于现有 7 个 Primitives 的 variant 扩展和结构重构，未�
 
 ### 4. 证据来源（基线采集）
 
-| 数据点                | 基线值                  | 采集命令                                                                                              |
-| --------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------- |
-| 原始组件文件数        | 29 个                   | `ls primitives/*.tsx \| grep -v test \| grep -v stories \| grep -v behavior \| wc -l`                 |
-| 原始总行数            | 4452 行                 | `find primitives/ -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' -exec wc -l {} + \| tail -1` |
-| Input.tsx 行数        | 85 行                   | `wc -l primitives/Input.tsx`                                                                          |
-| Spinner.tsx 行数      | 88 行                   | `wc -l primitives/Spinner.tsx`                                                                        |
-| Table 组件            | 不存在                  | `find primitives/ -name 'Table*'`（无结果）                                                           |
-| Separator 组件        | 不存在                  | `find primitives/ -name 'Separator*'`（无结果）                                                       |
-| Alert 组件            | 不存在                  | `find primitives/ -name 'Alert*'`（无结果）                                                           |
-| SegmentedControl 组件 | 不存在                  | `find primitives/ -name 'Segment*'`（无结果）                                                         |
-| Progress 组件         | 不存在                  | `find primitives/ -name 'Progress*'`（无结果）                                                        |
-| Input prefix/suffix   | 无 slot 支持            | `grep -c 'prefix\|suffix' primitives/Input.tsx`（0 匹配）                                             |
-| v1-02 Button 基线     | 229 行，pill + icon     | `wc -l primitives/Button.tsx`                                                                         |
-| v1-02 Card 基线       | 129 行，bento + compact | `wc -l primitives/Card.tsx`                                                                           |
-| v1-02 Tabs 基线       | 333 行，underline       | `wc -l primitives/Tabs.tsx`                                                                           |
-| v1-02 Badge 基线      | 130 行，pill            | `wc -l primitives/Badge.tsx`                                                                          |
+| 数据点                | 基线值                  | 采集命令                                                                                                                                                  |
+| --------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原始组件文件数        | 29 个                   | `find apps/desktop/renderer/src/components/primitives -maxdepth 1 -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' ! -name '*.behavior.*' \| wc -l` |
+| 原始总行数            | 4452 行                 | `find apps/desktop/renderer/src/components/primitives -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' -exec wc -l {} + \| tail -1`                 |
+| Input.tsx 行数        | 85 行                   | `wc -l apps/desktop/renderer/src/components/primitives/Input.tsx`                                                                                         |
+| Spinner.tsx 行数      | 88 行                   | `wc -l apps/desktop/renderer/src/components/primitives/Spinner.tsx`                                                                                       |
+| Table 组件            | 不存在                  | `find apps/desktop/renderer/src/components/primitives -name 'Table*'`（无结果）                                                                           |
+| Separator 组件        | 不存在                  | `find apps/desktop/renderer/src/components/primitives -name 'Separator*'`（无结果）                                                                       |
+| Alert 组件            | 不存在                  | `find apps/desktop/renderer/src/components/primitives -name 'Alert*'`（无结果）                                                                           |
+| SegmentedControl 组件 | 不存在                  | `find apps/desktop/renderer/src/components/primitives -name 'Segment*'`（无结果）                                                                         |
+| Progress 组件         | 不存在                  | `find apps/desktop/renderer/src/components/primitives -name 'Progress*'`（无结果）                                                                        |
+| Input prefix/suffix   | 无 slot 支持            | `grep -c 'prefix\|suffix' apps/desktop/renderer/src/components/primitives/Input.tsx`（0 匹配）                                                            |
+| v1-02 Button 基线     | 229 行，pill + icon     | `wc -l apps/desktop/renderer/src/components/primitives/Button.tsx`                                                                                        |
+| v1-02 Card 基线       | 129 行，bento + compact | `wc -l apps/desktop/renderer/src/components/primitives/Card.tsx`                                                                                          |
+| v1-02 Tabs 基线       | 333 行，underline       | `wc -l apps/desktop/renderer/src/components/primitives/Tabs.tsx`                                                                                          |
+| v1-02 Badge 基线      | 130 行，pill            | `wc -l apps/desktop/renderer/src/components/primitives/Badge.tsx`                                                                                         |
 
 ---
 
@@ -220,17 +220,17 @@ v1-02 聚焦于现有 7 个 Primitives 的 variant 扩展和结构重构，未�
 
 ## 验收标准
 
-| ID    | 标准                                                                                    | 验证方式                                                                                            |
-| ----- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| AC-1  | Table / DataTable compound component 已建立（~300 行），支持 default/striped variant    | `wc -l primitives/Table.tsx`；Storybook Story 可见                                                  |
-| AC-2  | Separator 组件已建立（~60 行），支持 horizontal/vertical + default/bold variant         | `wc -l primitives/Separator.tsx`；`grep 'role="separator"' primitives/Separator.tsx`                |
-| AC-3  | Alert 组件已建立（~150 行），支持 info/warning/error/success variant + closable         | `wc -l primitives/Alert.tsx`；`grep 'role="alert"' primitives/Alert.tsx`                            |
-| AC-4  | SegmentedControl compound component 已建立（~200 行），支持 sm/md size                  | `wc -l primitives/SegmentedControl.tsx`；`grep 'role="radiogroup"' primitives/SegmentedControl.tsx` |
-| AC-5  | Progress 组件已建立（~120 行），支持 default/success/warning/error variant + sm/md size | `wc -l primitives/Progress.tsx`；`grep 'role="progressbar"' primitives/Progress.tsx`                |
-| AC-6  | Input prefix/suffix slot 增强（85 → ~150 行），不传 prefix/suffix 时零回归              | `grep -c 'prefix\|suffix' primitives/Input.tsx` ≥ 4；现有 Input 测试全部通过                        |
-| AC-7  | 每个新组件有对应 Storybook Story                                                        | `find primitives/ -name '*.stories.tsx' \| wc -l` 增长 ≥ 5                                          |
-| AC-8  | 每个新组件有单元测试（variant className 断言 + 行为测试）                               | `pnpm -C apps/desktop vitest run`                                                                   |
-| AC-9  | 所有 ARIA 属性正确（Table aria-sort、Alert role、Progress aria-valuenow 等）            | 测试中验证 ARIA 属性                                                                                |
-| AC-10 | TypeScript 类型检查通过                                                                 | `pnpm typecheck`                                                                                    |
-| AC-11 | Storybook 可构建                                                                        | `pnpm -C apps/desktop storybook:build`                                                              |
-| AC-12 | lint 无新增违规                                                                         | `pnpm lint`                                                                                         |
+| ID    | 标准                                                                                    | 验证方式                                                                                                                                                                      |
+| ----- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-1  | Table / DataTable compound component 已建立（~300 行），支持 default/striped variant    | `wc -l apps/desktop/renderer/src/components/primitives/Table.tsx`；Storybook Story 可见                                                                                       |
+| AC-2  | Separator 组件已建立（~60 行），支持 horizontal/vertical + default/bold variant         | `wc -l apps/desktop/renderer/src/components/primitives/Separator.tsx`；`grep 'role="separator"' apps/desktop/renderer/src/components/primitives/Separator.tsx`                |
+| AC-3  | Alert 组件已建立（~150 行），支持 info/warning/error/success variant + closable         | `wc -l apps/desktop/renderer/src/components/primitives/Alert.tsx`；`grep 'role="alert"' apps/desktop/renderer/src/components/primitives/Alert.tsx`                            |
+| AC-4  | SegmentedControl compound component 已建立（~200 行），支持 sm/md size                  | `wc -l apps/desktop/renderer/src/components/primitives/SegmentedControl.tsx`；`grep 'role="radiogroup"' apps/desktop/renderer/src/components/primitives/SegmentedControl.tsx` |
+| AC-5  | Progress 组件已建立（~120 行），支持 default/success/warning/error variant + sm/md size | `wc -l apps/desktop/renderer/src/components/primitives/Progress.tsx`；`grep 'role="progressbar"' apps/desktop/renderer/src/components/primitives/Progress.tsx`                |
+| AC-6  | Input prefix/suffix slot 增强（85 → ~150 行），不传 prefix/suffix 时零回归              | `grep -c 'prefix\|suffix' apps/desktop/renderer/src/components/primitives/Input.tsx` ≥ 4；现有 Input 测试全部通过                                                             |
+| AC-7  | 每个新组件有对应 Storybook Story                                                        | `find apps/desktop/renderer/src/components/primitives -name '*.stories.tsx' \| wc -l` 增长 ≥ 5                                                                                |
+| AC-8  | 每个新组件有单元测试（variant className 断言 + 行为测试）                               | `pnpm -C apps/desktop vitest run`                                                                                                                                             |
+| AC-9  | 所有 ARIA 属性正确（Table aria-sort、Alert role、Progress aria-valuenow 等）            | 测试中验证 ARIA 属性                                                                                                                                                          |
+| AC-10 | TypeScript 类型检查通过                                                                 | `pnpm typecheck`                                                                                                                                                              |
+| AC-11 | Storybook 可构建                                                                        | `pnpm -C apps/desktop storybook:build`                                                                                                                                        |
+| AC-12 | lint 无新增违规                                                                         | `pnpm lint`                                                                                                                                                                   |

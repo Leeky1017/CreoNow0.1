@@ -6,7 +6,7 @@
 - **评级**: ⭐⭐⭐⭐
 - **GitHub Issue**: #1168
 - **分支**: `task/<N>-dashboard-visual-rewrite`
-- **Delta Spec**: `openspec/changes/v1-03-dashboard-visual-rewrite/specs/`
+- **Delta Spec**: `specs/NOTE.md`（纯视觉重构，无独立 delta spec）
 
 ---
 
