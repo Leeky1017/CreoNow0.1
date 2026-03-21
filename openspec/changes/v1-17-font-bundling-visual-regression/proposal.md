@@ -52,7 +52,7 @@ CreoNow 的字体系统声明了三族字体——`Inter`（UI）、`Lora`（正
 | `shadow-[]` 总计             | 60 处                                   | `grep -rc "shadow-\[" apps/desktop/renderer/src/ --include="*.tsx"` 汇总 |
 | Playwright 视觉 spec 文件    | 3 个                                    | `apps/desktop/tests/visual/*.visual.spec.ts`                             |
 | 视觉基线截图                 | 106 个                                  | `apps/desktop/tests/visual/__screenshots__/*.png`                        |
-| DOM snapshot 测试            | 3 个                                    | kg, editor, workbench `.snapshot.test.ts`                                |
+| DOM snapshot 测试            | 6 个                                    | `find apps/desktop/renderer -name "*.snapshot.test.*" \| wc -l`          |
 | v1-01 token 体系             | ✅ 完成                                 | 469 行 tokens.css，14 档 typography，11 weight/tracking/leading          |
 | 设计稿指定字体               | Inter / Lora / JetBrains Mono           | `DESIGN_DECISIONS.md` §4.1                                               |
 | @theme shadow 导出           | 0（shadow 未进 @theme）                 | `awk '/@theme/,/^\}/' main.css \| grep shadow` → 空                      |
@@ -140,3 +140,35 @@ CreoNow 的字体系统声明了三族字体——`Inter`（UI）、`Lora`（正
 - **并行安全**: 字体文件新增、shadow token 追加、@theme shadow 导出、基线重建——均为追加操作，不修改现有组件代码，合并冲突风险极低
 - **风险**: woff2 文件增加 Electron 打包体积（≤ 500KB，可接受）；基线重建后 git 历史增加约 106 个 PNG 变更
 - **预估工作量**: 约 v1-02 的 **0.4 倍**——字体打包 + CSS 统一为机械性工作，shadow token 补全简单，基线重建为命令执行
+
+---
+
+## R1 Cascade Refresh (2026-03-21)
+
+### 上游依赖状态
+
+| 依赖  | 状态                                    |
+| ----- | --------------------------------------- |
+| v1-01 | ✅ 完成（2026-03-20 验收，R1 复核通过） |
+| v1-02 | ✅ 完成（2026-03-21 验收，⭐⭐⭐⭐⭐）  |
+
+### 基线指标复核
+
+所有指标 R1 复核完成，与初始建档一致（差异已标注）：
+
+| 指标                         | R1 建档值 | R1 复核值 | 趋势 | 说明                     |
+| ---------------------------- | --------- | --------- | ---- | ------------------------ |
+| `.woff2` 文件数              | 0         | 0         | →    | 待实施                   |
+| `@font-face` 声明数          | 0         | 0         | →    | 待实施                   |
+| `fonts.css` body 字体        | 无 Lora   | 无 Lora   | →    | 待修复                   |
+| 阴影 token 档数              | 4         | 4         | →    | xs/2xl 待新增            |
+| `shadow-[var(--shadow-*)]`   | 54 处     | 54 处     | →    | 归 v1-18 统一替换        |
+| `shadow-[var(--shadow-2xl)]` | 3 处      | 3 处      | →    | 本 change 替换           |
+| `shadow-[custom]` 非 token   | 6 处      | 6 处      | →    | 归 v1-18 评估            |
+| Playwright 视觉 spec         | 3 个      | 3 个      | →    |                          |
+| 视觉基线截图                 | 106 个    | 106 个    | →    | 字体打包后需重建         |
+| DOM snapshot 测试            | 3 个      | 6 个      | ↑ +3 | v1-02 新增 snapshot 测试 |
+
+### Scope 变更
+
+无需调整。v1-02 完成后新增的 DOM snapshot 测试不影响本 change 的范围——字体打包后基线重建将覆盖新增的 snapshot。

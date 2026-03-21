@@ -6,7 +6,7 @@
 - **评级**: ⭐⭐⭐⭐
 - **GitHub Issue**: #1168
 - **分支**: `task/<N>-dashboard-visual-rewrite`
-- **Delta Spec**: `openspec/changes/v1-03-dashboard-visual-rewrite/specs/`
+- **Delta Spec**: `specs/NOTE.md`（纯视觉重构，无独立 delta spec）
 
 ---
 
@@ -240,3 +240,31 @@ R2 P1 复核：v1-03/04/05 Phase 1 并行复核。重新采集所有度量基线
 - **偏差**：无
 - **Scope 调整**：不变
 - **结论**：✅ **STABLE** — v1-03 全部 AC 无退化，下游级联刷新可安全进行
+
+---
+
+## R1 Cascade Refresh (2026-03-21)
+
+> 上游 v1-01 ⭐⭐⭐⭐ PASS + v1-02 ⭐⭐⭐⭐⭐ PASS 验证完毕后的正式级联确认。
+
+### 度量重采集
+
+| 度量                      | R2    | R1 Cascade | Delta |
+| ------------------------- | ----- | ---------- | ----- |
+| DashboardPage.tsx 行数    | 268   | 268        | 0     |
+| HeroCard arbitrary values | 0     | 0          | 0     |
+| 原生 `<button>`（prod）   | 0     | 0          | 0     |
+| `eslint-disable`          | 0     | 0          | 0     |
+| 测试文件数                | 10    | 10         | 0     |
+| Guard 测试文件            | 3     | 3          | 0     |
+| Dashboard 目录总行数      | 2,758 | 2,758      | 0     |
+
+### AC 级联确认
+
+- AC-1 ~ AC-12：全部 ✅ 保持 — R1 级联确认
+- Phase 0 ~ Phase 3：48/48 全部完成 — R1 级联确认
+- 遗留项（DashboardEmptyState → v1-18）：不变 — R1 级联确认
+
+### 结论
+
+✅ **STABLE** — v1-03 在上游 v1-01 + v1-02 正式验证后，所有 AC 无退化，度量零偏差。

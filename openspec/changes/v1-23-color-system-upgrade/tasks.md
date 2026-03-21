@@ -139,3 +139,31 @@
 - **功能色 5-step 色阶**（可选增强）：若时间允许，为 error/success/warning/info/accent 各生成 `--{color}-100` 至 `--{color}-500` 色阶。若不实施，作为后续 change 候选
 - **组件层功能色 hover 迁移**：`--color-btn-danger-hover` 等组件级 token 引用统一后，组件 `.tsx` 文件中的直接引用需在后续 change 中迁移
 - **features/ 硬编码色值清理**：44 处硬编码色值的清理归属后续 change（v1-18 推广或专项清理）
+
+---
+
+## R1 Cascade Refresh 记录（2026-03-21）
+
+### 上游依赖复核
+
+- **v1-01** ✅ 完成（2026-03-20 验收）——tokens.css 469 行，99 个色彩 token，HSL 0 处
+- **v1-02** ✅ 完成（2026-03-21 验收）——组件层重构完成，未触及 `01-tokens.css` 色彩定义
+
+### 基线指标验证
+
+| 指标                      | 实测值 | 采集命令                                                                                        |
+| ------------------------- | ------ | ----------------------------------------------------------------------------------------------- |
+| 色彩 token 数量           | 99     | `grep -cE '\-\-color-' design/system/01-tokens.css`                                             |
+| 灰阶 token                | 0      | `grep -cE '\-\-gray-' design/system/01-tokens.css`                                              |
+| 功能色 hover/active token | 0      | `grep -cE '\-\-(error\|success\|warning\|info)-(hover\|active)' design/system/01-tokens.css`    |
+| features/ 硬编码 hex      | 25     | `grep -rn '#[0-9a-fA-F]\{3,8\}' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l` |
+| features/ 硬编码 rgb/rgba | 19     | `grep -rnE 'rgb\(\|rgba\(' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`      |
+| HSL 使用量                | 0      | `grep -c 'hsl' design/system/01-tokens.css`                                                     |
+| `prefers-contrast` 支持   | 0      | `grep -c 'prefers-contrast' design/system/01-tokens.css`                                        |
+| tokens.css 总行数         | 469    | `wc -l design/system/01-tokens.css`                                                             |
+
+所有指标与初始建档一致，无变化。
+
+### Phase 0 调整
+
+无需调整。上游依赖已全部就绪，Phase 0 准备任务保持不变。

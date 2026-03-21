@@ -127,3 +127,33 @@ FileTreePanel.tsx（1,400 行）将节点渲染、右键菜单、拖拽排序、
 - **被依赖于**: 无直接下游——本 change 是终端叶子节点
 - **并行安全**: 与 v1-06（AI Panel）、v1-07（Settings）无文件交叉，可并行开发
 - **风险**: FileTreePanel.tsx 1,320 行的单文件修改需谨慎，每次改动需跑全量 file tree 相关测试确认无回归
+
+---
+
+## R3 Cascade Refresh (2026-03-21)
+
+### 上游依赖状态
+
+| 上游 Change                  | 状态    | 说明                                                                       |
+| ---------------------------- | ------- | -------------------------------------------------------------------------- |
+| v1-06 AI Panel Overhaul      | ✅ PASS | AiPanel 281行, TabBar 50, MessageList 432, InputArea 293, 27测试文件全通过 |
+| v1-07 Settings Visual Polish | ✅ PASS | SettingsDialog 297行, AppearancePage 249, Navigation 103, 91测试全通过     |
+
+### 基线指标更新
+
+| 指标                   | proposal 原值 | R3 实测值                  | 趋势                      | 采集命令                                                                                      |
+| ---------------------- | ------------- | -------------------------- | ------------------------- | --------------------------------------------------------------------------------------------- |
+| FileTreePanel.tsx 行数 | ~1,320        | **126**                    | ⬇️ 大幅下降（已完成拆分） | `wc -l apps/desktop/renderer/src/features/files/FileTreePanel.tsx`                            |
+| 文件树模块总行数       | —             | **4,350**                  | 📊 首次采集               | `find apps/desktop/renderer/src/features/files/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l` |
+| FileTreeNodeRow.tsx    | —             | **300**                    | 📊 首次采集（拆分产物）   | `wc -l .../FileTreeNodeRow.tsx`                                                               |
+| FileTreeRenameRow.tsx  | —             | **88**                     | 📊 首次采集（拆分产物）   | `wc -l .../FileTreeRenameRow.tsx`                                                             |
+| useFileTreeKeyboard.ts | —             | **139**                    | 📊 首次采集（拆分产物）   | `wc -l .../useFileTreeKeyboard.ts`                                                            |
+| useFileTreeCore.ts     | —             | **182**                    | 📊 首次采集（拆分产物）   | `wc -l .../useFileTreeCore.ts`                                                                |
+| fileTreeContextMenu.ts | —             | **86**                     | 📊 首次采集（拆分产物）   | `wc -l .../fileTreeContextMenu.ts`                                                            |
+| FileTree 测试          | —             | **9 文件 / 79 测试全通过** | ✅                        | `npx vitest run --reporter=verbose FileTree`                                                  |
+
+### 分析
+
+FileTreePanel.tsx 已从原始 ~1,320 行大幅拆分至 **126 行**（壳层），远低于 AC-14 要求的 ≤300 行。子组件 FileTreeNodeRow（300行）、useFileTreeKeyboard（139行）、useFileTreeCore（182行）等均在合理范围内。proposal 中描述的"1,320 行巨石组件"问题已在前序工作中解决。
+
+**剩余工作聚焦**：视觉精修（icon bar 宽度、行高统一、拖拽手柄、箭头动效、文件类型颜色映射等 8 项 What），组件解耦已基本完成。

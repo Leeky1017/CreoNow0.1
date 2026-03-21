@@ -205,5 +205,23 @@
 | @theme shadow 导出           | 0                                       | `awk '/@theme/,/^\}/' main.css \| grep shadow` → 空                                            |
 | Playwright 视觉 spec 文件    | 3 个                                    | `find apps/desktop/tests/visual -name "*.visual.spec.ts" \| wc -l`                             |
 | 视觉基线截图                 | 106 个                                  | `find apps/desktop/tests/visual/__screenshots__ -name "*.png" \| wc -l`                        |
-| DOM snapshot 测试            | 3 个                                    | `find apps/desktop/renderer -name "*.snapshot.test.*" \| wc -l`                                |
+| DOM snapshot 测试            | 6 个                                    | `find apps/desktop/renderer -name "*.snapshot.test.*" \| wc -l`                                |
 | v1-01 tokens.css 行数        | 469 行                                  | `wc -l design/system/01-tokens.css`                                                            |
+
+---
+
+## R1 Cascade Refresh 记录（2026-03-21）
+
+### 上游依赖复核
+
+- **v1-01** ✅ 完成（2026-03-20 验收）——tokens.css 469 行，14 档 typography，11 weight/tracking/leading，4 semantic spacing
+- **v1-02** ✅ 完成（2026-03-21 验收）——Button 229 行、Card 129 行、Tabs 333 行、Badge 130 行，新变体 130 处使用
+
+### 基线指标变化
+
+- DOM snapshot 测试从 3 个增至 6 个（v1-02 新增），不影响 v1-17 scope
+- 其余所有指标与初始建档值一致
+
+### Phase 0 调整
+
+无需调整。上游依赖已全部就绪，Phase 0 准备任务保持不变。

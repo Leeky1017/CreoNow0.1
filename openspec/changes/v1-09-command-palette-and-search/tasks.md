@@ -375,3 +375,38 @@ className={cn(
   - PR-A: CommandPalette 精修（Part A）
   - PR-B: SearchPanel 精修（Part B）
 - [ ] PR 创建，含 `Closes #N`
+
+---
+
+## R3 Cascade Refresh (2026-03-21)
+
+### 上游依赖确认
+
+- ✅ v1-06 AI Panel Overhaul: PASS（27测试文件全通过）
+- ✅ v1-07 Settings Visual Polish: PASS（91测试全通过）
+- 上游依赖（v1-01 Design Token、v1-02 Primitive）已就绪
+
+### 基线指标更新
+
+| 指标                         | tasks.md 原值           | R3 实测值                  | 说明           |
+| ---------------------------- | ----------------------- | -------------------------- | -------------- |
+| CommandPalette.tsx 行数      | ~793（AC-16 目标 ≤300） | **283**                    | ✅ 已达标      |
+| CommandPalette inline styles | ~35（含 SearchPanel）   | **0**                      | ✅ AC-5 已满足 |
+| CommandPalette 模块总行数    | —                       | **3,170**                  | 首次采集       |
+| CommandPalette 测试          | —                       | **5 文件 / 57 测试全通过** | AC-12 基线 ✅  |
+| SearchPanel.tsx 行数         | ~994（AC-17 目标 ≤300） | **294**                    | ✅ 已达标      |
+| SearchPanel inline styles    | —                       | **0**                      | ✅ 已清零      |
+| SearchPanel 模块总行数       | —                       | **2,807**                  | 首次采集       |
+| SearchPanel 测试             | —                       | **9 文件 / 30 测试全通过** | AC-12 基线 ✅  |
+
+### AC 状态评估
+
+| AC                       | 状态        | 说明                                                                  |
+| ------------------------ | ----------- | --------------------------------------------------------------------- |
+| AC-5                     | ✅ 已满足   | 生产代码 inline style = 0                                             |
+| AC-12                    | ✅ 基线良好 | CommandPalette 57 + SearchPanel 30 = 87 测试全通过                    |
+| AC-16                    | ✅ 已满足   | CommandPalette.tsx 283 行 ≤ 300                                       |
+| AC-17                    | ✅ 已满足   | SearchPanel.tsx 294 行 ≤ 300                                          |
+| AC-1~AC-4                | 🔲 待实现   | CommandPalette 视觉精修（分组线、左蓝线、快捷键 pill、图标颜色）      |
+| AC-6~AC-9                | 🔲 待实现   | SearchPanel 视觉精修（filter pills、match highlight、toggle、指示条） |
+| AC-10~AC-11, AC-13~AC-15 | 🔲 待验证   | Design Token / 键盘导航 / Storybook / typecheck / lint 在实现阶段执行 |

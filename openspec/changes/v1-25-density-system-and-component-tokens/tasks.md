@@ -11,20 +11,20 @@
 
 ## 验收标准
 
-| ID    | 标准                                                                                          | 验证方式                                                                                                                          | 结果 |
-| ----- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| AC-1  | `01-tokens.css` 新增 component token 层，覆盖 Button/Input/Card/Badge/ListItem/Dialog/Tabs    | `grep -c '\-\-button-\|\-\-input-\|\-\-card-\|\-\-badge-\|\-\-listitem-\|\-\-dialog-\|\-\-tab-' design/system/01-tokens.css` ≥ 20 | ⬜   |
-| AC-2  | `[data-density="compact"]` 块存在且覆盖核心 component token                                   | `grep -c 'data-density.*compact' design/system/01-tokens.css` ≥ 1                                                                 | ⬜   |
-| AC-3  | compact 密度下所有可交互元素高度 ≥ 28px                                                       | 审查 compact preset 中 `--*-height-*` 值                                                                                          | ⬜   |
-| AC-4  | DensityProvider 组件存在，导出 `useDensity` hook                                              | `find apps/desktop/renderer/src/ -name "DensityProvider*"` 返回结果                                                               | ⬜   |
-| AC-5  | DensityProvider 在容器 DOM 上设置 `data-density` attribute                                    | 单元测试断言 `data-density` attribute                                                                                             | ⬜   |
-| AC-6  | 在 `<DensityProvider density="compact">` 下渲染的 Button padding 使用 compact token 值        | 单元测试 / Storybook visual 验证                                                                                                  | ⬜   |
-| AC-7  | 现有 Primitives（Button/Input/Card/ListItem）的 hardcoded spacing 替换为 component token 引用 | `grep -rn 'var(--button-\|var(--input-\|var(--card-\|var(--listitem-' .../primitives/ --include='*.tsx'` ≥ 10                     | ⬜   |
-| AC-8  | 不传 DensityProvider 时，组件行为与当前完全一致（comfortable 为默认值）                       | 回归测试全绿                                                                                                                      | ⬜   |
-| AC-9  | TypeScript 类型检查通过                                                                       | `pnpm typecheck`                                                                                                                  | ⬜   |
-| AC-10 | 全量测试通过                                                                                  | `pnpm -C apps/desktop vitest run`                                                                                                 | ⬜   |
-| AC-11 | Storybook 可构建                                                                              | `pnpm -C apps/desktop storybook:build`                                                                                            | ⬜   |
-| AC-12 | DensityProvider 有 Storybook Story，展示 compact vs comfortable 对比                          | Story 文件存在 + storybook:build 通过                                                                                             | ⬜   |
+| ID    | 标准                                                                                          | 验证方式                                                                                                                                      | 结果 |
+| ----- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| AC-1  | `01-tokens.css` 新增 component token 层，覆盖 Button/Input/Card/Badge/ListItem/Dialog/Tabs    | `grep -c '\-\-button-\|\-\-input-\|\-\-card-\|\-\-badge-\|\-\-listitem-\|\-\-dialog-\|\-\-tab-' design/system/01-tokens.css` ≥ 20             | ⬜   |
+| AC-2  | `[data-density="compact"]` 块存在且覆盖核心 component token                                   | `grep -c 'data-density.*compact' design/system/01-tokens.css` ≥ 1                                                                             | ⬜   |
+| AC-3  | compact 密度下所有可交互元素高度 ≥ 28px                                                       | 审查 compact preset 中 `--*-height-*` 值                                                                                                      | ⬜   |
+| AC-4  | DensityProvider 组件存在，导出 `useDensity` hook                                              | `find apps/desktop/renderer/src/ -name "DensityProvider*"` 返回结果                                                                           | ⬜   |
+| AC-5  | DensityProvider 在容器 DOM 上设置 `data-density` attribute                                    | 单元测试断言 `data-density` attribute                                                                                                         | ⬜   |
+| AC-6  | 在 `<DensityProvider density="compact">` 下渲染的 Button padding 使用 compact token 值        | 单元测试 / Storybook visual 验证                                                                                                              | ⬜   |
+| AC-7  | 现有 Primitives（Button/Input/Card/ListItem）的 hardcoded spacing 替换为 component token 引用 | `grep -rn 'var(--button-\|var(--input-\|var(--card-\|var(--listitem-' apps/desktop/renderer/src/components/primitives --include='*.tsx'` ≥ 10 | ⬜   |
+| AC-8  | 不传 DensityProvider 时，组件行为与当前完全一致（comfortable 为默认值）                       | 回归测试全绿                                                                                                                                  | ⬜   |
+| AC-9  | TypeScript 类型检查通过                                                                       | `pnpm typecheck`                                                                                                                              | ⬜   |
+| AC-10 | 全量测试通过                                                                                  | `pnpm -C apps/desktop vitest run`                                                                                                             | ⬜   |
+| AC-11 | Storybook 可构建                                                                              | `pnpm -C apps/desktop storybook:build`                                                                                                        | ⬜   |
+| AC-12 | DensityProvider 有 Storybook Story，展示 compact vs comfortable 对比                          | Story 文件存在 + storybook:build 通过                                                                                                         | ⬜   |
 
 ---
 
@@ -154,3 +154,33 @@
 3. **用户可配置密度**：Settings 面板中添加密度偏好选项（compact/comfortable/auto），属于 v1-07（Settings Visual Polish）的下游需求
 4. **v1-19 a11y 约束对接**：a11y 审计确认 compact 密度触控目标符合 WCAG 2.5.5，待 v1-19 完成后验证
 5. **v1-23 色彩系统对接**：确认 component token 中的色彩引用与 v1-23 色彩系统一致，待 v1-23 完成后验证
+
+---
+
+## R1 Cascade Refresh 记录（2026-03-21）
+
+### 上游依赖复核
+
+- **v1-01** ✅ 完成（2026-03-20 验收）——13 级 spacing + 7 级 radius + 4 semantic spacing 已就位
+- **v1-02** ✅ 完成（2026-03-21 验收）——29 个 Primitives、314 处 spacing 引用，为 component token 迁移提供稳定基线
+- **v1-24** ⏳ 待启动——本 change 仍 blocked by v1-24（新组件需先建立才能定义 component token）
+- **v1-23** ⏳ 待启动——色彩系统升级对 component token 的色彩引用有影响
+- **v1-19** ⏳ 待启动——a11y 约束对 compact 密度最小尺寸有约束
+
+### 基线指标验证
+
+| 指标                     | 实测值 | 采集命令                                                                                                                                                  |
+| ------------------------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Component-level token 数 | 0      | `grep -cE '\-\-(button\|input\|card\|badge\|listitem\|dialog\|tab)-' design/system/01-tokens.css`                                                         |
+| `data-density` 使用数    | 0      | `grep -rc 'data-density' apps/desktop/renderer/src/ --include='*.tsx'`                                                                                    |
+| DensityProvider          | 不存在 | `find apps/desktop/renderer/src/ -name "*Density*"` → 空                                                                                                  |
+| Spacing token 数         | 16     | `grep -c '\-\-space-' design/system/01-tokens.css`                                                                                                        |
+| Radius token 档位        | 8      | `grep -c '\-\-radius-' design/system/01-tokens.css`                                                                                                       |
+| Primitives spacing 引用  | 314    | `grep -rn 'padding\|gap\|space-' apps/desktop/renderer/src/components/primitives --include='*.tsx' \| wc -l`                                              |
+| Primitive 组件文件数     | 29     | `find apps/desktop/renderer/src/components/primitives -maxdepth 1 -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' ! -name '*.behavior.*' \| wc -l` |
+
+所有指标与初始建档一致，无变化。
+
+### Phase 0 调整
+
+无需调整。v1-25 仍处于 blocked 状态（依赖 v1-24），Phase 0 准备任务保持不变。解除阻塞后需重新评估 v1-24 新增组件的 component token 范围。
