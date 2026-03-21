@@ -39,23 +39,23 @@ CreoNow 的字体系统声明了三族字体——`Inter`（UI）、`Lora`（正
 
 ### 4. 证据来源（R1 基线采集 2026-03-21）
 
-| 数据点                       | 值                                      | 来源                                                            |
-| ---------------------------- | --------------------------------------- | --------------------------------------------------------------- |
-| `.woff2` 文件数              | 0                                       | `find renderer -name "*.woff2"` → 空                            |
-| `@font-face` 声明数          | 0                                       | `grep -r "@font-face" renderer/src/ --include="*.css"`          |
-| `fonts.css` body 字体        | `ui-serif, Georgia, serif`（无 Lora）   | `renderer/src/styles/fonts.css`                                 |
-| `main.css` body 字体         | `"Lora", "Crimson Pro", Georgia, serif` | `renderer/src/styles/main.css` @theme 块                        |
-| 阴影 token 档数              | 4（sm/md/lg/xl）                        | `grep -c '\-\-shadow-' design/system/01-tokens.css` → 4         |
-| `shadow-[var(--shadow-*)]`   | 54 处（token 引用）                     | `grep -rn "shadow-\[var(--shadow-" renderer/src/` → 54          |
-| `shadow-[var(--shadow-2xl)]` | 3 处                                    | VersionHistoryPanel.stories ×2, QualityGatesPanel.stories ×1    |
-| `shadow-[custom]` 非 token   | 6 处                                    | CharacterCard, SearchPanel, DiffHeader ×2, VersionPane, Slider  |
-| `shadow-[]` 总计             | 60 处                                   | `grep -rc "shadow-\[" renderer/src/ --include="*.tsx"` 汇总     |
-| Playwright 视觉 spec 文件    | 3 个                                    | `tests/visual/*.visual.spec.ts`                                 |
-| 视觉基线截图                 | 106 个                                  | `tests/visual/__screenshots__/*.png`                            |
-| DOM snapshot 测试            | 3 个                                    | kg, editor, workbench `.snapshot.test.ts`                       |
-| v1-01 token 体系             | ✅ 完成                                 | 469 行 tokens.css，14 档 typography，11 weight/tracking/leading |
-| 设计稿指定字体               | Inter / Lora / JetBrains Mono           | `DESIGN_DECISIONS.md` §4.1                                      |
-| @theme shadow 导出           | 0（shadow 未进 @theme）                 | `awk '/@theme/,/^\}/' main.css \| grep shadow` → 空             |
+| 数据点                       | 值                                      | 来源                                                                     |
+| ---------------------------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| `.woff2` 文件数              | 0                                       | `find apps/desktop/renderer -name "*.woff2"` → 空                        |
+| `@font-face` 声明数          | 0                                       | `grep -r "@font-face" apps/desktop/renderer/src/ --include="*.css"`      |
+| `fonts.css` body 字体        | `ui-serif, Georgia, serif`（无 Lora）   | `apps/desktop/renderer/src/styles/fonts.css`                             |
+| `main.css` body 字体         | `"Lora", "Crimson Pro", Georgia, serif` | `apps/desktop/renderer/src/styles/main.css` @theme 块                    |
+| 阴影 token 档数              | 4（sm/md/lg/xl）                        | `grep -c '\-\-shadow-' design/system/01-tokens.css` → 4                  |
+| `shadow-[var(--shadow-*)]`   | 54 处（token 引用）                     | `grep -rn "shadow-\[var(--shadow-" apps/desktop/renderer/src/` → 54      |
+| `shadow-[var(--shadow-2xl)]` | 3 处                                    | VersionHistoryPanel.stories ×2, QualityGatesPanel.stories ×1             |
+| `shadow-[custom]` 非 token   | 6 处                                    | CharacterCard, SearchPanel, DiffHeader ×2, VersionPane, Slider           |
+| `shadow-[]` 总计             | 60 处                                   | `grep -rc "shadow-\[" apps/desktop/renderer/src/ --include="*.tsx"` 汇总 |
+| Playwright 视觉 spec 文件    | 3 个                                    | `apps/desktop/tests/visual/*.visual.spec.ts`                             |
+| 视觉基线截图                 | 106 个                                  | `apps/desktop/tests/visual/__screenshots__/*.png`                        |
+| DOM snapshot 测试            | 3 个                                    | kg, editor, workbench `.snapshot.test.ts`                                |
+| v1-01 token 体系             | ✅ 完成                                 | 469 行 tokens.css，14 档 typography，11 weight/tracking/leading          |
+| 设计稿指定字体               | Inter / Lora / JetBrains Mono           | `DESIGN_DECISIONS.md` §4.1                                               |
+| @theme shadow 导出           | 0（shadow 未进 @theme）                 | `awk '/@theme/,/^\}/' main.css \| grep shadow` → 空                      |
 
 ---
 
@@ -73,7 +73,7 @@ CreoNow 的字体系统声明了三族字体——`Inter`（UI）、`Lora`（正
 
 ### 2. `@font-face` 声明与 CSS 统一
 
-在 `renderer/src/styles/fonts.css` 中：
+在 `apps/desktop/renderer/src/styles/fonts.css` 中：
 
 - 为每个字重编写 `@font-face` 声明，使用 `font-display: swap`
 - 统一 `--font-family-body` 为 `"Lora", "Crimson Pro", Georgia, serif`（与 `main.css` 对齐）
@@ -87,20 +87,20 @@ CreoNow 的字体系统声明了三族字体——`Inter`（UI）、`Lora`（正
 - `--shadow-xs: 0 1px 1px var(--color-shadow)`——细微阴影，用于 Badge、Chip 等小型元素
 - `--shadow-2xl: 0 24px 48px var(--color-shadow)`——强浮层阴影，用于 Modal / Dialog / Dropdown
 
-在 `renderer/src/styles/main.css` 的 `@theme` 块中导出，使 `shadow-xs` / `shadow-2xl` 成为有效 Tailwind utility。
+在 `apps/desktop/renderer/src/styles/main.css` 的 `@theme` 块中导出，使 `shadow-xs` / `shadow-2xl` 成为有效 Tailwind utility。
 
 替换现有 3 处 `shadow-[var(--shadow-2xl)]` arbitrary 值为标准 `shadow-2xl`。
 
 ### 4. 视觉回归基线重建
 
-字体打包后，现有 Playwright 视觉回归基础设施（`tests/visual/`）的 106 个基线截图需重建：
+字体打包后，现有 Playwright 视觉回归基础设施（`apps/desktop/tests/visual/`）的 106 个基线截图需重建：
 
 - 现有 3 个 spec 文件（`layout.visual.spec.ts`、`primitives.visual.spec.ts`、`features.visual.spec.ts`）和 Playwright 配置（`playwright.visual.config.ts`）可直接复用
 - 字体打包后运行 `pnpm -C apps/desktop test:visual:update` 重新生成所有基线截图
 - 确认新基线中字体渲染使用的是打包的 Inter/Lora/JetBrains Mono（而非系统字体）
 - CI 阈值维持 `maxDiffPixelRatio: 0.01`（1%），无需调整
 
-### 5. `renderer/src/styles/tokens.css` 同步
+### 5. `apps/desktop/renderer/src/styles/tokens.css` 同步
 
 确保 `tokens.css` 与 `01-tokens.css` 的 shadow 新增保持同步。
 
@@ -118,18 +118,18 @@ CreoNow 的字体系统声明了三族字体——`Inter`（UI）、`Lora`（正
 
 ## AC：验收标准
 
-| #   | 验收条件                                                                     | 验证方式                                                        |
-| --- | ---------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| 1   | `find renderer -name "*.woff2"` 返回 ≥ 12 个文件，总大小 ≤ 500KB             | 命令行检查                                                      |
-| 2   | `grep -r "@font-face" renderer/src/styles/fonts.css` 返回 ≥ 12 条声明        | 命令行检查                                                      |
-| 3   | `fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-*` 声明完全一致    | diff 对比                                                       |
-| 4   | Storybook 构建通过，字体正确加载（DevTools Network 无外部字体请求）          | `pnpm -C apps/desktop storybook:build` + 手动检查               |
-| 5   | `01-tokens.css` 包含 `--shadow-xs` 和 `--shadow-2xl`                         | grep 验证                                                       |
-| 6   | `shadow-[var(--shadow-2xl)]` arbitrary 值残留 = 0                            | `grep -r "shadow-\[var(--shadow-2xl)\]" renderer/src/` → 0 匹配 |
-| 7   | `main.css` @theme 块导出 `shadow-xs` / `shadow-2xl`（Tailwind utility 生效） | `awk '/@theme/,/^\}/' main.css \| grep shadow`                  |
-| 8   | 视觉基线截图已用打包字体重建（`tests/visual/__screenshots__/` 全部更新）     | git diff 截图文件                                               |
-| 9   | 类型检查通过 `pnpm typecheck`                                                | CI gate                                                         |
-| 10  | Electron 离线环境下字体正确渲染（无网络时不 fallback 到系统字体）            | 手动验证                                                        |
+| #   | 验收条件                                                                              | 验证方式                                                                     |
+| --- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 1   | `find apps/desktop/renderer -name "*.woff2"` 返回 ≥ 12 个文件，总大小 ≤ 500KB         | 命令行检查                                                                   |
+| 2   | `grep -r "@font-face" apps/desktop/renderer/src/styles/fonts.css` 返回 ≥ 12 条声明    | 命令行检查                                                                   |
+| 3   | `fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-*` 声明完全一致             | diff 对比                                                                    |
+| 4   | Storybook 构建通过，字体正确加载（DevTools Network 无外部字体请求）                   | `pnpm -C apps/desktop storybook:build` + 手动检查                            |
+| 5   | `01-tokens.css` 包含 `--shadow-xs` 和 `--shadow-2xl`                                  | grep 验证                                                                    |
+| 6   | `shadow-[var(--shadow-2xl)]` arbitrary 值残留 = 0                                     | `grep -r "shadow-\[var(--shadow-2xl)\]" apps/desktop/renderer/src/` → 0 匹配 |
+| 7   | `main.css` @theme 块导出 `shadow-xs` / `shadow-2xl`（Tailwind utility 生效）          | `awk '/@theme/,/^\}/' main.css \| grep shadow`                               |
+| 8   | 视觉基线截图已用打包字体重建（`apps/desktop/tests/visual/__screenshots__/` 全部更新） | git diff 截图文件                                                            |
+| 9   | 类型检查通过 `pnpm typecheck`                                                         | CI gate                                                                      |
+| 10  | Electron 离线环境下字体正确渲染（无网络时不 fallback 到系统字体）                     | 手动验证                                                                     |
 
 ---
 
