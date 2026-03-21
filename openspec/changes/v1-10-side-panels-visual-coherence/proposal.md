@@ -185,36 +185,36 @@
 
 ---
 
-## R4 Cascade Refresh (2025-07-25)
+## R4 Cascade Refresh (2026-03-21)
 
 > Phase 3（v1-08 FileTree 精修 + v1-09 命令面板与搜索面板）已合并。按级联刷新规则，对 v1-10 进行轻度刷新。
 
 ### 上游依赖状态
 
-| 上游 Change | 状态 | 说明 |
-| --- | --- | --- |
-| v1-08 FileTree Precision | ✅ PASS | R4 复核确认，7/9 AC 已满足 |
+| 上游 Change                 | 状态    | 说明                            |
+| --------------------------- | ------- | ------------------------------- |
+| v1-08 FileTree Precision    | ✅ PASS | R4 复核确认，7/9 AC 已满足      |
 | v1-09 CommandPalette+Search | ✅ PASS | R4 复核确认，全部核心 AC 已满足 |
 
 ### 基线指标更新
 
-| 指标 | proposal 原值 | R4 实测值 | 趋势 | 采集命令 |
-| --- | --- | --- | --- | --- |
-| CharacterPanel.tsx 行数 | ~450 | 225 | ↓50% | `wc -l apps/desktop/renderer/src/features/character/CharacterPanel.tsx` |
-| CharacterDetailDialog.tsx 行数 | ~900 | 321 | ↓64% | `wc -l apps/desktop/renderer/src/features/character/CharacterDetailDialog.tsx` |
-| MemoryPanel.tsx 行数 | ~750 | 155 | ↓79% | `wc -l apps/desktop/renderer/src/features/memory/MemoryPanel.tsx` |
-| OutlinePanel.tsx 行数 | ~1,020 | 326 | ↓68% | `wc -l apps/desktop/renderer/src/features/outline/OutlinePanel.tsx` |
-| KnowledgeGraphPanel.tsx 行数 | ~950 | 147 | ↓85% | `wc -l apps/desktop/renderer/src/features/kg/KnowledgeGraphPanel.tsx` |
-| VersionHistoryPanel.tsx 行数 | ~620 | 183 | ↓70% | `wc -l apps/desktop/renderer/src/features/version-history/VersionHistoryPanel.tsx` |
-| VersionHistoryContainer.tsx 行数 | 760（tasks.md） | 273 | ↓64% | `wc -l apps/desktop/renderer/src/features/version-history/VersionHistoryContainer.tsx` |
-| eslint-disable（character） | 26 | 16 | ↓38% | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/character/ \| wc -l` |
-| eslint-disable（memory） | 13 | 4 | ↓69% | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/memory/ \| wc -l` |
-| eslint-disable（outline） | 9 | 0 | ↓100% | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/outline/ \| wc -l` |
-| eslint-disable（kg） | — | 1 | — | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/kg/ \| wc -l` |
-| eslint-disable（version-history） | 15 | 9 | ↓40% | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/version-history/ \| wc -l` |
-| eslint-disable 总计（5 面板） | 93 | 30 | ↓68% | 上述各面板求和 |
-| PanelHeader 统一 | 0/5 | 5/5 | ✅ | `grep -rn 'PanelHeader' apps/desktop/renderer/src/features/{character,memory,outline,kg,version-history}/ --include='*.tsx'` |
-| EmptyState/LoadingState/ErrorState 集成 | 0/5 | 5/5 | ✅ | `grep -rn 'EmptyState\|LoadingState\|ErrorState' ... --include='*.tsx'` |
+| 指标                                    | proposal 原值   | R4 实测值 | 趋势  | 采集命令                                                                                                                     |
+| --------------------------------------- | --------------- | --------- | ----- | ---------------------------------------------------------------------------------------------------------------------------- |
+| CharacterPanel.tsx 行数                 | ~450            | 225       | ↓50%  | `wc -l apps/desktop/renderer/src/features/character/CharacterPanel.tsx`                                                      |
+| CharacterDetailDialog.tsx 行数          | ~900            | 321       | ↓64%  | `wc -l apps/desktop/renderer/src/features/character/CharacterDetailDialog.tsx`                                               |
+| MemoryPanel.tsx 行数                    | ~750            | 155       | ↓79%  | `wc -l apps/desktop/renderer/src/features/memory/MemoryPanel.tsx`                                                            |
+| OutlinePanel.tsx 行数                   | ~1,020          | 326       | ↓68%  | `wc -l apps/desktop/renderer/src/features/outline/OutlinePanel.tsx`                                                          |
+| KnowledgeGraphPanel.tsx 行数            | ~950            | 147       | ↓85%  | `wc -l apps/desktop/renderer/src/features/kg/KnowledgeGraphPanel.tsx`                                                        |
+| VersionHistoryPanel.tsx 行数            | ~620            | 183       | ↓70%  | `wc -l apps/desktop/renderer/src/features/version-history/VersionHistoryPanel.tsx`                                           |
+| VersionHistoryContainer.tsx 行数        | 760（tasks.md） | 273       | ↓64%  | `wc -l apps/desktop/renderer/src/features/version-history/VersionHistoryContainer.tsx`                                       |
+| eslint-disable（character）             | 26              | 16        | ↓38%  | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/character/ \| wc -l`                                            |
+| eslint-disable（memory）                | 13              | 4         | ↓69%  | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/memory/ \| wc -l`                                               |
+| eslint-disable（outline）               | 9               | 0         | ↓100% | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/outline/ \| wc -l`                                              |
+| eslint-disable（kg）                    | —               | 1         | —     | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/kg/ \| wc -l`                                                   |
+| eslint-disable（version-history）       | 15              | 9         | ↓40%  | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/version-history/ \| wc -l`                                      |
+| eslint-disable 总计（5 面板）           | 93              | 30        | ↓68%  | 上述各面板求和                                                                                                               |
+| PanelHeader 统一                        | 0/5             | 5/5       | ✅    | `grep -rn 'PanelHeader' apps/desktop/renderer/src/features/{character,memory,outline,kg,version-history}/ --include='*.tsx'` |
+| EmptyState/LoadingState/ErrorState 集成 | 0/5             | 5/5       | ✅    | `grep -rn 'EmptyState\|LoadingState\|ErrorState' ... --include='*.tsx'`                                                      |
 
 ### 分析
 

@@ -189,33 +189,33 @@ CommandPalette.tsx 已从 ~730 行拆分至 **283 行**，SearchPanel.tsx 从 ~9
 
 ### 上游依赖状态
 
-| 上游 Change | 状态 | 说明 |
-| --- | --- | --- |
-| v1-01 Design Token 补完 | ✅ PASS | `--color-info`、`--color-accent`、`--color-success`、`--color-warning`、`--color-info-subtle`、`--shadow-sm` 等 token 可用 |
-| v1-02 Primitive 进化 | ✅ PASS | Toggle 组件使用 `rounded-full` + `transition-all` + `duration-[var(--duration-slow)]` |
-| v1-06 AI Panel Overhaul | ✅ PASS | 上游无回归 |
-| v1-07 Settings Visual Polish | ✅ PASS | 上游无回归 |
+| 上游 Change                  | 状态    | 说明                                                                                                                       |
+| ---------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------- |
+| v1-01 Design Token 补完      | ✅ PASS | `--color-info`、`--color-accent`、`--color-success`、`--color-warning`、`--color-info-subtle`、`--shadow-sm` 等 token 可用 |
+| v1-02 Primitive 进化         | ✅ PASS | Toggle 组件使用 `rounded-full` + `transition-all` + `duration-[var(--duration-slow)]`                                      |
+| v1-06 AI Panel Overhaul      | ✅ PASS | 上游无回归                                                                                                                 |
+| v1-07 Settings Visual Polish | ✅ PASS | 上游无回归                                                                                                                 |
 
 ### 基线指标更新
 
-| 指标 | R3 值 | R4 实测值 | 趋势 | 采集命令 |
-| --- | --- | --- | --- | --- |
-| CommandPalette.tsx 行数 | 283 | **283** | ➡️ 无变化 | `wc -l .../CommandPalette.tsx` |
-| CommandPalette inline styles | 0 | **0** | ➡️ 无变化 | `grep -cn 'style={{' .../CommandPalette.tsx` |
-| CommandPalette 模块总行数 | 3,170 | **3,170** | ➡️ 无变化 | `find .../commandPalette/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l` |
-| CommandPaletteFooter.tsx | 38 | **38** | ➡️ 无变化 | `wc -l .../CommandPaletteFooter.tsx` |
-| commandPaletteCommands.tsx | 231 | **231** | ➡️ 无变化 | `wc -l .../commandPaletteCommands.tsx` |
-| commandPaletteHelpers.tsx | 95 | **95** | ➡️ 无变化 | `wc -l .../commandPaletteHelpers.tsx` |
-| fuzzyMatch.ts | 160 | **160** | ➡️ 无变化 | `wc -l .../fuzzyMatch.ts` |
-| CommandPalette 测试 | 5 文件 / 57 测试 | **5 文件 / 57 测试全通过** | ✅ 无回归 | `npx vitest run --reporter=verbose CommandPalette` |
-| SearchPanel.tsx 行数 | 294 | **294** | ➡️ 无变化 | `wc -l .../SearchPanel.tsx` |
-| SearchPanel inline styles | 0 | **0** | ➡️ 无变化 | `grep -cn 'style={{' .../SearchPanel.tsx` |
-| SearchPanel 模块总行数 | 2,807 | **2,807** | ➡️ 无变化 | `find .../search/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l` |
-| SearchPanelParts.tsx | 175 | **175** | ➡️ 无变化 | `wc -l .../SearchPanelParts.tsx` |
-| SearchResultItems.tsx | 245 | **245** | ➡️ 无变化 | `wc -l .../SearchResultItems.tsx` |
-| SearchResultsArea.tsx | 180 | **180** | ➡️ 无变化 | `wc -l .../SearchResultsArea.tsx` |
-| SearchPanel 测试 | 9 文件 / 30 测试 | **9 文件 / 30 测试全通过** | ✅ 无回归 | `npx vitest run --reporter=verbose SearchPanel` |
-| 生产代码硬编码色值 | — | **0**（仅 stories） | ✅ AC-10 | `grep -rn '#[0-9a-fA-F]{3,8}' .../commandPalette/ .../search/ --include='*.tsx'` |
+| 指标                         | R3 值            | R4 实测值                  | 趋势      | 采集命令                                                                         |
+| ---------------------------- | ---------------- | -------------------------- | --------- | -------------------------------------------------------------------------------- |
+| CommandPalette.tsx 行数      | 283              | **283**                    | ➡️ 无变化 | `wc -l .../CommandPalette.tsx`                                                   |
+| CommandPalette inline styles | 0                | **0**                      | ➡️ 无变化 | `grep -cn 'style={{' .../CommandPalette.tsx`                                     |
+| CommandPalette 模块总行数    | 3,170            | **3,170**                  | ➡️ 无变化 | `find .../commandPalette/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l`          |
+| CommandPaletteFooter.tsx     | 38               | **38**                     | ➡️ 无变化 | `wc -l .../CommandPaletteFooter.tsx`                                             |
+| commandPaletteCommands.tsx   | 231              | **231**                    | ➡️ 无变化 | `wc -l .../commandPaletteCommands.tsx`                                           |
+| commandPaletteHelpers.tsx    | 95               | **95**                     | ➡️ 无变化 | `wc -l .../commandPaletteHelpers.tsx`                                            |
+| fuzzyMatch.ts                | 160              | **160**                    | ➡️ 无变化 | `wc -l .../fuzzyMatch.ts`                                                        |
+| CommandPalette 测试          | 5 文件 / 57 测试 | **5 文件 / 57 测试全通过** | ✅ 无回归 | `npx vitest run --reporter=verbose CommandPalette`                               |
+| SearchPanel.tsx 行数         | 294              | **294**                    | ➡️ 无变化 | `wc -l .../SearchPanel.tsx`                                                      |
+| SearchPanel inline styles    | 0                | **0**                      | ➡️ 无变化 | `grep -cn 'style={{' .../SearchPanel.tsx`                                        |
+| SearchPanel 模块总行数       | 2,807            | **2,807**                  | ➡️ 无变化 | `find .../search/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l`                  |
+| SearchPanelParts.tsx         | 175              | **175**                    | ➡️ 无变化 | `wc -l .../SearchPanelParts.tsx`                                                 |
+| SearchResultItems.tsx        | 245              | **245**                    | ➡️ 无变化 | `wc -l .../SearchResultItems.tsx`                                                |
+| SearchResultsArea.tsx        | 180              | **180**                    | ➡️ 无变化 | `wc -l .../SearchResultsArea.tsx`                                                |
+| SearchPanel 测试             | 9 文件 / 30 测试 | **9 文件 / 30 测试全通过** | ✅ 无回归 | `npx vitest run --reporter=verbose SearchPanel`                                  |
+| 生产代码硬编码色值           | —                | **0**（仅 stories）        | ✅ AC-10  | `grep -rn '#[0-9a-fA-F]{3,8}' .../commandPalette/ .../search/ --include='*.tsx'` |
 
 ### 分析
 
@@ -235,6 +235,7 @@ CommandPalette.tsx 已从 ~730 行拆分至 **283 行**，SearchPanel.tsx 从 ~9
 R3 可能因搜索范围限于主文件（未追踪 `CommandItem` 组合组件、`commandPaletteTypes.ts`、`SearchPanelParts.tsx`）而漏判。
 
 **偏差记录**（低风险，不阻断）：
+
 1. AC-2：`--color-accent-blue` vs spec 的 `--color-info`，跨主题行为待确认
 2. AC-6：`--shadow-lg` vs spec 的 `--shadow-sm`，可能为有意设计增强
 

@@ -337,43 +337,43 @@ const FILE_TYPE_COLORS: Record<string, string> = {
 
 ### 基线指标更新
 
-| 指标 | R3 值 | R4 实测值 | 说明 |
-| --- | --- | --- | --- |
-| FileTreePanel.tsx 行数 | 126 | **126** | 无变化，AC-14 ✅ 持续满足 |
-| 文件树模块总行数 | 4,350 | **4,350** | 无变化 |
-| FileTreeNodeRow.tsx | 300 | **300** | 无变化 |
-| FileTreeRenameRow.tsx | 88 | **88** | 无变化 |
-| useFileTreeKeyboard.ts | 139 | **139** | 无变化 |
-| useFileTreeCore.ts | 182 | **182** | 无变化 |
-| fileTreeContextMenu.ts | 86 | **86** | 无变化 |
-| FileTree 测试 | 9 文件 / 79 测试全通过 | **9 文件 / 79 测试全通过** | 无变化，AC-10 ✅ 持续满足 |
+| 指标                   | R3 值                  | R4 实测值                  | 说明                      |
+| ---------------------- | ---------------------- | -------------------------- | ------------------------- |
+| FileTreePanel.tsx 行数 | 126                    | **126**                    | 无变化，AC-14 ✅ 持续满足 |
+| 文件树模块总行数       | 4,350                  | **4,350**                  | 无变化                    |
+| FileTreeNodeRow.tsx    | 300                    | **300**                    | 无变化                    |
+| FileTreeRenameRow.tsx  | 88                     | **88**                     | 无变化                    |
+| useFileTreeKeyboard.ts | 139                    | **139**                    | 无变化                    |
+| useFileTreeCore.ts     | 182                    | **182**                    | 无变化                    |
+| fileTreeContextMenu.ts | 86                     | **86**                     | 无变化                    |
+| FileTree 测试          | 9 文件 / 79 测试全通过 | **9 文件 / 79 测试全通过** | 无变化，AC-10 ✅ 持续满足 |
 
 ### AC 状态评估
 
 > R3 将 AC-1~AC-9 批量标注为「🔲 待实现」。R4 逐项独立验证后发现：多数视觉精修项已在前序组件拆分过程中实现，R3 评估过于保守。
 
-| AC | R3 状态 | R4 状态 | 说明 |
-| --- | --- | --- | --- |
-| AC-1 | 🔲 待实现 | ✅ 已满足 | IconBar.tsx:226 已有 `shrink-0 w-12`（48px 固定宽度）。组件在 `components/layout/IconBar.tsx`，非 files/ 目录，但功能已满足 |
-| AC-2 | 🔲 待实现 | ✅ 已满足 | FileTreeNodeRow.tsx:153 和 FileTreeRenameRow.tsx:36 均使用 `h-8`（32px 固定行高），rename 不跳动 |
-| AC-3 | 🔲 待实现 | ✅ 已满足 | FileTreeNodeRow.tsx:110 有 `w-2 h-2 rounded-full bg-[var(--color-info)]` 圆形手柄；FileTreeRenameRow.tsx:31 同 |
-| AC-4 | 🔲 待实现 | ✅ 已满足 | FileTreeRenameRow.tsx:60 有 `focus:border-[var(--color-info)]`，使用语义 token |
-| AC-5 | 🔲 待实现 | ✅ 已满足 | fileTreeContextMenu.ts 定义 `shortcut: "F2"` / `"Del"`；ContextMenu.tsx:148-155 渲染为 `text-[11px] text-[var(--color-fg-muted)]`，完全对齐设计稿 |
-| AC-6 | 🔲 待实现 | ⚠️ 待深度验证 | FileTreeNodeRow 使用 `--color-bg-hover` / `--color-bg-selected` design token，token 使用正确；实际对比度取决于 v1-01 token 定义值，非本 change 职责 |
-| AC-7 | 🔲 待实现 | ✅ 已满足 | FileTreeNodeRow.tsx:164 有 `transition-transform duration-[var(--duration-fast)]`；:166-168 使用 inline style `rotate(90deg)` / `rotate(0deg)` |
-| AC-8 | 🔲 待实现 | 🔲 待重新定义 | 当前使用 emoji 图标（📄📝📘🕒👤）按文档类型区分，非文件扩展名颜色映射。proposal 以代码编辑器视角描述（.ts/.md/.json），但 CreoNow 是创作 IDE，文档类型为 chapter/note/setting/timeline/character。需 Owner 确认是否需要为文档类型增加颜色映射，或 AC-8 已被 emoji 差异化方案等价满足 |
-| AC-9 | 🔲 待实现 | ✅ 已满足 | `grep '#[0-9a-fA-F]{3,8}'` 返回 0 结果，files/ 下无硬编码色值 |
-| AC-10 | ✅ 基线良好 | ✅ R4 确认 | 79 测试全通过，0 失败 |
-| AC-11~AC-13 | 🔲 待验证 | 🔲 待验证 | Storybook / typecheck / lint 在实现阶段执行 |
-| AC-14 | ✅ 已满足 | ✅ R4 确认 | 主文件 126 行 ≤ 300，子组件均 ≤ 300 |
+| AC          | R3 状态     | R4 状态       | 说明                                                                                                                                                                                                                                                                                 |
+| ----------- | ----------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AC-1        | 🔲 待实现   | ✅ 已满足     | IconBar.tsx:226 已有 `shrink-0 w-12`（48px 固定宽度）。组件在 `components/layout/IconBar.tsx`，非 files/ 目录，但功能已满足                                                                                                                                                          |
+| AC-2        | 🔲 待实现   | ✅ 已满足     | FileTreeNodeRow.tsx:153 和 FileTreeRenameRow.tsx:36 均使用 `h-8`（32px 固定行高），rename 不跳动                                                                                                                                                                                     |
+| AC-3        | 🔲 待实现   | ✅ 已满足     | FileTreeNodeRow.tsx:110 有 `w-2 h-2 rounded-full bg-[var(--color-info)]` 圆形手柄；FileTreeRenameRow.tsx:31 同                                                                                                                                                                       |
+| AC-4        | 🔲 待实现   | ✅ 已满足     | FileTreeRenameRow.tsx:60 有 `focus:border-[var(--color-info)]`，使用语义 token                                                                                                                                                                                                       |
+| AC-5        | 🔲 待实现   | ✅ 已满足     | fileTreeContextMenu.ts 定义 `shortcut: "F2"` / `"Del"`；ContextMenu.tsx:148-155 渲染为 `text-[11px] text-[var(--color-fg-muted)]`，完全对齐设计稿                                                                                                                                    |
+| AC-6        | 🔲 待实现   | ⚠️ 待深度验证 | FileTreeNodeRow 使用 `--color-bg-hover` / `--color-bg-selected` design token，token 使用正确；实际对比度取决于 v1-01 token 定义值，非本 change 职责                                                                                                                                  |
+| AC-7        | 🔲 待实现   | ✅ 已满足     | FileTreeNodeRow.tsx:164 有 `transition-transform duration-[var(--duration-fast)]`；:166-168 使用 inline style `rotate(90deg)` / `rotate(0deg)`                                                                                                                                       |
+| AC-8        | 🔲 待实现   | 🔲 待重新定义 | 当前使用 emoji 图标（📄📝📘🕒👤）按文档类型区分，非文件扩展名颜色映射。proposal 以代码编辑器视角描述（.ts/.md/.json），但 CreoNow 是创作 IDE，文档类型为 chapter/note/setting/timeline/character。需 Owner 确认是否需要为文档类型增加颜色映射，或 AC-8 已被 emoji 差异化方案等价满足 |
+| AC-9        | 🔲 待实现   | ✅ 已满足     | `grep '#[0-9a-fA-F]{3,8}'` 返回 0 结果，files/ 下无硬编码色值                                                                                                                                                                                                                        |
+| AC-10       | ✅ 基线良好 | ✅ R4 确认    | 79 测试全通过，0 失败                                                                                                                                                                                                                                                                |
+| AC-11~AC-13 | 🔲 待验证   | 🔲 待验证     | Storybook / typecheck / lint 在实现阶段执行                                                                                                                                                                                                                                          |
+| AC-14       | ✅ 已满足   | ✅ R4 确认    | 主文件 126 行 ≤ 300，子组件均 ≤ 300                                                                                                                                                                                                                                                  |
 
 ### 回补归属确认
 
-| 未满足 AC | 归属 | 说明 |
-| --- | --- | --- |
+| 未满足 AC                     | 归属               | 说明                                                                                                        |
+| ----------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------- |
 | AC-6（hover/selected 对比度） | v1-01 Design Token | 文件树已正确使用 `--color-bg-hover` / `--color-bg-selected` token，对比度由 token 定义值决定，属 v1-01 职责 |
-| AC-8（文件类型图标颜色） | 待 Owner 决策 | 当前 emoji 方案已提供类型差异化；若需进一步颜色编码，可作为独立精修任务或归入 v1-12 |
-| AC-11~AC-13（构建门禁） | 本 change 实现阶段 | 在实际开发提交前执行验证 |
+| AC-8（文件类型图标颜色）      | 待 Owner 决策      | 当前 emoji 方案已提供类型差异化；若需进一步颜色编码，可作为独立精修任务或归入 v1-12                         |
+| AC-11~AC-13（构建门禁）       | 本 change 实现阶段 | 在实际开发提交前执行验证                                                                                    |
 
 ### R4 关键发现
 

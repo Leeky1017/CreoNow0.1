@@ -222,46 +222,46 @@
 
 ---
 
-## R4 Cascade Refresh (2025-07-25)
+## R4 Cascade Refresh (2026-03-21)
 
 > Phase 3（v1-08 + v1-09）已合并，v1-10 自身亦已合并。按级联刷新规则，对 tasks.md 进行基线数字更新。
 
 ### 面板主文件行数基线更新
 
-| 文件 | tasks.md 原值 | R4 实测值 | AC-24 (≤300) | 采集命令 |
-| --- | --- | --- | --- | --- |
-| CharacterPanel.tsx | 379 | 225 | ✅ | `wc -l apps/desktop/renderer/src/features/character/CharacterPanel.tsx` |
-| CharacterDetailDialog.tsx | 1,090 | 321 | ⚠️ 321 > 300（+7%） | `wc -l apps/desktop/renderer/src/features/character/CharacterDetailDialog.tsx` |
-| MemoryPanel.tsx | 918 | 155 | ✅ | `wc -l apps/desktop/renderer/src/features/memory/MemoryPanel.tsx` |
-| OutlinePanel.tsx | 1,094 | 326 | ⚠️ 326 > 300（+9%） | `wc -l apps/desktop/renderer/src/features/outline/OutlinePanel.tsx` |
-| KnowledgeGraphPanel.tsx | 1,315 | 147 | ✅ | `wc -l apps/desktop/renderer/src/features/kg/KnowledgeGraphPanel.tsx` |
-| VersionHistoryPanel.tsx | 860 | 183 | ✅ | `wc -l apps/desktop/renderer/src/features/version-history/VersionHistoryPanel.tsx` |
-| VersionHistoryContainer.tsx | 760 | 273 | ✅ | `wc -l apps/desktop/renderer/src/features/version-history/VersionHistoryContainer.tsx` |
+| 文件                        | tasks.md 原值 | R4 实测值 | AC-24 (≤300)        | 采集命令                                                                               |
+| --------------------------- | ------------- | --------- | ------------------- | -------------------------------------------------------------------------------------- |
+| CharacterPanel.tsx          | 379           | 225       | ✅                  | `wc -l apps/desktop/renderer/src/features/character/CharacterPanel.tsx`                |
+| CharacterDetailDialog.tsx   | 1,090         | 321       | ⚠️ 321 > 300（+7%） | `wc -l apps/desktop/renderer/src/features/character/CharacterDetailDialog.tsx`         |
+| MemoryPanel.tsx             | 918           | 155       | ✅                  | `wc -l apps/desktop/renderer/src/features/memory/MemoryPanel.tsx`                      |
+| OutlinePanel.tsx            | 1,094         | 326       | ⚠️ 326 > 300（+9%） | `wc -l apps/desktop/renderer/src/features/outline/OutlinePanel.tsx`                    |
+| KnowledgeGraphPanel.tsx     | 1,315         | 147       | ✅                  | `wc -l apps/desktop/renderer/src/features/kg/KnowledgeGraphPanel.tsx`                  |
+| VersionHistoryPanel.tsx     | 860           | 183       | ✅                  | `wc -l apps/desktop/renderer/src/features/version-history/VersionHistoryPanel.tsx`     |
+| VersionHistoryContainer.tsx | 760           | 273       | ✅                  | `wc -l apps/desktop/renderer/src/features/version-history/VersionHistoryContainer.tsx` |
 
 **AC-24 总结**：5/7 达标。`CharacterDetailDialog.tsx`（321）和 `OutlinePanel.tsx`（326）略超阈值，偏差均 <10%，不构成阻断。
 
 ### eslint-disable 基线更新
 
-| 面板目录 | tasks.md 原值 | R4 实测值 | 采集命令 |
-| --- | --- | --- | --- |
-| character | 26 | 16 | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/character/ \| wc -l` |
-| memory | 13 | 4 | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/memory/ \| wc -l` |
-| outline | 9 | 0 | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/outline/ \| wc -l` |
-| kg | — | 1 | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/kg/ \| wc -l` |
-| version-history | 15 | 9 | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/version-history/ \| wc -l` |
-| **总计** | **93** → **AC-18 目标 ≤30** | **30** | 求和 |
+| 面板目录        | tasks.md 原值               | R4 实测值 | 采集命令                                                                                |
+| --------------- | --------------------------- | --------- | --------------------------------------------------------------------------------------- |
+| character       | 26                          | 16        | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/character/ \| wc -l`       |
+| memory          | 13                          | 4         | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/memory/ \| wc -l`          |
+| outline         | 9                           | 0         | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/outline/ \| wc -l`         |
+| kg              | —                           | 1         | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/kg/ \| wc -l`              |
+| version-history | 15                          | 9         | `grep -r 'eslint-disable' apps/desktop/renderer/src/features/version-history/ \| wc -l` |
+| **总计**        | **93** → **AC-18 目标 ≤30** | **30**    | 求和                                                                                    |
 
 **AC-18 总结**：达标（30 ≤ 30）。剩余主要分布在 `character/`（16）和 `version-history/`（9），多为无对应 Primitive 的原生表单元素。
 
 ### v1-11 状态组件集成情况
 
-| 面板 | EmptyState | LoadingState | ErrorState | 采集命令 |
-| --- | --- | --- | --- | --- |
-| Character | ✅ (CharacterCardList) | — | — | `grep -rn 'EmptyState' apps/desktop/renderer/src/features/character/ --include='*.tsx'` |
-| Memory | ✅ (MemoryList) | ✅ (MemoryPanel + MemoryList) | ✅ (MemoryPanel) | `grep -rn 'EmptyState\|LoadingState\|ErrorState' apps/desktop/renderer/src/features/memory/ --include='*.tsx'` |
-| Outline | ✅ (OutlineTree) | — | — | `grep -rn 'EmptyState' apps/desktop/renderer/src/features/outline/ --include='*.tsx'` |
-| KG | ✅ (KgListView) | — | ✅ (KgListView) | `grep -rn 'EmptyState\|ErrorState' apps/desktop/renderer/src/features/kg/ --include='*.tsx'` |
-| VersionHistory | ✅ (Container) | ✅ (Container) | ✅ (Container) | `grep -rn 'EmptyState\|LoadingState\|ErrorState' apps/desktop/renderer/src/features/version-history/ --include='*.tsx'` |
+| 面板           | EmptyState             | LoadingState                  | ErrorState       | 采集命令                                                                                                                |
+| -------------- | ---------------------- | ----------------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Character      | ✅ (CharacterCardList) | —                             | —                | `grep -rn 'EmptyState' apps/desktop/renderer/src/features/character/ --include='*.tsx'`                                 |
+| Memory         | ✅ (MemoryList)        | ✅ (MemoryPanel + MemoryList) | ✅ (MemoryPanel) | `grep -rn 'EmptyState\|LoadingState\|ErrorState' apps/desktop/renderer/src/features/memory/ --include='*.tsx'`          |
+| Outline        | ✅ (OutlineTree)       | —                             | —                | `grep -rn 'EmptyState' apps/desktop/renderer/src/features/outline/ --include='*.tsx'`                                   |
+| KG             | ✅ (KgListView)        | —                             | ✅ (KgListView)  | `grep -rn 'EmptyState\|ErrorState' apps/desktop/renderer/src/features/kg/ --include='*.tsx'`                            |
+| VersionHistory | ✅ (Container)         | ✅ (Container)                | ✅ (Container)   | `grep -rn 'EmptyState\|LoadingState\|ErrorState' apps/desktop/renderer/src/features/version-history/ --include='*.tsx'` |
 
 ### PanelHeader 统一确认
 
@@ -269,14 +269,14 @@
 
 ### 面板测试汇总
 
-| 面板 | 测试文件数 | 测试用例数 | 状态 | 采集命令 |
-| --- | --- | --- | --- | --- |
-| Character | 2 | 20 | ✅ 全绿 | `vitest run CharacterPanel` |
-| Memory | 2 | 12 | ✅ 全绿 | `vitest run MemoryPanel` |
-| Outline | 2 | 35 | ✅ 全绿 | `vitest run OutlinePanel` |
-| KnowledgeGraph | 9 | 60 | ✅ 全绿 | `vitest run KnowledgeGraph` |
-| VersionHistory | 5 | 42 | ✅ 全绿 | `vitest run VersionHistory` |
-| **总计** | **20** | **169** | **✅** | — |
+| 面板           | 测试文件数 | 测试用例数 | 状态    | 采集命令                    |
+| -------------- | ---------- | ---------- | ------- | --------------------------- |
+| Character      | 2          | 20         | ✅ 全绿 | `vitest run CharacterPanel` |
+| Memory         | 2          | 12         | ✅ 全绿 | `vitest run MemoryPanel`    |
+| Outline        | 2          | 35         | ✅ 全绿 | `vitest run OutlinePanel`   |
+| KnowledgeGraph | 9          | 60         | ✅ 全绿 | `vitest run KnowledgeGraph` |
+| VersionHistory | 5          | 42         | ✅ 全绿 | `vitest run VersionHistory` |
+| **总计**       | **20**     | **169**    | **✅**  | —                           |
 
 ### 刷新结论
 

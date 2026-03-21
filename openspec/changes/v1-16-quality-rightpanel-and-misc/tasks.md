@@ -238,7 +238,7 @@
 
 ---
 
-## R4 Cascade Refresh (2025-07-21)
+## R4 Cascade Refresh (2026-03-21)
 
 ### 基线复核结果
 
@@ -279,21 +279,21 @@
 
 ### 测试基线
 
-| 模块 | 文件数 | 用例数 | 状态 |
-| --- | --- | --- | --- |
-| Quality | 2 | 32 | ✅ 全部通过 |
-| Diff | 8 | 59 | ✅ 全部通过 |
+| 模块    | 文件数 | 用例数 | 状态        |
+| ------- | ------ | ------ | ----------- |
+| Quality | 2      | 32     | ✅ 全部通过 |
+| Diff    | 8      | 59     | ✅ 全部通过 |
 
 ### pixel 残留盘点（EXECUTION_ORDER 提及）
 
-| 文件 | 残留类型 | 数量 |
-| --- | --- | --- |
-| DiffView.tsx | `text-[11px]`/`text-[13px]`/`underline-offset-[3px]` | 5 处 |
-| DiffHeader.tsx | `text-[10px]` | 2 处 |
-| SplitDiffView.tsx | `text-[10px]`/`text-[11px]`/`text-[13px]`/`underline-offset-[3px]` | 6 处 |
-| VersionPane.tsx | `text-[10px]` | 1 处 |
-| QualityRuleList.tsx | `text-[11px]`/`text-[12px]`/`text-[13px]`/`left-[3px]`/`w-[18px]`/`h-[18px]`/`translate-x-[20px]` | 10 处 |
-| QualityGatesPanel.tsx | `text-[13px]`/`text-[15px]` | 2 处 |
+| 文件                  | 残留类型                                                                                          | 数量  |
+| --------------------- | ------------------------------------------------------------------------------------------------- | ----- |
+| DiffView.tsx          | `text-[11px]`/`text-[13px]`/`underline-offset-[3px]`                                              | 5 处  |
+| DiffHeader.tsx        | `text-[10px]`                                                                                     | 2 处  |
+| SplitDiffView.tsx     | `text-[10px]`/`text-[11px]`/`text-[13px]`/`underline-offset-[3px]`                                | 6 处  |
+| VersionPane.tsx       | `text-[10px]`                                                                                     | 1 处  |
+| QualityRuleList.tsx   | `text-[11px]`/`text-[12px]`/`text-[13px]`/`left-[3px]`/`w-[18px]`/`h-[18px]`/`translate-x-[20px]` | 10 处 |
+| QualityGatesPanel.tsx | `text-[13px]`/`text-[15px]`                                                                       | 2 处  |
 
 > 合计 ~26 处 arbitrary pixel 值需在 v1-16 实施时替换为 Design Token 变量。
 
@@ -302,6 +302,7 @@
 **轻度刷新**。Part A 行数拆分已完成（正向偏差），但 PanelHeader 采纳和 pixel 收口仍为未完成工作项。Part B/C 基线稳定，tasks 无需调整。
 
 v1-16 实施优先级建议：
+
 1. PanelHeader 采纳（QualityGatesPanel、QualityPanel、DiffViewPanel）
 2. Diff 模块 pixel 残留系统性替换
 3. InfoPanel 压缩至 ≤250 行
