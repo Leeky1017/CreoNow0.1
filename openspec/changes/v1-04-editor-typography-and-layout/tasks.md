@@ -185,3 +185,30 @@
 无直接下游需刷新。v1-07（Settings 视觉精修）为消费方，不阻塞。
 
 **级联刷新 R1 记录**：v1-01 ✅ + v1-02 ✅ 完成后重采集基线。typography token（`--text-display-*`、`--leading-relaxed`）由 v1-01 提前达成定义；Button/Card/Tabs 原语由 v1-02 提前达成。text-\[Npx\] ~1000 处归 v1-18。
+
+---
+
+## R2 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+R2 P1 复核：v1-03/04/05 Phase 1 并行复核。重新采集所有度量基线。
+
+### 复测结论
+
+- **所有 11 项 AC 保持达标**，零退化
+- **基线 R2 重采集**：
+
+| 度量                                 | R1 / 合并时 | R2    | Delta |
+| ------------------------------------ | ----------- | ----- | ----- |
+| `--editor-content-max-width`（AC-1） | 760px       | 760px | 0     |
+| `--text-display-size`（AC-2）        | 48px        | 48px  | 0     |
+| `--font-family-body` 含 Lora（AC-3） | ✅          | ✅    | 0     |
+| `--text-editor-line-height`（AC-4）  | 1.8         | 1.8   | 0     |
+| EditorFeaturedImage.tsx 行数（AC-5） | 49          | 49    | 0     |
+| `--space-editor-padding-x`（AC-6）   | 48px        | 48px  | 0     |
+| CJK line-height（AC-4 补充）         | 1.95        | 1.95  | 0     |
+
+- **偏差**：无
+- **Scope 调整**：不变
+- **结论**：✅ **STABLE** — v1-04 全部 AC 无退化

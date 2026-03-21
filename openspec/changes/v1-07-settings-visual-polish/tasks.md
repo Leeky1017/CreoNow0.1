@@ -306,3 +306,35 @@ const THEME_PREVIEW_TOKENS = {
   - Toggle 切换有 smooth 过渡
 - [ ] 确认 0 处新增 Tailwind arbitrary 色值 / 字号
 - [ ] 创建 PR（含 `Closes #N`），附视觉对比截图
+
+---
+
+## R2 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+R2 P1 复核 v1-03/04/05 → 级联刷新。v1-07 已实现并合并。
+
+### AC 验证状态（R2 重采集）
+
+| AC    | 状态 | R2 证据                                                          |
+| ----- | ---- | ---------------------------------------------------------------- |
+| AC-1  | ✅   | SettingsAppearancePage.tsx 中 0 处 hex 值                        |
+| AC-2  | ✅   | accentPalette.ts 49 行，命名常量 + token 映射                    |
+| AC-3  | ✅   | ThemePreview 无硬编码（grep 验证 0 处）                          |
+| AC-4  | —    | 需 diff review 确认 section header 样式                          |
+| AC-5  | —    | 需 diff review 确认 theme filled 选中态                          |
+| AC-6  | —    | 需 diff review 确认 font-size 滑块刻度                           |
+| AC-7  | —    | 需 diff review 确认色板 hover glow 效果                          |
+| AC-8  | —    | 需 diff review 确认 nav active indicator                         |
+| AC-9  | —    | 需 diff review 确认 toggle transition ≥0.15s                     |
+| AC-10 | ✅   | R2 基线未新增 arbitrary 值                                       |
+| AC-11 | ✅   | CI 守护                                                          |
+| AC-12 | ✅   | CI 守护                                                          |
+| AC-13 | ✅   | CI 守护                                                          |
+| AC-14 | ✅   | CI 守护                                                          |
+| AC-15 | ✅   | SettingsDialog.tsx 297 行（≤300），SettingsNavigation.tsx 103 行 |
+
+### 结论
+
+核心 AC（hex 清零 AC-1~3、拆分 AC-15、CI 门禁 AC-10~14）全部达成。视觉精度 AC（AC-4~9）需在后续审计中确认。

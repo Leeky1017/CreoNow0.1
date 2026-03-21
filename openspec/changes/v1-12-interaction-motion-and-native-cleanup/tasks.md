@@ -311,3 +311,23 @@
 - [ ] grep 确认 `.transition-default` / `.scroll-shadow-y` 在各面板中的应用
 - [ ] 逐面板视觉验收：hover 过渡流畅、scroll shadow 可见、action icons fade-in 自然
 - [ ] 确认替换过程中无功能回归（重点检查 click / change / focus / submit 事件链）
+
+---
+
+## R2 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+R2 P1 复核 v1-03/04/05 → 级联刷新。v1-12 尚未启动。
+
+### 基线更新
+
+- 原生 `<button>` 基线从提案时 186 降至 R2 实际 **69**（v1-03/06/07 等已替换 117 处）
+- AppShell.tsx **1,267 行** 未变
+- eslint-disable `no-native-html-element` **121 处** 未变
+- 任务工作量总体下降约 40%（主要来自 button 替换量缩减）
+
+### 任务状态
+
+- Phase 0~3 全部 [ ] 未启动
+- 无已达成项需勾选（上游完成不直接满足 v1-12 的 AC，仅缩减工作量）

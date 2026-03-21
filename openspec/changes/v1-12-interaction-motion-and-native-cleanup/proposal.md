@@ -177,3 +177,40 @@ V1 各 Wave 中的子组件都有独立的 Storybook Story，但组件之间的 
   - Select 重构为 Trigger/Content/Item 组合模式，替换更直观
   - Radio 重构为 RadioGroup/RadioGroupItem，覆盖了原生 radio input 场景
   - 原生 `<input>` / `<select>` 数量显著下降，Part B 替换工作量相应减少
+
+---
+
+## R2 级联刷新记录（2026-03-21）
+
+### 刷新触发
+
+R2 P1 复核 v1-03/04/05 → 级联刷新下游。v1-12 尚未启动，此次为基线重采集。
+
+### R2 基线重采集
+
+| 度量                                    | 原始提案基线 | R2 实际 | Delta | 说明                     |
+| --------------------------------------- | ------------ | ------- | ----- | ------------------------ |
+| AppShell.tsx 行数                       | 1,267        | 1,267   | 0     | 未变化                   |
+| 原生 `<button>`（features prod）        | 186          | 69      | -117  | v1-03/06/07 等已大量替换 |
+| 原生 `<input>`（features prod）         | —            | 12      | —     | 首次采集                 |
+| 原生 `<select>`（features prod）        | —            | 6       | —     | 首次采集                 |
+| 原生 `<textarea>`（features prod）      | —            | 5       | —     | 首次采集                 |
+| `no-native-html-element` eslint-disable | 121          | 121     | 0     | 未变化                   |
+| transition 工具类使用                   | 0            | 2       | +2    | 少量已开始使用           |
+| features 层 eslint-disable 总数         | —            | 146     | —     | 首次采集                 |
+
+### AC 目标调整
+
+- **原生 `<button>` 目标维持 ≤14**：当前 69（较原始 186 已下降 63%），仍需替换 ~55 处
+- **AppShell.tsx 拆分目标维持 ≤250 行**：当前 1,267 行无变化
+- **CSS 动效工具类目标不变**：`.transition-default`、`.transition-slow`、`.scroll-shadow-y` 待定义
+
+### 上游影响评估
+
+- v1-03（Dashboard）✅：Dashboard 区域原生按钮已清零，不再计入 v1-12 工作量
+- v1-04（Editor Typography）✅：无原生 HTML 影响
+- v1-05（Editor Decomposition）✅：编辑器已拆分为独立子模块，v1-12 可针对各子模块逐一处理原生 HTML 替换
+
+### 结论
+
+v1-12 基线已刷新。核心工作量：`<button>` 69→≤14（替换 ~55 处）、`<input>` 12→≤3、AppShell 拆分 1,267→≤250。上游完成降低了部分工作量（button 从 186 降至 69）。
