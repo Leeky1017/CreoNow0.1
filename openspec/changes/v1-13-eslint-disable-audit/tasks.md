@@ -221,3 +221,13 @@
 ### 结论
 
 上游三项 R5 复核全部 PASS，无阻断项。v1-13 所有 task 保持待执行状态——符合预期（v1-12 为硬依赖）。基线增长（176→229）不影响 scope 和 AC；待 v1-12 合并后重新采集基线即可启动。
+
+---
+
+## R6 级联刷新记录（2026-03-22）
+
+**v1-12 已于 2026-03-22 合并（PR #1213）。v1-13 现已解除阻断，可启动。**
+
+按 `apps/desktop/renderer/src/features` 生产文件口径重采样：feature-level `eslint-disable` 当前为 25 处，其中 2 处 `no-native-html-element` 为合理保留（hidden input / autosize textarea）。实际行动面约 23 处，已适合进入逐条审计。
+
+详细基线数据、规则分布和 AC 调整见 `proposal.md` 的 R6 级联刷新记录。

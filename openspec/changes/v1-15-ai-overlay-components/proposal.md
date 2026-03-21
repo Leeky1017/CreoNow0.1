@@ -1,6 +1,6 @@
 # V1-15 AI Overlay 组件视觉统一与解耦
 
-- **状态**: ✅ 已实现（随 PR #1198 进入合并审计）
+- **状态**: ✅ 已实现（已随 PR #1198 合并）
 - **GitHub Issue**: #1197（v1-14 / v1-15 共享交付）
 - **分支**: `task/1197-v1-14-v1-15-tdd-redo`
 - **所属任务簇**: V1（视觉重塑）— Wave 5 全覆盖收口
@@ -249,3 +249,19 @@ npx vitest run --reporter=verbose 2>&1 | grep -cE '✓.*(AiDiff|AiError|SystemDi
 ### 结论
 
 v1-15 R5 级联刷新：**PASS** ✅ —— 代码基线零漂移，测试稳中有增（83→91），上游无冲突，无需二次拆分。
+
+---
+
+## R6 级联刷新记录（2026-03-22）
+
+### 刷新触发
+
+v1-12 已于 2026-03-22 合并（PR #1213）。v1-15 已于 2026-03-21 合并（PR #1198），SOFT 依赖确认。
+
+### 影响评估
+
+v1-12 替换了 AI 面板中的原生 HTML（SkillManagerDialog 等），但 v1-15 的 4 个 overlay 组件（AiDiffModal、AiErrorCard、SystemDialog、AiInlineConfirm）的拆分结构未受影响。测试从 83→91（+8 guard tests），2600 全量通过。
+
+### 结论
+
+**PASS** — v1-15 已合并，v1-12 无回归影响。

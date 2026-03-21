@@ -163,3 +163,44 @@ v1-13 此前无 R4 级联刷新记录，本次为首次级联刷新。
 ### 结论
 
 上游三项 PASS，v1-13 scope 与 AC 不受影响；待 v1-12 合并后重新采集基线即可启动审计。
+
+---
+
+## R6 级联刷新记录（2026-03-22）
+
+### 刷新触发
+
+v1-12 已于 2026-03-22 合并（PR #1213）。按 proposal 主 scope，对 `apps/desktop/renderer/src/features` 的生产文件重新采集基线。
+
+### R6 基线重采集
+
+| 度量                                 | v1-12 前基线 | R6 实际 | Delta        | 说明                                   |
+| ------------------------------------ | ------------ | ------- | ------------ | -------------------------------------- |
+| eslint-disable 总数（features prod） | 176          | 25      | -151 (-86%)  | 硬依赖解除后，审计面已大幅缩窄         |
+| `no-native-html-element`             | ~153         | 2       | -151 (~-99%) | 仅剩 hidden input 与 autosize textarea |
+| `creonow/no-hardcoded-dimension`     | ~25          | 10      | -15 (-60%)   | 当前最大残留类别                       |
+| `creonow/no-raw-error-code-in-ui`    | —            | 5       | —            | 仍需逐条辨析 false positive 与真问题   |
+| `i18next/no-literal-string`          | —            | 4       | —            | 多为装饰性 glyph / 分隔符              |
+| `react-hooks/refs` + `max-lines-*`   | —            | 4       | —            | 属结构治理残留                         |
+
+### 当前 2 处 `no-native-html-element` 残留
+
+| 文件                                       | 原因                                   | 判定 |
+| ------------------------------------------ | -------------------------------------- | ---- |
+| `features/projects/ProjectFormContent.tsx` | `<input type="hidden">` 为表单语义元素 | KEEP |
+| `features/ai/AiInputArea.tsx`              | autosize textarea 需要 ref 转发        | KEEP |
+
+### AC 目标调整
+
+| AC #        | 原目标              | R6 调整后目标                       | 理由                                                |
+| ----------- | ------------------- | ----------------------------------- | --------------------------------------------------- |
+| AC-1        | eslint-disable ≤ 20 | eslint-disable（non-primitive）≤ 20 | 当前 25 处中已有 2 处为合理保留，实际行动面约 23 处 |
+| AC-2～AC-11 | 不变                | 不变                                | v1-12 解除的是依赖阻断，不替代逐条审计              |
+
+### 对 v1-13 scope 的影响
+
+**scope 已清晰可执行。** v1-13 不再面对“176 处历史豁免”的混沌局面，而是落到 25 处 feature-level disable 的精准清扫：其中 2 处明确 KEEP，其余约 23 处可进入逐条审计。
+
+### 结论
+
+v1-12 合并后，v1-13 的硬依赖已解除，且基线已收缩到可直接开工的规模。后续重点应转向 `no-hardcoded-dimension` 与 `no-raw-error-code-in-ui` 的逐条判定，而不是继续沿用过时的 59/32 口径。
