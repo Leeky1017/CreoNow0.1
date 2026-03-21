@@ -3,7 +3,7 @@
 - **GitHub Issue**: #1197（v1-14 / v1-15 共享交付）
 - **分支**: `task/1197-v1-14-v1-15-tdd-redo`
 - **PR**: #1198
-- **状态**: ✅ 实现完成；当前处于独立审计与收口阶段
+- **状态**: ✅ 主体实现完成；另有 #1199 记录的 2 条后续必修约束
 - **Delta Spec**: `openspec/changes/v1-14-dialog-and-entry-pages/specs/`
 
 ---
@@ -37,6 +37,8 @@
 | AC-14 | Storybook 可构建（`pnpm -C apps/desktop storybook:build`）                                                                    | 全局          |
 | AC-15 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                                   | 全局          |
 | AC-16 | lint 无新增违规（`pnpm lint`）                                                                                                | 全局          |
+| AC-17 | 在 `CreateProjectDialog` 中新建模板成功返回后，刚创建的模板会被自动选中，无需用户二次点击                                     | 交互          |
+| AC-18 | 导出进度态点击 `Cancel` 时，必须真实中止正在进行的导出任务；仅关闭前端等待界面不算完成                                        | 跨层          |
 
 ---
 
@@ -164,6 +166,13 @@
 **文件**: `apps/desktop/renderer/src/features/settings-dialog/SettingsGeneral.tsx`
 
 ---
+
+## 后续必修补丁（Issue #1199）
+
+> 这两项不是“建议优化”，而是已经确认会误导用户的遗留约束。后续工程落地时必须补齐。
+
+- [ ] `CreateProjectDialog`：新增模板创建成功后，自动选中刚创建的模板，并补充回归测试
+- [ ] `ExportDialog`：为导出进度态补齐真实 cancel / abort 链路，并补充前端 + IPC / main 级验证
 
 ## Phase 3: Verification（验证）
 
