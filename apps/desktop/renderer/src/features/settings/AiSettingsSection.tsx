@@ -180,6 +180,7 @@ export function AiSettingsSection(): JSX.Element {
               label: t("settings.aiSection.providerAnthropicByok"),
             },
           ]}
+          layer="modal"
           fullWidth
         />
       </FormField>
