@@ -124,7 +124,8 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
     newChatSignal: props.newChatSignal,
     t,
   });
-  // eslint-disable-next-line react-hooks/refs -- ref-taint false positive; callbacks only invoked from event handlers
+  // 审计：v1-13 #011 KEEP
+  // eslint-disable-next-line react-hooks/refs -- 技术原因：ref-taint false positive; callbacks only invoked from event handlers, not during render
   const actions = createAiPanelActions({
     input: sel.input,
     selectedSkillId: sel.selectedSkillId,
@@ -165,7 +166,8 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
     t,
   });
   React.useEffect(() => {
-    // eslint-disable-next-line react-hooks/refs
+    // 审计：v1-13 #012 KEEP
+    // eslint-disable-next-line react-hooks/refs -- 技术原因：ref.current 赋值在 useEffect 中执行，非渲染期间，属于 react-hooks/refs 误报
     handleNewChatRef.current = actions.handleNewChat;
   }, [actions.handleNewChat]);
   const working = isRunning(sel.status);

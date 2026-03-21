@@ -271,9 +271,11 @@ describe("InlineAiDiffPreview", () => {
 // ---------------------------------------------------------------------------
 
 describe("inlineAi i18n keys", () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  // 审计：v1-13 #020 KEEP
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- 技术原因：test file uses require() to load JSON locale files for key existence validation
   const en = require("../../i18n/locales/en.json");
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  // 审计：v1-13 #021 KEEP
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- 技术原因：test file uses require() to load JSON locale files for key existence validation
   const zhCN = require("../../i18n/locales/zh-CN.json");
 
   const requiredKeys = [

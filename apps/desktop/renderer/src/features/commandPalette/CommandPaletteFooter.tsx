@@ -9,7 +9,8 @@ export function CommandPaletteFooter(): JSX.Element {
     <div className="h-9 px-4 flex items-center justify-end gap-4 border-t border-[var(--color-border-default)] bg-[var(--color-bg-surface)]">
       <div className="flex items-center gap-1.5">
         <span className="px-1 min-w-4 h-4 flex items-center justify-center text-[11px] text-[var(--color-fg-muted)] bg-[var(--color-zen-hover)] rounded">
-          {/* eslint-disable-next-line i18next/no-literal-string -- decorative navigation arrows */}
+          {/* 审计：v1-13 #018 KEEP */}
+          {/* eslint-disable-next-line i18next/no-literal-string -- 技术原因：decorative navigation arrow glyphs, not user-facing translatable text */}
           ↑↓
         </span>
         <Text size="tiny" color="placeholder">
@@ -18,7 +19,8 @@ export function CommandPaletteFooter(): JSX.Element {
       </div>
       <div className="flex items-center gap-1.5">
         <span className="px-1 min-w-4 h-4 flex items-center justify-center text-[11px] text-[var(--color-fg-muted)] bg-[var(--color-zen-hover)] rounded">
-          {/* eslint-disable-next-line i18next/no-literal-string -- decorative enter arrow */}
+          {/* 审计：v1-13 #019 KEEP */}
+          {/* eslint-disable-next-line i18next/no-literal-string -- 技术原因：decorative enter arrow glyph, not user-facing translatable text */}
           ↵
         </span>
         <Text size="tiny" color="placeholder">

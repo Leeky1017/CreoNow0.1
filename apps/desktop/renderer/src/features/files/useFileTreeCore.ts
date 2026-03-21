@@ -11,7 +11,8 @@ import { buildTreeSnapshot, flattenTree } from "./fileTreeHelpers";
  * FileTree 核心状态：store 消费、React 状态、副作用。
  * 拆自 useFileTreeState，仅负责 state + effects，不含 CRUD handlers。
  */
-// eslint-disable-next-line max-lines-per-function
+// 审计：v1-13 #008 KEEP
+// eslint-disable-next-line max-lines-per-function -- 技术原因：核心状态 hook 聚合 store 消费、React 状态与副作用，拆分会破坏内聚性
 export function useFileTreeCore(
   projectId: string,
   t: ReturnType<typeof useTranslation>["t"],

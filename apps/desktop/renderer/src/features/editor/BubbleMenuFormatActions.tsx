@@ -119,15 +119,18 @@ export function BubbleMenuFormatActions(props: {
       </InlineFormatButton>
       <InlineFormatButton
         testId="bubble-code"
-        // eslint-disable-next-line creonow/no-raw-error-code-in-ui -- false positive: EDITOR_SHORTCUTS.code refers to code-formatting shortcut, not error code
+        // 审计：v1-13 #022 KEEP
+        // eslint-disable-next-line creonow/no-raw-error-code-in-ui -- 技术原因：false positive; EDITOR_SHORTCUTS.code refers to code-formatting shortcut, not error code
         label={EDITOR_SHORTCUTS.code.label}
-        // eslint-disable-next-line creonow/no-raw-error-code-in-ui -- false positive: EDITOR_SHORTCUTS.code refers to code-formatting shortcut, not error code
+        // 审计：v1-13 #023 KEEP
+        // eslint-disable-next-line creonow/no-raw-error-code-in-ui -- 技术原因：false positive; EDITOR_SHORTCUTS.code refers to code-formatting shortcut, not error code
         shortcut={EDITOR_SHORTCUTS.code.display()}
         isActive={editor.isActive("code")}
         disabled={inlineDisabled}
         onClick={() => editor.chain().focus().toggleCode().run()}
       >
-        {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- false positive: formatIcons.code is the code-formatting icon */}
+        {/* 审计：v1-13 #024 KEEP */}
+        {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- 技术原因：false positive; formatIcons.code is the code-formatting icon, not error code */}
         {formatIcons.code}
       </InlineFormatButton>
       <InlineFormatButton
