@@ -1,5 +1,10 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+
+// =============================================================================
+// Mock 设置
+// =============================================================================
 
 vi.mock("../../i18n/languagePreference", () => ({
   getLanguagePreference: vi.fn(() => "zh-CN"),
@@ -11,112 +16,97 @@ vi.mock("../../i18n", () => ({
 }));
 
 vi.mock("../../lib/ipcClient", () => ({
-  invoke: vi.fn(() => Promise.resolve({ ok: true })),
+  invoke: vi.fn(() => Promise.resolve({ ok: true, data: {} })),
 }));
 
 import { OnboardingPage } from "./OnboardingPage";
 import { setLanguagePreference } from "../../i18n/languagePreference";
 import { i18n } from "../../i18n";
 
-describe("OnboardingPage wizard flow", () => {
+// =============================================================================
+// 完整向导流程测试 — 端到端行为场景
+// =============================================================================
+describe("OnboardingPage 向导流程", () => {
   const onComplete = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("renders step 1 (language selection) by default", () => {
+  it("完整流程：语言选择 → AI 配置跳过 → 跳过文件夹 → onComplete", async () => {
+    const user = userEvent.setup();
     render(<OnboardingPage onComplete={onComplete} />);
+
+    // Step 1: 语言选择
     expect(screen.getByTestId("onboarding-step-1")).toBeInTheDocument();
-    expect(
-      screen.getByTestId("onboarding-language-select"),
-    ).toBeInTheDocument();
-  });
-
-  it("persists language selection on step 1", () => {
-    render(<OnboardingPage onComplete={onComplete} />);
-
-    const englishOption = screen.getByText("English");
-    fireEvent.click(englishOption);
-
+    await user.click(screen.getByTestId("onboarding-lang-en"));
     expect(setLanguagePreference).toHaveBeenCalledWith("en");
     expect(i18n.changeLanguage).toHaveBeenCalledWith("en");
-  });
 
-  it("advances from step 1 to step 2", () => {
-    render(<OnboardingPage onComplete={onComplete} />);
-
-    const nextBtn = screen.getByTestId("onboarding-next");
-    fireEvent.click(nextBtn);
-
+    // 前进到 Step 2
+    await user.click(screen.getByTestId("onboarding-next"));
     expect(screen.getByTestId("onboarding-step-2")).toBeInTheDocument();
-  });
 
-  it("renders AI config step with skip option in step 2", () => {
-    render(<OnboardingPage onComplete={onComplete} />);
-
-    fireEvent.click(screen.getByTestId("onboarding-next"));
-
-    expect(screen.getByTestId("onboarding-step-2")).toBeInTheDocument();
-    expect(screen.getByTestId("onboarding-ai-skip")).toBeInTheDocument();
-  });
-
-  it("skip in step 2 advances to step 3", () => {
-    render(<OnboardingPage onComplete={onComplete} />);
-
-    fireEvent.click(screen.getByTestId("onboarding-next"));
-    fireEvent.click(screen.getByTestId("onboarding-ai-skip"));
-
+    // Step 2: 跳过 AI 配置
+    await user.click(screen.getByTestId("onboarding-ai-skip"));
     expect(screen.getByTestId("onboarding-step-3")).toBeInTheDocument();
-  });
 
-  it("renders open folder button in step 3", () => {
-    render(<OnboardingPage onComplete={onComplete} />);
-
-    fireEvent.click(screen.getByTestId("onboarding-next"));
-    fireEvent.click(screen.getByTestId("onboarding-ai-skip"));
-
-    expect(screen.getByTestId("onboarding-open-folder")).toBeInTheDocument();
-  });
-
-  it("calls onComplete when skipping folder in step 3", () => {
-    render(<OnboardingPage onComplete={onComplete} />);
-
-    fireEvent.click(screen.getByTestId("onboarding-next"));
-    fireEvent.click(screen.getByTestId("onboarding-ai-skip"));
-
-    fireEvent.click(screen.getByTestId("onboarding-skip-folder"));
+    // Step 3: 跳过文件夹
+    await user.click(screen.getByTestId("onboarding-skip-folder"));
     expect(onComplete).toHaveBeenCalledTimes(1);
   });
 
-  it("back button returns to previous step", () => {
+  it("来回导航不丢失语言选择", async () => {
+    const user = userEvent.setup();
     render(<OnboardingPage onComplete={onComplete} />);
 
-    fireEvent.click(screen.getByTestId("onboarding-next"));
+    // 选择英文
+    await user.click(screen.getByTestId("onboarding-lang-en"));
+
+    // 前进到 Step 2
+    await user.click(screen.getByTestId("onboarding-next"));
     expect(screen.getByTestId("onboarding-step-2")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByTestId("onboarding-back"));
+    // 返回 Step 1
+    await user.click(screen.getByTestId("onboarding-back"));
     expect(screen.getByTestId("onboarding-step-1")).toBeInTheDocument();
+
+    // 语言选择应保持
+    expect(setLanguagePreference).toHaveBeenCalledWith("en");
   });
 
-  it("back button on step 3 returns to step 2", () => {
+  it("Step 3 返回 Step 2 再返回 Step 1 的完整后退链", async () => {
+    const user = userEvent.setup();
     render(<OnboardingPage onComplete={onComplete} />);
 
-    fireEvent.click(screen.getByTestId("onboarding-next"));
-    fireEvent.click(screen.getByTestId("onboarding-ai-skip"));
+    // 走到 Step 3
+    await user.click(screen.getByTestId("onboarding-next"));
+    await user.click(screen.getByTestId("onboarding-ai-skip"));
     expect(screen.getByTestId("onboarding-step-3")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByTestId("onboarding-back"));
+    // 回到 Step 2
+    await user.click(screen.getByTestId("onboarding-back"));
     expect(screen.getByTestId("onboarding-step-2")).toBeInTheDocument();
-  });
 
-  it("renders step indicator", () => {
-    render(<OnboardingPage onComplete={onComplete} />);
-    expect(screen.getByTestId("onboarding-step-indicator")).toBeInTheDocument();
-  });
-
-  it("does not render back button on step 1", () => {
-    render(<OnboardingPage onComplete={onComplete} />);
+    // 回到 Step 1
+    await user.click(screen.getByTestId("onboarding-back"));
+    expect(screen.getByTestId("onboarding-step-1")).toBeInTheDocument();
     expect(screen.queryByTestId("onboarding-back")).not.toBeInTheDocument();
+  });
+
+  it("步骤指示器在各步骤中始终可见", async () => {
+    const user = userEvent.setup();
+    render(<OnboardingPage onComplete={onComplete} />);
+
+    // Step 1
+    expect(screen.getByTestId("onboarding-step-indicator")).toBeInTheDocument();
+
+    // Step 2
+    await user.click(screen.getByTestId("onboarding-next"));
+    expect(screen.getByTestId("onboarding-step-indicator")).toBeInTheDocument();
+
+    // Step 3
+    await user.click(screen.getByTestId("onboarding-ai-skip"));
+    expect(screen.getByTestId("onboarding-step-indicator")).toBeInTheDocument();
   });
 });

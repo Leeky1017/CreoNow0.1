@@ -1,15 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CreateProjectDialog } from "./CreateProjectDialog";
 import type { ProjectStore } from "../../stores/projectStore";
 import type { ProjectTemplate } from "../../stores/templateStore";
 
-/**
- * Build a fully-typed project store shape for tests.
- *
- * Why: CreateProjectDialog tests should stay resilient as ProjectStore actions grow.
- */
+// =============================================================================
+// Mock 工具函数
+// =============================================================================
+
 function createMockProjectState(
   overrides: Partial<ProjectStore> = {},
 ): ProjectStore {
@@ -120,7 +119,10 @@ function createMockTemplateState(
 
 let templateStoreState = createMockTemplateState();
 
-// Mock stores
+// =============================================================================
+// Mock 设置
+// =============================================================================
+
 vi.mock("../../stores/projectStore", () => ({
   useProjectStore: vi.fn((selector) => {
     const state = createMockProjectState();
@@ -132,7 +134,6 @@ vi.mock("../../stores/templateStore", () => ({
   useTemplateStore: vi.fn((selector) => selector(templateStoreState)),
 }));
 
-// Mock CreateTemplateDialog
 vi.mock("./CreateTemplateDialog", () => ({
   CreateTemplateDialog: ({ open }: { open: boolean }) =>
     open ? (
@@ -140,467 +141,489 @@ vi.mock("./CreateTemplateDialog", () => ({
     ) : null,
 }));
 
-describe("CreateProjectDialog", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+beforeEach(() => {
+  vi.clearAllMocks();
+  templateStoreState = createMockTemplateState();
+});
+
+// ===========================================================================
+// 渲染 — 对话框结构与初始状态
+// ===========================================================================
+describe("渲染", () => {
+  it("open 为 true 时渲染对话框", () => {
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    expect(screen.getByTestId("create-project-dialog")).toBeInTheDocument();
+  });
+
+  it("显示对话框标题 Create New Project", () => {
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    expect(screen.getByText("Create New Project")).toBeInTheDocument();
+  });
+
+  it("显示项目名称输入框，带 placeholder 且自动聚焦", () => {
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    const input = screen.getByTestId("create-project-name");
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveAttribute("placeholder", "e.g., The Silent Echo");
+    expect(input).toHaveFocus();
+  });
+
+  it("显示描述输入框", () => {
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    expect(
+      screen.getByTestId("create-project-description"),
+    ).toBeInTheDocument();
+  });
+
+  it("显示 Create Project 和 Cancel 按钮", () => {
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    expect(screen.getByTestId("create-project-submit")).toBeInTheDocument();
+    expect(screen.getByText("Create Project")).toBeInTheDocument();
+    expect(screen.getByText("Cancel")).toBeInTheDocument();
+  });
+
+  it("显示所有预设模板选项", () => {
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    expect(screen.getByText("Novel")).toBeInTheDocument();
+    expect(screen.getByText("Short Story")).toBeInTheDocument();
+    expect(screen.getByText("Screenplay")).toBeInTheDocument();
+    expect(screen.getByText("Other")).toBeInTheDocument();
+  });
+
+  it("显示 Create Template 按钮", () => {
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    expect(screen.getByText("Create Template")).toBeInTheDocument();
+  });
+
+  it("显示 Manual 和 AI Assisted 两个标签页", () => {
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    expect(screen.getByRole("tab", { name: "Manual" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("tab", { name: "AI Assisted" }),
+    ).toBeInTheDocument();
+  });
+});
+
+// ===========================================================================
+// 表单 — 输入与数据变更
+// ===========================================================================
+describe("表单", () => {
+  it("输入项目名称后值更新", async () => {
+    const user = userEvent.setup();
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    const input = screen.getByTestId("create-project-name");
+    await user.type(input, "My Project");
+
+    expect(input).toHaveValue("My Project");
+  });
+
+  it("输入描述后值更新", async () => {
+    const user = userEvent.setup();
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    const textarea = screen.getByTestId("create-project-description");
+    await user.type(textarea, "A story about silence");
+
+    expect(textarea).toHaveValue("A story about silence");
+  });
+});
+
+// ===========================================================================
+// 验证 — 名称校验
+// ===========================================================================
+describe("验证", () => {
+  it("空名称提交时显示错误消息", async () => {
+    const user = userEvent.setup();
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    await user.click(screen.getByTestId("create-project-submit"));
+
+    expect(screen.getByText("Project name is required")).toBeInTheDocument();
+  });
+
+  it("仅空格的名称提交时显示错误消息", async () => {
+    const user = userEvent.setup();
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    await user.type(screen.getByTestId("create-project-name"), "   ");
+    await user.click(screen.getByTestId("create-project-submit"));
+
+    expect(screen.getByText("Project name is required")).toBeInTheDocument();
+  });
+});
+
+// ===========================================================================
+// 交互 — 按钮、模板选择、标签页
+// ===========================================================================
+describe("交互", () => {
+  it("点击 Cancel 调用 onOpenChange(false)", async () => {
+    const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    render(<CreateProjectDialog open={true} onOpenChange={onOpenChange} />);
+
+    await user.click(screen.getByText("Cancel"));
+
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it("提交有效表单调用 createAndSetCurrent 并传递正确参数", async () => {
+    const { useProjectStore } = await import("../../stores/projectStore");
+    const createAndSetCurrent = vi.fn().mockResolvedValue({
+      ok: true,
+      data: { projectId: "new-project", rootPath: "/mock/path" },
+    });
+    vi.mocked(useProjectStore).mockImplementation((selector) => {
+      const state = createMockProjectState({ createAndSetCurrent });
+      return selector(state);
+    });
+
+    const user = userEvent.setup();
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    await user.type(screen.getByTestId("create-project-name"), "New Project");
+    await user.click(screen.getByTestId("create-project-submit"));
+
+    await waitFor(() => {
+      expect(createAndSetCurrent).toHaveBeenCalledWith({
+        name: "New Project",
+        description: "",
+        type: undefined,
+        template: {
+          kind: "builtin",
+          id: "novel",
+        },
+        coverImage: null,
+        cropArea: null,
+      });
+    });
+  });
+
+  it("选择模板后提交使用所选模板", async () => {
+    const { useProjectStore } = await import("../../stores/projectStore");
+    const createAndSetCurrent = vi.fn().mockResolvedValue({
+      ok: true,
+      data: { projectId: "new-project", rootPath: "/mock/path" },
+    });
+    vi.mocked(useProjectStore).mockImplementation((selector) => {
+      const state = createMockProjectState({ createAndSetCurrent });
+      return selector(state);
+    });
+
+    const user = userEvent.setup();
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    await user.click(screen.getByRole("radio", { name: "Short Story" }));
+    await user.type(screen.getByTestId("create-project-name"), "New Project");
+    await user.click(screen.getByTestId("create-project-submit"));
+
+    await waitFor(() => {
+      expect(createAndSetCurrent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: { kind: "builtin", id: "short-story" },
+        }),
+      );
+    });
+  });
+
+  it("点击 Create Template 打开 CreateTemplateDialog", async () => {
+    const user = userEvent.setup();
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    await user.click(screen.getByText("Create Template"));
+
+    expect(screen.getByTestId("create-template-dialog")).toBeInTheDocument();
+  });
+
+  it("预设模板后到达时自动同步默认值", async () => {
+    const { useProjectStore } = await import("../../stores/projectStore");
+    const createAndSetCurrent = vi.fn().mockResolvedValue({
+      ok: true,
+      data: { projectId: "new-project", rootPath: "/mock/path" },
+    });
+    vi.mocked(useProjectStore).mockImplementation((selector) => {
+      const state = createMockProjectState({ createAndSetCurrent });
+      return selector(state);
+    });
+
+    templateStoreState = createMockTemplateState({ presets: [] });
+    const onOpenChange = vi.fn();
+    const user = userEvent.setup();
+    const { rerender } = render(
+      <CreateProjectDialog open={true} onOpenChange={onOpenChange} />,
+    );
+
     templateStoreState = createMockTemplateState();
-  });
+    rerender(<CreateProjectDialog open={true} onOpenChange={onOpenChange} />);
 
-  // ===========================================================================
-  // 基础渲染测试
-  // ===========================================================================
-  describe("渲染", () => {
-    it("open 为 true 时应该渲染对话框", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+    await user.type(screen.getByTestId("create-project-name"), "New Project");
+    await user.click(screen.getByTestId("create-project-submit"));
 
-      expect(screen.getByTestId("create-project-dialog")).toBeInTheDocument();
-    });
-
-    it("应该显示 Create New Project Title", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      expect(screen.getByText("Create New Project")).toBeInTheDocument();
-    });
-
-    it("应该显示Name输入框", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      expect(screen.getByTestId("create-project-name")).toBeInTheDocument();
-    });
-
-    it("应该显示 Create Project 按钮", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      expect(screen.getByTestId("create-project-submit")).toBeInTheDocument();
-      expect(screen.getByText("Create Project")).toBeInTheDocument();
-    });
-
-    it("应该显示 Cancel 按钮", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      expect(screen.getByText("Cancel")).toBeInTheDocument();
-    });
-
-    it("应该显示预设模板选项", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      expect(screen.getByText("Novel")).toBeInTheDocument();
-      expect(screen.getByText("Short Story")).toBeInTheDocument();
-      expect(screen.getByText("Screenplay")).toBeInTheDocument();
-      expect(screen.getByText("Other")).toBeInTheDocument();
-    });
-
-    it("应该显示Description输入框", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      expect(
-        screen.getByTestId("create-project-description"),
-      ).toBeInTheDocument();
-    });
-
-    it("应该显示 Create Template 按钮", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      expect(screen.getByText("Create Template")).toBeInTheDocument();
-    });
-  });
-
-  // ===========================================================================
-  // 表单测试
-  // ===========================================================================
-  describe("表单", () => {
-    it("Name输入框应有 placeholder", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      const input = screen.getByTestId("create-project-name");
-      expect(input).toHaveAttribute("placeholder", "e.g., The Silent Echo");
-    });
-
-    it("输入应更新值", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      const input = screen.getByTestId("create-project-name");
-      fireEvent.change(input, { target: { value: "My Project" } });
-
-      expect(input).toHaveValue("My Project");
-    });
-
-    it("Name输入框应有 autoFocus", () => {
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      const input = screen.getByTestId("create-project-name");
-      expect(input).toHaveFocus();
-    });
-  });
-
-  // ===========================================================================
-  // 验证测试
-  // ===========================================================================
-  describe("验证", () => {
-    it("空Name应该显示错误", async () => {
-      const user = userEvent.setup();
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      // Submit without entering name
-      await user.click(screen.getByTestId("create-project-submit"));
-
-      expect(screen.getByText("Project name is required")).toBeInTheDocument();
-    });
-
-    it("只有空格的Name应该显示错误", async () => {
-      const user = userEvent.setup();
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      await user.type(screen.getByTestId("create-project-name"), "   ");
-      await user.click(screen.getByTestId("create-project-submit"));
-
-      expect(screen.getByText("Project name is required")).toBeInTheDocument();
-    });
-  });
-
-  // ===========================================================================
-  // 交互测试
-  // ===========================================================================
-  describe("交互", () => {
-    it("点击 Cancel 应调用 onOpenChange(false)", () => {
-      const onOpenChange = vi.fn();
-      render(<CreateProjectDialog open={true} onOpenChange={onOpenChange} />);
-
-      const cancelButton = screen.getByText("Cancel");
-      fireEvent.click(cancelButton);
-
-      expect(onOpenChange).toHaveBeenCalledWith(false);
-    });
-
-    it("提交有效表单应调用 createAndSetCurrent", async () => {
-      const { useProjectStore } = await import("../../stores/projectStore");
-      const createAndSetCurrent = vi.fn().mockResolvedValue({
-        ok: true,
-        data: { projectId: "new-project", rootPath: "/mock/path" },
-      });
-      vi.mocked(useProjectStore).mockImplementation((selector) => {
-        const state = createMockProjectState({ createAndSetCurrent });
-        return selector(state);
-      });
-
-      const user = userEvent.setup();
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      await user.type(screen.getByTestId("create-project-name"), "New Project");
-      await user.click(screen.getByTestId("create-project-submit"));
-
-      await waitFor(() => {
-        expect(createAndSetCurrent).toHaveBeenCalledWith({
-          name: "New Project",
-          description: "",
-          type: undefined,
-          template: {
-            kind: "builtin",
-            id: "novel",
-          },
-          coverImage: null,
-          cropArea: null,
-        });
-      });
-    });
-
-    it("点击 Create Template 应to open CreateTemplateDialog", async () => {
-      const user = userEvent.setup();
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      await user.click(screen.getByText("Create Template"));
-
-      expect(screen.getByTestId("create-template-dialog")).toBeInTheDocument();
-    });
-
-    it("默认模板后到达时应同步为可提交的 preset", async () => {
-      const { useProjectStore } = await import("../../stores/projectStore");
-      const createAndSetCurrent = vi.fn().mockResolvedValue({
-        ok: true,
-        data: { projectId: "new-project", rootPath: "/mock/path" },
-      });
-      vi.mocked(useProjectStore).mockImplementation((selector) => {
-        const state = createMockProjectState({ createAndSetCurrent });
-        return selector(state);
-      });
-
-      templateStoreState = createMockTemplateState({ presets: [] });
-      const onOpenChange = vi.fn();
-      const user = userEvent.setup();
-      const { rerender } = render(
-        <CreateProjectDialog open={true} onOpenChange={onOpenChange} />,
+    await waitFor(() => {
+      expect(createAndSetCurrent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: { kind: "builtin", id: "novel" },
+        }),
       );
+    });
+  });
 
-      templateStoreState = createMockTemplateState();
-      rerender(<CreateProjectDialog open={true} onOpenChange={onOpenChange} />);
-
-      await user.type(screen.getByTestId("create-project-name"), "New Project");
-      await user.click(screen.getByTestId("create-project-submit"));
-
-      await waitFor(() => {
-        expect(createAndSetCurrent).toHaveBeenCalledWith({
-          name: "New Project",
-          description: "",
-          type: undefined,
-          template: {
-            kind: "builtin",
-            id: "novel",
-          },
-          coverImage: null,
-          cropArea: null,
-        });
-      });
+  it("用户手动选择模板后不被默认同步覆盖", async () => {
+    const { useProjectStore } = await import("../../stores/projectStore");
+    const createAndSetCurrent = vi.fn().mockResolvedValue({
+      ok: true,
+      data: { projectId: "new-project", rootPath: "/mock/path" },
+    });
+    vi.mocked(useProjectStore).mockImplementation((selector) => {
+      const state = createMockProjectState({ createAndSetCurrent });
+      return selector(state);
     });
 
-    it("User手动Select模板后不应被默认模板同步覆盖", async () => {
-      const { useProjectStore } = await import("../../stores/projectStore");
-      const createAndSetCurrent = vi.fn().mockResolvedValue({
-        ok: true,
-        data: { projectId: "new-project", rootPath: "/mock/path" },
-      });
-      vi.mocked(useProjectStore).mockImplementation((selector) => {
-        const state = createMockProjectState({ createAndSetCurrent });
-        return selector(state);
-      });
+    const user = userEvent.setup();
+    const { rerender } = render(
+      <CreateProjectDialog open={true} onOpenChange={vi.fn()} />,
+    );
 
-      const user = userEvent.setup();
-      const { rerender } = render(
-        <CreateProjectDialog open={true} onOpenChange={vi.fn()} />,
+    await user.click(screen.getByRole("radio", { name: "Short Story" }));
+
+    templateStoreState = createMockTemplateState({
+      presets: [...DEFAULT_PRESET_TEMPLATES],
+    });
+    rerender(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    await user.type(screen.getByTestId("create-project-name"), "New Project");
+    await user.click(screen.getByTestId("create-project-submit"));
+
+    await waitFor(() => {
+      expect(createAndSetCurrent).toHaveBeenCalledWith(
+        expect.objectContaining({
+          template: { kind: "builtin", id: "short-story" },
+        }),
       );
-
-      await user.click(screen.getByRole("radio", { name: "Short Story" }));
-
-      templateStoreState = createMockTemplateState({
-        presets: [...DEFAULT_PRESET_TEMPLATES],
-      });
-      rerender(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      await user.type(screen.getByTestId("create-project-name"), "New Project");
-      await user.click(screen.getByTestId("create-project-submit"));
-
-      await waitFor(() => {
-        expect(createAndSetCurrent).toHaveBeenCalledWith({
-          name: "New Project",
-          description: "",
-          type: undefined,
-          template: {
-            kind: "builtin",
-            id: "short-story",
-          },
-          coverImage: null,
-          cropArea: null,
-        });
-      });
     });
   });
 });
 
-describe("CreateProjectDialog — error and edge cases", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    templateStoreState = createMockTemplateState();
+// ===========================================================================
+// 标签页切换 — Manual / AI Assisted
+// ===========================================================================
+describe("标签页切换", () => {
+  it("点击 AI Assisted 标签页显示 AI 生成区域", async () => {
+    const user = userEvent.setup();
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    await user.click(screen.getByRole("tab", { name: "AI Assisted" }));
+
+    expect(screen.getByTestId("create-project-ai-prompt")).toBeInTheDocument();
+    expect(
+      screen.getByTestId("create-project-ai-generate"),
+    ).toBeInTheDocument();
   });
 
-  // ===========================================================================
-  // 错误状态测试
-  // ===========================================================================
-  describe("错误状态", () => {
-    it("有错误时应显示错误Info", async () => {
-      const { useProjectStore } = await import("../../stores/projectStore");
-      vi.mocked(useProjectStore).mockImplementation((selector) => {
-        const state = createMockProjectState({
-          lastError: {
-            code: "IO_ERROR",
-            message: "Failed to create project",
-          },
-        });
-        return selector(state);
-      });
+  it("Manual 标签页默认选中", () => {
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+    expect(screen.getByRole("tab", { name: "Manual" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+  });
 
+  it("AI Assisted 降级时显示回退消息且 Manual 标签页仍可用", async () => {
+    const user = userEvent.setup();
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    await user.click(screen.getByRole("tab", { name: "AI Assisted" }));
+    await user.type(
+      screen.getByTestId("create-project-ai-prompt"),
+      "帮我Create一部校园推理小说",
+    );
+    await user.click(screen.getByTestId("create-project-ai-generate"));
+
+    await waitFor(() => {
       expect(
-        screen.getByText(/Read\/write operation failed/),
+        screen.getByText(
+          "AI-assisted creation is temporarily unavailable. Please create manually or try again later",
+        ),
       ).toBeInTheDocument();
     });
 
-    it("ProjectCreateGo back错误时应显示可见错误并记录诊断上下文", async () => {
-      const { useProjectStore } = await import("../../stores/projectStore");
-      const createAndSetCurrent: ProjectStore["createAndSetCurrent"] = vi
-        .fn()
-        .mockResolvedValue({
-          ok: false,
-          error: {
-            code: "NAME_CONFLICT",
-            message: "Project already exists",
-          },
-        });
-      vi.mocked(useProjectStore).mockImplementation((selector) => {
-        const state = createMockProjectState({
-          createAndSetCurrent,
-          lastError: null,
-        });
-        return selector(state);
+    expect(screen.getByRole("tab", { name: "Manual" })).toBeInTheDocument();
+  });
+});
+
+// ===========================================================================
+// 错误状态 — Store 错误与 IPC 错误展示
+// ===========================================================================
+describe("错误状态", () => {
+  it("Store lastError 存在时显示人类可读错误消息", async () => {
+    const { useProjectStore } = await import("../../stores/projectStore");
+    vi.mocked(useProjectStore).mockImplementation((selector) => {
+      const state = createMockProjectState({
+        lastError: {
+          code: "IO_ERROR",
+          message: "Failed to create project",
+        },
       });
-
-      const consoleErrorSpy = vi
-        .spyOn(console, "error")
-        .mockImplementation(() => undefined);
-      const user = userEvent.setup();
-
-      try {
-        render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-        await user.type(
-          screen.getByTestId("create-project-name"),
-          "Duplicate Project",
-        );
-        await user.click(screen.getByTestId("create-project-submit"));
-
-        await waitFor(() => {
-          expect(
-            screen.getByText(/Something unexpected happened/),
-          ).toBeInTheDocument();
-        });
-
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
-          "[CreateProjectDialog] createProject failed:",
-          expect.objectContaining({
-            operation: "createAndSetCurrent",
-            code: "NAME_CONFLICT",
-          }),
-        );
-      } finally {
-        consoleErrorSpy.mockRestore();
-      }
+      return selector(state);
     });
 
-    it("ProjectCreate抛异常时应展示错误并输出诊断日志", async () => {
-      const { useProjectStore } = await import("../../stores/projectStore");
-      const createAndSetCurrent: ProjectStore["createAndSetCurrent"] = vi
-        .fn()
-        .mockRejectedValue(
-          Object.assign(new Error("Disk full"), { code: "IO_ERROR" }),
-        );
-      vi.mocked(useProjectStore).mockImplementation((selector) => {
-        const state = createMockProjectState({
-          createAndSetCurrent,
-          lastError: null,
-        });
-        return selector(state);
-      });
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
-      const consoleErrorSpy = vi
-        .spyOn(console, "error")
-        .mockImplementation(() => undefined);
-      const user = userEvent.setup();
-
-      try {
-        render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-        await user.type(
-          screen.getByTestId("create-project-name"),
-          "Disk Full Project",
-        );
-        await user.click(screen.getByTestId("create-project-submit"));
-
-        await waitFor(() => {
-          expect(
-            screen.getByText(/Read\/write operation failed/),
-          ).toBeInTheDocument();
-        });
-
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
-          "[CreateProjectDialog] createProject failed:",
-          expect.objectContaining({
-            operation: "createAndSetCurrent",
-            code: "IO_ERROR",
-          }),
-        );
-      } finally {
-        consoleErrorSpy.mockRestore();
-      }
-    });
+    expect(
+      screen.getByText(/Read\/write operation failed/),
+    ).toBeInTheDocument();
   });
 
-  // ===========================================================================
-  // 提交中状态测试
-  // ===========================================================================
-  describe("提交中状态", () => {
-    it("提交时 Create 按钮应显示 loading", async () => {
-      const { useProjectStore } = await import("../../stores/projectStore");
-      const createAndSetCurrent = vi.fn(
-        () =>
-          new Promise<{
-            ok: true;
-            data: { projectId: string; rootPath: string };
-          }>(() => {}),
-      ); // Never resolves
-      vi.mocked(useProjectStore).mockImplementation((selector) => {
-        const state = createMockProjectState({ createAndSetCurrent });
-        return selector(state);
+  it("IPC 返回 ok:false 时显示错误并记录诊断日志", async () => {
+    const { useProjectStore } = await import("../../stores/projectStore");
+    const createAndSetCurrent: ProjectStore["createAndSetCurrent"] = vi
+      .fn()
+      .mockResolvedValue({
+        ok: false,
+        error: {
+          code: "NAME_CONFLICT",
+          message: "Project already exists",
+        },
       });
+    vi.mocked(useProjectStore).mockImplementation((selector) => {
+      const state = createMockProjectState({
+        createAndSetCurrent,
+        lastError: null,
+      });
+      return selector(state);
+    });
 
-      const user = userEvent.setup();
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+    const user = userEvent.setup();
+
+    try {
       render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
 
       await user.type(
         screen.getByTestId("create-project-name"),
-        "Test Project",
+        "Duplicate Project",
       );
       await user.click(screen.getByTestId("create-project-submit"));
 
       await waitFor(() => {
-        expect(screen.getByText("Creating…")).toBeInTheDocument();
-      });
-    });
-  });
-
-  // ===========================================================================
-  // 清理测试
-  // ===========================================================================
-  describe("清理", () => {
-    it("Close时应Clear错误", async () => {
-      const { useProjectStore } = await import("../../stores/projectStore");
-      const clearError = vi.fn();
-      vi.mocked(useProjectStore).mockImplementation((selector) => {
-        const state = createMockProjectState({ clearError });
-        return selector(state);
-      });
-
-      const { rerender } = render(
-        <CreateProjectDialog open={true} onOpenChange={vi.fn()} />,
-      );
-      rerender(<CreateProjectDialog open={false} onOpenChange={vi.fn()} />);
-
-      expect(clearError).toHaveBeenCalled();
-    });
-  });
-
-  // ===========================================================================
-  // PM1-S3 AI Assisted降级测试
-  // ===========================================================================
-  describe("AI Assisted降级", () => {
-    it("should show fallback message and keep manual mode available", async () => {
-      const user = userEvent.setup();
-      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
-
-      await user.click(screen.getByRole("tab", { name: "AI Assisted" }));
-      await user.type(
-        screen.getByTestId("create-project-ai-prompt"),
-        "帮我Create一部校园推理小说",
-      );
-      await user.click(screen.getByTestId("create-project-ai-generate"));
-
-      await waitFor(() => {
         expect(
-          screen.getByText(
-            "AI-assisted creation is temporarily unavailable. Please create manually or try again later",
-          ),
+          screen.getByText(/Something unexpected happened/),
         ).toBeInTheDocument();
       });
 
-      expect(screen.getByRole("tab", { name: "Manual" })).toBeInTheDocument();
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "[CreateProjectDialog] createProject failed:",
+        expect.objectContaining({
+          operation: "createAndSetCurrent",
+          code: "NAME_CONFLICT",
+        }),
+      );
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
+  });
+
+  it("IPC 抛异常时显示错误并记录诊断日志", async () => {
+    const { useProjectStore } = await import("../../stores/projectStore");
+    const createAndSetCurrent: ProjectStore["createAndSetCurrent"] = vi
+      .fn()
+      .mockRejectedValue(
+        Object.assign(new Error("Disk full"), { code: "IO_ERROR" }),
+      );
+    vi.mocked(useProjectStore).mockImplementation((selector) => {
+      const state = createMockProjectState({
+        createAndSetCurrent,
+        lastError: null,
+      });
+      return selector(state);
     });
+
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+    const user = userEvent.setup();
+
+    try {
+      render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+      await user.type(
+        screen.getByTestId("create-project-name"),
+        "Disk Full Project",
+      );
+      await user.click(screen.getByTestId("create-project-submit"));
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(/Read\/write operation failed/),
+        ).toBeInTheDocument();
+      });
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "[CreateProjectDialog] createProject failed:",
+        expect.objectContaining({
+          operation: "createAndSetCurrent",
+          code: "IO_ERROR",
+        }),
+      );
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
+  });
+});
+
+// ===========================================================================
+// 状态 — 提交中与清理
+// ===========================================================================
+describe("状态", () => {
+  it("提交过程中 Create 按钮显示 Creating…", async () => {
+    const { useProjectStore } = await import("../../stores/projectStore");
+    const createAndSetCurrent = vi.fn(
+      () =>
+        new Promise<{
+          ok: true;
+          data: { projectId: string; rootPath: string };
+        }>(() => {}),
+    );
+    vi.mocked(useProjectStore).mockImplementation((selector) => {
+      const state = createMockProjectState({ createAndSetCurrent });
+      return selector(state);
+    });
+
+    const user = userEvent.setup();
+    render(<CreateProjectDialog open={true} onOpenChange={vi.fn()} />);
+
+    await user.type(screen.getByTestId("create-project-name"), "Test Project");
+    await user.click(screen.getByTestId("create-project-submit"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Creating…")).toBeInTheDocument();
+    });
+  });
+
+  it("关闭对话框时清除 Store 错误", async () => {
+    const { useProjectStore } = await import("../../stores/projectStore");
+    const clearError = vi.fn();
+    vi.mocked(useProjectStore).mockImplementation((selector) => {
+      const state = createMockProjectState({ clearError });
+      return selector(state);
+    });
+
+    const { rerender } = render(
+      <CreateProjectDialog open={true} onOpenChange={vi.fn()} />,
+    );
+    rerender(<CreateProjectDialog open={false} onOpenChange={vi.fn()} />);
+
+    expect(clearError).toHaveBeenCalled();
   });
 });

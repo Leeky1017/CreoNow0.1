@@ -1,10 +1,21 @@
 # Tasks: V1-15 AI Overlay 组件视觉统一与解耦
 
-- **GitHub Issue**: 待创建
-- **分支**: `task/<N>-ai-overlay-components`
+- **GitHub Issue**: #1197（v1-14 / v1-15 共享交付）
+- **分支**: `task/1197-v1-14-v1-15-tdd-redo`
+- **PR**: #1198
+- **状态**: ✅ 实现完成；当前处于独立审计与收口阶段
 - **Delta Spec**: `openspec/changes/v1-15-ai-overlay-components/specs/`
 
 ---
+
+## 当前执行状态（2026-03-21）
+
+| 阶段                 | 状态 | 说明                                                                                                                          |
+| -------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Phase 0 准备         | ✅   | AiDialogs 目标文件、依赖与测试基线已梳理                                                                                      |
+| Phase 1 Red          | ✅   | `AiDiffModal.test.tsx`、`AiErrorCard.test.tsx`、`SystemDialog.test.tsx`、`AiInlineConfirm.test.tsx` 已覆盖重构后的公开行为    |
+| Phase 2 Green        | ✅   | 四个 overlay 已完成拆分与 token 对齐                                                                                          |
+| Phase 3 Verification | 🟡   | `pnpm typecheck`、`pnpm lint`、`pnpm -C apps/desktop storybook:build`、Vitest 已执行；最终用户路径走查保留给合并前 spot-check |
 
 ## 验收标准
 

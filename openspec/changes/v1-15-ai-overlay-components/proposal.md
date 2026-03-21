@@ -1,11 +1,22 @@
 # V1-15 AI Overlay 组件视觉统一与解耦
 
-- **GitHub Issue**: 待创建
+- **状态**: ✅ 已实现（随 PR #1198 进入合并审计）
+- **GitHub Issue**: #1197（v1-14 / v1-15 共享交付）
+- **分支**: `task/1197-v1-14-v1-15-tdd-redo`
 - **所属任务簇**: V1（视觉重塑）— Wave 5 全覆盖收口
 - **涉及模块**: components/features/AiDialogs（AiDiffModal / AiErrorCard / SystemDialog / AiInlineConfirm）
 - **前端验收**: 需要（Storybook Story + 视觉验收截图）
 
 ---
+
+## 当前实现结果（2026-03-21）
+
+| 区域            | 原始行数 | 当前结果                                                                                              | 备注                                  |
+| --------------- | -------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| AiDiffModal     | 893      | `AiDiffModal.tsx` 199 / `AiDiffContent.tsx` 190 / `AiDiffSummary.tsx` 146 / `useAiDiffActions.ts` 150 | 已压到壳层 + 内容/摘要/状态逻辑四段式 |
+| AiErrorCard     | 855      | `AiErrorCard.tsx` 177 / `AiErrorDetails.tsx` 161 / `AiErrorActions.tsx` 150                           | 错误展示与动作区域已拆开              |
+| SystemDialog    | 638      | `SystemDialog.tsx` 241 / `SystemDialogContent.tsx` 144                                                | 已达到原计划主文件 ≤250 行目标        |
+| AiInlineConfirm | 398      | `AiInlineConfirm.tsx` 164 / `AiInlinePreview.tsx` 138                                                 | 已达到原计划主文件 ≤200 行目标        |
 
 ## Why：为什么必须做
 

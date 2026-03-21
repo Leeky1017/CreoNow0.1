@@ -1,11 +1,25 @@
 # V1-14 对话框与入口页视觉补完
 
-- **GitHub Issue**: 待创建
+- **状态**: ✅ 已实现（随 PR #1198 进入合并审计）
+- **GitHub Issue**: #1197（v1-14 / v1-15 共享交付）
+- **分支**: `task/1197-v1-14-v1-15-tdd-redo`
 - **所属任务簇**: V1（视觉重塑）— Wave 5 全覆盖收口
 - **涉及模块**: export、projects、onboarding、settings-dialog（SettingsGeneral）
 - **前端验收**: 需要（Storybook Story + 视觉验收截图）
 
 ---
+
+## 当前实现结果（2026-03-21）
+
+| 区域                 | 原始行数 | 当前结果                                                                                                            | 备注                                          |
+| -------------------- | -------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
+| ExportDialog         | 993      | `ExportDialog.tsx` 178 / `ExportFormatTab.tsx` 340 / `ExportPreview.tsx` 195 / `useExportConfig.ts` 341             | 主壳已压到 200 行内，配置与状态分离           |
+| CreateProjectDialog  | 732      | `CreateProjectDialog.tsx` 139 / `ProjectFormContent.tsx` 300 / `useCreateProject.ts` 216 / `AiAssistSection.tsx` 80 | 从单体向导改为壳层 + 表单内容 + 状态逻辑分层  |
+| CreateTemplateDialog | 381      | `CreateTemplateDialog.tsx` 270 / `TemplateMetadataForm.tsx` 92                                                      | 已拆出元数据表单，主文件仍高于最初 250 行目标 |
+| OnboardingPage       | 369      | `OnboardingPage.tsx` 142 / `OnboardingSteps.tsx` 196                                                                | 页面框架与步骤内容已拆分                      |
+| SettingsGeneral      | 330      | `SettingsGeneral.tsx` 154 / `SettingsGeneralSections.tsx` 191                                                       | General 页已收口为壳层 + section 组件         |
+
+> 注：上表记录的是当前分支的真实落地结果；若与最初 proposal 的理想目标不同，以“当前实现结果”作为审计口径。
 
 ## Why：为什么必须做
 
