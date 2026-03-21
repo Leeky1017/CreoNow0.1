@@ -224,10 +224,10 @@
 
 ---
 
-## R6 级联刷新记录（2026-03-21）
+## R6 级联刷新记录（2026-03-22）
 
-**v1-12 已合并（PR #1213）。v1-13 现已解除阻断，可启动。**
+**v1-12 已于 2026-03-22 合并（PR #1213）。v1-13 现已解除阻断，可启动。**
 
-R6 基线重采集结果：eslint-disable 总数从 229 降至 59（-74%），其中 27 处为合理的 Primitive 包装层 disable。v1-13 实际审计范围缩窄为 32 处 non-primitive disable。AC-1 目标调整为排除 Primitive 层后 ≤ 20。
+按 `apps/desktop/renderer/src/features` 生产文件口径重采样：feature-level `eslint-disable` 当前为 25 处，其中 2 处 `no-native-html-element` 为合理保留（hidden input / autosize textarea）。实际行动面约 23 处，已适合进入逐条审计。
 
-详细基线数据和 AC 调整见 `proposal.md` R6 级联刷新记录。
+详细基线数据、规则分布和 AC 调整见 `proposal.md` 的 R6 级联刷新记录。
