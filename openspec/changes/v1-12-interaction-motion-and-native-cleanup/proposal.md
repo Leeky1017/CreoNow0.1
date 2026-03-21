@@ -411,3 +411,124 @@ Phase 3 完成后对 v1-12 scope 的影响：
 4. **AppShell 解耦无变化**：1,267 行未动，Part C 工作量不变。
 
 5. **总体 scope 评估**：v1-12 scope 因 FileTree 回补缩减而略微缩小，但 Part A/B/C/D 四个核心部分均不受影响。v1-12 仍为 V1 收口阶段的关键 change。
+
+---
+
+## R5 Cascade Refresh（级联刷新）
+
+> 「善战者，求之于势，不责于人。」——《孙子兵法·势篇》
+> Phase 4 三项复核全部 PASS，上游势稳如磐，v1-12 可专注自身四部曲。
+
+**触发**：R5 P4 复核（v1-11 / v1-10 / v1-16 全部 PASS）
+**日期**：2026-03-22
+
+### 上游复核结论
+
+| 上游 Change                  | R5 结论   | 关键数据                                                                                       |
+| ---------------------------- | --------- | ---------------------------------------------------------------------------------------------- |
+| v1-11（Empty/Loading/Error） | ✅ PASS   | EmptyState 241 行, LoadingState 337 行, ErrorState 537 行; 64 tests 全绿; 16 feature 集成, 0 composites 残留 |
+| v1-10（Side Panels）         | ✅ PASS   | 169 tests 全绿; PanelHeader 5/5 统一; OutlinePanel 326 行（⚠️+9%，<10%）; CharacterDetailDialog 321 行（⚠️+7%）; eslint-disable 30 |
+| v1-16（Quality/RightPanel）  | ✅ PASS   | QualityGatesPanel 184 行, QualityPanel 238 行, InfoPanel 266 行; Quality 32 tests + Diff 59 tests 全绿; pixel 残留 42 处; DiffView 7 files 无变化 |
+
+### v1-12 当前基线（R5 实测）
+
+**Part A: 动效相关**
+
+| 度量                                  | R4 基线 | R5 实际 | Delta     | 采集命令                                                                                                                       |
+| ------------------------------------- | ------- | ------- | --------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `transition-colors`（features/ prod） | 72      | **72**  | 0         | `grep -rn 'transition-colors' .../features/ --include='*.tsx' \| grep -v '.test.\|.stories.' \| wc -l`                        |
+| `duration-*`（features/ prod）        | 30      | **40**  | **+10** ↑ | `grep -rn 'duration-' .../features/ --include='*.tsx' \| grep -v '.test.\|.stories.' \| wc -l`                                |
+| scroll shadow / mask-image            | 2       | **2**   | 0         | `grep -rn 'scroll-shadow\|mask-image\|scrollShadow' .../renderer/src/ --include='*.tsx' --include='*.css' \| wc -l`           |
+| CSS 动效工具类（main.css 定义）       | 0       | **0**   | 0         | `grep -n 'transition-default\|transition-slow\|scroll-shadow' .../styles/main.css`                                            |
+
+> **分析**：`duration-*` prod 使用从 30→40（+10），新增来源为 v1-10 Side Panels（character/quality-gates 等模块）在重构时主动使用 Design Token `var(--duration-fast)` / `var(--duration-slow)` 替代硬编码值。这是积极信号——上游模块已开始自发对齐设计稿标准。但 `.transition-default` 等统一工具类仍未定义，Part A 核心价值不变。
+
+**Part B: 原生 HTML 收口**
+
+| 度量                                             | R4 基线 | R5 实际 | Delta | 采集命令                                                                                                                      |
+| ------------------------------------------------ | ------- | ------- | ----- | ----------------------------------------------------------------------------------------------------------------------------- |
+| 原生 `<button>`（features/ prod）                | 69      | **69**  | 0     | `grep -rn '<button' .../features/ --include='*.tsx' \| grep -v '.test.\|.stories.\|.guard.' \| wc -l`                        |
+| 原生 `<button>`（components/features/ prod）     | 33      | **33**  | 0     | 同上替换路径                                                                                                                  |
+| 原生 `<button>` 合计（prod）                     | 102     | **102** | 0     | —                                                                                                                             |
+| 原生 `<input>`（features/ prod）                 | 12      | **12**  | 0     | `grep -rn '<input' .../features/ --include='*.tsx' \| grep -v '.test.\|.stories.\|.guard.' \| wc -l`                         |
+| 原生 `<select>`（features/ prod）                | 6       | **6**   | 0     | 同上替换 `<select`                                                                                                            |
+| 原生 `<textarea>`（features/ prod）              | 5       | **5**   | 0     | 同上替换 `<textarea`                                                                                                          |
+| `no-native-html-element`（features/）            | 121     | **121** | 0     | `grep -rn 'no-native-html-element' .../features/ --include='*.tsx' \| grep -v '.test.\|.stories.\|.guard.' \| wc -l`         |
+| `no-native-html-element`（components/features/） | 38      | **38**  | 0     | 同上替换路径                                                                                                                  |
+| `no-native-html-element` 合计                    | 159     | **159** | 0     | —                                                                                                                             |
+| `eslint-disable` 总数（renderer/src/）           | 229     | **229** | 0     | `grep -r 'eslint-disable' .../renderer/src/ \| wc -l`                                                                        |
+| `eslint-disable`（features/ prod）               | 142     | **142** | 0     | `grep -rn 'eslint-disable' .../features/ --include='*.tsx' \| grep -v '.test.\|.stories.\|.guard.' \| wc -l`                 |
+| Button `size="icon"`（features/）                | 13      | **13**  | 0     | `grep -rn 'size="icon"' .../features/ --include='*.tsx' \| grep -v '.test.\|.stories.\|.guard.' \| wc -l`                    |
+| v1-02 变体使用（renderer/）                      | 66      | **66**  | 0     | `grep -rn 'variant=.\(pill\|bento\|compact\)' .../renderer/src/ --include='*.tsx' \| wc -l`                                  |
+
+> **分析**：原生 HTML 计数全部与 R4 持平。Phase 4 的 v1-11/v1-10/v1-16 专注于状态组件、面板统一和右面板收口，均未触及原生 HTML 替换——Part B 工作量不变。
+
+**Part C: AppShell 解耦（AC-19）**
+
+| 度量               | R4 基线 | R5 实际   | Delta  | 采集命令                                                             |
+| ------------------ | ------- | --------- | ------ | -------------------------------------------------------------------- |
+| AppShell.tsx 行数  | 1,267   | **1,267** | 0      | `wc -l .../components/layout/AppShell.tsx`                           |
+| layout/ 目录总行数 | 9,353   | **9,353** | 0      | `find .../layout/ -name '*.tsx' -o -name '*.ts' \| xargs wc -l`     |
+| layout/ 文件数     | 40      | **46**    | **+6** | 同上 `\| wc -l`                                                      |
+
+> **分析**：AppShell.tsx 本体未变。layout/ 目录新增 6 个文件（总行数不变），为 v1-10/v1-11 期间新增的测试文件。文件增多但总行数持平，说明其他文件可能因重构而微调——拆分后需确认无循环依赖。
+
+**Part D: 回补组件行数**
+
+| 组件                   | R4 基线 | R5 实际 | Delta | 目标 | 采集命令                                       |
+| ---------------------- | ------- | ------- | ----- | ---- | ---------------------------------------------- |
+| SkillManagerDialog.tsx | 624     | **624** | 0     | 拆分 | `wc -l .../features/ai/SkillManagerDialog.tsx` |
+| OutlinePanel.tsx       | 326     | **326** | 0     | ≤300 | `wc -l .../features/outline/OutlinePanel.tsx`  |
+| DiffView.tsx           | 345     | **345** | 0     | 评估 | `wc -l .../features/diff/DiffView.tsx`         |
+| DiffHeader.tsx         | 260     | **260** | 0     | —    | `wc -l .../features/diff/DiffHeader.tsx`       |
+| CharacterDetailDialog  | —       | **321** | —     | ≤300 | `wc -l .../features/character/CharacterDetailDialog.tsx` |
+
+> **分析**：所有回补组件行数与 R4 持平。v1-10 R5 复核确认 OutlinePanel 326 行（超标 +9%）、CharacterDetailDialog 321 行（超标 +7%）均在 <10% 容忍区间，不阻塞合并但回补任务维持。
+
+**辅助指标**
+
+| 度量                     | R4 基线 | R5 实际 | Delta | 采集命令                                                                         |
+| ------------------------ | ------- | ------- | ----- | -------------------------------------------------------------------------------- |
+| Storybook `play:` 函数数 | 256     | **256** | 0     | `grep -rn 'play:' .../renderer/src/ --include='*.stories.tsx' \| wc -l`         |
+
+### 与 R4 基线对比
+
+| 类别                      | R4 → R5 变化                            | 影响评估                                  |
+| ------------------------- | --------------------------------------- | ----------------------------------------- |
+| `duration-*` features/    | 30 → **40**（+10，↑33%）               | ✅ 积极：上游模块主动采纳 Design Token    |
+| layout/ 文件数            | 40 → **46**（+6）                       | ⚠️ 中性：新增测试文件，总行数不变         |
+| 原生 HTML 全部指标        | 全部持平（button 102/input 12/select 6/textarea 5/eslint-disable 159） | — 无变化                                  |
+| AppShell.tsx              | 1,267 → 1,267                          | — 无变化                                  |
+| 回补组件（4 项）          | 全部持平                                | — 无变化                                  |
+| CSS 动效工具类            | 0 → 0                                  | — 待 Part A 定义                          |
+| scroll shadow             | 2 → 2                                  | — 待 Part A 铺设                          |
+
+### 上游依赖状态（R5 更新）
+
+| 上游 Change                 | 状态    | R5 说明                                                                                     |
+| --------------------------- | ------- | ------------------------------------------------------------------------------------------- |
+| v1-01 Design Token          | ✅ PASS | `--duration-*` / `--ease-*` / `--color-bg-*` token 已就绪                                  |
+| v1-02 Primitive Evolution   | ✅ PASS | Button/Select/Radio/Badge 变体完备，66 处使用                                               |
+| v1-06 AI Panel Overhaul     | ✅ PASS | SkillManagerDialog 624 行遗留待回补                                                         |
+| v1-07 Settings Polish       | ✅ PASS | settings-dialog 仅剩 2 处原生 button                                                        |
+| v1-08 FileTree Precision    | ✅ PASS | 7/9 AC 已满足，回补 0~1 项                                                                  |
+| v1-09 CommandPalette+Search | ✅ PASS | 全部核心 AC 已满足                                                                           |
+| v1-10 Side Panels           | ✅ PASS | **R5 复核：169 tests 全绿，PanelHeader 5/5 统一，OutlinePanel 326（⚠️<10%），零回归**      |
+| v1-11 Empty/Loading/Error   | ✅ PASS | **R5 新增：64 tests 全绿，16 feature 集成，0 composites 残留，零回归**                      |
+| v1-16 Quality/RightPanel    | ✅ PASS | **R5 复核：Quality 32 + Diff 59 tests 全绿，pixel 残留 42 处，DiffView 无变化，零回归**    |
+
+### 对 v1-12 scope 的影响
+
+Phase 4 三项复核全部 PASS 且零回归，对 v1-12 scope 的影响如下：
+
+1. **v1-11 Empty/Loading/Error States**：与 v1-12 无直接交叉。v1-11 完成了 `composites/` → `patterns/` 迁移，0 composites 残留——v1-12 无需处理遗留的 composites 引用。零影响。
+
+2. **v1-10 Side Panels**：OutlinePanel 326 行（超标 +9%）回补任务维持，但 R5 确认其在 <10% 容忍区间，优先级不升不降。新增的 10 处 `duration-*` Design Token 引用来自 v1-10 重构的面板组件（character/quality-gates 模块），表明上游已开始自发对齐设计稿标准——Part A 统一工具类的铺设将进一步巩固此趋势。
+
+3. **v1-16 Quality/RightPanel**：DiffView 345 行、DiffHeader 260 行维持不变，diff 模块 9 处原生 `<button>` 回补与 Part B 合并处理。pixel 残留 42 处属 v1-16 自身范围，不回流至 v1-12。
+
+4. **scope 净增量**：零。无新增任务，无优先级调整。
+
+### 结论
+
+R5 级联刷新确认：**v1-12 scope 与 R4 完全一致，无变化**。Phase 4 上游三项复核全部 PASS 且零回归，未产生任何新的回流或回补需求。唯一的正向变化是 `duration-*` 使用从 30→40（+10），上游模块已开始自发采纳 Design Token——这为 Part A 统一动效铺设提供了更好的起点。Part A/B/C/D 四个核心部分、回补清单（SkillManagerDialog/OutlinePanel/DiffView）、AC 目标均维持 R4 定义不变。v1-12 已准备就绪，可随时启动。

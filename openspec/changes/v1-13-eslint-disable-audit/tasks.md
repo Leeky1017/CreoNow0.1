@@ -200,3 +200,24 @@
 - [ ] 运行 `pnpm lint` lint 无新增违规
 - [ ] 运行 `pnpm -C apps/desktop storybook:build` Storybook 可构建
 - [ ] 确认 TRACK 判定的 Issue 均已创建（列出 Issue 链接）
+
+---
+
+## R5 Cascade Refresh（级联刷新）
+
+**触发**：R5 P4 复核（v1-11 / v1-10 / v1-16 全部 PASS）
+**日期**：2026-03-22
+
+### 受影响的 Task 条目
+
+| Task | 影响 | 说明 |
+| ---- | ---- | ---- |
+| Phase 0 基线采集 | 基线数据更新 | 当前 eslint-disable 总数 229（原 proposal 记录 176）。v1-12 未启动，基线自然增长。Phase 0 的基线采集须在 v1-12 合并后重新执行 |
+| Task 1.1 `no-native-html-element` | 预估审计量上调 | 当前 186 处（原 ~153），v1-12 清理后预计仍剩 ~20-30，审计工作量不变 |
+| Task 1.2 `no-hardcoded-dimension` | 无变化 | 当前 22 处（原 ~25），略有下降 |
+| Task 1.3 其他规则 | 新增规则类型 | 新增 `no-raw-error-code-in-ui`（5 处）及 `no-console`（5 处），需纳入审计范围 |
+| Phase 1-3 所有 Task | 未勾选（正确） | v1-13 全部 AC 待实现，符合「v1-12 完成后才启动」的执行顺序 |
+
+### 结论
+
+上游三项 R5 复核全部 PASS，无阻断项。v1-13 所有 task 保持待执行状态——符合预期（v1-12 为硬依赖）。基线增长（176→229）不影响 scope 和 AC；待 v1-12 合并后重新采集基线即可启动。
