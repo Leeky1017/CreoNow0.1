@@ -5,7 +5,11 @@ import { PanelOrchestrator } from "./PanelOrchestrator";
 import { StatusBar } from "./StatusBar";
 import { useAppShellLayout } from "./useAppShellLayout";
 import { useAppShellKeyboard } from "./useAppShellKeyboard";
-import { AppShellOverlays, resolveDialogTitle, renderDialogContent } from "./AppShellOverlays";
+import {
+  AppShellOverlays,
+  resolveDialogTitle,
+  renderDialogContent,
+} from "./AppShellOverlays";
 import { AppShellMainArea } from "./AppShellMainArea";
 import { AppShellLeftPanel } from "./AppShellLeftPanel";
 import { AppShellRightPanel } from "./AppShellRightPanel";

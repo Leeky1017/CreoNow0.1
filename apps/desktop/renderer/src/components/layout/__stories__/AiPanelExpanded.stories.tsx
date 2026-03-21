@@ -24,7 +24,10 @@ import {
   createSearchStore,
 } from "../../../stores/searchStore";
 import { KgStoreProvider, createKgStore } from "../../../stores/kgStore";
-import { ThemeStoreProvider, createThemeStore } from "../../../stores/themeStore";
+import {
+  ThemeStoreProvider,
+  createThemeStore,
+} from "../../../stores/themeStore";
 
 const mockPreferences = {
   get: <T,>(key: string): T | null => {
@@ -40,9 +43,27 @@ const mockPreferences = {
 };
 
 const mockSkills = [
-  { id: "builtin-polish", name: "Polish", scope: "builtin", enabled: true, valid: true },
-  { id: "builtin-expand", name: "Expand", scope: "builtin", enabled: true, valid: true },
-  { id: "builtin-simplify", name: "Simplify", scope: "builtin", enabled: true, valid: true },
+  {
+    id: "builtin-polish",
+    name: "Polish",
+    scope: "builtin",
+    enabled: true,
+    valid: true,
+  },
+  {
+    id: "builtin-expand",
+    name: "Expand",
+    scope: "builtin",
+    enabled: true,
+    valid: true,
+  },
+  {
+    id: "builtin-simplify",
+    name: "Simplify",
+    scope: "builtin",
+    enabled: true,
+    valid: true,
+  },
 ];
 
 const mockIpc = {

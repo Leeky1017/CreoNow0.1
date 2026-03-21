@@ -339,13 +339,15 @@ textarea:focus-visible {
 /* === V1-12: Global Interaction Motion Utilities === */
 
 .transition-default {
-  transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+  transition-property:
+    color, background-color, border-color, opacity, box-shadow, transform;
   transition-duration: var(--duration-fast);
   transition-timing-function: var(--ease-default);
 }
 
 .transition-slow {
-  transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+  transition-property:
+    color, background-color, border-color, opacity, box-shadow, transform;
   transition-duration: var(--duration-normal);
   transition-timing-function: var(--ease-default);
 }

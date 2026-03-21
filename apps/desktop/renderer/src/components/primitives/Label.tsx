@@ -1,7 +1,6 @@
 import React from "react";
 
-export interface LabelProps
-  extends React.LabelHTMLAttributes<HTMLLabelElement> {
+export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   children: React.ReactNode;
 }
 
@@ -21,10 +20,7 @@ const baseStyles = [
  * <Label htmlFor="name">Name</Label>
  * ```
  */
-export function Label({
-  className = "",
-  ...props
-}: LabelProps): JSX.Element {
+export function Label({ className = "", ...props }: LabelProps): JSX.Element {
   const classes = [baseStyles, className].filter(Boolean).join(" ");
   // eslint-disable-next-line creonow/no-native-html-element -- Primitive: Label wraps native <label>
   return <label className={classes} {...props} />;

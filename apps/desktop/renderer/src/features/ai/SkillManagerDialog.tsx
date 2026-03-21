@@ -189,8 +189,14 @@ function SkillFormFields(props: {
               }))
             }
             options={[
-              { value: "selection", label: t("ai.skillManager.inputTypeSelection") },
-              { value: "document", label: t("ai.skillManager.inputTypeDocument") },
+              {
+                value: "selection",
+                label: t("ai.skillManager.inputTypeSelection"),
+              },
+              {
+                value: "document",
+                label: t("ai.skillManager.inputTypeDocument"),
+              },
             ]}
             className="mt-1 w-full text-sm"
             data-testid="skill-form-input-type"

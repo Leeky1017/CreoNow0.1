@@ -1,24 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  useLayoutStore,
-} from "../../stores/layoutStore";
-import {
-  useProjectStore,
-} from "../../stores/projectStore";
+import { useLayoutStore } from "../../stores/layoutStore";
+import { useProjectStore } from "../../stores/projectStore";
 import { useFileStore } from "../../stores/fileStore";
 import { useEditorStore } from "../../stores/editorStore";
 import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore";
-import {
-  usePanelVisibilityActions,
-} from "./PanelOrchestrator";
-import {
-  useVersionCompare,
-} from "../../features/version-history/useVersionCompare";
-import {
-  useConfirmDialog,
-} from "../../hooks/useConfirmDialog";
+import { usePanelVisibilityActions } from "./PanelOrchestrator";
+import { useVersionCompare } from "../../features/version-history/useVersionCompare";
+import { useConfirmDialog } from "../../hooks/useConfirmDialog";
 import type { SettingsTab } from "../../features/settings-dialog/SettingsDialog";
 import type {
   CommandPaletteLayoutActions,
@@ -135,7 +125,12 @@ export function useAppShellLayout() {
       });
       openVersionHistoryPanel();
     },
-    [currentProjectId, openEditorDocument, openVersionHistoryPanel, setCurrentDocument],
+    [
+      currentProjectId,
+      openEditorDocument,
+      openVersionHistoryPanel,
+      setCurrentDocument,
+    ],
   );
 
   const handleSwitchProject = React.useCallback(
@@ -160,7 +155,13 @@ export function useAppShellLayout() {
       onToggleZenMode: () => setZenMode(!zenMode),
       onOpenVersionHistory: openVersionHistoryPanel,
     }),
-    [openVersionHistoryPanel, setZenMode, toggleAiPanel, toggleSidebarVisibility, zenMode],
+    [
+      openVersionHistoryPanel,
+      setZenMode,
+      toggleAiPanel,
+      toggleSidebarVisibility,
+      zenMode,
+    ],
   );
 
   const dialogActionCallbacks = React.useMemo<CommandPaletteDialogActions>(

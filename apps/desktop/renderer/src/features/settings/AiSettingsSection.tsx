@@ -163,16 +163,22 @@ export function AiSettingsSection(): JSX.Element {
           value={providerMode}
           onValueChange={(val) =>
             setProviderMode(
-              val as
-                | "openai-compatible"
-                | "openai-byok"
-                | "anthropic-byok",
+              val as "openai-compatible" | "openai-byok" | "anthropic-byok",
             )
           }
           options={[
-            { value: "openai-compatible", label: t("settings.aiSection.providerOpenAiProxy") },
-            { value: "openai-byok", label: t("settings.aiSection.providerOpenAiByok") },
-            { value: "anthropic-byok", label: t("settings.aiSection.providerAnthropicByok") },
+            {
+              value: "openai-compatible",
+              label: t("settings.aiSection.providerOpenAiProxy"),
+            },
+            {
+              value: "openai-byok",
+              label: t("settings.aiSection.providerOpenAiByok"),
+            },
+            {
+              value: "anthropic-byok",
+              label: t("settings.aiSection.providerAnthropicByok"),
+            },
           ]}
           fullWidth
         />

@@ -5,9 +5,7 @@ import { useEditorStore } from "../../stores/editorStore";
 import type { AiProposal } from "../../stores/aiStore";
 import type { ProjectInfo, ProjectListItem } from "../../stores/projectStore";
 import type { DiffHunkDecision } from "../../lib/diff/unifiedDiff";
-import type {
-  CompareState,
-} from "../../features/version-history/useVersionCompare";
+import type { CompareState } from "../../features/version-history/useVersionCompare";
 import type { UseConfirmDialogReturn } from "../../hooks/useConfirmDialog";
 import { RegionErrorBoundary } from "../patterns/RegionErrorBoundary";
 import { DashboardPage } from "../../features/dashboard";

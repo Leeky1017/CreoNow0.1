@@ -147,9 +147,7 @@ export function ModelPicker(props: ModelPickerProps): JSX.Element | null {
               data-testid="ai-model-groupby"
               className="h-8 text-[11px]"
               value={groupBy}
-              onValueChange={(val) =>
-                setGroupBy(val as "provider" | "none")
-              }
+              onValueChange={(val) => setGroupBy(val as "provider" | "none")}
               options={[
                 { value: "provider", label: t("ai.modelPicker.groupBy") },
                 { value: "none", label: t("ai.modelPicker.noGroup") },

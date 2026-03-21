@@ -18,9 +18,7 @@ type AppShellLeftPanelProps = {
 /**
  * AppShellLeftPanel – left sidebar region (file tree / panel switcher).
  */
-export function AppShellLeftPanel(
-  props: AppShellLeftPanelProps,
-): JSX.Element {
+export function AppShellLeftPanel(props: AppShellLeftPanelProps): JSX.Element {
   return (
     <RegionErrorBoundary region="sidebar">
       <Sidebar

@@ -24,7 +24,10 @@ import {
   createSearchStore,
 } from "../../../stores/searchStore";
 import { KgStoreProvider, createKgStore } from "../../../stores/kgStore";
-import { ThemeStoreProvider, createThemeStore } from "../../../stores/themeStore";
+import {
+  ThemeStoreProvider,
+  createThemeStore,
+} from "../../../stores/themeStore";
 
 const mockPreferences = {
   get: <T,>(): T | null => null,

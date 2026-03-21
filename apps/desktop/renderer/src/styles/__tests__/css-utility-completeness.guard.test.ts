@@ -15,17 +15,15 @@ describe("V1-12 AC-1: .transition-default utility class", () => {
   });
 
   it("uses var(--duration-fast) for transition-duration", () => {
-    const block = MAIN_CSS.match(
-      /\.transition-default\s*\{([^}]+)\}/s,
-    );
+    const block = MAIN_CSS.match(/\.transition-default\s*\{([^}]+)\}/s);
     expect(block).not.toBeNull();
-    expect(block![1]).toMatch(/transition-duration\s*:\s*var\(--duration-fast\)/);
+    expect(block![1]).toMatch(
+      /transition-duration\s*:\s*var\(--duration-fast\)/,
+    );
   });
 
   it("uses var(--ease-default) for transition-timing-function", () => {
-    const block = MAIN_CSS.match(
-      /\.transition-default\s*\{([^}]+)\}/s,
-    );
+    const block = MAIN_CSS.match(/\.transition-default\s*\{([^}]+)\}/s);
     expect(block).not.toBeNull();
     expect(block![1]).toMatch(
       /transition-timing-function\s*:\s*var\(--ease-default\)/,
@@ -39,9 +37,7 @@ describe("V1-12 AC-2: .transition-slow utility class", () => {
   });
 
   it("uses var(--duration-normal) for transition-duration", () => {
-    const block = MAIN_CSS.match(
-      /\.transition-slow\s*\{([^}]+)\}/s,
-    );
+    const block = MAIN_CSS.match(/\.transition-slow\s*\{([^}]+)\}/s);
     expect(block).not.toBeNull();
     expect(block![1]).toMatch(
       /transition-duration\s*:\s*var\(--duration-normal\)/,
@@ -55,9 +51,7 @@ describe("V1-12 AC-3: .scroll-shadow-y utility class", () => {
   });
 
   it("uses mask-image for scroll shadow effect", () => {
-    const block = MAIN_CSS.match(
-      /\.scroll-shadow-y\s*\{([^}]+)\}/s,
-    );
+    const block = MAIN_CSS.match(/\.scroll-shadow-y\s*\{([^}]+)\}/s);
     expect(block).not.toBeNull();
     expect(block![1]).toMatch(/mask-image\s*:/);
   });
