@@ -54,20 +54,20 @@ Features 层有 186 处 `<button>`（153）、`<input>`（14）、`<select>`（7
 
 ### 4. 证据来源
 
-| 数据点                          | 旧值（v1-02 前）                        | R1 实测值                                | 采集命令                                                                                    |
-| ------------------------------- | --------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------- |
-| `eslint-disable` 总数（renderer/src/）| 176 处                            | **229 处**                               | `grep -r 'eslint-disable' apps/desktop/renderer/src/ \| wc -l`                              |
-| 其中 `no-native-html-element`（features/）| ~153 处                          | **121 处**（↓21%）                        | `grep -r 'no-native-html-element' apps/desktop/renderer/src/features/ \| wc -l`             |
-| 原生 `<button>`（features/ 全部）| 80+ 处                                 | **153 处**（含 test/story/guard 84 处）   | `grep -rn '<button' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`          |
-| 原生 `<button>`（features/ 仅 prod）| —                                   | **69 处**                                | 同上排除 `.test.` / `.stories.` / `.guard.`                                                  |
-| 原生 `<input>`                  | 50+ 处                                  | **14 处**（↓72%，v1-02 重构效果）         | `grep -rn '<input' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`           |
-| 原生 `<select>`                 | 20+ 处                                  | **7 处**（↓65%，v1-02 Select 重构效果）   | `grep -rn '<select' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`          |
-| 原生 `<textarea>`               | 10+ 处                                 | **12 处**                                | `grep -rn '<textarea' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`        |
-| `Button size="icon"` 使用       | 0                                       | **13 处**（v1-02 新增 variant 已推广）    | `grep -rn 'size="icon"' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`      |
-| `transition-colors` 无 duration | 普遍                                    | **76 处** transition-colors，仅 44 处 duration | `grep -rn 'transition-colors\|duration-' ... --include='*.tsx' \| wc -l`                |
-| 设计稿全局过渡                  | `0.2–0.3s cubic-bezier(0.2, 0, 0.2, 1)` | 不变                                    | 35 个 HTML 设计稿                                                                            |
-| scroll shadow 实现              | 几乎为 0                                | **2 处**                                 | `grep -rn 'scroll-shadow\|mask-image' apps/desktop/renderer/src/ --include='*.tsx' --include='*.css' \| wc -l` |
-| AppShell.tsx 行数               | 1,260 行                                | **1,267 行**                             | `wc -l apps/desktop/renderer/src/components/layout/AppShell.tsx`                             |
+| 数据点                                     | 旧值（v1-02 前）                        | R1 实测值                                      | 采集命令                                                                                                       |
+| ------------------------------------------ | --------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `eslint-disable` 总数（renderer/src/）     | 176 处                                  | **229 处**                                     | `grep -r 'eslint-disable' apps/desktop/renderer/src/ \| wc -l`                                                 |
+| 其中 `no-native-html-element`（features/） | ~153 处                                 | **121 处**（↓21%）                             | `grep -r 'no-native-html-element' apps/desktop/renderer/src/features/ \| wc -l`                                |
+| 原生 `<button>`（features/ 全部）          | 80+ 处                                  | **153 处**（含 test/story/guard 84 处）        | `grep -rn '<button' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`                            |
+| 原生 `<button>`（features/ 仅 prod）       | —                                       | **69 处**                                      | 同上排除 `.test.` / `.stories.` / `.guard.`                                                                    |
+| 原生 `<input>`                             | 50+ 处                                  | **14 处**（↓72%，v1-02 重构效果）              | `grep -rn '<input' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`                             |
+| 原生 `<select>`                            | 20+ 处                                  | **7 处**（↓65%，v1-02 Select 重构效果）        | `grep -rn '<select' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`                            |
+| 原生 `<textarea>`                          | 10+ 处                                  | **12 处**                                      | `grep -rn '<textarea' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`                          |
+| `Button size="icon"` 使用                  | 0                                       | **13 处**（v1-02 新增 variant 已推广）         | `grep -rn 'size="icon"' apps/desktop/renderer/src/features/ --include='*.tsx' \| wc -l`                        |
+| `transition-colors` 无 duration            | 普遍                                    | **76 处** transition-colors，仅 44 处 duration | `grep -rn 'transition-colors\|duration-' ... --include='*.tsx' \| wc -l`                                       |
+| 设计稿全局过渡                             | `0.2–0.3s cubic-bezier(0.2, 0, 0.2, 1)` | 不变                                           | 35 个 HTML 设计稿                                                                                              |
+| scroll shadow 实现                         | 几乎为 0                                | **2 处**                                       | `grep -rn 'scroll-shadow\|mask-image' apps/desktop/renderer/src/ --include='*.tsx' --include='*.css' \| wc -l` |
+| AppShell.tsx 行数                          | 1,260 行                                | **1,267 行**                                   | `wc -l apps/desktop/renderer/src/components/layout/AppShell.tsx`                                               |
 
 ---
 

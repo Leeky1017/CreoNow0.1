@@ -9,23 +9,23 @@
 
 ## 验收标准
 
-| ID     | 标准                                                                                                   | 验证方式                                                        | 结果 | R1 复核 |
-| ------ | ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- | ---- | ------- |
-| AC-1   | `01-tokens.css` 定义 10-step 灰阶变量（`--gray-1` 至 `--gray-10`），暗色/亮色主题各一套               | `grep -c '\-\-gray-' design/system/01-tokens.css` ≥ 20          | ⬜   |         |
-| AC-2   | 灰阶使用 HSL 格式定义                                                                                  | `grep '\-\-gray-' design/system/01-tokens.css \| grep -c 'hsl'` ≥ 20 | ⬜   |         |
-| AC-3   | 语义 bg token（`--color-bg-base/surface/raised/hover/active/selected`）引用灰阶变量                    | `grep 'color-bg-.*var(--gray' design/system/01-tokens.css` ≥ 6  | ⬜   |         |
-| AC-4   | `--color-error-hover`、`--color-error-active` 在暗色/亮色主题均已定义                                   | `grep` 计数 = 4                                                 | ⬜   |         |
-| AC-5   | `--color-success-hover`、`--color-success-active` 在暗色/亮色主题均已定义                               | `grep` 计数 = 4                                                 | ⬜   |         |
-| AC-6   | `--color-warning-hover`、`--color-warning-active` 在暗色/亮色主题均已定义                               | `grep` 计数 = 4                                                 | ⬜   |         |
-| AC-7   | `--color-info-hover`、`--color-info-active` 在暗色/亮色主题均已定义                                     | `grep` 计数 = 4                                                 | ⬜   |         |
-| AC-8   | `--color-accent-active` 在暗色/亮色主题均已定义                                                         | `grep` 计数 = 2                                                 | ⬜   |         |
-| AC-9   | `--color-fg-subtle`（暗色主题）与 `--color-bg-base` 对比度 ≥ 4.5:1                                     | 对比度计算工具验证                                              | ⬜   |         |
-| AC-10  | 存在 `@media (prefers-contrast: more)` 块                                                              | `grep 'prefers-contrast'` ≥ 1                                   | ⬜   |         |
-| AC-11  | 高对比模式下所有 fg/bg 组合对比度 ≥ 7:1                                                                | 对比度计算工具验证                                              | ⬜   |         |
-| AC-12  | 现有 boundary test 全部通过（零回归）                                                                   | `pnpm -C apps/desktop vitest run`                               | ⬜   |         |
-| AC-13  | TypeScript 类型检查通过                                                                                 | `pnpm typecheck`                                                | ⬜   |         |
-| AC-14  | Storybook 可构建                                                                                        | `pnpm -C apps/desktop storybook:build`                          | ⬜   |         |
-| AC-15  | lint 无新增违规                                                                                         | `pnpm lint`                                                     | ⬜   |         |
+| ID    | 标准                                                                                    | 验证方式                                                             | 结果 | R1 复核 |
+| ----- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ---- | ------- |
+| AC-1  | `01-tokens.css` 定义 10-step 灰阶变量（`--gray-1` 至 `--gray-10`），暗色/亮色主题各一套 | `grep -c '\-\-gray-' design/system/01-tokens.css` ≥ 20               | ⬜   |         |
+| AC-2  | 灰阶使用 HSL 格式定义                                                                   | `grep '\-\-gray-' design/system/01-tokens.css \| grep -c 'hsl'` ≥ 20 | ⬜   |         |
+| AC-3  | 语义 bg token（`--color-bg-base/surface/raised/hover/active/selected`）引用灰阶变量     | `grep 'color-bg-.*var(--gray' design/system/01-tokens.css` ≥ 6       | ⬜   |         |
+| AC-4  | `--color-error-hover`、`--color-error-active` 在暗色/亮色主题均已定义                   | `grep` 计数 = 4                                                      | ⬜   |         |
+| AC-5  | `--color-success-hover`、`--color-success-active` 在暗色/亮色主题均已定义               | `grep` 计数 = 4                                                      | ⬜   |         |
+| AC-6  | `--color-warning-hover`、`--color-warning-active` 在暗色/亮色主题均已定义               | `grep` 计数 = 4                                                      | ⬜   |         |
+| AC-7  | `--color-info-hover`、`--color-info-active` 在暗色/亮色主题均已定义                     | `grep` 计数 = 4                                                      | ⬜   |         |
+| AC-8  | `--color-accent-active` 在暗色/亮色主题均已定义                                         | `grep` 计数 = 2                                                      | ⬜   |         |
+| AC-9  | `--color-fg-subtle`（暗色主题）与 `--color-bg-base` 对比度 ≥ 4.5:1                      | 对比度计算工具验证                                                   | ⬜   |         |
+| AC-10 | 存在 `@media (prefers-contrast: more)` 块                                               | `grep 'prefers-contrast'` ≥ 1                                        | ⬜   |         |
+| AC-11 | 高对比模式下所有 fg/bg 组合对比度 ≥ 7:1                                                 | 对比度计算工具验证                                                   | ⬜   |         |
+| AC-12 | 现有 boundary test 全部通过（零回归）                                                   | `pnpm -C apps/desktop vitest run`                                    | ⬜   |         |
+| AC-13 | TypeScript 类型检查通过                                                                 | `pnpm typecheck`                                                     | ⬜   |         |
+| AC-14 | Storybook 可构建                                                                        | `pnpm -C apps/desktop storybook:build`                               | ⬜   |         |
+| AC-15 | lint 无新增违规                                                                         | `pnpm lint`                                                          | ⬜   |         |
 
 ---
 

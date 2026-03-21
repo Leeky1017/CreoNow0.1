@@ -37,22 +37,22 @@ DashboardPage.tsx 约 929 行，是一个中型巨石组件。HeroCard、Project
 
 ### 4. 证据来源
 
-| 数据点                           | 原始值（proposal 初稿）                                 | 实测值（合并后）                                       | R1 复测值（2026-03-21）                                | 采集命令                                                                                    |
-| -------------------------------- | ------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| DashboardPage.tsx 行数           | 929 行                                                  | **268 行**（↓71%，目标 ≤300 ✅）                       | **268 行** ✅（无变化）                                | `wc -l apps/desktop/renderer/src/features/dashboard/DashboardPage.tsx`                      |
-| DashboardHero.tsx                | —（不存在）                                             | **85 行**（新提取）                                    | **85 行** ✅                                           | `wc -l apps/desktop/renderer/src/features/dashboard/DashboardHero.tsx`                      |
-| DashboardProjectGrid.tsx         | —（不存在）                                             | **232 行**（新提取）                                   | **232 行** ✅                                          | `wc -l apps/desktop/renderer/src/features/dashboard/DashboardProjectGrid.tsx`               |
-| DashboardSidebar.tsx             | —（不存在）                                             | **153 行**（新提取）                                   | **153 行** ✅                                          | `wc -l apps/desktop/renderer/src/features/dashboard/DashboardSidebar.tsx`                   |
-| useDashboardLayout.ts            | —（不存在）                                             | **17 行**（新提取）                                    | **17 行** ✅                                           | `wc -l apps/desktop/renderer/src/features/dashboard/useDashboardLayout.ts`                  |
-| HeroCard arbitrary 值            | 6 处（p-10, max-w-[500px], w-16, h-16, text-[11px] 等） | **0 处**（全部 Token 化 ✅）                           | **0 处** ✅                                            | `grep -rn 'p-10\|max-w-\[500px\]\|w-16 h-16\|text-\[11px\]' …/dashboard/ --include='*.tsx'` |
-| 原生 `<button>` + eslint-disable | 2 处                                                    | **0 处**（已替换为 Primitive ✅）                      | **0 处** ✅（仅 guard 测试中引用）                     | `grep -rn '<button' …/dashboard/ --include='*.tsx'`                                         |
-| `eslint-disable` 注释            | 2 处                                                    | **0 处** ✅                                            | **0 处** ✅                                            | `grep -rn 'eslint-disable' …/dashboard/ --include='*.tsx' --include='*.ts'`                 |
-| Guard 测试                       | —（不存在）                                             | **3 个**（ghost-buttons / i18n / HeroCard responsive） | **3 个** ✅                                            | `find …/dashboard/ -name '*guard*'`                                                         |
-| 测试文件总数                     | —                                                       | **10 个**                                              | **10 个** ✅                                           | `find …/dashboard/ \( -name '*.test.*' -o -name '*.spec.*' \) \| wc -l`                     |
-| 设计稿采纳版                     | `05-dashboard-sidebar-full.html`                        | （同左）                                               | （同左）                                               | DESIGN_DECISIONS.md §1.2 + §11.14                                                           |
-| 空状态设计稿                     | `26-empty-states.html`                                  | （同左）                                               | （同左）                                               | 设计稿目录                                                                                  |
+| 数据点                           | 原始值（proposal 初稿）                                 | 实测值（合并后）                                       | R1 复测值（2026-03-21）                                                   | 采集命令                                                                                    |
+| -------------------------------- | ------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| DashboardPage.tsx 行数           | 929 行                                                  | **268 行**（↓71%，目标 ≤300 ✅）                       | **268 行** ✅（无变化）                                                   | `wc -l apps/desktop/renderer/src/features/dashboard/DashboardPage.tsx`                      |
+| DashboardHero.tsx                | —（不存在）                                             | **85 行**（新提取）                                    | **85 行** ✅                                                              | `wc -l apps/desktop/renderer/src/features/dashboard/DashboardHero.tsx`                      |
+| DashboardProjectGrid.tsx         | —（不存在）                                             | **232 行**（新提取）                                   | **232 行** ✅                                                             | `wc -l apps/desktop/renderer/src/features/dashboard/DashboardProjectGrid.tsx`               |
+| DashboardSidebar.tsx             | —（不存在）                                             | **153 行**（新提取）                                   | **153 行** ✅                                                             | `wc -l apps/desktop/renderer/src/features/dashboard/DashboardSidebar.tsx`                   |
+| useDashboardLayout.ts            | —（不存在）                                             | **17 行**（新提取）                                    | **17 行** ✅                                                              | `wc -l apps/desktop/renderer/src/features/dashboard/useDashboardLayout.ts`                  |
+| HeroCard arbitrary 值            | 6 处（p-10, max-w-[500px], w-16, h-16, text-[11px] 等） | **0 处**（全部 Token 化 ✅）                           | **0 处** ✅                                                               | `grep -rn 'p-10\|max-w-\[500px\]\|w-16 h-16\|text-\[11px\]' …/dashboard/ --include='*.tsx'` |
+| 原生 `<button>` + eslint-disable | 2 处                                                    | **0 处**（已替换为 Primitive ✅）                      | **0 处** ✅（仅 guard 测试中引用）                                        | `grep -rn '<button' …/dashboard/ --include='*.tsx'`                                         |
+| `eslint-disable` 注释            | 2 处                                                    | **0 处** ✅                                            | **0 处** ✅                                                               | `grep -rn 'eslint-disable' …/dashboard/ --include='*.tsx' --include='*.ts'`                 |
+| Guard 测试                       | —（不存在）                                             | **3 个**（ghost-buttons / i18n / HeroCard responsive） | **3 个** ✅                                                               | `find …/dashboard/ -name '*guard*'`                                                         |
+| 测试文件总数                     | —                                                       | **10 个**                                              | **10 个** ✅                                                              | `find …/dashboard/ \( -name '*.test.*' -o -name '*.spec.*' \) \| wc -l`                     |
+| 设计稿采纳版                     | `05-dashboard-sidebar-full.html`                        | （同左）                                               | （同左）                                                                  | DESIGN_DECISIONS.md §1.2 + §11.14                                                           |
+| 空状态设计稿                     | `26-empty-states.html`                                  | （同左）                                               | （同左）                                                                  | 设计稿目录                                                                                  |
 | v1-02 Primitive 可用性           | —                                                       | —                                                      | Card bento/compact ✅ Button pill/icon ✅ Badge pill ✅ Tabs underline ✅ | `grep -n 'bento\|compact\|pill\|underline' …/primitives/{Card,Button,Badge,Tabs}.tsx`       |
-| features/ 新 variant 采用量      | —                                                       | —                                                      | size="icon" 13 处; pill/bento/compact/underline = 0    | `grep -rn 'variant="pill"\|variant="bento"' …/features/ --include='*.tsx'`                  |
+| features/ 新 variant 采用量      | —                                                       | —                                                      | size="icon" 13 处; pill/bento/compact/underline = 0                       | `grep -rn 'variant="pill"\|variant="bento"' …/features/ --include='*.tsx'`                  |
 
 ---
 
@@ -155,14 +155,14 @@ v1-03 在 v1-02 之前已合并（PR #1168），因此 v1-02 的产出（Card be
 
 ### v1-02 已达成项对 v1-03 的关联
 
-| v1-02 产出                       | v1-03 原始依赖描述                | R1 判定                                                                                                |
-| -------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Card bento variant（24px/32px）  | "Card bento/stat variant 已就位" | ✅ variant 已在 primitives 中可用（Card.tsx:14），但 Dashboard 未采用——v1-03 已用自定义样式独立达标 |
-| Card compact variant             | （同上）                         | ✅ 同上                                                                                               |
-| Button pill variant              | "Button pill/ghost 已就位"       | ✅ variant 已在 primitives 中可用（Button.tsx:16），Dashboard 未采用——v1-03 使用 secondary/ghost 已达标 |
-| Button icon size                 | —                                | ✅ 已可用（Button.tsx:27），Dashboard 已有 13 处 size="icon" 引用                                     |
-| Badge pill variant               | —                                | ✅ 已可用（Badge.tsx:18），Dashboard 无 Badge 使用场景                                                 |
-| Tabs underline variant           | —                                | ✅ 已可用（Tabs.tsx:24），Dashboard 无 Tabs 使用场景                                                   |
+| v1-02 产出                      | v1-03 原始依赖描述               | R1 判定                                                                                                 |
+| ------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Card bento variant（24px/32px） | "Card bento/stat variant 已就位" | ✅ variant 已在 primitives 中可用（Card.tsx:14），但 Dashboard 未采用——v1-03 已用自定义样式独立达标     |
+| Card compact variant            | （同上）                         | ✅ 同上                                                                                                 |
+| Button pill variant             | "Button pill/ghost 已就位"       | ✅ variant 已在 primitives 中可用（Button.tsx:16），Dashboard 未采用——v1-03 使用 secondary/ghost 已达标 |
+| Button icon size                | —                                | ✅ 已可用（Button.tsx:27），Dashboard 已有 13 处 size="icon" 引用                                       |
+| Badge pill variant              | —                                | ✅ 已可用（Badge.tsx:18），Dashboard 无 Badge 使用场景                                                  |
+| Tabs underline variant          | —                                | ✅ 已可用（Tabs.tsx:24），Dashboard 无 Tabs 使用场景                                                    |
 
 ### 偏差记录
 

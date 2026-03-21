@@ -11,20 +11,20 @@
 
 ## 验收标准
 
-| ID    | 标准                                                                                             | 验证方式                                                                               | 结果 |
-| ----- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- | ---- |
-| AC-1  | `01-tokens.css` 新增 component token 层，覆盖 Button/Input/Card/Badge/ListItem/Dialog/Tabs       | `grep -c '\-\-button-\|\-\-input-\|\-\-card-\|\-\-badge-\|\-\-listitem-\|\-\-dialog-\|\-\-tab-' design/system/01-tokens.css` ≥ 20 | ⬜ |
-| AC-2  | `[data-density="compact"]` 块存在且覆盖核心 component token                                      | `grep -c 'data-density.*compact' design/system/01-tokens.css` ≥ 1                      | ⬜ |
-| AC-3  | compact 密度下所有可交互元素高度 ≥ 28px                                                           | 审查 compact preset 中 `--*-height-*` 值                                                | ⬜ |
-| AC-4  | DensityProvider 组件存在，导出 `useDensity` hook                                                  | `find apps/desktop/renderer/src/ -name "DensityProvider*"` 返回结果                     | ⬜ |
-| AC-5  | DensityProvider 在容器 DOM 上设置 `data-density` attribute                                        | 单元测试断言 `data-density` attribute                                                   | ⬜ |
-| AC-6  | 在 `<DensityProvider density="compact">` 下渲染的 Button padding 使用 compact token 值             | 单元测试 / Storybook visual 验证                                                        | ⬜ |
-| AC-7  | 现有 Primitives（Button/Input/Card/ListItem）的 hardcoded spacing 替换为 component token 引用      | `grep -rn 'var(--button-\|var(--input-\|var(--card-\|var(--listitem-' .../primitives/ --include='*.tsx'` ≥ 10 | ⬜ |
-| AC-8  | 不传 DensityProvider 时，组件行为与当前完全一致（comfortable 为默认值）                             | 回归测试全绿                                                                            | ⬜ |
-| AC-9  | TypeScript 类型检查通过                                                                           | `pnpm typecheck`                                                                        | ⬜ |
-| AC-10 | 全量测试通过                                                                                      | `pnpm -C apps/desktop vitest run`                                                       | ⬜ |
-| AC-11 | Storybook 可构建                                                                                  | `pnpm -C apps/desktop storybook:build`                                                  | ⬜ |
-| AC-12 | DensityProvider 有 Storybook Story，展示 compact vs comfortable 对比                               | Story 文件存在 + storybook:build 通过                                                   | ⬜ |
+| ID    | 标准                                                                                          | 验证方式                                                                                                                          | 结果 |
+| ----- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| AC-1  | `01-tokens.css` 新增 component token 层，覆盖 Button/Input/Card/Badge/ListItem/Dialog/Tabs    | `grep -c '\-\-button-\|\-\-input-\|\-\-card-\|\-\-badge-\|\-\-listitem-\|\-\-dialog-\|\-\-tab-' design/system/01-tokens.css` ≥ 20 | ⬜   |
+| AC-2  | `[data-density="compact"]` 块存在且覆盖核心 component token                                   | `grep -c 'data-density.*compact' design/system/01-tokens.css` ≥ 1                                                                 | ⬜   |
+| AC-3  | compact 密度下所有可交互元素高度 ≥ 28px                                                       | 审查 compact preset 中 `--*-height-*` 值                                                                                          | ⬜   |
+| AC-4  | DensityProvider 组件存在，导出 `useDensity` hook                                              | `find apps/desktop/renderer/src/ -name "DensityProvider*"` 返回结果                                                               | ⬜   |
+| AC-5  | DensityProvider 在容器 DOM 上设置 `data-density` attribute                                    | 单元测试断言 `data-density` attribute                                                                                             | ⬜   |
+| AC-6  | 在 `<DensityProvider density="compact">` 下渲染的 Button padding 使用 compact token 值        | 单元测试 / Storybook visual 验证                                                                                                  | ⬜   |
+| AC-7  | 现有 Primitives（Button/Input/Card/ListItem）的 hardcoded spacing 替换为 component token 引用 | `grep -rn 'var(--button-\|var(--input-\|var(--card-\|var(--listitem-' .../primitives/ --include='*.tsx'` ≥ 10                     | ⬜   |
+| AC-8  | 不传 DensityProvider 时，组件行为与当前完全一致（comfortable 为默认值）                       | 回归测试全绿                                                                                                                      | ⬜   |
+| AC-9  | TypeScript 类型检查通过                                                                       | `pnpm typecheck`                                                                                                                  | ⬜   |
+| AC-10 | 全量测试通过                                                                                  | `pnpm -C apps/desktop vitest run`                                                                                                 | ⬜   |
+| AC-11 | Storybook 可构建                                                                              | `pnpm -C apps/desktop storybook:build`                                                                                            | ⬜   |
+| AC-12 | DensityProvider 有 Storybook Story，展示 compact vs comfortable 对比                          | Story 文件存在 + storybook:build 通过                                                                                             | ⬜   |
 
 ---
 
@@ -121,7 +121,7 @@
 
 **映射验收标准**: AC-6, AC-7, AC-8
 
-- [ ] Button.tsx：`padding` 引用 `var(--button-padding-x)` / `var(--button-padding-y)`，height 引用 `var(--button-height-*)` 
+- [ ] Button.tsx：`padding` 引用 `var(--button-padding-x)` / `var(--button-padding-y)`，height 引用 `var(--button-height-*)`
 - [ ] Input.tsx：`height` 引用 `var(--input-height)`，`padding` 引用 `var(--input-padding-x)`
 - [ ] Card.tsx：`padding` 引用 `var(--card-padding)`
 - [ ] ListItem.tsx：`padding` 引用 `var(--listitem-padding-x)` / `var(--listitem-padding-y)`

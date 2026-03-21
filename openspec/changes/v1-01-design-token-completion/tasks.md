@@ -9,8 +9,8 @@
 
 ## 验收标准
 
-| ID    | 标准                                                                                                                                                                                                                       | 验证方式               | 结果 | 证据                                                                 | R1 复核（2026-03-21）                     |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ---- | -------------------------------------------------------------------- | ----------------------------------------- |
+| ID    | 标准                                                                                                                                                                                                                       | 验证方式               | 结果 | 证据                                                                 | R1 复核（2026-03-21）                      |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ---- | -------------------------------------------------------------------- | ------------------------------------------ |
 | AC-1  | `design/system/01-tokens.css` 包含 `--text-display-*`（48px）、`--text-heading-*`（24px）、`--text-nav-*`（13px）、`--text-metadata-*`（12px）四组 typography token，每组包含 size / weight / line-height / letter-spacing | `grep` 四组 token 名   | ✅   | `tokens.css` 含全部 4 组 × 4 属性                                    | R1: ✅ 复核确认                            |
 | AC-2  | 独立 weight token（`--weight-light/normal/medium/semibold`）、tracking token（`--tracking-tight/normal/wide/wider`）、leading token（`--leading-tight/normal/relaxed`）全部定义                                            | `grep` 验证            | ✅   | 4+4+3=11 个 token 全部定义                                           | R1: ✅ 复核确认（11 个）                   |
 | AC-4  | 语义间距 `--space-panel-padding`、`--space-section-gap`、`--space-item-gap`、`--space-inline-gap` 已定义，且值通过 `var(--space-N)` 引用基础间距                                                                           | `grep` + 值检查        | ✅   | `panel-padding` / `section-gap` / `item-gap` / `inline-gap` 均已定义 | R1: ✅ 复核确认（4 个）                    |
@@ -146,18 +146,18 @@
 
 ### 度量重采集
 
-| 指标 | v1-01 声称 | R1 实测 | 状态 | 采集命令 |
-|------|-----------|---------|------|---------|
-| tokens.css 行数 | 469 行 | 469 行 | ✅ 复核确认 | `wc -l design/system/01-tokens.css` |
-| text-[Npx] arbitrary 值 | 667 处 | 1000 处 | ⚠️ 漂移（Non-Goal 范畴，不影响评级） | `grep -rn 'text-\[' apps/desktop/renderer/src/ --include='*.tsx' \| wc -l` |
-| typography token 档数 | 14 档 | 14 档 | ✅ 复核确认 | `grep -c '\-\-text-.*-size' design/system/01-tokens.css` |
-| 独立 weight/tracking/leading token | 11 个 | 11 个 | ✅ 复核确认 | `grep -cE '\-\-(weight\|tracking\|leading)-' design/system/01-tokens.css` |
-| 语义间距 token | 4 个 | 4 个 | ✅ 复核确认 | `grep -cE '\-\-space-(panel\|section\|item\|inline)' design/system/01-tokens.css` |
-| @theme duration | 5 个 | 5 个（@theme 内）| ✅ 复核确认 | 原命令 `grep -c 'duration'` 返回 15（全文匹配），精确计数 @theme 内为 5 |
-| @theme typography 映射 | 56 条（14×4） | 56 条（awk 精确计数）| ✅ 复核确认 | 原命令 `grep -cE` 返回 38（漏匹配），`awk '/@theme/,/^\}/' \| grep -cE '\-\-text-[a-z]'` 确认 56 |
-| renderer tokens.css 行数 | 381 行 | 381 行 | ✅ 复核确认 | `wc -l apps/desktop/renderer/src/styles/tokens.css` |
-| 测试覆盖 | 19 个测试套件 | 14 describe / 163 test case 全绿 | ⚠️ 表述偏差（不影响质量） | `vitest run --config tests/unit/main/vitest.node.config.ts` |
-| 设计稿总数 | 36 个 HTML | 36 个 | ✅ 复核确认 | `ls design/Variant/designs/*.html \| wc -l` |
+| 指标                               | v1-01 声称    | R1 实测                          | 状态                                 | 采集命令                                                                                         |
+| ---------------------------------- | ------------- | -------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| tokens.css 行数                    | 469 行        | 469 行                           | ✅ 复核确认                          | `wc -l design/system/01-tokens.css`                                                              |
+| text-[Npx] arbitrary 值            | 667 处        | 1000 处                          | ⚠️ 漂移（Non-Goal 范畴，不影响评级） | `grep -rn 'text-\[' apps/desktop/renderer/src/ --include='*.tsx' \| wc -l`                       |
+| typography token 档数              | 14 档         | 14 档                            | ✅ 复核确认                          | `grep -c '\-\-text-.*-size' design/system/01-tokens.css`                                         |
+| 独立 weight/tracking/leading token | 11 个         | 11 个                            | ✅ 复核确认                          | `grep -cE '\-\-(weight\|tracking\|leading)-' design/system/01-tokens.css`                        |
+| 语义间距 token                     | 4 个          | 4 个                             | ✅ 复核确认                          | `grep -cE '\-\-space-(panel\|section\|item\|inline)' design/system/01-tokens.css`                |
+| @theme duration                    | 5 个          | 5 个（@theme 内）                | ✅ 复核确认                          | 原命令 `grep -c 'duration'` 返回 15（全文匹配），精确计数 @theme 内为 5                          |
+| @theme typography 映射             | 56 条（14×4） | 56 条（awk 精确计数）            | ✅ 复核确认                          | 原命令 `grep -cE` 返回 38（漏匹配），`awk '/@theme/,/^\}/' \| grep -cE '\-\-text-[a-z]'` 确认 56 |
+| renderer tokens.css 行数           | 381 行        | 381 行                           | ✅ 复核确认                          | `wc -l apps/desktop/renderer/src/styles/tokens.css`                                              |
+| 测试覆盖                           | 19 个测试套件 | 14 describe / 163 test case 全绿 | ⚠️ 表述偏差（不影响质量）            | `vitest run --config tests/unit/main/vitest.node.config.ts`                                      |
+| 设计稿总数                         | 36 个 HTML    | 36 个                            | ✅ 复核确认                          | `ls design/Variant/designs/*.html \| wc -l`                                                      |
 
 ### 发现项
 

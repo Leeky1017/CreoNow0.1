@@ -9,34 +9,34 @@
 
 ## 验收标准
 
-| ID    | 标准                                                                                                          | 验证方式                               | 结果 |
-| ----- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------- | ---- |
-| AC-1  | `Table` compound component 存在（Table/TableHeader/TableBody/TableRow/TableCell/TableHeaderCell）              | TypeScript 编译 + 文件存在             | ⬜   |
-| AC-2  | `<Table variant="striped">` 渲染时奇偶行交替背景色                                                            | 单元测试 className 断言                | ⬜   |
-| AC-3  | `<TableHeaderCell sortable sortDirection="asc">` 渲染时含 `aria-sort="ascending"`                             | 单元测试 ARIA 断言                     | ⬜   |
-| AC-4  | `<TableRow selected>` 渲染时含 `aria-selected="true"` 和选中背景色                                            | 单元测试 ARIA + className 断言         | ⬜   |
-| AC-5  | `Separator` 组件存在，支持 `orientation="horizontal" \| "vertical"` 和 `variant="default" \| "bold"`          | TypeScript 编译 + 单元测试             | ⬜   |
-| AC-6  | `<Separator orientation="vertical">` 渲染时含 `aria-orientation="vertical"`                                   | 单元测试 ARIA 断言                     | ⬜   |
-| AC-7  | `Alert` 组件存在，支持 `variant="info" \| "warning" \| "error" \| "success"`                                  | TypeScript 编译 + 单元测试             | ⬜   |
-| AC-8  | `<Alert variant="error">` 渲染时含 `role="alert"` 和 error variant 对应的背景/边框色 className                | 单元测试 ARIA + className 断言         | ⬜   |
-| AC-9  | `<Alert closable onClose={fn}>` 渲染关闭按钮，点击触发 onClose 回调                                          | 单元测试交互断言                       | ⬜   |
-| AC-10 | `SegmentedControl` compound component 存在（SegmentedControl + SegmentedControlItem）                         | TypeScript 编译 + 文件存在             | ⬜   |
-| AC-11 | `<SegmentedControl value="a">` 受控选中态正确，active item 含 `aria-checked="true"`                           | 单元测试 ARIA + 交互断言               | ⬜   |
-| AC-12 | SegmentedControl 支持 `size="sm" \| "md"`                                                                     | 单元测试 className 断言                | ⬜   |
-| AC-13 | `Progress` 组件存在，支持 `value` 0-100 + `variant` 四种                                                      | TypeScript 编译 + 单元测试             | ⬜   |
-| AC-14 | `<Progress value={65}>` 渲染时含 `role="progressbar"` + `aria-valuenow="65"` + 填充宽度 65%                   | 单元测试 ARIA + style 断言             | ⬜   |
-| AC-15 | `<Progress size="sm">` 和 `<Progress size="md">` 渲染不同高度                                                | 单元测试 className 断言                | ⬜   |
-| AC-16 | `Input` 支持 `prefix` 和 `suffix` ReactNode prop                                                             | TypeScript 编译 + 单元测试             | ⬜   |
-| AC-17 | `<Input prefix={<Icon />}>` 渲染时前缀在输入框左侧，输入框保持正常功能                                        | 单元测试 DOM 结构 + 交互断言           | ⬜   |
-| AC-18 | 不传 prefix/suffix 时 Input 行为与现有完全一致（零回归）                                                       | 回归测试                               | ⬜   |
-| AC-19 | 所有 6 个新/增强组件有 Storybook Story，每个 variant + size 至少一个                                           | Story 存在 + `storybook:build` 通过    | ⬜   |
-| AC-20 | 所有新组件在 `primitives/index.ts` 中导出                                                                     | grep 验证                              | ⬜   |
-| AC-21 | TypeScript 类型检查通过                                                                                        | `pnpm typecheck`                       | ⬜   |
-| AC-22 | 全量测试通过                                                                                                   | `pnpm -C apps/desktop vitest run`      | ⬜   |
-| AC-23 | lint 无新增违规                                                                                                | `pnpm lint`                            | ⬜   |
-| AC-24 | Storybook 可构建                                                                                               | `pnpm -C apps/desktop storybook:build` | ⬜   |
-| AC-25 | 原始组件文件数从 29 增长至 ≥ 35（新增 Table 系列 + Separator + Alert + SegmentedControl + Progress）           | `ls primitives/*.tsx \| wc -l`         | ⬜   |
-| AC-26 | 所有用户可见文本走 `t()` / i18n                                                                                | grep 验证无裸字符串                    | ⬜   |
+| ID    | 标准                                                                                                 | 验证方式                               | 结果 |
+| ----- | ---------------------------------------------------------------------------------------------------- | -------------------------------------- | ---- |
+| AC-1  | `Table` compound component 存在（Table/TableHeader/TableBody/TableRow/TableCell/TableHeaderCell）    | TypeScript 编译 + 文件存在             | ⬜   |
+| AC-2  | `<Table variant="striped">` 渲染时奇偶行交替背景色                                                   | 单元测试 className 断言                | ⬜   |
+| AC-3  | `<TableHeaderCell sortable sortDirection="asc">` 渲染时含 `aria-sort="ascending"`                    | 单元测试 ARIA 断言                     | ⬜   |
+| AC-4  | `<TableRow selected>` 渲染时含 `aria-selected="true"` 和选中背景色                                   | 单元测试 ARIA + className 断言         | ⬜   |
+| AC-5  | `Separator` 组件存在，支持 `orientation="horizontal" \| "vertical"` 和 `variant="default" \| "bold"` | TypeScript 编译 + 单元测试             | ⬜   |
+| AC-6  | `<Separator orientation="vertical">` 渲染时含 `aria-orientation="vertical"`                          | 单元测试 ARIA 断言                     | ⬜   |
+| AC-7  | `Alert` 组件存在，支持 `variant="info" \| "warning" \| "error" \| "success"`                         | TypeScript 编译 + 单元测试             | ⬜   |
+| AC-8  | `<Alert variant="error">` 渲染时含 `role="alert"` 和 error variant 对应的背景/边框色 className       | 单元测试 ARIA + className 断言         | ⬜   |
+| AC-9  | `<Alert closable onClose={fn}>` 渲染关闭按钮，点击触发 onClose 回调                                  | 单元测试交互断言                       | ⬜   |
+| AC-10 | `SegmentedControl` compound component 存在（SegmentedControl + SegmentedControlItem）                | TypeScript 编译 + 文件存在             | ⬜   |
+| AC-11 | `<SegmentedControl value="a">` 受控选中态正确，active item 含 `aria-checked="true"`                  | 单元测试 ARIA + 交互断言               | ⬜   |
+| AC-12 | SegmentedControl 支持 `size="sm" \| "md"`                                                            | 单元测试 className 断言                | ⬜   |
+| AC-13 | `Progress` 组件存在，支持 `value` 0-100 + `variant` 四种                                             | TypeScript 编译 + 单元测试             | ⬜   |
+| AC-14 | `<Progress value={65}>` 渲染时含 `role="progressbar"` + `aria-valuenow="65"` + 填充宽度 65%          | 单元测试 ARIA + style 断言             | ⬜   |
+| AC-15 | `<Progress size="sm">` 和 `<Progress size="md">` 渲染不同高度                                        | 单元测试 className 断言                | ⬜   |
+| AC-16 | `Input` 支持 `prefix` 和 `suffix` ReactNode prop                                                     | TypeScript 编译 + 单元测试             | ⬜   |
+| AC-17 | `<Input prefix={<Icon />}>` 渲染时前缀在输入框左侧，输入框保持正常功能                               | 单元测试 DOM 结构 + 交互断言           | ⬜   |
+| AC-18 | 不传 prefix/suffix 时 Input 行为与现有完全一致（零回归）                                             | 回归测试                               | ⬜   |
+| AC-19 | 所有 6 个新/增强组件有 Storybook Story，每个 variant + size 至少一个                                 | Story 存在 + `storybook:build` 通过    | ⬜   |
+| AC-20 | 所有新组件在 `primitives/index.ts` 中导出                                                            | grep 验证                              | ⬜   |
+| AC-21 | TypeScript 类型检查通过                                                                              | `pnpm typecheck`                       | ⬜   |
+| AC-22 | 全量测试通过                                                                                         | `pnpm -C apps/desktop vitest run`      | ⬜   |
+| AC-23 | lint 无新增违规                                                                                      | `pnpm lint`                            | ⬜   |
+| AC-24 | Storybook 可构建                                                                                     | `pnpm -C apps/desktop storybook:build` | ⬜   |
+| AC-25 | 原始组件文件数从 29 增长至 ≥ 35（新增 Table 系列 + Separator + Alert + SegmentedControl + Progress） | `ls primitives/*.tsx \| wc -l`         | ⬜   |
+| AC-26 | 所有用户可见文本走 `t()` / i18n                                                                      | grep 验证无裸字符串                    | ⬜   |
 
 ---
 

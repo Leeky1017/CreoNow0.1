@@ -10,28 +10,28 @@
 
 ## 验收标准
 
-| ID    | 标准                                                                                                      | 验证方式                               | 结果                              | R1 复核 |
-| ----- | --------------------------------------------------------------------------------------------------------- | -------------------------------------- | --------------------------------- | ------- |
-| AC-1  | `ButtonVariant` type 包含 `"pill"`，`ButtonSize` type 包含 `"icon"`                                       | TypeScript 编译 + grep                 | ✅ 229 行，含 pill + icon variant | R1 确认：229 行，grep 见 `ButtonVariant` L11, `variant.*pill` L198 |
-| AC-2  | `<Button variant="pill">` 渲染时 `border-radius` 为 `var(--radius-full)`                                  | 单元测试 className 断言                | ✅ 测试通过                       | R1 确认：59/59 tests passed |
-| AC-3  | `<Button size="icon">` 渲染时宽高相等，padding 为 0                                                       | 单元测试 className 断言                | ✅ 测试通过                       | R1 确认：pill×icon 组合测试通过 |
-| AC-4  | `CardVariant` type 包含 `"bento"` 和 `"compact"`                                                          | TypeScript 编译 + grep                 | ✅ 129 行，含 bento + compact     | R1 确认：129 行，grep 见 `CardVariant` L10, `variant.*bento` L108 |
-| AC-5  | `<Card variant="bento">` 渲染时 `border-radius` 为 `var(--radius-2xl)`，padding 为 `var(--space-8)`       | 单元测试 className 断言                | ✅ 测试通过                       | R1 确认：67/67 tests passed |
-| AC-6  | `<Card variant="compact">` 渲染时使用紧凑 padding `var(--space-3)`                                        | 单元测试 className 断言                | ✅ 测试通过                       | R1 确认：67/67 tests passed |
-| AC-7  | Tabs 组件支持 `variant` prop，类型为 `"default" \| "underline"`                                           | TypeScript 编译                        | ✅ 333 行，含 underline variant   | R1 确认：333 行，grep 见 `TabsVariant` L24 |
-| AC-8  | `<Tabs variant="underline">` 的 active tab 下方渲染 2px accent 色底线                                     | 单元测试 DOM 断言                      | ✅ 测试通过                       | R1 确认：29/29 tests passed |
-| AC-9  | 不传 `variant` 时 Tabs 行为与当前完全一致（默认 `"default"`，无底线）                                     | 回归测试                               | ✅ 零回归                         | R1 确认：29/29 tests passed |
-| AC-10 | `BadgeVariant` type 包含 `"pill"`                                                                         | TypeScript 编译 + grep                 | ✅ 130 行，含 pill                | R1 确认：130 行，grep 见 `BadgeVariant` L12, `variant.*pill` L114 |
-| AC-11 | `<Badge variant="pill">` 渲染时有 `uppercase`、`border-radius: var(--radius-full)`、正确的 letter-spacing | 单元测试 className 断言                | ✅ 测试通过                       | R1 确认：34/34 tests passed |
+| ID    | 标准                                                                                                      | 验证方式                               | 结果                              | R1 复核                                                                                                                      |
+| ----- | --------------------------------------------------------------------------------------------------------- | -------------------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| AC-1  | `ButtonVariant` type 包含 `"pill"`，`ButtonSize` type 包含 `"icon"`                                       | TypeScript 编译 + grep                 | ✅ 229 行，含 pill + icon variant | R1 确认：229 行，grep 见 `ButtonVariant` L11, `variant.*pill` L198                                                           |
+| AC-2  | `<Button variant="pill">` 渲染时 `border-radius` 为 `var(--radius-full)`                                  | 单元测试 className 断言                | ✅ 测试通过                       | R1 确认：59/59 tests passed                                                                                                  |
+| AC-3  | `<Button size="icon">` 渲染时宽高相等，padding 为 0                                                       | 单元测试 className 断言                | ✅ 测试通过                       | R1 确认：pill×icon 组合测试通过                                                                                              |
+| AC-4  | `CardVariant` type 包含 `"bento"` 和 `"compact"`                                                          | TypeScript 编译 + grep                 | ✅ 129 行，含 bento + compact     | R1 确认：129 行，grep 见 `CardVariant` L10, `variant.*bento` L108                                                            |
+| AC-5  | `<Card variant="bento">` 渲染时 `border-radius` 为 `var(--radius-2xl)`，padding 为 `var(--space-8)`       | 单元测试 className 断言                | ✅ 测试通过                       | R1 确认：67/67 tests passed                                                                                                  |
+| AC-6  | `<Card variant="compact">` 渲染时使用紧凑 padding `var(--space-3)`                                        | 单元测试 className 断言                | ✅ 测试通过                       | R1 确认：67/67 tests passed                                                                                                  |
+| AC-7  | Tabs 组件支持 `variant` prop，类型为 `"default" \| "underline"`                                           | TypeScript 编译                        | ✅ 333 行，含 underline variant   | R1 确认：333 行，grep 见 `TabsVariant` L24                                                                                   |
+| AC-8  | `<Tabs variant="underline">` 的 active tab 下方渲染 2px accent 色底线                                     | 单元测试 DOM 断言                      | ✅ 测试通过                       | R1 确认：29/29 tests passed                                                                                                  |
+| AC-9  | 不传 `variant` 时 Tabs 行为与当前完全一致（默认 `"default"`，无底线）                                     | 回归测试                               | ✅ 零回归                         | R1 确认：29/29 tests passed                                                                                                  |
+| AC-10 | `BadgeVariant` type 包含 `"pill"`                                                                         | TypeScript 编译 + grep                 | ✅ 130 行，含 pill                | R1 确认：130 行，grep 见 `BadgeVariant` L12, `variant.*pill` L114                                                            |
+| AC-11 | `<Badge variant="pill">` 渲染时有 `uppercase`、`border-radius: var(--radius-full)`、正确的 letter-spacing | 单元测试 className 断言                | ✅ 测试通过                       | R1 确认：34/34 tests passed                                                                                                  |
 | AC-12 | Button / Card / Tabs / Badge 各有新增 variant 的 Storybook Story                                          | Story 存在 + `storybook:build` 通过    | ✅ 6 个 story 文件含新变体        | R1 确认：5 个含新变体关键字（Button/Card/Tabs/Badge/ImageUpload），Radio/Select stories 存在但无新变体关键字；差异为计数口径 |
-| AC-13 | 所有现有 Button / Card / Tabs / Badge 测试通过（回归零破坏）                                              | `vitest run`                           | ✅ 全量回归通过                   | R1 确认：Button 59/59, Card 67/67, Tabs 29/29, Badge 34/34 |
-| AC-14 | Storybook 可构建                                                                                          | `pnpm -C apps/desktop storybook:build` | ✅ 构建成功                       | R1 未重跑（非阻断，CI 已验证） |
-| AC-15 | 全量测试通过                                                                                              | `pnpm -C apps/desktop vitest run`      | ✅ 全量通过                       | R1 未重跑全量（非阻断，CI 已验证） |
-| AC-16 | TypeScript 类型检查通过                                                                                   | `pnpm typecheck`                       | ✅ 通过                           | R1 未重跑（非阻断，CI 已验证） |
-| AC-17 | lint 无新增违规                                                                                           | `pnpm lint`                            | ✅ 无违规                         | R1 未重跑（非阻断，CI 已验证） |
-| AC-18 | `Radio.tsx` 从 493 行拆分为 RadioGroup + RadioItem + hook，各文件 ≤ 200 行                                | 架构                                   | ✅ 139 + 183 + 70 行              | R1 确认：139 + 183 + 70 = 392 行 |
-| AC-19 | `Select.tsx` 从 350 行拆分为 Select + SelectContent，各文件 ≤ 200 行                                      | 架构                                   | ✅ 130 + 134 行                   | R1 确认：130 + 134 = 264 行 |
-| AC-20 | `ImageUpload.tsx` 从 335 行分离 ImagePreview，各文件 ≤ 200 行                                             | 架构                                   | ✅ 200 + 93 行                    | R1 确认：200 + 93 = 293 行 |
+| AC-13 | 所有现有 Button / Card / Tabs / Badge 测试通过（回归零破坏）                                              | `vitest run`                           | ✅ 全量回归通过                   | R1 确认：Button 59/59, Card 67/67, Tabs 29/29, Badge 34/34                                                                   |
+| AC-14 | Storybook 可构建                                                                                          | `pnpm -C apps/desktop storybook:build` | ✅ 构建成功                       | R1 未重跑（非阻断，CI 已验证）                                                                                               |
+| AC-15 | 全量测试通过                                                                                              | `pnpm -C apps/desktop vitest run`      | ✅ 全量通过                       | R1 未重跑全量（非阻断，CI 已验证）                                                                                           |
+| AC-16 | TypeScript 类型检查通过                                                                                   | `pnpm typecheck`                       | ✅ 通过                           | R1 未重跑（非阻断，CI 已验证）                                                                                               |
+| AC-17 | lint 无新增违规                                                                                           | `pnpm lint`                            | ✅ 无违规                         | R1 未重跑（非阻断，CI 已验证）                                                                                               |
+| AC-18 | `Radio.tsx` 从 493 行拆分为 RadioGroup + RadioItem + hook，各文件 ≤ 200 行                                | 架构                                   | ✅ 139 + 183 + 70 行              | R1 确认：139 + 183 + 70 = 392 行                                                                                             |
+| AC-19 | `Select.tsx` 从 350 行拆分为 Select + SelectContent，各文件 ≤ 200 行                                      | 架构                                   | ✅ 130 + 134 行                   | R1 确认：130 + 134 = 264 行                                                                                                  |
+| AC-20 | `ImageUpload.tsx` 从 335 行分离 ImagePreview，各文件 ≤ 200 行                                             | 架构                                   | ✅ 200 + 93 行                    | R1 确认：200 + 93 = 293 行                                                                                                   |
 
 ---
 
@@ -239,36 +239,36 @@
 
 ### 度量重采集
 
-| 指标 | v1-02 声称 | R1 实测 | 状态 | 采集命令 |
-|------|-----------|---------|------|---------|
-| Button.tsx 行数 | 229 行 | 229 行 | ✅ 一致 | `wc -l ...Button.tsx` |
-| Card.tsx 行数 | 129 行 | 129 行 | ✅ 一致 | `wc -l ...Card.tsx` |
-| Tabs.tsx 行数 | 333 行 | 333 行 | ✅ 一致 | `wc -l ...Tabs.tsx` |
-| Badge.tsx 行数 | 130 行 | 130 行 | ✅ 一致 | `wc -l ...Badge.tsx` |
-| Radio 拆分 | 139 + 183 + 70 行 | 139 + 183 + 70 行 | ✅ 一致 | `wc -l Radio.tsx RadioItem.tsx useRadioGroup.ts` |
-| Select 拆分 | 130 + 134 行 | 130 + 134 行 | ✅ 一致 | `wc -l Select.tsx SelectContent.tsx` |
-| ImageUpload 拆分 | 200 + 93 行 | 200 + 93 行 | ✅ 一致 | `wc -l ImageUpload.tsx ImagePreview.tsx` |
-| ButtonVariant 含 pill | ✅ | ✅ L11 定义, L198 使用 | ✅ 一致 | `grep -n ButtonVariant\|variant.*pill Button.tsx` |
-| CardVariant 含 bento/compact | ✅ | ✅ L10 定义, L108/L110 使用 | ✅ 一致 | `grep -n CardVariant\|variant.*bento\|variant.*compact Card.tsx` |
-| TabsVariant 含 underline | ✅ | ✅ L24 定义, L255 使用 | ✅ 一致 | `grep -n TabsVariant\|variant.*underline Tabs.tsx` |
-| BadgeVariant 含 pill | ✅ | ✅ L12 定义, L114 使用 | ✅ 一致 | `grep -n BadgeVariant\|variant.*pill Badge.tsx` |
-| Story 文件含新变体 | 6 个 | 5 个（Button/Card/Tabs/Badge/ImageUpload） | ⚠️ 微差 | 见下方说明 |
-| src/ 新变体使用量 | 104 处 | 237 处（`pill\|bento\|compact\|underline` excl stories） | ⚠️ 偏差 | 见下方说明 |
+| 指标                         | v1-02 声称        | R1 实测                                                  | 状态    | 采集命令                                                         |
+| ---------------------------- | ----------------- | -------------------------------------------------------- | ------- | ---------------------------------------------------------------- |
+| Button.tsx 行数              | 229 行            | 229 行                                                   | ✅ 一致 | `wc -l ...Button.tsx`                                            |
+| Card.tsx 行数                | 129 行            | 129 行                                                   | ✅ 一致 | `wc -l ...Card.tsx`                                              |
+| Tabs.tsx 行数                | 333 行            | 333 行                                                   | ✅ 一致 | `wc -l ...Tabs.tsx`                                              |
+| Badge.tsx 行数               | 130 行            | 130 行                                                   | ✅ 一致 | `wc -l ...Badge.tsx`                                             |
+| Radio 拆分                   | 139 + 183 + 70 行 | 139 + 183 + 70 行                                        | ✅ 一致 | `wc -l Radio.tsx RadioItem.tsx useRadioGroup.ts`                 |
+| Select 拆分                  | 130 + 134 行      | 130 + 134 行                                             | ✅ 一致 | `wc -l Select.tsx SelectContent.tsx`                             |
+| ImageUpload 拆分             | 200 + 93 行       | 200 + 93 行                                              | ✅ 一致 | `wc -l ImageUpload.tsx ImagePreview.tsx`                         |
+| ButtonVariant 含 pill        | ✅                | ✅ L11 定义, L198 使用                                   | ✅ 一致 | `grep -n ButtonVariant\|variant.*pill Button.tsx`                |
+| CardVariant 含 bento/compact | ✅                | ✅ L10 定义, L108/L110 使用                              | ✅ 一致 | `grep -n CardVariant\|variant.*bento\|variant.*compact Card.tsx` |
+| TabsVariant 含 underline     | ✅                | ✅ L24 定义, L255 使用                                   | ✅ 一致 | `grep -n TabsVariant\|variant.*underline Tabs.tsx`               |
+| BadgeVariant 含 pill         | ✅                | ✅ L12 定义, L114 使用                                   | ✅ 一致 | `grep -n BadgeVariant\|variant.*pill Badge.tsx`                  |
+| Story 文件含新变体           | 6 个              | 5 个（Button/Card/Tabs/Badge/ImageUpload）               | ⚠️ 微差 | 见下方说明                                                       |
+| src/ 新变体使用量            | 104 处            | 237 处（`pill\|bento\|compact\|underline` excl stories） | ⚠️ 偏差 | 见下方说明                                                       |
 
 ### 测试重采集
 
-| 测试文件 | 结果 | 通过/总计 |
-|---------|------|----------|
-| Button.test.tsx | ✅ PASS | 59/59 |
-| Card.test.tsx (+ AiErrorCard.test.tsx) | ✅ PASS | 67/67 |
-| Tabs.test.tsx | ✅ PASS | 29/29 |
-| Badge.test.tsx | ✅ PASS | 34/34 |
+| 测试文件                               | 结果    | 通过/总计 |
+| -------------------------------------- | ------- | --------- |
+| Button.test.tsx                        | ✅ PASS | 59/59     |
+| Card.test.tsx (+ AiErrorCard.test.tsx) | ✅ PASS | 67/67     |
+| Tabs.test.tsx                          | ✅ PASS | 29/29     |
+| Badge.test.tsx                         | ✅ PASS | 34/34     |
 
 ### features/ 层变体使用量
 
-| 变体 | 声称 | R1 实测 | 状态 |
-|------|------|---------|------|
-| features/ 直接使用 | 0 | 13 | ⚠️ 偏差 |
+| 变体               | 声称 | R1 实测 | 状态    |
+| ------------------ | ---- | ------- | ------- |
+| features/ 直接使用 | 0    | 13      | ⚠️ 偏差 |
 
 **详情**：全部 13 处均为 `size="icon"`，分布在 DashboardProjectGrid（1）、VersionCard（3）、VersionHistoryPanel（1）、CharacterRelationships（1）、character-detail-shared（1）、CharacterPanelSections（1）、OutlinePanel（2）、OutlineNodeItem（3）。无 `variant="pill"` / `variant="bento"` / `variant="compact"` / `variant="underline"` 使用。
 
@@ -281,6 +281,7 @@
 #### 2. src/ 使用量（104 → 237）
 
 原声称使用 `grep -r "pill|bento|compact|underline" --include="*.tsx"` 统计 104 处。R1 重跑同一命令（排除 stories）得到 237 处。主因：
+
 - "underline" 匹配大量 CSS 类（`hover:underline`、`text-decoration: underline`）和编辑器格式化代码（`editor.isActive("underline")`），非 v1-02 新变体使用
 - "compact" 匹配注释和变量名（`compact layout`、`compact project-type indicator`），非 Card variant
 - 后续 PR 合并新增了匹配代码

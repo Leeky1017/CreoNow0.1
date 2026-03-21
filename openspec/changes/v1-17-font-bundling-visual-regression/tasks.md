@@ -13,18 +13,18 @@
 
 ## 验收标准
 
-| ID   | 标准                                                                              | 验证方式                                                      | 结果 |
-| ---- | --------------------------------------------------------------------------------- | ------------------------------------------------------------- | ---- |
-| AC-1 | `find renderer -name "*.woff2"` 返回 ≥ 12 个文件，总大小 ≤ 500KB                  | 命令行检查                                                    | ⬜   |
-| AC-2 | `grep -r "@font-face" renderer/src/styles/fonts.css` 返回 ≥ 12 条声明             | 命令行检查                                                    | ⬜   |
-| AC-3 | `fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-*` 声明完全一致         | diff 对比                                                     | ⬜   |
-| AC-4 | Storybook 构建通过，字体正确加载（无外部字体请求）                                | `pnpm -C apps/desktop storybook:build` + 手动检查             | ⬜   |
-| AC-5 | `01-tokens.css` 包含 `--shadow-xs` 和 `--shadow-2xl`                              | grep 验证                                                     | ⬜   |
-| AC-6 | `shadow-[var(--shadow-2xl)]` arbitrary 值残留 = 0                                 | `grep -r "shadow-\[var(--shadow-2xl)\]" renderer/src/` → 0    | ⬜   |
-| AC-7 | `main.css` @theme 块导出 `shadow-xs` / `shadow-2xl`（Tailwind utility 生效）      | `awk '/@theme/,/^\}/' main.css \| grep shadow`                | ⬜   |
-| AC-8 | 视觉基线截图已用打包字体重建（`tests/visual/__screenshots__/` 全部更新）          | git diff 截图文件                                             | ⬜   |
-| AC-9 | 类型检查通过 `pnpm typecheck`                                                     | CI gate                                                       | ⬜   |
-| AC-10| Electron 离线环境下字体正确渲染（无网络时不 fallback 到系统字体）                 | 手动验证                                                      | ⬜   |
+| ID    | 标准                                                                         | 验证方式                                                   | 结果 |
+| ----- | ---------------------------------------------------------------------------- | ---------------------------------------------------------- | ---- |
+| AC-1  | `find renderer -name "*.woff2"` 返回 ≥ 12 个文件，总大小 ≤ 500KB             | 命令行检查                                                 | ⬜   |
+| AC-2  | `grep -r "@font-face" renderer/src/styles/fonts.css` 返回 ≥ 12 条声明        | 命令行检查                                                 | ⬜   |
+| AC-3  | `fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-*` 声明完全一致    | diff 对比                                                  | ⬜   |
+| AC-4  | Storybook 构建通过，字体正确加载（无外部字体请求）                           | `pnpm -C apps/desktop storybook:build` + 手动检查          | ⬜   |
+| AC-5  | `01-tokens.css` 包含 `--shadow-xs` 和 `--shadow-2xl`                         | grep 验证                                                  | ⬜   |
+| AC-6  | `shadow-[var(--shadow-2xl)]` arbitrary 值残留 = 0                            | `grep -r "shadow-\[var(--shadow-2xl)\]" renderer/src/` → 0 | ⬜   |
+| AC-7  | `main.css` @theme 块导出 `shadow-xs` / `shadow-2xl`（Tailwind utility 生效） | `awk '/@theme/,/^\}/' main.css \| grep shadow`             | ⬜   |
+| AC-8  | 视觉基线截图已用打包字体重建（`tests/visual/__screenshots__/` 全部更新）     | git diff 截图文件                                          | ⬜   |
+| AC-9  | 类型检查通过 `pnpm typecheck`                                                | CI gate                                                    | ⬜   |
+| AC-10 | Electron 离线环境下字体正确渲染（无网络时不 fallback 到系统字体）            | 手动验证                                                   | ⬜   |
 
 ---
 
@@ -192,18 +192,18 @@
 
 ## R1 基线采集记录（2026-03-21）
 
-| 指标                          | R1 实测值          | 采集命令                                                           |
-| ----------------------------- | ------------------ | ------------------------------------------------------------------ |
-| `.woff2` 文件数               | 0                  | `find renderer -name "*.woff2" \| wc -l`                          |
-| `@font-face` 声明数           | 0                  | `grep -r "@font-face" renderer/src/ --include="*.css" \| wc -l`   |
-| `fonts.css` body 字体         | `ui-serif, Georgia, serif`（无 Lora） | `cat renderer/src/styles/fonts.css`                    |
-| `main.css` body 字体          | `"Lora", "Crimson Pro", Georgia, serif` | `grep font-family main.css`                          |
-| 阴影 token 档数               | 4（sm/md/lg/xl）   | `grep -c '\-\-shadow-' design/system/01-tokens.css`               |
-| `shadow-[var(--shadow-*)]`    | 54 处              | `grep -rn "shadow-\[var(--shadow-" renderer/src/ \| wc -l`        |
-| `shadow-[var(--shadow-2xl)]`  | 3 处               | `grep -rn "shadow-\[var(--shadow-2xl)\]" renderer/src/ \| wc -l`  |
-| `shadow-[custom]` 非 token    | 6 处               | `grep -rn "shadow-\[" renderer/src/ \| grep -v "shadow-\[var(--shadow-" \| wc -l` |
-| @theme shadow 导出            | 0                  | `awk '/@theme/,/^\}/' main.css \| grep shadow` → 空               |
-| Playwright 视觉 spec 文件     | 3 个               | `find tests/visual -name "*.visual.spec.ts" \| wc -l`             |
-| 视觉基线截图                  | 106 个             | `find tests/visual/__screenshots__ -name "*.png" \| wc -l`        |
-| DOM snapshot 测试             | 3 个               | `find renderer -name "*.snapshot.test.*" \| wc -l`                |
-| v1-01 tokens.css 行数         | 469 行             | `wc -l design/system/01-tokens.css`                               |
+| 指标                         | R1 实测值                               | 采集命令                                                                          |
+| ---------------------------- | --------------------------------------- | --------------------------------------------------------------------------------- |
+| `.woff2` 文件数              | 0                                       | `find renderer -name "*.woff2" \| wc -l`                                          |
+| `@font-face` 声明数          | 0                                       | `grep -r "@font-face" renderer/src/ --include="*.css" \| wc -l`                   |
+| `fonts.css` body 字体        | `ui-serif, Georgia, serif`（无 Lora）   | `cat renderer/src/styles/fonts.css`                                               |
+| `main.css` body 字体         | `"Lora", "Crimson Pro", Georgia, serif` | `grep font-family main.css`                                                       |
+| 阴影 token 档数              | 4（sm/md/lg/xl）                        | `grep -c '\-\-shadow-' design/system/01-tokens.css`                               |
+| `shadow-[var(--shadow-*)]`   | 54 处                                   | `grep -rn "shadow-\[var(--shadow-" renderer/src/ \| wc -l`                        |
+| `shadow-[var(--shadow-2xl)]` | 3 处                                    | `grep -rn "shadow-\[var(--shadow-2xl)\]" renderer/src/ \| wc -l`                  |
+| `shadow-[custom]` 非 token   | 6 处                                    | `grep -rn "shadow-\[" renderer/src/ \| grep -v "shadow-\[var(--shadow-" \| wc -l` |
+| @theme shadow 导出           | 0                                       | `awk '/@theme/,/^\}/' main.css \| grep shadow` → 空                               |
+| Playwright 视觉 spec 文件    | 3 个                                    | `find tests/visual -name "*.visual.spec.ts" \| wc -l`                             |
+| 视觉基线截图                 | 106 个                                  | `find tests/visual/__screenshots__ -name "*.png" \| wc -l`                        |
+| DOM snapshot 测试            | 3 个                                    | `find renderer -name "*.snapshot.test.*" \| wc -l`                                |
+| v1-01 tokens.css 行数        | 469 行                                  | `wc -l design/system/01-tokens.css`                                               |

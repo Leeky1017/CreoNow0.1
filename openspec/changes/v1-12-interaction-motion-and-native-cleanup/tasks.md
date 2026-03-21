@@ -32,7 +32,7 @@
 | AC-16 | TypeScript 类型检查通过（`pnpm typecheck`）                                                                              | CI 命令         | 待实现  |
 | AC-17 | lint 无新增违规（`pnpm lint`）                                                                                           | CI 命令         | 待实现  |
 | AC-18 | 全量测试通过（`pnpm -C apps/desktop vitest run`）                                                                        | CI 命令         | 待实现  |
-| AC-19 | `AppShell.tsx` 从 R1 基线 1,267 行按职责解耦为 5+ 文件，每个文件只承担一个职责                                            | 架构            | 待实现  |
+| AC-19 | `AppShell.tsx` 从 R1 基线 1,267 行按职责解耦为 5+ 文件，每个文件只承担一个职责                                           | 架构            | 待实现  |
 | AC-20 | 布局骨架使用语义化 Design Token（`--space-panel-padding`、`--color-border-subtle`）                                      | 视觉            | 待实现  |
 | AC-21 | 全窗口组合 Story（Dashboard + AppShell）以 `layout: 'fullscreen'` 渲染可构建                                             | Storybook       | 待实现  |
 | AC-22 | 全窗口组合 Story（Editor + FileTree + RightPanel）以 `layout: 'fullscreen'` 渲染可构建                                   | Storybook       | 待实现  |
