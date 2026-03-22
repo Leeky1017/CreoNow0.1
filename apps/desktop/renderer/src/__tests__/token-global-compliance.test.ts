@@ -293,7 +293,7 @@ describe("Token global compliance: no style bypass in production files", () => {
         .join("");
       expect.fail(
         `Found ${shadowViolations.reduce((n, v) => n + v.violations.length, 0)} bare shadow violation(s) in ${shadowViolations.length} file(s).\n` +
-          `Use shadow-[var(--shadow-2xl)] or register --shadow-2xl in @theme inline.\n${report}`,
+          `Use a token-backed shadow utility or register the shadow token in @theme inline.\n${report}`,
       );
     }
   });
