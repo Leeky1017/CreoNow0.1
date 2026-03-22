@@ -13,10 +13,7 @@ import { within, expect } from "@storybook/test";
 import { AiSettingsSection } from "./AiSettingsSection";
 import { JudgeSection } from "./JudgeSection";
 import { AppearanceSection } from "./AppearanceSection";
-import {
-  ThemeStoreProvider,
-  createThemeStore,
-} from "../../stores/themeStore";
+import { ThemeStoreProvider, createThemeStore } from "../../stores/themeStore";
 import type { PreferenceStore, PreferenceKey } from "../../lib/preferences";
 
 /* ------------------------------------------------------------------ */
@@ -73,19 +70,36 @@ function createMockAiIpc(options: {
       if (testOk) {
         return { ok: true, data: { ok: true, latencyMs: 120 } };
       }
-      return { ok: true, data: { ok: false, latencyMs: 500, error: { code: "TIMEOUT", message: "Connection timed out" } } };
+      return {
+        ok: true,
+        data: {
+          ok: false,
+          latencyMs: 500,
+          error: { code: "TIMEOUT", message: "Connection timed out" },
+        },
+      };
     }
-    return { ok: false, error: { code: "NOT_FOUND", message: `Unhandled: ${String(channel)}` } };
+    return {
+      ok: false,
+      error: { code: "NOT_FOUND", message: `Unhandled: ${String(channel)}` },
+    };
   };
 }
 
-function createMockJudgeIpc(status: "ready" | "not_ready" | "downloading" | "error") {
+function createMockJudgeIpc(
+  status: "ready" | "not_ready" | "downloading" | "error",
+) {
   return async (channel: string): Promise<unknown> => {
     if (channel === "judge:model:getstate") {
       if (status === "error") {
         return {
           ok: true,
-          data: { state: { status: "error", error: { code: "INTERNAL", message: "MODEL_INIT_FAILED" } } },
+          data: {
+            state: {
+              status: "error",
+              error: { code: "INTERNAL", message: "MODEL_INIT_FAILED" },
+            },
+          },
         };
       }
       return { ok: true, data: { state: { status } } };
@@ -93,11 +107,16 @@ function createMockJudgeIpc(status: "ready" | "not_ready" | "downloading" | "err
     if (channel === "judge:model:ensure") {
       return { ok: true, data: { state: { status: "ready" } } };
     }
-    return { ok: false, error: { code: "NOT_FOUND", message: `Unhandled: ${String(channel)}` } };
+    return {
+      ok: false,
+      error: { code: "NOT_FOUND", message: `Unhandled: ${String(channel)}` },
+    };
   };
 }
 
-function createMockPreferences(initial: "dark" | "light" | "system" = "system"): PreferenceStore {
+function createMockPreferences(
+  initial: "dark" | "light" | "system" = "system",
+): PreferenceStore {
   const store = new Map<string, unknown>();
   store.set("creonow.theme.mode", initial);
   return {
@@ -129,12 +148,22 @@ function AiSettingsWrapper(props: {
 
   React.useEffect(() => {
     const prev = window.creonow;
-    window.creonow = { invoke: mockInvoke as NonNullable<Window["creonow"]>["invoke"] };
-    return () => { window.creonow = prev; };
+    window.creonow = {
+      invoke: mockInvoke as NonNullable<Window["creonow"]>["invoke"],
+    };
+    return () => {
+      window.creonow = prev;
+    };
   }, [mockInvoke]);
 
   return (
-    <div style={{ width: 440, padding: 16, backgroundColor: "var(--color-bg-surface)" }}>
+    <div
+      style={{
+        width: 440,
+        padding: 16,
+        backgroundColor: "var(--color-bg-surface)",
+      }}
+    >
       <AiSettingsSection />
     </div>
   );
@@ -143,29 +172,50 @@ function AiSettingsWrapper(props: {
 function JudgeSectionWrapper(props: {
   status: "ready" | "not_ready" | "downloading" | "error";
 }): JSX.Element {
-  const mockInvoke = React.useMemo(() => createMockJudgeIpc(props.status), [props.status]);
+  const mockInvoke = React.useMemo(
+    () => createMockJudgeIpc(props.status),
+    [props.status],
+  );
 
   React.useEffect(() => {
     const prev = window.creonow;
-    window.creonow = { invoke: mockInvoke as NonNullable<Window["creonow"]>["invoke"] };
-    return () => { window.creonow = prev; };
+    window.creonow = {
+      invoke: mockInvoke as NonNullable<Window["creonow"]>["invoke"],
+    };
+    return () => {
+      window.creonow = prev;
+    };
   }, [mockInvoke]);
 
   return (
-    <div style={{ width: 440, padding: 16, backgroundColor: "var(--color-bg-surface)" }}>
+    <div
+      style={{
+        width: 440,
+        padding: 16,
+        backgroundColor: "var(--color-bg-surface)",
+      }}
+    >
       <JudgeSection />
     </div>
   );
 }
 
-function AppearanceWrapper(props: { initial?: "dark" | "light" | "system" }): JSX.Element {
+function AppearanceWrapper(props: {
+  initial?: "dark" | "light" | "system";
+}): JSX.Element {
   const [themeStore] = React.useState(() =>
     createThemeStore(createMockPreferences(props.initial ?? "dark")),
   );
 
   return (
     <ThemeStoreProvider store={themeStore}>
-      <div style={{ width: 440, padding: 16, backgroundColor: "var(--color-bg-surface)" }}>
+      <div
+        style={{
+          width: 440,
+          padding: 16,
+          backgroundColor: "var(--color-bg-surface)",
+        }}
+      >
         <AppearanceSection />
       </div>
     </ThemeStoreProvider>
@@ -190,7 +240,12 @@ type Story = StoryObj;
 /* ------------------------------------------------------------------ */
 
 export const AiSettingsDefault: Story = {
-  render: () => <AiSettingsWrapper providerMode="openai-compatible" apiKeyConfigured={true} />,
+  render: () => (
+    <AiSettingsWrapper
+      providerMode="openai-compatible"
+      apiKeyConfigured={true}
+    />
+  ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("settings-ai-section")).toBeInTheDocument();
@@ -203,7 +258,12 @@ export const AiSettingsDefault: Story = {
 };
 
 export const AiSettingsUnconfigured: Story = {
-  render: () => <AiSettingsWrapper providerMode="openai-compatible" apiKeyConfigured={false} />,
+  render: () => (
+    <AiSettingsWrapper
+      providerMode="openai-compatible"
+      apiKeyConfigured={false}
+    />
+  ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("settings-ai-section")).toBeInTheDocument();
@@ -218,7 +278,9 @@ export const JudgeReady: Story = {
   render: () => <JudgeSectionWrapper status="ready" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByTestId("settings-judge-section")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("settings-judge-section"),
+    ).toBeInTheDocument();
     await expect(canvas.getByTestId("judge-ensure")).toBeInTheDocument();
   },
 };
@@ -227,7 +289,9 @@ export const JudgeNotReady: Story = {
   render: () => <JudgeSectionWrapper status="not_ready" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByTestId("settings-judge-section")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("settings-judge-section"),
+    ).toBeInTheDocument();
     await expect(canvas.getByTestId("judge-ensure")).toBeInTheDocument();
   },
 };
@@ -236,7 +300,9 @@ export const JudgeError: Story = {
   render: () => <JudgeSectionWrapper status="error" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByTestId("settings-judge-section")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("settings-judge-section"),
+    ).toBeInTheDocument();
   },
 };
 
@@ -248,7 +314,9 @@ export const AppearanceDark: Story = {
   render: () => <AppearanceWrapper initial="dark" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByTestId("settings-appearance-section")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("settings-appearance-section"),
+    ).toBeInTheDocument();
     await expect(canvas.getByTestId("theme-mode-dark")).toBeInTheDocument();
     await expect(canvas.getByTestId("theme-mode-light")).toBeInTheDocument();
     await expect(canvas.getByTestId("theme-mode-system")).toBeInTheDocument();
@@ -259,6 +327,8 @@ export const AppearanceLight: Story = {
   render: () => <AppearanceWrapper initial="light" />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByTestId("settings-appearance-section")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("settings-appearance-section"),
+    ).toBeInTheDocument();
   },
 };

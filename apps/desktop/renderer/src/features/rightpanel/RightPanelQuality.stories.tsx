@@ -39,7 +39,12 @@ function createMockQualityIpc(opts: {
       if (opts.judgeStatus === "error") {
         return {
           ok: true,
-          data: { state: { status: "error", error: { code: "INTERNAL", message: "MODEL_INIT_FAILED" } } },
+          data: {
+            state: {
+              status: "error",
+              error: { code: "INTERNAL", message: "MODEL_INIT_FAILED" },
+            },
+          },
         };
       }
       return { ok: true, data: { state: { status: opts.judgeStatus } } };
@@ -51,20 +56,29 @@ function createMockQualityIpc(opts: {
 
     if (channel === "constraints:policy:get") {
       if (opts.constraints.kind === "error") {
-        return { ok: false, error: { code: "NOT_FOUND", message: "Constraints not found" } };
+        return {
+          ok: false,
+          error: { code: "NOT_FOUND", message: "Constraints not found" },
+        };
       }
       return {
         ok: true,
         data: {
           constraints: {
-            items: opts.constraints.kind === "with-data" ? opts.constraints.items : [],
+            items:
+              opts.constraints.kind === "with-data"
+                ? opts.constraints.items
+                : [],
             version: 1 as const,
           },
         },
       };
     }
 
-    return { ok: false, error: { code: "NOT_FOUND", message: `Unhandled: ${String(channel)}` } };
+    return {
+      ok: false,
+      error: { code: "NOT_FOUND", message: `Unhandled: ${String(channel)}` },
+    };
   };
 }
 
@@ -80,7 +94,10 @@ function QualityPanelWrapper(props: {
   const {
     projectId,
     judgeStatus = "ready",
-    constraints = { kind: "with-data", items: ["每章不超过3000字", "避免重复词汇", "保持视角统一"] },
+    constraints = {
+      kind: "with-data",
+      items: ["每章不超过3000字", "避免重复词汇", "保持视角统一"],
+    },
   } = props;
 
   const mockInvoke = React.useMemo(
@@ -115,8 +132,12 @@ function QualityPanelWrapper(props: {
 
   React.useEffect(() => {
     const prev = window.creonow;
-    window.creonow = { invoke: mockInvoke as NonNullable<Window["creonow"]>["invoke"] };
-    return () => { window.creonow = prev; };
+    window.creonow = {
+      invoke: mockInvoke as NonNullable<Window["creonow"]>["invoke"],
+    };
+    return () => {
+      window.creonow = prev;
+    };
   }, [mockInvoke]);
 
   return (
@@ -182,7 +203,9 @@ export const NoProject: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("quality-panel")).toBeInTheDocument();
-    await expect(canvas.getByTestId("quality-panel-no-project")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("quality-panel-no-project"),
+    ).toBeInTheDocument();
   },
 };
 

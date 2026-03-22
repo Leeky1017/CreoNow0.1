@@ -12,10 +12,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { within, expect } from "@storybook/test";
 
 import { InfoPanel } from "./InfoPanel";
-import {
-  FileStoreProvider,
-  createFileStore,
-} from "../../stores/fileStore";
+import { FileStoreProvider, createFileStore } from "../../stores/fileStore";
 import "../../i18n";
 
 /* ------------------------------------------------------------------ */
@@ -52,7 +49,12 @@ function createMockInfoIpc(statsOptions: MockStatsOptions) {
           ok: true,
           data: {
             date: new Date().toISOString().split("T")[0],
-            summary: { wordsWritten: 0, writingSeconds: 0, skillsUsed: 0, documentsCreated: 0 },
+            summary: {
+              wordsWritten: 0,
+              writingSeconds: 0,
+              skillsUsed: 0,
+              documentsCreated: 0,
+            },
           },
         };
       }
@@ -64,7 +66,10 @@ function createMockInfoIpc(statsOptions: MockStatsOptions) {
         },
       };
     }
-    return { ok: false, error: { code: "NOT_FOUND", message: `Unhandled: ${String(channel)}` } };
+    return {
+      ok: false,
+      error: { code: "NOT_FOUND", message: `Unhandled: ${String(channel)}` },
+    };
   };
 }
 
@@ -84,23 +89,28 @@ function InfoPanelWrapper(props: {
   );
 
   const [fileStore] = React.useState(() => {
-    const store = createFileStore({ invoke: mockInvoke as Parameters<typeof createFileStore>[0]["invoke"] });
+    const store = createFileStore({
+      invoke: mockInvoke as Parameters<typeof createFileStore>[0]["invoke"],
+    });
     store.setState({
       projectId: "project-story",
-      items: props.hasDocument !== false
-        ? [
-            {
-              documentId: "doc-1",
-              type: "chapter" as const,
-              title: "第一章 · 起始之处",
-              status: "draft" as const,
-              sortOrder: 0,
-              parentId: undefined,
-              updatedAt: Date.now() - 3600000,
-            },
-          ]
-        : [],
-      currentDocumentId: props.currentDocumentId ?? (props.hasDocument !== false ? "doc-1" : null),
+      items:
+        props.hasDocument !== false
+          ? [
+              {
+                documentId: "doc-1",
+                type: "chapter" as const,
+                title: "第一章 · 起始之处",
+                status: "draft" as const,
+                sortOrder: 0,
+                parentId: undefined,
+                updatedAt: Date.now() - 3600000,
+              },
+            ]
+          : [],
+      currentDocumentId:
+        props.currentDocumentId ??
+        (props.hasDocument !== false ? "doc-1" : null),
       bootstrapStatus: "ready",
       lastError: null,
     });
@@ -109,8 +119,12 @@ function InfoPanelWrapper(props: {
 
   React.useEffect(() => {
     const prev = window.creonow;
-    window.creonow = { invoke: mockInvoke as NonNullable<Window["creonow"]>["invoke"] };
-    return () => { window.creonow = prev; };
+    window.creonow = {
+      invoke: mockInvoke as NonNullable<Window["creonow"]>["invoke"],
+    };
+    return () => {
+      window.creonow = prev;
+    };
   }, [mockInvoke]);
 
   return (
@@ -153,22 +167,39 @@ export const Default: Story = {
     <InfoPanelWrapper
       statsOptions={{
         kind: "success",
-        summary: { wordsWritten: 1240, writingSeconds: 2700, skillsUsed: 3, documentsCreated: 1 },
+        summary: {
+          wordsWritten: 1240,
+          writingSeconds: 2700,
+          skillsUsed: 3,
+          documentsCreated: 1,
+        },
       }}
     />
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("info-panel")).toBeInTheDocument();
-    await expect(canvas.getByTestId("info-panel-doc-title")).toBeInTheDocument();
-    await expect(canvas.getByTestId("info-panel-words-written")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("info-panel-doc-title"),
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("info-panel-words-written"),
+    ).toBeInTheDocument();
   },
 };
 
 export const NoDocument: Story = {
   render: () => (
     <InfoPanelWrapper
-      statsOptions={{ kind: "success", summary: { wordsWritten: 0, writingSeconds: 0, skillsUsed: 0, documentsCreated: 0 } }}
+      statsOptions={{
+        kind: "success",
+        summary: {
+          wordsWritten: 0,
+          writingSeconds: 0,
+          skillsUsed: 0,
+          documentsCreated: 0,
+        },
+      }}
       currentDocumentId={null}
       hasDocument={false}
     />
@@ -176,30 +207,38 @@ export const NoDocument: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("info-panel")).toBeInTheDocument();
-    await expect(canvas.getByTestId("info-panel-no-document")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("info-panel-no-document"),
+    ).toBeInTheDocument();
   },
 };
 
 export const StatsError: Story = {
   render: () => (
     <InfoPanelWrapper
-      statsOptions={{ kind: "error", code: "INTERNAL", message: "Failed to load stats" }}
+      statsOptions={{
+        kind: "error",
+        code: "INTERNAL",
+        message: "Failed to load stats",
+      }}
     />
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("info-panel")).toBeInTheDocument();
-    await expect(canvas.getByTestId("info-panel-stats-error")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("info-panel-stats-error"),
+    ).toBeInTheDocument();
   },
 };
 
 export const EmptyDay: Story = {
-  render: () => (
-    <InfoPanelWrapper statsOptions={{ kind: "empty" }} />
-  ),
+  render: () => <InfoPanelWrapper statsOptions={{ kind: "empty" }} />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("info-panel")).toBeInTheDocument();
-    await expect(canvas.getByTestId("info-panel-doc-title")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("info-panel-doc-title"),
+    ).toBeInTheDocument();
   },
 };
