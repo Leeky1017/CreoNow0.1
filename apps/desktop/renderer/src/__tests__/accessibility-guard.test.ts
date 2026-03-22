@@ -13,10 +13,7 @@ describe("V1-19 Accessibility Guard", () => {
 
   it("FileTreePanel 包含 tree role 和 aria-label", () => {
     const content = fs.readFileSync(
-      path.resolve(
-        __dirname,
-        "../features/files/FileTreePanel.tsx",
-      ),
+      path.resolve(__dirname, "../features/files/FileTreePanel.tsx"),
       "utf-8",
     );
     expect(content).toContain('role="tree"');
@@ -25,10 +22,7 @@ describe("V1-19 Accessibility Guard", () => {
 
   it("FileTreeNodeRow 包含 treeitem role 和 aria-expanded/aria-level", () => {
     const content = fs.readFileSync(
-      path.resolve(
-        __dirname,
-        "../features/files/FileTreeNodeRow.tsx",
-      ),
+      path.resolve(__dirname, "../features/files/FileTreeNodeRow.tsx"),
       "utf-8",
     );
     expect(content).toContain('role="treeitem"');
@@ -38,10 +32,7 @@ describe("V1-19 Accessibility Guard", () => {
 
   it("OutlinePanel 包含 tree role", () => {
     const content = fs.readFileSync(
-      path.resolve(
-        __dirname,
-        "../features/outline/OutlinePanel.tsx",
-      ),
+      path.resolve(__dirname, "../features/outline/OutlinePanel.tsx"),
       "utf-8",
     );
     expect(content).toContain('role="tree"');
@@ -49,10 +40,7 @@ describe("V1-19 Accessibility Guard", () => {
 
   it("AI 消息区域包含 aria-live region 和 role log", () => {
     const content = fs.readFileSync(
-      path.resolve(
-        __dirname,
-        "../features/ai/AiMessageList.tsx",
-      ),
+      path.resolve(__dirname, "../features/ai/AiMessageList.tsx"),
       "utf-8",
     );
     expect(content).toContain("aria-live");
@@ -63,10 +51,7 @@ describe("V1-19 Accessibility Guard", () => {
 
   it("FileTreePanel 支持键盘导航", () => {
     const content = fs.readFileSync(
-      path.resolve(
-        __dirname,
-        "../features/files/useFileTreeKeyboard.ts",
-      ),
+      path.resolve(__dirname, "../features/files/useFileTreeKeyboard.ts"),
       "utf-8",
     );
     expect(content).toContain("handleTreeKeyDown");
@@ -78,10 +63,7 @@ describe("V1-19 Accessibility Guard", () => {
 
   it("LayoutShell 包含 skip-to-content 链接", () => {
     const content = fs.readFileSync(
-      path.resolve(
-        __dirname,
-        "../components/layout/LayoutShell.tsx",
-      ),
+      path.resolve(__dirname, "../components/layout/LayoutShell.tsx"),
       "utf-8",
     );
     expect(content).toContain("skip");

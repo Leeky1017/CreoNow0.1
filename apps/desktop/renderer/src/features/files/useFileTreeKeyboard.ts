@@ -26,7 +26,9 @@ interface ResolvedContext {
 
 function handleArrowDown(ctx: ResolvedContext, deps: TreeKeyDownDeps): void {
   const next =
-    deps.visibleNodes[Math.min(ctx.currentIndex + 1, deps.visibleNodes.length - 1)];
+    deps.visibleNodes[
+      Math.min(ctx.currentIndex + 1, deps.visibleNodes.length - 1)
+    ];
   if (next) deps.setFocusedDocumentId(next.node.documentId);
 }
 
