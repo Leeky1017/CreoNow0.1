@@ -202,6 +202,9 @@ export const DefaultMultiProject: Story = {
   args: {
     onProjectSelect: (id: string) => console.log("Selected project:", id),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -226,12 +229,18 @@ export const EmptyState: Story = {
   args: {
     onProjectSelect: (id: string) => console.log("Selected project:", id),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const SearchFiltered: Story = {
   decorators: [createStoryDecorator(mockProjects)],
   args: {
     onProjectSelect: (id: string) => console.log("Selected project:", id),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -243,6 +252,9 @@ export const SingleProject: Story = {
   args: {
     onProjectSelect: (id: string) => console.log("Selected project:", id),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -252,6 +264,9 @@ export const TwoProjects: Story = {
   decorators: [createStoryDecorator(mockProjects.slice(0, 2))],
   args: {
     onProjectSelect: (id: string) => console.log("Selected project:", id),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -335,4 +350,7 @@ export const Loading: Story = {
       );
     },
   ],
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

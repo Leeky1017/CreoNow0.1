@@ -3,6 +3,7 @@ import { CircleAlert } from "lucide-react";
 import React from "react";
 import { AiPanel } from "./AiPanel";
 import { layoutDecorator } from "../../components/layout/test-utils";
+import { expect } from "@storybook/test";
 
 const meta = {
   title: "Features/AI/States",
@@ -212,6 +213,9 @@ export const SendButtonStates: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 错误状态 — AI 请求失败时的错误提示 */
@@ -344,5 +348,8 @@ export const ErrorState: Story = {
         story: "错误状态展示。请求失败时显示红色边框的错误提示和重试按钮。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

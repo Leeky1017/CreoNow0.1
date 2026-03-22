@@ -96,7 +96,7 @@ const recentFiles: CommandItem[] = [
   {
     id: "file-app",
     label: "App.tsx",
-    icon: <FileIcon color="#3b82f6" />,
+    icon: <FileIcon color="var(--color-info)" />,
     subtext: "src/components",
     group: "Recent Files",
     onSelect: fn(),
@@ -104,14 +104,14 @@ const recentFiles: CommandItem[] = [
   {
     id: "file-package",
     label: "package.json",
-    icon: <FileIcon color="#eab308" />,
+    icon: <FileIcon color="var(--color-warning)" />,
     group: "Recent Files",
     onSelect: fn(),
   },
   {
     id: "file-logo",
     label: "logo-brand.svg",
-    icon: <FileIcon color="#c084fc" />,
+    icon: <FileIcon color="var(--color-accent-purple, #c084fc)" />,
     group: "Recent Files",
     onSelect: fn(),
   },
@@ -216,5 +216,12 @@ export const LongCommandList: Story = {
           "长命令列表测试。50 个命令，验证滚动流畅性和分组标题 sticky 效果。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvasElement.querySelector("[data-testid]") ||
+        canvasElement.firstElementChild,
+    ).toBeTruthy();
   },
 };

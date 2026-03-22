@@ -11,6 +11,7 @@ import { DiffHeader, type DiffViewMode, type VersionInfo } from "./DiffHeader";
 import { DiffFooter } from "./DiffFooter";
 import { SplitDiffView } from "./SplitDiffView";
 import { layoutDecorator } from "../../components/layout/test-utils";
+import { expect } from "@storybook/test";
 
 /**
  * DiffView 基础展示 Stories
@@ -99,6 +100,9 @@ export const Default: Story = {
       <DiffView {...args} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -119,6 +123,9 @@ export const Empty: Story = {
       <DiffView {...args} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -141,6 +148,9 @@ export const FullPanelUnified: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -163,6 +173,9 @@ export const FullPanelSplit: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -190,6 +203,9 @@ export const UnifiedViewOnly: Story = {
       </div>
     );
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -212,6 +228,9 @@ export const SplitViewOnly: Story = {
       </div>
     );
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -224,6 +243,9 @@ export const HeaderOnly: Story = {
     diffText: sampleDiff,
   },
   render: () => <HeaderOnlyDemo />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function HeaderOnlyDemo(): JSX.Element {
@@ -269,4 +291,7 @@ export const FooterOnly: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

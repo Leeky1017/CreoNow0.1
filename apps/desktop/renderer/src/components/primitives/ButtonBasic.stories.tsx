@@ -114,6 +114,10 @@ export const Secondary: Story = {
     variant: "secondary",
     size: "md",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /** Ghost variant：轻量级操作按钮 */
@@ -123,6 +127,10 @@ export const Ghost: Story = {
     variant: "ghost",
     size: "md",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /** Danger variant：危险/删除操作按钮 */
@@ -131,6 +139,10 @@ export const Danger: Story = {
     children: "Danger Button",
     variant: "danger",
     size: "md",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
 
@@ -145,6 +157,10 @@ export const Small: Story = {
     variant: "secondary",
     size: "sm",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /** Medium size：中等尺寸按钮（36px 高） */
@@ -154,6 +170,10 @@ export const Medium: Story = {
     variant: "secondary",
     size: "md",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /** Large size：大尺寸按钮（44px 高） */
@@ -162,6 +182,10 @@ export const Large: Story = {
     children: "Large Button",
     variant: "secondary",
     size: "lg",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
 
@@ -210,6 +234,10 @@ export const FullWidth: Story = {
   parameters: {
     layout: "padded",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /** Pill variant — 胶囊按钮 */
@@ -217,6 +245,10 @@ export const Pill: Story = {
   args: {
     variant: "pill",
     children: "Pill Button",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
 
@@ -234,6 +266,10 @@ export const PillStates: Story = {
       </Button>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /** Icon-only 按钮 */
@@ -242,6 +278,10 @@ export const IconOnly: Story = {
     size: "icon",
     variant: "ghost",
     children: "✕",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
 
@@ -264,4 +304,8 @@ export const IconOnlyVariants: Story = {
       </Button>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };

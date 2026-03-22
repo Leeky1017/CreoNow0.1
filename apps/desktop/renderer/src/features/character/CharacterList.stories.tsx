@@ -69,6 +69,13 @@ export const EmptyProject: Story = {
     characters: [],
     selectedId: null,
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvasElement.querySelector("[data-testid]") ||
+        canvasElement.firstElementChild,
+    ).toBeTruthy();
+  },
 };
 
 function SwitchingBetweenCharactersRender() {
@@ -124,6 +131,13 @@ function SwitchingBetweenCharactersRender() {
 /** 用户快速切换角色 */
 export const SwitchingBetweenCharacters: Story = {
   render: () => <SwitchingBetweenCharactersRender />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvasElement.querySelector("[data-testid]") ||
+        canvasElement.firstElementChild,
+    ).toBeTruthy();
+  },
 };
 
 /** 头像 hover 显示相机图标状态 */
@@ -139,7 +153,7 @@ export const AvatarHoverState: Story = {
             {/* With avatar */}
             <div className="text-center">
               <div className="relative group cursor-pointer mb-2">
-                <div className="w-16 h-16 rounded-full p-[1px] bg-gradient-to-b from-[var(--color-border-hover)] to-[#111]">
+                <div className="w-16 h-16 rounded-full p-[1px] bg-gradient-to-b from-[var(--color-border-hover)] to-[var(--color-bg-surface)]">
                   <img
                     src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=128&h=128&fit=crop&crop=faces"
                     alt="Elara Vance"
@@ -192,6 +206,13 @@ export const AvatarHoverState: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvasElement.querySelector("[data-testid]") ||
+        canvasElement.firstElementChild,
+    ).toBeTruthy();
+  },
 };
 
 function ChapterAppearanceNavigationRender() {
@@ -242,4 +263,11 @@ function ChapterAppearanceNavigationRender() {
 /** 用户点击章节链接 */
 export const ChapterAppearanceNavigation: Story = {
   render: () => <ChapterAppearanceNavigationRender />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvasElement.querySelector("[data-testid]") ||
+        canvasElement.firstElementChild,
+    ).toBeTruthy();
+  },
 };

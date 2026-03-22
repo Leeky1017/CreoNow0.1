@@ -10,6 +10,7 @@ import {
   EditorStoreProvider,
   createEditorStore,
 } from "../../stores/editorStore";
+import { within, expect } from "@storybook/test";
 
 function createMockIpc(options: {
   items?: DocumentListItem[];
@@ -206,6 +207,10 @@ export const Default: Story = {
       currentDocumentId="doc-1"
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -221,6 +226,10 @@ export const Empty: Story = {
       currentDocumentId={null}
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -237,6 +246,10 @@ export const Loading: Story = {
       bootstrapStatus="loading"
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -262,6 +275,10 @@ export const ManyFiles: Story = {
         currentDocumentId="doc-10"
       />
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
   },
 };
 
@@ -308,6 +325,10 @@ export const LongFileNames: Story = {
       currentDocumentId="doc-1"
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -367,6 +388,10 @@ export const WithSelection: Story = {
       currentDocumentId="doc-2"
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -419,4 +444,8 @@ export const NestedHierarchy: Story = {
       currentDocumentId="doc-1-1"
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };

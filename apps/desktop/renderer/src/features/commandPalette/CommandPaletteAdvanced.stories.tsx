@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { fn, within, expect } from "@storybook/test";
 import {
   Download,
   FileText,
@@ -109,7 +109,7 @@ const recentFiles: CommandItem[] = [
   {
     id: "file-app",
     label: "App.tsx",
-    icon: <FileIcon color="#3b82f6" />,
+    icon: <FileIcon color="var(--color-info)" />,
     subtext: "src/components",
     group: "Recent Files",
     onSelect: fn(),
@@ -117,14 +117,14 @@ const recentFiles: CommandItem[] = [
   {
     id: "file-package",
     label: "package.json",
-    icon: <FileIcon color="#eab308" />,
+    icon: <FileIcon color="var(--color-warning)" />,
     group: "Recent Files",
     onSelect: fn(),
   },
   {
     id: "file-logo",
     label: "logo-brand.svg",
-    icon: <FileIcon color="#c084fc" />,
+    icon: <FileIcon color="var(--color-accent-purple, #c084fc)" />,
     group: "Recent Files",
     onSelect: fn(),
   },
@@ -183,7 +183,7 @@ const searchCommands: CommandItem[] = [
   {
     id: "file-use-settings",
     label: "useSettings.ts",
-    icon: <FileIcon color="#3b82f6" />,
+    icon: <FileIcon color="var(--color-info)" />,
     subtext: "src/hooks",
     group: "Files",
     onSelect: fn(),
@@ -191,7 +191,7 @@ const searchCommands: CommandItem[] = [
   {
     id: "file-settings-modal",
     label: "SettingsModal.tsx",
-    icon: <FileIcon color="#3b82f6" />,
+    icon: <FileIcon color="var(--color-info)" />,
     subtext: "src/components",
     group: "Files",
     onSelect: fn(),
@@ -199,7 +199,7 @@ const searchCommands: CommandItem[] = [
   {
     id: "file-reset-css",
     label: "reset.css",
-    icon: <FileIcon color="#4ade80" />,
+    icon: <FileIcon color="var(--color-success)" />,
     subtext: "public/styles",
     group: "Files",
     onSelect: fn(),
@@ -296,6 +296,9 @@ export const MultipleGroups: Story = {
       <CommandPalette {...args} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 键盘导航演示 — ↑↓ 移动选中项，Enter 执行，Esc 关闭 */
@@ -415,6 +418,9 @@ export const KeyboardNavigationDemo: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 搜索高亮 — 展示搜索时匹配文字的高亮效果 */
@@ -456,5 +462,8 @@ export const SearchHighlight: Story = {
         story: '搜索高亮演示。输入 "set" 查看匹配文字的高亮效果。',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

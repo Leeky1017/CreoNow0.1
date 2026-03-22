@@ -7,6 +7,7 @@ import {
   type DialogType,
   type LeftPanelType,
 } from "../../stores/layoutStore";
+import { expect } from "@storybook/test";
 
 /**
  * IconBar 组件 Story
@@ -123,6 +124,9 @@ export const Default: Story = {
       <IconBarStatePreview activePanel="files" />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -134,6 +138,9 @@ export const KnowledgeGraphActive: Story = {
       <IconBarStatePreview activePanel="files" dialogType="knowledgeGraph" />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -148,6 +155,9 @@ export const SearchHover: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const FilesFocusVisible: Story = {
@@ -159,6 +169,9 @@ export const FilesFocusVisible: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const ReducedMotion: Story = {
@@ -167,6 +180,9 @@ export const ReducedMotion: Story = {
       <IconBarStatePreview activePanel="files" reducedMotion={true} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const DarkMode: Story = {
@@ -175,6 +191,9 @@ export const DarkMode: Story = {
       <IconBarStatePreview activePanel="files" dark={true} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -182,4 +201,7 @@ export const DarkMode: Story = {
  */
 export const FullHeight: Story = {
   render: () => <IconBarStatePreview activePanel="files" fullHeight={true} />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { OutlinePanel, type OutlineItem } from "./OutlinePanel";
+import { expect } from "@storybook/test";
 
 /**
  * Sample outline data based on design spec
@@ -164,7 +165,7 @@ const meta: Meta<typeof OutlinePanel> = {
               <h1 className="text-4xl font-bold text-[var(--color-fg-default)] mb-8 tracking-tight">
                 The Aesthetics of Silence
               </h1>
-              <div className="space-y-6 text-[#bfbfbf] leading-relaxed text-lg font-light">
+              <div className="space-y-6 text-[var(--color-fg-muted)] leading-relaxed text-lg font-light">
                 <p>
                   In a world of noise, silence is a luxury. Our interfaces
                   recede, allowing the content to breathe.
@@ -202,6 +203,9 @@ export const DefaultMultiLevel: Story = {
     activeId: "h1-aesthetics",
     draggable: true,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -213,6 +217,9 @@ export const EmptyDocument: Story = {
   args: {
     items: [],
     activeId: null,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -235,6 +242,9 @@ export const EditorScrollSync: Story = {
           "P0: 编辑器滚动同步。启用后底部显示绿色同步指示器，activeId 会随编辑器滚动自动更新。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -262,6 +272,9 @@ export const WordCountDisplay: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -274,6 +287,9 @@ export const LongTitleTruncation: Story = {
     items: LONG_TITLE_DATA,
     activeId: "h1-aesthetics",
     draggable: true,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -295,5 +311,8 @@ export const LargeDocument: Story = {
           "大文档性能测试。包含 10 章 × 5 节 × 3 小节 = 180 个大纲项，测试滚动和渲染性能。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

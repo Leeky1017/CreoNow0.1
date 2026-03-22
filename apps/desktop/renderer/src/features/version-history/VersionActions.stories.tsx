@@ -4,6 +4,7 @@ import React from "react";
 import { VersionHistoryPanel, type TimeGroup } from "./VersionHistoryPanel";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "../../components/primitives";
+import { expect } from "@storybook/test";
 
 const SAMPLE_TIME_GROUPS: TimeGroup[] = [
   {
@@ -265,6 +266,9 @@ export const RestoreConfirmation: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function CompareWithCurrentRender() {
@@ -331,6 +335,9 @@ export const CompareWithCurrent: Story = {
           "与当前版本对比功能。点击选中版本的 Compare 按钮，触发对比模式（实际应用中会打开 Diff 视图）。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -400,5 +407,8 @@ export const PreviewVersion: Story = {
           "预览版本功能。点击选中版本的 Preview 按钮，进入只读预览模式（实际应用中会显示该版本的文档内容）。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

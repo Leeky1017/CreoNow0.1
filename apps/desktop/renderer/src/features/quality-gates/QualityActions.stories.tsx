@@ -3,6 +3,7 @@ import { NotepadText } from "lucide-react";
 import React from "react";
 import { QualityGatesPanel, type QualitySettings } from "./QualityGatesPanel";
 import { SAMPLE_CHECK_GROUPS } from "./qualityGatesStoryData";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof QualityGatesPanel> = {
   title: "Features/QualityGates/Actions",
@@ -88,6 +89,9 @@ export const ExpandedIssueDetail: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function FixIssueActionRender() {
@@ -167,6 +171,9 @@ export const FixIssueAction: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function IgnoreIssueActionRender() {
@@ -242,6 +249,9 @@ export const IgnoreIssueAction: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function SettingsExpandedRender() {
@@ -292,6 +302,9 @@ export const SettingsExpanded: Story = {
           "展开设置区域。Settings 区域展开后显示 Toggle 控件和下拉选择，可以配置检查行为。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -369,5 +382,8 @@ export const RunAllChecks: Story = {
           '运行所有检查。点击 "Run All Checks" 按钮后，所有检查项依次显示检查动画，完成后状态更新。',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

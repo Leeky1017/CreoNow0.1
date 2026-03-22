@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Input } from "./Input";
+import { within, expect } from "@storybook/test";
 
 const meta = {
   title: "Primitives/Input/Variants",
@@ -21,6 +22,10 @@ export const Password: Story = {
     type: "password",
     placeholder: "Enter password...",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /** Email 输入 */
@@ -28,6 +33,10 @@ export const Email: Story = {
   args: {
     type: "email",
     placeholder: "Enter email...",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 
@@ -37,6 +46,10 @@ export const Number: Story = {
     type: "number",
     placeholder: "Enter number...",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /** Search 输入 */
@@ -44,6 +57,10 @@ export const Search: Story = {
   args: {
     type: "search",
     placeholder: "Search...",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 
@@ -128,6 +145,10 @@ export const AllTypes: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 // ============================================================================
@@ -143,6 +164,10 @@ export const LongText: Story = {
   args: {
     defaultValue:
       "This is a very long text that should scroll horizontally when it exceeds the input width",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 
@@ -171,6 +196,10 @@ export const LongTextConstrained: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -182,6 +211,10 @@ export const ShortText: Story = {
   args: {
     defaultValue: "Hi",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -192,6 +225,10 @@ export const ShortText: Story = {
 export const WithEmoji: Story = {
   args: {
     defaultValue: "Hello 🌍 World 🚀",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 

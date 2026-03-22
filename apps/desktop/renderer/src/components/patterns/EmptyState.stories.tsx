@@ -9,6 +9,7 @@ import {
   MemoryIllustration,
   OutlineIllustration,
 } from "../../assets/illustrations/BrandIllustrations";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof EmptyState> = {
   title: "Patterns/EmptyState",
@@ -41,6 +42,9 @@ export const Project: Story = {
     variant: "project",
     onAction: () => {},
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** variant="files" — 无文件提示 */
@@ -48,6 +52,9 @@ export const Files: Story = {
   args: {
     variant: "files",
     onAction: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -57,6 +64,9 @@ export const Search: Story = {
     variant: "search",
     onAction: () => {},
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** variant="characters" — 无角色提示 */
@@ -65,6 +75,9 @@ export const Characters: Story = {
     variant: "characters",
     onAction: () => {},
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** variant="generic" — 通用空态 */
@@ -72,6 +85,9 @@ export const Generic: Story = {
   args: {
     variant: "generic",
     onAction: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -83,6 +99,9 @@ export const CustomContent: Story = {
     description: "请添加内容以开始使用",
     actionLabel: "开始添加",
     onAction: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 

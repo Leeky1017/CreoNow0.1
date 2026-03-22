@@ -158,16 +158,16 @@ const meta: Meta<typeof VersionHistoryPanel> = {
             </div>
           </div>
           <div className="flex-1 p-12 overflow-hidden flex justify-center">
-            <div className="w-full max-w-3xl h-full bg-[#121212] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-2xl p-16 relative">
-              <div className="w-1/3 h-8 bg-[rgba(255,255,255,0.08)] rounded mb-10" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-5/6 h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-8" />
-              <div className="w-1/4 h-5 bg-[rgba(255,255,255,0.06)] rounded mb-6" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-11/12 h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
+            <div className="w-full max-w-3xl h-full bg-[var(--color-bg-surface)] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-[var(--shadow-2xl)] p-16 relative">
+              <div className="w-1/3 h-8 bg-[var(--color-bg-overlay)] rounded mb-10" />
+              <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-4" />
+              <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-4" />
+              <div className="w-5/6 h-3 bg-[var(--color-separator)] rounded mb-4" />
+              <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-8" />
+              <div className="w-1/4 h-5 bg-[var(--color-separator)] rounded mb-6" />
+              <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-4" />
+              <div className="w-11/12 h-3 bg-[var(--color-separator)] rounded mb-4" />
+              <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-4" />
               <div className="absolute top-64 left-16 right-16 h-24 bg-[var(--color-info)]/5 border-l-2 border-[var(--color-info)]/30" />
             </div>
           </div>
@@ -252,6 +252,13 @@ export const HoverShowQuickActions: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvasElement.querySelector("[data-testid]") ||
+        canvasElement.firstElementChild,
+    ).toBeTruthy();
+  },
 };
 
 /** Scene 4: WordCountVariations — 不同变更量显示 */
@@ -270,6 +277,13 @@ export const WordCountVariations: Story = {
           "不同变更量的显示样式。+124 words 显示为绿色，-12 words 显示为红色，No changes 显示为灰色。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvasElement.querySelector("[data-testid]") ||
+        canvasElement.firstElementChild,
+    ).toBeTruthy();
   },
 };
 

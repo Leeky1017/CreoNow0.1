@@ -5,6 +5,7 @@ import {
   type OutlineItem,
   type DropPosition,
 } from "./OutlinePanel";
+import { expect } from "@storybook/test";
 
 /**
  * Sample outline data based on design spec
@@ -126,7 +127,7 @@ const meta: Meta<typeof OutlinePanel> = {
               <h1 className="text-4xl font-bold text-[var(--color-fg-default)] mb-8 tracking-tight">
                 The Aesthetics of Silence
               </h1>
-              <div className="space-y-6 text-[#bfbfbf] leading-relaxed text-lg font-light">
+              <div className="space-y-6 text-[var(--color-fg-muted)] leading-relaxed text-lg font-light">
                 <p>
                   In a world of noise, silence is a luxury. Our interfaces
                   recede, allowing the content to breathe.
@@ -182,6 +183,9 @@ export const SingleNodeCollapse: Story = {
           "P0: 单节点展开/折叠。点击节点左侧的箭头可以折叠/展开该节点的子项。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -242,6 +246,9 @@ export const DragDropComplete: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // =============================================================================
@@ -275,6 +282,9 @@ export const SearchFilter: Story = {
           'P1: 搜索/过滤功能。在顶部搜索框输入关键词，大纲会实时过滤显示匹配项。输入 "Digital" 试试。',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -315,6 +325,9 @@ export const MultiSelect: Story = {
 - 选中后可批量删除`,
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -362,6 +375,9 @@ export const KeyboardNavigation: Story = {
 - Ctrl/Cmd + A: 全选`,
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -431,5 +447,8 @@ export const AllFeaturesCombined: Story = {
           "所有功能组合演示：折叠/展开、拖拽、搜索、多选、键盘导航、字数统计、滚动同步。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

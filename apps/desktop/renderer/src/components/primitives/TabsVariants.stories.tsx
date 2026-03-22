@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { TabItem } from "./Tabs";
 import { Tabs } from "./Tabs";
+import { within, expect } from "@storybook/test";
 
 const meta = {
   title: "Primitives/Tabs/Variants",
@@ -110,6 +111,10 @@ export const LongLabels: Story = {
       { value: "t3", label: "Short", content: <div>Content 3</div> },
     ],
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -125,6 +130,10 @@ export const ManyTabs: Story = {
   },
   parameters: {
     layout: "padded",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
   },
 };
 
@@ -177,6 +186,10 @@ export const WithIcons: Story = {
         content: <div>Settings content</div>,
       },
     ],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
   },
 };
 
@@ -287,6 +300,10 @@ export const RichContent: Story = {
   parameters: {
     layout: "padded",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
+  },
 };
 
 // ============================================================================
@@ -306,6 +323,10 @@ export const SingleTab: Story = {
       },
     ],
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -317,6 +338,10 @@ export const EmptyContent: Story = {
       { value: "t1", label: "Tab 1", content: <div></div> },
       { value: "t2", label: "Tab 2", content: <div>Has content</div> },
     ],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
   },
 };
 
@@ -340,6 +365,10 @@ export const FocusTest: Story = {
           "使用 Tab 键聚焦到标签，用左右箭头键切换，验证 focus ring 和键盘导航",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
   },
 };
 
@@ -433,6 +462,10 @@ export const Underline: Story = {
     tabs: basicTabs,
     variant: "underline",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
+  },
 };
 
 /** Underline + Full Width */
@@ -441,6 +474,10 @@ export const UnderlineFullWidth: Story = {
     tabs: basicTabs,
     variant: "underline",
     fullWidth: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
   },
 };
 
@@ -453,5 +490,9 @@ export const UnderlineVertical: Story = {
   },
   parameters: {
     layout: "padded",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
   },
 };

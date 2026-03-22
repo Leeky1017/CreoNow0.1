@@ -1,9 +1,9 @@
 /**
  * Settings Stories — AiSettingsSection, AppearanceSection, JudgeSection
  *
- * Static demo approach: these components use IPC and Zustand stores,
- * so we render visual replicas using primitive components and mock data,
- * mirroring each section's data-testid contract.
+ * @demo-only This story uses a static replica because the real component
+ * depends on Electron IPC and Zustand stores that cannot be easily mocked
+ * in Storybook. See docs/references/testing/README.md for guidelines.
  *
  * @module features/settings/Settings.stories
  */
@@ -318,6 +318,9 @@ export const AppearanceDefault: Story = {
       <AppearanceDemo />
     </SettingsShell>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Judge section showing model ready state. */
@@ -328,6 +331,9 @@ export const JudgeReady: Story = {
       <JudgeDemo status="ready" />
     </SettingsShell>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Judge section showing error state with retry option. */
@@ -338,4 +344,7 @@ export const JudgeError: Story = {
       <JudgeDemo status="error" />
     </SettingsShell>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

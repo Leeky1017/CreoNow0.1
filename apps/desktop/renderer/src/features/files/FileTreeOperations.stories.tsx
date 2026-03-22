@@ -10,6 +10,7 @@ import {
   EditorStoreProvider,
   createEditorStore,
 } from "../../stores/editorStore";
+import { expect } from "@storybook/test";
 
 function createMockIpc(options: {
   items?: DocumentListItem[];
@@ -199,6 +200,9 @@ export const RenameDemo: Story = {
       initialRenameDocumentId="doc-long"
     />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -257,6 +261,9 @@ export const DragDropState: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -306,6 +313,9 @@ export const ContextMenuState: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 const KEYBOARD_NAV_ITEMS: DocumentListItem[] = [
@@ -482,5 +492,8 @@ export const KeyboardNavigation: Story = {
         story: "键盘导航演示。↑↓ 移动，Enter 打开，F2 重命名，Delete 删除。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

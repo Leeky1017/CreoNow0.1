@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Search } from "lucide-react";
 import { SearchPanel, type SearchResultItem } from "./SearchPanel";
 import { layoutDecorator } from "../../components/layout/test-utils";
+import { within, expect } from "@storybook/test";
 
 const MOCK_SEARCH_RESULTS: SearchResultItem[] = [
   {
@@ -247,6 +248,10 @@ export const KeyboardNavigation: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -437,5 +442,9 @@ export const SearchInProgress: Story = {
           "搜索中状态。显示 Spinner 和 'Searching...' 文字，按 Esc 可取消。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };

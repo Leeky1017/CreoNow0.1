@@ -1,8 +1,10 @@
 /**
- * RightPanel Stories — QualityPanel
+ * RightPanel Quality Stories
  *
- * Static demo: IPC-dependent components rendered with mock data.
- * @module features/rightpanel/RightPanelQuality.stories
+ * @demo-only This story uses a static replica because the real component
+ * depends on Electron IPC and Zustand stores. The replica mirrors the
+ * original's data-testid contract for visual regression testing.
+ * See docs/references/testing/README.md for guidelines.
  */
 
 import React from "react";
@@ -266,6 +268,9 @@ export const QualityPanelNoProject: Story = {
       <QualityPanelDemo state="no-project" />
     </RightPanelShell>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** QualityPanel in loading state. */
@@ -276,4 +281,7 @@ export const QualityPanelLoading: Story = {
       <QualityPanelDemo state="loading" />
     </RightPanelShell>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

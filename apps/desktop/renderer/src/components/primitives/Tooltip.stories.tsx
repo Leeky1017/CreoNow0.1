@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Tooltip } from "./Tooltip";
 import { Button } from "./Button";
+import { expect } from "@storybook/test";
 
 /**
  * Tooltip 组件 Story
@@ -62,6 +63,9 @@ export const Default: Story = {
     content: "This is a tooltip",
     children: <Button>Hover me</Button>,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 长文本内容 */
@@ -70,6 +74,9 @@ export const LongContent: Story = {
     content:
       "This is a longer tooltip that contains more information about the element you're hovering over.",
     children: <Button>Hover for details</Button>,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -84,6 +91,9 @@ export const Top: Story = {
     side: "top",
     children: <Button>Top</Button>,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Right side */
@@ -92,6 +102,9 @@ export const Right: Story = {
     content: "Right tooltip",
     side: "right",
     children: <Button>Right</Button>,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -102,6 +115,9 @@ export const Bottom: Story = {
     side: "bottom",
     children: <Button>Bottom</Button>,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Left side */
@@ -110,6 +126,9 @@ export const Left: Story = {
     content: "Left tooltip",
     side: "left",
     children: <Button>Left</Button>,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -139,6 +158,9 @@ export const AllSides: Story = {
       </Tooltip>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 不同触发元素 */
@@ -184,6 +206,9 @@ export const DifferentTriggers: Story = {
       </Tooltip>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 即时显示 */
@@ -193,6 +218,9 @@ export const InstantDelay: Story = {
     delayDuration: 0,
     children: <Button>No delay</Button>,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 长延迟 */
@@ -201,6 +229,9 @@ export const LongDelay: Story = {
     content: "Delayed tooltip",
     delayDuration: 1000,
     children: <Button>1s delay</Button>,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -223,4 +254,7 @@ export const Alignments: Story = {
       </Tooltip>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

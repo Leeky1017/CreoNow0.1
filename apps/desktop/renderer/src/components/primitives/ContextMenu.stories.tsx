@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ContextMenu } from "./ContextMenu";
+import { within, expect } from "@storybook/test";
 
 const meta = {
   title: "Primitives/ContextMenu",
@@ -36,6 +37,10 @@ export const Default: Story = {
       </div>
     ),
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 export const WithDisabled: Story = {
@@ -58,5 +63,9 @@ export const WithDisabled: Story = {
         Right-click here
       </div>
     ),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };

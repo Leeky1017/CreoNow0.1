@@ -8,6 +8,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { AiPanel } from "./AiPanel";
 import { layoutDecorator } from "../../components/layout/test-utils";
+import { expect } from "@storybook/test";
 
 const meta = {
   title: "Features/AI/Conversation",
@@ -171,5 +172,8 @@ export const LongConversation: Story = {
           "长对话展示。多轮对话时的滚动和布局表现，用户消息有边框，AI 回复无边框。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

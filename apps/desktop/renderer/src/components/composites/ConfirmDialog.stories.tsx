@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { ConfirmDialog } from "./ConfirmDialog";
+import { within, expect } from "@storybook/test";
 
 const meta: Meta<typeof ConfirmDialog> = {
   title: "Composites/ConfirmDialog",
@@ -23,6 +24,10 @@ export const Default: Story = {
     onConfirm: () => {},
     onCancel: () => {},
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const Destructive: Story = {
@@ -36,5 +41,9 @@ export const Destructive: Story = {
     destructive: true,
     onConfirm: () => {},
     onCancel: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };

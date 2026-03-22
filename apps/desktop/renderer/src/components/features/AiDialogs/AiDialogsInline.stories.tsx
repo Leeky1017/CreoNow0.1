@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AiInlineConfirm } from "./AiInlineConfirm";
 import { AiDiffModal } from "./AiDiffModal";
 import type { DiffChange, DiffChangeState } from "./types";
+import { within, expect } from "@storybook/test";
 
 /**
  * AI Dialogs — Inline confirmation and diff comparison components
@@ -257,6 +258,10 @@ export const InlineConfirmDefault: StoryObj = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -264,6 +269,10 @@ export const InlineConfirmDefault: StoryObj = {
  */
 export const InlineConfirmAcceptFlow: StoryObj = {
   render: () => <InlineConfirmAcceptFlowWrapper />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -271,6 +280,10 @@ export const InlineConfirmAcceptFlow: StoryObj = {
  */
 export const InlineConfirmRejectFlow: StoryObj = {
   render: () => <InlineConfirmRejectFlowWrapper />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -291,6 +304,10 @@ export const InlineConfirmApplyingState: StoryObj = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 // =============================================================================
@@ -302,6 +319,10 @@ export const InlineConfirmApplyingState: StoryObj = {
  */
 export const DiffModalWithHighlight: StoryObj = {
   render: () => <DiffModalWithHighlightWrapper />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -309,6 +330,10 @@ export const DiffModalWithHighlight: StoryObj = {
  */
 export const DiffModalPartialAccept: StoryObj = {
   render: () => <DiffModalPartialAcceptWrapper />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -316,4 +341,8 @@ export const DiffModalPartialAccept: StoryObj = {
  */
 export const DiffModalApplyingChanges: StoryObj = {
   render: () => <DiffModalApplyingChangesWrapper />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };

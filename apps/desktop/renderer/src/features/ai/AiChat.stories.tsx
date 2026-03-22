@@ -36,6 +36,9 @@ export const Default: Story = {
  */
 export const ConversationStatic: Story = {
   render: () => <ConversationDemo />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function ConversationDemo(): JSX.Element {
@@ -183,6 +186,9 @@ function ConversationDemo(): JSX.Element {
 /** 流式输出状态（静态展示） */
 export const StreamingStatic: Story = {
   render: () => <StreamingDemo />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function StreamingDemo(): JSX.Element {
@@ -427,14 +433,23 @@ export const EmptyConversation: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** P2 四态：空态 */
 export const EmptyState: Story = {
   ...EmptyConversation,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** P2 四态：生成中 */
 export const GeneratingState: Story = {
   ...StreamingStatic,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

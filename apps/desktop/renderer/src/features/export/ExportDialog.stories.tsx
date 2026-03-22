@@ -136,6 +136,10 @@ export const SelectMarkdownFormat: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -169,6 +173,10 @@ export const ToggleAllOptions: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -196,6 +204,10 @@ export const ChangePageSize: Story = {
           "Page size changed to Letter. Preview badge shows 'PDF • LETTER'.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -257,6 +269,10 @@ export const ProgressViewAlmostDone: Story = {
           "Export almost complete at 95%. Progress bar nearly full, step shows 'Finalizing PDF...'.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -320,6 +336,10 @@ export const ProgressViewPreparing: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -346,6 +366,10 @@ export const ProgressViewEmbeddingImages: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const UnsupportedStructureError: Story = {
@@ -365,6 +389,10 @@ export const UnsupportedStructureError: Story = {
           "Config view with an explicit unsupported-structure failure, showing the same error surface users get before file write.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -392,5 +420,9 @@ export const LegalPageSize: Story = {
         story: "PDF with Legal page size. Preview badge shows 'PDF • LEGAL'.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };

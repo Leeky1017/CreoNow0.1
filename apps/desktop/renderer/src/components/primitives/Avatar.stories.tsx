@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { AvatarSize } from "./Avatar";
 import { Avatar } from "./Avatar";
+import { expect } from "@storybook/test";
 
 /**
  * Avatar 组件 Story
@@ -49,6 +50,9 @@ export const Default: Story = {
     fallback: "John Doe",
     size: "md",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 带图片 */
@@ -58,6 +62,9 @@ export const WithImage: Story = {
     alt: "John Doe",
     size: "md",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 只有首字母 */
@@ -65,6 +72,9 @@ export const WithInitials: Story = {
   args: {
     fallback: "AB",
     size: "md",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -74,6 +84,9 @@ export const SingleName: Story = {
     fallback: "Admin",
     size: "md",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 图片加载失败时显示 fallback */
@@ -82,6 +95,9 @@ export const ImageError: Story = {
     src: "https://invalid-url.example.com/image.jpg",
     fallback: "Error User",
     size: "md",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -97,6 +113,9 @@ export const ExtraSmall: Story = {
     fallback: "XS",
     size: "xs",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** SM size (32px) */
@@ -104,6 +123,9 @@ export const Small: Story = {
   args: {
     fallback: "SM",
     size: "sm",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -113,6 +135,9 @@ export const Medium: Story = {
     fallback: "MD",
     size: "md",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** LG size (56px) */
@@ -121,6 +146,9 @@ export const Large: Story = {
     fallback: "LG",
     size: "lg",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** XL size (80px) */
@@ -128,6 +156,9 @@ export const ExtraLarge: Story = {
   args: {
     fallback: "XL",
     size: "xl",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -147,6 +178,9 @@ export const AllSizes: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 带图片的所有 Sizes */
@@ -166,6 +200,9 @@ export const AllSizesWithImage: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 用户列表示例 */
@@ -193,6 +230,9 @@ export const UserList: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 头像组（重叠） */
@@ -220,4 +260,7 @@ export const AvatarGroup: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

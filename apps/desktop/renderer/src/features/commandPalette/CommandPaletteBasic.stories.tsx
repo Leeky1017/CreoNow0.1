@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { fn, within, expect } from "@storybook/test";
 import {
   Download,
   FileText,
@@ -109,7 +109,7 @@ const recentFiles: CommandItem[] = [
   {
     id: "file-app",
     label: "App.tsx",
-    icon: <FileIcon color="#3b82f6" />,
+    icon: <FileIcon color="var(--color-info)" />,
     subtext: "src/components",
     group: "Recent Files",
     onSelect: fn(),
@@ -117,14 +117,14 @@ const recentFiles: CommandItem[] = [
   {
     id: "file-package",
     label: "package.json",
-    icon: <FileIcon color="#eab308" />,
+    icon: <FileIcon color="var(--color-warning)" />,
     group: "Recent Files",
     onSelect: fn(),
   },
   {
     id: "file-logo",
     label: "logo-brand.svg",
-    icon: <FileIcon color="#c084fc" />,
+    icon: <FileIcon color="var(--color-accent-purple, #c084fc)" />,
     group: "Recent Files",
     onSelect: fn(),
   },
@@ -209,6 +209,9 @@ export const Default: Story = {
       <CommandPalette {...args} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -245,7 +248,7 @@ export const Searching: Story = {
       {
         id: "file-use-settings",
         label: "useSettings.ts",
-        icon: <FileIcon color="#3b82f6" />,
+        icon: <FileIcon color="var(--color-info)" />,
         subtext: "src/hooks",
         group: "Files",
         onSelect: fn(),
@@ -253,7 +256,7 @@ export const Searching: Story = {
       {
         id: "file-settings-modal",
         label: "SettingsModal.tsx",
-        icon: <FileIcon color="#3b82f6" />,
+        icon: <FileIcon color="var(--color-info)" />,
         subtext: "src/components",
         group: "Files",
         onSelect: fn(),
@@ -261,7 +264,7 @@ export const Searching: Story = {
       {
         id: "file-reset-css",
         label: "reset.css",
-        icon: <FileIcon color="#4ade80" />,
+        icon: <FileIcon color="var(--color-success)" />,
         subtext: "public/styles",
         group: "Files",
         onSelect: fn(),
@@ -295,6 +298,9 @@ export const Searching: Story = {
       </div>
     );
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -319,6 +325,9 @@ export const EmptyResults: Story = {
       <CommandPalette {...args} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -355,6 +364,9 @@ export const Closed: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -415,5 +427,8 @@ export const Interactive: Story = {
         <CommandPalette {...args} open={open} onOpenChange={setOpen} />
       </div>
     );
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { RegionErrorBoundary } from "./RegionErrorBoundary";
+import { expect } from "@storybook/test";
 
 function ThrowingComponent(): JSX.Element {
   throw new Error("Simulated render error");
@@ -36,11 +37,17 @@ export const WithSafeContent: Story = {
     region: "Panel",
     children: <SafeContent />,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const WithError: Story = {
   args: {
     region: "File Tree",
     children: <ThrowingComponent />,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

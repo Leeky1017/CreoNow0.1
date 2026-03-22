@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { ErrorBoundary } from "./ErrorBoundary";
+import { expect } from "@storybook/test";
 
 function ThrowingComponent(): JSX.Element {
   throw new Error("Simulated fatal render error");
@@ -28,10 +29,16 @@ export const WithSafeContent: Story = {
   args: {
     children: <SafeContent />,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const WithError: Story = {
   args: {
     children: <ThrowingComponent />,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

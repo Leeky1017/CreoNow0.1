@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { InfoBar } from "./InfoBar";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof InfoBar> = {
   title: "Composites/InfoBar",
@@ -24,12 +25,18 @@ export const Info: Story = {
     variant: "info",
     message: "Your project is being indexed for search.",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Warning: Story = {
   args: {
     variant: "warning",
     message: "This document has unsaved changes.",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -39,6 +46,9 @@ export const Error: Story = {
     message: "Failed to connect to AI service. Please check your API key.",
     action: { label: "Settings", onClick: () => {} },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Success: Story = {
@@ -47,5 +57,8 @@ export const Success: Story = {
     message: "Export completed successfully.",
     dismissible: true,
     onDismiss: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { FileText, Settings, Search, Plus } from "lucide-react";
 
 import { CommandItem } from "./CommandItem";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof CommandItem> = {
   title: "Composites/CommandItem",
@@ -34,6 +35,9 @@ export const Default: Story = {
     hint: "⌘O",
     onSelect: () => {},
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Active: Story = {
@@ -43,6 +47,9 @@ export const Active: Story = {
     hint: "⌘K",
     active: true,
     onSelect: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -76,4 +83,7 @@ export const CommandList: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

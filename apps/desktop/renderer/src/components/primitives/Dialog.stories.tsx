@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { Dialog } from "./Dialog";
 import { Button } from "./Button";
+import { within, expect } from "@storybook/test";
 
 /**
  * Dialog 组件 Story
@@ -94,6 +95,10 @@ export const Default: Story = {
         </Dialog>
       </>
     );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 

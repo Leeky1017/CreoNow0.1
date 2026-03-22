@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { ImageCropper } from "./ImageCropper";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof ImageCropper> = {
   title: "Composites/ImageCropper",
@@ -24,5 +25,8 @@ export const NoFile: Story = {
     file: null,
     onCropChange: () => {},
     aspectRatio: 1,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { ButtonVariant, ButtonSize } from "./Button";
 import { Button } from "./Button";
+import { within, expect } from "@storybook/test";
 
 const meta = {
   title: "Primitives/Button/Variants",
@@ -39,6 +40,10 @@ export const AllVariants: Story = {
       <Button variant="pill">Pill</Button>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /** 所有 Sizes 展示 */
@@ -56,6 +61,10 @@ export const AllSizes: Story = {
       </Button>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 // ============================================================================
@@ -100,6 +109,10 @@ export const VariantSizeMatrix: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -120,6 +133,10 @@ export const DisabledMatrix: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -140,6 +157,10 @@ export const LoadingMatrix: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 // ============================================================================
@@ -157,6 +178,10 @@ export const LongText: Story = {
       "This is a very long button text that might overflow in some containers",
     variant: "secondary",
     size: "md",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
 
@@ -184,6 +209,10 @@ export const LongTextConstrained: Story = {
       </Button>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -197,6 +226,10 @@ export const ShortText: Story = {
     variant: "primary",
     size: "sm",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -209,6 +242,10 @@ export const SingleChar: Story = {
     children: "X",
     variant: "danger",
     size: "sm",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
 
@@ -228,6 +265,10 @@ export const WithEmoji: Story = {
       <Button variant="danger">🗑️ Delete</Button>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 // ============================================================================
@@ -263,6 +304,10 @@ export const FocusTest: Story = {
       <Button variant="danger">Danger Focus</Button>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -280,6 +325,10 @@ export const ButtonGroup: Story = {
       <Button variant="primary">Submit</Button>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 /**

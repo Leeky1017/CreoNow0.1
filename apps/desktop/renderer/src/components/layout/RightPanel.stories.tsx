@@ -7,6 +7,7 @@ import {
   type RightPanelType,
   useLayoutStore,
 } from "../../stores/layoutStore";
+import { expect } from "@storybook/test";
 
 function RightPanelStoryRender(args: {
   width: number;
@@ -72,6 +73,9 @@ export const AiTabDefault: Story = {
     collapsed: false,
   },
   render: (args) => <RightPanelStoryRender {...args} activeTab="ai" />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const InfoTab: Story = {
@@ -80,6 +84,9 @@ export const InfoTab: Story = {
     collapsed: false,
   },
   render: (args) => <RightPanelStoryRender {...args} activeTab="info" />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const QualityTab: Story = {
@@ -88,6 +95,9 @@ export const QualityTab: Story = {
     collapsed: false,
   },
   render: (args) => <RightPanelStoryRender {...args} activeTab="quality" />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const ReducedMotionInfoTab: Story = {
@@ -98,6 +108,9 @@ export const ReducedMotionInfoTab: Story = {
   render: (args) => (
     <RightPanelStoryRender {...args} activeTab="info" reducedMotion={true} />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const DarkModeQualityTab: Story = {
@@ -108,6 +121,9 @@ export const DarkModeQualityTab: Story = {
   render: (args) => (
     <RightPanelStoryRender {...args} activeTab="quality" dark={true} />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const WithCollapseButton: Story = {
@@ -137,6 +153,9 @@ export const WithCollapseButton: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Collapsed: Story = {
@@ -145,4 +164,7 @@ export const Collapsed: Story = {
     collapsed: true,
   },
   render: (args) => <RightPanelStoryRender {...args} activeTab="ai" />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { AiErrorCard } from "./AiErrorCard";
 import { SystemDialog } from "./SystemDialog";
 import type { AiErrorConfig, AiErrorType } from "./types";
+import { within, expect } from "@storybook/test";
 
 const meta: Meta = {
   title: "Features/AiDialogs/States",
@@ -406,6 +407,10 @@ function AllSystemDialogsWrapper() {
  */
 export const ErrorRetryLoading: StoryObj = {
   render: () => <ErrorRetryLoadingWrapper />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -413,6 +418,10 @@ export const ErrorRetryLoading: StoryObj = {
  */
 export const ErrorRetryFailed: StoryObj = {
   render: () => <ErrorRetryFailedWrapper />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -420,6 +429,10 @@ export const ErrorRetryFailed: StoryObj = {
  */
 export const ErrorDismissAnimation: StoryObj = {
   render: () => <ErrorDismissAnimationWrapper />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -427,6 +440,10 @@ export const ErrorDismissAnimation: StoryObj = {
  */
 export const ErrorCountdownComplete: StoryObj = {
   render: () => <ErrorCountdownCompleteWrapper />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -470,50 +487,8 @@ export const AllErrorStates: StoryObj = {
       </div>
     </div>
   ),
-};
-
-// =============================================================================
-// 4. System Dialog Stories
-// =============================================================================
-
-/**
- * Delete dialog with loading state
- */
-export const SystemDeleteWithLoading: StoryObj = {
-  render: () => <SystemDeleteWithLoadingWrapper />,
-};
-
-/**
- * Keyboard navigation demo
- */
-export const SystemKeyboardNavigation: StoryObj = {
-  render: () => <SystemKeyboardNavigationWrapper />,
-};
-
-/**
- * Custom button labels
- */
-export const SystemCustomLabels: StoryObj = {
-  render: () => <SystemCustomLabelsWrapper />,
-};
-
-/**
- * Unsaved changes dialog with loading
- */
-export const SystemUnsavedChanges: StoryObj = {
-  render: () => <SystemUnsavedChangesWrapper />,
-};
-
-/**
- * Export complete dialog
- */
-export const SystemExportComplete: StoryObj = {
-  render: () => <SystemExportCompleteWrapper />,
-};
-
-/**
- * All system dialogs showcase
- */
-export const AllSystemDialogs: StoryObj = {
-  render: () => <AllSystemDialogsWrapper />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };

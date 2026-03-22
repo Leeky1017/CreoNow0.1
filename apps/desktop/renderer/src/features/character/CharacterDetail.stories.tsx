@@ -8,6 +8,7 @@ import { AddRelationshipPopover } from "./AddRelationshipPopover";
 import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
 import type { Character, CharacterRole, CharacterGroup } from "./types";
 import { SAMPLE_CHARACTERS } from "./characterStoryData";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof CharacterPanel> = {
   title: "Features/Character/Detail",
@@ -76,6 +77,9 @@ function EditingCharacterFormRender() {
 /** 用户正在编辑 Elara 的详情 */
 export const EditingCharacterForm: Story = {
   render: () => <EditingCharacterFormRender />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function AddingPersonalityTraitRender() {
@@ -116,6 +120,9 @@ function AddingPersonalityTraitRender() {
 /** 用户正在添加性格标签 */
 export const AddingPersonalityTrait: Story = {
   render: () => <AddingPersonalityTraitRender />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function ManagingRelationshipsRender() {
@@ -169,6 +176,9 @@ function ManagingRelationshipsRender() {
 /** 用户正在管理人物关系 */
 export const ManagingRelationships: Story = {
   render: () => <ManagingRelationshipsRender />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function UploadingAvatarRender() {
@@ -203,6 +213,9 @@ function UploadingAvatarRender() {
 /** 用户正在上传角色头像 */
 export const UploadingAvatar: Story = {
   render: () => <UploadingAvatarRender />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 用户点击删除角色 */
@@ -218,6 +231,9 @@ export const DeletingCharacterConfirm: Story = {
           "用户点击删除角色时的场景。点击角色卡片上的删除图标或对话框中的 Delete 按钮来测试删除流程。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -256,6 +272,9 @@ export const RoleSelectorOpen: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function GroupSelectorOpenRender() {
@@ -292,6 +311,9 @@ export const GroupSelectorOpen: Story = {
           "分组选择器的交互演示。点击分组标签打开 Popover，可选择 Main Cast、Supporting、Others。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -367,6 +389,9 @@ export const AddingRelationshipFlow: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function DeleteConfirmationRender() {
@@ -431,5 +456,8 @@ export const DeleteConfirmation: Story = {
           "删除角色确认弹窗演示。显示警告信息和角色名称，用户必须点击 Delete 确认删除，或 Cancel 取消。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

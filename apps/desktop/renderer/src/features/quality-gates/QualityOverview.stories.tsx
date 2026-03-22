@@ -6,6 +6,7 @@ import {
   ALL_PASSED_GROUPS,
   RUNNING_GROUPS,
 } from "./qualityGatesStoryData";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof QualityGatesPanel> = {
   title: "Features/QualityGates/Overview",
@@ -34,16 +35,16 @@ const meta: Meta<typeof QualityGatesPanel> = {
             </div>
           </div>
           <div className="flex-1 p-12 overflow-hidden flex justify-center">
-            <div className="w-full max-w-3xl h-full bg-[#121212] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-2xl p-16 relative">
-              <div className="w-1/3 h-8 bg-[rgba(255,255,255,0.08)] rounded mb-10" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-5/6 h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-8" />
-              <div className="w-1/4 h-5 bg-[rgba(255,255,255,0.06)] rounded mb-6" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-11/12 h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
+            <div className="w-full max-w-3xl h-full bg-[var(--color-bg-surface)] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-[var(--shadow-2xl)] p-16 relative">
+              <div className="w-1/3 h-8 bg-[var(--color-bg-overlay)] rounded mb-10" />
+              <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-4" />
+              <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-4" />
+              <div className="w-5/6 h-3 bg-[var(--color-separator)] rounded mb-4" />
+              <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-8" />
+              <div className="w-1/4 h-5 bg-[var(--color-separator)] rounded mb-6" />
+              <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-4" />
+              <div className="w-11/12 h-3 bg-[var(--color-separator)] rounded mb-4" />
+              <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-4" />
             </div>
           </div>
         </div>
@@ -79,6 +80,9 @@ export const DefaultWithIssues: Story = {
       frequency: "on-demand",
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 全部通过 */
@@ -101,6 +105,9 @@ export const AllPassed: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 检查进行中 */
@@ -121,6 +128,9 @@ export const CheckRunning: Story = {
           '检查进行中状态。顶部显示 spinner 和 "Running checks..."，正在检查的项目显示加载动画。',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -177,6 +187,9 @@ export const MultipleIssues: Story = {
           "多个问题展示。展示同一检查项下有多个问题时的界面，包括错误和警告级别的问题。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -244,6 +257,9 @@ export const ErrorLevelIssues: Story = {
           "严重错误展示。检查项显示红色 X 图标，问题卡片有红色边框，顶部显示 'Errors Found'。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -315,5 +331,8 @@ export const AllIgnored: Story = {
           '所有问题已忽略。检查项显示 "2 Ignored" 标签，问题有删除线样式，顶部状态为绿色。',
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

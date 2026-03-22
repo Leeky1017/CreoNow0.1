@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { PanelHeader } from "./PanelHeader";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof PanelHeader> = {
   title: "Patterns/PanelHeader",
@@ -23,12 +24,18 @@ export const TitleOnly: Story = {
   args: {
     title: "大纲",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const TitleWithSubtitle: Story = {
   args: {
     title: "角色",
     subtitle: "第一章 · 破晓",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -40,6 +47,9 @@ export const TitleWithActions: Story = {
         ⚙
       </button>
     ),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -58,11 +68,17 @@ export const FullHeader: Story = {
       </div>
     ),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const LongTitleTruncation: Story = {
   args: {
     title: "这是一个非常长的面板标题用于验证文本截断行为是否正确工作",
     subtitle: "副标题也可能很长需要验证是否正确截断不会导致布局溢出",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

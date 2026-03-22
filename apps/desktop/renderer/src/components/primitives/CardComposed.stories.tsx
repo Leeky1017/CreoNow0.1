@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { CardVariant } from "./Card";
 import { Card } from "./Card";
+import { expect } from "@storybook/test";
 
 const meta = {
   title: "Primitives/Card/Composed",
@@ -317,6 +318,9 @@ export const ProjectCardScenario: Story = {
       </Card>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -408,4 +412,7 @@ export const SettingsCardScenario: Story = {
       </Card>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

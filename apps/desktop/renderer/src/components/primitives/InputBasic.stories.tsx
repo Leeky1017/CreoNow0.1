@@ -87,12 +87,20 @@ export const WithValue: Story = {
   args: {
     defaultValue: "Hello World",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /** 带 placeholder */
 export const WithPlaceholder: Story = {
   args: {
     placeholder: "Type something here...",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 
@@ -105,6 +113,10 @@ export const Error: Story = {
   args: {
     error: true,
     defaultValue: "Invalid input",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 
@@ -127,6 +139,10 @@ export const ReadOnly: Story = {
     readOnly: true,
     defaultValue: "Read only input",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /** Full Width：全宽输入框 */
@@ -137,6 +153,10 @@ export const FullWidth: Story = {
   },
   parameters: {
     layout: "padded",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 
@@ -225,4 +245,8 @@ export const AllStates: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };

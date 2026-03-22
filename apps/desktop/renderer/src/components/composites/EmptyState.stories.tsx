@@ -3,6 +3,7 @@ import { FileText, Search, Users } from "lucide-react";
 
 import { Button } from "../primitives/Button";
 import { EmptyState } from "./EmptyState";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof EmptyState> = {
   title: "Composites/EmptyState",
@@ -40,6 +41,9 @@ export const NoFiles: Story = {
       </Button>
     ),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const NoSearchResults: Story = {
@@ -47,6 +51,9 @@ export const NoSearchResults: Story = {
     icon: <Search size={48} />,
     title: "No results found",
     description: "Try adjusting your search terms.",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -60,5 +67,8 @@ export const NoCharacters: Story = {
         Add Character
       </Button>
     ),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

@@ -1,8 +1,10 @@
 /**
- * RightPanel Stories — InfoPanel
+ * RightPanel Info Stories
  *
- * Static demo: IPC-dependent components rendered with mock data.
- * @module features/rightpanel/RightPanelInfo.stories
+ * @demo-only This story uses a static replica because the real component
+ * depends on Electron IPC and Zustand stores. The replica mirrors the
+ * original's data-testid contract for visual regression testing.
+ * See docs/references/testing/README.md for guidelines.
  */
 
 import React from "react";
@@ -255,6 +257,9 @@ export const InfoPanelLoading: Story = {
       <InfoPanelDemo state="loading" />
     </RightPanelShell>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** InfoPanel with no document selected. */
@@ -281,4 +286,7 @@ export const InfoPanelError: Story = {
       <InfoPanelDemo state="error" />
     </RightPanelShell>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

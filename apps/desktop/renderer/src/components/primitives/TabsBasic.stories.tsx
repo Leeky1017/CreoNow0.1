@@ -198,6 +198,10 @@ export const Controlled: Story = {
       </div>
     );
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -207,6 +211,10 @@ export const DefaultValue: Story = {
   args: {
     tabs: basicTabs,
     defaultValue: "tab2",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
   },
 };
 
@@ -222,6 +230,10 @@ export const Horizontal: Story = {
     tabs: basicTabs,
     orientation: "horizontal",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -234,6 +246,10 @@ export const Vertical: Story = {
   },
   parameters: {
     layout: "padded",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
   },
 };
 
@@ -248,6 +264,10 @@ export const WithDisabled: Story = {
   args: {
     tabs: tabsWithDisabled,
     defaultValue: "active",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
   },
 };
 
@@ -269,4 +289,8 @@ export const FullWidth: Story = {
       </div>
     ),
   ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("tablist")).toBeInTheDocument();
+  },
 };

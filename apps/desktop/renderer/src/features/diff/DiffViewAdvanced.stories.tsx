@@ -8,6 +8,7 @@ import {
   type VersionContent,
 } from "./MultiVersionCompare";
 import { layoutDecorator } from "../../components/layout/test-utils";
+import { expect } from "@storybook/test";
 
 /**
  * DiffView 高级功能 Stories
@@ -83,6 +84,9 @@ export const InteractiveDemo: Story = {
     diffText: longDiff,
   },
   render: (args) => <InteractiveDemoComponent diffText={args.diffText} />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function InteractiveDemoComponent(props: { diffText: string }): JSX.Element {
@@ -146,6 +150,9 @@ export const OnlyAdditions: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -169,6 +176,9 @@ export const OnlyDeletions: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // =============================================================================
@@ -270,6 +280,9 @@ export const MultiVersion2: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -287,6 +300,9 @@ export const MultiVersion3: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -304,6 +320,9 @@ export const MultiVersion4: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -322,4 +341,7 @@ export const MultiVersionNoSync: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

@@ -131,16 +131,32 @@ export const Appearance: Story = {
 
 export const AI: Story = {
   args: { open: true, defaultTab: "ai" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const Judge: Story = {
   args: { open: true, defaultTab: "judge" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const Analytics: Story = {
   args: { open: true, defaultTab: "analytics" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const Account: Story = {
   args: { open: true, defaultTab: "account" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };

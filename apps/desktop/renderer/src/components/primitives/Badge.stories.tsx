@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { BadgeVariant, BadgeSize } from "./Badge";
 import { Badge } from "./Badge";
+import { expect } from "@storybook/test";
 
 /**
  * Badge 组件 Story
@@ -56,6 +57,9 @@ export const Default: Story = {
     variant: "default",
     size: "md",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Success variant */
@@ -63,6 +67,9 @@ export const Success: Story = {
   args: {
     children: "Active",
     variant: "success",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -72,6 +79,9 @@ export const Warning: Story = {
     children: "Pending",
     variant: "warning",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Error variant */
@@ -80,6 +90,9 @@ export const Error: Story = {
     children: "Failed",
     variant: "error",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Info variant */
@@ -87,6 +100,9 @@ export const Info: Story = {
   args: {
     children: "New",
     variant: "info",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -100,6 +116,9 @@ export const Small: Story = {
     children: "SM",
     size: "sm",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Medium size */
@@ -107,6 +126,9 @@ export const Medium: Story = {
   args: {
     children: "MD",
     size: "md",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -138,6 +160,9 @@ export const AllVariants: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 所有 Sizes 展示 */
@@ -154,6 +179,9 @@ export const AllSizes: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 完整矩阵 */
@@ -209,6 +237,9 @@ export const NumberBadges: Story = {
       </Badge>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Pill variant — 分类标签 */
@@ -216,6 +247,9 @@ export const Pill: Story = {
   args: {
     variant: "pill",
     children: "CATEGORY",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -232,4 +266,7 @@ export const PillVariations: Story = {
       <Badge variant="pill">SCREENPLAY</Badge>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

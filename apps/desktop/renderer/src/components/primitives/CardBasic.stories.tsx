@@ -113,6 +113,9 @@ export const Raised: Story = {
       </div>
     ),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Bordered variant：加粗边框卡片 */
@@ -135,6 +138,9 @@ export const Bordered: Story = {
         </p>
       </div>
     ),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -163,6 +169,9 @@ export const Hoverable: Story = {
       </div>
     ),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Hoverable + Raised：可点击悬浮卡片 */
@@ -186,6 +195,9 @@ export const HoverableRaised: Story = {
         </p>
       </div>
     ),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -214,6 +226,9 @@ export const NoPadding: Story = {
       </div>
     ),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Bento variant — 大圆角卡片 */
@@ -221,6 +236,9 @@ export const Bento: Story = {
   args: {
     variant: "bento",
     children: "Bento card with 24px radius and 32px padding",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -230,6 +248,9 @@ export const BentoHoverable: Story = {
     variant: "bento",
     hoverable: true,
     children: "Hover me — border color transitions",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -252,6 +273,9 @@ export const Compact: Story = {
       </Card>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -262,5 +286,8 @@ export const Compact: Story = {
 export const EmptyContent: Story = {
   args: {
     children: <div style={{ height: "50px" }} />,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

@@ -2,6 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { SearchPanel, type SearchResultItem } from "./SearchPanel";
 import { layoutDecorator } from "../../components/layout/test-utils";
+import { within, expect } from "@storybook/test";
 
 /**
  * Mock data for Storybook demonstrations only.
@@ -66,7 +67,7 @@ const meta = {
     layout: "fullscreen",
     backgrounds: {
       default: "dark",
-      values: [{ name: "dark", value: "#080808" }],
+      values: [{ name: "dark", value: "#080808" }], // matches --color-bg-base
     },
   },
   tags: ["autodocs"],
@@ -102,7 +103,7 @@ function SearchPanelWithQuery(props: {
   }, []);
 
   return (
-    <div style={{ height: "100vh", backgroundColor: "#080808" }}>
+    <div style={{ height: "100vh", backgroundColor: "var(--color-bg-base)" }}>
       <SearchPanel
         {...props}
         mockQuery={props.initialQuery}
@@ -130,6 +131,10 @@ export const WithResults: Story = {
   render: (args) => (
     <SearchPanelWithQuery {...args} initialQuery="design theory" />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -143,6 +148,10 @@ export const Default: Story = {
     open: true,
   },
   render: (args) => <SearchPanelWithQuery {...args} />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -159,6 +168,10 @@ export const NoResults: Story = {
   render: (args) => (
     <SearchPanelWithQuery {...args} initialQuery="quantum flux" />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -173,6 +186,10 @@ export const Empty: Story = {
   render: (args) => (
     <SearchPanelWithQuery {...args} initialQuery="quantum flux" />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -186,6 +203,10 @@ export const Loading: Story = {
     mockStatus: "loading",
   },
   render: (args) => <SearchPanelWithQuery {...args} initialQuery="hero" />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -202,6 +223,10 @@ export const DocumentsOnly: Story = {
   render: (args) => (
     <SearchPanelWithQuery {...args} initialQuery="architecture" />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -218,6 +243,10 @@ export const MemoriesOnly: Story = {
   render: (args) => (
     <SearchPanelWithQuery {...args} initialQuery="negative space" />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -234,6 +263,10 @@ export const KnowledgeOnly: Story = {
     ),
   },
   render: (args) => <SearchPanelWithQuery {...args} initialQuery="bauhaus" />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -280,4 +313,8 @@ export const ManyResults: Story = {
     ],
   },
   render: (args) => <SearchPanelWithQuery {...args} initialQuery="design" />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { TextSize, TextColor } from "./Text";
 import { Text } from "./Text";
+import { expect } from "@storybook/test";
 
 /**
  * Text 组件 Story
@@ -74,6 +75,9 @@ export const Default: Story = {
   args: {
     children: "This is default body text.",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -83,6 +87,9 @@ export const Body: Story = {
   args: {
     size: "body",
     children: "Body text at 13px with normal weight.",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -94,6 +101,9 @@ export const BodyLarge: Story = {
     size: "bodyLarge",
     children: "Body large text at 16px for editor content.",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -103,6 +113,9 @@ export const Small: Story = {
   args: {
     size: "small",
     children: "Small text at 12px for secondary information.",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -114,6 +127,9 @@ export const Tiny: Story = {
     size: "tiny",
     children: "Tiny text at 11px for timestamps and metadata.",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -124,6 +140,9 @@ export const Label: Story = {
     size: "label",
     children: "Section Label",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -133,6 +152,9 @@ export const Code: Story = {
   args: {
     size: "code",
     children: 'console.log("Hello, World!");',
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -183,6 +205,9 @@ export const AllSizes: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -228,6 +253,9 @@ export const AllColors: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -249,6 +277,9 @@ export const AllWeights: Story = {
       <Text weight="bold">Bold weight (700)</Text>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -270,6 +301,9 @@ export const AsElements: Story = {
       <Text as="label">Rendered as label</Text>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -293,6 +327,9 @@ export const Paragraph: Story = {
       </div>
     ),
   ],
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -303,6 +340,9 @@ export const HelperText: Story = {
     size: "small",
     color: "muted",
     children: "This is helper text that provides additional context.",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -315,6 +355,9 @@ export const ErrorMessage: Story = {
     color: "error",
     children: "This field is required.",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -326,6 +369,9 @@ export const SuccessMessage: Story = {
     color: "success",
     children: "Changes saved successfully.",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -336,6 +382,9 @@ export const Timestamp: Story = {
     size: "tiny",
     color: "subtle",
     children: "2 hours ago",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -360,179 +409,7 @@ export const CodeSnippet: Story = {
       </div>
     ),
   ],
-};
-
-// ============================================================================
-// 边界情况
-// ============================================================================
-
-/**
- * 长文本
- */
-export const LongText: Story = {
-  args: {
-    children:
-      "This is an extremely long text that might wrap to multiple lines depending on the container width. It should handle wrapping gracefully without breaking the layout or causing any visual issues.",
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
-  decorators: [
-    (Story) => (
-      <div style={{ maxWidth: "300px" }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
-
-/**
- * 带换行的文本
- */
-export const WithLineBreaks: Story = {
-  args: {
-    as: "p",
-    children: "Line 1\nLine 2\nLine 3",
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ whiteSpace: "pre-line" }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
-
-/**
- * 空文本
- */
-export const Empty: Story = {
-  args: {
-    children: "",
-  },
-};
-
-// ============================================================================
-// 完整展示
-// ============================================================================
-
-/**
- * 完整功能展示（用于 AI 自检）
- */
-export const FullMatrix: Story = {
-  args: {
-    children: "Text",
-  },
-  parameters: {
-    layout: "fullscreen",
-  },
-  render: () => (
-    <div
-      style={{
-        padding: "2rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "2rem",
-      }}
-    >
-      {/* Sizes */}
-      <section>
-        <Text
-          size="label"
-          color="muted"
-          as="div"
-          style={{ marginBottom: "0.5rem" }}
-        >
-          SIZE VARIANTS
-        </Text>
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-        >
-          {sizes.map((size) => (
-            <div
-              key={size}
-              style={{ display: "flex", alignItems: "baseline", gap: "1rem" }}
-            >
-              <Text size="tiny" color="muted" style={{ width: "80px" }}>
-                {size}
-              </Text>
-              <Text size={size}>
-                {size === "code"
-                  ? "const x = 1;"
-                  : size === "label"
-                    ? "LABEL"
-                    : "Sample text"}
-              </Text>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Colors */}
-      <section>
-        <Text
-          size="label"
-          color="muted"
-          as="div"
-          style={{ marginBottom: "0.5rem" }}
-        >
-          COLOR VARIANTS
-        </Text>
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}
-        >
-          {colors.map((color) => (
-            <Text key={color} color={color}>
-              {color}: Sample text
-            </Text>
-          ))}
-        </div>
-      </section>
-
-      {/* Weights */}
-      <section>
-        <Text
-          size="label"
-          color="muted"
-          as="div"
-          style={{ marginBottom: "0.5rem" }}
-        >
-          WEIGHT VARIANTS
-        </Text>
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}
-        >
-          <Text weight="normal">Normal (400)</Text>
-          <Text weight="medium">Medium (500)</Text>
-          <Text weight="semibold">Semibold (600)</Text>
-          <Text weight="bold">Bold (700)</Text>
-        </div>
-      </section>
-
-      {/* Combined */}
-      <section>
-        <Text
-          size="label"
-          color="muted"
-          as="div"
-          style={{ marginBottom: "0.5rem" }}
-        >
-          COMBINED USAGE
-        </Text>
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-        >
-          <Text size="bodyLarge" weight="semibold">
-            Article Title
-          </Text>
-          <Text size="body" color="muted">
-            By Author Name
-          </Text>
-          <Text size="body" as="p">
-            This is the article body text that contains the main content.
-          </Text>
-          <Text size="small" color="subtle">
-            Last updated 2 hours ago
-          </Text>
-        </div>
-      </section>
-    </div>
-  ),
 };

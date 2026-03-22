@@ -24,7 +24,7 @@ const meta = {
     layout: "centered",
     backgrounds: {
       default: "dark",
-      values: [{ name: "dark", value: "#080808" }],
+      values: [{ name: "dark", value: "#080808" }], // matches --color-bg-base
     },
   },
   tags: ["autodocs"],

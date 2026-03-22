@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Pencil, Trash2 } from "lucide-react";
 import { AiPanel } from "./AiPanel";
 import { layoutDecorator } from "../../components/layout/test-utils";
+import { expect } from "@storybook/test";
 
 const meta = {
   title: "Features/AI/Layout",
@@ -23,6 +24,9 @@ export const NarrowWidth: Story = {
       <AiPanel />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 宽布局 — 较宽面板下的布局（480px） */
@@ -32,6 +36,9 @@ export const WideWidth: Story = {
       <AiPanel />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 中等高度 — 限制高度场景（600px） */
@@ -41,11 +48,17 @@ export const MediumHeight: Story = {
       <AiPanel />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 历史记录下拉（静态展示） */
 export const HistoryDropdownStatic: Story = {
   render: () => <HistoryDropdownDemo />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 function HistoryDropdownDemo(): JSX.Element {

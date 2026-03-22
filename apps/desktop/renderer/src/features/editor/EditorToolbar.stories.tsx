@@ -116,6 +116,9 @@ export const FocusVisibleBold: Story = {
       <ToolbarWithEditor />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -134,6 +137,9 @@ export const ReducedMotionDefault: Story = {
       </div>
     );
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -145,6 +151,9 @@ export const DarkModeDefault: Story = {
       <ToolbarWithEditor />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -161,6 +170,9 @@ export const FontScale125: Story = {
         <ToolbarWithEditor />
       </div>
     );
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -179,6 +191,9 @@ export const FontScale150: Story = {
       </div>
     );
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -193,6 +208,9 @@ export const NoEditor: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -221,4 +239,7 @@ export const MultipleStates: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

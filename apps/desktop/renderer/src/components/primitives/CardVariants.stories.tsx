@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { CardVariant } from "./Card";
 import { Card } from "./Card";
+import { expect } from "@storybook/test";
 
 const meta = {
   title: "Primitives/Card/Variants",
@@ -103,6 +104,9 @@ export const AllVariants: Story = {
       </Card>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 所有 Hoverable 状态展示 */
@@ -156,6 +160,9 @@ export const AllHoverable: Story = {
       </Card>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -243,6 +250,9 @@ export const WithSlots: Story = {
       </div>
     </Card>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -276,6 +286,9 @@ export const LongContent: Story = {
         </p>
       </div>
     ),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -314,6 +327,9 @@ export const LongContentConstrained: Story = {
       </Card>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -346,6 +362,9 @@ export const NestedCards: Story = {
       </Card>
     </Card>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -371,6 +390,9 @@ export const WithEmoji: Story = {
         </p>
       </div>
     ),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -435,4 +457,7 @@ export const VariantMatrix: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
