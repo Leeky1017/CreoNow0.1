@@ -14,7 +14,7 @@
    深色主题
    ============================================ */
 :root[data-theme="dark"] {
-  /* HSL 10-step 灰阶（近黑 → 中灰，等感知亮度步进） */
+/* HSL 10-step 灰阶（近黑 → 中灰，等感知亮度步进） */
   --gray-1: hsl(0 0% 3%);
   --gray-2: hsl(0 0% 6%);
   --gray-3: hsl(0 0% 8%);
@@ -25,6 +25,12 @@
   --gray-8: hsl(0 0% 27%);
   --gray-9: hsl(0 0% 40%);
   --gray-10: hsl(0 0% 45%);
+
+/* 品牌渐变系统 */
+  --gradient-brand: linear-gradient(135deg, var(--color-accent) 0%, #7c3aed 100%);
+  --gradient-surface: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-base) 100%);
+  --gradient-hero: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15) 0%, transparent 60%);
+  --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
 
   /* 背景层级（按 elevation 递增：base → surface → raised） */
   --color-bg-base: var(--gray-1); /* 最底层：窗口背景 */
@@ -98,7 +104,7 @@
    浅色主题
    ============================================ */
 :root[data-theme="light"] {
-  /* HSL 10-step 灰阶（纯白 → 中灰，等感知亮度步进） */
+/* HSL 10-step 灰阶（纯白 → 中灰，等感知亮度步进） */
   --gray-1: hsl(0 0% 100%);
   --gray-2: hsl(0 0% 98%);
   --gray-3: hsl(0 0% 96%);
@@ -109,6 +115,12 @@
   --gray-8: hsl(0 0% 75%);
   --gray-9: hsl(0 0% 60%);
   --gray-10: hsl(0 0% 45%);
+
+/* 品牌渐变系统（亮色适配） */
+  --gradient-brand: linear-gradient(135deg, var(--color-accent) 0%, #7c3aed 100%);
+  --gradient-surface: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-base) 100%);
+  --gradient-hero: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
+  --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.03) 50%, transparent 100%);
 
   /* 背景层级 */
   --color-bg-base: var(--gray-1);
@@ -197,6 +209,37 @@
   --color-node-event: #f97316; /* 事件 - 橙色 */
   --color-node-item: #06b6d4; /* 物品 - 青色 */
   --color-node-other: #8b5cf6; /* 其他 - 紫色 */
+}
+
+/* ============================================
+   品牌色延伸色阶（accent 50–900）
+   暗色主题 accent=#ffffff → 白色系灰阶
+   ============================================ */
+:root[data-theme="dark"] {
+  --color-accent-50: hsl(0 0% 98%);
+  --color-accent-100: hsl(0 0% 95%);
+  --color-accent-200: hsl(0 0% 88%);
+  --color-accent-300: hsl(0 0% 78%);
+  --color-accent-400: hsl(0 0% 68%);
+  --color-accent-500: var(--color-accent);
+  --color-accent-600: hsl(0 0% 88%);
+  --color-accent-700: hsl(0 0% 75%);
+  --color-accent-800: hsl(0 0% 62%);
+  --color-accent-900: hsl(0 0% 50%);
+}
+
+/* 亮色主题 accent=#1a1a1a → 深色系灰阶 */
+:root[data-theme="light"] {
+  --color-accent-50: hsl(0 0% 95%);
+  --color-accent-100: hsl(0 0% 88%);
+  --color-accent-200: hsl(0 0% 75%);
+  --color-accent-300: hsl(0 0% 60%);
+  --color-accent-400: hsl(0 0% 45%);
+  --color-accent-500: var(--color-accent);
+  --color-accent-600: hsl(0 0% 8%);
+  --color-accent-700: hsl(0 0% 5%);
+  --color-accent-800: hsl(0 0% 3%);
+  --color-accent-900: hsl(0 0% 2%);
 }
 
 /* ============================================

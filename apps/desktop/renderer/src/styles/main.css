@@ -643,3 +643,54 @@ textarea:focus-visible {
 .ProseMirror p + p {
   margin-top: var(--text-editor-paragraph-spacing);
 }
+
+/* ============================================
+   品牌化 Loading 动画（CSS-only）
+   CreoNow "C" 字母脉冲 + 渐变光环
+   ============================================ */
+@keyframes brand-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes brand-ring-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.brand-spinner {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-spinner::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--color-accent);
+  border-right-color: var(--color-accent-muted, rgba(255, 255, 255, 0.6));
+  animation: brand-ring-rotate 1.2s var(--ease-default) infinite;
+}
+
+.brand-spinner-letter {
+  font-family: var(--font-family-ui);
+  font-weight: var(--weight-semibold);
+  color: var(--color-fg-default);
+  animation: brand-pulse 2s var(--ease-in-out) infinite;
+  user-select: none;
+  line-height: 1;
+}
