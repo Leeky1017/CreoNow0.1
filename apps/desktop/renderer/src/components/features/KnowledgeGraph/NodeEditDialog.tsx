@@ -22,8 +22,7 @@ const nodeTypeColorVars: Record<NodeType, string> = {
 /**
  * Label styles
  */
-const labelStyles =
-  "block text-xs font-medium text-[var(--color-fg-muted)] mb-1.5";
+const labelStyles = "block text-xs font-medium text-(--color-fg-muted) mb-1.5";
 
 /**
  * Generate a unique ID for new nodes
@@ -249,14 +248,14 @@ export function NodeEditDialog({
             <Button
               type="button"
               onClick={handleAddAttribute}
-              className="text-[11px] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+              className="text-status text-(--color-fg-muted) hover:text-(--color-fg-default) transition-colors"
             >
               {t("kg.nodeEdit.addProperty")}
             </Button>
           </div>
 
           {attributes.length === 0 ? (
-            <p className="text-xs text-[var(--color-fg-subtle)] italic">
+            <p className="text-xs text-(--color-fg-subtle) italic">
               {t("kg.nodeEdit.noProperties")}
             </p>
           ) : (
@@ -271,7 +270,7 @@ export function NodeEditDialog({
                     placeholder={t("kg.nodeEdit.propertyNamePlaceholder")}
                     className="flex-1"
                   />
-                  <span className="text-[var(--color-fg-subtle)]">:</span>
+                  <span className="text-(--color-fg-subtle)">:</span>
                   <Input
                     value={attr.value}
                     onChange={(e) =>
@@ -282,8 +281,9 @@ export function NodeEditDialog({
                   />
                   <Button
                     type="button"
+                    size="icon"
                     onClick={() => handleRemoveAttribute(index)}
-                    className="w-8 h-8 flex items-center justify-center text-[var(--color-fg-subtle)] hover:text-[var(--color-error)] transition-colors"
+                    className="flex items-center justify-center text-(--color-fg-subtle) hover:text-(--color-error) transition-colors"
                     aria-label={t("kg.nodeEdit.deleteProperty")}
                   >
                     <svg

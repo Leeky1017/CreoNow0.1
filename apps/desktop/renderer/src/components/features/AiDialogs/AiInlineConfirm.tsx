@@ -69,33 +69,33 @@ const containerStyles = ["relative", "group"].join(" ");
 const toolbarStyles = [
   "absolute -top-12 right-0 flex",
   "items-center gap-1 bg-[var(--color-bg-raised)] border",
-  "border-[var(--color-separator)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] p-1",
+  "border-[var(--color-separator)] rounded-lg shadow-xl p-1",
   "z-[var(--z-popover)] transition-opacity duration-[var(--duration-normal)]",
 ].join(" ");
 const actionButtonBaseStyles = [
   "h-7 px-2 flex items-center",
-  "gap-1.5 rounded-[var(--radius-sm)] text-[var(--color-fg-muted)] transition-colors",
+  "gap-1.5 rounded-sm text-(--color-fg-muted) transition-colors",
   "duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)]",
   "focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed",
 ].join(" ");
 const acceptButtonStyles = [
   actionButtonBaseStyles,
-  "hover:bg-[var(--color-success-subtle)] hover:text-[var(--color-success)]",
+  "hover:bg-[var(--color-success-subtle)] hover:text-(--color-success)",
 ].join(" ");
 const rejectButtonStyles = [
   actionButtonBaseStyles,
-  "hover:bg-[var(--color-error-subtle)] hover:text-[var(--color-error)]",
+  "hover:bg-[var(--color-error-subtle)] hover:text-(--color-error)",
 ].join(" ");
 const diffButtonStyles = [
   "h-7 w-7 flex items-center",
-  "justify-center rounded-[var(--radius-sm)] text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)]",
-  "hover:text-[var(--color-fg-default)] transition-colors duration-[var(--duration-fast)] focus-visible:outline",
+  "justify-center rounded-sm text-(--color-fg-muted) hover:bg-[var(--color-bg-hover)]",
+  "hover:text-(--color-fg-default) transition-colors duration-[var(--duration-fast)] focus-visible:outline",
   "focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)]",
 ].join(" ");
 const separatorStyles = ["w-px h-4 bg-[var(--color-separator)] mx-0.5"].join(
   " ",
 );
-const labelStyles = ["text-[11px]", "font-medium"].join(" ");
+const labelStyles = ["text-status", "font-medium"].join(" ");
 
 /** AiInlineConfirm - Inline confirmation component for AI suggestions Displays an AI-suggested text modification with Accept/Reject actions. Features: - Shows original text (strikethrough) and suggested text (highlighted) - Internal state machine: pending → applying → accepted/rejected - Smooth animations for all state transitions - Loading spinner during applying state
  * @example

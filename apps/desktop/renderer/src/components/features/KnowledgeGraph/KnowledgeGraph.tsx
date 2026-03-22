@@ -50,7 +50,7 @@ function KgEmptyIllustration(): JSX.Element {
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"
-        className="text-[var(--color-fg-subtle)]"
+        className="text-(--color-fg-subtle)"
       >
         <circle cx="12" cy="5" r="3" />
         <circle cx="5" cy="19" r="3" />
@@ -387,7 +387,8 @@ export function KnowledgeGraph({
             <div className="absolute bottom-6 left-6 z-30">
               <Button
                 onClick={handleAddNode}
-                className="w-10 h-10 rounded-full bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)] shadow-[var(--shadow-lg)] flex items-center justify-center transition-transform hover:scale-105"
+                size="icon"
+                className="rounded-full bg-[var(--color-fg-default)] text-(--color-fg-inverse) hover:bg-[var(--color-fg-muted)] shadow-lg flex items-center justify-center transition-transform hover:scale-105"
                 aria-label={t("kg.graph.addNode")}
               >
                 <svg

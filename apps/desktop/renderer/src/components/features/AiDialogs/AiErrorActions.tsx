@@ -41,20 +41,20 @@ const Spinner = ({ className = "" }: { className?: string }) => (
 );
 const buttonContainerStyles = ["flex", "items-center", "gap-2"].join(" ");
 const retryButtonStyles = [
-  "text-xs font-medium text-[var(--color-fg-default)] bg-[var(--color-bg-hover)]",
-  "hover:bg-[var(--color-bg-active)] px-3 py-1.5 rounded-[var(--radius-sm)]",
+  "text-xs font-medium text-(--color-fg-default) bg-[var(--color-bg-hover)]",
+  "hover:bg-[var(--color-bg-active)] px-3 py-1.5 rounded-sm",
   "transition-colors duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)]",
   "focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed",
   "flex items-center gap-1.5",
 ].join(" ");
 const upgradeButtonStyles = [
-  "text-xs font-medium text-[var(--color-bg-base)] bg-[var(--color-warning)]",
-  "hover:bg-[var(--color-warning)]/80 px-3 py-1.5 rounded-[var(--radius-sm)]",
+  "text-xs font-medium text-(--color-bg-base) bg-[var(--color-warning)]",
+  "hover:bg-[var(--color-warning)]/80 px-3 py-1.5 rounded-sm",
   "transition-colors duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)]",
   "focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)]",
 ].join(" ");
 const linkButtonStyles = [
-  "text-xs font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]",
+  "text-xs font-medium text-(--color-fg-muted) hover:text-(--color-fg-default)",
   "px-2 flex items-center gap-1",
   "transition-colors duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)]",
   "focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)]",
@@ -76,15 +76,11 @@ function RetryButtonContent(props: {
   }
   if (props.retryState === "success") {
     return (
-      <span className="text-[var(--color-success)]">
-        {t("ai.error.success")}
-      </span>
+      <span className="text-(--color-success)">{t("ai.error.success")}</span>
     );
   }
   if (props.retryState === "error") {
-    return (
-      <span className="text-[var(--color-error)]">{t("ai.error.failed")}</span>
-    );
+    return <span className="text-(--color-error)">{t("ai.error.failed")}</span>;
   }
   return (
     <span>
@@ -112,6 +108,7 @@ export function AiErrorCardActions(props: {
           {props.onUpgradePlan && (
             <Button
               type="button"
+              variant="pill"
               className={upgradeButtonStyles}
               onClick={props.onUpgradePlan}
             >
@@ -135,6 +132,7 @@ export function AiErrorCardActions(props: {
           {props.onRetry && (
             <Button
               type="button"
+              variant="pill"
               className={retryButtonStyles}
               onClick={props.handleRetry}
               disabled={props.retryState === "loading"}
@@ -164,6 +162,7 @@ export function AiErrorCardActions(props: {
         props.onRetry && (
           <Button
             type="button"
+            variant="pill"
             className={retryButtonStyles}
             onClick={props.handleRetry}
             disabled={props.isRetryDisabled}

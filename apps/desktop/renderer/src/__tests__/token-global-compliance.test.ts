@@ -4,8 +4,8 @@
  * Scans all production .tsx files under features/ and components/ for
  * styling violations that bypass the Design Token system:
  *
- *   1. Tailwind built-in shadows (shadow-lg, shadow-xl, shadow-2xl)
- *      → must use a token-wrapped shadow utility
+ *   1. Tailwind shadow-2xl (not registered in @theme inline)
+ *      → must use a token-wrapped shadow utility or register in @theme
  *   2. Tailwind raw color utilities (bg-red-600, text-green-500, etc.)
  *      → must use semantic Token via var(--)
  *   3. Hardcoded hex (#xxx, #xxxxxx) or rgba() values in className / style
@@ -58,11 +58,13 @@ const HEX_RGBA_ALLOWLISTED_FILES = [/SettingsAppearancePage\.tsx$/];
 
 /**
  * Tailwind built-in shadow classes that bypass the Token shadow system.
- * Matches: shadow-lg, shadow-xl, shadow-2xl (and hover/focus variants)
+ * Matches: shadow-2xl (and hover/focus variants)
+ * Does NOT match: shadow-sm/md/lg/xl — these are registered via @theme inline
+ *                 and resolve to design-token values (--shadow-sm … --shadow-xl).
  * Does NOT match: shadow-[var(--shadow-lg)] (token-wrapped)
  */
 const BARE_SHADOW_REGEX =
-  /(?<!\[var\(--shadow-)(?:^|[\s"'`])(?:!?(?:hover:|focus:|active:|group-hover:)*)(!?shadow-(?:lg|xl|2xl))\b(?!\])/;
+  /(?<!\[var\(--shadow-)(?:^|[\s"'`])(?:!?(?:hover:|focus:|active:|group-hover:)*)(!?shadow-2xl)\b(?!\])/;
 
 /**
  * Tailwind raw color utilities (not wrapped in var(--)).
@@ -274,7 +276,7 @@ describe("Token global compliance: no style bypass in production files", () => {
     }
   }
 
-  it("no production files should use bare Tailwind shadow classes (shadow-lg/xl/2xl)", () => {
+  it("no production files should use bare Tailwind shadow classes not registered in @theme (shadow-2xl)", () => {
     const shadowViolations = allViolations
       .map((f) => ({
         file: f.file,
@@ -291,7 +293,7 @@ describe("Token global compliance: no style bypass in production files", () => {
         .join("");
       expect.fail(
         `Found ${shadowViolations.reduce((n, v) => n + v.violations.length, 0)} bare shadow violation(s) in ${shadowViolations.length} file(s).\n` +
-          `Use shadow-[var(--shadow-lg)] instead of shadow-lg.\n${report}`,
+          `Use a token-backed shadow utility or register the shadow token in @theme inline.\n${report}`,
       );
     }
   });

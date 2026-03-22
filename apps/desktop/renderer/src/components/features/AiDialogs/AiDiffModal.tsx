@@ -70,9 +70,9 @@ const overlayStyles = [
 const contentStyles = [
   "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
   "z-[var(--z-modal)] bg-[var(--color-bg-surface)] border border-[var(--color-border-default)]",
-  "rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] w-full max-w-4xl",
+  "rounded-lg shadow-xl w-full max-w-4xl",
   // eslint-disable-next-line creonow/no-hardcoded-dimension -- dialog content height per design spec
-  "h-[500px] overflow-hidden flex flex-col",
+  "h-125 overflow-hidden flex flex-col",
   "transition-[opacity,transform] duration-[var(--duration-normal)] ease-[var(--ease-default)]",
   "data-[state=open]:opacity-100 data-[state=open]:scale-100 data-[state=closed]:opacity-0 data-[state=closed]:scale-95",
   "focus:outline-none",
@@ -84,34 +84,32 @@ const headerStyles = [
 ].join(" ");
 const navContainerStyles = [
   "flex items-center gap-3 bg-[var(--color-bg-base)]",
-  "rounded-[var(--radius-sm)] px-2 py-1 border",
+  "rounded-sm px-2 py-1 border",
   "border-[var(--color-separator)]",
 ].join(" ");
 const navButtonStyles = [
-  "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors duration-[var(--duration-fast)]",
+  "text-(--color-fg-muted) hover:text-(--color-fg-default) transition-colors duration-[var(--duration-fast)]",
   "p-0.5 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)]",
   "focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed",
 ].join(" ");
-const navTextStyles = ["text-xs font-mono text-[var(--color-fg-muted)]"].join(
-  " ",
-);
+const navTextStyles = ["text-xs font-mono text-(--color-fg-muted)"].join(" ");
 const closeButtonStyles = [
-  "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] p-1 transition-colors",
+  "text-(--color-fg-muted) hover:text-(--color-fg-default) p-1 transition-colors",
   "duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)]",
   "focus-visible:outline-[var(--color-ring-focus)]",
 ].join(" ");
 const changeActionButtonStyles = [
   "h-6 w-6 flex items-center",
-  "justify-center rounded-[var(--radius-sm)] transition-colors duration-[var(--duration-fast)]",
+  "justify-center rounded-sm transition-colors duration-[var(--duration-fast)]",
   "focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)]",
 ].join(" ");
 const acceptChangeButtonStyles = [
   changeActionButtonStyles,
-  "text-[var(--color-fg-muted)] hover:bg-[var(--color-success-subtle)] hover:text-[var(--color-success)]",
+  "text-(--color-fg-muted) hover:bg-[var(--color-success-subtle)] hover:text-(--color-success)",
 ].join(" ");
 const rejectChangeButtonStyles = [
   changeActionButtonStyles,
-  "text-[var(--color-fg-muted)] hover:bg-[var(--color-error-subtle)] hover:text-[var(--color-error)]",
+  "text-(--color-fg-muted) hover:bg-[var(--color-error-subtle)] hover:text-(--color-error)",
 ].join(" ");
 interface AiDiffModalBodyProps extends Omit<AiDiffModalProps, "open"> {
   currentIndex: number;
@@ -164,10 +162,10 @@ function AiDiffModalBody({
       {/* Header */}
       <div className={headerStyles}>
         <div className="flex items-center gap-4">
-          <DialogPrimitive.Title className="font-medium text-sm text-[var(--color-fg-default)]">
+          <DialogPrimitive.Title className="font-medium text-sm text-(--color-fg-default)">
             {t("ai.diff.reviewChanges")}
           </DialogPrimitive.Title>
-          <span className="text-xs text-[var(--color-fg-muted)]">
+          <span className="text-xs text-(--color-fg-muted)">
             {t("ai.diff.modifyCount", { count: totalChanges })}
           </span>
         </div>

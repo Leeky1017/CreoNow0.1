@@ -2,13 +2,15 @@
  * Custom ESLint rule: no-raw-tailwind-tokens
  *
  * Forbids raw Tailwind color values (e.g., bg-red-600, text-gray-300)
- * and built-in shadow classes (shadow-lg, shadow-xl, shadow-2xl)
  * in ANY string literal or template literal. This covers all usage patterns:
  *   - className="bg-red-600"           (direct JSX attribute)
  *   - className={`shadow-lg ${x}`}     (template literal)
  *   - ["shadow-2xl", ...].join(" ")    (array → join)
  *   - cn("hover:bg-red-600", ...)      (clsx/cn helper)
  *   - { color: "text-blue-400" }       (object property value)
+ *
+ * Note: shadow-xs/sm/md/lg/xl/2xl are exported via @theme and map to
+ * our design tokens. They are no longer flagged.
  *
  * The regex patterns are specific enough (e.g., bg-red-600) that false
  * positives on non-Tailwind strings are essentially impossible.
@@ -22,13 +24,11 @@ const rule = {
     type: "suggestion",
     docs: {
       description:
-        "Disallow raw Tailwind color values and built-in shadow classes in any string literal. Use semantic Design Tokens instead.",
+        "Disallow raw Tailwind color values in any string literal. Use semantic Design Tokens instead.",
     },
     messages: {
       rawColor:
         "Avoid raw Tailwind color '{{value}}'. Use a semantic Design Token instead. See docs/references/design-ui-architecture.md.",
-      rawShadow:
-        "Avoid Tailwind built-in shadow class '{{value}}'. Use --shadow-* Design Token instead.",
     },
     schema: [],
   },
@@ -39,14 +39,6 @@ const rule = {
     // Also matches opacity suffixes: shadow-red-500/20, bg-red-600/50
     const RAW_COLOR_RE =
       /\b(?:[\w-]*:)?(?:bg|text|border|ring|shadow|outline|fill|stroke|from|via|to|divide|placeholder|accent|caret|decoration)-(?:red|blue|green|yellow|purple|pink|indigo|violet|cyan|teal|emerald|lime|amber|orange|fuchsia|rose|sky|slate|gray|zinc|neutral|stone|warm)-\d{1,3}(?:\/\d{1,3})?\b/g;
-
-    // Matches: shadow-sm, shadow-md, shadow-lg, shadow-xl (but not shadow-[custom] or shadow-surface etc.)
-    // Note: shadow-xs and shadow-2xl are registered in @theme as design tokens,
-    // so they are NOT blocked — using them via Tailwind utilities IS using the design token.
-    // Also with modifier prefixes: hover:shadow-lg, data-[state=active]:shadow-sm
-    // Negative lookbehind (?<!-) prevents matching inside CSS var names (--shadow-md)
-    // and Tailwind drop-shadow utilities (drop-shadow-md).
-    const RAW_SHADOW_RE = /(?<!-)\b(?:[\w[\]=-]*:)?shadow-(?:sm|md|lg|xl)\b/g;
 
     /**
      * Check a string value for raw Tailwind tokens.
@@ -60,14 +52,6 @@ const rule = {
         context.report({
           node,
           messageId: "rawColor",
-          data: { value: match[0] },
-        });
-      }
-      RAW_SHADOW_RE.lastIndex = 0;
-      while ((match = RAW_SHADOW_RE.exec(value)) !== null) {
-        context.report({
-          node,
-          messageId: "rawShadow",
           data: { value: match[0] },
         });
       }

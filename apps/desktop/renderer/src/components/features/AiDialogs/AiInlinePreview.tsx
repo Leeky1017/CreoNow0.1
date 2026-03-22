@@ -13,7 +13,7 @@ const contentWrapperStyles = [
  * Styles for the original text (strikethrough)
  */
 const originalTextStyles = [
-  "text-[var(--color-fg-muted)]",
+  "text-(--color-fg-muted)",
   "line-through",
   "decoration-[var(--color-error)]/50",
   "bg-[var(--color-error-subtle)]",
@@ -60,7 +60,7 @@ const pendingHighlightStyles = [
  * Styles for accepted final state (no highlight)
  */
 const acceptedTextStyles = [
-  "text-[var(--color-fg-default)]",
+  "text-(--color-fg-default)",
   "transition-all",
   "duration-[var(--duration-normal)]",
 ].join(" ");
@@ -69,7 +69,7 @@ const acceptedTextStyles = [
  * Styles for rejected final state (original text restored)
  */
 const rejectedTextStyles = [
-  "text-[var(--color-fg-default)]",
+  "text-(--color-fg-default)",
   "transition-all",
   "duration-[var(--duration-normal)]",
 ].join(" ");
@@ -106,9 +106,7 @@ export function AiInlinePreview({
             <span className={`${originalTextStyles} mr-2`}>{originalText}</span>
           )}
           <span className={pendingHighlightStyles}>
-            <span className="text-[var(--color-fg-default)]">
-              {suggestedText}
-            </span>
+            <span className="text-(--color-fg-default)">{suggestedText}</span>
           </span>
         </>
       )}
@@ -116,7 +114,7 @@ export function AiInlinePreview({
       {/* Applying state: show suggested with loading indicator */}
       {isApplying && (
         <span className={suggestedTextStyles}>
-          <span className="text-[var(--color-fg-default)] opacity-70">
+          <span className="text-(--color-fg-default) opacity-70">
             {suggestedText}
           </span>
         </span>
