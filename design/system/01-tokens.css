@@ -14,7 +14,7 @@
    深色主题
    ============================================ */
 :root[data-theme="dark"] {
-/* HSL 10-step 灰阶（近黑 → 中灰，等感知亮度步进） */
+  /* HSL 10-step 灰阶（近黑 → 中灰，等感知亮度步进） */
   --gray-1: hsl(0 0% 3%);
   --gray-2: hsl(0 0% 6%);
   --gray-3: hsl(0 0% 8%);
@@ -26,13 +26,30 @@
   --gray-9: hsl(0 0% 40%);
   --gray-10: hsl(0 0% 45%);
 
-/* 品牌渐变系统 */
-  --gradient-brand: linear-gradient(135deg, var(--color-accent) 0%, #7c3aed 100%);
-  --gradient-surface: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-base) 100%);
-  --gradient-hero: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15) 0%, transparent 60%);
-  --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+  /* 品牌渐变系统 */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.15) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
 
-/* 品牌渐变系统 */
+  /* 品牌渐变系统 */
   --gradient-brand: linear-gradient(
     135deg,
     var(--color-accent) 0%,
@@ -127,7 +144,7 @@
    浅色主题
    ============================================ */
 :root[data-theme="light"] {
-/* HSL 10-step 灰阶（纯白 → 中灰，等感知亮度步进） */
+  /* HSL 10-step 灰阶（纯白 → 中灰，等感知亮度步进） */
   --gray-1: hsl(0 0% 100%);
   --gray-2: hsl(0 0% 98%);
   --gray-3: hsl(0 0% 96%);
@@ -139,13 +156,30 @@
   --gray-9: hsl(0 0% 60%);
   --gray-10: hsl(0 0% 45%);
 
-/* 品牌渐变系统（亮色适配） */
-  --gradient-brand: linear-gradient(135deg, var(--color-accent) 0%, #7c3aed 100%);
-  --gradient-surface: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-base) 100%);
-  --gradient-hero: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
-  --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.03) 50%, transparent 100%);
+  /* 品牌渐变系统（亮色适配） */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.08) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.03) 50%,
+    transparent 100%
+  );
 
-/* 品牌渐变系统（亮色适配） */
+  /* 品牌渐变系统（亮色适配） */
   --gradient-brand: linear-gradient(
     135deg,
     var(--color-accent) 0%,

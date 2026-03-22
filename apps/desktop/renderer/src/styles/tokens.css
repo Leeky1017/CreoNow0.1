@@ -243,7 +243,7 @@
 }
 
 :root[data-theme="dark"] {
-/* HSL 10-step 灰阶（近黑 → 中灰，等感知亮度步进） */
+  /* HSL 10-step 灰阶（近黑 → 中灰，等感知亮度步进） */
   --gray-1: hsl(0 0% 3%);
   --gray-2: hsl(0 0% 6%);
   --gray-3: hsl(0 0% 8%);
@@ -260,7 +260,7 @@
   --color-bg-surface: var(--gray-2);
   --color-bg-raised: var(--gray-3);
 
-/* 品牌渐变系统 */
+  /* 品牌渐变系统 */
   --gradient-brand: linear-gradient(
     135deg,
     var(--color-accent) 0%,
@@ -372,7 +372,7 @@
 }
 
 :root[data-theme="light"] {
-/* HSL 10-step 灰阶（纯白 → 中灰，等感知亮度步进） */
+  /* HSL 10-step 灰阶（纯白 → 中灰，等感知亮度步进） */
   --gray-1: hsl(0 0% 100%);
   --gray-2: hsl(0 0% 98%);
   --gray-3: hsl(0 0% 96%);
@@ -389,7 +389,7 @@
   --color-bg-surface: var(--gray-2);
   --color-bg-raised: var(--gray-1);
 
-/* 品牌渐变系统（亮色适配） */
+  /* 品牌渐变系统（亮色适配） */
   --gradient-brand: linear-gradient(
     135deg,
     var(--color-accent) 0%,
