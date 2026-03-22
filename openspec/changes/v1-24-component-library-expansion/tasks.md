@@ -35,7 +35,7 @@
 | AC-22 | 全量测试通过                                                                                         | `pnpm -C apps/desktop vitest run`                                                                                                                         | ⬜   |
 | AC-23 | lint 无新增违规                                                                                      | `pnpm lint`                                                                                                                                               | ⬜   |
 | AC-24 | Storybook 可构建                                                                                     | `pnpm -C apps/desktop storybook:build`                                                                                                                    | ⬜   |
-| AC-25 | 原始组件文件数从 29 增长至 ≥ 35（新增 Table 系列 + Separator + Alert + SegmentedControl + Progress） | `find apps/desktop/renderer/src/components/primitives -maxdepth 1 -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' ! -name '*.behavior.*' \| wc -l` | ⬜   |
+| AC-25 | 原始组件文件数从 30（R10 基线）增长至 ≥ 35（新增 Table 系列 + Separator + Alert + SegmentedControl + Progress） | `find apps/desktop/renderer/src/components/primitives -maxdepth 1 -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' ! -name '*.behavior.*' \| wc -l` | ⬜   |
 | AC-26 | 所有用户可见文本走 `t()` / i18n                                                                      | grep 验证无裸字符串                                                                                                                                       | ⬜   |
 
 ---
@@ -359,3 +359,42 @@
 ### Phase 0 调整
 
 无需调整。上游依赖已全部就绪，v1-02 标杆模式可直接参考。建议 Phase 0 增加对 v1-02 新增的 `.behavior.test.tsx` 模式的阅读，作为新组件行为测试的参考。
+
+---
+
+## R10 级联刷新记录（2026-03-22）
+
+> 📋 **R10 P8**: v1-19~v1-23 tasks.md 创建/复核完成，v1-17（PR#1222）/v1-18（PR#1223）已合并
+
+### 上游依赖复核
+
+- **v1-01** ✅ 完成 — Design Token 体系完备
+- **v1-02** ✅ 完成 — variant/size/token 标杆模式已建立
+- **v1-17** ✅ 已合并 — shadow token 扩展至 6 档（`--shadow-xs` ~ `--shadow-2xl`），视觉回归 CI 已建立
+- **v1-18** ✅ 已合并 — arbitrary 值清理完成，variant 推广模式可参考
+
+### R10 基线指标验证
+
+| 指标                  | R1 值 | R10 值 | Delta | 采集命令                                                                                                                                                  |
+| --------------------- | ----- | ------ | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Primitive 组件文件数  | 29    | 30     | +1    | `find apps/desktop/renderer/src/components/primitives -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' \| wc -l`                                    |
+| Primitive 总行数      | 4452  | 4479   | +27   | `find apps/desktop/renderer/src/components/primitives -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' -exec wc -l {} + \| tail -1`                 |
+| Input.tsx 行数        | 85    | 85     | →     | `wc -l apps/desktop/renderer/src/components/primitives/Input.tsx`                                                                                         |
+| Input prefix/suffix   | 0     | 0      | →     | `grep -c 'prefix\|suffix' apps/desktop/renderer/src/components/primitives/Input.tsx`                                                                      |
+| Table 组件            | 不存在 | 不存在 | →     | `find apps/desktop/renderer/src/components/primitives -name 'Table*'` → 空                                                                                |
+| Separator 组件        | 不存在 | 不存在 | →     | `find apps/desktop/renderer/src/components/primitives -name 'Separator*'` → 空                                                                            |
+| Alert 组件            | 不存在 | 不存在 | →     | `find apps/desktop/renderer/src/components/primitives -name 'Alert*'` → 空                                                                                |
+| SegmentedControl 组件 | 不存在 | 不存在 | →     | `find apps/desktop/renderer/src/components/primitives -name 'Segment*'` → 空                                                                              |
+| Progress 组件         | 不存在 | 不存在 | →     | `find apps/desktop/renderer/src/components/primitives -name 'Progress*'` → 空                                                                             |
+| Shadow tokens         | 4 档  | 6 档   | +2    | `grep 'shadow' design/system/01-tokens.css`（新增 `--shadow-xs` / `--shadow-2xl`）                                                                       |
+| Story 文件数          | 26    | 26     | →     | `find apps/desktop/renderer/src/components/primitives -name '*.stories.tsx' \| wc -l`                                                                     |
+
+### AC/Task 调整
+
+1. **AC-25 基线更新**: 原始组件文件数基线从 29 调整为 30（R10 实测值），目标仍为 ≥ 35
+2. **v1-20 交叉依赖**: Task 1.7（Story 完整性）和 Phase 2 各 Story Task 应确保包含 play function（交互测试），以满足 v1-20 Storybook 体系化要求
+3. **v1-23 交叉依赖**: Task 2.5（Alert 实现）的 variantStyles map 可直接引用 v1-23 补全的功能色 hover/active token
+
+### Scope 变更
+
+无需调整。v1-17/v1-18 的合并强化了 Token 基础但未改变组件范围。v1-19~v1-23 的交叉依赖已在现有 AC 中覆盖。
