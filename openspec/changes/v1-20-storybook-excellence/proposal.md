@@ -248,3 +248,37 @@ v1-15 引入的子组件（无独立 Story）：
 ### 结论
 
 **PASS** — proposal 基线五项指标与 R8 实测完全一致（Delta 均为 ±0），v1-14/v1-15 未改变缺口列表和 Play function 总量。唯一需注意：Phase 2 拆分表应追加 `AiDialogs.stories.tsx`（818 行）和 `Card.stories.tsx`（1062 行）为拆分候选。此为增量优化建议，不阻塞 v1-20 启动。
+
+---
+
+## R9 级联刷新（v1-17 + v1-18 完成后）
+
+**触发源**：v1-17（字体打包+阴影Token）PR #1222 + v1-18（Arbitrary清理+变体推广）PR #1223 CI 全绿
+**采集时间**：2026-03-22
+**采集口径**：控制面 main（v1-17/v1-18 未合并，值为合并前基线；合并后需 R10 验证）
+
+| 指标 | R8 值 | R9 值 | Delta | 说明 |
+|------|-------|-------|-------|------|
+| Feature Story 文件数 | 26 | 26 | ±0 | v1-17/v1-18 未新增 Story 文件 |
+| 有 Story 的功能目录 | 19/22 | 19/22 | ±0 | 缺口不变：rightpanel, settings, shortcuts |
+| 无 Story 的功能目录 | 3 | 3 | ±0 | rightpanel, settings, shortcuts |
+| Play function 总数 | 256 | 256 | ±0 | v1-17/v1-18 未修改 play function |
+| 最大 Story 文件行数 | 1265 | 1265 | ±0 | AiPanel.stories.tsx 不变 |
+| Story 文件 > 500 行 | 21 | 21 | ±0 | 巨石 Story 列表不变 |
+
+**v1-17 影响分析**：
+
+- v1-17 的 2 处 story 文件中 `shadow-[var(--shadow-2xl)]` → `shadow-2xl` 替换——class 名缩短但行数不变，Story 功能和视觉不受影响
+- v1-17 新增 28 条 guard 测试——均为测试文件，非 Story 文件，不影响 v1-20 基线
+- v1-17 新增 106 张视觉基线截图——为 v1-20 Phase 2 巨石 Story 拆分提供回归验证基准。**利好**：拆分后可通过视觉截图对比确认零视觉偏差
+- v1-17 的 @theme shadow 导出使 Storybook 中 shadow 渲染与生产代码一致
+
+**v1-18 影响分析**：
+
+- v1-18 修改了 AiDialogs 7 文件 + KnowledgeGraph 3+ 文件——这些文件对应的 Story（`AiDialogs.stories.tsx`、`KnowledgeGraph.stories.tsx`）**内容未变**（v1-18 只改生产代码中的 arbitrary class，Story 中的 mock 数据和结构不变），但 Story 渲染结果可能有细微视觉差异（class 从 arbitrary → semantic token 映射后）
+- v1-18 未新增或删除 Story 文件，Play function 数量不变
+- v1-18 的 variant 推广（v1-02 变体应用到 features/）不影响 Story 结构——Story 通过 component 渲染，component 变体变更自动反映在 Story 中
+
+**预测（合并后）**：所有五项 Storybook 基线指标预计不变。v1-17 的视觉回归 CI 为 v1-20 的巨石 Story 拆分提供安全网。
+
+**范围/AC 变更**：无变更

@@ -167,3 +167,35 @@
 ### Phase 0 调整
 
 无需调整。上游依赖已全部就绪，Phase 0 准备任务保持不变。
+
+---
+
+## R9 级联刷新记录（2026-03-22）
+
+### 触发源
+
+v1-17（字体打包+阴影Token）PR #1222 + v1-18（Arbitrary清理+变体推广）PR #1223 CI 全绿。
+
+### 基线指标变化
+
+| 指标 | R1 实测值 | R9 实测值 | Delta | 影响 |
+|------|----------|----------|-------|------|
+| tokens.css 总行数 | 469 | 469（合并后→472） | ±0（→+3） | v1-17 新增 shadow token，不影响色彩任务 |
+| 色彩 token 数量 | 99 | 99（合并后→101） | ±0（→+2） | shadow 相关色彩 token，非色彩系统核心 |
+| features/ 硬编码 hex | 25 | 50 | +25 | 增量来自 v1-14/v1-15 注释和测试；v1-23 Non-Goals 不改 .tsx |
+| features/ 硬编码 rgb/rgba | 19 | 19 | ±0 | 不变 |
+| 其余指标 | — | — | ±0 | HSL/灰阶/功能色 hover·active/prefers-contrast 均保持 0 |
+
+### AC 调整
+
+- **AC-12**（原文 "现有 163 个 boundary test 全部通过"）：v1-17 新增 28 条 + v1-18 新增 5 条 guard 测试，合并后测试总数将增加。**建议修订为 "现有 boundary test 全部通过（零回归）"**，不锁定具体数字
+- 其余 AC 无需调整
+
+### Task 调整
+
+- **Phase 0 准备**：无需调整。`01-tokens.css` 的色彩 token 结构未变（v1-17 仅追加 shadow 区域）
+- **Phase 1 HSL 灰阶**：无需调整。灰阶 token 仍为 0，v1-17 shadow token 不影响灰阶系统
+- **Phase 2 功能色补全**：无需调整。功能色 hover/active token 仍为 0
+- **Phase 3 对比度修复**：无需调整。`--color-fg-subtle` 值不变
+- **Task 2.6（消除组件级硬编码）**：features/ 硬编码 hex 从 25→50，但增量主要是注释和测试中的 hex，而非组件层 hover 硬编码。Task 2.6 的 scope（`--color-btn-danger-hover` 等）不受影响
+- **遗留项（features/ 硬编码色值清理）**：44 处硬编码色值已增至约 69 处（hex 50 + rgba 19），后续清理工作量增加
