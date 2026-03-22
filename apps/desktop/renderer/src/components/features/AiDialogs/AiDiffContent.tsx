@@ -97,45 +97,45 @@ const afterPanelStyles = [diffPanelStyles, "bg-[var(--color-bg-surface)]"].join(
   " ",
 );
 const labelStyles = [
-  "uppercase text-[10px] font-bold tracking-wider",
+  "uppercase text-label font-bold tracking-wider",
   "mb-4",
 ].join(" ");
 const beforeLabelStyles = [
   labelStyles,
-  "text-[var(--color-error)] opacity-70",
+  "text-(--color-error) opacity-70",
 ].join(" ");
 const afterLabelStyles = [
   labelStyles,
-  "text-[var(--color-success)] opacity-70",
+  "text-(--color-success) opacity-70",
 ].join(" ");
 const textStyles = ["text-sm", "leading-relaxed", "font-mono"].join(" ");
-const beforeTextStyles = [textStyles, "text-[var(--color-fg-muted)]"].join(" ");
-const afterTextStyles = [textStyles, "text-[var(--color-fg-default)]"].join(
+const beforeTextStyles = [textStyles, "text-(--color-fg-muted)"].join(" ");
+const afterTextStyles = [textStyles, "text-(--color-fg-default)"].join(
   " ",
 );
 const removedStyles = [
-  "bg-[var(--color-error-subtle)] text-[var(--color-error)] line-through px-0.5",
+  "bg-[var(--color-error-subtle)] text-(--color-error) line-through px-0.5",
   "rounded-sm",
 ].join(" ");
 const addedStyles = [
-  "bg-[var(--color-success-subtle)] text-[var(--color-success)] px-0.5 rounded-sm",
+  "bg-[var(--color-success-subtle)] text-(--color-success) px-0.5 rounded-sm",
 ].join(" ");
 const stateIndicatorStyles = [
   "absolute top-2 right-2 flex",
-  "items-center gap-1 text-[10px] font-medium",
+  "items-center gap-1 text-label font-medium",
   "px-2 py-0.5 rounded-full",
 ].join(" ");
 const pendingIndicatorStyles = [
   stateIndicatorStyles,
-  "bg-[var(--color-info-subtle)] text-[var(--color-info)]",
+  "bg-[var(--color-info-subtle)] text-(--color-info)",
 ].join(" ");
 const acceptedIndicatorStyles = [
   stateIndicatorStyles,
-  "bg-[var(--color-success-subtle)] text-[var(--color-success)]",
+  "bg-[var(--color-success-subtle)] text-(--color-success)",
 ].join(" ");
 const rejectedIndicatorStyles = [
   stateIndicatorStyles,
-  "bg-[var(--color-error-subtle)] text-[var(--color-error)]",
+  "bg-[var(--color-error-subtle)] text-(--color-error)",
 ].join(" ");
 
 interface AiDiffContentProps {

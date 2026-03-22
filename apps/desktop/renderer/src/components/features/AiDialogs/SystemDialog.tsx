@@ -31,7 +31,7 @@ const overlayStyles = [
 const contentStyles = [
   "fixed left-1/2 top-1/2 -translate-x-1/2",
   "-translate-y-1/2 z-[var(--z-modal)] bg-[var(--color-bg-surface)] border",
-  "border-[var(--color-border-default)] rounded-[var(--radius-xl)] shadow-[var(--shadow-xl)] w-full",
+  "border-[var(--color-border-default)] rounded-xl shadow-xl w-full",
   "max-w-sm p-6 flex flex-col",
   "items-center text-center transition-[opacity,transform] duration-[var(--duration-normal)]",
   "ease-[var(--ease-default)] data-[state=open]:opacity-100 data-[state=open]:scale-100 data-[state=closed]:opacity-0",

@@ -32,34 +32,34 @@ const footerStyles = [
 ].join(" ");
 const statsStyles = [
   "flex items-center gap-4 text-xs",
-  "text-[var(--color-fg-muted)]",
+  "text-(--color-fg-muted)",
 ].join(" ");
-const addedStatsStyles = ["text-[var(--color-success)]"].join(" ");
-const removedStatsStyles = ["text-[var(--color-error)]"].join(" ");
+const addedStatsStyles = ["text-(--color-success)"].join(" ");
+const removedStatsStyles = ["text-(--color-error)"].join(" ");
 const textButtonStyles = [
-  "px-3 py-1.5 rounded-[var(--radius-sm)] text-xs",
+  "px-3 py-1.5 rounded-sm text-xs",
   "font-medium transition-colors duration-[var(--duration-fast)] focus-visible:outline",
   "focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50",
   "disabled:cursor-not-allowed",
 ].join(" ");
 const rejectAllStyles = [
   textButtonStyles,
-  "text-[var(--color-error)] hover:bg-[var(--color-error-subtle)]",
+  "text-(--color-error) hover:bg-[var(--color-error-subtle)]",
 ].join(" ");
 const acceptAllStyles = [
   textButtonStyles,
-  "text-[var(--color-success)] hover:bg-[var(--color-success-subtle)]",
+  "text-(--color-success) hover:bg-[var(--color-success-subtle)]",
 ].join(" ");
 const editManuallyStyles = [
-  "px-4 py-2 rounded-[var(--radius-sm)] text-xs",
-  "font-medium text-[var(--color-fg-default)] border border-[var(--color-separator)]",
+  "px-4 py-2 rounded-sm text-xs",
+  "font-medium text-(--color-fg-default) border border-[var(--color-separator)]",
   "hover:bg-[var(--color-bg-hover)] transition-colors duration-[var(--duration-fast)] focus-visible:outline",
   "focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50",
   "disabled:cursor-not-allowed",
 ].join(" ");
 const applyChangesStyles = [
-  "px-4 py-2 rounded-[var(--radius-sm)] text-xs",
-  "font-medium bg-[var(--color-fg-default)] text-[var(--color-fg-inverse)] hover:bg-[var(--color-fg-muted)]",
+  "px-4 py-2 rounded-sm text-xs",
+  "font-medium bg-[var(--color-fg-default)] text-(--color-fg-inverse) hover:bg-[var(--color-fg-muted)]",
   "transition-colors duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)]",
   "focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed",
   "flex items-center gap-2",
@@ -124,11 +124,11 @@ export function AiDiffSummary({
           </span>
           {(acceptedCount > 0 || rejectedCount > 0) && (
             <>
-              <span className="text-[var(--color-separator)]">|</span>
-              <span className="text-[var(--color-success)]">
+              <span className="text-(--color-separator)">|</span>
+              <span className="text-(--color-success)">
                 {t("ai.diff.statsAccepted", { count: acceptedCount })}
               </span>
-              <span className="text-[var(--color-error)]">
+              <span className="text-(--color-error)">
                 {t("ai.diff.statsRejected", { count: rejectedCount })}
               </span>
             </>

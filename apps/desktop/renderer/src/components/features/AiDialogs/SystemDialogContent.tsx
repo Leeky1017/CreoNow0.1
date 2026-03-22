@@ -114,25 +114,25 @@ export function getIconColorsByType(type: SystemDialogType): {
     case "delete":
       return {
         bg: "bg-[var(--color-error-subtle)]",
-        text: "text-[var(--color-error)]",
+        text: "text-(--color-error)",
         border: "border-[var(--color-error)]/20",
       };
     case "unsaved_changes":
       return {
         bg: "bg-[var(--color-warning-subtle)]",
-        text: "text-[var(--color-warning)]",
+        text: "text-(--color-warning)",
         border: "border-[var(--color-warning)]/20",
       };
     case "export_complete":
       return {
         bg: "bg-[var(--color-success-subtle)]",
-        text: "text-[var(--color-success)]",
+        text: "text-(--color-success)",
         border: "border-[var(--color-success)]/20",
       };
     default:
       return {
         bg: "bg-[var(--color-warning-subtle)]",
-        text: "text-[var(--color-warning)]",
+        text: "text-(--color-warning)",
         border: "border-[var(--color-warning)]/20",
       };
   }
@@ -143,19 +143,19 @@ export const iconContainerStyles = [
   "items-center justify-center mb-4 border",
 ].join(" ");
 export const titleStyles = [
-  "text-lg font-semibold text-[var(--color-fg-default)] mb-2",
+  "text-lg font-semibold text-(--color-fg-default) mb-2",
 ].join(" ");
 export const descriptionStyles = [
-  "text-sm text-[var(--color-fg-muted)] mb-6 leading-relaxed",
+  "text-sm text-(--color-fg-muted) mb-6 leading-relaxed",
 ].join(" ");
 export const keyboardHintStyles = [
-  "text-[10px] text-[var(--color-fg-muted)] mt-3 flex",
+  "text-label text-(--color-fg-muted) mt-3 flex",
   "items-center gap-3",
 ].join(" ");
 export const kbdStyles = [
   "px-1.5 py-0.5 rounded bg-[var(--color-bg-hover)]",
   "border border-[var(--color-separator)] text-[9px] font-mono",
-  "text-[var(--color-fg-muted)]",
+  "text-(--color-fg-muted)",
 ].join(" ");
 export const buttonContainerStyles = [
   "flex",
@@ -164,7 +164,7 @@ export const buttonContainerStyles = [
   "w-full",
 ].join(" ");
 export const buttonBaseStyles = [
-  "h-9 rounded-[var(--radius-lg)] text-sm font-medium",
+  "h-9 rounded-lg text-sm font-medium",
   "transition-colors duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)]",
   "focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed",
   "flex items-center justify-center gap-2",
@@ -172,29 +172,29 @@ export const buttonBaseStyles = [
 export const cancelButtonStyles = [
   buttonBaseStyles,
   "flex-1 border border-[var(--color-separator)] bg-transparent",
-  "hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-default)]",
+  "hover:bg-[var(--color-bg-hover)] text-(--color-fg-default)",
 ].join(" ");
 export const deleteButtonStyles = [
   buttonBaseStyles,
-  "flex-1 bg-[var(--color-btn-danger-bg)] hover:bg-[var(--color-btn-danger-hover)] text-[var(--color-fg-on-accent)]",
-  "shadow-[var(--shadow-lg)]",
+  "flex-1 bg-[var(--color-btn-danger-bg)] hover:bg-[var(--color-btn-danger-hover)] text-(--color-fg-on-accent)",
+  "shadow-lg",
 ].join(" ");
 export const discardButtonStyles = [
   buttonBaseStyles,
   "px-4 border border-[var(--color-error)]/20 hover:bg-[var(--color-error-subtle)]",
-  "text-[var(--color-error)]",
+  "text-(--color-error)",
 ].join(" ");
 export const saveButtonStyles = [
   buttonBaseStyles,
-  "px-4 bg-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-inverse)]",
+  "px-4 bg-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] text-(--color-fg-inverse)",
 ].join(" ");
 export const doneButtonStyles = [
   buttonBaseStyles,
   "flex-1 border border-[var(--color-separator)] bg-transparent",
-  "hover:bg-[var(--color-bg-hover)] text-[var(--color-fg-default)]",
+  "hover:bg-[var(--color-bg-hover)] text-(--color-fg-default)",
 ].join(" ");
 export const openFileButtonStyles = [
   buttonBaseStyles,
-  "flex-1 bg-[var(--color-btn-success-bg)] hover:bg-[var(--color-btn-success-hover)] text-[var(--color-fg-on-accent)]",
-  "shadow-[var(--shadow-lg)]",
+  "flex-1 bg-[var(--color-btn-success-bg)] hover:bg-[var(--color-btn-success-hover)] text-(--color-fg-on-accent)",
+  "shadow-lg",
 ].join(" ");
