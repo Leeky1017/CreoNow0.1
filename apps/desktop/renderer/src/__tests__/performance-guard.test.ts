@@ -100,4 +100,51 @@ describe("V1-21 Performance Guard", () => {
     // Verify our new animations are also disabled
     expect(mainCss).toContain("tab-crossfade");
   });
+
+  it("tab-crossfade class is used in RightPanel content area", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const rightPanelSrc = fs.readFileSync(
+      path.resolve(__dirname, "../components/layout/RightPanel.tsx"),
+      "utf-8",
+    );
+    expect(rightPanelSrc).toContain("tab-crossfade");
+  });
+
+  it("countup class is used in StatusBar word count", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const statusBarSrc = fs.readFileSync(
+      path.resolve(__dirname, "../components/layout/StatusBar.tsx"),
+      "utf-8",
+    );
+    expect(statusBarSrc).toContain("countup");
+  });
+
+  it("progressive loading: AppShellOverlays uses React.lazy for heavy panels", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const overlaySrc = fs.readFileSync(
+      path.resolve(__dirname, "../components/layout/AppShellOverlays.tsx"),
+      "utf-8",
+    );
+    expect(overlaySrc).toContain("lazy(");
+    expect(overlaySrc).toContain("Suspense");
+    expect(overlaySrc).toContain("LazyKnowledgeGraphPanel");
+    expect(overlaySrc).toContain("LazyVersionHistoryContainer");
+    expect(overlaySrc).toContain("LazyMemoryPanel");
+    expect(overlaySrc).toContain("LazyCharacterCardListContainer");
+  });
+
+  it("progressive loading: RightPanel uses React.lazy for QualityPanel", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const rightPanelSrc = fs.readFileSync(
+      path.resolve(__dirname, "../components/layout/RightPanel.tsx"),
+      "utf-8",
+    );
+    expect(rightPanelSrc).toContain("lazy(");
+    expect(rightPanelSrc).toContain("Suspense");
+    expect(rightPanelSrc).toContain("LazyQualityPanel");
+  });
 });

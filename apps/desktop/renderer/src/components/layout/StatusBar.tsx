@@ -95,7 +95,13 @@ export function StatusBar(): JSX.Element {
       </div>
 
       <div className="ml-auto flex items-center gap-3">
-        <span data-testid="status-word-count">{wordCountText}</span>
+        <span
+          key={documentCharacterCountSafe}
+          data-testid="status-word-count"
+          className="countup tabular-nums"
+        >
+          {wordCountText}
+        </span>
         <SaveIndicator
           autosaveStatus={autosaveStatus}
           onRetry={() => {

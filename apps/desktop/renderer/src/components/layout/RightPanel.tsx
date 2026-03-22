@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import {
   LAYOUT_DEFAULTS,
@@ -7,7 +7,7 @@ import {
 } from "../../stores/layoutStore";
 import { AiPanel } from "../../features/ai/AiPanel";
 import { ChatHistory } from "../../features/ai/ChatHistory";
-import { InfoPanel, QualityPanel } from "../../features/rightpanel";
+import { InfoPanel } from "../../features/rightpanel";
 import {
   OpenSettingsContext,
   type OpenSettingsTarget,
@@ -15,6 +15,13 @@ import {
 import { ScrollArea } from "../primitives";
 import { useProjectStore } from "../../stores/projectStore";
 import { useAiStore } from "../../stores/aiStore";
+import { Skeleton } from "../primitives/Skeleton";
+
+const LazyQualityPanel = lazy(() =>
+  import("../../features/rightpanel/QualityPanel").then((m) => ({
+    default: m.QualityPanel,
+  })),
+);
 
 export { useOpenSettings } from "../../contexts/OpenSettingsContext";
 
@@ -113,7 +120,20 @@ export function RightPanel(props: {
       case "info":
         return <InfoPanel onOpenVersionHistory={props.onOpenVersionHistory} />;
       case "quality":
-        return <QualityPanel />;
+        return (
+          <Suspense
+            fallback={
+              <div className="p-4 space-y-3">
+                <Skeleton className="h-5 w-32" />
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-5 w-24" />
+                <Skeleton className="h-20 w-full" />
+              </div>
+            }
+          >
+            <LazyQualityPanel />
+          </Suspense>
+        );
       default: {
         const _exhaustive: never = activeRightPanel;
         return _exhaustive;
@@ -245,13 +265,15 @@ export function RightPanel(props: {
           ) : null}
         </div>
 
-        {/* Tab content */}
+        {/* Tab content — key triggers tab-crossfade animation on switch */}
         <ScrollArea
           data-testid="right-panel-scroll"
           viewportTestId="right-panel-scroll-viewport"
           className="flex-1 min-h-0"
         >
-          {renderContent()}
+          <div key={activeRightPanel} className="tab-crossfade">
+            {renderContent()}
+          </div>
         </ScrollArea>
       </aside>
     </OpenSettingsContext.Provider>

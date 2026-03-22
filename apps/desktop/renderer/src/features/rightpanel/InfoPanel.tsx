@@ -49,7 +49,7 @@ function StatItem(props: {
         data-testid={props.testId}
         size="small"
         color="default"
-        className="font-medium"
+        className="font-medium countup tabular-nums"
       >
         {props.value}
       </Text>
