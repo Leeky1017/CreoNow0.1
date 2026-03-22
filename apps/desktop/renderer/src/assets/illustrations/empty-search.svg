@@ -3,7 +3,7 @@
   <circle cx="52" cy="52" r="22" opacity="0.4"/>
   <line x1="68" y1="68" x2="90" y2="90" stroke-width="2.5"/>
   <!-- 问号 -->
-  <path d="M48 44a8 8 0 018-8 8 8 0 016.9 4" stroke="#7c3aed" stroke-width="2"/>
-  <path d="M56 48v6" stroke="#7c3aed" stroke-width="2"/>
-  <circle cx="56" cy="60" r="1" fill="#7c3aed" stroke="none"/>
+  <path d="M48 44a8 8 0 018-8 8 8 0 016.9 4" stroke="currentColor" stroke-width="2"/>
+  <path d="M56 48v6" stroke="currentColor" stroke-width="2"/>
+  <circle cx="56" cy="60" r="1" fill="currentColor" stroke="none"/>
 </svg>

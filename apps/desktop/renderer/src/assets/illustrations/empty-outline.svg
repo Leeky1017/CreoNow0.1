@@ -4,12 +4,12 @@
   <line x1="38" y1="52" x2="74" y2="52" opacity="0.4"/>
   <line x1="38" y1="64" x2="78" y2="64" opacity="0.4"/>
   <!-- 虚线（空大纲暗示） -->
-  <line x1="38" y1="76" x2="70" y2="76" stroke-dasharray="4 4" stroke="#7c3aed"/>
-  <line x1="38" y1="88" x2="62" y2="88" stroke-dasharray="4 4" stroke="#7c3aed"/>
+  <line x1="38" y1="76" x2="70" y2="76" stroke-dasharray="4 4" stroke="currentColor"/>
+  <line x1="38" y1="88" x2="62" y2="88" stroke-dasharray="4 4" stroke="currentColor"/>
   <!-- 项目符号 -->
   <circle cx="32" cy="40" r="2" fill="currentColor" opacity="0.3"/>
   <circle cx="32" cy="52" r="2" fill="currentColor" opacity="0.3"/>
   <circle cx="32" cy="64" r="2" fill="currentColor" opacity="0.3"/>
-  <circle cx="32" cy="76" r="2" fill="#7c3aed" stroke="none"/>
-  <circle cx="32" cy="88" r="2" fill="#7c3aed" stroke="none"/>
+  <circle cx="32" cy="76" r="2" fill="currentColor" stroke="none"/>
+  <circle cx="32" cy="88" r="2" fill="currentColor" stroke="none"/>
 </svg>

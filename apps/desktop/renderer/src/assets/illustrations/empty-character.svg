@@ -3,6 +3,6 @@
   <circle cx="60" cy="40" r="14" opacity="0.4"/>
   <path d="M36 92v-6a24 24 0 0148 0v6" opacity="0.4"/>
   <!-- 加号 -->
-  <line x1="90" y1="36" x2="90" y2="52" stroke="#7c3aed" stroke-width="2"/>
-  <line x1="82" y1="44" x2="98" y2="44" stroke="#7c3aed" stroke-width="2"/>
+  <line x1="90" y1="36" x2="90" y2="52" stroke="currentColor" stroke-width="2"/>
+  <line x1="82" y1="44" x2="98" y2="44" stroke="currentColor" stroke-width="2"/>
 </svg>

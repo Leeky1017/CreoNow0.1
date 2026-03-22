@@ -65,3 +65,20 @@ export const ProgressDeterminate: Story = {
     </div>
   ),
 };
+
+/** 品牌 Spinner — CreoNow "C" 字母脉冲 + 渐变光环 */
+export const BrandSpinner: Story = {
+  args: {
+    variant: "brand",
+    text: "正在加载...",
+    size: "lg",
+  },
+};
+
+/** 品牌 Spinner — 小尺寸 */
+export const BrandSpinnerSmall: Story = {
+  args: {
+    variant: "brand",
+    size: "sm",
+  },
+};

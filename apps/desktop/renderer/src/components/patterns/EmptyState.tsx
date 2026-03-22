@@ -1,6 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Text, Heading } from "../primitives";
+import {
+  ProjectIllustration,
+  SearchIllustration,
+  CharacterIllustration,
+} from "../../assets/illustrations/BrandIllustrations";
 
 /**
  * Empty state variants based on design spec §12.1
@@ -75,64 +80,43 @@ function getVariantDefaults(
 }
 
 /**
- * Default illustration SVG component
+ * Default illustration component
  *
- * A simple, neutral illustration that works for various empty states.
- * Uses CSS variables for theming support.
+ * Uses brand SVG illustrations for each variant (design spec §12.1).
+ * Renders 120×120 themed illustrations with accent color highlights.
  */
 function DefaultIllustration({
   variant,
 }: {
   variant: EmptyStateVariant;
 }): JSX.Element {
-  // Use different icons based on variant
-  const getIcon = () => {
+  const illustrationClass = "h-24 w-24 text-[var(--color-fg-muted)]";
+
+  const getIllustration = (): React.ReactNode => {
     switch (variant) {
       case "project":
       case "files":
-        return (
-          // File/folder icon
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
-          />
-        );
+        return <ProjectIllustration className={illustrationClass} />;
       case "search":
-        return (
-          // Search icon
-          <>
-            <circle cx="11" cy="11" r="8" strokeWidth={1.5} fill="none" />
-            <path
-              strokeLinecap="round"
-              strokeWidth={1.5}
-              d="M21 21l-4.35-4.35"
-            />
-          </>
-        );
+        return <SearchIllustration className={illustrationClass} />;
       case "characters":
+        return <CharacterIllustration className={illustrationClass} />;
+      default:
         return (
-          // Person icon
-          <>
-            <circle cx="12" cy="8" r="4" strokeWidth={1.5} fill="none" />
+          <svg
+            className="h-8 w-8 text-[var(--color-fg-muted)]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={1.5}
-              d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"
+              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
             />
-          </>
-        );
-      default:
-        return (
-          // Generic empty box icon
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-          />
+          </svg>
         );
     }
   };
@@ -140,17 +124,9 @@ function DefaultIllustration({
   return (
     <div
       data-testid="empty-state-illustration"
-      className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-bg-hover)]"
+      className="mb-4 flex items-center justify-center"
     >
-      <svg
-        className="h-8 w-8 text-[var(--color-fg-muted)]"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {getIcon()}
-      </svg>
+      {getIllustration()}
     </div>
   );
 }
