@@ -101,14 +101,14 @@ describe("V1-21 Performance Guard", () => {
     expect(mainCss).toContain("tab-crossfade");
   });
 
-  it("tab-crossfade class is used in RightPanel content area", async () => {
+  it("tab-crossfade is NOT used in RightPanel (creates stacking context breaking dropdowns)", async () => {
     const fs = await import("node:fs");
     const path = await import("node:path");
     const rightPanelSrc = fs.readFileSync(
       path.resolve(__dirname, "../components/layout/RightPanel.tsx"),
       "utf-8",
     );
-    expect(rightPanelSrc).toContain("tab-crossfade");
+    expect(rightPanelSrc).not.toContain("tab-crossfade");
   });
 
   it("countup class is used in StatusBar word count", async () => {
