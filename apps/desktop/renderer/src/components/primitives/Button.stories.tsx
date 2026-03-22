@@ -21,6 +21,26 @@ const meta = {
   component: Button,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component: `## 使用指南
+
+### 何时使用
+- **primary**: 页面主操作，每页最多 1 个
+- **secondary**: 次要操作，对话框取消、工具栏按钮
+- **ghost**: 内联操作、工具栏、无边框场景
+- **danger**: 删除、不可逆操作，需醒目警示
+
+### 尺寸选择
+- **sm**: 工具栏、紧凑列表
+- **md**: 默认尺寸，适用于大多数场景
+- **lg**: 登录、注册等全宽 CTA
+
+### 不应使用
+- 导航链接 → 使用 \`<a>\` 或 Router Link
+- 纯图标按钮 → 配合 \`size="icon"\` 使用`,
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {

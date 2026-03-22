@@ -24,6 +24,21 @@ const meta = {
   component: Card,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component: `## 使用指南
+
+### 变体说明
+- **default**: 标准容器，细边框分隔
+- **raised**: 悬浮卡片，带阴影，用于需要层次感的场景
+- **bordered**: 加粗边框，强调分组
+- **bento**: 大圆角大内边距，用于 Dashboard 等展示场景
+- **compact**: 紧凑信息卡片，列表项
+
+### 组合模式
+使用 CardHeader / CardContent / CardFooter slot 构建结构化内容`,
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {

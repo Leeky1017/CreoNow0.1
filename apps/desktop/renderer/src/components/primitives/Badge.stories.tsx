@@ -13,6 +13,19 @@ const meta = {
   component: Badge,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component: `## 使用指南
+
+### 用途
+- **default**: 通用标签
+- **success**: 已完成、已通过状态
+- **warning**: 需注意、待处理
+- **error**: 错误、失败状态
+- **info**: 提示信息
+- **outline**: 轻量标签，减少视觉噪音`,
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {

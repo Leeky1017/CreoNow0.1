@@ -11,16 +11,6 @@ import {
   createEditorStore,
 } from "../../stores/editorStore";
 
-/**
- * FileTreePanel 组件 Story
- *
- * Phase 4.1 - 左侧文件树面板
- *
- * 目标：
- * - 修复 Rename 输入框溢出
- * - Rename/Delete 不再 inline，改为菜单（右键 ContextMenu + ⋯ 菜单）
- */
-
 function createMockIpc(options: {
   items?: DocumentListItem[];
   currentDocumentId?: string | null;
@@ -93,7 +83,6 @@ function FileTreePanelWrapper(props: {
   bootstrapStatus?: "idle" | "loading" | "ready" | "error";
   initialRenameDocumentId?: string;
 }): JSX.Element {
-  // 固定初始值，避免 Storybook render 频繁 re-create store（造成交互不稳定）
   const [{ initialProps, fileStore, editorStore }] = React.useState(() => {
     const initialProps = {
       items: props.items,
@@ -165,7 +154,7 @@ function FileTreePanelWrapper(props: {
 }
 
 const meta: Meta<typeof FileTreePanel> = {
-  title: "Features/FileTreePanel",
+  title: "Features/FileTree/Operations",
   component: FileTreePanel,
   parameters: {
     layout: "centered",
@@ -177,213 +166,9 @@ export default meta;
 type Story = StoryObj<typeof FileTreePanel>;
 
 /**
- * 默认状态
- *
- * 有项目 ID 时的基本状态
- */
-export const Default: Story = {
-  render: () => (
-    <FileTreePanelWrapper
-      projectId="project-1"
-      items={[
-        {
-          documentId: "doc-1",
-          type: "chapter",
-          title: "Chapter 1",
-          status: "draft",
-          sortOrder: 0,
-          parentId: undefined,
-          updatedAt: Date.now() - 86400000,
-        },
-        {
-          documentId: "doc-2",
-          type: "chapter",
-          title: "Chapter 2",
-          status: "draft",
-          sortOrder: 1,
-          parentId: undefined,
-          updatedAt: Date.now() - 172800000,
-        },
-        {
-          documentId: "doc-3",
-          type: "chapter",
-          title: "Epilogue",
-          status: "final",
-          sortOrder: 2,
-          parentId: undefined,
-          updatedAt: Date.now() - 259200000,
-        },
-      ]}
-      currentDocumentId="doc-1"
-    />
-  ),
-};
-
-/**
- * 空状态
- *
- * 无文档时显示提示
- */
-export const Empty: Story = {
-  render: () => (
-    <FileTreePanelWrapper
-      projectId="project-empty"
-      items={[]}
-      currentDocumentId={null}
-    />
-  ),
-};
-
-/**
- * 加载状态
- *
- * 正在加载文件列表
- */
-export const Loading: Story = {
-  render: () => (
-    <FileTreePanelWrapper
-      projectId="project-loading"
-      items={[]}
-      currentDocumentId={null}
-      bootstrapStatus="loading"
-    />
-  ),
-};
-
-/**
- * 大量文件
- *
- * 测试滚动与性能
- */
-export const ManyFiles: Story = {
-  render: () => {
-    const items: DocumentListItem[] = Array.from({ length: 50 }, (_, i) => ({
-      documentId: `doc-${i + 1}`,
-      type: i % 3 === 0 ? "note" : "chapter",
-      title: `Document ${i + 1}`,
-      status: i % 4 === 0 ? "final" : "draft",
-      sortOrder: i,
-      parentId: undefined,
-      updatedAt: Date.now() - i * 3600000,
-    }));
-    return (
-      <FileTreePanelWrapper
-        projectId="project-many"
-        items={items}
-        currentDocumentId="doc-10"
-      />
-    );
-  },
-};
-
-/**
- * 超长文件名
- *
- * 测试文本截断
- */
-export const LongFileNames: Story = {
-  render: () => (
-    <FileTreePanelWrapper
-      projectId="project-long"
-      items={[
-        {
-          documentId: "doc-1",
-          type: "chapter",
-          title:
-            "This is a very long document title that should be truncated properly in the UI",
-          status: "draft",
-          sortOrder: 0,
-          parentId: undefined,
-          updatedAt: Date.now() - 86400000,
-        },
-        {
-          documentId: "doc-2",
-          type: "chapter",
-          title:
-            "Another extremely long title for testing text overflow behavior in the file tree panel",
-          status: "draft",
-          sortOrder: 1,
-          parentId: undefined,
-          updatedAt: Date.now() - 172800000,
-        },
-        {
-          documentId: "doc-3",
-          type: "chapter",
-          title: "Short",
-          status: "draft",
-          sortOrder: 2,
-          parentId: undefined,
-          updatedAt: Date.now() - 259200000,
-        },
-      ]}
-      currentDocumentId="doc-1"
-    />
-  ),
-};
-
-/**
- * 选中状态
- */
-export const WithSelection: Story = {
-  render: () => (
-    <FileTreePanelWrapper
-      projectId="project-sel"
-      items={[
-        {
-          documentId: "doc-1",
-          type: "chapter",
-          title: "Introduction",
-          status: "draft",
-          sortOrder: 0,
-          parentId: undefined,
-          updatedAt: Date.now() - 86400000,
-        },
-        {
-          documentId: "doc-2",
-          type: "chapter",
-          title: "Main Content",
-          status: "draft",
-          sortOrder: 1,
-          parentId: undefined,
-          updatedAt: Date.now() - 172800000,
-        },
-        {
-          documentId: "doc-3",
-          type: "chapter",
-          title: "Conclusion",
-          status: "draft",
-          sortOrder: 2,
-          parentId: undefined,
-          updatedAt: Date.now() - 259200000,
-        },
-        {
-          documentId: "doc-4",
-          type: "chapter",
-          title: "Appendix A",
-          status: "draft",
-          sortOrder: 3,
-          parentId: undefined,
-          updatedAt: Date.now() - 345600000,
-        },
-        {
-          documentId: "doc-5",
-          type: "chapter",
-          title: "Appendix B",
-          status: "draft",
-          sortOrder: 4,
-          parentId: undefined,
-          updatedAt: Date.now() - 432000000,
-        },
-      ]}
-      currentDocumentId="doc-2"
-    />
-  ),
-};
-
-/**
  * Rename 演示
  *
- * 进入即自动进入 Rename 模式，用于稳定复现并验证“不会溢出”。
+ * 进入即自动进入 Rename 模式，用于稳定复现并验证"不会溢出"。
  */
 export const RenameDemo: Story = {
   render: () => (
@@ -412,58 +197,6 @@ export const RenameDemo: Story = {
       ]}
       currentDocumentId="doc-long"
       initialRenameDocumentId="doc-long"
-    />
-  ),
-};
-
-/**
- * 多层级结构
- *
- * 覆盖文件夹层级展示（parentId 组织）。
- */
-export const NestedHierarchy: Story = {
-  render: () => (
-    <FileTreePanelWrapper
-      projectId="project-nested"
-      items={[
-        {
-          documentId: "folder-1",
-          type: "chapter",
-          title: "第一卷",
-          status: "draft",
-          sortOrder: 0,
-          parentId: undefined,
-          updatedAt: Date.now() - 86400000,
-        },
-        {
-          documentId: "doc-1-1",
-          type: "chapter",
-          title: "第一卷 · 第一章",
-          status: "draft",
-          sortOrder: 1,
-          parentId: "folder-1",
-          updatedAt: Date.now() - 80000000,
-        },
-        {
-          documentId: "doc-1-2",
-          type: "note",
-          title: "第一卷 · 设定备忘",
-          status: "draft",
-          sortOrder: 2,
-          parentId: "folder-1",
-          updatedAt: Date.now() - 70000000,
-        },
-        {
-          documentId: "doc-root",
-          type: "chapter",
-          title: "独立章节",
-          status: "final",
-          sortOrder: 3,
-          parentId: undefined,
-          updatedAt: Date.now() - 60000000,
-        },
-      ]}
-      currentDocumentId="doc-1-1"
     />
   ),
 };
@@ -623,9 +356,11 @@ const KEYBOARD_NAV_ITEMS: DocumentListItem[] = [
   },
 ];
 
-// =============================================================================
-// P2: 键盘导航测试
-// =============================================================================
+const kbdStyle: React.CSSProperties = {
+  backgroundColor: "var(--color-bg-raised)",
+  padding: "2px 4px",
+  borderRadius: "3px",
+};
 
 /**
  * 键盘导航演示
@@ -635,17 +370,8 @@ const KEYBOARD_NAV_ITEMS: DocumentListItem[] = [
  * 验证点：
  * - ↑↓ 键在文件之间移动选中项
  * - Enter 键打开选中文件
- * - → 键展开文件夹（如有）
- * - ← 键折叠文件夹（如有）
- * - Delete 键删除选中文件（需确认）
  * - F2 键重命名选中文件
- *
- * 浏览器测试步骤：
- * 1. 点击文件列表区域获取焦点
- * 2. 按 ↓ 键，验证选中项移动到下一个文件
- * 3. 按 ↑ 键，验证选中项移动到上一个文件
- * 4. 按 Enter 键，验证操作提示显示打开的文件
- * 5. 按 F2 键，验证进入重命名模式
+ * - Delete 键删除选中文件（需确认）
  */
 function KeyboardNavigationDemo(): JSX.Element {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -688,7 +414,6 @@ function KeyboardNavigationDemo(): JSX.Element {
 
   return (
     <div style={{ display: "flex", gap: "24px", padding: "24px" }}>
-      {/* 操作提示 */}
       <div
         style={{
           width: "280px",
@@ -704,78 +429,12 @@ function KeyboardNavigationDemo(): JSX.Element {
           键盘导航测试（Windows）：
         </p>
         <ul style={{ paddingLeft: "1rem", margin: 0, lineHeight: 1.8 }}>
-          <li>
-            <code
-              style={{
-                backgroundColor: "var(--color-bg-raised)",
-                padding: "2px 4px",
-                borderRadius: "3px",
-              }}
-            >
-              ↑↓
-            </code>{" "}
-            移动选中项
-          </li>
-          <li>
-            <code
-              style={{
-                backgroundColor: "var(--color-bg-raised)",
-                padding: "2px 4px",
-                borderRadius: "3px",
-              }}
-            >
-              Enter
-            </code>{" "}
-            打开文件
-          </li>
-          <li>
-            <code
-              style={{
-                backgroundColor: "var(--color-bg-raised)",
-                padding: "2px 4px",
-                borderRadius: "3px",
-              }}
-            >
-              F2
-            </code>{" "}
-            重命名
-          </li>
-          <li>
-            <code
-              style={{
-                backgroundColor: "var(--color-bg-raised)",
-                padding: "2px 4px",
-                borderRadius: "3px",
-              }}
-            >
-              Delete
-            </code>{" "}
-            删除
-          </li>
-          <li>
-            <code
-              style={{
-                backgroundColor: "var(--color-bg-raised)",
-                padding: "2px 4px",
-                borderRadius: "3px",
-              }}
-            >
-              →
-            </code>{" "}
-            展开文件夹
-          </li>
-          <li>
-            <code
-              style={{
-                backgroundColor: "var(--color-bg-raised)",
-                padding: "2px 4px",
-                borderRadius: "3px",
-              }}
-            >
-              ←
-            </code>{" "}
-            折叠文件夹
-          </li>
+          <li><code style={kbdStyle}>↑↓</code> 移动选中项</li>
+          <li><code style={kbdStyle}>Enter</code> 打开文件</li>
+          <li><code style={kbdStyle}>F2</code> 重命名</li>
+          <li><code style={kbdStyle}>Delete</code> 删除</li>
+          <li><code style={kbdStyle}>→</code> 展开文件夹</li>
+          <li><code style={kbdStyle}>←</code> 折叠文件夹</li>
         </ul>
         {lastAction && (
           <div
@@ -792,8 +451,6 @@ function KeyboardNavigationDemo(): JSX.Element {
           </div>
         )}
       </div>
-
-      {/* 文件树 */}
       <FileTreePanelWrapper
         projectId="project-keyboard"
         items={KEYBOARD_NAV_ITEMS}

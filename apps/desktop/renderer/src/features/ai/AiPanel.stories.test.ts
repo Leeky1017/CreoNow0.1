@@ -3,10 +3,11 @@ import userEvent from "@testing-library/user-event";
 import { composeStories } from "@storybook/react";
 import { describe, expect, it } from "vitest";
 
-import * as stories from "./AiPanel.stories";
+import * as chatStories from "./AiChat.stories";
+import * as statesStories from "./AiStates.stories";
 
-const { EmptyState, GeneratingState, ErrorState, SendButtonStates } =
-  composeStories(stories);
+const { EmptyState, GeneratingState } = composeStories(chatStories);
+const { ErrorState, SendButtonStates } = composeStories(statesStories);
 
 describe("AiPanel stories", () => {
   it("[CMI-S2-SA-S1] asserts key render elements and initial state", () => {

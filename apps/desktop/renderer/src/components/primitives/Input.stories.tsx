@@ -20,6 +20,21 @@ const meta = {
   component: Input,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component: `## 使用指南
+
+### Props 说明
+- **error**: 设为 true 显示红色边框，配合 FormField 显示错误信息
+- **fullWidth**: 占满父容器宽度
+- **disabled / readonly**: 不可编辑状态
+
+### 最佳实践
+- 始终配合 label 使用（通过 FormField 组件）
+- 密码输入使用 \`type="password"\`
+- 搜索输入使用 SearchInput 组合组件`,
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {

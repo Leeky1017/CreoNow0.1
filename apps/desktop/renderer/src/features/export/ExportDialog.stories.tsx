@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 import { AppToastProvider } from "../../components/providers/AppToastProvider";
 import { ExportDialog, defaultExportOptions } from "./ExportDialog";
 
@@ -96,6 +97,13 @@ export const ConfigViewDefault: Story = {
           "Default config view with Markdown selected and structured capability descriptions visible for all formats.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByTestId("export-dialog"),
+    ).toBeInTheDocument();
+    await expect(canvas.getByTestId("export-submit")).toBeInTheDocument();
   },
 };
 
@@ -217,6 +225,12 @@ export const ProgressView: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByText("Generating pages..."),
+    ).toBeInTheDocument();
+  },
 };
 
 /**
@@ -273,6 +287,13 @@ export const SuccessView: Story = {
           "Export complete. Shows green checkmark, success message, and Done button with white background.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByTestId("export-success"),
+    ).toBeInTheDocument();
+    await expect(canvas.getByTestId("export-done")).toBeInTheDocument();
   },
 };
 

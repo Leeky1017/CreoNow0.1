@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { fn, within, expect } from "@storybook/test";
 import { AnalyticsPage } from "./AnalyticsPage";
 import { Button } from "../../components/primitives/Button";
 
@@ -205,6 +205,15 @@ export const WithData: Story = {
       );
     },
   ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByTestId("analytics-page"),
+    ).toBeInTheDocument();
+    await expect(
+      await canvas.findByTestId("analytics-today-words"),
+    ).toBeInTheDocument();
+  },
 };
 
 /**
@@ -234,6 +243,12 @@ export const EmptyData: Story = {
       );
     },
   ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByTestId("analytics-page"),
+    ).toBeInTheDocument();
+  },
 };
 
 /**

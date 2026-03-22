@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 
 import { DashboardPage } from "./DashboardPage";
 import {
@@ -187,6 +188,13 @@ export const Default: Story = {
   args: {
     onProjectSelect: (id: string) => console.log("Selected project:", id),
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("dashboard-page")).toBeInTheDocument();
+    await expect(
+      await canvas.findByText("The Aesthetics of Silence"),
+    ).toBeInTheDocument();
+  },
 };
 
 export const DefaultMultiProject: Story = {
@@ -203,6 +211,13 @@ export const Empty: Story = {
   decorators: [createStoryDecorator([])],
   args: {
     onProjectSelect: (id: string) => console.log("Selected project:", id),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("dashboard-page")).toBeInTheDocument();
+    await expect(
+      await canvas.findByTestId("dashboard-empty"),
+    ).toBeInTheDocument();
   },
 };
 
@@ -281,6 +296,16 @@ export const ManyProjects: Story = {
   decorators: [createStoryDecorator(manyProjects)],
   args: {
     onProjectSelect: (id: string) => console.log("Selected project:", id),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("dashboard-page")).toBeInTheDocument();
+    await expect(
+      await canvas.findByText("The Aesthetics of Silence"),
+    ).toBeInTheDocument();
+    await expect(
+      await canvas.findByText("Accessibility Best Practices"),
+    ).toBeInTheDocument();
   },
 };
 

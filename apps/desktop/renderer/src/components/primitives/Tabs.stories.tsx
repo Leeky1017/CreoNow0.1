@@ -22,6 +22,23 @@ const meta = {
   component: Tabs,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component: `## 使用指南
+
+### 用法
+- 使用 \`items\` 数组定义标签页，每项需有 \`value\`、\`label\`
+- 受控模式：通过 \`value\` + \`onValueChange\` 控制
+- 非受控模式：通过 \`defaultValue\` 初始化
+
+### 方向
+- **horizontal**: 默认，水平排列
+- **vertical**: 侧边标签页
+
+### 禁用
+- 单个标签页可通过 item.disabled 禁用`,
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {

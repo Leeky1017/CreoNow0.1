@@ -1,26 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 import { NotepadText } from "lucide-react";
-import React from "react";
 import { VersionHistoryPanel, type TimeGroup } from "./VersionHistoryPanel";
-import * as Dialog from "@radix-ui/react-dialog";
-import { Button } from "../../components/primitives";
 
-/**
- * Sample version data based on design spec
- *
- * Document: "Project Requirements.docx"
- *
- * Version groups:
- * - Just now: Current version (You, 0 words changed)
- * - Earlier Today:
- *   - 10:42 AM: AI Assistant (+124 words) - selected
- *   - 9:15 AM: Sarah M. (-12 words)
- *   - 8:00 AM: Auto-Save (No changes)
- * - Yesterday:
- *   - 4:20 PM: You (+54 words)
- *   - 2:45 PM: AI Assistant (+312 words)
- *   - 11:00 AM: You (+15 words)
- */
+/** Sample version data based on design spec */
 const SAMPLE_TIME_GROUPS: TimeGroup[] = [
   {
     label: "",
@@ -115,9 +98,7 @@ const SAMPLE_TIME_GROUPS: TimeGroup[] = [
   },
 ];
 
-/**
- * Minimal version data for word count variations story
- */
+/** Word count variations data */
 const WORD_COUNT_VARIATIONS: TimeGroup[] = [
   {
     label: "Word Count Examples",
@@ -151,21 +132,20 @@ const WORD_COUNT_VARIATIONS: TimeGroup[] = [
 ];
 
 const meta: Meta<typeof VersionHistoryPanel> = {
-  title: "Features/VersionHistoryPanel",
+  title: "Features/VersionHistory/List",
   component: VersionHistoryPanel,
   parameters: {
     layout: "fullscreen",
     docs: {
       description: {
         component:
-          "版本历史面板 - 用于查看和管理文档版本历史，包括恢复、对比和预览功能。对应设计稿: 23-version-history.html",
+          "版本历史面板 - 列表与显示场景。对应设计稿: 23-version-history.html",
       },
     },
   },
   decorators: [
     (Story) => (
       <div className="h-screen min-h-[700px] flex bg-[var(--color-bg-base)]">
-        {/* Main content area placeholder */}
         <div className="flex-1 h-full flex flex-col relative">
           <div className="h-14 border-b border-[var(--color-separator)] flex items-center px-6 justify-between">
             <div className="flex items-center gap-4">
@@ -177,7 +157,6 @@ const meta: Meta<typeof VersionHistoryPanel> = {
               </span>
             </div>
           </div>
-
           <div className="flex-1 p-12 overflow-hidden flex justify-center">
             <div className="w-full max-w-3xl h-full bg-[#121212] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-2xl p-16 relative">
               <div className="w-1/3 h-8 bg-[rgba(255,255,255,0.08)] rounded mb-10" />
@@ -185,12 +164,10 @@ const meta: Meta<typeof VersionHistoryPanel> = {
               <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
               <div className="w-5/6 h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
               <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-8" />
-
               <div className="w-1/4 h-5 bg-[rgba(255,255,255,0.06)] rounded mb-6" />
               <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
               <div className="w-11/12 h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
               <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-
               <div className="absolute top-64 left-16 right-16 h-24 bg-[var(--color-info)]/5 border-l-2 border-[var(--color-info)]/30" />
             </div>
           </div>
@@ -212,16 +189,7 @@ const meta: Meta<typeof VersionHistoryPanel> = {
 export default meta;
 type Story = StoryObj<typeof VersionHistoryPanel>;
 
-/**
- * Scene 1: DefaultWithHistory
- *
- * 完整版本历史
- * - 验证时间分组标题 "Earlier Today" / "Yesterday"
- * - 验证当前版本 "Current" 标签样式（蓝色背景）
- * - 验证 AI 生成版本的蓝色图标
- * - 验证用户编辑版本的白色头像图标
- * - 验证 Auto-Save 版本的灰色图标
- */
+/** Scene 1: DefaultWithHistory — 完整版本历史 */
 export const DefaultWithHistory: Story = {
   args: {
     documentTitle: "Project Requirements.docx",
@@ -230,17 +198,18 @@ export const DefaultWithHistory: Story = {
     lastSavedText: "2m ago",
     autoSaveEnabled: true,
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      canvas.getByTestId("version-history-panel"),
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("version-card-v-1042"),
+    ).toBeInTheDocument();
+  },
 };
 
-/**
- * Scene 2: SelectedVersionExpanded
- *
- * 选中版本展开操作
- * - 选中 10:42 AM AI 版本
- * - 验证左侧蓝色边框指示器
- * - 验证展开的 Restore/Compare/Preview 按钮
- * - 验证按钮 3 列布局
- */
+/** Scene 2: SelectedVersionExpanded — 选中版本展开操作 */
 export const SelectedVersionExpanded: Story = {
   args: {
     documentTitle: "Project Requirements.docx",
@@ -259,9 +228,6 @@ export const SelectedVersionExpanded: Story = {
   },
 };
 
-/**
- * Render component for HoverShowQuickActions story
- */
 function HoverShowQuickActionsRender() {
   return (
     <div className="h-screen flex bg-[var(--color-bg-base)]">
@@ -277,14 +243,7 @@ function HoverShowQuickActionsRender() {
   );
 }
 
-/**
- * Scene 3: HoverShowQuickActions
- *
- * 悬停显示快速操作
- * - 悬停未选中的版本卡片
- * - 验证显示浮层操作按钮（Restore/Compare/Preview 图标）
- * - 验证浮层背景模糊效果
- */
+/** Scene 3: HoverShowQuickActions — 悬停显示快速操作 */
 export const HoverShowQuickActions: Story = {
   render: () => <HoverShowQuickActionsRender />,
   parameters: {
@@ -297,14 +256,7 @@ export const HoverShowQuickActions: Story = {
   },
 };
 
-/**
- * Scene 4: WordCountVariations
- *
- * 不同变更量显示
- * - +124 words: 绿色字体 + 绿色背景
- * - -12 words: 红色字体 + 红色背景
- * - No changes: 灰色字体
- */
+/** Scene 4: WordCountVariations — 不同变更量显示 */
 export const WordCountVariations: Story = {
   args: {
     documentTitle: "Word Count Examples",
@@ -323,196 +275,6 @@ export const WordCountVariations: Story = {
   },
 };
 
-/**
- * Restore confirmation dialog component
- */
-function RestoreConfirmDialog({
-  open,
-  onOpenChange,
-  versionTimestamp,
-  onConfirm,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  versionTimestamp: string;
-  onConfirm: () => void;
-}) {
-  return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-[rgba(0,0,0,0.6)] backdrop-blur-sm" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[var(--z-modal)] w-[400px] bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-2xl p-6 focus:outline-none">
-          <Dialog.Title className="text-lg font-medium text-[var(--color-fg-default)] mb-2">
-            Restore Version?
-          </Dialog.Title>
-          <Dialog.Description className="text-sm text-[var(--color-fg-muted)] mb-6">
-            Are you sure you want to restore the version from {versionTimestamp}
-            ? Your current changes will be saved as a new version.
-          </Dialog.Description>
-          <div className="flex justify-end gap-3">
-            <Button variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                onConfirm();
-                onOpenChange(false);
-              }}
-            >
-              Restore
-            </Button>
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
-  );
-}
-
-/**
- * Render component for RestoreConfirmation story
- */
-function RestoreConfirmationRender() {
-  const [showConfirm, setShowConfirm] = React.useState(false);
-  const [selectedId, setSelectedId] = React.useState<string | null>("v-1042");
-  const [restored, setRestored] = React.useState(false);
-
-  const selectedVersion = SAMPLE_TIME_GROUPS.flatMap((g) => g.versions).find(
-    (v) => v.id === selectedId,
-  );
-
-  const handleRestore = (versionId: string) => {
-    setSelectedId(versionId);
-    setShowConfirm(true);
-  };
-
-  const handleConfirm = () => {
-    setRestored(true);
-    setTimeout(() => setRestored(false), 3000);
-  };
-
-  return (
-    <div className="h-screen flex bg-[var(--color-bg-base)]">
-      <div className="flex-1 flex items-center justify-center">
-        {restored && (
-          <div className="px-4 py-2 bg-[var(--color-success-subtle)] text-[var(--color-success)] rounded-md text-sm">
-            Version restored successfully!
-          </div>
-        )}
-      </div>
-      <VersionHistoryPanel
-        documentTitle="Project Requirements.docx"
-        timeGroups={SAMPLE_TIME_GROUPS}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-        onRestore={handleRestore}
-        lastSavedText="2m ago"
-        autoSaveEnabled
-      />
-      <RestoreConfirmDialog
-        open={showConfirm}
-        onOpenChange={setShowConfirm}
-        versionTimestamp={selectedVersion?.timestamp ?? ""}
-        onConfirm={handleConfirm}
-      />
-    </div>
-  );
-}
-
-/**
- * Scene 5: RestoreConfirmation
- *
- * 恢复版本确认
- * - 点击 Restore 按钮
- * - 验证弹出确认对话框
- * - 验证对话框文案
- */
-export const RestoreConfirmation: Story = {
-  render: () => <RestoreConfirmationRender />,
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "恢复版本确认流程。点击选中版本的 Restore 按钮，会弹出确认对话框。点击 Restore 确认恢复，或点击 Cancel 取消。",
-      },
-    },
-  },
-};
-
-/**
- * Render component for CompareWithCurrent story
- */
-function CompareWithCurrentRender() {
-  const [selectedId, setSelectedId] = React.useState<string | null>("v-1042");
-  const [comparing, setComparing] = React.useState<string | null>(null);
-
-  const handleCompare = (versionId: string) => {
-    setComparing(versionId);
-    // In real app, this would open a diff view
-  };
-
-  const comparedVersion = SAMPLE_TIME_GROUPS.flatMap((g) => g.versions).find(
-    (v) => v.id === comparing,
-  );
-
-  return (
-    <div className="h-screen flex bg-[var(--color-bg-base)]">
-      <div className="flex-1 flex flex-col items-center justify-center p-8">
-        {comparing ? (
-          <div className="text-center">
-            <div className="text-[var(--color-fg-default)] mb-2">
-              Comparing with version from{" "}
-              <strong>{comparedVersion?.timestamp}</strong>
-            </div>
-            <div className="text-sm text-[var(--color-fg-muted)] mb-4">
-              Diff view would appear here
-            </div>
-            <Button variant="secondary" onClick={() => setComparing(null)}>
-              Close Compare View
-            </Button>
-          </div>
-        ) : (
-          <div className="text-[var(--color-fg-muted)] text-sm">
-            Click &quot;Compare&quot; on a version to see differences
-          </div>
-        )}
-      </div>
-      <VersionHistoryPanel
-        documentTitle="Project Requirements.docx"
-        timeGroups={SAMPLE_TIME_GROUPS}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-        onCompare={handleCompare}
-        lastSavedText="2m ago"
-        autoSaveEnabled
-      />
-    </div>
-  );
-}
-
-/**
- * Scene 6: CompareWithCurrent
- *
- * 与当前版本对比
- * - 点击 Compare 按钮
- * - 验证触发 onCompare 回调
- * - 验证按钮状态变化
- */
-export const CompareWithCurrent: Story = {
-  render: () => <CompareWithCurrentRender />,
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "与当前版本对比功能。点击选中版本的 Compare 按钮，触发对比模式（实际应用中会打开 Diff 视图）。",
-      },
-    },
-  },
-};
-
-/**
- * Generate many versions for scroll testing
- */
 function generateManyVersions(): TimeGroup[] {
   const groups: TimeGroup[] = [
     {
@@ -572,18 +334,10 @@ function generateManyVersions(): TimeGroup[] {
       })),
     },
   ];
-
   return groups;
 }
 
-/**
- * Scene 7: ScrollAndSticky
- *
- * 滚动和粘性标题
- * - 滚动列表
- * - 验证分组标题 sticky 行为
- * - 验证滚动条样式（6px 宽度）
- */
+/** Scene 7: ScrollAndSticky — 滚动和粘性标题 */
 export const ScrollAndSticky: Story = {
   args: {
     documentTitle: "Large Document History.docx",
@@ -602,13 +356,7 @@ export const ScrollAndSticky: Story = {
   },
 };
 
-/**
- * Scene 8: AutoSaveDisabled
- *
- * 自动保存关闭状态
- * - 验证底部状态显示 "Auto-save off"
- * - 验证状态指示器为灰色
- */
+/** Scene 8: AutoSaveDisabled — 自动保存关闭状态 */
 export const AutoSaveDisabled: Story = {
   args: {
     documentTitle: "Project Requirements.docx",
@@ -627,9 +375,6 @@ export const AutoSaveDisabled: Story = {
   },
 };
 
-/**
- * Render component for EmptyHistory story
- */
 function EmptyHistoryRender() {
   const emptyGroups: TimeGroup[] = [
     {
@@ -662,12 +407,7 @@ function EmptyHistoryRender() {
   );
 }
 
-/**
- * Scene 9: EmptyHistory (only current version)
- *
- * 仅有当前版本的新文档
- * - 验证空状态只显示当前版本
- */
+/** Scene 9: EmptyHistory — 仅有当前版本的新文档 */
 export const EmptyHistory: Story = {
   render: () => <EmptyHistoryRender />,
   parameters: {
@@ -680,81 +420,7 @@ export const EmptyHistory: Story = {
   },
 };
 
-/**
- * Render component for PreviewVersion story
- */
-function PreviewVersionRender() {
-  const [selectedId, setSelectedId] = React.useState<string | null>("v-1042");
-  const [previewing, setPreviewing] = React.useState<string | null>(null);
-
-  const handlePreview = (versionId: string) => {
-    setPreviewing(versionId);
-  };
-
-  const previewedVersion = SAMPLE_TIME_GROUPS.flatMap((g) => g.versions).find(
-    (v) => v.id === previewing,
-  );
-
-  return (
-    <div className="h-screen flex bg-[var(--color-bg-base)]">
-      <div className="flex-1 flex flex-col items-center justify-center p-8">
-        {previewing ? (
-          <div className="text-center max-w-md">
-            <div className="text-[var(--color-fg-default)] mb-2">
-              Previewing version from{" "}
-              <strong>{previewedVersion?.timestamp}</strong>
-            </div>
-            <div className="text-sm text-[var(--color-fg-muted)] mb-2">
-              {previewedVersion?.description}
-            </div>
-            <div className="text-xs text-[var(--color-fg-placeholder)] mb-4">
-              Read-only preview mode
-            </div>
-            <Button variant="secondary" onClick={() => setPreviewing(null)}>
-              Exit Preview
-            </Button>
-          </div>
-        ) : (
-          <div className="text-[var(--color-fg-muted)] text-sm">
-            Click &quot;Preview&quot; on a version to view it
-          </div>
-        )}
-      </div>
-      <VersionHistoryPanel
-        documentTitle="Project Requirements.docx"
-        timeGroups={SAMPLE_TIME_GROUPS}
-        selectedId={selectedId}
-        onSelect={setSelectedId}
-        onPreview={handlePreview}
-        lastSavedText="2m ago"
-        autoSaveEnabled
-      />
-    </div>
-  );
-}
-
-/**
- * Scene 10: PreviewVersion
- *
- * 预览版本功能
- * - 点击 Preview 按钮
- * - 验证触发 onPreview 回调
- */
-export const PreviewVersion: Story = {
-  render: () => <PreviewVersionRender />,
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "预览版本功能。点击选中版本的 Preview 按钮，进入只读预览模式（实际应用中会显示该版本的文档内容）。",
-      },
-    },
-  },
-};
-
-/**
- * Rich version info data showcasing reason, affectedParagraphs, and diffSummary
- */
+/** Rich version info showcasing reason, affectedParagraphs, and diffSummary */
 const RICH_VERSION_INFO: TimeGroup[] = [
   {
     label: "丰富版本信息示例",
@@ -796,14 +462,7 @@ const RICH_VERSION_INFO: TimeGroup[] = [
   },
 ];
 
-/**
- * Scene 11: RichVersionInfo
- *
- * 丰富的版本信息展示
- * - 显示修改原因（reason）
- * - 显示受影响段落数（affectedParagraphs）
- * - 显示 diff 摘要预览（diffSummary）
- */
+/** Scene 11: RichVersionInfo — 丰富的版本信息展示 */
 export const RichVersionInfo: Story = {
   args: {
     documentTitle: "项目需求文档.docx",

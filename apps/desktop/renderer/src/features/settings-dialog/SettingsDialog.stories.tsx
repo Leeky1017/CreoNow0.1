@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 
 import { AppToastProvider } from "../../components/providers/AppToastProvider";
 import { createPreferenceStore } from "../../lib/preferences";
@@ -110,10 +111,22 @@ type Story = StoryObj<typeof SettingsDialog>;
 
 export const General: Story = {
   args: { open: true, defaultTab: "general" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByTestId("settings-dialog"),
+    ).toBeInTheDocument();
+  },
 };
 
 export const Appearance: Story = {
   args: { open: true, defaultTab: "appearance" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByTestId("settings-dialog"),
+    ).toBeInTheDocument();
+  },
 };
 
 export const AI: Story = {
