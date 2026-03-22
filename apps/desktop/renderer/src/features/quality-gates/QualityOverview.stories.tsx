@@ -35,7 +35,7 @@ const meta: Meta<typeof QualityGatesPanel> = {
             </div>
           </div>
           <div className="flex-1 p-12 overflow-hidden flex justify-center">
-            <div className="w-full max-w-3xl h-full bg-[var(--color-bg-surface)] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-[var(--shadow-2xl)] p-16 relative">
+            <div className="w-full max-w-3xl h-full bg-[var(--color-bg-surface)] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-2xl p-16 relative">
               <div className="w-1/3 h-8 bg-[var(--color-bg-overlay)] rounded mb-10" />
               <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-4" />
               <div className="w-full h-3 bg-[var(--color-separator)] rounded mb-4" />
