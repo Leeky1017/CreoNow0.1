@@ -99,6 +99,8 @@
 
 ### T1-01: 守卫测试 — Arbitrary Value 上限
 
+**文件**: `apps/desktop/tests/lint/arbitrary-value-cleanup-v1-18.test.ts`
+
 - [ ] 创建守卫测试，断言 features/ 下各类 arbitrary value 数量 ≤ AC 目标：
   - `text-[` prod ≤ 10
   - `rounded-[` prod ≤ 5
@@ -107,6 +109,8 @@
 - [ ] 运行测试确认 Red（当前 95/18/1/7 均超标）
 
 ### T1-02: 守卫测试 — Variant 采用下限
+
+**文件**: `apps/desktop/tests/lint/arbitrary-value-cleanup-v1-18.test.ts`（同 T1-01）
 
 - [ ] 创建守卫测试，断言 features/ 下 v1-02 variant 使用量 ≥ 15
 - [ ] 运行测试确认 Red（当前 0）
