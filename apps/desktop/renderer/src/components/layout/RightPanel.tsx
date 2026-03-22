@@ -271,7 +271,9 @@ export function RightPanel(props: {
           viewportTestId="right-panel-scroll-viewport"
           className="flex-1 min-h-0"
         >
-          {renderContent()}
+          <div key={activeRightPanel} className="tab-crossfade">
+            {renderContent()}
+          </div>
         </ScrollArea>
       </aside>
     </OpenSettingsContext.Provider>

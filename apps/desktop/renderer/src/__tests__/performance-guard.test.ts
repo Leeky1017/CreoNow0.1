@@ -78,15 +78,18 @@ describe("V1-21 Performance Guard", () => {
     expect(seconds).toBeLessThanOrEqual(0.3);
   });
 
-  it("tab-crossfade animation exists in main.css", async () => {
+  it("tab-crossfade transition exists in main.css (not animation)", async () => {
     const fs = await import("node:fs");
     const path = await import("node:path");
     const mainCss = fs.readFileSync(
       path.resolve(__dirname, "../styles/main.css"),
       "utf-8",
     );
-    expect(mainCss).toContain("@keyframes tab-crossfade");
     expect(mainCss).toContain(".tab-crossfade");
+    expect(mainCss).toContain("transition: opacity");
+    // Must NOT use @keyframes animation — it creates stacking context
+    expect(mainCss).not.toContain("@keyframes tab-crossfade");
+    expect(mainCss).not.toMatch(/animation:\s*tab-crossfade/);
   });
 
   it("animations respect prefers-reduced-motion", async () => {
@@ -97,18 +100,32 @@ describe("V1-21 Performance Guard", () => {
       "utf-8",
     );
     expect(mainCss).toContain("prefers-reduced-motion");
-    // Verify our new animations are also disabled
+    // Verify our new animations/transitions are also disabled
     expect(mainCss).toContain("tab-crossfade");
   });
 
-  it("tab-crossfade is NOT used in RightPanel (creates stacking context breaking dropdowns)", async () => {
+  it("tab-crossfade transition is used in RightPanel", async () => {
     const fs = await import("node:fs");
     const path = await import("node:path");
     const rightPanelSrc = fs.readFileSync(
       path.resolve(__dirname, "../components/layout/RightPanel.tsx"),
       "utf-8",
     );
-    expect(rightPanelSrc).not.toContain("tab-crossfade");
+    expect(rightPanelSrc).toContain("tab-crossfade");
+    // Must NOT use CSS animation property
+    expect(rightPanelSrc).not.toMatch(/animation:\s*tab-crossfade/);
+  });
+
+  it("tab-crossfade transition is used in AiPanel", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const aiPanelSrc = fs.readFileSync(
+      path.resolve(__dirname, "../features/ai/AiPanel.tsx"),
+      "utf-8",
+    );
+    expect(aiPanelSrc).toContain("tab-crossfade");
+    // Must NOT use CSS animation property
+    expect(aiPanelSrc).not.toMatch(/animation:\s*tab-crossfade/);
   });
 
   it("countup class is used in StatusBar word count", async () => {
