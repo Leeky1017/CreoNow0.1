@@ -103,7 +103,11 @@ describe("AC-3: font-family 三处一致", () => {
   const mainCss = readCSS(MAIN_CSS);
   const tokensCss = readCSS(RENDERER_TOKENS);
 
-  const families = ["--font-family-ui", "--font-family-body", "--font-family-mono"] as const;
+  const families = [
+    "--font-family-ui",
+    "--font-family-body",
+    "--font-family-mono",
+  ] as const;
 
   for (const varName of families) {
     it(`${varName} 在 fonts.css / main.css / tokens.css 值一致`, () => {

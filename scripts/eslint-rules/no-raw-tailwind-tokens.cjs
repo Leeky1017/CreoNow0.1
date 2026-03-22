@@ -57,11 +57,19 @@ const rule = {
       let match;
       RAW_COLOR_RE.lastIndex = 0;
       while ((match = RAW_COLOR_RE.exec(value)) !== null) {
-        context.report({ node, messageId: "rawColor", data: { value: match[0] } });
+        context.report({
+          node,
+          messageId: "rawColor",
+          data: { value: match[0] },
+        });
       }
       RAW_SHADOW_RE.lastIndex = 0;
       while ((match = RAW_SHADOW_RE.exec(value)) !== null) {
-        context.report({ node, messageId: "rawShadow", data: { value: match[0] } });
+        context.report({
+          node,
+          messageId: "rawShadow",
+          data: { value: match[0] },
+        });
       }
     }
 

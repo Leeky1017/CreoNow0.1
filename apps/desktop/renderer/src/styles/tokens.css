@@ -59,8 +59,9 @@
   --text-editor-paragraph-spacing: 0.75em;
 
   /* 字体族 */
-  --font-family-ui: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  --font-family-ui:
+    "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   --font-family-body: "Lora", "Crimson Pro", Georgia, serif;
   --font-family-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
 
