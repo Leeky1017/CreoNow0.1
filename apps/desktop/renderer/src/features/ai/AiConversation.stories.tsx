@@ -6,7 +6,6 @@
  */
 
 import type { Meta, StoryObj } from "@storybook/react";
-import React from "react";
 import { AiPanel } from "./AiPanel";
 import { layoutDecorator } from "../../components/layout/test-utils";
 
