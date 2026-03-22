@@ -1,8 +1,8 @@
 /**
- * RightPanel Stories — InfoPanel & QualityPanel
+ * RightPanel Stories — QualityPanel
  *
  * Static demo: IPC-dependent components rendered with mock data.
- * @module features/rightpanel/RightPanel.stories
+ * @module features/rightpanel/RightPanelQuality.stories
  */
 
 import React from "react";
@@ -13,23 +13,10 @@ import { Card } from "../../components/primitives/Card";
 import { Text } from "../../components/primitives/Text";
 import { Button } from "../../components/primitives/Button";
 import { Heading } from "../../components/primitives/Heading";
-import { PanelHeader } from "../../components/patterns/PanelHeader";
 
 /* ------------------------------------------------------------------ */
 /*  Mock data                                                         */
 /* ------------------------------------------------------------------ */
-
-const MOCK_DOCUMENT = {
-  title: "The Architecture of Silence",
-  updatedAt: "Jan 15, 2025, 10:42 AM",
-};
-
-const MOCK_STATS = {
-  wordsWritten: "1,247",
-  writingTime: "42m 18s",
-  skillsUsed: 3,
-  documentsCreated: 2,
-};
 
 const MOCK_CONSTRAINTS = [
   "Max 80k words",
@@ -41,33 +28,9 @@ const MOCK_CONSTRAINTS = [
 ];
 
 /* ------------------------------------------------------------------ */
-/*  Shared demo sub-components                                        */
+/*  Shared helpers                                                     */
 /* ------------------------------------------------------------------ */
 
-/** Stat row matching InfoPanel's StatItem layout. */
-function StatRow(props: {
-  label: string;
-  value: React.ReactNode;
-  testId?: string;
-}): JSX.Element {
-  return (
-    <div className="flex justify-between items-baseline py-1.5 border-b border-[var(--color-separator)] last:border-b-0">
-      <Text size="small" color="muted">
-        {props.label}
-      </Text>
-      <Text
-        data-testid={props.testId}
-        size="small"
-        color="default"
-        className="font-medium"
-      >
-        {props.value}
-      </Text>
-    </div>
-  );
-}
-
-/** Status dot matching QualityPanelSections' StatusDot. */
 function StatusDot(props: {
   status: "ready" | "downloading" | "error" | "not_ready" | "loading";
 }): JSX.Element {
@@ -86,128 +49,18 @@ function StatusDot(props: {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  InfoPanel demo                                                    */
-/* ------------------------------------------------------------------ */
-
-/** Static InfoPanel matching the real component's visual structure. */
-function InfoPanelDemo(props: {
-  state: "default" | "loading" | "empty" | "error";
-}): JSX.Element {
-  const { state } = props;
-
+function RightPanelShell(props: { children?: React.ReactNode }): JSX.Element {
   return (
-    <div data-testid="info-panel" className="flex flex-col h-full">
-      <PanelHeader title="Document Info" />
-
-      <div className="flex flex-col gap-[var(--space-section-gap)] p-4 overflow-auto">
-        {/* Document info section */}
-        <section>
-          <Text
-            size="small"
-            weight="semibold"
-            color="muted"
-            as="p"
-            className="mb-2"
-          >
-            Current Document
-          </Text>
-          <Card className="p-3 rounded-[var(--radius-md)]">
-            {state === "empty" ? (
-              <Text
-                data-testid="info-panel-no-document"
-                size="small"
-                color="muted"
-                className="text-center"
-              >
-                No document selected
-              </Text>
-            ) : (
-              <>
-                <StatRow
-                  label="Title"
-                  value={MOCK_DOCUMENT.title}
-                  testId="info-panel-doc-title"
-                />
-                <StatRow
-                  label="Updated"
-                  value={MOCK_DOCUMENT.updatedAt}
-                  testId="info-panel-doc-updated"
-                />
-              </>
-            )}
-          </Card>
-        </section>
-
-        {/* Today's stats section */}
-        <section>
-          <Text
-            size="small"
-            weight="semibold"
-            color="muted"
-            as="p"
-            className="mb-2"
-          >
-            Today&apos;s Progress
-          </Text>
-          <Card
-            className={`p-3 rounded-[var(--radius-md)]${
-              state === "error" ? " border-[var(--color-error)]/20" : ""
-            }`}
-          >
-            {state === "loading" ? (
-              <Text size="small" color="muted" className="text-center">
-                Loading statistics…
-              </Text>
-            ) : state === "error" ? (
-              <Text
-                data-testid="info-panel-stats-error"
-                size="small"
-                color="muted"
-                className="text-center"
-              >
-                Failed to load statistics (STATS_FETCH_ERROR)
-              </Text>
-            ) : state === "empty" ? (
-              <Text size="small" color="muted" className="text-center">
-                No stats available
-              </Text>
-            ) : (
-              <>
-                <StatRow
-                  label="Words Written"
-                  value={MOCK_STATS.wordsWritten}
-                  testId="info-panel-words-written"
-                />
-                <StatRow
-                  label="Writing Time"
-                  value={MOCK_STATS.writingTime}
-                  testId="info-panel-writing-time"
-                />
-                <StatRow
-                  label="Skills Used"
-                  value={MOCK_STATS.skillsUsed}
-                  testId="info-panel-skills-used"
-                />
-                <StatRow
-                  label="Documents Created"
-                  value={MOCK_STATS.documentsCreated}
-                  testId="info-panel-docs-created"
-                />
-              </>
-            )}
-          </Card>
-        </section>
-
-        {/* Version history button */}
-        <Button
-          type="button"
-          className="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
-          disabled={state === "empty"}
-        >
-          Open Version History
-        </Button>
-      </div>
+    <div
+      style={{
+        width: 320,
+        height: 600,
+        backgroundColor: "var(--color-bg-surface)",
+        borderLeft: "1px solid var(--color-separator)",
+        overflow: "hidden",
+      }}
+    >
+      {props.children}
     </div>
   );
 }
@@ -216,7 +69,6 @@ function InfoPanelDemo(props: {
 /*  QualityPanel demo                                                 */
 /* ------------------------------------------------------------------ */
 
-/** Static QualityPanel matching the real component's visual structure. */
 function QualityPanelDemo(props: {
   state: "with-data" | "no-project" | "loading";
 }): JSX.Element {
@@ -243,7 +95,6 @@ function QualityPanelDemo(props: {
           </Text>
         </Card>
 
-        {/* Judge section still visible without project */}
         <section>
           <Heading level="h4" className="mb-2 font-semibold text-[13px]">
             Judge Model
@@ -279,7 +130,6 @@ function QualityPanelDemo(props: {
   return (
     <div data-testid="quality-panel" className="flex flex-col h-full">
       <div className="p-4 space-y-4 border-b border-[var(--color-separator)]">
-        {/* Judge model status */}
         <section>
           <Heading level="h4" className="mb-2 font-semibold text-[13px]">
             Judge Model
@@ -309,7 +159,6 @@ function QualityPanelDemo(props: {
           </Card>
         </section>
 
-        {/* Constraints */}
         <section>
           <Heading level="h4" className="mb-2 font-semibold text-[13px]">
             Project Constraints
@@ -360,27 +209,8 @@ function QualityPanelDemo(props: {
 /*  Storybook meta                                                    */
 /* ------------------------------------------------------------------ */
 
-/**
- * Wrapper that lets Storybook select between InfoPanel and QualityPanel demos.
- */
-function RightPanelShell(props: { children?: React.ReactNode }): JSX.Element {
-  return (
-    <div
-      style={{
-        width: 320,
-        height: 600,
-        backgroundColor: "var(--color-bg-surface)",
-        borderLeft: "1px solid var(--color-separator)",
-        overflow: "hidden",
-      }}
-    >
-      {props.children}
-    </div>
-  );
-}
-
 const meta = {
-  title: "Features/RightPanel",
+  title: "Features/RightPanel/Quality",
   component: RightPanelShell,
   parameters: {
     layout: "centered",
@@ -394,66 +224,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-/* ------------------------------------------------------------------ */
-/*  InfoPanel stories                                                 */
-/* ------------------------------------------------------------------ */
-
-/** InfoPanel with document info and today's writing statistics. */
-export const InfoPanelDefault: Story = {
-  name: "InfoPanel — Default",
-  render: () => (
-    <RightPanelShell>
-      <InfoPanelDemo state="default" />
-    </RightPanelShell>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(canvas.getByTestId("info-panel")).toBeInTheDocument();
-    await expect(
-      canvas.getByTestId("info-panel-doc-title"),
-    ).toBeInTheDocument();
-    await expect(
-      canvas.getByTestId("info-panel-words-written"),
-    ).toBeInTheDocument();
-  },
-};
-
-/** InfoPanel while statistics are being fetched. */
-export const InfoPanelLoading: Story = {
-  name: "InfoPanel — Loading",
-  render: () => (
-    <RightPanelShell>
-      <InfoPanelDemo state="loading" />
-    </RightPanelShell>
-  ),
-};
-
-/** InfoPanel with no document selected. */
-export const InfoPanelEmpty: Story = {
-  name: "InfoPanel — Empty",
-  render: () => (
-    <RightPanelShell>
-      <InfoPanelDemo state="empty" />
-    </RightPanelShell>
-  ),
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await expect(
-      canvas.getByTestId("info-panel-no-document"),
-    ).toBeInTheDocument();
-  },
-};
-
-/** InfoPanel when stats fetch fails. */
-export const InfoPanelError: Story = {
-  name: "InfoPanel — Error",
-  render: () => (
-    <RightPanelShell>
-      <InfoPanelDemo state="error" />
-    </RightPanelShell>
-  ),
-};
 
 /* ------------------------------------------------------------------ */
 /*  QualityPanel stories                                              */
