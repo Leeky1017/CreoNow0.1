@@ -136,7 +136,9 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                           setFocusedDocumentId={state.setFocusedDocumentId}
                           expandedFolderIds={state.expandedFolderIds}
                           toggleFolderExpanded={state.toggleFolderExpanded}
-                          resolveMoveTargetFolder={state.resolveMoveTargetFolder}
+                          resolveMoveTargetFolder={
+                            state.resolveMoveTargetFolder
+                          }
                           onSelect={state.onSelect}
                           onCopy={state.onCopy}
                           onDelete={state.onDelete}

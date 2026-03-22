@@ -178,9 +178,7 @@ export function SearchResultsArea(props: {
                   <DocumentResultItem
                     item={item}
                     query={props.effectiveQuery}
-                    isActive={
-                      virtualRow.index === 0 && props.activeIndex === 0
-                    }
+                    isActive={virtualRow.index === 0 && props.activeIndex === 0}
                     isFlashing={
                       props.flashKey?.startsWith(
                         `${item.documentId ?? item.id}:${item.anchor?.start ?? 0}:${item.anchor?.end ?? 0}:`,

@@ -41,10 +41,9 @@ describe("V1-21 Performance Guard", () => {
       "AiPanelSkeleton",
       "MemoryPanelSkeleton",
     ];
-    const files = fs.readdirSync(
-      path.resolve(__dirname, "../features"),
-      { recursive: true },
-    );
+    const files = fs.readdirSync(path.resolve(__dirname, "../features"), {
+      recursive: true,
+    });
     for (const name of skeletons) {
       const found = (files as string[]).some(
         (f) => typeof f === "string" && f.includes(name),
