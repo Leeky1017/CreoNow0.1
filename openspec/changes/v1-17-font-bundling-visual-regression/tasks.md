@@ -225,3 +225,35 @@
 ### Phase 0 调整
 
 无需调整。上游依赖已全部就绪，Phase 0 准备任务保持不变。
+
+---
+
+## R8 级联刷新记录（2026-03-22）
+
+R8 P6 复核 v1-14/v1-15 → 级联刷新 v1-17。
+
+### 上游结论
+
+v1-14 PASS（14 文件 2853 行，2600 tests 全绿），v1-15 PASS（11 文件 2265 行，83 tests 全绿）。两者已于 2026-03-21 合并（PR #1198）。
+
+### 基线验证
+
+| 指标                         | R1 值   | R8 值   | Delta |
+| ---------------------------- | ------- | ------- | ----- |
+| `.woff2` 文件数              | 0       | 0       | →     |
+| `@font-face` 声明数          | 0       | 0       | →     |
+| `fonts.css` body 字体        | 无 Lora | 无 Lora | →     |
+| 阴影 token 档数              | 4       | 4       | →     |
+| `shadow-[var(--shadow-*)]`   | 54 处   | 54 处   | →     |
+| `shadow-[var(--shadow-2xl)]` | 3 处    | 3 处    | →     |
+| Playwright 视觉 spec         | 3 个    | 3 个    | →     |
+| 视觉基线截图                 | 106 个  | 106 个  | →     |
+| DOM snapshot 测试            | 6 个    | 6 个    | →     |
+
+### 影响评估
+
+v1-14/v1-15 scope 与 v1-17 scope 无交集：重构文件中无 `shadow-2xl` 引用、无字体相关依赖。现有 3 处 shadow-2xl 仍在 VersionHistoryPanel/QualityGatesPanel stories 中，未被上游变更触及。
+
+### 结论
+
+**PASS** — 9 项基线零漂移，scope 无需调整。

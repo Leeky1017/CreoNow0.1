@@ -172,3 +172,65 @@ CreoNow 的字体系统声明了三族字体——`Inter`（UI）、`Lora`（正
 ### Scope 变更
 
 无需调整。v1-02 完成后新增的 DOM snapshot 测试不影响本 change 的范围——字体打包后基线重建将覆盖新增的 snapshot。
+
+---
+
+## R8 级联刷新记录（2026-03-22）
+
+### 刷新触发
+
+R8 P6 复核 v1-14/v1-15。两者已于 2026-03-21 合并（PR #1198），R8 结论均为 PASS。
+
+### 上游复核结论
+
+| 上游               | R8 结论 | 关键数据                                                     |
+| ------------------ | ------- | ------------------------------------------------------------ |
+| v1-14 对话框入口页 | ✅ PASS | 14 文件 2853 行，2600 tests 全绿                             |
+| v1-15 AI Overlay   | ✅ PASS | 11 文件 2265 行，83 tests 全绿（vitest 实跑 AiDialogs 目录） |
+
+### 影响评估
+
+v1-14/v1-15 对 v1-17 scope **无直接影响**。证据：
+
+1. **shadow-2xl 引用**：v1-14 scope（export/projects/onboarding/settings-dialog）和 v1-15 scope（AiDialogs）中均不存在 `shadow-[var(--shadow-2xl)]` 引用。现有 3 处 shadow-2xl 仍集中在 VersionHistoryPanel.stories.tsx（2 处）和 QualityGatesPanel.stories.tsx（1 处），与 R1 基线一致。
+
+```bash
+# v1-14 scope — 无匹配
+grep -rn 'shadow-\[var(--shadow-2xl)\]' apps/desktop/renderer/src/features/export/ \
+  apps/desktop/renderer/src/features/projects/ \
+  apps/desktop/renderer/src/features/onboarding/ 2>/dev/null
+# (none)
+
+# v1-15 scope — 无匹配
+grep -rn 'shadow-\[var(--shadow-2xl)\]' apps/desktop/renderer/src/components/features/AiDialogs/ 2>/dev/null
+# (none)
+```
+
+2. **字体依赖**：v1-14/v1-15 重构的文件中无任何 `@font-face`、`woff2`、`Lora`、`font-family` 引用，未引入新字体相关依赖。
+
+```bash
+grep -rn 'font-face\|woff2\|Lora\|font-family' \
+  apps/desktop/renderer/src/features/export/ \
+  apps/desktop/renderer/src/features/projects/ \
+  apps/desktop/renderer/src/features/onboarding/ \
+  apps/desktop/renderer/src/components/features/AiDialogs/ 2>/dev/null
+# (none)
+```
+
+### 基线对比（R1 → R8）
+
+| 指标                         | R1 值   | R8 值   | Delta | 说明              |
+| ---------------------------- | ------- | ------- | ----- | ----------------- |
+| `.woff2` 文件数              | 0       | 0       | →     | 待实施            |
+| `@font-face` 声明数          | 0       | 0       | →     | 待实施            |
+| `fonts.css` body 字体        | 无 Lora | 无 Lora | →     | 待修复            |
+| 阴影 token 档数              | 4       | 4       | →     | xs/2xl 待新增     |
+| `shadow-[var(--shadow-*)]`   | 54 处   | 54 处   | →     | 归 v1-18 统一替换 |
+| `shadow-[var(--shadow-2xl)]` | 3 处    | 3 处    | →     | 本 change 替换    |
+| Playwright 视觉 spec         | 3 个    | 3 个    | →     |                   |
+| 视觉基线截图                 | 106 个  | 106 个  | →     | 字体打包后需重建  |
+| DOM snapshot 测试            | 6 个    | 6 个    | →     |                   |
+
+### 结论
+
+**PASS** — 所有 9 项基线指标与 R1 完全一致，零漂移。v1-14/v1-15 的 shadow token 重构范围与 v1-17 scope（shadow-2xl 替换、字体打包、视觉基线）无交集。v1-17 scope 无需调整。

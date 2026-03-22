@@ -257,3 +257,48 @@
 ### 结论
 
 v1-15 R5 级联刷新：**PASS** ✅ —— 11 个源文件行数与 R3 完全一致（零漂移），测试从 83 增至 91（guard 体系增强），全量 2,592 tests 零回归，上游三路 PASS 均无冲突，无需二次拆分或额外响应。
+
+---
+
+## R8 级联刷新记录（2026-03-22）
+
+R8 P6 复核。v1-15 已合并（PR #1198），稳定性验证。
+
+### 基线验证
+
+| 组件文件                | R6 行数  | R8 行数  | Delta   |
+| ----------------------- | -------- | -------- | ------- |
+| AiDiffModal.tsx（主）   | 307      | 304      | -3      |
+| AiDiffContent.tsx       | 227      | 227      | 0       |
+| AiDiffSummary.tsx       | 169      | 166      | -3      |
+| useAiDiffActions.ts     | 155      | 155      | 0       |
+| AiErrorCard.tsx         | 226      | 226      | 0       |
+| AiErrorDetails.tsx      | 211      | 211      | 0       |
+| AiErrorActions.tsx      | 183      | 179      | -4      |
+| SystemDialog.tsx        | 250      | 244      | -6      |
+| SystemDialogContent.tsx | 200      | 200      | 0       |
+| AiInlineConfirm.tsx     | 221      | 219      | -2      |
+| AiInlinePreview.tsx     | 134      | 134      | 0       |
+| **合计**                | **2283** | **2265** | **-18** |
+
+### 测试结果
+
+- AiDialogs 相关测试：**83 tests**，全部 ✓ 通过
+- 无失败 / 无跳过
+- 采集命令：`pnpm -C apps/desktop exec vitest run src/components/features/AiDialogs --reporter=dot`
+
+> **R8 勘误**：R5 记录中的「91 tests」系采集口径错误（grep 跨文件匹配混入其他测试文件的 AiDialogs 引用）。R8 以 vitest 实跑 AiDialogs 目录为准：**83 tests**。
+
+### AC 状态
+
+| AC                           | R6 状态                 | R8 状态                    | 变化                  |
+| ---------------------------- | ----------------------- | -------------------------- | --------------------- |
+| AC-1（AiDiffModal ≤200）     | ⚠️ 307行                | ⚠️ 304行                   | -3，维持 Non-blocking |
+| AC-4（AiErrorCard ≤200）     | ⚠️ 226行                | ⚠️ 226行                   | 无变化                |
+| AC-7（SystemDialog ≤250）    | ✅ 250行                | ✅ 244行                   | -6，改善              |
+| AC-9（AiInlineConfirm ≤200） | ⚠️ 221行                | ⚠️ 219行                   | -2，维持 Non-blocking |
+| AC-12（测试全通过）          | ✅ 91 tests（口径偏差） | ✅ 83 tests（vitest 实跑） | 修正                  |
+
+### 结论
+
+**PASS** — 零行为漂移，行数微降（-18），83 tests 全通过（vitest 实跑），上游无新变更。v1-15 实现稳定。
