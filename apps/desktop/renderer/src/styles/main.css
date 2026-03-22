@@ -649,7 +649,8 @@ textarea:focus-visible {
    CreoNow "C" 字母脉冲 + 渐变光环
    ============================================ */
 @keyframes brand-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.4;
     transform: scale(0.95);
   }

@@ -32,6 +32,29 @@
   --gradient-hero: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15) 0%, transparent 60%);
   --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
 
+/* 品牌渐变系统 */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.15) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+
   /* 背景层级（按 elevation 递增：base → surface → raised） */
   --color-bg-base: var(--gray-1); /* 最底层：窗口背景 */
   --color-bg-surface: var(--gray-2); /* 面板/卡片/输入框背景 */
@@ -121,6 +144,29 @@
   --gradient-surface: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-base) 100%);
   --gradient-hero: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
   --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.03) 50%, transparent 100%);
+
+/* 品牌渐变系统（亮色适配） */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.08) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.03) 50%,
+    transparent 100%
+  );
 
   /* 背景层级 */
   --color-bg-base: var(--gray-1);
