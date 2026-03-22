@@ -7,14 +7,13 @@
     "reason": "visual-compliance-complete-all-4-rules-promoted-to-error"
   },
   "snapshot": {
-    "totalViolations": 404,
+    "totalViolations": 401,
     "byRule": {
       "creonow/no-hardcoded-dimension": 0,
       "creonow/no-native-html-element": 0,
       "creonow/no-raw-error-code-in-ui": 0,
       "creonow/no-raw-tailwind-tokens": 0,
-      "creonow/require-describe-in-tests": 401,
-      "react-hooks/incompatible-library": 3
+      "creonow/require-describe-in-tests": 401
     }
   }
 }

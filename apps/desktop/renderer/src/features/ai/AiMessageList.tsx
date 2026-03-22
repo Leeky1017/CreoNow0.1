@@ -228,6 +228,7 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
   const hasHistoryReplay = props.historyMessages.length > 0;
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: props.historyMessages.length,
     getScrollElement: () => scrollRef.current,

@@ -17,6 +17,15 @@ import {
 } from "./SearchResultItems";
 import { ResultGroup } from "./SearchPanelParts";
 
+type VirtualSearchRow =
+  | {
+      type: "header";
+      category: string;
+      count: number;
+      hasBorderTop: boolean;
+    }
+  | { type: "item"; item: SearchResultItem };
+
 /**
  * Renders the appropriate search results view based on the current state.
  */
@@ -41,40 +50,71 @@ export function SearchResultsArea(props: {
 }): JSX.Element {
   const { t } = useTranslation();
 
-  const allVisibleItems = React.useMemo(() => {
-    const result: SearchResultItem[] = [];
+  const allVisibleRows = React.useMemo(() => {
+    const rows: VirtualSearchRow[] = [];
+    let groupIndex = 0;
+
     if (
       props.documentItems.length > 0 &&
       (props.category === "all" || props.category === "documents")
     ) {
-      result.push(...props.documentItems);
+      rows.push({
+        type: "header",
+        category: t("search.resultTypes.documents"),
+        count: props.documentItems.length,
+        hasBorderTop: groupIndex > 0,
+      });
+      for (const item of props.documentItems) {
+        rows.push({ type: "item", item });
+      }
+      groupIndex++;
     }
     if (
       props.memoryItems.length > 0 &&
       (props.category === "all" || props.category === "memories")
     ) {
-      result.push(...props.memoryItems);
+      rows.push({
+        type: "header",
+        category: t("search.resultTypes.memories"),
+        count: props.memoryItems.length,
+        hasBorderTop: groupIndex > 0,
+      });
+      for (const item of props.memoryItems) {
+        rows.push({ type: "item", item });
+      }
+      groupIndex++;
     }
     if (
       props.knowledgeItems.length > 0 &&
       (props.category === "all" || props.category === "knowledge")
     ) {
-      result.push(...props.knowledgeItems);
+      rows.push({
+        type: "header",
+        category: t("search.resultTypes.knowledgeGraph"),
+        count: props.knowledgeItems.length,
+        hasBorderTop: groupIndex > 0,
+      });
+      for (const item of props.knowledgeItems) {
+        rows.push({ type: "item", item });
+      }
     }
-    return result;
+    return rows;
   }, [
     props.documentItems,
     props.memoryItems,
     props.knowledgeItems,
     props.category,
+    t,
   ]);
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
-    count: allVisibleItems.length,
+    count: allVisibleRows.length,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => 72,
+    estimateSize: (index) =>
+      allVisibleRows[index].type === "header" ? 36 : 72,
     overscan: 8,
   });
 
@@ -163,10 +203,10 @@ export function SearchResultsArea(props: {
           style={{ height: `${virtualizer.getTotalSize()}px` }}
         >
           {virtualItems.map((virtualRow) => {
-            const item = allVisibleItems[virtualRow.index];
+            const row = allVisibleRows[virtualRow.index];
             return (
               <div
-                key={item.id}
+                key={virtualRow.index}
                 ref={virtualizer.measureElement}
                 data-index={virtualRow.index}
                 className="absolute left-0 right-0 w-full list-item-enter"
@@ -174,29 +214,42 @@ export function SearchResultsArea(props: {
                   transform: `translateY(${virtualRow.start}px)`,
                 }}
               >
-                {item.type === "document" ? (
+                {row.type === "header" ? (
+                  <div
+                    className={`py-2 ${row.hasBorderTop ? "border-t border-[var(--color-separator)]" : ""}`}
+                  >
+                    <div className="px-4 py-1.5 flex items-center justify-between">
+                      <span className="text-[10px] font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-widest">
+                        {row.category}
+                      </span>
+                      <span className="text-[10px] font-mono text-[var(--color-fg-placeholder)]">
+                        {t("search.results.match", { count: row.count })}
+                      </span>
+                    </div>
+                  </div>
+                ) : row.item.type === "document" ? (
                   <DocumentResultItem
-                    item={item}
+                    item={row.item}
                     query={props.effectiveQuery}
-                    isActive={virtualRow.index === 0 && props.activeIndex === 0}
+                    isActive={false}
                     isFlashing={
                       props.flashKey?.startsWith(
-                        `${item.documentId ?? item.id}:${item.anchor?.start ?? 0}:${item.anchor?.end ?? 0}:`,
+                        `${row.item.documentId ?? row.item.id}:${row.item.anchor?.start ?? 0}:${row.item.anchor?.end ?? 0}:`,
                       ) ?? false
                     }
-                    onClick={() => props.onItemClick(item.id)}
+                    onClick={() => props.onItemClick(row.item.id)}
                   />
-                ) : item.type === "memory" ? (
+                ) : row.item.type === "memory" ? (
                   <MemoryResultItem
-                    item={item}
+                    item={row.item}
                     query={props.effectiveQuery}
-                    onClick={() => props.onItemClick(item.id)}
+                    onClick={() => props.onItemClick(row.item.id)}
                   />
                 ) : (
                   <KnowledgeResultItem
-                    item={item}
+                    item={row.item}
                     query={props.effectiveQuery}
-                    onClick={() => props.onItemClick(item.id)}
+                    onClick={() => props.onItemClick(row.item.id)}
                   />
                 )}
               </div>

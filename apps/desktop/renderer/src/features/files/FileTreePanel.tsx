@@ -28,6 +28,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: state.visibleNodes.length,
     getScrollElement: () => scrollRef.current,
