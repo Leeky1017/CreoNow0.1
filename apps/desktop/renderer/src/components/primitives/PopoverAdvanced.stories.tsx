@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { Popover, PopoverClose } from "./Popover";
+import { Popover } from "./Popover";
 import { Button } from "./Button";
 import { within, expect } from "@storybook/test";
 
@@ -46,7 +46,6 @@ const meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
-
 
 /**
  * 表单内容
@@ -98,7 +97,7 @@ export const FormContent: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('button')).toBeInTheDocument();
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
 
@@ -117,7 +116,7 @@ export const CustomOffset: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('button')).toBeInTheDocument();
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
 
@@ -131,7 +130,7 @@ export const MinimalContent: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('button')).toBeInTheDocument();
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
 
@@ -150,7 +149,7 @@ export const WideContent: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('button')).toBeInTheDocument();
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
 
@@ -264,6 +263,6 @@ export const FullFeatures: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('button')).toBeInTheDocument();
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };

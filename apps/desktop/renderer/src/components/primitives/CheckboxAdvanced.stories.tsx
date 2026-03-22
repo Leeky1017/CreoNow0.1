@@ -69,7 +69,7 @@ export const Checked: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('checkbox')).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox")).toBeInTheDocument();
   },
 };
 
@@ -80,7 +80,7 @@ export const Unchecked: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('checkbox')).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox")).toBeInTheDocument();
   },
 };
 
@@ -91,10 +91,9 @@ export const Indeterminate: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('checkbox')).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox")).toBeInTheDocument();
   },
 };
-
 
 /** Select All 模式：演示 indeterminate 使用场景 */
 export const SelectAllDemo: Story = {
@@ -155,7 +154,7 @@ export const SelectAllDemo: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('checkbox')).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox")).toBeInTheDocument();
   },
 };
 
@@ -189,7 +188,7 @@ export const FocusTest: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('checkbox')).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox")).toBeInTheDocument();
   },
 };
 
@@ -281,7 +280,7 @@ export const StateMatrix: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('checkbox')).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox")).toBeInTheDocument();
   },
 };
 
@@ -297,7 +296,7 @@ export const LongLabel: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('checkbox')).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox")).toBeInTheDocument();
   },
 };
 
@@ -320,7 +319,7 @@ export const LongLabelConstrained: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('checkbox')).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox")).toBeInTheDocument();
   },
 };
 
@@ -345,7 +344,7 @@ export const NoLabelList: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('checkbox')).toBeInTheDocument();
+    await expect(canvas.getByRole("checkbox")).toBeInTheDocument();
   },
 };
 

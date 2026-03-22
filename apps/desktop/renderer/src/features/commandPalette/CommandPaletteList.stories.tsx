@@ -6,7 +6,7 @@
  */
 
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { fn, expect } from "@storybook/test";
 import { FileText, Moon, PanelLeft, Pencil } from "lucide-react";
 import React from "react";
 
@@ -218,7 +218,6 @@ export const LongCommandList: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,

@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState, useCallback } from "react";
-import { AiErrorCard } from "./AiErrorCard";
+import { useState } from "react";
 import { SystemDialog } from "./SystemDialog";
-import type { AiErrorConfig, AiErrorType } from "./types";
 import { within, expect } from "@storybook/test";
 
 const meta: Meta = {
@@ -20,8 +18,6 @@ const meta: Meta = {
 };
 
 export default meta;
-
-
 
 function SystemDeleteWithLoadingWrapper() {
   const [open, setOpen] = useState(true);
@@ -219,7 +215,6 @@ function AllSystemDialogsWrapper() {
   );
 }
 
-
 // =============================================================================
 // 4. System Dialog Stories
 // =============================================================================
@@ -231,7 +226,7 @@ export const SystemDeleteWithLoading: StoryObj = {
   render: () => <SystemDeleteWithLoadingWrapper />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -242,7 +237,7 @@ export const SystemKeyboardNavigation: StoryObj = {
   render: () => <SystemKeyboardNavigationWrapper />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -253,7 +248,7 @@ export const SystemCustomLabels: StoryObj = {
   render: () => <SystemCustomLabelsWrapper />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -264,7 +259,7 @@ export const SystemUnsavedChanges: StoryObj = {
   render: () => <SystemUnsavedChangesWrapper />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -275,7 +270,7 @@ export const SystemExportComplete: StoryObj = {
   render: () => <SystemExportCompleteWrapper />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -286,6 +281,6 @@ export const AllSystemDialogs: StoryObj = {
   render: () => <AllSystemDialogsWrapper />,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('dialog')).toBeInTheDocument();
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn, within, expect } from "@storybook/test";
+import { fn, expect } from "@storybook/test";
 import { ZenMode } from "./ZenMode";
 
 const defaultStats = {

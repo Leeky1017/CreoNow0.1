@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
 import { Textarea } from "./Textarea";
-import { within, expect } from "@storybook/test";
 
 /**
  * Textarea 组件 Story
@@ -72,7 +70,6 @@ export const Disabled: Story = {
     defaultValue: "This content is read-only",
   },
 };
-
 
 // ============================================================================
 // Focus 测试

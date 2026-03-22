@@ -253,7 +253,6 @@ export const HoverShowQuickActions: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -279,7 +278,6 @@ export const WordCountVariations: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,

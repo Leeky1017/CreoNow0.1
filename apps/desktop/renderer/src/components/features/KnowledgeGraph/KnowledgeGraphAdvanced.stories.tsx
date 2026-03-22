@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { KnowledgeGraph } from "./KnowledgeGraph";
-import type { GraphData, GraphNode, NodeType } from "./types";
+import type { GraphData, GraphNode } from "./types";
 import { expect } from "@storybook/test";
 
 /**
@@ -123,11 +123,6 @@ const DEMO_DATA: GraphData = {
   edges: DEMO_EDGES,
 };
 
-const EMPTY_DATA: GraphData = {
-  nodes: [],
-  edges: [],
-};
-
 // ============================================================================
 // Meta Configuration
 // ============================================================================
@@ -181,7 +176,6 @@ const meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
-
 
 // ============================================================================
 // 额外场景: 多节点选中对比

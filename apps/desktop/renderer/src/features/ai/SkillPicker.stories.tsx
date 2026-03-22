@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { fn, within, expect } from "@storybook/test";
+import { fn, expect } from "@storybook/test";
 import { ArrowUp, Clock, Plus } from "lucide-react";
 import { SkillPicker } from "./SkillPicker";
 import { layoutDecorator } from "../../components/layout/test-utils";

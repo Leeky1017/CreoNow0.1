@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { fn, within, expect } from "@storybook/test";
 import { create } from "zustand";
 import { CreateProjectDialog } from "./CreateProjectDialog";
 import { Button } from "../../components/primitives/Button";

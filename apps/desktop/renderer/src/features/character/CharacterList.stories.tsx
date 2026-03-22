@@ -70,7 +70,6 @@ export const EmptyProject: Story = {
     selectedId: null,
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -132,7 +131,6 @@ function SwitchingBetweenCharactersRender() {
 export const SwitchingBetweenCharacters: Story = {
   render: () => <SwitchingBetweenCharactersRender />,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -207,7 +205,6 @@ export const AvatarHoverState: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -264,7 +261,6 @@ function ChapterAppearanceNavigationRender() {
 export const ChapterAppearanceNavigation: Story = {
   render: () => <ChapterAppearanceNavigationRender />,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,

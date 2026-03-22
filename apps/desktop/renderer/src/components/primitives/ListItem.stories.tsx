@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
 import { ListItem } from "./ListItem";
-import { within, expect } from "@storybook/test";
+import { expect } from "@storybook/test";
 
 /**
  * ListItem 组件 Story
@@ -63,7 +62,6 @@ export const Default: Story = {
     children: "List Item",
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -80,7 +78,6 @@ export const Interactive: Story = {
     interactive: true,
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -98,7 +95,6 @@ export const Selected: Story = {
     interactive: true,
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -115,7 +111,6 @@ export const Compact: Story = {
     compact: true,
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -133,7 +128,6 @@ export const Disabled: Story = {
     interactive: true,
   },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -178,7 +172,6 @@ export const SizeComparison: Story = {
     </div>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -223,7 +216,6 @@ export const AllStates: Story = {
     </div>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -260,7 +252,6 @@ export const WithIcon: Story = {
     </div>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,
@@ -296,7 +287,6 @@ export const WithBadge: Story = {
     </div>
   ),
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
     await expect(
       canvasElement.querySelector("[data-testid]") ||
         canvasElement.firstElementChild,

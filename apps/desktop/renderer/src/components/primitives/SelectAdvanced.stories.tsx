@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
 import type { SelectOption, SelectGroup } from "./Select";
 import { Select } from "./Select";
 import { within, expect } from "@storybook/test";
@@ -103,7 +102,7 @@ export const Default: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('combobox')).toBeInTheDocument();
+    await expect(canvas.getByRole("combobox")).toBeInTheDocument();
   },
 };
 
@@ -114,7 +113,7 @@ export const Grouped: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('combobox')).toBeInTheDocument();
+    await expect(canvas.getByRole("combobox")).toBeInTheDocument();
   },
 };
 
@@ -126,10 +125,9 @@ export const Disabled: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('combobox')).toBeInTheDocument();
+    await expect(canvas.getByRole("combobox")).toBeInTheDocument();
   },
 };
-
 
 /** 超长选项在有限宽度 */
 export const LongOptionsConstrained: Story = {
@@ -162,7 +160,7 @@ export const LongOptionsConstrained: Story = {
   ],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('combobox')).toBeInTheDocument();
+    await expect(canvas.getByRole("combobox")).toBeInTheDocument();
   },
 };
 
@@ -174,7 +172,7 @@ export const EmptyOptions: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('combobox')).toBeInTheDocument();
+    await expect(canvas.getByRole("combobox")).toBeInTheDocument();
   },
 };
 
@@ -186,7 +184,7 @@ export const SingleOption: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('combobox')).toBeInTheDocument();
+    await expect(canvas.getByRole("combobox")).toBeInTheDocument();
   },
 };
 
@@ -263,7 +261,7 @@ export const StateMatrix: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole('combobox')).toBeInTheDocument();
+    await expect(canvas.getByRole("combobox")).toBeInTheDocument();
   },
 };
 
