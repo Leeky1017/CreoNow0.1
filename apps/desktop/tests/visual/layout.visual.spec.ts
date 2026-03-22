@@ -27,12 +27,12 @@ const LAYOUT_STORIES: Array<{
   },
   {
     component: "resizer",
-    storyId: "layout-resizer--default",
+    storyId: "layout-resizer-basic--default",
     story: "default",
   },
   {
     component: "resizer",
-    storyId: "layout-resizer--dual-resizer",
+    storyId: "layout-resizer-basic--dual-resizer",
     story: "dual-resizer",
   },
   {

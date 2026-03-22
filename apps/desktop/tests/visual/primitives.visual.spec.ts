@@ -31,30 +31,30 @@ const PRIMITIVE_STORIES: Array<{
   },
   {
     component: "button",
-    storyId: "primitives-button--default",
+    storyId: "primitives-button-basic--default",
     story: "default",
   },
   {
     component: "button",
-    storyId: "primitives-button--all-variants",
+    storyId: "primitives-button-variants--all-variants",
     story: "all-variants",
   },
   {
     component: "button",
-    storyId: "primitives-button--all-sizes",
+    storyId: "primitives-button-variants--all-sizes",
     story: "all-sizes",
   },
   {
     component: "button",
-    storyId: "primitives-button--loading",
+    storyId: "primitives-button-basic--loading",
     story: "loading",
   },
   {
     component: "button",
-    storyId: "primitives-button--disabled",
+    storyId: "primitives-button-basic--disabled",
     story: "disabled",
   },
-  { component: "card", storyId: "primitives-card--default", story: "default" },
+  { component: "card", storyId: "primitives-card-basic--default", story: "default" },
   {
     component: "checkbox",
     storyId: "primitives-checkbox--default",
@@ -87,7 +87,7 @@ const PRIMITIVE_STORIES: Array<{
   },
   {
     component: "input",
-    storyId: "primitives-input--default",
+    storyId: "primitives-input-basic--default",
     story: "default",
   },
   {
@@ -130,7 +130,7 @@ const PRIMITIVE_STORIES: Array<{
     storyId: "primitives-spinner--default",
     story: "default",
   },
-  { component: "tabs", storyId: "primitives-tabs--default", story: "default" },
+  { component: "tabs", storyId: "primitives-tabs-basic--default", story: "default" },
   { component: "text", storyId: "primitives-text--default", story: "default" },
   {
     component: "textarea",
