@@ -249,6 +249,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/Checkbox",
   },
   {
+    id: "checkboxAdvanced",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Checkbox advanced states" },
+    ],
+    testId: "checkbox-advanced",
+    storybookTitle: "Primitives/Checkbox/Advanced",
+  },
+  {
     id: "contextMenu",
     kind: "primitive",
     entryPoints: [
@@ -313,11 +322,38 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/ListItem",
   },
   {
+    id: "listItemAdvanced",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "ListItem advanced states" },
+    ],
+    testId: "list-item-advanced",
+    storybookTitle: "Primitives/ListItem/Advanced",
+  },
+  {
+    id: "listItemMatrix",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "ListItem variant matrix" },
+    ],
+    testId: "list-item-matrix",
+    storybookTitle: "Primitives/ListItem/Matrix",
+  },
+  {
     id: "popover",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Popover primitive" }],
     testId: "popover",
     storybookTitle: "Primitives/Popover",
+  },
+  {
+    id: "popoverAdvanced",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Popover advanced states" },
+    ],
+    testId: "popover-advanced",
+    storybookTitle: "Primitives/Popover/Advanced",
   },
   {
     id: "radio",
@@ -341,6 +377,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     entryPoints: [{ type: "storybookOnly", description: "Select primitive" }],
     testId: "select",
     storybookTitle: "Primitives/Select",
+  },
+  {
+    id: "selectAdvanced",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Select advanced states" },
+    ],
+    testId: "select-advanced",
+    storybookTitle: "Primitives/Select/Advanced",
   },
   {
     id: "skeleton",
@@ -387,11 +432,29 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/Text",
   },
   {
+    id: "textVariants",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Text variant showcase" },
+    ],
+    testId: "text-variants",
+    storybookTitle: "Primitives/Text/Variants",
+  },
+  {
     id: "textarea",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Textarea primitive" }],
     testId: "textarea",
     storybookTitle: "Primitives/Textarea",
+  },
+  {
+    id: "textareaAdvanced",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Textarea advanced states" },
+    ],
+    testId: "textarea-advanced",
+    storybookTitle: "Primitives/Textarea/Advanced",
   },
   {
     id: "toast",
@@ -435,6 +498,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     ],
     testId: "ai-dialogs-states",
     storybookTitle: "Features/AiDialogs/States",
+  },
+  {
+    id: "aiDialogsStatesSystem",
+    kind: "dialog",
+    entryPoints: [
+      { type: "storybookOnly", description: "AI system dialog states" },
+    ],
+    testId: "ai-dialogs-states-system",
+    storybookTitle: "Features/AiDialogs/StatesSystem",
   },
   {
     id: "aiPanelChat",
@@ -650,6 +722,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     ],
     testId: "kg-entity-detail-card",
     storybookTitle: "Features/KnowledgeGraph/EntityDetail",
+  },
+  {
+    id: "knowledgeGraphAdvanced",
+    kind: "leftPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "KG advanced interactions" },
+    ],
+    testId: "knowledge-graph-advanced",
+    storybookTitle: "Features/KnowledgeGraph/Advanced",
   },
   {
     id: "memoryCreateDialog",
