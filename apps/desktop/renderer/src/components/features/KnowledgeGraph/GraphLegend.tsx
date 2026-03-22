@@ -119,7 +119,7 @@ export function GraphLegend({ className = "" }: GraphLegendProps): JSX.Element {
   return (
     <div className={`${legendStyles} ${className}`}>
       {/* Title */}
-      <div className="text-[10px] uppercase tracking-wider text-[var(--color-fg-subtle)] font-medium mb-1">
+      <div className="text-label uppercase tracking-wider text-(--color-fg-subtle) font-medium mb-1">
         {t("kg.legend.title")}
       </div>
 
@@ -127,7 +127,7 @@ export function GraphLegend({ className = "" }: GraphLegendProps): JSX.Element {
       {legendItems.map((item) => (
         <div key={item.type} className="flex items-center gap-2">
           <ShapeIndicator shape={item.shape} colorVar={item.colorVar} />
-          <span className="text-[11px] text-[var(--color-fg-muted)]">
+          <span className="text-status text-(--color-fg-muted)">
             {item.label}
           </span>
         </div>

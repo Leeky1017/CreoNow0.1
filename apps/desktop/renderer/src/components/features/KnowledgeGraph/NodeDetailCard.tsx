@@ -50,7 +50,7 @@ const cardStyles = [
   "border",
   "border-[var(--color-border-hover)]",
   "rounded-lg",
-  "shadow-[var(--shadow-xl)]",
+  "shadow-xl",
   "p-4",
   "flex",
   "flex-col",
@@ -94,7 +94,7 @@ export function NodeDetailCard({
           {/* Name and role */}
           <div>
             <div className="flex items-center gap-2">
-              <div className="text-sm font-semibold text-[var(--color-fg-default)]">
+              <div className="text-sm font-semibold text-(--color-fg-default)">
                 {label}
               </div>
               <Badge variant={typeToVariant[type]} size="sm">
@@ -103,7 +103,7 @@ export function NodeDetailCard({
             </div>
             {role && (
               <div
-                className="text-[10px] uppercase tracking-wider font-medium"
+                className="text-label uppercase tracking-wider font-medium"
                 style={{ color: typeColor }}
               >
                 {role}
@@ -118,7 +118,7 @@ export function NodeDetailCard({
           {onDelete && (
             <Button
               onClick={onDelete}
-              className="p-1 text-[var(--color-fg-subtle)] hover:text-[var(--color-error)] transition-colors"
+              className="p-1 text-(--color-fg-subtle) hover:text-(--color-error) transition-colors"
               aria-label={t("kg.nodeDetail.deleteNode")}
               title={t("kg.nodeDetail.deleteNode")}
             >
@@ -140,7 +140,7 @@ export function NodeDetailCard({
           {/* Close button */}
           <Button
             onClick={onClose}
-            className="p-1 text-[var(--color-fg-subtle)] hover:text-[var(--color-fg-default)] transition-colors"
+            className="p-1 text-(--color-fg-subtle) hover:text-(--color-fg-default) transition-colors"
             aria-label={t("kg.nodeDetail.close")}
           >
             <svg
@@ -164,7 +164,7 @@ export function NodeDetailCard({
           {attributes.map((attr, index) => (
             <span
               key={`${attr.key}-${index}`}
-              className="px-2 py-0.5 rounded bg-[var(--color-bg-hover)] border border-[var(--color-border-default)] text-[10px] text-[var(--color-fg-muted)]"
+              className="px-2 py-0.5 rounded bg-[var(--color-bg-hover)] border border-[var(--color-border-default)] text-label text-(--color-fg-muted)"
             >
               {attr.key}: {attr.value}
             </span>
@@ -174,7 +174,7 @@ export function NodeDetailCard({
 
       {/* Description */}
       {description && (
-        <p className="text-xs text-[var(--color-fg-muted)] leading-relaxed line-clamp-3">
+        <p className="text-xs text-(--color-fg-muted) leading-relaxed line-clamp-3">
           {description}
         </p>
       )}

@@ -118,13 +118,13 @@ const labelBaseStyles = [
   "top-14",
   "left-1/2",
   "-translate-x-1/2",
-  "text-[11px]",
+  "text-status",
   "whitespace-nowrap",
   "px-1.5",
   "py-0.5",
   "rounded",
   "pointer-events-none",
-  "text-[var(--color-fg-default)]",
+  "text-(--color-fg-default)",
   "opacity-90",
   "transition-opacity",
   "duration-[var(--duration-fast)]",
@@ -173,7 +173,7 @@ export function GraphNode({
     (selected || dragging) && labelHoverStyles,
     // Event nodes need counter-rotation for label
     isEventType && "-rotate-45",
-    isEventType && "top-[60px]",
+    isEventType && "top-15",
   ]
     .filter(Boolean)
     .join(" ");
@@ -233,7 +233,7 @@ export function GraphNode({
       {/* Dragging indicator */}
       {dragging && (
         <span
-          className="absolute -right-2 -top-2 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-[var(--color-fg-on-accent)] rounded"
+          className="absolute -right-2 -top-2 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-(--color-fg-on-accent) rounded"
           style={{ backgroundColor: color }}
         >
           {t("kg.graph.dragging")}

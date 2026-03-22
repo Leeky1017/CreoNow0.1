@@ -64,15 +64,15 @@ const filterButtonBase = [
 ].join(" ");
 
 const filterButtonInactive = [
-  "text-[var(--color-fg-muted)]",
+  "text-(--color-fg-muted)",
   "border-transparent",
-  "hover:text-[var(--color-fg-default)]",
+  "hover:text-(--color-fg-default)",
   "hover:border-[var(--color-border-hover)]",
 ].join(" ");
 
 const filterButtonActive = [
   "bg-[var(--color-bg-raised)]",
-  "text-[var(--color-fg-default)]",
+  "text-(--color-fg-default)",
   "border-[var(--color-border-hover)]",
 ].join(" ");
 
@@ -122,7 +122,7 @@ export function GraphToolbar({
           <>
             <Button
               onClick={onBack}
-              className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+              className="text-(--color-fg-muted) hover:text-(--color-fg-default) transition-colors"
               aria-label={t("kg.toolbar.goBack")}
             >
               <svg
@@ -139,7 +139,7 @@ export function GraphToolbar({
             <div className="h-4 w-px bg-[var(--color-border-hover)]" />
           </>
         )}
-        <h1 className="text-sm font-medium tracking-wide text-[var(--color-fg-default)]">
+        <h1 className="text-sm font-medium tracking-wide text-(--color-fg-default)">
           {t("kg.toolbar.title")}
         </h1>
       </div>
@@ -170,7 +170,7 @@ export function GraphToolbar({
         <div className="flex items-center bg-[var(--color-bg-raised)] rounded border border-[var(--color-border-default)]">
           <Button
             onClick={onZoomOut}
-            className="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            className="p-1.5 text-(--color-fg-muted) hover:text-(--color-fg-default) hover:bg-[var(--color-bg-hover)] transition-colors"
             aria-label={t("kg.toolbar.zoomOut")}
           >
             <svg
@@ -184,12 +184,12 @@ export function GraphToolbar({
               <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
           </Button>
-          <span className="text-[10px] w-8 text-center text-[var(--color-fg-subtle)]">
+          <span className="text-label w-8 text-center text-(--color-fg-subtle)">
             {Math.round(zoom * 100)}%
           </span>
           <Button
             onClick={onZoomIn}
-            className="p-1.5 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            className="p-1.5 text-(--color-fg-muted) hover:text-(--color-fg-default) hover:bg-[var(--color-bg-hover)] transition-colors"
             aria-label={t("kg.toolbar.zoomIn")}
           >
             <svg
