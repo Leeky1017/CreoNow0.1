@@ -243,6 +243,18 @@
 }
 
 :root[data-theme="dark"] {
+  /* HSL 10-step 灰阶（近黑 → 中灰，等感知亮度步进） */
+  --gray-1: hsl(0 0% 3%);
+  --gray-2: hsl(0 0% 6%);
+  --gray-3: hsl(0 0% 8%);
+  --gray-4: hsl(0 0% 10%);
+  --gray-5: hsl(0 0% 12%);
+  --gray-6: hsl(0 0% 13%);
+  --gray-7: hsl(0 0% 20%);
+  --gray-8: hsl(0 0% 27%);
+  --gray-9: hsl(0 0% 40%);
+  --gray-10: hsl(0 0% 45%);
+
   /* Background layers */
   --color-bg-base: #080808;
   --color-bg-surface: #0f0f0f;
@@ -280,6 +292,17 @@
   --color-accent-hover: rgba(255, 255, 255, 0.9);
   --color-accent-muted: rgba(255, 255, 255, 0.6);
   --color-accent-subtle: rgba(255, 255, 255, 0.1);
+  --color-accent-active: hsl(0 0% 85%);
+
+  /* 功能色 hover/active（lightness +5%/+10%） */
+  --color-error-hover: hsl(0 84% 65%);
+  --color-error-active: hsl(0 84% 70%);
+  --color-success-hover: hsl(142 71% 50%);
+  --color-success-active: hsl(142 71% 55%);
+  --color-warning-hover: hsl(38 92% 55%);
+  --color-warning-active: hsl(38 92% 60%);
+  --color-info-hover: hsl(217 91% 65%);
+  --color-info-active: hsl(217 91% 70%);
 
   /* 阴影基色 §3.7 - 几何在 :root 中定义 */
   --color-shadow: rgba(0, 0, 0, 0.5);
@@ -308,6 +331,18 @@
 }
 
 :root[data-theme="light"] {
+  /* HSL 10-step 灰阶（纯白 → 中灰，等感知亮度步进） */
+  --gray-1: hsl(0 0% 100%);
+  --gray-2: hsl(0 0% 98%);
+  --gray-3: hsl(0 0% 96%);
+  --gray-4: hsl(0 0% 94%);
+  --gray-5: hsl(0 0% 91%);
+  --gray-6: hsl(0 0% 88%);
+  --gray-7: hsl(0 0% 82%);
+  --gray-8: hsl(0 0% 75%);
+  --gray-9: hsl(0 0% 60%);
+  --gray-10: hsl(0 0% 45%);
+
   /* Background layers */
   --color-bg-base: #ffffff;
   --color-bg-surface: #fafafa;
@@ -345,6 +380,17 @@
   --color-accent-hover: rgba(26, 26, 26, 0.9);
   --color-accent-muted: rgba(26, 26, 26, 0.6);
   --color-accent-subtle: rgba(26, 26, 26, 0.1);
+  --color-accent-active: hsl(0 0% 5%);
+
+  /* 功能色 hover/active（lightness -5%/-10%） */
+  --color-error-hover: hsl(0 84% 55%);
+  --color-error-active: hsl(0 84% 50%);
+  --color-success-hover: hsl(142 71% 40%);
+  --color-success-active: hsl(142 71% 35%);
+  --color-warning-hover: hsl(38 92% 45%);
+  --color-warning-active: hsl(38 92% 40%);
+  --color-info-hover: hsl(217 91% 55%);
+  --color-info-active: hsl(217 91% 50%);
 
   /* 阴影基色 §3.7 - 几何在 :root 中定义 */
   --color-shadow: rgba(0, 0, 0, 0.1);
