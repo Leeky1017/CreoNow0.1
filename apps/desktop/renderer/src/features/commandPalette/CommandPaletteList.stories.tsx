@@ -7,15 +7,7 @@
 
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import {
-  Download,
-  FileText,
-  Moon,
-  PanelLeft,
-  Pencil,
-  Settings,
-  SquareTerminal,
-} from "lucide-react";
+import { FileText, Moon, PanelLeft, Pencil } from "lucide-react";
 import React from "react";
 
 import { CommandPalette, type CommandItem } from "./CommandPalette";
