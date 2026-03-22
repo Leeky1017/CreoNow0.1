@@ -23,6 +23,10 @@ tester.run("creonow/no-raw-tailwind-tokens (shadow extension)", rule, {
     { code: `const x = "drop-shadow-md";` },
     // CSS variable name — should not trigger
     { code: `const x = "--shadow-md";` },
+    // shadow-2xl is registered in @theme as design token — should not trigger
+    { code: `const cls = "shadow-2xl";` },
+    // shadow-xs is registered in @theme as design token — should not trigger
+    { code: `const cls = "shadow-xs";` },
   ],
   invalid: [
     // Built-in shadow-lg — should trigger
@@ -35,11 +39,6 @@ tester.run("creonow/no-raw-tailwind-tokens (shadow extension)", rule, {
       code: `const cls = "shadow-xl";`,
       errors: [{ messageId: "rawShadow" }],
     },
-    // Built-in shadow-2xl — should trigger
-    {
-      code: `const cls = "shadow-2xl";`,
-      errors: [{ messageId: "rawShadow" }],
-    },
     // Built-in shadow-sm — should trigger
     {
       code: `const cls = "shadow-sm";`,
@@ -47,7 +46,7 @@ tester.run("creonow/no-raw-tailwind-tokens (shadow extension)", rule, {
     },
     // Multiple shadows in one string — should trigger twice
     {
-      code: `const cls = "shadow-xl shadow-2xl";`,
+      code: `const cls = "shadow-xl shadow-lg";`,
       errors: [{ messageId: "rawShadow" }, { messageId: "rawShadow" }],
     },
     // With modifier prefix — should trigger
