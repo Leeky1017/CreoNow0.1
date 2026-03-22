@@ -82,7 +82,7 @@ describe("Dialog 焦点管理", () => {
     });
   });
 
-  it("按 Escape 关闭后焦点不残留在已卸载的对话框元素上", async () => {
+  it("按 Escape 关闭后焦点恢复到触发按钮", async () => {
     const user = userEvent.setup();
     render(<DialogWithTrigger />);
 
@@ -103,15 +103,11 @@ describe("Dialog 焦点管理", () => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
-    // After close, focus must not remain on a detached/unmounted element.
-    // Radix restores focus to the previously active element in real browsers;
-    // in jsdom the restoration may land on <body>. Either outcome is valid
-    // as long as focus stays within the live DOM tree.
-    expect(document.body.contains(document.activeElement)).toBe(true);
-    expect(document.activeElement).not.toBeNull();
+    // Focus must return to the trigger button that opened the dialog
+    expect(trigger).toHaveFocus();
   });
 
-  it("点击关闭按钮后焦点不残留在已卸载的对话框", async () => {
+  it("点击关闭按钮后焦点恢复到触发按钮", async () => {
     const user = userEvent.setup();
     render(<DialogWithTrigger />);
 
@@ -128,8 +124,8 @@ describe("Dialog 焦点管理", () => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
 
-    expect(document.body.contains(document.activeElement)).toBe(true);
-    expect(document.activeElement).not.toBeNull();
+    // Focus must return to the trigger button that opened the dialog
+    expect(trigger).toHaveFocus();
   });
 
   it("Tab 键在对话框内循环（焦点陷阱）", async () => {

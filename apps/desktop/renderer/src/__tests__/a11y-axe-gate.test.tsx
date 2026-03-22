@@ -124,19 +124,10 @@ describe("axe-core a11y gate", () => {
     expect(results).toHaveNoViolations();
   });
 
-  it("FileTreePanel 渲染无 axe 违规（排除已知 role=button 相关问题）", async () => {
-    // FileTreeNodeRow uses role="button" + aria-selected and has focusable
-    // descendants inside role="button". Both are pre-existing structural
-    // issues tracked separately. We exclude them here so the gate catches
-    // NEW violations while the component refactor is pending.
+  it("FileTreePanel 渲染无 axe 违规", async () => {
     const { container } = render(<FileTreePanel projectId="test-project" />);
 
-    const results = await axe(container, {
-      rules: {
-        "aria-allowed-attr": { enabled: false },
-        "nested-interactive": { enabled: false },
-      },
-    });
+    const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
 

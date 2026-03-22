@@ -253,16 +253,16 @@ describe("V1-19 Accessibility Guard", () => {
       tree.focus();
 
       fireEvent.keyDown(tree, { key: "End" });
-      expect(screen.getByTestId("file-row-doc-root")).toHaveAttribute(
-        "aria-selected",
-        "true",
-      );
+      const endTreeItem = screen
+        .getByTestId("file-row-doc-root")
+        .closest("[role='treeitem']");
+      expect(endTreeItem).toHaveAttribute("aria-selected", "true");
 
       fireEvent.keyDown(tree, { key: "Home" });
-      expect(screen.getByTestId("file-row-folder-1")).toHaveAttribute(
-        "aria-selected",
-        "true",
-      );
+      const homeTreeItem = screen
+        .getByTestId("file-row-folder-1")
+        .closest("[role='treeitem']");
+      expect(homeTreeItem).toHaveAttribute("aria-selected", "true");
     });
   });
 

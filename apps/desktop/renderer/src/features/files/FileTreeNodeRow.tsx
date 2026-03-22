@@ -122,9 +122,7 @@ export const FileTreeNodeRow = React.forwardRef<
       <ContextMenu items={contextMenuItems}>
         <ListItem
           data-testid={`file-row-${item.documentId}`}
-          aria-selected={selected}
           selected={selected}
-          interactive
           compact
           draggable
           onDragStart={(e) => {
@@ -159,7 +157,7 @@ export const FileTreeNodeRow = React.forwardRef<
             props.setDraggingDocumentId(null);
           }}
           onClick={() => void props.onSelect(item.documentId)}
-          className={`h-8 border ${selected ? "border-[var(--color-border-focus)]" : "border-transparent"} group ${dropInto ? "bg-[var(--color-bg-hover)]" : ""} ${isDragging ? "opacity-50" : ""}`}
+          className={`h-8 border ${selected ? "border-[var(--color-border-focus)]" : "border-transparent"} group ${dropInto ? "bg-[var(--color-bg-hover)]" : ""} ${isDragging ? "opacity-50" : ""} cursor-pointer select-none hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)]`}
         >
           {hasChildren ? (
             <Button
