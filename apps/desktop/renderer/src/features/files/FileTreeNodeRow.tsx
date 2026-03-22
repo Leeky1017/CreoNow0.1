@@ -102,6 +102,7 @@ export const FileTreeNodeRow = React.forwardRef<
 
   return (
     <div
+      id={`tree-node-${item.documentId}`}
       key={item.documentId}
       role="treeitem"
       aria-expanded={isExpanded}

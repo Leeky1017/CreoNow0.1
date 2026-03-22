@@ -13,7 +13,11 @@ const sharedAliasPath = path.resolve(__dirname, "../../../packages/shared");
  */
 const config: StorybookConfig = {
   stories: ["../renderer/src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
-  addons: ["@storybook/addon-links", "@storybook/addon-essentials"],
+  addons: [
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@storybook/addon-a11y",
+  ],
   framework: {
     name: "@storybook/react-vite",
     options: {},
@@ -42,7 +46,9 @@ const config: StorybookConfig = {
             if (
               warning.code === "EVAL" &&
               typeof warning.id === "string" &&
-              warning.id.includes("/node_modules/@storybook/core/dist/preview/runtime.js")
+              warning.id.includes(
+                "/node_modules/@storybook/core/dist/preview/runtime.js",
+              )
             ) {
               return;
             }

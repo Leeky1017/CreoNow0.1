@@ -133,6 +133,11 @@ const closeButtonStyles = [
  * A modal dialog built on Radix UI Dialog for proper accessibility and focus management.
  * Uses z-index modal (400), shadow-xl, and scrim overlay.
  *
+ * Radix UI Dialog provides built-in focus management (WCAG 2.4.3):
+ * - Focus trap: Tab/Shift+Tab cycle stays within the dialog content
+ * - Esc key: Closes the dialog (configurable via `closeOnEscape`)
+ * - Focus restoration: Focus returns to the trigger element after close
+ *
  * @example
  * ```tsx
  * <Dialog

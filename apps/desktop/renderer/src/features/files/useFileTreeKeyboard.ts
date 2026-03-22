@@ -99,7 +99,13 @@ export function handleTreeKeyDown(
     ArrowRight: () => handleArrowRight(ctx, deps),
     ArrowLeft: () => handleArrowLeft(ctx, deps),
     Enter: () => void deps.onSelect(activeNode.documentId),
-    " ": () => void deps.onSelect(activeNode.documentId),
+    " ": () => {
+      if (activeNode.children.length > 0) {
+        deps.toggleFolderExpanded(activeNode.documentId);
+      } else {
+        void deps.onSelect(activeNode.documentId);
+      }
+    },
     Home: () => handleHome(deps),
     End: () => handleEnd(deps),
     F2: () =>
