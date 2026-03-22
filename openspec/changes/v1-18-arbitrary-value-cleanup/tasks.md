@@ -275,3 +275,49 @@ R6 基线因采样路径不一致（声称 `src/features/`，R3 命令实际用 
 ### 结论
 
 v1-13 为 lint 治理补上了审批流程和审计清单，间接支撑 v1-18 的 lint 收口目标。v1-18 scope 和 AC 不受直接影响，保持原计划。详细基线与影响分析见 `proposal.md` 的 R7 级联刷新记录。
+
+---
+
+## R8 级联刷新记录（2026-03-22）
+
+R8 P6 复核 v1-14/v1-15 → 级联刷新 v1-18。
+
+### 上游结论
+
+v1-14 PASS（14 文件 2853 行，features/export, projects, onboarding, settings-dialog），v1-15 PASS（11 文件 2265 行，components/features/AiDialogs）。
+
+### 基线验证
+
+#### components/features/ 口径（与 R7 可比）
+
+| 度量             | R7 基线 | R8 实测 | Delta | 说明   |
+| ---------------- | ------- | ------- | ----- | ------ |
+| text-[           | 95      | 95      | 0     | 无变化 |
+| rounded-[        | 18      | 18      | 0     | 无变化 |
+| w-[]/h-[]        | 8       | 8       | 0     | 无变化 |
+| p-[]/m-[]/gap-[] | 1       | 1       | 0     | 无变化 |
+| shadow-[         | 7       | 7       | 0     | 无变化 |
+
+#### v1-14 scope 采样
+
+| 度量      | R8 实测 |
+| --------- | ------- |
+| text-[    | 50      |
+| rounded-[ | 24      |
+| shadow-[  | 2       |
+
+#### v1-02 变体
+
+v1-14/v1-15 范围及全 features/ 层变体使用量均为 **0**。
+
+### 热点文件变化
+
+R7 热点文件列表（AiDialogs 6 文件 + KnowledgeGraph 3 文件）未因 v1-14/v1-15 拆分而变化。v1-15 重构了 AiDialogs 的结构和布局，但未修改或重命名热点文件。v1-14 新增的 features/ 范围（export/projects/onboarding）为 v1-18 的 stretch 清理目标。
+
+### Scope 影响
+
+v1-14/v1-15 均为结构性重构，未触及 arbitrary 值。R7 基线零 Delta，AC 目标不变，热点文件不变，变体推广工作量不变。scope 无需调整。
+
+### 结论
+
+**PASS** — 零 Delta，v1-18 scope 维持原计划。详细基线与影响分析见 `proposal.md` 的 R8 级联刷新记录。

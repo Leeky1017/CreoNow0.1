@@ -166,3 +166,85 @@ export default {
 - **并行安全**: Story 文件修改与生产代码修改不冲突；但巨石 Story 拆分需确保在无其他 change 修改同一 Story 时进行
 - **风险**: Story 拆分可能遗漏某些 Story variant（需逐 Story 验证）；play function 依赖 DOM 结构，组件重构后可能失效
 - **预估工作量**: 约 v1-05 的 **0.6 倍**——无业务逻辑，但 Story 拆分和 play function 编写需要仔细的视觉验证。Phase 1 补缺 约 1d，Phase 2 拆分约 2d，Phase 3 play function 约 1d，Phase 4 文档约 1d，Phase 5 双主题约 0.5d
+
+---
+
+## R8 级联刷新记录（2026-03-22）
+
+### 刷新触发
+
+R8 P6 复核 v1-14/v1-15。两者已于 2026-03-21 合并（PR #1198），R8 结论均为 PASS。本次为 v1-20 首次级联刷新。
+
+### 上游复核结论
+
+| 上游               | R8 结论 | 关键数据                                                                     |
+| ------------------ | ------- | ---------------------------------------------------------------------------- |
+| v1-14 对话框入口页 | ✅ PASS | 14 文件 2853 行，涉及 features/export, projects, onboarding, settings-dialog |
+| v1-15 AI Overlay   | ✅ PASS | 11 文件 2265 行，涉及 components/features/AiDialogs                          |
+
+### 影响评估
+
+#### Story 覆盖变化
+
+v1-14 scope 4 个功能目录均已有 Story 文件（共 6 个），v1-15 scope 有 1 个 Story 文件（AiDialogs.stories.tsx）。**缺口列表不变**——`rightpanel`、`settings`、`shortcuts` 仍无 Story，Phase 1 计划无需调整。
+
+v1-14 scope Story 明细：
+
+- `features/export/ExportDialog.stories.tsx`（375 行）
+- `features/projects/CreateProjectDialog.stories.tsx`（240 行）
+- `features/projects/ProjectSwitcher.stories.tsx`（113 行）
+- `features/projects/CreateTemplateDialog.stories.tsx`（151 行）
+- `features/onboarding/OnboardingPage.stories.tsx`（73 行）
+- `features/settings-dialog/SettingsDialog.stories.tsx`（133 行）
+
+v1-15 scope Story 明细：
+
+- `components/features/AiDialogs/AiDialogs.stories.tsx`（818 行）
+
+#### 巨石 Story 状态
+
+`AiPanel.stories.tsx` 当前仍为 **1265 行**，Phase 2 拆分计划不变。
+
+**新增巨石候选**：`AiDialogs.stories.tsx`（818 行）超过 AC 规定的 500 行上限。此文件由 v1-15 引入，覆盖 AiDiffModal、AiErrorCard、SystemDialog、AiInlineConfirm 等组件。Phase 2 拆分表应新增此文件为拆分候选（建议拆为 `AiDiffModal.stories.tsx` + `AiErrorCard.stories.tsx` + `SystemDialog.stories.tsx`）。
+
+此外，`Card.stories.tsx`（1062 行）在 Top 10 中位列第二，proposal 原拆分表未包含，Phase 2 也应考虑。
+
+#### 新增组件的 Story 需求
+
+v1-14 引入的子组件（无独立 Story）：
+
+- `ExportFormatTab.tsx`、`ExportPreview.tsx`（export 子组件，由 ExportDialog.stories 覆盖）
+- `OnboardingSteps.tsx`（onboarding 子组件，由 OnboardingPage.stories 覆盖）
+- `AiAssistSection.tsx`、`ProjectFormContent.tsx`、`DeleteProjectDialog.tsx`、`TemplateMetadataForm.tsx`（projects 子组件）
+- `SettingsAccount.tsx`、`SettingsAppearancePage.tsx`、`SettingsExport.tsx`、`SettingsGeneralSections.tsx`、`SettingsNavigation.tsx`（settings-dialog 子组件）
+
+v1-15 引入的子组件（无独立 Story）：
+
+- `AiDiffContent.tsx`、`AiDiffSummary.tsx`（AiDiffModal 子组件）
+- `AiErrorActions.tsx`、`AiErrorDetails.tsx`（AiErrorCard 子组件）
+- `AiInlinePreview.tsx`（AiInlineConfirm 子组件）
+- `SystemDialogContent.tsx`（SystemDialog 子组件）
+
+评估：这些子组件由父级 Story 间接覆盖，当前无需独立 Story。Phase 4（Props 文档与 Usage Guidelines）可在父级 Story 的 Docs page 中统一描述子组件用法。
+
+### 基线重采集
+
+| 指标                 | proposal 原值 | R8 实测 | Delta | 说明                            |
+| -------------------- | ------------- | ------- | ----- | ------------------------------- |
+| Feature Story 文件数 | 26            | 26      | ±0    | 无变化                          |
+| 有 Story 的功能目录  | 19/22         | 19/22   | ±0    | 无变化                          |
+| 无 Story 的功能目录  | 3             | 3       | ±0    | rightpanel, settings, shortcuts |
+| Play function 总数   | 256           | 256     | ±0    | 无变化                          |
+| 最大 Story 文件行数  | 1265          | 1265    | ±0    | AiPanel.stories.tsx 不变        |
+
+### Scope 影响
+
+- **Phase 1（补缺口）**：无需调整。3 个无 Story 目录不变。
+- **Phase 2（巨石拆分）**：需新增 `AiDialogs.stories.tsx`（818 行）和 `Card.stories.tsx`（1062 行）为拆分候选。拆分表建议追加两行。
+- **Phase 3（Play Function 强化）**：无需调整。v1-14/v1-15 Story 已有 play function，总数不变。
+- **Phase 4（Props 文档）**：v1-14/v1-15 新增约 22 个子组件，可在父级 Story Docs 中补充 usage guidelines，但不增加独立 Story 文件数。
+- **Phase 5（双主题）**：无需调整。
+
+### 结论
+
+**PASS** — proposal 基线五项指标与 R8 实测完全一致（Delta 均为 ±0），v1-14/v1-15 未改变缺口列表和 Play function 总量。唯一需注意：Phase 2 拆分表应追加 `AiDialogs.stories.tsx`（818 行）和 `Card.stories.tsx`（1062 行）为拆分候选。此为增量优化建议，不阻塞 v1-20 启动。

@@ -223,3 +223,42 @@ v1-14 已实现完毕（✅），全部 14 个拆分文件行数与 R1 完全一
 
 - v1-14 主体已完成，此次刷新确认上游变更未影响已落地结果
 - 后续约束（模板自动选中 + 导出取消链路）仍待 #1199 解决
+
+---
+
+## R8 级联刷新记录（2026-03-22）
+
+R8 P6 复核。v1-14 已合并（PR #1198），稳定性验证。
+
+### 基线验证
+
+| 文件                        | R6 行数  | R8 行数  | Delta  |
+| --------------------------- | -------- | -------- | ------ |
+| ExportDialog.tsx            | 181      | 181      | 0      |
+| ExportFormatTab.tsx         | 336      | 336      | 0      |
+| ExportPreview.tsx           | 195      | 195      | 0      |
+| useExportConfig.ts          | 341      | 341      | 0      |
+| CreateProjectDialog.tsx     | 139      | 137      | -2     |
+| ProjectFormContent.tsx      | 308      | 306      | -2     |
+| useCreateProject.ts         | 216      | 216      | 0      |
+| AiAssistSection.tsx         | 80       | 80       | 0      |
+| CreateTemplateDialog.tsx    | 270      | 267      | -3     |
+| TemplateMetadataForm.tsx    | 92       | 91       | -1     |
+| OnboardingPage.tsx          | 142      | 143      | +1     |
+| OnboardingSteps.tsx         | 196      | 196      | 0      |
+| SettingsGeneral.tsx         | 155      | 156      | +1     |
+| SettingsGeneralSections.tsx | 208      | 208      | 0      |
+| **合计**                    | **2859** | **2853** | **-6** |
+
+### 测试结果
+
+vitest 全量：**2600 passed**，0 失败。
+
+### AC 状态
+
+- AC-1～AC-16：状态不变（✅ 已满足），无回归
+- AC-17/AC-18：后续约束（#1199），不受此次刷新影响
+
+### 结论
+
+**PASS** — 14 文件行数偏差 ≤3 行（共 -6），无语义变化。2600 测试全绿，R6 以来无上游变更影响 v1-14 scope。

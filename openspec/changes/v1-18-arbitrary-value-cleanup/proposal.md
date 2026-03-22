@@ -477,3 +477,67 @@ grep -rn 'shadow-\[' apps/desktop/renderer/src/components/features/ --include='*
 ### 结论
 
 v1-13 为 lint 治理补上了审批流程和审计清单，间接支撑 v1-18 的 lint 收口目标。v1-18 scope 和 AC 不受直接影响，保持原计划。R6 基线因口径错误已撤回，R7 以 R3 为可比基线，零 delta 符合预期（v1-13 不触及 arbitrary 值）。
+
+---
+
+## R8 级联刷新记录（2026-03-22）
+
+### 刷新触发
+
+R8 P6 复核 v1-14/v1-15。两者已于 2026-03-21 合并（PR #1198），R8 结论均为 PASS。
+
+### 上游复核结论
+
+| 上游               | R8 结论 | 关键数据                                                                     |
+| ------------------ | ------- | ---------------------------------------------------------------------------- |
+| v1-14 对话框入口页 | ✅ PASS | 14 文件 2853 行，涉及 features/export, projects, onboarding, settings-dialog |
+| v1-15 AI Overlay   | ✅ PASS | 11 文件 2265 行，涉及 components/features/AiDialogs                          |
+
+### 影响评估
+
+v1-15 重构的 AiDialogs 正是 v1-18 R7 基线的核心采样区域（components/features/ 口径）。v1-14 重构的 features/export, projects, onboarding 也在 v1-18 的全量清理范围内。两者均为结构/布局重构，未涉及 arbitrary 值的替换或新增。
+
+### 基线对比
+
+#### components/features/ 口径（与 R7 可比）
+
+| 度量             | R7 基线 | R8 实测 | Delta | 说明                                |
+| ---------------- | ------- | ------- | ----- | ----------------------------------- |
+| text-[           | 95      | 95      | 0     | v1-14/v1-15 未触及字号 arbitrary 值 |
+| rounded-[        | 18      | 18      | 0     | 无变化                              |
+| w-[]/h-[]        | 8       | 8       | 0     | 无变化                              |
+| p-[]/m-[]/gap-[] | 1       | 1       | 0     | 无变化                              |
+| shadow-[         | 7       | 7       | 0     | 无变化                              |
+
+零 Delta，R7 基线仍完全有效。v1-14/v1-15 的重构未引入新 arbitrary 值，也未清理既有值。
+
+#### v1-14 scope 采样
+
+| 度量      | R8 实测 | 说明                                                              |
+| --------- | ------- | ----------------------------------------------------------------- |
+| text-[    | 50      | features/export, projects, onboarding 合计，属 v1-18 全量清理范围 |
+| rounded-[ | 24      | 同上，圆角硬编码集中在 projects 和 export                         |
+| shadow-[  | 2       | 少量阴影 arbitrary 值                                             |
+
+#### 全 features/ 层总量
+
+| 度量      | R8 实测 | 说明                      |
+| --------- | ------- | ------------------------- |
+| text-[    | 502     | 全 features/ 层 prod 文件 |
+| rounded-[ | 115     | 全 features/ 层 prod 文件 |
+| shadow-[  | 28      | 全 features/ 层 prod 文件 |
+
+#### v1-02 变体采用
+
+v1-14/v1-15 重构范围内的 v1-02 变体（pill/bento/compact/underline/bordered）使用量：**0**。全 features/ + components/features/ 层总量亦为 **0**。变体推广仍为 v1-18 的核心任务之一。
+
+### Scope 影响
+
+1. **components/features/ 热点文件未变**：R7 基线中 AiDialogs 的 6 个热点文件（SystemDialogContent、AiDiffContent、AiDiffSummary、AiErrorDetails、AiDiffModal、AiInlineConfirm）未因 v1-15 拆分而消失或重命名，清理目标不变。
+2. **features/ 层新增采样**：v1-14 范围（export/projects/onboarding）贡献 text-[=50, rounded-[=24, shadow-[=2，纳入 v1-18 全量清理范围，但 AC 目标按 components/features/ 口径定义，全量清理为 stretch goal。
+3. **v1-02 变体推广仍为零**：v1-14/v1-15 均未采用新变体，v1-18 的变体推广工作量不变。
+4. **scope 无需调整**：v1-18 AC 目标维持原计划。
+
+### 结论
+
+**PASS** — v1-14/v1-15 为结构性重构，未触及 arbitrary 值，R7 基线零 Delta 完全有效。v1-18 scope、AC 目标、热点文件列表均无需调整。v1-02 变体推广仍为待启动状态。
