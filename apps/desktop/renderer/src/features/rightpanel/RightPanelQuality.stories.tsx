@@ -1,287 +1,215 @@
 /**
- * RightPanel Quality Stories
+ * RightPanelQuality Stories — QualityPanel
  *
- * @demo-only This story uses a static replica because the real component
- * depends on Electron IPC and Zustand stores. The replica mirrors the
- * original's data-testid contract for visual regression testing.
- * See docs/references/testing/README.md for guidelines.
+ * Uses the real QualityPanel component with mocked IPC boundary (window.creonow.invoke)
+ * and a seed ProjectStore state.
+ *
+ * @module features/rightpanel/RightPanelQuality.stories
  */
 
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, expect } from "@storybook/test";
 
-import { Card } from "../../components/primitives/Card";
-import { Text } from "../../components/primitives/Text";
-import { Button } from "../../components/primitives/Button";
-import { Heading } from "../../components/primitives/Heading";
+import { QualityPanel } from "./QualityPanel";
+import {
+  ProjectStoreProvider,
+  createProjectStore,
+} from "../../stores/projectStore";
+import type { IpcInvokeResult } from "@shared/types/ipc-generated";
+import "../../i18n";
 
 /* ------------------------------------------------------------------ */
-/*  Mock data                                                         */
+/*  Mock IPC factory                                                   */
 /* ------------------------------------------------------------------ */
 
-const MOCK_CONSTRAINTS = [
-  "Max 80k words",
-  "Formal tone",
-  "No first-person",
-  "Chicago style",
-  "Academic citations",
-  "12pt font minimum",
-];
+type JudgeStatusOption = "ready" | "not_ready" | "downloading" | "error";
 
-/* ------------------------------------------------------------------ */
-/*  Shared helpers                                                     */
-/* ------------------------------------------------------------------ */
+type ConstraintsOption =
+  | { kind: "with-data"; items: string[] }
+  | { kind: "empty" }
+  | { kind: "error" };
 
-function StatusDot(props: {
-  status: "ready" | "downloading" | "error" | "not_ready" | "loading";
-}): JSX.Element {
-  const colors: Record<typeof props.status, string> = {
-    ready: "bg-[var(--color-success)]",
-    downloading: "bg-[var(--color-info)]",
-    error: "bg-[var(--color-error)]",
-    not_ready: "bg-[var(--color-warning)]",
-    loading: "bg-[var(--color-fg-muted)]",
+function createMockQualityIpc(opts: {
+  judgeStatus: JudgeStatusOption;
+  constraints: ConstraintsOption;
+}) {
+  return async (channel: string): Promise<unknown> => {
+    if (channel === "judge:model:getstate") {
+      if (opts.judgeStatus === "error") {
+        return {
+          ok: true,
+          data: { state: { status: "error", error: { code: "INTERNAL", message: "MODEL_INIT_FAILED" } } },
+        };
+      }
+      return { ok: true, data: { state: { status: opts.judgeStatus } } };
+    }
+
+    if (channel === "judge:model:ensure") {
+      return { ok: true, data: { state: { status: "ready" } } };
+    }
+
+    if (channel === "constraints:policy:get") {
+      if (opts.constraints.kind === "error") {
+        return { ok: false, error: { code: "NOT_FOUND", message: "Constraints not found" } };
+      }
+      return {
+        ok: true,
+        data: {
+          constraints: {
+            items: opts.constraints.kind === "with-data" ? opts.constraints.items : [],
+            version: 1 as const,
+          },
+        },
+      };
+    }
+
+    return { ok: false, error: { code: "NOT_FOUND", message: `Unhandled: ${String(channel)}` } };
   };
-  const extra = props.status === "downloading" ? " animate-pulse" : "";
-  return (
-    <span
-      className={`inline-block w-2 h-2 rounded-full ${colors[props.status]}${extra}`}
-    />
-  );
-}
-
-function RightPanelShell(props: { children?: React.ReactNode }): JSX.Element {
-  return (
-    <div
-      style={{
-        width: 320,
-        height: 600,
-        backgroundColor: "var(--color-bg-surface)",
-        borderLeft: "1px solid var(--color-separator)",
-        overflow: "hidden",
-      }}
-    >
-      {props.children}
-    </div>
-  );
 }
 
 /* ------------------------------------------------------------------ */
-/*  QualityPanel demo                                                 */
+/*  Wrapper                                                            */
 /* ------------------------------------------------------------------ */
 
-function QualityPanelDemo(props: {
-  state: "with-data" | "no-project" | "loading";
+function QualityPanelWrapper(props: {
+  projectId: string | null;
+  judgeStatus?: JudgeStatusOption;
+  constraints?: ConstraintsOption;
 }): JSX.Element {
-  const { state } = props;
+  const {
+    projectId,
+    judgeStatus = "ready",
+    constraints = { kind: "with-data", items: ["每章不超过3000字", "避免重复词汇", "保持视角统一"] },
+  } = props;
 
-  if (state === "no-project") {
-    return (
-      <div
-        data-testid="quality-panel"
-        className="flex flex-col gap-4 p-4 h-full overflow-auto"
-      >
-        <Heading level="h3" className="font-bold text-[15px]">
-          Quality
-        </Heading>
+  const mockInvoke = React.useMemo(
+    () => createMockQualityIpc({ judgeStatus, constraints }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
-        <Card className="p-4 rounded-[var(--radius-md)]">
-          <Text
-            data-testid="quality-panel-no-project"
-            size="small"
-            color="muted"
-            className="text-center"
-          >
-            No project selected. Open a project to see quality analysis.
-          </Text>
-        </Card>
+  const [projectStore] = React.useState(() => {
+    const store = createProjectStore({
+      invoke: async () =>
+        ({
+          ok: false,
+          error: { code: "NOT_FOUND", message: "unused in story" },
+        }) as IpcInvokeResult<"project:project:getcurrent">,
+    });
+    if (projectId) {
+      store.setState((prev) => ({
+        ...prev,
+        current: { projectId, rootPath: "/tmp/story-project" },
+        bootstrapStatus: "ready",
+      }));
+    } else {
+      store.setState((prev) => ({
+        ...prev,
+        current: null,
+        bootstrapStatus: "ready",
+      }));
+    }
+    return store;
+  });
 
-        <section>
-          <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-            Judge Model
-          </Heading>
-          <Card className="p-3 rounded-[var(--radius-md)]">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <StatusDot status="not_ready" />
-                <Text size="small" color="default">
-                  Judge Model:{" "}
-                  <span
-                    data-testid="quality-panel-judge-status"
-                    className="font-medium"
-                  >
-                    Not Ready
-                  </span>
-                </Text>
-              </div>
-              <Button
-                data-testid="quality-panel-judge-ensure"
-                variant="secondary"
-                size="sm"
-              >
-                Initialize
-              </Button>
-            </div>
-          </Card>
-        </section>
-      </div>
-    );
-  }
+  React.useEffect(() => {
+    const prev = window.creonow;
+    window.creonow = { invoke: mockInvoke as NonNullable<Window["creonow"]>["invoke"] };
+    return () => { window.creonow = prev; };
+  }, [mockInvoke]);
 
   return (
-    <div data-testid="quality-panel" className="flex flex-col h-full">
-      <div className="p-4 space-y-4 border-b border-[var(--color-separator)]">
-        <section>
-          <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-            Judge Model
-          </Heading>
-          <Card className="p-3 rounded-[var(--radius-md)]">
-            {state === "loading" ? (
-              <div className="flex items-center gap-2">
-                <StatusDot status="loading" />
-                <Text size="small" color="muted">
-                  Loading judge status…
-                </Text>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <StatusDot status="ready" />
-                <Text size="small" color="default">
-                  Judge Model:{" "}
-                  <span
-                    data-testid="quality-panel-judge-status"
-                    className="font-medium"
-                  >
-                    Ready
-                  </span>
-                </Text>
-              </div>
-            )}
-          </Card>
-        </section>
-
-        <section>
-          <Heading level="h4" className="mb-2 font-semibold text-[13px]">
-            Project Constraints
-          </Heading>
-          <Card className="p-3 rounded-[var(--radius-md)]">
-            {state === "loading" ? (
-              <Text size="small" color="muted">
-                Loading constraints…
-              </Text>
-            ) : (
-              <>
-                <div className="flex items-center justify-between">
-                  <Text size="small" color="default">
-                    Constraints:{" "}
-                    <span
-                      data-testid="quality-panel-constraints-count"
-                      className="font-medium"
-                    >
-                      {MOCK_CONSTRAINTS.length} rules
-                    </span>
-                  </Text>
-                </div>
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {MOCK_CONSTRAINTS.slice(0, 5).map((item, idx) => (
-                    <span
-                      key={idx}
-                      className="inline-block px-2 py-0.5 text-[10px] rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                  {MOCK_CONSTRAINTS.length > 5 && (
-                    <span className="inline-block px-2 py-0.5 text-[10px] rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]">
-                      +{MOCK_CONSTRAINTS.length - 5} more
-                    </span>
-                  )}
-                </div>
-              </>
-            )}
-          </Card>
-        </section>
+    <ProjectStoreProvider store={projectStore}>
+      <div
+        style={{
+          width: 320,
+          height: 640,
+          backgroundColor: "var(--color-bg-surface)",
+          border: "1px solid var(--color-border-default)",
+          overflow: "hidden",
+        }}
+      >
+        <QualityPanel />
       </div>
-    </div>
+    </ProjectStoreProvider>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  Storybook meta                                                    */
+/*  Meta                                                               */
 /* ------------------------------------------------------------------ */
 
-const meta = {
+const meta: Meta<typeof QualityPanel> = {
   title: "Features/RightPanel/Quality",
-  component: RightPanelShell,
-  parameters: {
-    layout: "centered",
-    backgrounds: {
-      default: "dark",
-      values: [{ name: "dark", value: "hsl(0 0% 3.1%)" }],
-    },
-    docs: {
-      description: {
-        component: `**Visual Demo (Static Replica)**
-
-This story renders a visual replica of the Quality panel.
-The real component depends on IPC channels and Zustand stores unavailable in Storybook.
-The replica mirrors the original's \`data-testid\` contract for visual regression testing.`,
-      },
-    },
-  },
-  tags: ["autodocs", "demo-only"],
-} satisfies Meta<typeof RightPanelShell>;
+  component: QualityPanel,
+  parameters: { layout: "centered" },
+  tags: ["autodocs"],
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof QualityPanel>;
 
 /* ------------------------------------------------------------------ */
-/*  QualityPanel stories                                              */
+/*  Stories                                                            */
 /* ------------------------------------------------------------------ */
 
-/** QualityPanel with judge ready and constraints loaded. */
-export const QualityPanelWithData: Story = {
-  name: "QualityPanel — With Data",
+export const WithProject: Story = {
   render: () => (
-    <RightPanelShell>
-      <QualityPanelDemo state="with-data" />
-    </RightPanelShell>
+    <QualityPanelWrapper
+      projectId="project-story"
+      judgeStatus="ready"
+      constraints={{
+        kind: "with-data",
+        items: ["每章不超过3000字", "避免重复词汇", "保持视角统一"],
+      }}
+    />
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("quality-panel")).toBeInTheDocument();
-    await expect(
-      canvas.getByTestId("quality-panel-judge-status"),
-    ).toBeInTheDocument();
-    await expect(
-      canvas.getByTestId("quality-panel-constraints-count"),
-    ).toBeInTheDocument();
   },
 };
 
-/** QualityPanel when no project is selected. */
-export const QualityPanelNoProject: Story = {
-  name: "QualityPanel — No Project",
+export const NoProject: Story = {
   render: () => (
-    <RightPanelShell>
-      <QualityPanelDemo state="no-project" />
-    </RightPanelShell>
+    <QualityPanelWrapper
+      projectId={null}
+      judgeStatus="ready"
+      constraints={{ kind: "empty" }}
+    />
   ),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.children.length).toBeGreaterThan(0);
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("quality-panel")).toBeInTheDocument();
+    await expect(canvas.getByTestId("quality-panel-no-project")).toBeInTheDocument();
   },
 };
 
-/** QualityPanel in loading state. */
-export const QualityPanelLoading: Story = {
-  name: "QualityPanel — Loading",
+export const JudgeNotReady: Story = {
   render: () => (
-    <RightPanelShell>
-      <QualityPanelDemo state="loading" />
-    </RightPanelShell>
+    <QualityPanelWrapper
+      projectId="project-story"
+      judgeStatus="not_ready"
+      constraints={{ kind: "empty" }}
+    />
   ),
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.children.length).toBeGreaterThan(0);
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("quality-panel")).toBeInTheDocument();
+  },
+};
+
+export const JudgeError: Story = {
+  render: () => (
+    <QualityPanelWrapper
+      projectId="project-story"
+      judgeStatus="error"
+      constraints={{ kind: "with-data", items: ["避免重复词汇"] }}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("quality-panel")).toBeInTheDocument();
   },
 };
