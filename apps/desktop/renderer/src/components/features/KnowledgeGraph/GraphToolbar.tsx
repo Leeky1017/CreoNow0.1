@@ -122,6 +122,7 @@ export function GraphToolbar({
           <>
             <Button
               onClick={onBack}
+              size="icon"
               className="text-(--color-fg-muted) hover:text-(--color-fg-default) transition-colors"
               aria-label={t("kg.toolbar.goBack")}
             >
@@ -149,6 +150,7 @@ export function GraphToolbar({
         {filterButtons.map(({ filter, label, colorClass }) => (
           <Button
             key={filter}
+            variant="pill"
             onClick={() => onFilterChange(filter)}
             className={`${filterButtonBase} ${
               activeFilter === filter
@@ -170,7 +172,8 @@ export function GraphToolbar({
         <div className="flex items-center bg-[var(--color-bg-raised)] rounded border border-[var(--color-border-default)]">
           <Button
             onClick={onZoomOut}
-            className="p-1.5 text-(--color-fg-muted) hover:text-(--color-fg-default) hover:bg-[var(--color-bg-hover)] transition-colors"
+            size="icon"
+            className="text-(--color-fg-muted) hover:text-(--color-fg-default) hover:bg-[var(--color-bg-hover)] transition-colors"
             aria-label={t("kg.toolbar.zoomOut")}
           >
             <svg
@@ -189,7 +192,8 @@ export function GraphToolbar({
           </span>
           <Button
             onClick={onZoomIn}
-            className="p-1.5 text-(--color-fg-muted) hover:text-(--color-fg-default) hover:bg-[var(--color-bg-hover)] transition-colors"
+            size="icon"
+            className="text-(--color-fg-muted) hover:text-(--color-fg-default) hover:bg-[var(--color-bg-hover)] transition-colors"
             aria-label={t("kg.toolbar.zoomIn")}
           >
             <svg

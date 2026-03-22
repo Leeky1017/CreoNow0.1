@@ -282,8 +282,9 @@ export function NodeEditDialog({
                   />
                   <Button
                     type="button"
+                    size="icon"
                     onClick={() => handleRemoveAttribute(index)}
-                    className="w-8 h-8 flex items-center justify-center text-(--color-fg-subtle) hover:text-(--color-error) transition-colors"
+                    className="flex items-center justify-center text-(--color-fg-subtle) hover:text-(--color-error) transition-colors"
                     aria-label={t("kg.nodeEdit.deleteProperty")}
                   >
                     <svg

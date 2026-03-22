@@ -118,7 +118,8 @@ export function NodeDetailCard({
           {onDelete && (
             <Button
               onClick={onDelete}
-              className="p-1 text-(--color-fg-subtle) hover:text-(--color-error) transition-colors"
+              size="icon"
+              className="text-(--color-fg-subtle) hover:text-(--color-error) transition-colors"
               aria-label={t("kg.nodeDetail.deleteNode")}
               title={t("kg.nodeDetail.deleteNode")}
             >
@@ -140,7 +141,8 @@ export function NodeDetailCard({
           {/* Close button */}
           <Button
             onClick={onClose}
-            className="p-1 text-(--color-fg-subtle) hover:text-(--color-fg-default) transition-colors"
+            size="icon"
+            className="text-(--color-fg-subtle) hover:text-(--color-fg-default) transition-colors"
             aria-label={t("kg.nodeDetail.close")}
           >
             <svg
