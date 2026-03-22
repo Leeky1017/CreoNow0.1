@@ -22,8 +22,7 @@ const nodeTypeColorVars: Record<NodeType, string> = {
 /**
  * Label styles
  */
-const labelStyles =
-  "block text-xs font-medium text-(--color-fg-muted) mb-1.5";
+const labelStyles = "block text-xs font-medium text-(--color-fg-muted) mb-1.5";
 
 /**
  * Generate a unique ID for new nodes

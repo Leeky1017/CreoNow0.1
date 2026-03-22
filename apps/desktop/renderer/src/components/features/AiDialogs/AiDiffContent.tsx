@@ -100,19 +100,16 @@ const labelStyles = [
   "uppercase text-label font-bold tracking-wider",
   "mb-4",
 ].join(" ");
-const beforeLabelStyles = [
-  labelStyles,
-  "text-(--color-error) opacity-70",
-].join(" ");
+const beforeLabelStyles = [labelStyles, "text-(--color-error) opacity-70"].join(
+  " ",
+);
 const afterLabelStyles = [
   labelStyles,
   "text-(--color-success) opacity-70",
 ].join(" ");
 const textStyles = ["text-sm", "leading-relaxed", "font-mono"].join(" ");
 const beforeTextStyles = [textStyles, "text-(--color-fg-muted)"].join(" ");
-const afterTextStyles = [textStyles, "text-(--color-fg-default)"].join(
-  " ",
-);
+const afterTextStyles = [textStyles, "text-(--color-fg-default)"].join(" ");
 const removedStyles = [
   "bg-[var(--color-error-subtle)] text-(--color-error) line-through px-0.5",
   "rounded-sm",

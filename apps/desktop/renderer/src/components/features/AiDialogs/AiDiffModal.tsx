@@ -92,9 +92,7 @@ const navButtonStyles = [
   "p-0.5 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)]",
   "focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed",
 ].join(" ");
-const navTextStyles = ["text-xs font-mono text-(--color-fg-muted)"].join(
-  " ",
-);
+const navTextStyles = ["text-xs font-mono text-(--color-fg-muted)"].join(" ");
 const closeButtonStyles = [
   "text-(--color-fg-muted) hover:text-(--color-fg-default) p-1 transition-colors",
   "duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)]",

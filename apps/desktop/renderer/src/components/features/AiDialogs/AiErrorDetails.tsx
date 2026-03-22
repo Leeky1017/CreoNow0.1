@@ -122,18 +122,16 @@ export function getBgColorByType(type: AiErrorType): string {
 }
 
 const contentStyles = ["flex", "items-start", "gap-3"].join(" ");
-const iconContainerStyles = [
-  "p-1.5 rounded-sm shrink-0 mt-0.5",
-].join(" ");
+const iconContainerStyles = ["p-1.5 rounded-sm shrink-0 mt-0.5"].join(" ");
 const titleStyles = [
   "text-sm font-medium text-(--color-fg-default) mb-0.5",
 ].join(" ");
 const descriptionStyles = [
   "text-xs text-(--color-fg-muted) leading-snug mb-2",
 ].join(" ");
-const errorCodeStyles = [
-  "text-label font-mono text-(--color-error) mb-2",
-].join(" ");
+const errorCodeStyles = ["text-label font-mono text-(--color-error) mb-2"].join(
+  " ",
+);
 const countdownStyles = [
   "text-label font-mono text-(--color-warning) bg-[var(--color-warning-subtle)]",
   "inline-block px-1.5 py-0.5 rounded-sm",

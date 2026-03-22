@@ -76,15 +76,11 @@ function RetryButtonContent(props: {
   }
   if (props.retryState === "success") {
     return (
-      <span className="text-(--color-success)">
-        {t("ai.error.success")}
-      </span>
+      <span className="text-(--color-success)">{t("ai.error.success")}</span>
     );
   }
   if (props.retryState === "error") {
-    return (
-      <span className="text-(--color-error)">{t("ai.error.failed")}</span>
-    );
+    return <span className="text-(--color-error)">{t("ai.error.failed")}</span>;
   }
   return (
     <span>

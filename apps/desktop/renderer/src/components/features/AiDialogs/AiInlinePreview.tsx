@@ -106,9 +106,7 @@ export function AiInlinePreview({
             <span className={`${originalTextStyles} mr-2`}>{originalText}</span>
           )}
           <span className={pendingHighlightStyles}>
-            <span className="text-(--color-fg-default)">
-              {suggestedText}
-            </span>
+            <span className="text-(--color-fg-default)">{suggestedText}</span>
           </span>
         </>
       )}
