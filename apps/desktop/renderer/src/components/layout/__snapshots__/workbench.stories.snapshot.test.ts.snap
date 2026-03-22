@@ -2063,221 +2063,217 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-slot="scroll-area-viewport"
         data-testid="right-panel-scroll-viewport"
       >
-        <div
-          class="tab-crossfade"
+        <section
+          class="flex flex-col h-full min-h-0 bg-[color:var(--color-bg-surface)] "
+          data-testid="ai-panel"
         >
-          <section
-            class="flex flex-col h-full min-h-0 bg-[color:var(--color-bg-surface)] "
-            data-testid="ai-panel"
+          <div
+            class="flex items-center justify-between p-3 border-b border-[color:var(--color-separator)]"
           >
             <div
-              class="flex items-center justify-between p-3 border-b border-[color:var(--color-separator)]"
+              class="flex items-center gap-2 text-[13px] text-[color:var(--color-fg-muted)] font-medium"
             >
-              <div
-                class="flex items-center gap-2 text-[13px] text-[color:var(--color-fg-muted)] font-medium"
-              >
-                <span>
-                  AI
-                </span>
-              </div>
+              <span>
+                AI
+              </span>
             </div>
+          </div>
+          <div
+            class="flex-1 overflow-auto min-h-0"
+          >
             <div
-              class="flex-1 overflow-auto min-h-0"
+              class="flex flex-col h-full min-h-0"
             >
               <div
-                class="flex flex-col h-full min-h-0"
+                class="flex border-b border-[var(--color-separator)] px-3"
+                role="tablist"
+              >
+                <button
+                  aria-selected="true"
+                  class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-2 text-[13px] font-medium transition-colors duration-[var(--duration-fast)] relative focus-ring text-[var(--color-fg-default)] border-b-2 border-[var(--color-accent)]"
+                  role="tab"
+                  type="button"
+                >
+                  <span
+                    class="inline-flex items-center gap-2 truncate"
+                  >
+                    Chat
+                  </span>
+                </button>
+                <button
+                  aria-selected="false"
+                  class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-2 text-[13px] font-medium transition-colors duration-[var(--duration-fast)] relative focus-ring text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+                  role="tab"
+                  type="button"
+                >
+                  <span
+                    class="inline-flex items-center gap-2 truncate"
+                  >
+                    History
+                  </span>
+                </button>
+              </div>
+              <div
+                class="flex-1 flex flex-col min-h-0"
               >
                 <div
-                  class="flex border-b border-[var(--color-separator)] px-3"
-                  role="tablist"
-                >
-                  <button
-                    aria-selected="true"
-                    class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-2 text-[13px] font-medium transition-colors duration-[var(--duration-fast)] relative focus-ring text-[var(--color-fg-default)] border-b-2 border-[var(--color-accent)]"
-                    role="tab"
-                    type="button"
-                  >
-                    <span
-                      class="inline-flex items-center gap-2 truncate"
-                    >
-                      Chat
-                    </span>
-                  </button>
-                  <button
-                    aria-selected="false"
-                    class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] px-3 py-2 text-[13px] font-medium transition-colors duration-[var(--duration-fast)] relative focus-ring text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
-                    role="tab"
-                    type="button"
-                  >
-                    <span
-                      class="inline-flex items-center gap-2 truncate"
-                    >
-                      History
-                    </span>
-                  </button>
-                </div>
-                <div
-                  class="flex-1 flex flex-col min-h-0"
+                  class="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4"
                 >
                   <div
-                    class="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4"
+                    aria-atomic="false"
+                    aria-live="polite"
+                    data-testid="ai-output"
                   >
                     <div
-                      aria-atomic="false"
-                      aria-live="polite"
-                      data-testid="ai-output"
+                      class="flex-1 flex flex-col items-center justify-center text-center py-12 animate-fade-in "
+                      data-testid="ai-empty-state"
                     >
                       <div
-                        class="flex-1 flex flex-col items-center justify-center text-center py-12 animate-fade-in "
-                        data-testid="ai-empty-state"
+                        class="animate-spin-slow"
                       >
-                        <div
-                          class="animate-spin-slow"
+                        <svg
+                          aria-hidden="true"
+                          class="lucide lucide-sun w-12 h-12 text-[var(--color-fg-muted)]"
+                          data-testid="ai-empty-state-icon"
+                          fill="none"
+                          height="24"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.5"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <svg
-                            aria-hidden="true"
-                            class="lucide lucide-sun w-12 h-12 text-[var(--color-fg-muted)]"
-                            data-testid="ai-empty-state-icon"
-                            fill="none"
-                            height="24"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.5"
-                            viewBox="0 0 24 24"
-                            width="24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <circle
-                              cx="12"
-                              cy="12"
-                              r="4"
-                            />
-                            <path
-                              d="M12 2v2"
-                            />
-                            <path
-                              d="M12 20v2"
-                            />
-                            <path
-                              d="m4.93 4.93 1.41 1.41"
-                            />
-                            <path
-                              d="m17.66 17.66 1.41 1.41"
-                            />
-                            <path
-                              d="M2 12h2"
-                            />
-                            <path
-                              d="M20 12h2"
-                            />
-                            <path
-                              d="m6.34 17.66-1.41 1.41"
-                            />
-                            <path
-                              d="m19.07 4.93-1.41 1.41"
-                            />
-                          </svg>
-                        </div>
-                        <span
-                          class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] mt-4"
-                        >
-                          Select text or enter a prompt to collaborate with AI
-                        </span>
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="4"
+                          />
+                          <path
+                            d="M12 2v2"
+                          />
+                          <path
+                            d="M12 20v2"
+                          />
+                          <path
+                            d="m4.93 4.93 1.41 1.41"
+                          />
+                          <path
+                            d="m17.66 17.66 1.41 1.41"
+                          />
+                          <path
+                            d="M2 12h2"
+                          />
+                          <path
+                            d="M20 12h2"
+                          />
+                          <path
+                            d="m6.34 17.66-1.41 1.41"
+                          />
+                          <path
+                            d="m19.07 4.93-1.41 1.41"
+                          />
+                        </svg>
                       </div>
+                      <span
+                        class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] mt-4"
+                      >
+                        Select text or enter a prompt to collaborate with AI
+                      </span>
                     </div>
                   </div>
+                </div>
+                <div
+                  class="shrink-0 px-1.5 pb-1.5 pt-2 border-t border-[var(--color-separator)]"
+                >
                   <div
-                    class="shrink-0 px-1.5 pb-1.5 pt-2 border-t border-[var(--color-separator)]"
+                    class="relative border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] focus-within:border-[var(--color-border-focus)]"
                   >
+                    <textarea
+                      aria-label="AI input"
+                      class="w-full min-h-15 max-h-40 px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
+                      data-testid="ai-input"
+                      placeholder="Ask the AI to help with your writing..."
+                    />
                     <div
-                      class="relative border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)] focus-within:border-[var(--color-border-focus)]"
+                      class="flex items-center justify-between px-2 pb-2"
                     >
-                      <textarea
-                        aria-label="AI input"
-                        class="w-full min-h-15 max-h-40 px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
-                        data-testid="ai-input"
-                        placeholder="Ask the AI to help with your writing..."
-                      />
                       <div
-                        class="flex items-center justify-between px-2 pb-2"
+                        class="flex items-center gap-1"
                       >
-                        <div
-                          class="flex items-center gap-1"
-                        >
-                          <button
-                            class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)] transition-colors cursor-pointer text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
-                            type="button"
-                          >
-                            <span
-                              class="inline-flex items-center gap-2 truncate"
-                            >
-                              Ask
-                            </span>
-                          </button>
-                          <button
-                            class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)] transition-colors cursor-pointer text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
-                            type="button"
-                          >
-                            <span
-                              class="inline-flex items-center gap-2 truncate"
-                            >
-                              Loading
-                            </span>
-                          </button>
-                          <button
-                            class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)] transition-colors cursor-pointer text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
-                            data-testid="ai-skills-toggle"
-                            type="button"
-                          >
-                            <span
-                              class="inline-flex items-center gap-2 truncate"
-                            >
-                              Loading
-                            </span>
-                          </button>
-                        </div>
                         <button
-                          aria-label="Send message"
-                          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                          data-state="closed"
-                          data-testid="ai-send-stop"
-                          disabled=""
+                          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)] transition-colors cursor-pointer text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
                           type="button"
                         >
                           <span
                             class="inline-flex items-center gap-2 truncate"
                           >
-                            <svg
-                              aria-hidden="true"
-                              class="lucide lucide-arrow-up"
-                              fill="none"
-                              height="16"
-                              stroke="currentColor"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="1.5"
-                              viewBox="0 0 24 24"
-                              width="16"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="m5 12 7-7 7 7"
-                              />
-                              <path
-                                d="M12 19V5"
-                              />
-                            </svg>
+                            Ask
+                          </span>
+                        </button>
+                        <button
+                          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)] transition-colors cursor-pointer text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                          type="button"
+                        >
+                          <span
+                            class="inline-flex items-center gap-2 truncate"
+                          >
+                            Loading
+                          </span>
+                        </button>
+                        <button
+                          class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)] transition-colors cursor-pointer text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                          data-testid="ai-skills-toggle"
+                          type="button"
+                        >
+                          <span
+                            class="inline-flex items-center gap-2 truncate"
+                          >
+                            Loading
                           </span>
                         </button>
                       </div>
+                      <button
+                        aria-label="Send message"
+                        class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] focus-ring w-7 h-7 rounded-[var(--radius-sm)] flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        data-state="closed"
+                        data-testid="ai-send-stop"
+                        disabled=""
+                        type="button"
+                      >
+                        <span
+                          class="inline-flex items-center gap-2 truncate"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="lucide lucide-arrow-up"
+                            fill="none"
+                            height="16"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.5"
+                            viewBox="0 0 24 24"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="m5 12 7-7 7 7"
+                            />
+                            <path
+                              d="M12 19V5"
+                            />
+                          </svg>
+                        </span>
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </div>
     </div>
   </aside>
@@ -2358,48 +2354,44 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-testid="right-panel-scroll-viewport"
       >
         <div
-          class="tab-crossfade"
+          class="p-4 space-y-3"
         >
           <div
-            class="p-4 space-y-3"
-          >
-            <div
-              aria-busy="true"
-              aria-label="Loading..."
-              aria-valuemax="100"
-              aria-valuemin="0"
-              class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-5 w-32"
-              role="progressbar"
-              style="width: 100%; height: 1em;"
-            />
-            <div
-              aria-busy="true"
-              aria-label="Loading..."
-              aria-valuemax="100"
-              aria-valuemin="0"
-              class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-20 w-full"
-              role="progressbar"
-              style="width: 100%; height: 1em;"
-            />
-            <div
-              aria-busy="true"
-              aria-label="Loading..."
-              aria-valuemax="100"
-              aria-valuemin="0"
-              class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-5 w-24"
-              role="progressbar"
-              style="width: 100%; height: 1em;"
-            />
-            <div
-              aria-busy="true"
-              aria-label="Loading..."
-              aria-valuemax="100"
-              aria-valuemin="0"
-              class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-20 w-full"
-              role="progressbar"
-              style="width: 100%; height: 1em;"
-            />
-          </div>
+            aria-busy="true"
+            aria-label="Loading..."
+            aria-valuemax="100"
+            aria-valuemin="0"
+            class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-5 w-32"
+            role="progressbar"
+            style="width: 100%; height: 1em;"
+          />
+          <div
+            aria-busy="true"
+            aria-label="Loading..."
+            aria-valuemax="100"
+            aria-valuemin="0"
+            class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-20 w-full"
+            role="progressbar"
+            style="width: 100%; height: 1em;"
+          />
+          <div
+            aria-busy="true"
+            aria-label="Loading..."
+            aria-valuemax="100"
+            aria-valuemin="0"
+            class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-5 w-24"
+            role="progressbar"
+            style="width: 100%; height: 1em;"
+          />
+          <div
+            aria-busy="true"
+            aria-label="Loading..."
+            aria-valuemax="100"
+            aria-valuemin="0"
+            class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-20 w-full"
+            role="progressbar"
+            style="width: 100%; height: 1em;"
+          />
         </div>
       </div>
     </div>
@@ -2464,66 +2456,62 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-testid="right-panel-scroll-viewport"
       >
         <div
-          class="tab-crossfade"
+          class="flex flex-col h-full"
+          data-testid="info-panel"
         >
           <div
-            class="flex flex-col h-full"
-            data-testid="info-panel"
+            class="panel-header h-10 flex items-center justify-between px-3 border-b border-[var(--color-separator)] shrink-0"
           >
             <div
-              class="panel-header h-10 flex items-center justify-between px-3 border-b border-[var(--color-separator)] shrink-0"
+              class="flex flex-col justify-center min-w-0"
             >
-              <div
-                class="flex flex-col justify-center min-w-0"
+              <span
+                class="text-[var(--text-subtitle)] font-semibold leading-tight text-[var(--color-fg-default)] truncate"
               >
-                <span
-                  class="text-[var(--text-subtitle)] font-semibold leading-tight text-[var(--color-fg-default)] truncate"
-                >
-                  Info
-                </span>
-              </div>
+                Info
+              </span>
             </div>
+          </div>
+          <div
+            class="flex flex-col gap-[var(--space-section-gap)] p-4 overflow-auto"
+          >
             <div
-              class="flex flex-col gap-[var(--space-section-gap)] p-4 overflow-auto"
+              class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
             >
+              <span
+                class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
+                data-testid="info-panel-no-document"
+              >
+                No document selected
+              </span>
+            </div>
+            <section>
+              <p
+                class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] font-semibold mb-2"
+              >
+                Today's Progress
+              </p>
               <div
                 class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
               >
                 <span
                   class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
-                  data-testid="info-panel-no-document"
                 >
-                  No document selected
+                  Loading...
                 </span>
               </div>
-              <section>
-                <p
-                  class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] font-semibold mb-2"
-                >
-                  Today's Progress
-                </p>
-                <div
-                  class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
-                >
-                  <span
-                    class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
-                  >
-                    Loading...
-                  </span>
-                </div>
-              </section>
-              <button
-                class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
-                disabled=""
-                type="button"
+            </section>
+            <button
+              class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
+              disabled=""
+              type="button"
+            >
+              <span
+                class="inline-flex items-center gap-2 truncate"
               >
-                <span
-                  class="inline-flex items-center gap-2 truncate"
-                >
-                  View Version History
-                </span>
-              </button>
-            </div>
+                View Version History
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -2589,66 +2577,62 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-testid="right-panel-scroll-viewport"
       >
         <div
-          class="tab-crossfade"
+          class="flex flex-col h-full"
+          data-testid="info-panel"
         >
           <div
-            class="flex flex-col h-full"
-            data-testid="info-panel"
+            class="panel-header h-10 flex items-center justify-between px-3 border-b border-[var(--color-separator)] shrink-0"
           >
             <div
-              class="panel-header h-10 flex items-center justify-between px-3 border-b border-[var(--color-separator)] shrink-0"
+              class="flex flex-col justify-center min-w-0"
             >
-              <div
-                class="flex flex-col justify-center min-w-0"
+              <span
+                class="text-[var(--text-subtitle)] font-semibold leading-tight text-[var(--color-fg-default)] truncate"
               >
-                <span
-                  class="text-[var(--text-subtitle)] font-semibold leading-tight text-[var(--color-fg-default)] truncate"
-                >
-                  Info
-                </span>
-              </div>
+                Info
+              </span>
             </div>
+          </div>
+          <div
+            class="flex flex-col gap-[var(--space-section-gap)] p-4 overflow-auto"
+          >
             <div
-              class="flex flex-col gap-[var(--space-section-gap)] p-4 overflow-auto"
+              class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
             >
+              <span
+                class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
+                data-testid="info-panel-no-document"
+              >
+                No document selected
+              </span>
+            </div>
+            <section>
+              <p
+                class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] font-semibold mb-2"
+              >
+                Today's Progress
+              </p>
               <div
                 class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
               >
                 <span
                   class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
-                  data-testid="info-panel-no-document"
                 >
-                  No document selected
+                  Loading...
                 </span>
               </div>
-              <section>
-                <p
-                  class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] font-semibold mb-2"
-                >
-                  Today's Progress
-                </p>
-                <div
-                  class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
-                >
-                  <span
-                    class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
-                  >
-                    Loading...
-                  </span>
-                </div>
-              </section>
-              <button
-                class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
-                disabled=""
-                type="button"
+            </section>
+            <button
+              class="inline-flex items-center justify-center gap-2 font-medium cursor-pointer select-none transition-colors duration-[var(--duration-fast)] ease-[var(--ease-default)] overflow-hidden max-w-full focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)] disabled:opacity-50 disabled:cursor-not-allowed bg-transparent text-[var(--color-fg-default)] border border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)] h-9 px-[var(--space-4)] text-[var(--text-body-size)] rounded-[var(--radius-md)] self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
+              disabled=""
+              type="button"
+            >
+              <span
+                class="inline-flex items-center gap-2 truncate"
               >
-                <span
-                  class="inline-flex items-center gap-2 truncate"
-                >
-                  View Version History
-                </span>
-              </button>
-            </div>
+                View Version History
+              </span>
+            </button>
           </div>
         </div>
       </div>

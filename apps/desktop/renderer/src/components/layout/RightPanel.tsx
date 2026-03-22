@@ -265,15 +265,13 @@ export function RightPanel(props: {
           ) : null}
         </div>
 
-        {/* Tab content — key triggers tab-crossfade animation on switch */}
+        {/* Tab content */}
         <ScrollArea
           data-testid="right-panel-scroll"
           viewportTestId="right-panel-scroll-viewport"
           className="flex-1 min-h-0"
         >
-          <div key={activeRightPanel} className="tab-crossfade">
-            {renderContent()}
-          </div>
+          {renderContent()}
         </ScrollArea>
       </aside>
     </OpenSettingsContext.Provider>
