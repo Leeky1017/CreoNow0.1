@@ -5,8 +5,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { Button, Text } from "../../components/primitives";
 import { PanelContainer } from "../../components/composites/PanelContainer";
 import { EmptyState } from "../../components/patterns/EmptyState";
-import { LoadingState } from "../../components/patterns/LoadingState";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
+import { FileTreeSkeleton } from "./FileTreeSkeleton";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 
 import type { FileTreePanelProps } from "./fileTreeTypes";
@@ -88,12 +88,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
         className="flex-1 overflow-y-auto scroll-shadow-y min-h-0 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-ring-focus)]"
       >
         {state.bootstrapStatus !== "ready" ? (
-          <LoadingState
-            variant="spinner"
-            size="sm"
-            text={t("files.tree.loading")}
-            className="p-3"
-          />
+          <FileTreeSkeleton />
         ) : state.items.length === 0 ? (
           <EmptyState
             variant="files"

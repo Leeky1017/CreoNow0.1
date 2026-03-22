@@ -5,8 +5,8 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 
 import { Button } from "../../components/primitives/Button";
 import { EmptyState } from "../../components/patterns/EmptyState";
-import { LoadingState } from "../../components/patterns/LoadingState";
 import { ErrorState } from "../../components/patterns/ErrorState";
+import { SearchPanelSkeleton } from "./SearchPanelSkeleton";
 import type { SearchStatus } from "../../stores/searchStore";
 
 import type { SearchCategory, SearchResultItem } from "./searchPanelTypes";
@@ -136,13 +136,7 @@ export function SearchResultsArea(props: {
   }
 
   if (props.hasQuery && props.effectiveIndexState === "rebuilding") {
-    return (
-      <LoadingState
-        variant="spinner"
-        text={`${t("search.rebuildingIndex")}\n${t("search.rebuildingQuery", { query: props.effectiveQuery })}`}
-        className="py-16 px-8"
-      />
-    );
+    return <SearchPanelSkeleton />;
   }
 
   if (props.hasQuery && props.hasError) {

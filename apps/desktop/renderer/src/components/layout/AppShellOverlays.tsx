@@ -156,7 +156,9 @@ export function renderDialogContent(
     case "memory":
       return (
         <Suspense fallback={<MemoryPanelSkeleton />}>
-          <LazyMemoryPanel />
+          <div className="progressive-load">
+            <LazyMemoryPanel />
+          </div>
         </Suspense>
       );
     case "characters":
@@ -169,7 +171,9 @@ export function renderDialogContent(
       }
       return (
         <Suspense fallback={<CharacterPanelSkeleton />}>
-          <LazyCharacterCardListContainer projectId={currentProjectId} />
+          <div className="progressive-load">
+            <LazyCharacterCardListContainer projectId={currentProjectId} />
+          </div>
         </Suspense>
       );
     case "knowledgeGraph":
@@ -182,7 +186,9 @@ export function renderDialogContent(
       }
       return (
         <Suspense fallback={<KgPanelSkeleton />}>
-          <LazyKnowledgeGraphPanel projectId={currentProjectId} />
+          <div className="progressive-load">
+            <LazyKnowledgeGraphPanel projectId={currentProjectId} />
+          </div>
         </Suspense>
       );
     case "versionHistory":
@@ -195,7 +201,9 @@ export function renderDialogContent(
       }
       return (
         <Suspense fallback={<VersionHistorySkeleton />}>
-          <LazyVersionHistoryContainer projectId={currentProjectId} />
+          <div className="progressive-load">
+            <LazyVersionHistoryContainer projectId={currentProjectId} />
+          </div>
         </Suspense>
       );
     default:
