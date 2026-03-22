@@ -1,5 +1,7 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Search } from "lucide-react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 import { Button } from "../../components/primitives/Button";
 import { EmptyState } from "../../components/patterns/EmptyState";
@@ -38,6 +40,43 @@ export function SearchResultsArea(props: {
   onClearQuery: () => void;
 }): JSX.Element {
   const { t } = useTranslation();
+
+  const allVisibleItems = React.useMemo(() => {
+    const result: SearchResultItem[] = [];
+    if (
+      props.documentItems.length > 0 &&
+      (props.category === "all" || props.category === "documents")
+    ) {
+      result.push(...props.documentItems);
+    }
+    if (
+      props.memoryItems.length > 0 &&
+      (props.category === "all" || props.category === "memories")
+    ) {
+      result.push(...props.memoryItems);
+    }
+    if (
+      props.knowledgeItems.length > 0 &&
+      (props.category === "all" || props.category === "knowledge")
+    ) {
+      result.push(...props.knowledgeItems);
+    }
+    return result;
+  }, [
+    props.documentItems,
+    props.memoryItems,
+    props.knowledgeItems,
+    props.category,
+  ]);
+
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  const virtualizer = useVirtualizer({
+    count: allVisibleItems.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => 72,
+    overscan: 8,
+  });
 
   if (!props.hasQuery && !props.hasResults) {
     return (
@@ -109,6 +148,63 @@ export function SearchResultsArea(props: {
         >
           {t("search.clearSearch")}
         </Button>
+      </div>
+    );
+  }
+
+  const virtualItems = virtualizer.getVirtualItems();
+  const useVirtual = virtualItems.length > 0;
+
+  if (useVirtual) {
+    return (
+      <div ref={scrollRef} className="overflow-y-auto max-h-[60vh]">
+        <div
+          className="relative"
+          style={{ height: `${virtualizer.getTotalSize()}px` }}
+        >
+          {virtualItems.map((virtualRow) => {
+            const item = allVisibleItems[virtualRow.index];
+            return (
+              <div
+                key={item.id}
+                ref={virtualizer.measureElement}
+                data-index={virtualRow.index}
+                className="absolute left-0 right-0 w-full list-item-enter"
+                style={{
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                {item.type === "document" ? (
+                  <DocumentResultItem
+                    item={item}
+                    query={props.effectiveQuery}
+                    isActive={
+                      virtualRow.index === 0 && props.activeIndex === 0
+                    }
+                    isFlashing={
+                      props.flashKey?.startsWith(
+                        `${item.documentId ?? item.id}:${item.anchor?.start ?? 0}:${item.anchor?.end ?? 0}:`,
+                      ) ?? false
+                    }
+                    onClick={() => props.onItemClick(item.id)}
+                  />
+                ) : item.type === "memory" ? (
+                  <MemoryResultItem
+                    item={item}
+                    query={props.effectiveQuery}
+                    onClick={() => props.onItemClick(item.id)}
+                  />
+                ) : (
+                  <KnowledgeResultItem
+                    item={item}
+                    query={props.effectiveQuery}
+                    onClick={() => props.onItemClick(item.id)}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }

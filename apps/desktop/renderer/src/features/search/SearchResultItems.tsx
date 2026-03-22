@@ -1,3 +1,4 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
 import {
   ArrowRight,
@@ -51,7 +52,7 @@ export function HighlightText(props: {
 /**
  * Document result item component.
  */
-export function DocumentResultItem(props: {
+export const DocumentResultItem = React.memo(function DocumentResultItem(props: {
   item: SearchResultItem;
   query: string;
   isActive: boolean;
@@ -151,12 +152,12 @@ export function DocumentResultItem(props: {
       </div>
     </ListItem>
   );
-}
+});
 
 /**
  * Memory result item component.
  */
-export function MemoryResultItem(props: {
+export const MemoryResultItem = React.memo(function MemoryResultItem(props: {
   item: SearchResultItem;
   query: string;
   onClick: () => void;
@@ -203,12 +204,12 @@ export function MemoryResultItem(props: {
       </div>
     </ListItem>
   );
-}
+});
 
 /**
  * Knowledge graph result item component.
  */
-export function KnowledgeResultItem(props: {
+export const KnowledgeResultItem = React.memo(function KnowledgeResultItem(props: {
   item: SearchResultItem;
   query: string;
   onClick: () => void;
@@ -243,4 +244,4 @@ export function KnowledgeResultItem(props: {
       </div>
     </ListItem>
   );
-}
+});

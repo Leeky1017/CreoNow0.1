@@ -602,6 +602,29 @@ textarea:focus-visible {
   }
 }
 
+/* === V1-21: 列表项微交互动画 === */
+
+@keyframes list-item-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.list-item-enter {
+  animation: list-item-enter 0.2s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list-item-enter {
+    animation: none;
+  }
+}
+
 /* === 全局 Reduced Motion 降级 === */
 @media (prefers-reduced-motion: reduce) {
   *,

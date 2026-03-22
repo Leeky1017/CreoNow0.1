@@ -1,4 +1,5 @@
 import React from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import type { SettingsTab } from "../settings-dialog/SettingsDialog";
 
 import { AiErrorCard } from "../../components/features/AiDialogs";
@@ -225,25 +226,70 @@ export type AiMessageListProps = {
 export function AiMessageList(props: AiMessageListProps): JSX.Element {
   const { t } = useTranslation();
   const hasHistoryReplay = props.historyMessages.length > 0;
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  const virtualizer = useVirtualizer({
+    count: props.historyMessages.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => 80,
+    overscan: 5,
+  });
 
   return (
-    <div className="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4">
+    <div ref={scrollRef} className="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4">
       {hasHistoryReplay ? (
-        <div data-testid="ai-history-replay-list" className="w-full space-y-2">
-          {props.historyMessages.map((message) => (
-            <div
-              key={message.messageId}
-              data-testid={`ai-history-message-${message.role}`}
-              className={`w-full rounded-[var(--radius-md)] p-3 text-[13px] whitespace-pre-wrap ${
-                message.role === "user"
-                  ? "bg-[var(--color-bg-base)] text-[var(--color-fg-default)]"
-                  : "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)] border-l-2 border-[var(--color-accent)]"
-              }`}
-            >
-              {message.content}
+        (() => {
+          const virtualItems = virtualizer.getVirtualItems();
+          const useVirtual = virtualItems.length > 0;
+          if (useVirtual) {
+            return (
+              <div
+                data-testid="ai-history-replay-list"
+                className="w-full relative"
+                style={{ height: `${virtualizer.getTotalSize()}px` }}
+              >
+                {virtualItems.map((virtualRow) => {
+                  const message = props.historyMessages[virtualRow.index];
+                  return (
+                    <div
+                      key={message.messageId}
+                      ref={virtualizer.measureElement}
+                      data-index={virtualRow.index}
+                      data-testid={`ai-history-message-${message.role}`}
+                      className={`absolute left-0 right-0 w-full rounded-[var(--radius-md)] p-3 text-[13px] whitespace-pre-wrap list-item-enter ${
+                        message.role === "user"
+                          ? "bg-[var(--color-bg-base)] text-[var(--color-fg-default)]"
+                          : "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)] border-l-2 border-[var(--color-accent)]"
+                      }`}
+                      style={{
+                        transform: `translateY(${virtualRow.start}px)`,
+                      }}
+                    >
+                      {message.content}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          }
+          return (
+            <div data-testid="ai-history-replay-list" className="w-full space-y-2">
+              {props.historyMessages.map((message) => (
+                <div
+                  key={message.messageId}
+                  data-testid={`ai-history-message-${message.role}`}
+                  className={`w-full rounded-[var(--radius-md)] p-3 text-[13px] whitespace-pre-wrap ${
+                    message.role === "user"
+                      ? "bg-[var(--color-bg-base)] text-[var(--color-fg-default)]"
+                      : "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)] border-l-2 border-[var(--color-accent)]"
+                  }`}
+                >
+                  {message.content}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          );
+        })()
       ) : null}
 
       {!hasHistoryReplay && props.lastRequest ? (

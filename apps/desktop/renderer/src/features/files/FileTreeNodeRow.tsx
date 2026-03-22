@@ -50,7 +50,9 @@ export interface FileTreeNodeRowProps {
   onOpenVersionHistory?: (documentId: string) => void;
 }
 
-export const FileTreeNodeRow = React.forwardRef<
+/* eslint-disable react/prop-types -- TypeScript interface provides type safety; React.memo(forwardRef()) confuses prop-types plugin */
+export const FileTreeNodeRow = React.memo(
+  React.forwardRef<
   HTMLInputElement,
   FileTreeNodeRowProps
 >(function FileTreeNodeRow(props, ref) {
@@ -297,4 +299,5 @@ export const FileTreeNodeRow = React.forwardRef<
       </ContextMenu>
     </div>
   );
-});
+}),
+);
