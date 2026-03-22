@@ -26,10 +26,9 @@ describe("V1-20 Storybook Excellence Guard", () => {
   });
 
   it("no story file should exceed 500 lines", () => {
-    const storyFiles = execSync(
-      `find ${featuresDir} -name "*.stories.tsx"`,
-      { encoding: "utf-8" },
-    )
+    const storyFiles = execSync(`find ${featuresDir} -name "*.stories.tsx"`, {
+      encoding: "utf-8",
+    })
       .trim()
       .split("\n")
       .filter(Boolean);

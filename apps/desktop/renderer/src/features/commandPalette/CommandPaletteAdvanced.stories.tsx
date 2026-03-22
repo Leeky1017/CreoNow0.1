@@ -64,8 +64,21 @@ function StoreDecorator({ children }: { children: React.ReactNode }) {
   );
 }
 
-function FileIcon({ className, color }: { className?: string; color?: string }): JSX.Element {
-  return <FileText className={className} style={{ color }} size={16} strokeWidth={1.5} />;
+function FileIcon({
+  className,
+  color,
+}: {
+  className?: string;
+  color?: string;
+}): JSX.Element {
+  return (
+    <FileText
+      className={className}
+      style={{ color }}
+      size={16}
+      strokeWidth={1.5}
+    />
+  );
 }
 
 function EditIcon({ className }: { className?: string }): JSX.Element {
@@ -367,9 +380,15 @@ export const KeyboardNavigationDemo: Story = {
             键盘导航测试（Windows）：
           </p>
           <ul style={{ paddingLeft: "1rem", margin: 0, lineHeight: 1.6 }}>
-            <li><code style={kbdStyle}>↑↓</code> 移动选中项</li>
-            <li><code style={kbdStyle}>Enter</code> 执行命令</li>
-            <li><code style={kbdStyle}>Esc</code> 关闭面板</li>
+            <li>
+              <code style={kbdStyle}>↑↓</code> 移动选中项
+            </li>
+            <li>
+              <code style={kbdStyle}>Enter</code> 执行命令
+            </li>
+            <li>
+              <code style={kbdStyle}>Esc</code> 关闭面板
+            </li>
           </ul>
           {lastAction && (
             <div

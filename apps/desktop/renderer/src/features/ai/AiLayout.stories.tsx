@@ -70,7 +70,14 @@ function HistoryDropdownDemo(): JSX.Element {
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-default)] bg-[var(--color-bg-selected)] rounded"
               title="History"
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
               </svg>
@@ -79,7 +86,14 @@ function HistoryDropdownDemo(): JSX.Element {
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="New Chat"
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <line x1="12" y1="5" x2="12" y2="19" />
                 <line x1="5" y1="12" x2="19" y2="12" />
               </svg>
@@ -194,7 +208,14 @@ function HistoryDropdownDemo(): JSX.Element {
                 </span>
               </div>
               <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)]">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <line x1="12" y1="19" x2="12" y2="5" />
                   <polyline points="5 12 12 5 19 12" />
                 </svg>

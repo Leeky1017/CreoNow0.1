@@ -25,9 +25,7 @@ export const Default: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(
-      await canvas.findByTestId("ai-panel"),
-    ).toBeInTheDocument();
+    await expect(await canvas.findByTestId("ai-panel")).toBeInTheDocument();
   },
 };
 

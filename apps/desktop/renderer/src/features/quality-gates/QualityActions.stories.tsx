@@ -1,10 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { NotepadText } from "lucide-react";
 import React from "react";
-import {
-  QualityGatesPanel,
-  type QualitySettings,
-} from "./QualityGatesPanel";
+import { QualityGatesPanel, type QualitySettings } from "./QualityGatesPanel";
 import { SAMPLE_CHECK_GROUPS } from "./qualityGatesStoryData";
 
 const meta: Meta<typeof QualityGatesPanel> = {

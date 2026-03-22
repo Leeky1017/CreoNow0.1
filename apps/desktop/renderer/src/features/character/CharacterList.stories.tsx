@@ -13,8 +13,7 @@ const meta: Meta<typeof CharacterPanel> = {
     layout: "fullscreen",
     docs: {
       description: {
-        component:
-          "角色管理面板 - 角色列表、分组显示、切换和导航功能。",
+        component: "角色管理面板 - 角色列表、分组显示、切换和导航功能。",
       },
     },
   },
@@ -58,7 +57,9 @@ export const DefaultWithData: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("character-panel")).toBeInTheDocument();
-    await expect(canvas.getByTestId("character-card-elara")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("character-card-elara"),
+    ).toBeInTheDocument();
   },
 };
 

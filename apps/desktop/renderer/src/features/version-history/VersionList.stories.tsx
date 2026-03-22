@@ -203,9 +203,7 @@ export const DefaultWithHistory: Story = {
     await expect(
       canvas.getByTestId("version-history-panel"),
     ).toBeInTheDocument();
-    await expect(
-      canvas.getByTestId("version-card-v-1042"),
-    ).toBeInTheDocument();
+    await expect(canvas.getByTestId("version-card-v-1042")).toBeInTheDocument();
   },
 };
 

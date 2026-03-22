@@ -78,8 +78,7 @@ function StatusDot(props: {
     not_ready: "bg-[var(--color-warning)]",
     loading: "bg-[var(--color-fg-muted)]",
   };
-  const extra =
-    props.status === "downloading" ? " animate-pulse" : "";
+  const extra = props.status === "downloading" ? " animate-pulse" : "";
   return (
     <span
       className={`inline-block w-2 h-2 rounded-full ${colors[props.status]}${extra}`}
@@ -411,8 +410,12 @@ export const InfoPanelDefault: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("info-panel")).toBeInTheDocument();
-    await expect(canvas.getByTestId("info-panel-doc-title")).toBeInTheDocument();
-    await expect(canvas.getByTestId("info-panel-words-written")).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("info-panel-doc-title"),
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByTestId("info-panel-words-written"),
+    ).toBeInTheDocument();
   },
 };
 

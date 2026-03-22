@@ -47,7 +47,9 @@ type Story = StoryObj<typeof CharacterPanel>;
 
 function EditingCharacterFormRender() {
   const [open, setOpen] = React.useState(true);
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(
+    null,
+  );
   const setContainerRef = React.useCallback((el: HTMLDivElement | null) => {
     setContainerEl(el);
   }, []);
@@ -77,7 +79,9 @@ export const EditingCharacterForm: Story = {
 };
 
 function AddingPersonalityTraitRender() {
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(
+    null,
+  );
   const setContainerRef = React.useCallback((el: HTMLDivElement | null) => {
     setContainerEl(el);
   }, []);
@@ -115,7 +119,9 @@ export const AddingPersonalityTrait: Story = {
 };
 
 function ManagingRelationshipsRender() {
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(
+    null,
+  );
   const setContainerRef = React.useCallback((el: HTMLDivElement | null) => {
     setContainerEl(el);
   }, []);
@@ -166,7 +172,9 @@ export const ManagingRelationships: Story = {
 };
 
 function UploadingAvatarRender() {
-  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(null);
+  const [containerEl, setContainerEl] = React.useState<HTMLDivElement | null>(
+    null,
+  );
   const setContainerRef = React.useCallback((el: HTMLDivElement | null) => {
     setContainerEl(el);
   }, []);
@@ -223,11 +231,14 @@ function RoleSelectorOpenRender() {
           Role Selector Demo
         </h3>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-[var(--color-fg-muted)]">Current Role:</span>
+          <span className="text-xs text-[var(--color-fg-muted)]">
+            Current Role:
+          </span>
           <RoleSelector value={role} onChange={setRole} />
         </div>
         <p className="mt-4 text-xs text-[var(--color-fg-placeholder)]">
-          Click the role badge to open the selector. Try selecting different roles.
+          Click the role badge to open the selector. Try selecting different
+          roles.
         </p>
       </div>
     </div>
@@ -257,11 +268,14 @@ function GroupSelectorOpenRender() {
           Group Selector Demo
         </h3>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-[var(--color-fg-muted)]">Current Group:</span>
+          <span className="text-xs text-[var(--color-fg-muted)]">
+            Current Group:
+          </span>
           <GroupSelector value={group} onChange={setGroup} />
         </div>
         <p className="mt-4 text-xs text-[var(--color-fg-placeholder)]">
-          Click the group tag to open the selector. Try selecting different groups.
+          Click the group tag to open the selector. Try selecting different
+          groups.
         </p>
       </div>
     </div>

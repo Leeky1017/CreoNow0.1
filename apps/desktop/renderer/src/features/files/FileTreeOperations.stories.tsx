@@ -429,12 +429,24 @@ function KeyboardNavigationDemo(): JSX.Element {
           键盘导航测试（Windows）：
         </p>
         <ul style={{ paddingLeft: "1rem", margin: 0, lineHeight: 1.8 }}>
-          <li><code style={kbdStyle}>↑↓</code> 移动选中项</li>
-          <li><code style={kbdStyle}>Enter</code> 打开文件</li>
-          <li><code style={kbdStyle}>F2</code> 重命名</li>
-          <li><code style={kbdStyle}>Delete</code> 删除</li>
-          <li><code style={kbdStyle}>→</code> 展开文件夹</li>
-          <li><code style={kbdStyle}>←</code> 折叠文件夹</li>
+          <li>
+            <code style={kbdStyle}>↑↓</code> 移动选中项
+          </li>
+          <li>
+            <code style={kbdStyle}>Enter</code> 打开文件
+          </li>
+          <li>
+            <code style={kbdStyle}>F2</code> 重命名
+          </li>
+          <li>
+            <code style={kbdStyle}>Delete</code> 删除
+          </li>
+          <li>
+            <code style={kbdStyle}>→</code> 展开文件夹
+          </li>
+          <li>
+            <code style={kbdStyle}>←</code> 折叠文件夹
+          </li>
         </ul>
         {lastAction && (
           <div

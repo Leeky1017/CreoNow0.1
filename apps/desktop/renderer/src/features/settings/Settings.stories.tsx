@@ -192,12 +192,7 @@ function JudgeDemo(props: {
       </Heading>
       <Text size="small" color="muted" as="div" className="mb-2.5">
         Status:{" "}
-        <Text
-          data-testid="judge-status"
-          size="small"
-          color="default"
-          as="span"
-        >
+        <Text data-testid="judge-status" size="small" color="default" as="span">
           {statusLabel[props.status]}
         </Text>
       </Text>
@@ -277,9 +272,7 @@ export const SettingsOverview: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(
-      canvas.getByTestId("settings-ai-section"),
-    ).toBeInTheDocument();
+    await expect(canvas.getByTestId("settings-ai-section")).toBeInTheDocument();
     await expect(
       canvas.getByTestId("settings-appearance-section"),
     ).toBeInTheDocument();
@@ -299,9 +292,7 @@ export const AiSettingsDefault: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(
-      canvas.getByTestId("settings-ai-section"),
-    ).toBeInTheDocument();
+    await expect(canvas.getByTestId("settings-ai-section")).toBeInTheDocument();
     await expect(canvas.getByTestId("ai-save-btn")).toBeInTheDocument();
     await expect(canvas.getByTestId("ai-test-btn")).toBeInTheDocument();
   },

@@ -122,9 +122,7 @@ export const WithSearchHighlight: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByTestId("shortcuts-panel")).toBeInTheDocument();
     // Verify the search input is present
-    await expect(
-      canvas.getByLabelText("Filter shortcuts"),
-    ).toBeInTheDocument();
+    await expect(canvas.getByLabelText("Filter shortcuts")).toBeInTheDocument();
   },
 };
 
