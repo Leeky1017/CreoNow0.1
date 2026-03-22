@@ -9,17 +9,17 @@
 
 ## 验收标准
 
-| ID  | 标准                                                                          | 验证方式                 | 结果 | R10 基线                                                |
-| --- | ----------------------------------------------------------------------------- | ------------------------ | ---- | ------------------------------------------------------- |
-| AC1 | `01-tokens.css` 包含 ≥ 3 个 `--gradient-*` token（暗/亮双主题）              | `grep -c 'gradient' design/system/01-tokens.css` | 待验 | 0 个 gradient token                                     |
-| AC2 | `renderer/src/assets/illustrations/` 目录存在且包含 ≥ 6 个 SVG 文件（或占位） | `find renderer/src/assets/illustrations -name "*.svg" \| wc -l` | 待验 | 目录不存在，SVG/PNG 资源数 = 0                          |
-| AC3 | `<EmptyState>` patterns 版本使用品牌插画替换 DefaultIllustration              | 代码检查 + Story 视觉验收 | 待验 | patterns/EmptyState.tsx 已有 `illustration` prop + DefaultIllustration（Lucide 通用 icon） |
-| AC4 | OnboardingSteps 有步骤切换 slide+fade 动画 + 品牌渐变背景                     | 视觉验收 + Storybook     | 待验 | 仅 transition-colors，无 keyframe 动画，196 行          |
-| AC5 | `01-tokens.css` 包含 `--color-accent-50` 到 `--color-accent-900` 色阶        | `grep -c 'accent-[0-9]' design/system/01-tokens.css` | 待验 | 8 个 accent token（base/hover/muted/subtle × 2 themes） |
-| AC6 | Loading 动画已替换为品牌化版本（LoadingState variant="spinner"）               | 视觉验收 + Story         | 待验 | 通用 Spinner（animate-spin SVG circle），173 处引用      |
-| AC7 | 所有新增动效 CSS-only（无新 JS 动画库依赖）                                   | `git diff package.json` 无新增动画库 | 待验 | 无动画库依赖                                            |
-| AC8 | Storybook 构建通过                                                            | `pnpm -C apps/desktop storybook:build` | 待验 | CI gate                                                 |
-| AC9 | 暗/亮双主题下品牌元素均正常渲染                                               | Storybook 双主题 Story 验证 | 待验 | 双主题 token 体系已建立（01-tokens.css 472 行）          |
+| ID  | 标准                                                                          | 验证方式                                                        | 结果 | R10 基线                                                                                   |
+| --- | ----------------------------------------------------------------------------- | --------------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------------ |
+| AC1 | `01-tokens.css` 包含 ≥ 3 个 `--gradient-*` token（暗/亮双主题）               | `grep -c 'gradient' design/system/01-tokens.css`                | 待验 | 0 个 gradient token                                                                        |
+| AC2 | `renderer/src/assets/illustrations/` 目录存在且包含 ≥ 6 个 SVG 文件（或占位） | `find renderer/src/assets/illustrations -name "*.svg" \| wc -l` | 待验 | 目录不存在，SVG/PNG 资源数 = 0                                                             |
+| AC3 | `<EmptyState>` patterns 版本使用品牌插画替换 DefaultIllustration              | 代码检查 + Story 视觉验收                                       | 待验 | patterns/EmptyState.tsx 已有 `illustration` prop + DefaultIllustration（Lucide 通用 icon） |
+| AC4 | OnboardingSteps 有步骤切换 slide+fade 动画 + 品牌渐变背景                     | 视觉验收 + Storybook                                            | 待验 | 仅 transition-colors，无 keyframe 动画，196 行                                             |
+| AC5 | `01-tokens.css` 包含 `--color-accent-50` 到 `--color-accent-900` 色阶         | `grep -c 'accent-[0-9]' design/system/01-tokens.css`            | 待验 | 8 个 accent token（base/hover/muted/subtle × 2 themes）                                    |
+| AC6 | Loading 动画已替换为品牌化版本（LoadingState variant="spinner"）              | 视觉验收 + Story                                                | 待验 | 通用 Spinner（animate-spin SVG circle），173 处引用                                        |
+| AC7 | 所有新增动效 CSS-only（无新 JS 动画库依赖）                                   | `git diff package.json` 无新增动画库                            | 待验 | 无动画库依赖                                                                               |
+| AC8 | Storybook 构建通过                                                            | `pnpm -C apps/desktop storybook:build`                          | 待验 | CI gate                                                                                    |
+| AC9 | 暗/亮双主题下品牌元素均正常渲染                                               | Storybook 双主题 Story 验证                                     | 待验 | 双主题 token 体系已建立（01-tokens.css 472 行）                                            |
 
 ---
 
@@ -50,10 +50,27 @@
 - **位置**: `:root[data-theme="dark"]` 块末尾（约 line 95 之后）
 - **新增 token**:
   ```css
-  --gradient-brand: linear-gradient(135deg, var(--color-accent) 0%, #7c3aed 100%);
-  --gradient-surface: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-base) 100%);
-  --gradient-hero: radial-gradient(ellipse at top, rgba(var(--color-accent-rgb), 0.15) 0%, transparent 60%);
-  --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%);
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(var(--color-accent-rgb), 0.15) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
   ```
 - **前置**: 需确认 `--color-accent-rgb` 是否已定义；若无则需在同块新增 `--color-accent-rgb: 255, 255, 255;`
 - **AC**: AC1
@@ -64,10 +81,27 @@
 - **位置**: `:root[data-theme="light"]` 块末尾（约 line 155 之后）
 - **新增 token**: 与 T1-1 对应的亮色主题值
   ```css
-  --gradient-brand: linear-gradient(135deg, var(--color-accent) 0%, #6d28d9 100%);
-  --gradient-surface: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-base) 100%);
-  --gradient-hero: radial-gradient(ellipse at top, rgba(var(--color-accent-rgb), 0.10) 0%, transparent 60%);
-  --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.03) 50%, transparent 100%);
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #6d28d9 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(var(--color-accent-rgb), 0.1) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.03) 50%,
+    transparent 100%
+  );
   ```
 - **前置**: 亮色主题 `--color-accent-rgb: 26, 26, 26;`
 - **AC**: AC1, AC9
@@ -149,9 +183,29 @@
 - **文件**: `apps/desktop/renderer/src/features/onboarding/onboarding.css`（新建）
 - **内容**:
   ```css
-  @keyframes step-slide-in { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-  @keyframes step-slide-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-20px); } }
-  @keyframes confetti-burst { /* 完成庆祝 keyframes */ }
+  @keyframes step-slide-in {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes step-slide-out {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+  }
+  @keyframes confetti-burst {
+    /* 完成庆祝 keyframes */
+  }
   ```
 - **约束**: CSS-only，使用 `--duration-normal` / `--easing-smooth` design token
 - **AC**: AC4, AC7
@@ -203,16 +257,16 @@
 - **新增 token**:
   ```css
   /* 品牌色阶 — 具体值需 Owner 确认 */
-  --color-accent-50: ;   /* 最浅 */
+  --color-accent-50: ; /* 最浅 */
   --color-accent-100: ;
   --color-accent-200: ;
   --color-accent-300: ;
   --color-accent-400: ;
-  --color-accent-500: var(--color-accent);  /* 主色，与 accent 同值 */
+  --color-accent-500: var(--color-accent); /* 主色，与 accent 同值 */
   --color-accent-600: ;
   --color-accent-700: ;
   --color-accent-800: ;
-  --color-accent-900: ;  /* 最深 */
+  --color-accent-900: ; /* 最深 */
   ```
 - **⚠️ 阻断**: 具体 hex/rgba 值须 Owner 或设计师提供后填入，Agent 不得自行生成色值
 - **AC**: AC5
@@ -261,8 +315,12 @@
 - **文件**: `apps/desktop/renderer/src/styles/main.css` 或 Spinner 内联 `<style>`
 - **新增**:
   ```css
-  @keyframes brand-spin { /* 品牌 Spinner keyframes */ }
-  @keyframes brand-pulse { /* 脉冲辅助动画 */ }
+  @keyframes brand-spin {
+    /* 品牌 Spinner keyframes */
+  }
+  @keyframes brand-pulse {
+    /* 脉冲辅助动画 */
+  }
   ```
 - **替换**: 移除 `animate-spin`（Tailwind 内置），使用自定义 `brand-spin`
 - **AC**: AC6, AC7
@@ -312,20 +370,20 @@ Phase 0 (准备)
 
 ## R10 基线采集（2025-07-23）
 
-| 指标                         | R9 预测值     | R10 实测值 | Delta     | 说明                                                                      |
-| ---------------------------- | ------------- | ---------- | --------- | ------------------------------------------------------------------------- |
-| SVG/PNG 资源数               | 0             | 0          | ±0        | v1-22 核心任务：需新增 ≥ 6 个 SVG                                         |
-| gradient CSS（styles/）      | 1             | 1          | ±0        | main.css 仅 1 处 mask-gradient（scroll-shadow），非色彩渐变                |
-| gradient CSS（design/）      | 0             | 0          | ±0        | 01-tokens.css 无 gradient token，v1-22 Phase 1 将新增 4 个                 |
-| illustrations 目录           | 不存在        | 不存在     | ±0        | v1-22 Phase 2 将创建                                                       |
-| EmptyState illustration 引用 | 18            | 18         | ±0        | patterns/EmptyState.tsx 已有 illustration prop + DefaultIllustration       |
-| EmptyState 总引用            | —             | 107        | —         | 107 处引用，品牌插画替换 DefaultIllustration 将惠及所有引用                 |
-| accent color token           | 8             | 8          | ±0        | base/hover/muted/subtle × 2 themes；v1-22 Phase 4 将扩展 50-900 色阶      |
-| woff2 字体文件               | 0→14          | 14         | +14 ✅    | v1-17 已合并，品牌字体基础设施就绪                                          |
-| @font-face 声明              | 0→14          | 14         | +14 ✅    | v1-17 已合并，fonts.css 已扩展至 3159 字节                                  |
-| shadow token 档位            | 4→6           | 6          | +2 ✅     | v1-17 新增 shadow-xs + shadow-2xl，品牌化 Loading 可用更细腻阴影            |
-| OnboardingSteps 行数         | —             | 196        | —         | 3 步向导，仅 transition-colors 过渡，无 keyframe 动画                       |
-| Loading/Spinner 引用         | —             | 173        | —         | 替换 Spinner 影响面广，需确保非破坏性升级                                    |
+| 指标                         | R9 预测值 | R10 实测值 | Delta  | 说明                                                                 |
+| ---------------------------- | --------- | ---------- | ------ | -------------------------------------------------------------------- |
+| SVG/PNG 资源数               | 0         | 0          | ±0     | v1-22 核心任务：需新增 ≥ 6 个 SVG                                    |
+| gradient CSS（styles/）      | 1         | 1          | ±0     | main.css 仅 1 处 mask-gradient（scroll-shadow），非色彩渐变          |
+| gradient CSS（design/）      | 0         | 0          | ±0     | 01-tokens.css 无 gradient token，v1-22 Phase 1 将新增 4 个           |
+| illustrations 目录           | 不存在    | 不存在     | ±0     | v1-22 Phase 2 将创建                                                 |
+| EmptyState illustration 引用 | 18        | 18         | ±0     | patterns/EmptyState.tsx 已有 illustration prop + DefaultIllustration |
+| EmptyState 总引用            | —         | 107        | —      | 107 处引用，品牌插画替换 DefaultIllustration 将惠及所有引用          |
+| accent color token           | 8         | 8          | ±0     | base/hover/muted/subtle × 2 themes；v1-22 Phase 4 将扩展 50-900 色阶 |
+| woff2 字体文件               | 0→14      | 14         | +14 ✅ | v1-17 已合并，品牌字体基础设施就绪                                   |
+| @font-face 声明              | 0→14      | 14         | +14 ✅ | v1-17 已合并，fonts.css 已扩展至 3159 字节                           |
+| shadow token 档位            | 4→6       | 6          | +2 ✅  | v1-17 新增 shadow-xs + shadow-2xl，品牌化 Loading 可用更细腻阴影     |
+| OnboardingSteps 行数         | —         | 196        | —      | 3 步向导，仅 transition-colors 过渡，无 keyframe 动画                |
+| Loading/Spinner 引用         | —         | 173        | —      | 替换 Spinner 影响面广，需确保非破坏性升级                            |
 
 ---
 
@@ -336,6 +394,7 @@ Phase 0 (准备)
 **评估**: 合理但需补充交接机制。
 
 Proposal 明确"插画由设计师提供，本 change 建立框架 + 占位图"——这是正确的工程分工。占位 SVG 应满足：
+
 - 使用 `currentColor` + CSS 变量实现主题适配（不硬编码颜色）
 - 线性插画风格，≤ 5KB/个
 - 视觉上可用但非最终品牌资产
@@ -363,10 +422,12 @@ OnboardingSteps.tsx 为独立 3 步向导组件，使用标准 primitive（Butto
 **评估**: 影响面广但风险可控。
 
 173 处引用中，实际入口仅两个组件：
+
 - `Spinner.tsx`（primitive，88 行）—— 被 LoadingState 和各 feature 直接引用
 - `LoadingState.tsx`（pattern，338 行）—— 对外暴露 4 个 variant
 
 策略正确：仅修改 Spinner 内部 SVG + CSS，保持 `SpinnerProps` 接口不变（`size` / `label`），实现"无感升级"。但需注意：
+
 - 品牌化 Spinner 在 `xs`（12px）尺寸下可能因 SVG 复杂度失真——应在最小尺寸下测试辨识度
 - `text-current`（继承父色）机制须保留，品牌化 SVG 不可硬编码颜色
 - `animate-spin` 替换为自定义 keyframes 时，需确认所有引用场景的视觉效果（inline、fullscreen、button 内等）
@@ -376,6 +437,7 @@ OnboardingSteps.tsx 为独立 3 步向导组件，使用标准 primitive（Butto
 **评估**: 合理，无需 JS 动画库。
 
 所有 Phase 涉及的动效均可 CSS-only 实现：
+
 - Phase 1 渐变：纯 CSS custom property
 - Phase 3 步骤切换 slide+fade：`@keyframes` + `animation`
 - Phase 3 光点装饰：`::before` / `::after` pseudo-element + `@keyframes`

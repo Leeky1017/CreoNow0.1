@@ -12,20 +12,20 @@
 
 ## 验收标准
 
-| ID    | 标准                                                                                          | 验证方式                                                                                                                                      | 结果 |
-| ----- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
-| AC-1  | `01-tokens.css` 新增 component token 层，覆盖 Button/Input/Card/Badge/ListItem/Dialog/Tabs/Toast | `grep -cE '\-\-(button\|input\|card\|badge\|listitem\|dialog\|tab\|toast)-' design/system/01-tokens.css` ≥ 22 | ⬜   |
-| AC-2  | `[data-density="compact"]` 块存在且覆盖核心 component token                                   | `grep -c 'data-density.*compact' design/system/01-tokens.css` ≥ 1                                                                             | ⬜   |
-| AC-3  | compact 密度下所有可交互元素高度 ≥ 28px                                                       | 审查 compact preset 中 `--*-height-*` 值                                                                                                      | ⬜   |
-| AC-4  | DensityProvider 组件存在，导出 `useDensity` hook                                              | `find apps/desktop/renderer/src/ -name "DensityProvider*"` 返回结果                                                                           | ⬜   |
-| AC-5  | DensityProvider 在容器 DOM 上设置 `data-density` attribute                                    | 单元测试断言 `data-density` attribute                                                                                                         | ⬜   |
-| AC-6  | 在 `<DensityProvider density="compact">` 下渲染的 Button padding 使用 compact token 值        | 单元测试 / Storybook visual 验证                                                                                                              | ⬜   |
-| AC-7  | 现有 Primitives（Button/Input/Card/ListItem）的 hardcoded spacing 替换为 component token 引用 | `grep -rn 'var(--button-\|var(--input-\|var(--card-\|var(--listitem-' apps/desktop/renderer/src/components/primitives --include='*.tsx'` ≥ 10 | ⬜   |
-| AC-8  | 不传 DensityProvider 时，组件行为与当前完全一致（comfortable 为默认值）                       | 回归测试全绿                                                                                                                                  | ⬜   |
-| AC-9  | TypeScript 类型检查通过                                                                       | `pnpm typecheck`                                                                                                                              | ⬜   |
-| AC-10 | 全量测试通过                                                                                  | `pnpm -C apps/desktop vitest run`                                                                                                             | ⬜   |
-| AC-11 | Storybook 可构建                                                                              | `pnpm -C apps/desktop storybook:build`                                                                                                        | ⬜   |
-| AC-12 | DensityProvider 有 Storybook Story，展示 compact vs comfortable 对比                          | Story 文件存在 + storybook:build 通过                                                                                                         | ⬜   |
+| ID    | 标准                                                                                             | 验证方式                                                                                                                                      | 结果 |
+| ----- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| AC-1  | `01-tokens.css` 新增 component token 层，覆盖 Button/Input/Card/Badge/ListItem/Dialog/Tabs/Toast | `grep -cE '\-\-(button\|input\|card\|badge\|listitem\|dialog\|tab\|toast)-' design/system/01-tokens.css` ≥ 22                                 | ⬜   |
+| AC-2  | `[data-density="compact"]` 块存在且覆盖核心 component token                                      | `grep -c 'data-density.*compact' design/system/01-tokens.css` ≥ 1                                                                             | ⬜   |
+| AC-3  | compact 密度下所有可交互元素高度 ≥ 28px                                                          | 审查 compact preset 中 `--*-height-*` 值                                                                                                      | ⬜   |
+| AC-4  | DensityProvider 组件存在，导出 `useDensity` hook                                                 | `find apps/desktop/renderer/src/ -name "DensityProvider*"` 返回结果                                                                           | ⬜   |
+| AC-5  | DensityProvider 在容器 DOM 上设置 `data-density` attribute                                       | 单元测试断言 `data-density` attribute                                                                                                         | ⬜   |
+| AC-6  | 在 `<DensityProvider density="compact">` 下渲染的 Button padding 使用 compact token 值           | 单元测试 / Storybook visual 验证                                                                                                              | ⬜   |
+| AC-7  | 现有 Primitives（Button/Input/Card/ListItem）的 hardcoded spacing 替换为 component token 引用    | `grep -rn 'var(--button-\|var(--input-\|var(--card-\|var(--listitem-' apps/desktop/renderer/src/components/primitives --include='*.tsx'` ≥ 10 | ⬜   |
+| AC-8  | 不传 DensityProvider 时，组件行为与当前完全一致（comfortable 为默认值）                          | 回归测试全绿                                                                                                                                  | ⬜   |
+| AC-9  | TypeScript 类型检查通过                                                                          | `pnpm typecheck`                                                                                                                              | ⬜   |
+| AC-10 | 全量测试通过                                                                                     | `pnpm -C apps/desktop vitest run`                                                                                                             | ⬜   |
+| AC-11 | Storybook 可构建                                                                                 | `pnpm -C apps/desktop storybook:build`                                                                                                        | ⬜   |
+| AC-12 | DensityProvider 有 Storybook Story，展示 compact vs comfortable 对比                             | Story 文件存在 + storybook:build 通过                                                                                                         | ⬜   |
 
 ---
 
@@ -210,20 +210,20 @@
 
 ### 基线指标验证
 
-| 指标 | R1 值 | R10 值 | Delta | 采集命令 |
-|------|-------|--------|-------|----------|
-| 01-tokens.css 总行数 | — | 472 | — | `wc -l design/system/01-tokens.css` |
-| Component-level token 数 | 0 | 0 | → | `grep -cE '\-\-(button\|input\|card\|badge\|listitem\|dialog\|tab)-' design/system/01-tokens.css` |
-| `data-density` 使用数 | 0 | 0 | → | `grep -rn 'data-density' apps/desktop/renderer/src/ --include='*.tsx' --include='*.css' \| wc -l` |
-| DensityProvider | 不存在 | 不存在 | → | `find apps/desktop/renderer/src -name "*Density*"` → 空 |
-| compact/comfortable 引用 | — | 55 处 | — | ListItem.compact prop、Card compact variant 已存在 |
-| Spacing token 数 | 16 | 16 | → | `grep -c '\-\-space-' design/system/01-tokens.css` |
-| Radius token 档位 | 8 | 8 | → | `grep -c '\-\-radius-' design/system/01-tokens.css` |
-| Shadow token 档位 | 4 | 6 | +2 | v1-17 新增 `--shadow-xs`、`--shadow-2xl` |
-| `:root` / `@media` 块数 | 15 | 15 | → | `grep -cE ':root\|@media.*prefers' design/system/01-tokens.css` |
-| Primitives spacing 引用 | 314 | 314 | → | 待迁移为 component token |
-| Primitive 组件文件数 | 29 | 30 | +1 | v1-18 后微调 |
-| main.css 组件级样式 | — | 6 | — | `grep -cE 'btn-\|input-\|card-\|badge-' apps/desktop/renderer/src/styles/main.css` |
+| 指标                     | R1 值  | R10 值 | Delta | 采集命令                                                                                          |
+| ------------------------ | ------ | ------ | ----- | ------------------------------------------------------------------------------------------------- |
+| 01-tokens.css 总行数     | —      | 472    | —     | `wc -l design/system/01-tokens.css`                                                               |
+| Component-level token 数 | 0      | 0      | →     | `grep -cE '\-\-(button\|input\|card\|badge\|listitem\|dialog\|tab)-' design/system/01-tokens.css` |
+| `data-density` 使用数    | 0      | 0      | →     | `grep -rn 'data-density' apps/desktop/renderer/src/ --include='*.tsx' --include='*.css' \| wc -l` |
+| DensityProvider          | 不存在 | 不存在 | →     | `find apps/desktop/renderer/src -name "*Density*"` → 空                                           |
+| compact/comfortable 引用 | —      | 55 处  | —     | ListItem.compact prop、Card compact variant 已存在                                                |
+| Spacing token 数         | 16     | 16     | →     | `grep -c '\-\-space-' design/system/01-tokens.css`                                                |
+| Radius token 档位        | 8      | 8      | →     | `grep -c '\-\-radius-' design/system/01-tokens.css`                                               |
+| Shadow token 档位        | 4      | 6      | +2    | v1-17 新增 `--shadow-xs`、`--shadow-2xl`                                                          |
+| `:root` / `@media` 块数  | 15     | 15     | →     | `grep -cE ':root\|@media.*prefers' design/system/01-tokens.css`                                   |
+| Primitives spacing 引用  | 314    | 314    | →     | 待迁移为 component token                                                                          |
+| Primitive 组件文件数     | 29     | 30     | +1    | v1-18 后微调                                                                                      |
+| main.css 组件级样式      | —      | 6      | —     | `grep -cE 'btn-\|input-\|card-\|badge-' apps/desktop/renderer/src/styles/main.css`                |
 
 ### R10 任务调整摘要
 

@@ -9,18 +9,18 @@
 
 ## 验收标准
 
-| ID | 标准 | 验证方式 | 结果 | R10 基线 |
-|----|------|----------|------|----------|
-| AC-1 | axe-core CI 审计全部 Story，violation = 0 | CI gate | 待验证 | a11y 测试文件 13 个（无 axe-core 集成） |
-| AC-2 | 所有 `role="tree"` 容器包含 `aria-label`，子节点有 `aria-expanded` / `aria-level` | 代码审查 + axe | 待验证 | FileTree/OutlinePanel 无 tree role |
-| AC-3 | 所有表单 `<input>` 关联 `<label>` 或 `aria-label` | axe 自动检测 | 待验证 | 待 axe 首次扫描确认 |
-| AC-4 | FileTree / OutlinePanel 可纯键盘完成：导航、展开/折叠、选中 | 集成测试 + 手动测试 | 待验证 | onKeyDown 处理 28 处（散布多组件） |
-| AC-5 | 所有 Modal 实现 focus trap + Esc 关闭 + 焦点恢复 | 集成测试 | 待验证 | Radix Dialog 已内置；自定义 Modal 无 focus trap |
-| AC-6 | AI 消息列表有 `aria-live="polite"` 区域 | 代码检查 | 待验证 | AiMessageList 无 aria-live |
-| AC-7 | `@media (prefers-contrast: more)` 规则存在且覆盖核心 token | CSS 检查 | 待验证 | prefers-contrast 使用 0 处 |
-| AC-8 | `@media (forced-colors: active)` 规则存在 | CSS 检查 | 待验证 | forced-colors 使用 0 处 |
-| AC-9 | 纯装饰 icon 100% 添加 `aria-hidden="true"` | grep 抽查 | 待验证 | 待首次审计 |
-| AC-10 | 色彩对比度 ≥ 4.5:1（正文）/ ≥ 3:1（大文本） | axe contrast check | 待验证 | 待 axe 首次扫描确认 |
+| ID    | 标准                                                                              | 验证方式            | 结果   | R10 基线                                        |
+| ----- | --------------------------------------------------------------------------------- | ------------------- | ------ | ----------------------------------------------- |
+| AC-1  | axe-core CI 审计全部 Story，violation = 0                                         | CI gate             | 待验证 | a11y 测试文件 13 个（无 axe-core 集成）         |
+| AC-2  | 所有 `role="tree"` 容器包含 `aria-label`，子节点有 `aria-expanded` / `aria-level` | 代码审查 + axe      | 待验证 | FileTree/OutlinePanel 无 tree role              |
+| AC-3  | 所有表单 `<input>` 关联 `<label>` 或 `aria-label`                                 | axe 自动检测        | 待验证 | 待 axe 首次扫描确认                             |
+| AC-4  | FileTree / OutlinePanel 可纯键盘完成：导航、展开/折叠、选中                       | 集成测试 + 手动测试 | 待验证 | onKeyDown 处理 28 处（散布多组件）              |
+| AC-5  | 所有 Modal 实现 focus trap + Esc 关闭 + 焦点恢复                                  | 集成测试            | 待验证 | Radix Dialog 已内置；自定义 Modal 无 focus trap |
+| AC-6  | AI 消息列表有 `aria-live="polite"` 区域                                           | 代码检查            | 待验证 | AiMessageList 无 aria-live                      |
+| AC-7  | `@media (prefers-contrast: more)` 规则存在且覆盖核心 token                        | CSS 检查            | 待验证 | prefers-contrast 使用 0 处                      |
+| AC-8  | `@media (forced-colors: active)` 规则存在                                         | CSS 检查            | 待验证 | forced-colors 使用 0 处                         |
+| AC-9  | 纯装饰 icon 100% 添加 `aria-hidden="true"`                                        | grep 抽查           | 待验证 | 待首次审计                                      |
+| AC-10 | 色彩对比度 ≥ 4.5:1（正文）/ ≥ 3:1（大文本）                                       | axe contrast check  | 待验证 | 待 axe 首次扫描确认                             |
 
 ---
 
@@ -219,19 +219,20 @@
 **采集口径**: worktree `issue-1224-r10-p8-tasks-cascade`（基于最新 main）
 **采集范围**: `apps/desktop/renderer/src/`（全 renderer，比 R9 的 `features/` 更宽）
 
-| 指标 | R9 值 | R10 值 | Delta | 说明 |
-|------|-------|--------|-------|------|
-| `role=` 属性（renderer/src/ .tsx） | — | 102 | — | R9 未单独统计 role=；R10 首次采集 |
-| `aria-*` 属性（renderer/src/ .tsx） | 195（features/） | 368 | +173 | R10 范围扩大到 renderer/src/（含 components/）；Radix 组件贡献显著 |
-| 键盘事件处理（onKeyDown/Up/Press） | 16（features/） | 28 | +12 | 范围扩大；含 components/ 层键盘处理 |
-| `tabIndex` 使用 | — | 25 | — | R9 未单独统计；R10 首次采集 |
-| `useFocus`/`autoFocus`/`focus()` | — | 74 | — | R9 未单独统计；R10 首次采集 |
-| a11y 测试文件数 | — | 13 | — | 含 axe/a11y/accessibility 关键词的测试文件 |
-| `prefers-reduced-motion`（CSS+TSX） | 5 | 5 | ±0 | 稳定，v1-12 已落地 |
-| `prefers-contrast`（renderer） | 0 | 0 | ±0 | 仍为 0，v1-19 核心任务 |
-| `prefers-contrast`（design/） | 0 | 0 | ±0 | 仍为 0，v1-19 核心任务 |
+| 指标                                | R9 值            | R10 值 | Delta | 说明                                                               |
+| ----------------------------------- | ---------------- | ------ | ----- | ------------------------------------------------------------------ |
+| `role=` 属性（renderer/src/ .tsx）  | —                | 102    | —     | R9 未单独统计 role=；R10 首次采集                                  |
+| `aria-*` 属性（renderer/src/ .tsx） | 195（features/） | 368    | +173  | R10 范围扩大到 renderer/src/（含 components/）；Radix 组件贡献显著 |
+| 键盘事件处理（onKeyDown/Up/Press）  | 16（features/）  | 28     | +12   | 范围扩大；含 components/ 层键盘处理                                |
+| `tabIndex` 使用                     | —                | 25     | —     | R9 未单独统计；R10 首次采集                                        |
+| `useFocus`/`autoFocus`/`focus()`    | —                | 74     | —     | R9 未单独统计；R10 首次采集                                        |
+| a11y 测试文件数                     | —                | 13     | —     | 含 axe/a11y/accessibility 关键词的测试文件                         |
+| `prefers-reduced-motion`（CSS+TSX） | 5                | 5      | ±0    | 稳定，v1-12 已落地                                                 |
+| `prefers-contrast`（renderer）      | 0                | 0      | ±0    | 仍为 0，v1-19 核心任务                                             |
+| `prefers-contrast`（design/）       | 0                | 0      | ±0    | 仍为 0，v1-19 核心任务                                             |
 
 **R10 观察**：
+
 - ARIA 基础由 Radix 组件自动覆盖（368 处），但树形结构（FileTree/OutlinePanel）仍缺少 `role="tree"` / `role="treeitem"` 语义
 - 键盘处理（28 处）主要集中在 CommandPalette 和表单组件，树形导航和网格导航为空白
 - 高对比模式支持为 0——从 R6 到 R10 无变化，确认为 v1-19 核心交付物
@@ -288,6 +289,7 @@
 **工作量预估与 proposal 一致**：Phase 1 约 2d、Phase 2 约 3d、Phase 3 约 1d、Phase 4 约 1d、Phase 5 约 0.5d，合计约 7.5d。R6 级联分析已确认 Radix 基础使工作量减少约 40%，符合预期。
 
 **主要风险**：
+
 1. ARIA 角色错误使用比不用更糟——P0-4 选型完成后，建议每个 Phase 1 task 完成后立即运行 axe 扫描，而非等到 Phase 5
 2. 键盘导航与快捷键冲突——P0-6 的快捷键 map 是关键风控措施
 3. axe-core CI 集成的技术复杂度可能被低估——建议 Phase 5 作为独立 PR，避免阻塞其他 Phase 合并

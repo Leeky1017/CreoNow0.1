@@ -325,28 +325,30 @@ interface DensityProviderProps {
 **采集时间**: 2026-03-22
 **采集口径**: worktree（基于最新 main，v1-17/v1-18 已合并）
 
-| 指标 | R1 值 | R10 值 | Delta | 说明 |
-|------|-------|--------|-------|------|
-| 01-tokens.css 总行数 | — | 472 | — | R1 未追踪；当前值为基线 |
-| Component-level token 数 | 0 | 0 | → | 待本 change 新建 ≥ 20 |
-| `data-density` 使用数 | 0 | 0 | → | 待本 change 新建 |
-| DensityProvider | 不存在 | 不存在 | → | 待本 change 新建 |
-| compact/comfortable 文本引用 | — | 55 处 | — | ListItem.compact prop、Card compact variant 等已存在；R1 未追踪 |
-| Spacing token 数 | 16 | 16 | → | 13 numeric + 3 semantic |
-| Radius token 档位 | 8 | 8 | → | 不变 |
-| Shadow token 档位 | 4 | 6 | +2 | v1-17 扩展：新增 `--shadow-xs`、`--shadow-2xl` |
-| `:root` / `@media` 块数 | 15 | 15 | → | 不变 |
-| Primitives spacing 引用 | 314 | 314 | → | 待本 change 迁移为 component token |
-| Primitive 组件文件数 | 29 | 30 | +1 | v1-18 清理后微调（+1 组件） |
-| main.css 组件级样式 | — | 6 | — | R1 未追踪 |
+| 指标                         | R1 值  | R10 值 | Delta | 说明                                                            |
+| ---------------------------- | ------ | ------ | ----- | --------------------------------------------------------------- |
+| 01-tokens.css 总行数         | —      | 472    | —     | R1 未追踪；当前值为基线                                         |
+| Component-level token 数     | 0      | 0      | →     | 待本 change 新建 ≥ 20                                           |
+| `data-density` 使用数        | 0      | 0      | →     | 待本 change 新建                                                |
+| DensityProvider              | 不存在 | 不存在 | →     | 待本 change 新建                                                |
+| compact/comfortable 文本引用 | —      | 55 处  | —     | ListItem.compact prop、Card compact variant 等已存在；R1 未追踪 |
+| Spacing token 数             | 16     | 16     | →     | 13 numeric + 3 semantic                                         |
+| Radius token 档位            | 8      | 8      | →     | 不变                                                            |
+| Shadow token 档位            | 4      | 6      | +2    | v1-17 扩展：新增 `--shadow-xs`、`--shadow-2xl`                  |
+| `:root` / `@media` 块数      | 15     | 15     | →     | 不变                                                            |
+| Primitives spacing 引用      | 314    | 314    | →     | 待本 change 迁移为 component token                              |
+| Primitive 组件文件数         | 29     | 30     | +1    | v1-18 清理后微调（+1 组件）                                     |
+| main.css 组件级样式          | —      | 6      | —     | R1 未追踪                                                       |
 
 ### 上游影响分析
 
 #### v1-17（字体打包+阴影Token PR#1222 ✅ 已合并）
+
 - shadow token 扩展 4→6 档（新增 `--shadow-xs`、`--shadow-2xl`）→ 组件 token 层的 `--card-shadow`、`--dialog-shadow` 等可映射更细粒度的 shadow 档位
 - 不影响 spacing/radius 层，component token 定义无需调整
 
 #### v1-18（Arbitrary清理 PR#1223 ✅ 已合并）
+
 - arbitrary 值清理减少了组件级硬编码 → 组件 token 化迁移更顺畅，hardcoded spacing 残留更少
 - Primitive 组件文件数 29→30（+1），spacing 引用数维持 314 不变
 
@@ -368,12 +370,12 @@ interface DensityProviderProps {
 
 ### 依赖状态更新
 
-| 依赖 | R1 状态 | R10 状态 | 变化 |
-|------|---------|----------|------|
-| v1-01（Design Token） | ✅ 完成 | ✅ 完成 | 不变 |
-| v1-02（Primitives） | ✅ 完成 | ✅ 完成 | 不变 |
-| v1-17（字体+阴影） | — | ✅ 已合并 | 新增；shadow 6 档可用 |
-| v1-18（Arbitrary清理） | — | ✅ 已合并 | 新增；hardcoded 减少 |
-| v1-24（组件库扩展） | ⏳ 待启动 | ⏳ 待启动 | 不变；仍为主阻塞项 |
-| v1-23（色彩系统） | ⏳ 待启动 | ⏳ 待启动 | tasks.md 已建档 |
-| v1-19（a11y） | ⏳ 待启动 | ⏳ 待启动 | tasks.md 已建档 |
+| 依赖                   | R1 状态   | R10 状态  | 变化                  |
+| ---------------------- | --------- | --------- | --------------------- |
+| v1-01（Design Token）  | ✅ 完成   | ✅ 完成   | 不变                  |
+| v1-02（Primitives）    | ✅ 完成   | ✅ 完成   | 不变                  |
+| v1-17（字体+阴影）     | —         | ✅ 已合并 | 新增；shadow 6 档可用 |
+| v1-18（Arbitrary清理） | —         | ✅ 已合并 | 新增；hardcoded 减少  |
+| v1-24（组件库扩展）    | ⏳ 待启动 | ⏳ 待启动 | 不变；仍为主阻塞项    |
+| v1-23（色彩系统）      | ⏳ 待启动 | ⏳ 待启动 | tasks.md 已建档       |
+| v1-19（a11y）          | ⏳ 待启动 | ⏳ 待启动 | tasks.md 已建档       |

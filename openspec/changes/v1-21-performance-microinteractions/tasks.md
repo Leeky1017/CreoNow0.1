@@ -10,20 +10,20 @@
 
 ## 验收标准
 
-| ID | 标准 | 验证方式 | 结果 | R10 基线 |
-|----|------|----------|------|----------|
-| AC-01 | FileTree / AiMessageList / OutlinePanel / SearchResultItems / VersionHistory 使用虚拟化 | `grep "useVirtualizer" renderer/src/` ≥ 5 处 | 🔲 | 0 处 |
-| AC-02 | `@tanstack/react-virtual` 已安装 | `package.json` 依赖检查 | 🔲 | 未安装 |
-| AC-03 | 1000 节点 FileTree 滚动帧率 ≥ 55fps | React DevTools Profiler | 🔲 | N/A（无虚拟化） |
-| AC-04 | 500 条 AI 消息滚动帧率 ≥ 55fps | React DevTools Profiler | 🔲 | N/A（无虚拟化） |
-| AC-05 | ≥ 8 个面板使用定制 Skeleton 形状（非通用矩形） | 人工检查 | 🔲 | 2 个（Dashboard, Character） |
-| AC-06 | Skeleton 使用量 ≥ 60 处 | `grep "Skeleton\|skeleton" src/ --include="*.tsx" \| grep -v test \| wc` | 🔲 | 55 处（全 src/）；22 处（features/） |
-| AC-07 | 列表项添加/删除有 enter/exit 动画 | 视觉验收 | 🔲 | 0（无 enter/exit 动效） |
-| AC-08 | Tab 切换有 crossfade 动效 | 视觉验收 | 🔲 | 0（无 crossfade） |
-| AC-09 | 所有动效时长 ≤ 0.3s | CSS 检查 + guard test | 🔲 | 现有动效均 ≤ 0.3s |
-| AC-10 | `prefers-reduced-motion: reduce` 时非必要动画禁用 | media query 验证 + guard test | 🔲 | 5 处 CSS 声明 + guard test + `reducedMotion.ts` 工具 |
-| AC-11 | Storybook 构建通过 | `pnpm -C apps/desktop storybook:build` | 🔲 | — |
-| AC-12 | 类型检查通过 | `pnpm typecheck` | 🔲 | — |
+| ID    | 标准                                                                                    | 验证方式                                                                 | 结果 | R10 基线                                             |
+| ----- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ---- | ---------------------------------------------------- |
+| AC-01 | FileTree / AiMessageList / OutlinePanel / SearchResultItems / VersionHistory 使用虚拟化 | `grep "useVirtualizer" renderer/src/` ≥ 5 处                             | 🔲   | 0 处                                                 |
+| AC-02 | `@tanstack/react-virtual` 已安装                                                        | `package.json` 依赖检查                                                  | 🔲   | 未安装                                               |
+| AC-03 | 1000 节点 FileTree 滚动帧率 ≥ 55fps                                                     | React DevTools Profiler                                                  | 🔲   | N/A（无虚拟化）                                      |
+| AC-04 | 500 条 AI 消息滚动帧率 ≥ 55fps                                                          | React DevTools Profiler                                                  | 🔲   | N/A（无虚拟化）                                      |
+| AC-05 | ≥ 8 个面板使用定制 Skeleton 形状（非通用矩形）                                          | 人工检查                                                                 | 🔲   | 2 个（Dashboard, Character）                         |
+| AC-06 | Skeleton 使用量 ≥ 60 处                                                                 | `grep "Skeleton\|skeleton" src/ --include="*.tsx" \| grep -v test \| wc` | 🔲   | 55 处（全 src/）；22 处（features/）                 |
+| AC-07 | 列表项添加/删除有 enter/exit 动画                                                       | 视觉验收                                                                 | 🔲   | 0（无 enter/exit 动效）                              |
+| AC-08 | Tab 切换有 crossfade 动效                                                               | 视觉验收                                                                 | 🔲   | 0（无 crossfade）                                    |
+| AC-09 | 所有动效时长 ≤ 0.3s                                                                     | CSS 检查 + guard test                                                    | 🔲   | 现有动效均 ≤ 0.3s                                    |
+| AC-10 | `prefers-reduced-motion: reduce` 时非必要动画禁用                                       | media query 验证 + guard test                                            | 🔲   | 5 处 CSS 声明 + guard test + `reducedMotion.ts` 工具 |
+| AC-11 | Storybook 构建通过                                                                      | `pnpm -C apps/desktop storybook:build`                                   | 🔲   | —                                                    |
+| AC-12 | 类型检查通过                                                                            | `pnpm typecheck`                                                         | 🔲   | —                                                    |
 
 ---
 
@@ -308,29 +308,29 @@
 
 ## R10 基线采集（2026-03-22）
 
-| 指标 | R10 值 | 说明 |
-|------|--------|------|
-| `useVirtualizer` / `@tanstack/react-virtual` 使用 | 0 | 零虚拟化 |
-| `@tanstack/react-virtual` 安装 | 否 | `package.json` 无此依赖 |
-| Skeleton 使用量（`features/` excl test/story） | 22 处 | 仅 Dashboard + Character 有定制 Skeleton |
-| Skeleton 使用量（全 `src/` excl test/story） | 55 处 | 含 `components/` 层 Skeleton 组件定义 |
-| 已有定制 Skeleton 文件 | 2 个 | `DashboardSkeleton.tsx`（26行）、`CharacterPanelSkeleton.tsx`（23行） |
-| `React.lazy` / `Suspense` 使用 | 0 | 无代码分割 |
-| `React.memo` 使用 | 0 | 无 memo 化列表项 |
-| `useMemo` / `useCallback` 使用 | 437 处 | 已有较多使用 |
-| CSS transition/animation/@keyframes（`.css`） | 51 行 | `main.css` 645 行 |
-| motion/animate 使用（`.tsx`/`.ts`） | 118 处 | 含 Tailwind class 引用 |
-| `prefers-reduced-motion` 声明 | 5 处 CSS + guard test + 工具 | 全局降级已实现 |
-| `@starting-style` 使用 | 0 | 未采用 |
-| Framer Motion 安装 | 否 | 策略：CSS-only |
-| **关键组件行数** | | |
-| FileTreePanel.tsx | 126 行 | 固定行高虚拟化 |
-| AiMessageList.tsx | 431 行 | 动态行高虚拟化（最复杂） |
-| OutlinePanel.tsx | 326 行 | 固定行高虚拟化 |
-| SearchResultItems.tsx | 246 行 | 固定行高虚拟化 |
-| VersionHistoryPanel.tsx | 187 行 | 固定行高虚拟化 |
-| MemoryList.tsx | 82 行 | memo 优化候选 |
-| KgListView.tsx | 219 行 | memo 优化候选 |
+| 指标                                              | R10 值                       | 说明                                                                  |
+| ------------------------------------------------- | ---------------------------- | --------------------------------------------------------------------- |
+| `useVirtualizer` / `@tanstack/react-virtual` 使用 | 0                            | 零虚拟化                                                              |
+| `@tanstack/react-virtual` 安装                    | 否                           | `package.json` 无此依赖                                               |
+| Skeleton 使用量（`features/` excl test/story）    | 22 处                        | 仅 Dashboard + Character 有定制 Skeleton                              |
+| Skeleton 使用量（全 `src/` excl test/story）      | 55 处                        | 含 `components/` 层 Skeleton 组件定义                                 |
+| 已有定制 Skeleton 文件                            | 2 个                         | `DashboardSkeleton.tsx`（26行）、`CharacterPanelSkeleton.tsx`（23行） |
+| `React.lazy` / `Suspense` 使用                    | 0                            | 无代码分割                                                            |
+| `React.memo` 使用                                 | 0                            | 无 memo 化列表项                                                      |
+| `useMemo` / `useCallback` 使用                    | 437 处                       | 已有较多使用                                                          |
+| CSS transition/animation/@keyframes（`.css`）     | 51 行                        | `main.css` 645 行                                                     |
+| motion/animate 使用（`.tsx`/`.ts`）               | 118 处                       | 含 Tailwind class 引用                                                |
+| `prefers-reduced-motion` 声明                     | 5 处 CSS + guard test + 工具 | 全局降级已实现                                                        |
+| `@starting-style` 使用                            | 0                            | 未采用                                                                |
+| Framer Motion 安装                                | 否                           | 策略：CSS-only                                                        |
+| **关键组件行数**                                  |                              |                                                                       |
+| FileTreePanel.tsx                                 | 126 行                       | 固定行高虚拟化                                                        |
+| AiMessageList.tsx                                 | 431 行                       | 动态行高虚拟化（最复杂）                                              |
+| OutlinePanel.tsx                                  | 326 行                       | 固定行高虚拟化                                                        |
+| SearchResultItems.tsx                             | 246 行                       | 固定行高虚拟化                                                        |
+| VersionHistoryPanel.tsx                           | 187 行                       | 固定行高虚拟化                                                        |
+| MemoryList.tsx                                    | 82 行                        | memo 优化候选                                                         |
+| KgListView.tsx                                    | 219 行                       | memo 优化候选                                                         |
 
 ---
 
@@ -348,7 +348,8 @@
 
 **现象**: AC-03 和 AC-04 要求 ≥55fps 滚动帧率，但此指标只能通过 React DevTools Profiler 手动测量，无法纳入 CI 自动验证。
 
-**建议**: 
+**建议**:
+
 1. 帧率验证作为**人工验收步骤**记录在 PR checklist，不作为 CI gate
 2. 考虑用 `performance.now()` 写 benchmark 测试脚本，记录渲染时间上限（如 1000 项 FileTree 初始渲染 < 100ms），可纳入 CI
 3. 长期可考虑 Playwright + Chrome DevTools Protocol 自动化 fps 检测
@@ -372,6 +373,7 @@
 ### ✅ O-5: `prefers-reduced-motion` 支持——已完善，无需提前
 
 **现象**: Proposal 建议在 Phase 4 处理 reduced-motion。但 R10 基线显示全局 reduced-motion 降级已在 v1-12 完成：
+
 - `main.css` 有 4 处 `@media (prefers-reduced-motion: reduce)` 声明
 - `tokens.css` 有 1 处 duration token 归零
 - `reducedMotion.ts` 提供 JS 查询工具
