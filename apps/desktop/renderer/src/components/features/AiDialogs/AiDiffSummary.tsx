@@ -96,6 +96,7 @@ export function AiDiffSummary({
         <div className="flex gap-2">
           <Button
             type="button"
+            variant="pill"
             data-testid="ai-reject-all"
             className={rejectAllStyles}
             onClick={onRejectAll}
@@ -105,6 +106,7 @@ export function AiDiffSummary({
           </Button>
           <Button
             type="button"
+            variant="pill"
             data-testid="ai-accept-all"
             className={acceptAllStyles}
             onClick={onAcceptAll}
@@ -140,6 +142,7 @@ export function AiDiffSummary({
         {onEditManually && (
           <Button
             type="button"
+            variant="pill"
             className={editManuallyStyles}
             onClick={onEditManually}
             disabled={isApplying}

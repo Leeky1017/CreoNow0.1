@@ -112,6 +112,7 @@ export function AiErrorCardActions(props: {
           {props.onUpgradePlan && (
             <Button
               type="button"
+              variant="pill"
               className={upgradeButtonStyles}
               onClick={props.onUpgradePlan}
             >
@@ -135,6 +136,7 @@ export function AiErrorCardActions(props: {
           {props.onRetry && (
             <Button
               type="button"
+              variant="pill"
               className={retryButtonStyles}
               onClick={props.handleRetry}
               disabled={props.retryState === "loading"}
@@ -164,6 +166,7 @@ export function AiErrorCardActions(props: {
         props.onRetry && (
           <Button
             type="button"
+            variant="pill"
             className={retryButtonStyles}
             onClick={props.handleRetry}
             disabled={props.isRetryDisabled}

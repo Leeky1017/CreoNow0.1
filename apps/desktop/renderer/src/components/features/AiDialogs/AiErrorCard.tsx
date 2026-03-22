@@ -73,8 +73,8 @@ const cardStyles = [
   "transition-all duration-[var(--duration-normal)] ease-[var(--ease-default)]",
 ].join(" ");
 const dismissButtonStyles = [
-  "absolute top-2 right-2 p-1",
-  "rounded-sm text-(--color-fg-muted) hover:text-(--color-fg-default) hover:bg-[var(--color-bg-hover)]",
+  "absolute top-2 right-2",
+  "text-(--color-fg-muted) hover:text-(--color-fg-default) hover:bg-[var(--color-bg-hover)]",
   "transition-colors duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)]",
   "focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)]",
 ].join(" ");
@@ -195,6 +195,7 @@ export function AiErrorCard({
       {showDismiss && (
         <Button
           type="button"
+          size="icon"
           className={dismissButtonStyles}
           onClick={handleDismiss}
           title={t("ai.error.dismiss")}
