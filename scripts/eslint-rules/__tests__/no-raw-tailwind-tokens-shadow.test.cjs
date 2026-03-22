@@ -1,5 +1,6 @@
 // @ts-nocheck — ESLint RuleTester is JS-only
-// Additional tests for shadow class matching in no-raw-tailwind-tokens
+// Shadow classes (shadow-xs/sm/md/lg/xl/2xl) are exported via @theme
+// and map to our design tokens. They are no longer flagged.
 const { RuleTester } = require("eslint");
 const rule = require("../no-raw-tailwind-tokens.cjs");
 
@@ -11,50 +12,34 @@ const tester = new RuleTester({
   },
 });
 
-tester.run("creonow/no-raw-tailwind-tokens (shadow extension)", rule, {
-  valid: [
-    // CSS variable reference — should not trigger
-    { code: `const x = "shadow-[var(--shadow-card)]";` },
-    // Custom shadow with arbitrary value — should not trigger
-    { code: `const x = "shadow-[0_4px_6px_rgba(0,0,0,0.1)]";` },
-    // Design token usage — should not trigger
-    { code: `const x = "shadow-surface";` },
-    // Drop shadow variant — should not trigger
-    { code: `const x = "drop-shadow-md";` },
-    // CSS variable name — should not trigger
-    { code: `const x = "--shadow-md";` },
-    // shadow-2xl is registered in @theme as design token — should not trigger
-    { code: `const cls = "shadow-2xl";` },
-    // shadow-xs is registered in @theme as design token — should not trigger
-    { code: `const cls = "shadow-xs";` },
-  ],
-  invalid: [
-    // Built-in shadow-lg — should trigger
-    {
-      code: `const cls = "shadow-lg";`,
-      errors: [{ messageId: "rawShadow" }],
-    },
-    // Built-in shadow-xl — should trigger
-    {
-      code: `const cls = "shadow-xl";`,
-      errors: [{ messageId: "rawShadow" }],
-    },
-    // Built-in shadow-sm — should trigger
-    {
-      code: `const cls = "shadow-sm";`,
-      errors: [{ messageId: "rawShadow" }],
-    },
-    // Multiple shadows in one string — should trigger twice
-    {
-      code: `const cls = "shadow-xl shadow-lg";`,
-      errors: [{ messageId: "rawShadow" }, { messageId: "rawShadow" }],
-    },
-    // With modifier prefix — should trigger
-    {
-      code: `const cls = "hover:shadow-lg";`,
-      errors: [{ messageId: "rawShadow" }],
-    },
-  ],
-});
+tester.run(
+  "creonow/no-raw-tailwind-tokens (shadow — now allowed via @theme)",
+  rule,
+  {
+    valid: [
+      // CSS variable reference — should not trigger
+      { code: `const x = "shadow-[var(--shadow-card)]";` },
+      // Custom shadow with arbitrary value — should not trigger
+      { code: `const x = "shadow-[0_4px_6px_rgba(0,0,0,0.1)]";` },
+      // Design token usage — should not trigger
+      { code: `const x = "shadow-surface";` },
+      // Drop shadow variant — should not trigger
+      { code: `const x = "drop-shadow-md";` },
+      // CSS variable name — should not trigger
+      { code: `const x = "--shadow-md";` },
+      // @theme-exported shadow utilities — should not trigger
+      { code: `const cls = "shadow-xs";` },
+      { code: `const cls = "shadow-sm";` },
+      { code: `const cls = "shadow-lg";` },
+      { code: `const cls = "shadow-xl";` },
+      { code: `const cls = "shadow-2xl";` },
+      { code: `const cls = "hover:shadow-lg";` },
+      { code: `const cls = "shadow-xl shadow-2xl";` },
+    ],
+    invalid: [],
+  },
+);
 
-console.log("✅ no-raw-tailwind-tokens (shadow extension): all tests passed");
+console.log(
+  "✅ no-raw-tailwind-tokens (shadow — @theme allowed): all tests passed",
+);
