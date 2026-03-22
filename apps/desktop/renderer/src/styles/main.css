@@ -28,9 +28,19 @@
   --duration-slower: 500ms;
 
   /* 字体 */
-  --font-family-ui: "Inter", system-ui, sans-serif;
+  --font-family-ui:
+    "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
   --font-family-body: "Lora", "Crimson Pro", Georgia, serif;
   --font-family-mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+
+  /* 阴影 */
+  --shadow-xs: 0 1px 1px var(--color-shadow);
+  --shadow-sm: 0 1px 2px var(--color-shadow);
+  --shadow-md: 0 4px 8px var(--color-shadow);
+  --shadow-lg: 0 8px 16px var(--color-shadow);
+  --shadow-xl: 0 16px 32px var(--color-shadow);
+  --shadow-2xl: 0 24px 48px var(--color-shadow);
 }
 
 /*

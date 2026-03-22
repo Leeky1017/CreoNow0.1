@@ -40,11 +40,13 @@ const rule = {
     const RAW_COLOR_RE =
       /\b(?:[\w-]*:)?(?:bg|text|border|ring|shadow|outline|fill|stroke|from|via|to|divide|placeholder|accent|caret|decoration)-(?:red|blue|green|yellow|purple|pink|indigo|violet|cyan|teal|emerald|lime|amber|orange|fuchsia|rose|sky|slate|gray|zinc|neutral|stone|warm)-\d{1,3}(?:\/\d{1,3})?\b/g;
 
-    // Matches: shadow-lg, shadow-xl, shadow-2xl (but not shadow-[custom] or shadow-surface etc.)
+    // Matches: shadow-sm, shadow-md, shadow-lg, shadow-xl (but not shadow-[custom] or shadow-surface etc.)
+    // Note: shadow-xs and shadow-2xl are registered in @theme as design tokens,
+    // so they are NOT blocked — using them via Tailwind utilities IS using the design token.
     // Also with modifier prefixes: hover:shadow-lg, data-[state=active]:shadow-sm
     // Negative lookbehind (?<!-) prevents matching inside CSS var names (--shadow-md)
     // and Tailwind drop-shadow utilities (drop-shadow-md).
-    const RAW_SHADOW_RE = /(?<!-)\b(?:[\w[\]=-]*:)?shadow-(?:sm|md|lg|xl|2xl)\b/g;
+    const RAW_SHADOW_RE = /(?<!-)\b(?:[\w[\]=-]*:)?shadow-(?:sm|md|lg|xl)\b/g;
 
     /**
      * Check a string value for raw Tailwind tokens.
@@ -55,11 +57,19 @@ const rule = {
       let match;
       RAW_COLOR_RE.lastIndex = 0;
       while ((match = RAW_COLOR_RE.exec(value)) !== null) {
-        context.report({ node, messageId: "rawColor", data: { value: match[0] } });
+        context.report({
+          node,
+          messageId: "rawColor",
+          data: { value: match[0] },
+        });
       }
       RAW_SHADOW_RE.lastIndex = 0;
       while ((match = RAW_SHADOW_RE.exec(value)) !== null) {
-        context.report({ node, messageId: "rawShadow", data: { value: match[0] } });
+        context.report({
+          node,
+          messageId: "rawShadow",
+          data: { value: match[0] },
+        });
       }
     }
 
