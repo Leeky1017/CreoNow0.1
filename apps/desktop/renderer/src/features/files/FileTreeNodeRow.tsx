@@ -96,9 +96,17 @@ export const FileTreeNodeRow = React.forwardRef<
     );
   }
 
+  const isExpanded = hasChildren
+    ? props.expandedFolderIds.has(item.documentId)
+    : undefined;
+
   return (
     <div
       key={item.documentId}
+      role="treeitem"
+      aria-expanded={isExpanded}
+      aria-level={entry.depth + 1}
+      aria-selected={selected}
       className="relative"
       style={{ paddingLeft: `${entry.depth * 16}px` }}
     >

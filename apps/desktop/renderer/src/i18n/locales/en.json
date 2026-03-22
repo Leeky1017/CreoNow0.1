@@ -500,7 +500,8 @@
       "apply": "Apply",
       "confirmApply": "Confirm Apply",
       "backToDiff": "Back to Diff",
-      "reject": "Reject"
+      "reject": "Reject",
+      "messageArea": "AI message area"
     },
     "chatHistory": {
       "ariaLabel": "Chat History",
@@ -1030,8 +1031,6 @@
       "navJudge": "Quality",
       "navAnalytics": "Analytics",
       "navAccount": "Account",
-      "navExport": "Export",
-      "navShortcuts": "Shortcuts",
       "navExport": "Export",
       "navShortcuts": "Shortcuts",
       "title": "Settings",
@@ -1638,5 +1637,8 @@
   "common": {
     "comingSoon": "Coming soon",
     "featureInDevelopment": "This feature is under development"
+  },
+  "layout": {
+    "skipToContent": "Skip to main content"
   }
 }

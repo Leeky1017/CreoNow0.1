@@ -2117,7 +2117,10 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                 class="flex-1 flex flex-col min-h-0"
               >
                 <div
+                  aria-label="AI message area"
+                  aria-live="polite"
                   class="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4"
+                  role="log"
                 >
                   <div
                     aria-atomic="false"

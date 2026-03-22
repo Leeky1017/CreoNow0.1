@@ -695,3 +695,26 @@ textarea:focus-visible {
   user-select: none;
   line-height: 1;
 }
+
+/* === V1-19: 高对比模式支持 === */
+
+@media (prefers-contrast: more) {
+  :root {
+    --color-border-default: hsl(0 0% 50%);
+    --color-border-subtle: hsl(0 0% 40%);
+    --color-fg-subtle: hsl(0 0% 75%);
+    --color-fg-muted: hsl(0 0% 80%);
+    --color-separator: hsl(0 0% 45%);
+    --color-ring-focus: hsl(0 0% 100%);
+  }
+}
+
+@media (forced-colors: active) {
+  :root {
+    --color-border-default: CanvasText;
+    --color-fg-default: CanvasText;
+    --color-bg-base: Canvas;
+    --color-bg-surface: Canvas;
+    --color-ring-focus: Highlight;
+  }
+}

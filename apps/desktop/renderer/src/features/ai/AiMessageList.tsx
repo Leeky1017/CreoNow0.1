@@ -227,7 +227,12 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
   const hasHistoryReplay = props.historyMessages.length > 0;
 
   return (
-    <div className="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4">
+    <div
+      role="log"
+      aria-live="polite"
+      aria-label={t("ai.panel.messageArea")}
+      className="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4"
+    >
       {hasHistoryReplay ? (
         <div data-testid="ai-history-replay-list" className="w-full space-y-2">
           {props.historyMessages.map((message) => (

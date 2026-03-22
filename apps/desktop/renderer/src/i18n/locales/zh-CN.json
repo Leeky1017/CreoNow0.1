@@ -500,7 +500,8 @@
       "apply": "应用",
       "confirmApply": "确认应用",
       "backToDiff": "返回差异",
-      "reject": "拒绝"
+      "reject": "拒绝",
+      "messageArea": "AI 消息区域"
     },
     "chatHistory": {
       "ariaLabel": "聊天历史",
@@ -1030,8 +1031,6 @@
       "navJudge": "质量",
       "navAnalytics": "数据分析",
       "navAccount": "账户",
-      "navExport": "导出",
-      "navShortcuts": "快捷键",
       "navExport": "导出",
       "navShortcuts": "快捷键",
       "title": "设置",
@@ -1638,5 +1637,8 @@
   "common": {
     "comingSoon": "即将推出",
     "featureInDevelopment": "此功能正在开发中"
+  },
+  "layout": {
+    "skipToContent": "跳转到主内容区"
   }
 }
