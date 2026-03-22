@@ -255,33 +255,34 @@
   --gray-9: hsl(0 0% 40%);
   --gray-10: hsl(0 0% 45%);
 
-  /* Background layers */
-  --color-bg-base: #080808;
-  --color-bg-surface: #0f0f0f;
-  --color-bg-raised: #141414;
+  /* 背景层级（按 elevation 递增：base → surface → raised） */
+  --color-bg-base: var(--gray-1);
+  --color-bg-surface: var(--gray-2);
+  --color-bg-raised: var(--gray-3);
   --color-bg-disabled: rgba(0, 0, 0, 0.4);
 
-  --color-bg-hover: #1a1a1a;
-  --color-bg-active: #1f1f1f;
-  --color-bg-selected: #222222;
+  /* 交互状态背景 */
+  --color-bg-hover: var(--gray-4);
+  --color-bg-active: var(--gray-5);
+  --color-bg-selected: var(--gray-6);
   --color-bg-overlay: rgba(255, 255, 255, 0.1);
 
-  /* Foreground */
+  /* 前景（文字/图标） */
   --color-fg-default: #ffffff;
   --color-fg-base: var(--color-fg-default);
-  --color-fg-muted: #888888;
-  --color-fg-subtle: #666666;
-  --color-fg-placeholder: #444444;
-  --color-fg-disabled: #333333;
-  --color-fg-inverse: #080808;
+  --color-fg-muted: hsl(0 0% 53%);
+  --color-fg-subtle: hsl(0 0% 48%); /* WCAG AA ≥ 4.5:1 vs bg-base */
+  --color-fg-placeholder: var(--gray-8);
+  --color-fg-disabled: var(--gray-7);
+  --color-fg-inverse: var(--gray-1);
   --color-fg-on-accent: #ffffff;
 
-  /* Borders / separators */
-  --color-border-default: #222222;
-  --color-border-hover: #333333;
-  --color-border-focus: #444444;
+  /* 边框与分割线 */
+  --color-border-default: var(--gray-6);
+  --color-border-hover: var(--gray-7);
+  --color-border-focus: var(--gray-8);
   --color-separator: rgba(255, 255, 255, 0.06);
-  --color-separator-bold: #222222;
+  --color-separator-bold: var(--gray-6);
   --color-scrim: rgba(0, 0, 0, 0.6);
 
   /* Focus ring */
@@ -343,33 +344,34 @@
   --gray-9: hsl(0 0% 60%);
   --gray-10: hsl(0 0% 45%);
 
-  /* Background layers */
-  --color-bg-base: #ffffff;
-  --color-bg-surface: #fafafa;
-  --color-bg-raised: #ffffff;
+  /* 背景层级 */
+  --color-bg-base: var(--gray-1);
+  --color-bg-surface: var(--gray-2);
+  --color-bg-raised: var(--gray-1);
   --color-bg-disabled: rgba(255, 255, 255, 0.5);
 
-  --color-bg-hover: #f5f5f5;
-  --color-bg-active: #efefef;
-  --color-bg-selected: #e8e8e8;
+  /* 交互状态背景 */
+  --color-bg-hover: var(--gray-3);
+  --color-bg-active: var(--gray-4);
+  --color-bg-selected: var(--gray-5);
   --color-bg-overlay: rgba(0, 0, 0, 0.05);
 
-  /* Foreground */
+  /* 前景 */
   --color-fg-default: #1a1a1a;
   --color-fg-base: var(--color-fg-default);
-  --color-fg-muted: #666666;
-  --color-fg-subtle: #888888;
-  --color-fg-placeholder: #999999;
-  --color-fg-disabled: #cccccc;
+  --color-fg-muted: hsl(0 0% 40%);
+  --color-fg-subtle: hsl(0 0% 44%); /* WCAG AA ≥ 4.5:1 vs bg-base */
+  --color-fg-placeholder: hsl(0 0% 60%);
+  --color-fg-disabled: var(--gray-7);
   --color-fg-inverse: #ffffff;
   --color-fg-on-accent: #ffffff;
 
-  /* Borders / separators */
-  --color-border-default: #e0e0e0;
-  --color-border-hover: #d0d0d0;
-  --color-border-focus: #c0c0c0;
+  /* 边框与分割线 */
+  --color-border-default: var(--gray-6);
+  --color-border-hover: var(--gray-7);
+  --color-border-focus: var(--gray-8);
   --color-separator: rgba(0, 0, 0, 0.06);
-  --color-separator-bold: #e0e0e0;
+  --color-separator-bold: var(--gray-6);
   --color-scrim: rgba(0, 0, 0, 0.3);
 
   /* Focus ring */
@@ -426,5 +428,30 @@
     --duration-normal: 0ms;
     --duration-slow: 0ms;
     --duration-slower: 0ms;
+  }
+}
+
+/* ============================================
+   高对比模式（WCAG AAA ≥ 7:1）
+   ============================================ */
+@media (prefers-contrast: more) {
+  :root[data-theme="dark"] {
+    --color-fg-subtle: hsl(0 0% 75%);
+    --color-fg-muted: hsl(0 0% 80%);
+    --color-fg-placeholder: hsl(0 0% 60%);
+    --color-border-default: hsl(0 0% 50%);
+    --color-border-hover: hsl(0 0% 60%);
+    --color-separator: rgba(255, 255, 255, 0.2);
+    --color-separator-bold: hsl(0 0% 50%);
+  }
+
+  :root[data-theme="light"] {
+    --color-fg-subtle: hsl(0 0% 25%);
+    --color-fg-muted: hsl(0 0% 20%);
+    --color-fg-placeholder: hsl(0 0% 40%);
+    --color-border-default: hsl(0 0% 50%);
+    --color-border-hover: hsl(0 0% 40%);
+    --color-separator: rgba(0, 0, 0, 0.2);
+    --color-separator-bold: hsl(0 0% 50%);
   }
 }

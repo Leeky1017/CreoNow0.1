@@ -124,7 +124,7 @@
   /* 前景 */
   --color-fg-default: #1a1a1a;
   --color-fg-muted: hsl(0 0% 40%);
-  --color-fg-subtle: hsl(0 0% 53%);
+  --color-fg-subtle: hsl(0 0% 44%); /* 辅助文字（WCAG AA ≥ 4.5:1 vs bg-base） */
   --color-fg-placeholder: hsl(0 0% 60%);
   --color-fg-disabled: var(--gray-7);
   --color-fg-inverse: #ffffff;
@@ -521,13 +521,23 @@ textarea:focus-visible {
    高对比模式（WCAG AAA ≥ 7:1）
    ============================================ */
 @media (prefers-contrast: more) {
-  :root {
+  :root[data-theme="dark"] {
     --color-fg-subtle: hsl(0 0% 75%);
     --color-fg-muted: hsl(0 0% 80%);
     --color-fg-placeholder: hsl(0 0% 60%);
     --color-border-default: hsl(0 0% 50%);
     --color-border-hover: hsl(0 0% 60%);
     --color-separator: rgba(255, 255, 255, 0.2);
+    --color-separator-bold: hsl(0 0% 50%);
+  }
+
+  :root[data-theme="light"] {
+    --color-fg-subtle: hsl(0 0% 25%);
+    --color-fg-muted: hsl(0 0% 20%);
+    --color-fg-placeholder: hsl(0 0% 40%);
+    --color-border-default: hsl(0 0% 50%);
+    --color-border-hover: hsl(0 0% 40%);
+    --color-separator: rgba(0, 0, 0, 0.2);
     --color-separator-bold: hsl(0 0% 50%);
   }
 }
