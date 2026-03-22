@@ -53,7 +53,7 @@ export function OnboardingPage({
   return (
     <div
       data-testid="onboarding-page"
-      className="flex h-full w-full items-center justify-center bg-[var(--color-bg-base)]"
+      className="flex h-full w-full items-center justify-center bg-[image:var(--gradient-surface)]"
     >
       {/* 审计：v1-13 #026 KEEP */}
       {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：onboarding page layout bounds per design spec (max-h-[900px], max-w-[800px]) */}
@@ -63,9 +63,9 @@ export function OnboardingPage({
           <div className="mb-4 flex items-center gap-3">
             <div
               data-testid="onboarding-logo"
-              className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-xl font-bold text-[var(--color-fg-inverse)]"
+              className="brand-spinner flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-fg-default)] text-xl font-bold text-[var(--color-fg-inverse)]"
             >
-              C
+              <span className="brand-spinner-letter">C</span>
             </div>
             <span className="text-xl font-medium tracking-tight text-[var(--color-fg-default)]">
               {t("onboarding.appName")}

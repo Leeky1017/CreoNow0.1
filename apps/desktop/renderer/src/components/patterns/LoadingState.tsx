@@ -6,7 +6,12 @@
  * - progress: Top progress bar (2px, animated)
  * - inline: Small inline spinner for buttons/text
  */
-export type LoadingVariant = "spinner" | "skeleton" | "progress" | "inline";
+export type LoadingVariant =
+  | "spinner"
+  | "skeleton"
+  | "progress"
+  | "inline"
+  | "brand";
 
 /**
  * Skeleton element types for content placeholders
@@ -269,6 +274,15 @@ export function Skeleton({
 }
 
 /**
+ * Brand spinner sizes (CSS-only animation from main.css)
+ */
+const brandSizes = {
+  sm: { container: "w-6 h-6", letter: "text-xs" },
+  md: { container: "w-10 h-10", letter: "text-lg" },
+  lg: { container: "w-14 h-14", letter: "text-2xl" },
+} as const;
+
+/**
  * LoadingState component following design spec §12.2
  *
  * Displays loading indicators for async operations. Supports multiple
@@ -284,6 +298,9 @@ export function Skeleton({
  *
  * // Inline spinner (for buttons)
  * <LoadingState variant="inline" size="sm" />
+ *
+ * // Brand spinner (CreoNow "C" letter pulse)
+ * <LoadingState variant="brand" size="lg" />
  *
  * // Skeleton placeholders
  * <Skeleton type="paragraph" lines={4} />
@@ -310,6 +327,32 @@ export function LoadingState({
           <Skeleton type="paragraph" />
         </div>
       );
+
+    case "brand": {
+      const bs = brandSizes[size];
+      return (
+        <div
+          role="status"
+          data-size={size}
+          className={[
+            "flex flex-col items-center justify-center gap-3",
+            "py-12",
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <div className={`brand-spinner ${bs.container}`}>
+            <span className={`brand-spinner-letter ${bs.letter}`}>C</span>
+          </div>
+          {text && (
+            <span className="text-[13px] text-[var(--color-fg-muted)]">
+              {text}
+            </span>
+          )}
+        </div>
+      );
+    }
 
     case "spinner":
     default:

@@ -7,6 +7,8 @@ import React from "react";
 export interface EmptyStateProps {
   /** Optional icon displayed above the title */
   icon?: React.ReactNode;
+  /** Optional illustration (takes priority over icon when both provided) */
+  illustration?: React.ReactNode;
   /** Main title text describing the empty state */
   title: string;
   /** Optional description providing additional context */
@@ -81,6 +83,7 @@ const descriptionStyles = [
  */
 export function EmptyState({
   icon,
+  illustration,
   title,
   description,
   action,
@@ -93,7 +96,11 @@ export function EmptyState({
       className={`${containerStyles} ${className}`}
       role="status"
     >
-      {icon && <div className={iconStyles}>{icon}</div>}
+      {illustration ? (
+        <div className="mb-2">{illustration}</div>
+      ) : (
+        icon && <div className={iconStyles}>{icon}</div>
+      )}
       <h3 className={titleStyles}>{title}</h3>
       {description && <p className={descriptionStyles}>{description}</p>}
       {action && <div className="mt-1">{action}</div>}

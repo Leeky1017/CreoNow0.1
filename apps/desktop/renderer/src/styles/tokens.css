@@ -259,6 +259,34 @@
   --color-bg-base: var(--gray-1);
   --color-bg-surface: var(--gray-2);
   --color-bg-raised: var(--gray-3);
+
+  /* 品牌渐变系统 */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.15) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+
+  /* Background layers */
+  --color-bg-base: #080808;
+  --color-bg-surface: #0f0f0f;
+  --color-bg-raised: #141414;
   --color-bg-disabled: rgba(0, 0, 0, 0.4);
 
   /* 交互状态背景 */
@@ -305,6 +333,18 @@
   --color-info-hover: hsl(217 91% 65%);
   --color-info-active: hsl(217 91% 70%);
 
+  /* 品牌色延伸色阶（accent 50–900） */
+  --color-accent-50: hsl(0 0% 98%);
+  --color-accent-100: hsl(0 0% 95%);
+  --color-accent-200: hsl(0 0% 88%);
+  --color-accent-300: hsl(0 0% 78%);
+  --color-accent-400: hsl(0 0% 68%);
+  --color-accent-500: var(--color-accent);
+  --color-accent-600: hsl(0 0% 88%);
+  --color-accent-700: hsl(0 0% 75%);
+  --color-accent-800: hsl(0 0% 62%);
+  --color-accent-900: hsl(0 0% 50%);
+
   /* 阴影基色 §3.7 - 几何在 :root 中定义 */
   --color-shadow: rgba(0, 0, 0, 0.5);
 
@@ -348,6 +388,34 @@
   --color-bg-base: var(--gray-1);
   --color-bg-surface: var(--gray-2);
   --color-bg-raised: var(--gray-1);
+
+  /* 品牌渐变系统（亮色适配） */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.08) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.03) 50%,
+    transparent 100%
+  );
+
+  /* Background layers */
+  --color-bg-base: #ffffff;
+  --color-bg-surface: #fafafa;
+  --color-bg-raised: #ffffff;
   --color-bg-disabled: rgba(255, 255, 255, 0.5);
 
   /* 交互状态背景 */
@@ -393,6 +461,18 @@
   --color-warning-active: hsl(38 92% 40%);
   --color-info-hover: hsl(217 91% 55%);
   --color-info-active: hsl(217 91% 50%);
+
+  /* 品牌色延伸色阶（accent 50–900） */
+  --color-accent-50: hsl(0 0% 95%);
+  --color-accent-100: hsl(0 0% 88%);
+  --color-accent-200: hsl(0 0% 75%);
+  --color-accent-300: hsl(0 0% 60%);
+  --color-accent-400: hsl(0 0% 45%);
+  --color-accent-500: var(--color-accent);
+  --color-accent-600: hsl(0 0% 8%);
+  --color-accent-700: hsl(0 0% 5%);
+  --color-accent-800: hsl(0 0% 3%);
+  --color-accent-900: hsl(0 0% 2%);
 
   /* 阴影基色 §3.7 - 几何在 :root 中定义 */
   --color-shadow: rgba(0, 0, 0, 0.1);

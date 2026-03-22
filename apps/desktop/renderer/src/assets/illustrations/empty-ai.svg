@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 对话气泡 -->
+  <path d="M32 40h40a6 6 0 016 6v20a6 6 0 01-6 6H52l-10 10V72H32a6 6 0 01-6-6V46a6 6 0 016-6z" opacity="0.4"/>
+  <!-- 闪光 -->
+  <path d="M80 30l4-8 4 8-8 4 8 4-4 8-4-8-8-4z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  <!-- 气泡内圆点 -->
+  <circle cx="44" cy="56" r="2" fill="currentColor" opacity="0.3"/>
+  <circle cx="54" cy="56" r="2" fill="currentColor" opacity="0.3"/>
+  <circle cx="64" cy="56" r="2" fill="currentColor" opacity="0.3"/>
+</svg>
