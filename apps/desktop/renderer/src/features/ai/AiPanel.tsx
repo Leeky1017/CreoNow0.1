@@ -199,7 +199,10 @@ export function AiPanel(props: { newChatSignal?: number } = {}): JSX.Element {
       <div className="flex flex-col h-full min-h-0">
         <AiPanelTabBar activeTab={activeTab} onTabChange={setActiveTab} />
         {activeTab === "chat" ? (
-          <div key="chat" className="flex-1 flex flex-col min-h-0 tab-crossfade">
+          <div
+            key="chat"
+            className="flex-1 flex flex-col min-h-0 tab-crossfade"
+          >
             <AiMessageList
               historyMessages={
                 sel.activeChatSessionId ? sel.activeChatMessages : []
