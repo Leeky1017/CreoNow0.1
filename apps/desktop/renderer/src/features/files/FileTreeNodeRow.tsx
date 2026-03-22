@@ -125,6 +125,7 @@ export const FileTreeNodeRow = React.forwardRef<
           selected={selected}
           compact
           draggable
+          tabIndex={0}
           onDragStart={(e) => {
             props.setDraggingDocumentId(item.documentId);
             props.setDropTarget(null);
