@@ -22,6 +22,22 @@ const meta = {
   component: Checkbox,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component: `## 使用指南
+
+### 何时使用
+- **多选**: 从列表中选择零到多个选项
+- **开关**: 单独的布尔开关（如"同意条款"）
+- **批量操作**: 配合 \`indeterminate\` 状态实现全选/部分选中
+
+### 注意事项
+- 单个布尔选项也可使用 Toggle/Switch 组件
+- 始终提供 \`label\`，确保可访问性
+- \`indeterminate\` 状态仅用于父级复选框表示子项部分选中
+- 支持键盘操作：Space 切换状态，Tab 聚焦`,
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {

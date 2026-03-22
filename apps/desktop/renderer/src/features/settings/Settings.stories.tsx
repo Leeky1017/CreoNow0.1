@@ -245,10 +245,22 @@ const meta = {
     layout: "centered",
     backgrounds: {
       default: "dark",
-      values: [{ name: "dark", value: "#080808" }],
+      values: [{ name: "dark", value: "hsl(0 0% 3.1%)" }],
+    },
+    docs: {
+      description: {
+        component: `**Visual Demo (Static Replicas)**
+
+These stories render visual replicas of AiSettingsSection, AppearanceSection, and JudgeSection.
+The real components depend on IPC channels and Zustand stores that are unavailable in Storybook.
+Each replica mirrors the original component's \`data-testid\` contract and visual layout
+to enable visual regression testing and design review.
+
+To test real behavior, use the desktop app: \`Cmd/Ctrl+,\` → Settings dialog.`,
+      },
     },
   },
-  tags: ["autodocs"],
+  tags: ["autodocs", "demo-only"],
 } satisfies Meta<typeof SettingsShell>;
 
 export default meta;

@@ -1,5 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect, userEvent } from "@storybook/test";
 import { Toggle } from "./Toggle";
 
 /**
@@ -40,6 +41,13 @@ type Story = StoryObj<typeof Toggle>;
 export const Default: Story = {
   args: {
     defaultChecked: false,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toggle = canvas.getByRole("switch");
+    await expect(toggle).not.toBeChecked();
+    await userEvent.click(toggle);
+    await expect(toggle).toBeChecked();
   },
 };
 

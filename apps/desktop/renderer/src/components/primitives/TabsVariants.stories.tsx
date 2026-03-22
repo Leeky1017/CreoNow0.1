@@ -1,63 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
 import type { TabItem } from "./Tabs";
 import { Tabs } from "./Tabs";
 
-/**
- * Tabs 组件 Story
- *
- * 设计规范 §6.6
- * 标签页组件，基于 Radix UI Tabs 原语构建。
- * 支持水平/垂直方向、受控/非受控模式、禁用状态。
- *
- * 状态矩阵（MUST 全部实现）：
- * - default: 未选中状态
- * - active: 选中状态（高亮显示）
- * - hover: 悬停状态
- * - focus-visible: 键盘聚焦状态
- * - disabled: 禁用状态
- */
 const meta = {
-  title: "Primitives/Tabs",
+  title: "Primitives/Tabs/Variants",
   component: Tabs,
-  parameters: {
-    layout: "centered",
-    docs: {
-      description: {
-        component: `## 使用指南
-
-### 用法
-- 使用 \`items\` 数组定义标签页，每项需有 \`value\`、\`label\`
-- 受控模式：通过 \`value\` + \`onValueChange\` 控制
-- 非受控模式：通过 \`defaultValue\` 初始化
-
-### 方向
-- **horizontal**: 默认，水平排列
-- **vertical**: 侧边标签页
-
-### 禁用
-- 单个标签页可通过 item.disabled 禁用`,
-      },
-    },
-  },
+  parameters: { layout: "centered" },
   tags: ["autodocs"],
-  argTypes: {
-    variant: {
-      control: "select",
-      options: ["default", "underline"],
-      description:
-        "Visual variant — default (background highlight) or underline (accent indicator)",
-    },
-    orientation: {
-      control: "select",
-      options: ["horizontal", "vertical"],
-      description: "Orientation of tabs",
-    },
-    fullWidth: {
-      control: "boolean",
-      description: "Full width tabs",
-    },
-  },
 } satisfies Meta<typeof Tabs>;
 
 export default meta;
@@ -137,126 +86,6 @@ const tabsWithDisabled: TabItem[] = [
     content: <div>Another tab content</div>,
   },
 ];
-
-// ============================================================================
-// 基础 Stories
-// ============================================================================
-
-/**
- * 默认 Tabs
- */
-export const Default: Story = {
-  args: {
-    tabs: basicTabs,
-  },
-};
-
-/**
- * 设置页 Tabs 示例
- */
-export const SettingsTabs: Story = {
-  args: {
-    tabs: settingsTabs,
-    defaultValue: "general",
-  },
-};
-
-/**
- * 受控模式
- */
-export const Controlled: Story = {
-  args: {
-    tabs: basicTabs,
-  },
-  render: function Render() {
-    const [value, setValue] = useState("tab1");
-    return (
-      <div>
-        <div
-          style={{
-            marginBottom: "1rem",
-            fontSize: "12px",
-            color: "var(--color-fg-muted)",
-          }}
-        >
-          Current tab: {value}
-        </div>
-        <Tabs tabs={basicTabs} value={value} onValueChange={setValue} />
-      </div>
-    );
-  },
-};
-
-/**
- * 指定默认选中项
- */
-export const DefaultValue: Story = {
-  args: {
-    tabs: basicTabs,
-    defaultValue: "tab2",
-  },
-};
-
-// ============================================================================
-// 方向 Stories
-// ============================================================================
-
-/**
- * 水平方向（默认）
- */
-export const Horizontal: Story = {
-  args: {
-    tabs: basicTabs,
-    orientation: "horizontal",
-  },
-};
-
-/**
- * 垂直方向
- */
-export const Vertical: Story = {
-  args: {
-    tabs: settingsTabs,
-    orientation: "vertical",
-  },
-  parameters: {
-    layout: "padded",
-  },
-};
-
-// ============================================================================
-// 状态 Stories
-// ============================================================================
-
-/**
- * 带禁用项
- */
-export const WithDisabled: Story = {
-  args: {
-    tabs: tabsWithDisabled,
-    defaultValue: "active",
-  },
-};
-
-/**
- * 全宽模式
- */
-export const FullWidth: Story = {
-  args: {
-    tabs: basicTabs,
-    fullWidth: true,
-  },
-  parameters: {
-    layout: "padded",
-  },
-  decorators: [
-    (Story) => (
-      <div style={{ width: "400px" }}>
-        <Story />
-      </div>
-    ),
-  ],
-};
 
 // ============================================================================
 // 内容变体 Stories

@@ -58,7 +58,7 @@ const meta = {
     layout: "fullscreen",
     backgrounds: {
       default: "dark",
-      values: [{ name: "dark", value: "#080808" }],
+      values: [{ name: "dark", value: "hsl(0 0% 3.1%)" }],
     },
   },
   tags: ["autodocs"],
@@ -140,7 +140,7 @@ function KeyboardNavigationDemo(): JSX.Element {
     <div
       style={{
         height: "100vh",
-        backgroundColor: "#080808",
+        backgroundColor: "var(--color-bg-base)",
         position: "relative",
       }}
     >
@@ -267,7 +267,7 @@ export const KeyboardNavigation: Story = {
  */
 function SearchInProgressDemo(): JSX.Element {
   return (
-    <div style={{ height: "100vh", backgroundColor: "#080808" }}>
+    <div style={{ height: "100vh", backgroundColor: "var(--color-bg-base)" }}>
       <div
         style={{
           position: "fixed",

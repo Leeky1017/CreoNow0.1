@@ -2,7 +2,7 @@
  * Surface Registry — 前端资产与 App/QA 入口的唯一映射表
  *
  * 本文件是 P0-001 的核心产物，实现：
- * 1. 60/60 Storybook 资产全量映射（截至 2026-02-14）
+ * 1. 95/95 Storybook 资产全量映射
  * 2. 每个 surface 都有明确的入口（App/QA/Storybook）
  * 3. 每个 surface 都有 data-testid 用于 E2E 测试
  *
@@ -76,13 +76,13 @@ export interface SurfaceRegistryItem {
 }
 
 /**
- * 完整的 Surface Registry（69/69）
+ * 完整的 Surface Registry（95/95）
  *
  * 按类别组织：Layout → Primitives → Features → Patterns
  */
 export const surfaceRegistry: SurfaceRegistryItem[] = [
   // ============================================================
-  // Layout（10 个）
+  // Layout（11 个）
   // ============================================================
   {
     id: "appShell",
@@ -99,11 +99,20 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Layout/综合测试",
   },
   {
-    id: "resizer",
+    id: "resizerBasic",
     kind: "layout",
     entryPoints: [{ type: "storybookOnly", description: "Resizer component" }],
     testId: "resizer",
-    storybookTitle: "Layout/Resizer",
+    storybookTitle: "Layout/Resizer/Basic",
+  },
+  {
+    id: "resizerInteractions",
+    kind: "layout",
+    entryPoints: [
+      { type: "storybookOnly", description: "Resizer interaction demos" },
+    ],
+    testId: "resizer-interactions",
+    storybookTitle: "Layout/Resizer/Interactions",
   },
   {
     id: "sidebar",
@@ -166,7 +175,7 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
   },
 
   // ============================================================
-  // Primitives（26 個）
+  // Primitives（31 个）
   // ============================================================
   {
     id: "accordion",
@@ -192,18 +201,45 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/Badge",
   },
   {
-    id: "button",
+    id: "buttonBasic",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Button primitive" }],
     testId: "button",
-    storybookTitle: "Primitives/Button",
+    storybookTitle: "Primitives/Button/Basic",
   },
   {
-    id: "card",
+    id: "buttonVariants",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Button variants showcase" },
+    ],
+    testId: "button-variants",
+    storybookTitle: "Primitives/Button/Variants",
+  },
+  {
+    id: "cardBasic",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Card primitive" }],
     testId: "card",
-    storybookTitle: "Primitives/Card",
+    storybookTitle: "Primitives/Card/Basic",
+  },
+  {
+    id: "cardVariants",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Card variants showcase" },
+    ],
+    testId: "card-variants",
+    storybookTitle: "Primitives/Card/Variants",
+  },
+  {
+    id: "cardComposed",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Card composed layouts" },
+    ],
+    testId: "card-composed",
+    storybookTitle: "Primitives/Card/Composed",
   },
   {
     id: "checkbox",
@@ -254,11 +290,20 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/ImageUpload",
   },
   {
-    id: "input",
+    id: "inputBasic",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Input primitive" }],
     testId: "input",
-    storybookTitle: "Primitives/Input",
+    storybookTitle: "Primitives/Input/Basic",
+  },
+  {
+    id: "inputVariants",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Input variants showcase" },
+    ],
+    testId: "input-variants",
+    storybookTitle: "Primitives/Input/Variants",
   },
   {
     id: "listItem",
@@ -319,11 +364,20 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/Spinner",
   },
   {
-    id: "tabs",
+    id: "tabsBasic",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Tabs primitive" }],
     testId: "tabs",
-    storybookTitle: "Primitives/Tabs",
+    storybookTitle: "Primitives/Tabs/Basic",
+  },
+  {
+    id: "tabsVariants",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Tabs variants showcase" },
+    ],
+    testId: "tabs-variants",
+    storybookTitle: "Primitives/Tabs/Variants",
   },
   {
     id: "text",
@@ -362,16 +416,25 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
   },
 
   // ============================================================
-  // Features（28 个）
+  // Features（46 个）
   // ============================================================
   {
-    id: "aiDialogs",
+    id: "aiDialogsInline",
     kind: "dialog",
     entryPoints: [
-      { type: "button", description: "AI error/confirm/prompt actions" },
+      { type: "button", description: "AI inline confirm & diff modal" },
     ],
     testId: "ai-dialogs",
-    storybookTitle: "Features/AiDialogs",
+    storybookTitle: "Features/AiDialogs/Inline",
+  },
+  {
+    id: "aiDialogsStates",
+    kind: "dialog",
+    entryPoints: [
+      { type: "button", description: "AI error cards & system dialogs" },
+    ],
+    testId: "ai-dialogs-states",
+    storybookTitle: "Features/AiDialogs/States",
   },
   {
     id: "aiPanelChat",

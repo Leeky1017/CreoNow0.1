@@ -126,16 +126,16 @@ const meta: Meta<typeof VersionHistoryPanel> = {
             </div>
           </div>
           <div className="flex-1 p-12 overflow-hidden flex justify-center">
-            <div className="w-full max-w-3xl h-full bg-[#121212] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-2xl p-16 relative">
-              <div className="w-1/3 h-8 bg-[rgba(255,255,255,0.08)] rounded mb-10" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-5/6 h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-8" />
-              <div className="w-1/4 h-5 bg-[rgba(255,255,255,0.06)] rounded mb-6" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-11/12 h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
-              <div className="w-full h-3 bg-[rgba(255,255,255,0.04)] rounded mb-4" />
+            <div className="w-full max-w-3xl h-full bg-[var(--color-bg-surface)] rounded-t-lg border-x border-t border-[var(--color-separator)] shadow-[var(--shadow-xl)] p-16 relative">
+              <div className="w-1/3 h-8 bg-white/8 rounded mb-10" />
+              <div className="w-full h-3 bg-white/[0.04] rounded mb-4" />
+              <div className="w-full h-3 bg-white/[0.04] rounded mb-4" />
+              <div className="w-5/6 h-3 bg-white/[0.04] rounded mb-4" />
+              <div className="w-full h-3 bg-white/[0.04] rounded mb-8" />
+              <div className="w-1/4 h-5 bg-white/[0.06] rounded mb-6" />
+              <div className="w-full h-3 bg-white/[0.04] rounded mb-4" />
+              <div className="w-11/12 h-3 bg-white/[0.04] rounded mb-4" />
+              <div className="w-full h-3 bg-white/[0.04] rounded mb-4" />
               <div className="absolute top-64 left-16 right-16 h-24 bg-[var(--color-info)]/5 border-l-2 border-[var(--color-info)]/30" />
             </div>
           </div>
@@ -171,8 +171,8 @@ function RestoreConfirmDialog({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-[rgba(0,0,0,0.6)] backdrop-blur-sm" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[var(--z-modal)] w-[400px] bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-2xl p-6 focus:outline-none">
+        <Dialog.Overlay className="fixed inset-0 z-[var(--z-modal)] bg-black/60 backdrop-blur-sm" />
+        <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[var(--z-modal)] w-[400px] bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] p-6 focus:outline-none">
           <Dialog.Title className="text-lg font-medium text-[var(--color-fg-default)] mb-2">
             Restore Version?
           </Dialog.Title>

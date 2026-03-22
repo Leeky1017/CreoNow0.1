@@ -205,10 +205,19 @@ const meta = {
     layout: "centered",
     backgrounds: {
       default: "dark",
-      values: [{ name: "dark", value: "#080808" }],
+      values: [{ name: "dark", value: "hsl(0 0% 3.1%)" }],
+    },
+    docs: {
+      description: {
+        component: `**Visual Demo (Static Replica)**
+
+This story renders a visual replica of the Info panel.
+The real component depends on IPC channels and Zustand stores unavailable in Storybook.
+The replica mirrors the original's \`data-testid\` contract for visual regression testing.`,
+      },
     },
   },
-  tags: ["autodocs"],
+  tags: ["autodocs", "demo-only"],
 } satisfies Meta<typeof RightPanelShell>;
 
 export default meta;

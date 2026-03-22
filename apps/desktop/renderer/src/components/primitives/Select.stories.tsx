@@ -23,6 +23,22 @@ const meta = {
   component: Select,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component: `## 使用指南
+
+### 何时使用
+- **预设选项**: 从有限的预定义列表中选择一项（3–15 项最佳）
+- **分组选项**: 使用 \`groups\` 属性按类别组织选项
+- **表单字段**: 配合 FormField 组件使用，提供 label 和验证
+
+### 注意事项
+- 选项超过 15 项时，考虑使用 ComboBox（支持搜索过滤）
+- 始终提供 \`placeholder\`，引导用户进行选择
+- 禁用的选项仍显示在列表中，但不可选
+- 使用 \`fullWidth\` 适配表单布局`,
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {

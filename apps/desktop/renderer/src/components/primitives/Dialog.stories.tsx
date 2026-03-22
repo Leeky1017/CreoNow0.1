@@ -23,6 +23,22 @@ const meta = {
   component: Dialog,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component: `## 使用指南
+
+### 何时使用
+- **确认操作**: 删除、丢弃等不可逆动作前的二次确认
+- **信息收集**: 需要用户输入但不离开当前页面（表单、设置）
+- **警告/通知**: 需要用户明确确认的重要信息
+
+### 注意事项
+- 每次最多显示一个 Dialog，避免嵌套
+- 始终提供关闭方式（关闭按钮、Escape 键、遮罩点击）
+- \`title\` 是必填的，用于无障碍访问（screen reader）
+- 危险操作使用 \`variant="danger"\` 的确认按钮`,
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {

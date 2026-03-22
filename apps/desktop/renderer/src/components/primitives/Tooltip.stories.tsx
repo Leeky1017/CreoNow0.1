@@ -13,6 +13,22 @@ const meta = {
   component: Tooltip,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component: `## 使用指南
+
+### 何时使用
+- **补充说明**: 为图标按钮、缩写、截断文本提供额外信息
+- **快捷键提示**: 显示操作对应的键盘快捷键
+- **状态描述**: 解释禁用按钮的原因
+
+### 注意事项
+- Tooltip 不应包含关键操作信息——用户可能无法触达（触屏设备）
+- 保持内容简短（1-2 行），长文本使用 Popover
+- \`delayDuration\` 默认 200ms，避免设置过短导致闪烁
+- 确保触发元素可聚焦（键盘可访问）`,
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {
