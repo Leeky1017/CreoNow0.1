@@ -249,8 +249,9 @@ describe("FileTreePanel", () => {
 
       render(<FileTreePanel projectId="test-project" />);
 
-      const selectedItem = screen.getByTestId("file-row-doc-1");
-      expect(selectedItem).toHaveAttribute("aria-selected", "true");
+      const row = screen.getByTestId("file-row-doc-1");
+      const treeitem = row.closest('[role="treeitem"]');
+      expect(treeitem).toHaveAttribute("aria-selected", "true");
     });
 
     it("to open ⋯ 菜单后应显示 Rename 和 Delete", async () => {

@@ -107,28 +107,24 @@ describe("FileTreePanel keyboard navigation", () => {
     tree.focus();
 
     fireEvent.keyDown(tree, { key: "ArrowRight" });
-    expect(screen.getByTestId("file-row-doc-in-folder")).toHaveAttribute(
-      "aria-selected",
-      "true",
-    );
+    expect(
+      screen.getByTestId("file-row-doc-in-folder").closest('[role="treeitem"]'),
+    ).toHaveAttribute("aria-selected", "true");
 
     fireEvent.keyDown(tree, { key: "ArrowDown" });
-    expect(screen.getByTestId("file-row-doc-root")).toHaveAttribute(
-      "aria-selected",
-      "true",
-    );
+    expect(
+      screen.getByTestId("file-row-doc-root").closest('[role="treeitem"]'),
+    ).toHaveAttribute("aria-selected", "true");
 
     fireEvent.keyDown(tree, { key: "ArrowUp" });
-    expect(screen.getByTestId("file-row-doc-in-folder")).toHaveAttribute(
-      "aria-selected",
-      "true",
-    );
+    expect(
+      screen.getByTestId("file-row-doc-in-folder").closest('[role="treeitem"]'),
+    ).toHaveAttribute("aria-selected", "true");
 
     fireEvent.keyDown(tree, { key: "ArrowLeft" });
-    expect(screen.getByTestId("file-row-folder-1")).toHaveAttribute(
-      "aria-selected",
-      "true",
-    );
+    expect(
+      screen.getByTestId("file-row-folder-1").closest('[role="treeitem"]'),
+    ).toHaveAttribute("aria-selected", "true");
 
     fireEvent.keyDown(tree, { key: "Enter" });
     expect(openDocument).toHaveBeenCalledWith({
