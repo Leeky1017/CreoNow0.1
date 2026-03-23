@@ -78,6 +78,7 @@ export function CharacterCard({
           data-testid="character-card-selected-indicator"
         />
       )}
+      {/* 审计：v1-13 #1237 KEEP */}
       {/* eslint-disable-next-line creonow/no-native-html-element -- CharacterCard uses a primary native button with sibling actions so edit/delete controls are not nested inside another interactive element */}
       <button
         type="button"
