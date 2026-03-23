@@ -27,7 +27,7 @@ function ProjectTypeIcon(props: {
     props.type === "screenplay" ? "S" : props.type === "media" ? "M" : "N";
   return (
     <span
-      className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[var(--color-border-default)] text-[9px] font-semibold text-[var(--color-fg-muted)]"
+      className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-[var(--color-border-default)] text-(--text-label) font-semibold text-[var(--color-fg-muted)]"
       aria-hidden="true"
     >
       {label}
@@ -183,7 +183,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
       {showProgress ? (
         <div
           data-testid="project-switcher-progress"
-          className="absolute left-0 top-0 h-[2px] w-full overflow-hidden bg-[var(--color-border-default)]"
+          className="absolute left-0 top-0 h-0.5 w-full overflow-hidden bg-[var(--color-border-default)]"
         >
           <div className="h-full w-1/3 animate-pulse bg-[var(--color-fg-default)]" />
         </div>
@@ -207,7 +207,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
         </span>
         <span
           aria-hidden="true"
-          className="text-[10px] text-[var(--color-fg-muted)]"
+          className="text-(--text-label) text-[var(--color-fg-muted)]"
         >
           {open ? "▲" : "▼"}
         </span>
@@ -270,7 +270,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
                         {project.name}
                       </span>
                     </span>
-                    <span className="ml-2 shrink-0 text-[10px] text-[var(--color-fg-muted)]">
+                    <span className="ml-2 shrink-0 text-(--text-label) text-[var(--color-fg-muted)]">
                       {formatRelativeTime(project.updatedAt)}
                     </span>
                   </Button>

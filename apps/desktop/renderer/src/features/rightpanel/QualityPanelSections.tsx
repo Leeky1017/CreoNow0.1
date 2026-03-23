@@ -208,13 +208,13 @@ export function ConstraintsSection(props: {
           {constraints?.items.slice(0, 5).map((item, idx) => (
             <span
               key={idx}
-              className="inline-block px-2 py-0.5 text-[10px] rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]"
+              className="inline-block px-2 py-0.5 text-(--text-label) rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]"
             >
               {item.length > 30 ? `${item.slice(0, 30)}...` : item}
             </span>
           ))}
           {count > 5 && (
-            <span className="inline-block px-2 py-0.5 text-[10px] rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]">
+            <span className="inline-block px-2 py-0.5 text-(--text-label) rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]">
               {t("rightPanel.quality.moreCount", { count: count - 5 })}
             </span>
           )}
