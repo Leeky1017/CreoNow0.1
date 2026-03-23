@@ -14,32 +14,90 @@
    深色主题
    ============================================ */
 :root[data-theme="dark"] {
+  /* HSL 10-step 灰阶（近黑 → 中灰，等感知亮度步进） */
+  --gray-1: hsl(0 0% 3%);
+  --gray-2: hsl(0 0% 6%);
+  --gray-3: hsl(0 0% 8%);
+  --gray-4: hsl(0 0% 10%);
+  --gray-5: hsl(0 0% 12%);
+  --gray-6: hsl(0 0% 13%);
+  --gray-7: hsl(0 0% 20%);
+  --gray-8: hsl(0 0% 27%);
+  --gray-9: hsl(0 0% 40%);
+  --gray-10: hsl(0 0% 45%);
+
+  /* 品牌渐变系统 */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.15) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+
+  /* 品牌渐变系统 */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.15) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+
   /* 背景层级（按 elevation 递增：base → surface → raised） */
-  --color-bg-base: #080808; /* 最底层：窗口背景 */
-  --color-bg-surface: #0f0f0f; /* 面板/卡片/输入框背景 */
-  --color-bg-raised: #141414; /* 浮起元素背景（popover/dropdown） */
+  --color-bg-base: var(--gray-1); /* 最底层：窗口背景 */
+  --color-bg-surface: var(--gray-2); /* 面板/卡片/输入框背景 */
+  --color-bg-raised: var(--gray-3); /* 浮起元素背景（popover/dropdown） */
   --color-bg-disabled: rgba(0, 0, 0, 0.4); /* 禁用状态覆盖层 */
 
   /* 交互状态背景 */
-  --color-bg-hover: #1a1a1a; /* 悬停状态 */
-  --color-bg-active: #1f1f1f; /* 激活/按下状态 */
-  --color-bg-selected: #222222; /* 选中项 */
+  --color-bg-hover: var(--gray-4); /* 悬停状态 */
+  --color-bg-active: var(--gray-5); /* 激活/按下状态 */
+  --color-bg-selected: var(--gray-6); /* 选中项 */
 
   /* 前景（文字/图标） */
   --color-fg-default: #ffffff; /* 主要文字 */
-  --color-fg-muted: #888888; /* 次要文字 */
-  --color-fg-subtle: #666666; /* 辅助文字 */
-  --color-fg-placeholder: #444444; /* 占位符 */
-  --color-fg-disabled: #333333; /* 禁用状态 */
-  --color-fg-inverse: #080808; /* 反色（用于 Primary 按钮文字） */
+  --color-fg-muted: hsl(0 0% 53%); /* 次要文字 */
+  --color-fg-subtle: hsl(0 0% 48%); /* 辅助文字（WCAG AA ≥ 4.5:1 vs bg-base） */
+  --color-fg-placeholder: var(--gray-8); /* 占位符 */
+  --color-fg-disabled: var(--gray-7); /* 禁用状态 */
+  --color-fg-inverse: var(--gray-1); /* 反色（用于 Primary 按钮文字） */
   --color-fg-on-accent: #ffffff; /* 强调色上的文字 */
 
   /* 边框与分割线 */
-  --color-border-default: #222222; /* 默认边框 */
-  --color-border-hover: #333333; /* 悬停边框 */
-  --color-border-focus: #444444; /* 聚焦边框（非 focus ring） */
+  --color-border-default: var(--gray-6); /* 默认边框 */
+  --color-border-hover: var(--gray-7); /* 悬停边框 */
+  --color-border-focus: var(--gray-8); /* 聚焦边框（非 focus ring） */
   --color-separator: rgba(255, 255, 255, 0.06); /* 1px 细分割线 */
-  --color-separator-bold: #222222; /* 粗分割线 */
+  --color-separator-bold: var(--gray-6); /* 粗分割线 */
   --color-scrim: rgba(0, 0, 0, 0.6); /* 遮罩层 */
   --color-shadow: rgba(0, 0, 0, 0.5); /* 阴影基色 */
 
@@ -49,8 +107,19 @@
   /* 强调色（纯白系，极简主义） */
   --color-accent: #ffffff;
   --color-accent-hover: rgba(255, 255, 255, 0.9);
+  --color-accent-active: hsl(0 0% 85%);
   --color-accent-muted: rgba(255, 255, 255, 0.6);
   --color-accent-subtle: rgba(255, 255, 255, 0.1);
+
+  /* 功能色 hover/active（lightness +5%/+10%） */
+  --color-error-hover: hsl(0 84% 65%);
+  --color-error-active: hsl(0 84% 70%);
+  --color-success-hover: hsl(142 71% 50%);
+  --color-success-active: hsl(142 71% 55%);
+  --color-warning-hover: hsl(38 92% 55%);
+  --color-warning-active: hsl(38 92% 60%);
+  --color-info-hover: hsl(217 91% 65%);
+  --color-info-active: hsl(217 91% 70%);
 
   /* Diff 语义色 */
   --color-diff-added-bg: rgba(34, 197, 94, 0.15);
@@ -63,9 +132,9 @@
 
   /* 按钮状态色 */
   --color-btn-danger-bg: var(--color-error);
-  --color-btn-danger-hover: #dc2626;
+  --color-btn-danger-hover: var(--color-error-hover);
   --color-btn-success-bg: var(--color-success);
-  --color-btn-success-hover: #16a34a;
+  --color-btn-success-hover: var(--color-success-hover);
 
   /* 窗口控件色 */
   --color-window-close-hover: #cc2b3e;
@@ -75,32 +144,90 @@
    浅色主题
    ============================================ */
 :root[data-theme="light"] {
+  /* HSL 10-step 灰阶（纯白 → 中灰，等感知亮度步进） */
+  --gray-1: hsl(0 0% 100%);
+  --gray-2: hsl(0 0% 98%);
+  --gray-3: hsl(0 0% 96%);
+  --gray-4: hsl(0 0% 94%);
+  --gray-5: hsl(0 0% 91%);
+  --gray-6: hsl(0 0% 88%);
+  --gray-7: hsl(0 0% 82%);
+  --gray-8: hsl(0 0% 75%);
+  --gray-9: hsl(0 0% 60%);
+  --gray-10: hsl(0 0% 45%);
+
+  /* 品牌渐变系统（亮色适配） */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.08) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.03) 50%,
+    transparent 100%
+  );
+
+  /* 品牌渐变系统（亮色适配） */
+  --gradient-brand: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    #7c3aed 100%
+  );
+  --gradient-surface: linear-gradient(
+    180deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-base) 100%
+  );
+  --gradient-hero: radial-gradient(
+    ellipse at top,
+    rgba(124, 58, 237, 0.08) 0%,
+    transparent 60%
+  );
+  --gradient-shimmer: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.03) 50%,
+    transparent 100%
+  );
+
   /* 背景层级 */
-  --color-bg-base: #ffffff;
-  --color-bg-surface: #fafafa;
-  --color-bg-raised: #ffffff;
+  --color-bg-base: var(--gray-1);
+  --color-bg-surface: var(--gray-2);
+  --color-bg-raised: var(--gray-1);
   --color-bg-disabled: rgba(255, 255, 255, 0.5);
 
   /* 交互状态背景 */
-  --color-bg-hover: #f5f5f5;
-  --color-bg-active: #efefef;
-  --color-bg-selected: #e8e8e8;
+  --color-bg-hover: var(--gray-3);
+  --color-bg-active: var(--gray-4);
+  --color-bg-selected: var(--gray-5);
 
   /* 前景 */
   --color-fg-default: #1a1a1a;
-  --color-fg-muted: #666666;
-  --color-fg-subtle: #888888;
-  --color-fg-placeholder: #999999;
-  --color-fg-disabled: #cccccc;
+  --color-fg-muted: hsl(0 0% 40%);
+  --color-fg-subtle: hsl(0 0% 44%); /* 辅助文字（WCAG AA ≥ 4.5:1 vs bg-base） */
+  --color-fg-placeholder: hsl(0 0% 60%);
+  --color-fg-disabled: var(--gray-7);
   --color-fg-inverse: #ffffff;
   --color-fg-on-accent: #ffffff;
 
   /* 边框与分割线 */
-  --color-border-default: #e0e0e0;
-  --color-border-hover: #d0d0d0;
-  --color-border-focus: #c0c0c0;
+  --color-border-default: var(--gray-6);
+  --color-border-hover: var(--gray-7);
+  --color-border-focus: var(--gray-8);
   --color-separator: rgba(0, 0, 0, 0.06);
-  --color-separator-bold: #e0e0e0;
+  --color-separator-bold: var(--gray-6);
   --color-scrim: rgba(0, 0, 0, 0.3);
   --color-shadow: rgba(0, 0, 0, 0.1);
 
@@ -110,8 +237,19 @@
   /* 强调色（深色系） */
   --color-accent: #1a1a1a;
   --color-accent-hover: rgba(26, 26, 26, 0.9);
+  --color-accent-active: hsl(0 0% 5%);
   --color-accent-muted: rgba(26, 26, 26, 0.6);
   --color-accent-subtle: rgba(26, 26, 26, 0.1);
+
+  /* 功能色 hover/active（lightness -5%/-10%） */
+  --color-error-hover: hsl(0 84% 55%);
+  --color-error-active: hsl(0 84% 50%);
+  --color-success-hover: hsl(142 71% 40%);
+  --color-success-active: hsl(142 71% 35%);
+  --color-warning-hover: hsl(38 92% 45%);
+  --color-warning-active: hsl(38 92% 40%);
+  --color-info-hover: hsl(217 91% 55%);
+  --color-info-active: hsl(217 91% 50%);
 
   /* Diff 语义色（浅色背景用柔和色） */
   --color-diff-added-bg: rgba(34, 197, 94, 0.1);
@@ -124,9 +262,9 @@
 
   /* 按钮状态色 */
   --color-btn-danger-bg: var(--color-error);
-  --color-btn-danger-hover: #b91c1c;
+  --color-btn-danger-hover: var(--color-error-hover);
   --color-btn-success-bg: var(--color-success);
-  --color-btn-success-hover: #15803d;
+  --color-btn-success-hover: var(--color-success-hover);
 
   /* 窗口控件色 */
   --color-window-close-hover: #cc2b3e;
@@ -151,6 +289,37 @@
   --color-node-event: #f97316; /* 事件 - 橙色 */
   --color-node-item: #06b6d4; /* 物品 - 青色 */
   --color-node-other: #8b5cf6; /* 其他 - 紫色 */
+}
+
+/* ============================================
+   品牌色延伸色阶（accent 50–900）
+   暗色主题 accent=#ffffff → 白色系灰阶
+   ============================================ */
+:root[data-theme="dark"] {
+  --color-accent-50: hsl(0 0% 98%);
+  --color-accent-100: hsl(0 0% 95%);
+  --color-accent-200: hsl(0 0% 88%);
+  --color-accent-300: hsl(0 0% 78%);
+  --color-accent-400: hsl(0 0% 68%);
+  --color-accent-500: var(--color-accent);
+  --color-accent-600: hsl(0 0% 88%);
+  --color-accent-700: hsl(0 0% 75%);
+  --color-accent-800: hsl(0 0% 62%);
+  --color-accent-900: hsl(0 0% 50%);
+}
+
+/* 亮色主题 accent=#1a1a1a → 深色系灰阶 */
+:root[data-theme="light"] {
+  --color-accent-50: hsl(0 0% 95%);
+  --color-accent-100: hsl(0 0% 88%);
+  --color-accent-200: hsl(0 0% 75%);
+  --color-accent-300: hsl(0 0% 60%);
+  --color-accent-400: hsl(0 0% 45%);
+  --color-accent-500: var(--color-accent);
+  --color-accent-600: hsl(0 0% 8%);
+  --color-accent-700: hsl(0 0% 5%);
+  --color-accent-800: hsl(0 0% 3%);
+  --color-accent-900: hsl(0 0% 2%);
 }
 
 /* ============================================
@@ -469,4 +638,29 @@ textarea:focus-visible {
   /* 图标规格 */
   --size-icon: 24px; /* 图标尺寸 */
   --size-icon-button: 40px; /* 图标点击区域 */
+}
+
+/* ============================================
+   高对比模式（WCAG AAA ≥ 7:1）
+   ============================================ */
+@media (prefers-contrast: more) {
+  :root[data-theme="dark"] {
+    --color-fg-subtle: hsl(0 0% 75%);
+    --color-fg-muted: hsl(0 0% 80%);
+    --color-fg-placeholder: hsl(0 0% 60%);
+    --color-border-default: hsl(0 0% 50%);
+    --color-border-hover: hsl(0 0% 60%);
+    --color-separator: rgba(255, 255, 255, 0.2);
+    --color-separator-bold: hsl(0 0% 50%);
+  }
+
+  :root[data-theme="light"] {
+    --color-fg-subtle: hsl(0 0% 25%);
+    --color-fg-muted: hsl(0 0% 20%);
+    --color-fg-placeholder: hsl(0 0% 40%);
+    --color-border-default: hsl(0 0% 50%);
+    --color-border-hover: hsl(0 0% 40%);
+    --color-separator: rgba(0, 0, 0, 0.2);
+    --color-separator-bold: hsl(0 0% 50%);
+  }
 }

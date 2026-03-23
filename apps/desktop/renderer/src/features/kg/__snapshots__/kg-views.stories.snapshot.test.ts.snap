@@ -146,28 +146,46 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       class="flex flex-col items-center justify-center py-12 px-6 text-center"
     >
       <div
-        class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-bg-hover)]"
+        class="mb-4 flex items-center justify-center"
         data-testid="empty-state-illustration"
       >
         <svg
-          class="h-8 w-8 text-[var(--color-fg-muted)]"
+          class="h-24 w-24 text-[var(--color-fg-muted)]"
           fill="none"
+          height="120"
           stroke="currentColor"
-          viewBox="0 0 24 24"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          viewBox="0 0 120 120"
+          width="120"
           xmlns="http://www.w3.org/2000/svg"
         >
           <circle
-            cx="12"
-            cy="8"
-            fill="none"
-            r="4"
-            stroke-width="1.5"
+            cx="60"
+            cy="40"
+            opacity="0.4"
+            r="14"
           />
           <path
-            d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
+            d="M36 92v-6a24 24 0 0148 0v6"
+            opacity="0.4"
+          />
+          <line
+            stroke="var(--color-accent)"
+            stroke-width="2"
+            x1="90"
+            x2="90"
+            y1="36"
+            y2="52"
+          />
+          <line
+            stroke="var(--color-accent)"
+            stroke-width="2"
+            x1="82"
+            x2="98"
+            y1="44"
+            y2="44"
           />
         </svg>
       </div>

@@ -4,14 +4,17 @@ import { describe, expect, it } from "vitest";
 
 describe("FileTreePanel Storybook coverage", () => {
   it("should include nested/empty/dragging/context-menu/keyboard stories", () => {
-    const storyPath = path.resolve(__dirname, "FileTreePanel.stories.tsx");
-    const storySource = readFileSync(storyPath, "utf8");
+    const navPath = path.resolve(__dirname, "FileTreeNavigation.stories.tsx");
+    const opsPath = path.resolve(__dirname, "FileTreeOperations.stories.tsx");
+    const navSource = readFileSync(navPath, "utf8");
+    const opsSource = readFileSync(opsPath, "utf8");
+    const combined = navSource + opsSource;
 
-    expect(storySource).toContain("export const Default");
-    expect(storySource).toContain("export const Empty");
-    expect(storySource).toContain("export const NestedHierarchy");
-    expect(storySource).toContain("export const DragDropState");
-    expect(storySource).toContain("export const ContextMenuState");
-    expect(storySource).toContain("export const KeyboardNavigation");
+    expect(combined).toContain("export const Default");
+    expect(combined).toContain("export const Empty");
+    expect(combined).toContain("export const NestedHierarchy");
+    expect(combined).toContain("export const DragDropState");
+    expect(combined).toContain("export const ContextMenuState");
+    expect(combined).toContain("export const KeyboardNavigation");
   });
 });

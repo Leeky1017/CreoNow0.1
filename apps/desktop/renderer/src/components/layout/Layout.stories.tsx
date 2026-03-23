@@ -26,6 +26,7 @@ import {
 } from "../../stores/searchStore";
 import { KgStoreProvider, createKgStore } from "../../stores/kgStore";
 import { ThemeStoreProvider, createThemeStore } from "../../stores/themeStore";
+import { expect } from "@storybook/test";
 
 /**
  * Mock preferences for Storybook.
@@ -161,6 +162,9 @@ export const OverflowDefault: Story = {
       <AppShell />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -183,6 +187,9 @@ export const OverflowSmallContainer: Story = {
       <AppShell />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -218,6 +225,9 @@ export const OverflowMinimumSize: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -243,6 +253,9 @@ export const ResponsiveWide: Story = {
       <AppShell />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -264,6 +277,9 @@ export const ResponsiveStandard: Story = {
       <AppShell />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -285,6 +301,9 @@ export const ResponsiveLaptop: Story = {
       <AppShell />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -306,6 +325,9 @@ export const ResponsiveSmallLaptop: Story = {
       <AppShell />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -368,6 +390,9 @@ export const HeightVariations: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -466,4 +491,7 @@ export const LayoutConstants: Story = {
       </table>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

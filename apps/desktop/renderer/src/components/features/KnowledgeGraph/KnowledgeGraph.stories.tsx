@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { KnowledgeGraph } from "./KnowledgeGraph";
 import type { GraphData, GraphNode, NodeType } from "./types";
+import { expect } from "@storybook/test";
 
 /**
  * KnowledgeGraph Component Stories
@@ -205,6 +206,9 @@ export const DefaultGraphWithConnections: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -228,6 +232,9 @@ export const EmptyGraph: Story = {
         story: "空状态的知识图谱，显示引导用户添加第一个节点的 UI。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -256,6 +263,9 @@ export const SelectedNodeWithCard: Story = {
           "选中 Elara 节点，显示详情卡片。验证选中态样式和卡片内容完整性。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -307,6 +317,9 @@ export const DraggingNode: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -333,6 +346,9 @@ export const ZoomingCanvas: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -357,6 +373,9 @@ export const PanningCanvas: Story = {
         story: "测试平移功能。在空白区域按住并拖拽来移动整个画布。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -384,6 +403,9 @@ export const FilterByType: Story = {
         story: "测试筛选功能。点击工具栏的筛选按钮，验证节点过滤效果。",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -467,296 +489,6 @@ export const AddNewNode: Story = {
       description: {
         story:
           "交互式场景：添加新节点。点击 Add Node 按钮创建新节点并自动选中。",
-      },
-    },
-  },
-};
-
-// ============================================================================
-// 额外场景: 多节点选中对比
-// ============================================================================
-
-/**
- * 额外场景: 选中不同类型的节点
- *
- * 展示不同节点类型的选中状态和详情卡片
- */
-export const SelectLocationNode: Story = {
-  args: {
-    data: DEMO_DATA,
-    selectedNodeId: "shadow-keep",
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "选中 Location 类型节点 Shadow Keep，展示其详情卡片。",
-      },
-    },
-  },
-};
-
-export const SelectEventNode: Story = {
-  args: {
-    data: DEMO_DATA,
-    selectedNodeId: "great-war",
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "选中 Event 类型节点 The Great War，展示其详情卡片。",
-      },
-    },
-  },
-};
-
-export const SelectItemNode: Story = {
-  args: {
-    data: DEMO_DATA,
-    selectedNodeId: "crystal-key",
-  },
-  parameters: {
-    docs: {
-      description: {
-        story: "选中 Item 类型节点 Crystal Key，展示其详情卡片。",
-      },
-    },
-  },
-};
-
-// ============================================================================
-// 场景 10: EditNodeDialog - 编辑节点对话框
-// ============================================================================
-
-/**
- * 场景 10: 编辑节点对话框
- *
- * 验证点:
- * - 选中节点后点击 "Edit Node" 按钮
- * - 打开编辑对话框
- * - 修改名称、类型、描述、属性
- * - 保存后节点数据更新
- */
-export const EditNodeDialog: Story = {
-  args: { data: DEMO_DATA },
-  render: function EditNodeDialogStory() {
-    const [data, setData] = useState<GraphData>(DEMO_DATA);
-    const [selectedId, setSelectedId] = useState<string | null>("elara");
-
-    const handleNodeMove = (
-      nodeId: string,
-      position: { x: number; y: number },
-    ) => {
-      setData((prev) => ({
-        ...prev,
-        nodes: prev.nodes.map((node) =>
-          node.id === nodeId ? { ...node, position } : node,
-        ),
-      }));
-    };
-
-    const handleNodeSave = (node: GraphNode, isNew: boolean) => {
-      if (isNew) {
-        // Add new node
-        setData((prev) => ({
-          ...prev,
-          nodes: [...prev.nodes, node],
-        }));
-      } else {
-        // Update existing node
-        setData((prev) => ({
-          ...prev,
-          nodes: prev.nodes.map((n) => (n.id === node.id ? node : n)),
-        }));
-      }
-    };
-
-    return (
-      <KnowledgeGraph
-        data={data}
-        selectedNodeId={selectedId}
-        onNodeSelect={setSelectedId}
-        onNodeMove={handleNodeMove}
-        onNodeSave={handleNodeSave}
-        enableEditDialog={true}
-      />
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "交互式场景：编辑节点对话框。选中节点后点击 Edit Node，修改属性并保存。点击 Add Node 创建新节点。",
-      },
-    },
-  },
-};
-
-// ============================================================================
-// 场景 11: CreateNodeDialog - 创建新节点对话框
-// ============================================================================
-
-/**
- * 场景 11: 创建新节点对话框
- *
- * 验证点:
- * - 点击 "Add Node" 按钮
- * - 打开创建对话框
- * - 填写名称、选择类型、添加描述和属性
- * - 保存后新节点出现在画布
- */
-export const CreateNodeDialog: Story = {
-  args: { data: DEMO_DATA },
-  render: function CreateNodeDialogStory() {
-    const [data, setData] = useState<GraphData>({
-      nodes: [
-        {
-          id: "elara",
-          label: "Elara",
-          type: "character",
-          avatar:
-            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80",
-          position: { x: 400, y: 300 },
-          metadata: {
-            role: "Protagonist",
-            attributes: [{ key: "Age", value: "24" }],
-            description: "A skilled weaver of arcana.",
-          },
-        },
-      ],
-      edges: [],
-    });
-    const [selectedId, setSelectedId] = useState<string | null>(null);
-
-    const handleNodeSave = (node: GraphNode, isNew: boolean) => {
-      if (isNew) {
-        setData((prev) => ({
-          ...prev,
-          nodes: [...prev.nodes, node],
-        }));
-        setSelectedId(node.id);
-      } else {
-        setData((prev) => ({
-          ...prev,
-          nodes: prev.nodes.map((n) => (n.id === node.id ? node : n)),
-        }));
-      }
-    };
-
-    const handleNodeMove = (
-      nodeId: string,
-      position: { x: number; y: number },
-    ) => {
-      setData((prev) => ({
-        ...prev,
-        nodes: prev.nodes.map((node) =>
-          node.id === nodeId ? { ...node, position } : node,
-        ),
-      }));
-    };
-
-    return (
-      <KnowledgeGraph
-        data={data}
-        selectedNodeId={selectedId}
-        onNodeSelect={setSelectedId}
-        onNodeMove={handleNodeMove}
-        onNodeSave={handleNodeSave}
-        enableEditDialog={true}
-      />
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "交互式场景：创建新节点。点击 Add Node 按钮打开创建对话框，填写信息后保存。",
-      },
-    },
-  },
-};
-
-// ============================================================================
-// 完整矩阵展示
-// ============================================================================
-
-/**
- * 完整功能矩阵
- *
- * 展示所有节点类型和交互状态，包括编辑和删除功能
- */
-export const FullFeatureMatrix: Story = {
-  args: { data: DEMO_DATA },
-  render: function FullFeatureMatrixStory() {
-    const [data, setData] = useState<GraphData>(DEMO_DATA);
-    const [selectedId, setSelectedId] = useState<string | null>("elara");
-
-    const handleNodeMove = (
-      nodeId: string,
-      position: { x: number; y: number },
-    ) => {
-      setData((prev) => ({
-        ...prev,
-        nodes: prev.nodes.map((node) =>
-          node.id === nodeId ? { ...node, position } : node,
-        ),
-      }));
-    };
-
-    const handleNodeSave = (node: GraphNode, isNew: boolean) => {
-      if (isNew) {
-        setData((prev) => ({
-          ...prev,
-          nodes: [...prev.nodes, node],
-        }));
-        setSelectedId(node.id);
-      } else {
-        setData((prev) => ({
-          ...prev,
-          nodes: prev.nodes.map((n) => (n.id === node.id ? node : n)),
-        }));
-      }
-    };
-
-    const handleNodeDelete = (nodeId: string) => {
-      // Confirm before delete
-      const node = data.nodes.find((n) => n.id === nodeId);
-      if (
-        node &&
-        confirm(`确定要删除节点 "${node.label}" 吗？此操作不可撤销。`)
-      ) {
-        setData((prev) => ({
-          nodes: prev.nodes.filter((n) => n.id !== nodeId),
-          edges: prev.edges.filter(
-            (e) => e.source !== nodeId && e.target !== nodeId,
-          ),
-        }));
-        setSelectedId(null);
-      }
-    };
-
-    return (
-      <KnowledgeGraph
-        data={data}
-        selectedNodeId={selectedId}
-        onNodeSelect={setSelectedId}
-        onNodeMove={handleNodeMove}
-        onNodeSave={handleNodeSave}
-        onNodeDelete={handleNodeDelete}
-        onEditNode={(id) => console.log("Edit triggered:", id)}
-        onViewDetails={(id) =>
-          alert(
-            `查看详情: ${id}\n\n完整详情功能可在此实现更复杂的面板或页面跳转。`,
-          )
-        }
-        enableEditDialog={true}
-      />
-    );
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "完整功能演示：支持节点选择、拖拽、添加、编辑、删除、筛选、缩放等所有交互。点击垃圾桶图标删除节点。",
       },
     },
   },

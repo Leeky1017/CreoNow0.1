@@ -2,7 +2,7 @@
  * Surface Registry — 前端资产与 App/QA 入口的唯一映射表
  *
  * 本文件是 P0-001 的核心产物，实现：
- * 1. 60/60 Storybook 资产全量映射（截至 2026-02-14）
+ * 1. 95/95 Storybook 资产全量映射
  * 2. 每个 surface 都有明确的入口（App/QA/Storybook）
  * 3. 每个 surface 都有 data-testid 用于 E2E 测试
  *
@@ -76,13 +76,13 @@ export interface SurfaceRegistryItem {
 }
 
 /**
- * 完整的 Surface Registry（69/69）
+ * 完整的 Surface Registry（95/95）
  *
  * 按类别组织：Layout → Primitives → Features → Patterns
  */
 export const surfaceRegistry: SurfaceRegistryItem[] = [
   // ============================================================
-  // Layout（10 个）
+  // Layout（11 个）
   // ============================================================
   {
     id: "appShell",
@@ -99,11 +99,20 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Layout/综合测试",
   },
   {
-    id: "resizer",
+    id: "resizerBasic",
     kind: "layout",
     entryPoints: [{ type: "storybookOnly", description: "Resizer component" }],
     testId: "resizer",
-    storybookTitle: "Layout/Resizer",
+    storybookTitle: "Layout/Resizer/Basic",
+  },
+  {
+    id: "resizerInteractions",
+    kind: "layout",
+    entryPoints: [
+      { type: "storybookOnly", description: "Resizer interaction demos" },
+    ],
+    testId: "resizer-interactions",
+    storybookTitle: "Layout/Resizer/Interactions",
   },
   {
     id: "sidebar",
@@ -166,7 +175,7 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
   },
 
   // ============================================================
-  // Primitives（26 個）
+  // Primitives（31 个）
   // ============================================================
   {
     id: "accordion",
@@ -192,18 +201,45 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/Badge",
   },
   {
-    id: "button",
+    id: "buttonBasic",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Button primitive" }],
     testId: "button",
-    storybookTitle: "Primitives/Button",
+    storybookTitle: "Primitives/Button/Basic",
   },
   {
-    id: "card",
+    id: "buttonVariants",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Button variants showcase" },
+    ],
+    testId: "button-variants",
+    storybookTitle: "Primitives/Button/Variants",
+  },
+  {
+    id: "cardBasic",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Card primitive" }],
     testId: "card",
-    storybookTitle: "Primitives/Card",
+    storybookTitle: "Primitives/Card/Basic",
+  },
+  {
+    id: "cardVariants",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Card variants showcase" },
+    ],
+    testId: "card-variants",
+    storybookTitle: "Primitives/Card/Variants",
+  },
+  {
+    id: "cardComposed",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Card composed layouts" },
+    ],
+    testId: "card-composed",
+    storybookTitle: "Primitives/Card/Composed",
   },
   {
     id: "checkbox",
@@ -211,6 +247,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     entryPoints: [{ type: "storybookOnly", description: "Checkbox primitive" }],
     testId: "checkbox",
     storybookTitle: "Primitives/Checkbox",
+  },
+  {
+    id: "checkboxAdvanced",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Checkbox advanced states" },
+    ],
+    testId: "checkbox-advanced",
+    storybookTitle: "Primitives/Checkbox/Advanced",
   },
   {
     id: "contextMenu",
@@ -254,11 +299,20 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/ImageUpload",
   },
   {
-    id: "input",
+    id: "inputBasic",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Input primitive" }],
     testId: "input",
-    storybookTitle: "Primitives/Input",
+    storybookTitle: "Primitives/Input/Basic",
+  },
+  {
+    id: "inputVariants",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Input variants showcase" },
+    ],
+    testId: "input-variants",
+    storybookTitle: "Primitives/Input/Variants",
   },
   {
     id: "listItem",
@@ -268,11 +322,38 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/ListItem",
   },
   {
+    id: "listItemAdvanced",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "ListItem advanced states" },
+    ],
+    testId: "list-item-advanced",
+    storybookTitle: "Primitives/ListItem/Advanced",
+  },
+  {
+    id: "listItemMatrix",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "ListItem variant matrix" },
+    ],
+    testId: "list-item-matrix",
+    storybookTitle: "Primitives/ListItem/Matrix",
+  },
+  {
     id: "popover",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Popover primitive" }],
     testId: "popover",
     storybookTitle: "Primitives/Popover",
+  },
+  {
+    id: "popoverAdvanced",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Popover advanced states" },
+    ],
+    testId: "popover-advanced",
+    storybookTitle: "Primitives/Popover/Advanced",
   },
   {
     id: "radio",
@@ -298,6 +379,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/Select",
   },
   {
+    id: "selectAdvanced",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Select advanced states" },
+    ],
+    testId: "select-advanced",
+    storybookTitle: "Primitives/Select/Advanced",
+  },
+  {
     id: "skeleton",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Skeleton primitive" }],
@@ -319,11 +409,20 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/Spinner",
   },
   {
-    id: "tabs",
+    id: "tabsBasic",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Tabs primitive" }],
     testId: "tabs",
-    storybookTitle: "Primitives/Tabs",
+    storybookTitle: "Primitives/Tabs/Basic",
+  },
+  {
+    id: "tabsVariants",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Tabs variants showcase" },
+    ],
+    testId: "tabs-variants",
+    storybookTitle: "Primitives/Tabs/Variants",
   },
   {
     id: "text",
@@ -333,11 +432,29 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/Text",
   },
   {
+    id: "textVariants",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Text variant showcase" },
+    ],
+    testId: "text-variants",
+    storybookTitle: "Primitives/Text/Variants",
+  },
+  {
     id: "textarea",
     kind: "primitive",
     entryPoints: [{ type: "storybookOnly", description: "Textarea primitive" }],
     testId: "textarea",
     storybookTitle: "Primitives/Textarea",
+  },
+  {
+    id: "textareaAdvanced",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Textarea advanced states" },
+    ],
+    testId: "textarea-advanced",
+    storybookTitle: "Primitives/Textarea/Advanced",
   },
   {
     id: "toast",
@@ -362,23 +479,70 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
   },
 
   // ============================================================
-  // Features（28 个）
+  // Features（46 个）
   // ============================================================
   {
-    id: "aiDialogs",
+    id: "aiDialogsInline",
     kind: "dialog",
     entryPoints: [
-      { type: "button", description: "AI error/confirm/prompt actions" },
+      { type: "button", description: "AI inline confirm & diff modal" },
     ],
     testId: "ai-dialogs",
-    storybookTitle: "Features/AiDialogs",
+    storybookTitle: "Features/AiDialogs/Inline",
   },
   {
-    id: "aiPanel",
+    id: "aiDialogsStates",
+    kind: "dialog",
+    entryPoints: [
+      { type: "button", description: "AI error cards & system dialogs" },
+    ],
+    testId: "ai-dialogs-states",
+    storybookTitle: "Features/AiDialogs/States",
+  },
+  {
+    id: "aiDialogsStatesSystem",
+    kind: "dialog",
+    entryPoints: [
+      { type: "storybookOnly", description: "AI system dialog states" },
+    ],
+    testId: "ai-dialogs-states-system",
+    storybookTitle: "Features/AiDialogs/StatesSystem",
+  },
+  {
+    id: "aiPanelChat",
     kind: "rightPanel",
-    entryPoints: [{ type: "iconBar", description: "AI tab in right panel" }],
+    entryPoints: [
+      { type: "iconBar", description: "AI chat tab in right panel" },
+    ],
     testId: "ai-panel",
-    storybookTitle: "Features/AiPanel",
+    storybookTitle: "Features/AI/Chat",
+  },
+  {
+    id: "aiPanelConversation",
+    kind: "rightPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "AI long conversation demo" },
+    ],
+    testId: "ai-panel-conversation",
+    storybookTitle: "Features/AI/Conversation",
+  },
+  {
+    id: "aiPanelLayout",
+    kind: "rightPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "AI panel layout variants" },
+    ],
+    testId: "ai-panel-layout",
+    storybookTitle: "Features/AI/Layout",
+  },
+  {
+    id: "aiPanelStates",
+    kind: "rightPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "AI panel states demo" },
+    ],
+    testId: "ai-panel-states",
+    storybookTitle: "Features/AI/States",
   },
   {
     id: "analyticsPage",
@@ -388,18 +552,45 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Features/AnalyticsPage",
   },
   {
-    id: "characterPanel",
+    id: "characterDetail",
     kind: "leftPanel",
     entryPoints: [{ type: "iconBar", description: "Characters icon" }],
     testId: "character-panel",
-    storybookTitle: "Features/CharacterPanel",
+    storybookTitle: "Features/Character/Detail",
   },
   {
-    id: "commandPalette",
+    id: "characterList",
+    kind: "leftPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "Character list view" },
+    ],
+    testId: "character-list",
+    storybookTitle: "Features/Character/List",
+  },
+  {
+    id: "commandPaletteAdvanced",
     kind: "overlay",
     entryPoints: [{ type: "shortcut", description: "Cmd/Ctrl+P" }],
     testId: "command-palette",
-    storybookTitle: "Features/CommandPalette",
+    storybookTitle: "Features/CommandPalette/Advanced",
+  },
+  {
+    id: "commandPaletteBasic",
+    kind: "overlay",
+    entryPoints: [
+      { type: "storybookOnly", description: "Basic command palette demo" },
+    ],
+    testId: "command-palette-basic",
+    storybookTitle: "Features/CommandPalette/Basic",
+  },
+  {
+    id: "commandPaletteList",
+    kind: "overlay",
+    entryPoints: [
+      { type: "storybookOnly", description: "Long command list demo" },
+    ],
+    testId: "command-palette-list",
+    storybookTitle: "Features/CommandPalette/List",
   },
   {
     id: "createProjectDialog",
@@ -438,13 +629,22 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Features/Dashboard/DashboardPage",
   },
   {
-    id: "diffView",
+    id: "diffViewAdvanced",
     kind: "leftPanel",
     entryPoints: [
       { type: "button", description: "Compare button in VersionHistory" },
     ],
     testId: "diff-view",
-    storybookTitle: "Features/DiffView",
+    storybookTitle: "Features/DiffView/Advanced",
+  },
+  {
+    id: "diffViewBasic",
+    kind: "leftPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "Basic diff view demo" },
+    ],
+    testId: "diff-view-basic",
+    storybookTitle: "Features/DiffView/Basic",
   },
   {
     id: "editorPane",
@@ -480,11 +680,20 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Features/ExportDialog",
   },
   {
-    id: "fileTreePanel",
+    id: "fileTreeNavigation",
     kind: "leftPanel",
     entryPoints: [{ type: "iconBar", description: "Files icon" }],
     testId: "file-tree-panel",
-    storybookTitle: "Features/FileTreePanel",
+    storybookTitle: "Features/FileTree/Navigation",
+  },
+  {
+    id: "fileTreeOperations",
+    kind: "leftPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "File tree operations demo" },
+    ],
+    testId: "file-tree-operations",
+    storybookTitle: "Features/FileTree/Operations",
   },
   {
     id: "knowledgeGraph",
@@ -515,6 +724,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Features/KnowledgeGraph/EntityDetail",
   },
   {
+    id: "knowledgeGraphAdvanced",
+    kind: "leftPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "KG advanced interactions" },
+    ],
+    testId: "knowledge-graph-advanced",
+    storybookTitle: "Features/KnowledgeGraph/Advanced",
+  },
+  {
     id: "memoryCreateDialog",
     kind: "dialog",
     entryPoints: [{ type: "button", description: "Add memory button" }],
@@ -543,30 +761,84 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Features/Onboarding/OnboardingPage",
   },
   {
-    id: "outlinePanel",
+    id: "outlineBasic",
     kind: "leftPanel",
     entryPoints: [{ type: "iconBar", description: "Outline icon" }],
     testId: "outline-panel",
-    storybookTitle: "Features/OutlinePanel",
+    storybookTitle: "Features/Outline/Basic",
   },
   {
-    id: "qualityGatesPanel",
+    id: "outlineInteractive",
+    kind: "leftPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "Outline interactive demo" },
+    ],
+    testId: "outline-interactive",
+    storybookTitle: "Features/Outline/Interactive",
+  },
+  {
+    id: "qualityGatesActions",
     kind: "rightPanel",
     entryPoints: [
       { type: "iconBar", description: "Quality tab in right panel" },
     ],
     testId: "quality-gates-panel",
-    storybookTitle: "Features/QualityGatesPanel",
+    storybookTitle: "Features/QualityGates/Actions",
   },
   {
-    id: "searchPanel",
+    id: "qualityGatesOverview",
+    kind: "rightPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "Quality gates overview" },
+    ],
+    testId: "quality-gates-overview",
+    storybookTitle: "Features/QualityGates/Overview",
+  },
+  {
+    id: "rightPanelInfo",
+    kind: "rightPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "Right panel info section" },
+    ],
+    testId: "right-panel-info",
+    storybookTitle: "Features/RightPanel/Info",
+  },
+  {
+    id: "rightPanelQuality",
+    kind: "rightPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "Right panel quality section" },
+    ],
+    testId: "right-panel-quality",
+    storybookTitle: "Features/RightPanel/Quality",
+  },
+  {
+    id: "searchInteractive",
     kind: "leftPanel",
     entryPoints: [
       { type: "iconBar", description: "Search icon" },
       { type: "shortcut", description: "Cmd/Ctrl+Shift+F" },
     ],
     testId: "search-panel",
-    storybookTitle: "Features/SearchPanel",
+    storybookTitle: "Features/Search/Interactive",
+  },
+  {
+    id: "searchResults",
+    kind: "leftPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "Search results demo" },
+    ],
+    testId: "search-results",
+    storybookTitle: "Features/Search/Results",
+  },
+  {
+    id: "settings",
+    kind: "page",
+    entryPoints: [
+      { type: "storybookOnly", description: "Settings page stories" },
+    ],
+    testId: "settings",
+    storybookTitle: "Features/Settings",
   },
   {
     id: "settingsDialog",
@@ -580,6 +852,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Features/SettingsDialog",
   },
   {
+    id: "shortcutsPanel",
+    kind: "leftPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "Shortcuts panel stories" },
+    ],
+    testId: "shortcuts-panel",
+    storybookTitle: "Features/Shortcuts/ShortcutsPanel",
+  },
+  {
     id: "skillPicker",
     kind: "dialog",
     entryPoints: [
@@ -589,11 +870,20 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Features/SkillPicker",
   },
   {
-    id: "versionHistoryPanel",
+    id: "versionHistoryActions",
     kind: "leftPanel",
     entryPoints: [{ type: "iconBar", description: "History icon" }],
     testId: "version-history-panel",
-    storybookTitle: "Features/VersionHistoryPanel",
+    storybookTitle: "Features/VersionHistory/Actions",
+  },
+  {
+    id: "versionHistoryList",
+    kind: "leftPanel",
+    entryPoints: [
+      { type: "storybookOnly", description: "Version history list view" },
+    ],
+    testId: "version-history-list",
+    storybookTitle: "Features/VersionHistory/List",
   },
   {
     id: "zenMode",

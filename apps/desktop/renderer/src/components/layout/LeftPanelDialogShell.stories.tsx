@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { LeftPanelDialogShell } from "./LeftPanelDialogShell";
+import { within, expect } from "@storybook/test";
 
 const meta: Meta<typeof LeftPanelDialogShell> = {
   title: "Layout/LeftPanelDialogShell",
@@ -25,6 +26,10 @@ export const Open: Story = {
       </div>
     ),
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const Closed: Story = {
@@ -33,5 +38,9 @@ export const Closed: Story = {
     title: "Create Project",
     onOpenChange: () => {},
     children: <div />,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };

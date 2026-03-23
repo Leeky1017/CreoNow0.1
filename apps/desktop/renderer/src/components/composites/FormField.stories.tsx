@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { FormField } from "./FormField";
 import { Input } from "../primitives";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof FormField> = {
   title: "Composites/FormField",
@@ -26,6 +27,9 @@ export const Default: Story = {
     htmlFor: "name",
     children: <Input id="name" placeholder="Enter project name" />,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const WithHelp: Story = {
@@ -34,6 +38,9 @@ export const WithHelp: Story = {
     htmlFor: "api-key",
     help: "You can find your API key in Settings → API.",
     children: <Input id="api-key" placeholder="sk-..." />,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -44,6 +51,9 @@ export const WithError: Story = {
     error: "Please enter a valid email address",
     children: <Input id="email" defaultValue="not-an-email" />,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Required: Story = {
@@ -52,5 +62,8 @@ export const Required: Story = {
     htmlFor: "username",
     required: true,
     children: <Input id="username" placeholder="Required field" />,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

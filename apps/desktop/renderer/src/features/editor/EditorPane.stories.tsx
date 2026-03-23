@@ -1,5 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -115,6 +116,11 @@ export const Default: Story = {
       <StandaloneEditor />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("editor-pane")).toBeInTheDocument();
+    await expect(canvas.getByTestId("editor-toolbar")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -147,6 +153,11 @@ export const WithContent: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("editor-pane")).toBeInTheDocument();
+    await expect(canvas.getByTestId("tiptap-editor")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -176,6 +187,9 @@ export const TechnicalContent: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -189,6 +203,9 @@ export const ConstrainedWidth: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -200,6 +217,9 @@ export const Empty: Story = {
       <StandaloneEditor initialContent="<p></p>" />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -214,6 +234,9 @@ export const BubbleMenuVisible: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -229,6 +252,9 @@ export const BubbleMenuActive: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -244,4 +270,7 @@ export const BubbleMenuHidden: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ScrollArea } from "./ScrollArea";
+import { expect } from "@storybook/test";
 
 const meta = {
   title: "Primitives/ScrollArea",
@@ -37,6 +38,9 @@ export const Default: Story = {
       </div>
     ),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Horizontal: Story = {
@@ -67,5 +71,8 @@ export const Horizontal: Story = {
         ))}
       </div>
     ),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

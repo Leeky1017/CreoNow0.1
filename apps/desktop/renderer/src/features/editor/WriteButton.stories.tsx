@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { WriteButton } from "./WriteButton";
+import { within, expect } from "@storybook/test";
 
 const meta: Meta<typeof WriteButton> = {
   title: "Features/Editor/WriteButton",
@@ -30,6 +31,10 @@ export const Visible: Story = {
     running: false,
     onClick: () => {},
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 export const Disabled: Story = {
@@ -39,6 +44,10 @@ export const Disabled: Story = {
     running: false,
     onClick: () => {},
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 export const Running: Story = {
@@ -47,5 +56,9 @@ export const Running: Story = {
     disabled: true,
     running: true,
     onClick: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };

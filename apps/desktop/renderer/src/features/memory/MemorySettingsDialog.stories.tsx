@@ -6,6 +6,7 @@ import {
   createMemoryStore,
   type MemorySettings,
 } from "../../stores/memoryStore";
+import { within, expect } from "@storybook/test";
 
 // =============================================================================
 // Mock IPC
@@ -136,6 +137,10 @@ export const Default: Story = {
       }}
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -161,6 +166,10 @@ export const PrivacyMode: Story = {
       }}
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -186,6 +195,10 @@ export const LearningDisabled: Story = {
       }}
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -211,6 +224,10 @@ export const AllDisabled: Story = {
       }}
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -235,4 +252,8 @@ export const Interactive: Story = {
       }}
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };

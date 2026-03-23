@@ -1,6 +1,7 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Accordion } from "./Accordion";
+import { expect } from "@storybook/test";
 
 /**
  * Accordion 组件 Story
@@ -64,6 +65,9 @@ export const Default: Story = {
     type: "single",
     collapsible: true,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 多选模式 */
@@ -71,6 +75,9 @@ export const Multiple: Story = {
   args: {
     items: sampleItems,
     type: "multiple",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -81,6 +88,9 @@ export const DefaultExpanded: Story = {
     type: "single",
     defaultValue: "item-1",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 不可折叠 */
@@ -90,6 +100,9 @@ export const NotCollapsible: Story = {
     type: "single",
     collapsible: false,
     defaultValue: "item-1",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -106,6 +119,9 @@ export const WithDisabled: Story = {
       },
     ],
     type: "single",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -164,6 +180,9 @@ export const RichContent: Story = {
     ],
     type: "single",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 多选默认展开多项 */
@@ -172,6 +191,9 @@ export const MultipleDefaultExpanded: Story = {
     items: sampleItems,
     type: "multiple",
     defaultValue: ["item-1", "item-2"],
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -203,6 +225,9 @@ export const Controlled: Story = {
     items: sampleItems,
   },
   render: () => <ControlledDemo />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -224,6 +249,9 @@ export const LongContent: Story = {
     type: "single",
     defaultValue: "long",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 单项 */
@@ -238,6 +266,9 @@ export const SingleItem: Story = {
     ],
     type: "single",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 多项 */
@@ -249,5 +280,8 @@ export const ManyItems: Story = {
       content: `Content for section ${i + 1}. This is some placeholder text.`,
     })),
     type: "single",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

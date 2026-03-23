@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 文件夹 -->
+  <path d="M30 45h60a4 4 0 014 4v30a4 4 0 01-4 4H30a4 4 0 01-4-4V41a4 4 0 014-4z" opacity="0.4"/>
+  <path d="M26 45V37a4 4 0 014-4h18l6 6h36a4 4 0 014 4v2"/>
+  <!-- 加号 -->
+  <line x1="60" y1="55" x2="60" y2="73" stroke="currentColor" stroke-width="2"/>
+  <line x1="51" y1="64" x2="69" y2="64" stroke="currentColor" stroke-width="2"/>
+</svg>

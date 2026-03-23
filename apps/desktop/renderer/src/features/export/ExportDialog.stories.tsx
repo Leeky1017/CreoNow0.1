@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 import { AppToastProvider } from "../../components/providers/AppToastProvider";
 import { ExportDialog, defaultExportOptions } from "./ExportDialog";
 
@@ -97,6 +98,13 @@ export const ConfigViewDefault: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByTestId("export-dialog"),
+    ).toBeInTheDocument();
+    await expect(canvas.getByTestId("export-submit")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -127,6 +135,10 @@ export const SelectMarkdownFormat: Story = {
           "Markdown format selected. Page Size is disabled since it only applies to PDF. Preview shows 'MARKDOWN • A4'.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -161,6 +173,10 @@ export const ToggleAllOptions: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -188,6 +204,10 @@ export const ChangePageSize: Story = {
           "Page size changed to Letter. Preview badge shows 'PDF • LETTER'.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -217,6 +237,12 @@ export const ProgressView: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByText("Generating pages..."),
+    ).toBeInTheDocument();
+  },
 };
 
 /**
@@ -243,6 +269,10 @@ export const ProgressViewAlmostDone: Story = {
           "Export almost complete at 95%. Progress bar nearly full, step shows 'Finalizing PDF...'.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -274,6 +304,13 @@ export const SuccessView: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByTestId("export-success"),
+    ).toBeInTheDocument();
+    await expect(canvas.getByTestId("export-done")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -298,6 +335,10 @@ export const ProgressViewPreparing: Story = {
         story: "Export just started at 15%. Shows 'Preparing...' step label.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -325,6 +366,10 @@ export const ProgressViewEmbeddingImages: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const UnsupportedStructureError: Story = {
@@ -344,6 +389,10 @@ export const UnsupportedStructureError: Story = {
           "Config view with an explicit unsupported-structure failure, showing the same error surface users get before file write.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -371,5 +420,9 @@ export const LegalPageSize: Story = {
         story: "PDF with Legal page size. Preview badge shows 'PDF • LEGAL'.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };

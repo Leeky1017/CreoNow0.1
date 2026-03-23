@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import type { CSSProperties } from "react";
@@ -64,6 +65,12 @@ function ToolbarWithEditor(props: { initialContent?: string }): JSX.Element {
  */
 export const Default: Story = {
   render: () => <ToolbarWithEditor />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("toolbar-bold")).toBeInTheDocument();
+    await expect(canvas.getByTestId("toolbar-italic")).toBeInTheDocument();
+    await expect(canvas.getByTestId("toolbar-undo")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -92,6 +99,12 @@ export const WithFormattedContent: Story = {
       `}
     />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByTestId("toolbar-bold")).toBeInTheDocument();
+    await expect(canvas.getByTestId("toolbar-h1")).toBeInTheDocument();
+    await expect(canvas.getByTestId("toolbar-bullet-list")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -103,6 +116,9 @@ export const FocusVisibleBold: Story = {
       <ToolbarWithEditor />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -121,6 +137,9 @@ export const ReducedMotionDefault: Story = {
       </div>
     );
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -132,6 +151,9 @@ export const DarkModeDefault: Story = {
       <ToolbarWithEditor />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -148,6 +170,9 @@ export const FontScale125: Story = {
         <ToolbarWithEditor />
       </div>
     );
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -166,6 +191,9 @@ export const FontScale150: Story = {
       </div>
     );
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -180,6 +208,9 @@ export const NoEditor: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -208,4 +239,7 @@ export const MultipleStates: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

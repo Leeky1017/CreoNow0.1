@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { DropdownMenu } from "./DropdownMenu";
+import { within, expect } from "@storybook/test";
 
 const meta = {
   title: "Primitives/DropdownMenu",
@@ -38,6 +39,10 @@ export const Default: Story = {
     ),
     items: defaultItems,
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
+  },
 };
 
 export const WithDisabled: Story = {
@@ -62,5 +67,9 @@ export const WithDisabled: Story = {
       { key: "archive", label: "Archive", onSelect: () => {}, disabled: true },
       { key: "delete", label: "Delete", onSelect: () => {}, destructive: true },
     ],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button")).toBeInTheDocument();
   },
 };
