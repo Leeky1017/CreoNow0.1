@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import { Dialog, Text } from "../../components/primitives";
 import { useConfirmDialog } from "../../hooks/useConfirmDialog";
@@ -8,7 +7,6 @@ import { invoke } from "../../lib/ipcClient";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { Button } from "../../components/primitives/Button";
 import { Textarea } from "../../components/primitives/Textarea";
-
 import type {
   CustomSkillListItem,
   SkillFormState,
@@ -21,7 +19,6 @@ import {
 } from "./skill-manager-utils";
 import { SkillFormFields } from "./SkillFormFields";
 import { SkillItemList } from "./SkillItemList";
-
 export type { CustomSkillListItem } from "./skill-manager.types";
 /**
  * SkillManagerDialog provides custom skill CRUD + AI-assisted drafting.

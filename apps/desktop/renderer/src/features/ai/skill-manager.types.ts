@@ -14,3 +14,12 @@ export type SkillFormState = {
 };
 
 export type CustomSkillContextRules = Record<string, string | number | boolean>;
+
+export type SkillDraftPick = Pick<
+  SkillFormState,
+  "name" | "description" | "promptTemplate" | "inputType" | "contextRulesText"
+>;
+
+export type ContextRulesParseResult =
+  | { ok: true; data: CustomSkillContextRules }
+  | { ok: false; message: string };

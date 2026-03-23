@@ -1,9 +1,9 @@
 import type { IpcError } from "@shared/types/ipc-generated";
-
 import { i18n } from "../../i18n";
-
 import type {
+  ContextRulesParseResult,
   CustomSkillContextRules,
+  SkillDraftPick,
   SkillFormState,
 } from "./skill-manager.types";
 
@@ -19,16 +19,10 @@ export const DEFAULT_FORM: SkillFormState = {
 
 export function buildSkillDraftFromDescription(
   description: string,
-): Pick<
-  SkillFormState,
-  "name" | "description" | "promptTemplate" | "inputType" | "contextRulesText"
-> {
+): SkillDraftPick {
   const normalized = description.trim();
-  const shortName =
-    normalized.slice(0, 16) || i18n.t("ai.skillManager.aiGeneratedSkill");
-
   return {
-    name: shortName,
+    name: normalized.slice(0, 16) || i18n.t("ai.skillManager.aiGeneratedSkill"),
     description: normalized,
     promptTemplate: `请根据以下要求处理文本：${normalized}\n\n原文：{{input}}`,
     inputType: normalized.includes("续写") ? "document" : "selection",
@@ -36,11 +30,7 @@ export function buildSkillDraftFromDescription(
   };
 }
 
-export function parseContextRulesText(
-  text: string,
-):
-  | { ok: true; data: CustomSkillContextRules }
-  | { ok: false; message: string } {
+export function parseContextRulesText(text: string): ContextRulesParseResult {
   try {
     const parsed: unknown = JSON.parse(text);
     if (
@@ -64,9 +54,7 @@ export function parseContextRulesText(
 
 export function readFieldName(error: IpcError): string | null {
   const details = error.details;
-  if (!details || typeof details !== "object") {
-    return null;
-  }
+  if (!details || typeof details !== "object") return null;
   const fieldName = (details as { fieldName?: unknown }).fieldName;
   return typeof fieldName === "string" ? fieldName : null;
 }
