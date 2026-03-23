@@ -166,6 +166,7 @@
   --dimension-search-results-max-h: 60vh;
   --dimension-character-accent: 3px;
   --dimension-character-dialog-max-h: 92vh;
+  --dimension-outline-node-offset: 3px;
 }
 
 /* === 全局基础样式 === */

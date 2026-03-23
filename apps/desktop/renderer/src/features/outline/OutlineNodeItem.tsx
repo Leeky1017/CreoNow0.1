@@ -59,9 +59,7 @@ function DragIndicator({ position }: { position: DropPosition | null }) {
       ) : (
         <>
           <div className="h-0.5 bg-[var(--color-info)]" />
-          {/* 审计：v1-18e #1241 KEEP — -top-[3px] 无标准 token，大纲节点垂直偏移为设计规范固定值 */}
-          {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：-top-[3px] 无标准 Tailwind 工具类可替代 */}
-          <div className="absolute -left-1 -top-[3px] w-1.5 h-1.5 rounded-full bg-[var(--color-info)]" />
+          <div className="absolute -left-1 -top-(--dimension-outline-node-offset) w-1.5 h-1.5 rounded-full bg-[var(--color-info)]" />
         </>
       )}
     </div>
