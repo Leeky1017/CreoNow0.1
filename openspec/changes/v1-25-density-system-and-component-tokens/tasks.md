@@ -1,5 +1,7 @@
 # Tasks: V1-25 Density System & Component Tokens
 
+> ⚠️ 本 change 已拆分为 micro-changes: v1-25a, v1-25b, v1-25c, v1-25d。以下为历史记录。
+
 > 📋 **级联刷新 R10**（2026-03-22）：v1-19~v1-23 tasks.md 补建后级联刷新。v1-17/v1-18 已合并。v1-24 仍待完成。
 > 📋 **级联刷新 R1**（2026-03-21）：v1-01 完成后建档。基线已采集。v1-24 仍待完成。
 

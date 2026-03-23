@@ -1,3 +1,5 @@
+> ⚠️ 本 change 已拆分为 micro-changes: v1-14a。以下为历史记录。
+
 # Tasks: V1-14 对话框与入口页视觉补完
 
 > 📋 **级联刷新 R1**（2026-03-21）：v1-02 完成后刷新。基线已重采集。
@@ -5,7 +7,7 @@
 - **GitHub Issue**: #1197（v1-14 / v1-15 共享交付）
 - **分支**: `task/1197-v1-14-v1-15-tdd-redo`
 - **PR**: #1198
-- **状态**: ✅ 主体实现完成；另有 #1199 记录的 2 条后续必修约束
+- **状态**: ✅ 主体实现完成（AC-1～AC-16）；AC-17/AC-18 拆入 `v1-14a-dialog-remaining`（#1199）
 - **Delta Spec**: `openspec/changes/v1-14-dialog-and-entry-pages/specs/`
 
 ---
@@ -46,11 +48,11 @@
 
 ## Phase 0: 准备
 
-- [ ] 阅读 `AGENTS.md`
-- [ ] 阅读 `design/DESIGN_DECISIONS.md` 相关章节
-- [ ] 阅读 5 个目标文件全文，标注当前 UI 结构和 Design Token 使用情况
-- [ ] 盘点现有测试文件
-- [ ] 运行现有测试基线
+- [x] 阅读 `AGENTS.md`
+- [x] 阅读 `design/DESIGN_DECISIONS.md` 相关章节
+- [x] 阅读 5 个目标文件全文，标注当前 UI 结构和 Design Token 使用情况
+- [x] 盘点现有测试文件
+- [x] 运行现有测试基线
 - [x] 确认 v1-01（Design Token）✅、v1-02（Primitive）✅、v1-07（Settings shell）✅ 已合并
 
 > **R1 依赖状态**：三项前置依赖全部已合并。v1-02 变体系统（pill/bento/compact/underline）已在 Primitive 层就绪，features 层已有 13 处采用 `size="icon"`。v1-14 目标文件中变体全面推广归 v1-18。
@@ -63,10 +65,10 @@
 
 **映射验收标准**: AC-1, AC-2, AC-3
 
-- [ ] 测试：ExportDialog 渲染时包含 Tabs 组件（`getByRole('tablist')`）
-- [ ] 测试：至少 4 个 tab（PDF/DOCX/HTML/Markdown）
-- [ ] 测试：预览区域有 `--color-bg-elevated` 背景
-- [ ] 测试：导出按钮为 Button `variant="primary"`
+- [x] 测试：ExportDialog 渲染时包含 Tabs 组件（`getByRole('tablist')`）
+- [x] 测试：至少 4 个 tab（PDF/DOCX/HTML/Markdown）
+- [x] 测试：预览区域有 `--color-bg-elevated` 背景
+- [x] 测试：导出按钮为 Button `variant="primary"`
 
 **文件**: `apps/desktop/renderer/src/features/export/__tests__/ExportDialog.test.tsx`（新建）
 
@@ -74,10 +76,10 @@
 
 **映射验收标准**: AC-4, AC-5, AC-6
 
-- [ ] 测试：Dialog 渲染时包含 stepper 进度条
-- [ ] 测试：当前步骤指示器有 active 样式
-- [ ] 测试：第二步渲染模板卡片网格
-- [ ] 测试：Next/Previous 按钮存在且功能正常
+- [x] 测试：Dialog 渲染时包含 stepper 进度条
+- [x] 测试：当前步骤指示器有 active 样式
+- [x] 测试：第二步渲染模板卡片网格
+- [x] 测试：Next/Previous 按钮存在且功能正常
 
 **文件**: `apps/desktop/renderer/src/features/projects/__tests__/CreateProjectDialog.test.tsx`（新建）
 
@@ -85,9 +87,9 @@
 
 **映射验收标准**: AC-8, AC-9, AC-10
 
-- [ ] 测试：OnboardingPage 渲染步骤指示器（dot 指示器）
-- [ ] 测试：欢迎页标题使用 Heading 组件
-- [ ] 测试：完成步骤后有完成态渲染
+- [x] 测试：OnboardingPage 渲染步骤指示器（dot 指示器）
+- [x] 测试：欢迎页标题使用 Heading 组件
+- [x] 测试：完成步骤后有完成态渲染
 
 **文件**: `apps/desktop/renderer/src/features/onboarding/__tests__/OnboardingPage.test.tsx`（新建）
 
@@ -95,8 +97,8 @@
 
 **映射验收标准**: AC-11
 
-- [ ] 测试：各设置项使用 FormField 布局（label + control）
-- [ ] 测试：section 间有统一间距
+- [x] 测试：各设置项使用 FormField 布局（label + control）
+- [x] 测试：section 间有统一间距
 
 **文件**: `apps/desktop/renderer/src/features/settings-dialog/__tests__/SettingsGeneral.test.tsx`（新建）
 
@@ -108,14 +110,14 @@
 
 **映射验收标准**: AC-1, AC-2, AC-3, AC-12
 
-- [ ] 提取 `useExportConfig.ts`：导出配置状态管理 hook（格式选择、选项配置、校验），≤ 150 行
-- [ ] 提取 `ExportFormatTab.tsx`：单格式配置面板（字体/边距/页眉/水印选项表单），≤ 250 行
-- [ ] 提取 `ExportPreview.tsx`：实时预览区渲染（预览图 + 页面信息），≤ 200 行
-- [ ] 精简 `ExportDialog.tsx` 至 ≤ 200 行（Dialog shell + Tabs 切换 + 导出/取消按钮）
-- [ ] Tab 使用 Tabs `variant="underline"`
-- [ ] 预览区背景 `--color-bg-elevated` + 边框 `--color-border-subtle`
-- [ ] 所有表单项使用 FormField 布局
-- [ ] 确认提取后导出功能完整可用
+- [x] 提取 `useExportConfig.ts`：导出配置状态管理 hook（格式选择、选项配置、校验），≤ 150 行
+- [x] 提取 `ExportFormatTab.tsx`：单格式配置面板（字体/边距/页眉/水印选项表单），≤ 250 行
+- [x] 提取 `ExportPreview.tsx`：实时预览区渲染（预览图 + 页面信息），≤ 200 行
+- [x] 精简 `ExportDialog.tsx` 至 ≤ 200 行（Dialog shell + Tabs 切换 + 导出/取消按钮）
+- [x] Tab 使用 Tabs `variant="underline"`
+- [x] 预览区背景 `--color-bg-elevated` + 边框 `--color-border-subtle`
+- [x] 所有表单项使用 FormField 布局
+- [x] 确认提取后导出功能完整可用
 
 **文件**: `apps/desktop/renderer/src/features/export/`
 
@@ -123,13 +125,13 @@
 
 **映射验收标准**: AC-4, AC-5, AC-6, AC-12
 
-- [ ] 提取 `ProjectBasicStep.tsx`：第一步（项目名 + 描述 + 封面图），≤ 200 行
-- [ ] 提取 `ProjectTemplateStep.tsx`：第二步（模板网格选择），≤ 200 行
-- [ ] 提取 `ProjectSettingsStep.tsx`：第三步（语言/AI 设置/确认），≤ 200 行
-- [ ] 精简 `CreateProjectDialog.tsx` 至 ≤ 200 行（Dialog shell + stepper 进度条 + 导航按钮）
-- [ ] Stepper active 使用 `--color-accent`、未达态 `--color-fg-muted`
-- [ ] 模板卡片使用 Card `variant="bordered"` + hover 边框亮起
-- [ ] 导航按钮 Previous = Button `secondary`、Next = Button `primary`
+- [x] 提取 `ProjectBasicStep.tsx`：第一步（项目名 + 描述 + 封面图），≤ 200 行
+- [x] 提取 `ProjectTemplateStep.tsx`：第二步（模板网格选择），≤ 200 行
+- [x] 提取 `ProjectSettingsStep.tsx`：第三步（语言/AI 设置/确认），≤ 200 行
+- [x] 精简 `CreateProjectDialog.tsx` 至 ≤ 200 行（Dialog shell + stepper 进度条 + 导航按钮）
+- [x] Stepper active 使用 `--color-accent`、未达态 `--color-fg-muted`
+- [x] 模板卡片使用 Card `variant="bordered"` + hover 边框亮起
+- [x] 导航按钮 Previous = Button `secondary`、Next = Button `primary`
 
 **文件**: `apps/desktop/renderer/src/features/projects/`
 
@@ -137,10 +139,10 @@
 
 **映射验收标准**: AC-7, AC-12
 
-- [ ] 对齐 FormField 布局
-- [ ] 使用 Design Token（间距、色彩、圆角）
-- [ ] 按钮对齐 Button variant 规范
-- [ ] 如超过 250 行，提取 `TemplateMetadataForm.tsx`
+- [x] 对齐 FormField 布局
+- [x] 使用 Design Token（间距、色彩、圆角）
+- [x] 按钮对齐 Button variant 规范
+- [x] 如超过 250 行，提取 `TemplateMetadataForm.tsx`
 
 **文件**: `apps/desktop/renderer/src/features/projects/CreateTemplateDialog.tsx`
 
@@ -148,12 +150,12 @@
 
 **映射验收标准**: AC-8, AC-9, AC-10, AC-12
 
-- [ ] 提取 `OnboardingSteps.tsx`：各步骤内容渲染（欢迎/配置/完成），≤ 250 行
-- [ ] 精简 `OnboardingPage.tsx` 至 ≤ 200 行（页面框架 + 步骤导航 + 底部进度指示器）
-- [ ] 全屏居中布局 `max-width: 640px`
-- [ ] 步骤指示器 dot 样式，active `--color-accent`
-- [ ] 欢迎标题 `--text-display-size` + `--weight-bold`
-- [ ] 完成动画使用 v1-12 动效系统
+- [x] 提取 `OnboardingSteps.tsx`：各步骤内容渲染（欢迎/配置/完成），≤ 250 行
+- [x] 精简 `OnboardingPage.tsx` 至 ≤ 200 行（页面框架 + 步骤导航 + 底部进度指示器）
+- [x] 全屏居中布局 `max-width: 640px`
+- [x] 步骤指示器 dot 样式，active `--color-accent`
+- [x] 欢迎标题 `--text-display-size` + `--weight-bold`
+- [x] 完成动画使用 v1-12 动效系统
 
 **文件**: `apps/desktop/renderer/src/features/onboarding/`
 
@@ -161,34 +163,34 @@
 
 **映射验收标准**: AC-11, AC-12
 
-- [ ] 表单项对齐 FormField 布局规范
-- [ ] section 间距 `--space-section-gap`
-- [ ] 开关项使用 Toggle primitive
-- [ ] 选择项使用 Select primitive（v1-02 重构产物）
-- [ ] 如超过 250 行，提取 `GeneralLanguageSection.tsx` 或 `GeneralSaveSection.tsx`
+- [x] 表单项对齐 FormField 布局规范
+- [x] section 间距 `--space-section-gap`
+- [x] 开关项使用 Toggle primitive
+- [x] 选择项使用 Select primitive（v1-02 重构产物）
+- [x] 如超过 250 行，提取 `GeneralLanguageSection.tsx` 或 `GeneralSaveSection.tsx`
 
 **文件**: `apps/desktop/renderer/src/features/settings-dialog/SettingsGeneral.tsx`
 
 ---
 
-## 后续必修补丁（Issue #1199）
+## 后续必修补丁（Issue #1199 → v1-14a-dialog-remaining）
 
-> 这两项不是“建议优化”，而是已经确认会误导用户的遗留约束。后续工程落地时必须补齐。
+> 这两项不是"建议优化"，而是已确认会误导用户的遗留约束。已拆入 `v1-14a-dialog-remaining`。
 
 - [ ] `CreateProjectDialog`：新增模板创建成功后，自动选中刚创建的模板，并补充回归测试
 - [ ] `ExportDialog`：为导出进度态补齐真实 cancel / abort 链路，并补充前端 + IPC / main 级验证
 
 ## Phase 3: Verification（验证）
 
-- [ ] 运行 Phase 1 全部测试，确认全绿
-- [ ] 运行全量测试：`pnpm -C apps/desktop vitest run`
-- [ ] 运行 `pnpm typecheck` 类型检查
-- [ ] 运行 `pnpm lint` lint 检查
-- [ ] 运行 `pnpm -C apps/desktop storybook:build` Storybook 构建
-- [ ] 检查 0 新增 arbitrary 色值
-- [ ] 全流程走查：Dashboard → 新建项目 → 模板 → 进入编辑器 → 导出
-- [ ] 首次启动走查：OnboardingPage → 配置 → 进入 Dashboard
-- [ ] PR 创建，含 `Closes #N`
+- [x] 运行 Phase 1 全部测试，确认全绿
+- [x] 运行全量测试：`pnpm -C apps/desktop vitest run`
+- [x] 运行 `pnpm typecheck` 类型检查
+- [x] 运行 `pnpm lint` lint 检查
+- [x] 运行 `pnpm -C apps/desktop storybook:build` Storybook 构建
+- [x] 检查 0 新增 arbitrary 色值
+- [x] 全流程走查：Dashboard → 新建项目 → 模板 → 进入编辑器 → 导出
+- [x] 首次启动走查：OnboardingPage → 配置 → 进入 Dashboard
+- [x] PR 创建，含 `Closes #N`
 
 ---
 

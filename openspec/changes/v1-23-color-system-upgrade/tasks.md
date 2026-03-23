@@ -31,13 +31,13 @@
 
 ## Phase 0: 准备
 
-- [ ] 阅读 `AGENTS.md` 和 `design/DESIGN_DECISIONS.md`
-- [ ] 阅读 `design/system/01-tokens.css` 全文，理解当前色彩 token 结构
-- [ ] 阅读 `docs/references/design-ui-architecture.md`，理解 Design Token → Tailwind 桥接机制
-- [ ] 研究 Radix Colors 灰阶体系，确定 10-step HSL 色阶的亮度分布策略
-- [ ] 验证当前对比度数据：`--color-fg-subtle`（`#666666`）/ `--color-bg-base`（`#080808`）实际对比度
-- [ ] 确认 `@media (prefers-contrast: more)` 在 Electron 渲染进程中的支持情况
-- [ ] 阅读 `docs/references/testing/README.md` 了解测试规范
+- [x] 阅读 `AGENTS.md` 和 `design/DESIGN_DECISIONS.md`
+- [x] 阅读 `design/system/01-tokens.css` 全文，理解当前色彩 token 结构
+- [x] 阅读 `docs/references/design-ui-architecture.md`，理解 Design Token → Tailwind 桥接机制
+- [x] 研究 Radix Colors 灰阶体系，确定 10-step HSL 色阶的亮度分布策略
+- [x] 验证当前对比度数据：`--color-fg-subtle`（`#666666`）/ `--color-bg-base`（`#080808`）实际对比度
+- [x] 确认 `@media (prefers-contrast: more)` 在 Electron 渲染进程中的支持情况
+- [x] 阅读 `docs/references/testing/README.md` 了解测试规范
 
 ---
 
@@ -45,21 +45,21 @@
 
 ### Task 1.1: 定义 10-step 灰阶变量
 
-- [ ] 在 `:root`（暗色主题）定义 `--gray-1` 至 `--gray-10`，使用 HSL 格式
-- [ ] 在 `:root[data-theme="light"]` 定义对应的亮色灰阶
-- [ ] 灰阶步进遵循等感知亮度原则（参考 Radix Gray scale）
-- [ ] 验证：`grep -c '\-\-gray-' design/system/01-tokens.css` ≥ 20
+- [x] 在 `:root`（暗色主题）定义 `--gray-1` 至 `--gray-10`，使用 HSL 格式
+- [x] 在 `:root[data-theme="light"]` 定义对应的亮色灰阶
+- [x] 灰阶步进遵循等感知亮度原则（参考 Radix Gray scale）
+- [x] 验证：`grep -c '\-\-gray-' design/system/01-tokens.css` ≥ 20
 
 ### Task 1.2: 语义 token 引用灰阶
 
-- [ ] `--color-bg-base` 引用 `var(--gray-1)`
-- [ ] `--color-bg-surface` 引用 `var(--gray-2)`
-- [ ] `--color-bg-raised` 引用 `var(--gray-3)`
-- [ ] `--color-bg-hover` 引用 `var(--gray-4)`
-- [ ] `--color-bg-active` 引用 `var(--gray-5)`
-- [ ] `--color-bg-selected` 引用 `var(--gray-6)`
-- [ ] `--color-fg-*` 系列根据灰阶对应关系引用
-- [ ] `--color-border-*` 系列根据灰阶对应关系引用
+- [x] `--color-bg-base` 引用 `var(--gray-1)`
+- [x] `--color-bg-surface` 引用 `var(--gray-2)`
+- [x] `--color-bg-raised` 引用 `var(--gray-3)`
+- [x] `--color-bg-hover` 引用 `var(--gray-4)`
+- [x] `--color-bg-active` 引用 `var(--gray-5)`
+- [x] `--color-bg-selected` 引用 `var(--gray-6)`
+- [x] `--color-fg-*` 系列根据灰阶对应关系引用
+- [x] `--color-border-*` 系列根据灰阶对应关系引用
 - [ ] 验证：视觉差异最小化（Storybook 截图比对）
 
 ### Task 1.3: 灰阶回归验证
@@ -74,38 +74,38 @@
 
 ### Task 2.1: Error 色 hover/active
 
-- [ ] 暗色主题：定义 `--color-error-hover`（基础色 lightness +5%）、`--color-error-active`（lightness +10%）
-- [ ] 亮色主题：定义 `--color-error-hover`（lightness -5%）、`--color-error-active`（lightness -10%）
-- [ ] 验证：`grep -c 'color-error-hover\|color-error-active' design/system/01-tokens.css` = 4
+- [x] 暗色主题：定义 `--color-error-hover`（基础色 lightness +5%）、`--color-error-active`（lightness +10%）
+- [x] 亮色主题：定义 `--color-error-hover`（lightness -5%）、`--color-error-active`（lightness -10%）
+- [x] 验证：`grep -c 'color-error-hover\|color-error-active' design/system/01-tokens.css` = 4
 
 ### Task 2.2: Success 色 hover/active
 
-- [ ] 暗色主题：定义 `--color-success-hover`、`--color-success-active`
-- [ ] 亮色主题：定义 `--color-success-hover`、`--color-success-active`
-- [ ] 验证：grep 计数 = 4
+- [x] 暗色主题：定义 `--color-success-hover`、`--color-success-active`
+- [x] 亮色主题：定义 `--color-success-hover`、`--color-success-active`
+- [x] 验证：grep 计数 = 4
 
 ### Task 2.3: Warning 色 hover/active
 
-- [ ] 暗色主题：定义 `--color-warning-hover`、`--color-warning-active`
-- [ ] 亮色主题：定义 `--color-warning-hover`、`--color-warning-active`
-- [ ] 验证：grep 计数 = 4
+- [x] 暗色主题：定义 `--color-warning-hover`、`--color-warning-active`
+- [x] 亮色主题：定义 `--color-warning-hover`、`--color-warning-active`
+- [x] 验证：grep 计数 = 4
 
 ### Task 2.4: Info 色 hover/active
 
-- [ ] 暗色主题：定义 `--color-info-hover`、`--color-info-active`
-- [ ] 亮色主题：定义 `--color-info-hover`、`--color-info-active`
-- [ ] 验证：grep 计数 = 4
+- [x] 暗色主题：定义 `--color-info-hover`、`--color-info-active`
+- [x] 亮色主题：定义 `--color-info-hover`、`--color-info-active`
+- [x] 验证：grep 计数 = 4
 
 ### Task 2.5: Accent active 态
 
-- [ ] 暗色主题：定义 `--color-accent-active`
-- [ ] 亮色主题：定义 `--color-accent-active`
-- [ ] 验证：`grep -c 'color-accent-active' design/system/01-tokens.css` = 2
+- [x] 暗色主题：定义 `--color-accent-active`
+- [x] 亮色主题：定义 `--color-accent-active`
+- [x] 验证：`grep -c 'color-accent-active' design/system/01-tokens.css` = 2
 
 ### Task 2.6: 消除组件级硬编码
 
-- [ ] 将 `--color-btn-danger-hover: #dc2626` 替换为 `var(--color-error-hover)`
-- [ ] 将 `--color-btn-success-hover: #16a34a` 替换为 `var(--color-success-hover)`
+- [x] 将 `--color-btn-danger-hover: #dc2626` 替换为 `var(--color-error-hover)`
+- [x] 将 `--color-btn-success-hover: #16a34a` 替换为 `var(--color-success-hover)`
 - [ ] 验证组件视觉效果不变
 
 ---
@@ -114,16 +114,16 @@
 
 ### Task 3.1: 对比度修复
 
-- [ ] 调整暗色主题 `--color-fg-subtle` 使其与 `--color-bg-base` 对比度 ≥ 4.5:1
-- [ ] 验证亮色主题 `--color-fg-muted`、`--color-fg-subtle` 对比度合规
+- [x] 调整暗色主题 `--color-fg-subtle` 使其与 `--color-bg-base` 对比度 ≥ 4.5:1
+- [x] 验证亮色主题 `--color-fg-muted`、`--color-fg-subtle` 对比度合规
 - [ ] 验证所有语义 fg/bg 组合达标
 
 ### Task 3.2: 高对比模式
 
-- [ ] 新增 `@media (prefers-contrast: more)` 块
-- [ ] 高对比模式下 fg 色提升亮度/降低亮度，确保对比度 ≥ 7:1
-- [ ] 高对比模式下边框可见性增强
-- [ ] 验证：`grep 'prefers-contrast' design/system/01-tokens.css` ≥ 1
+- [x] 新增 `@media (prefers-contrast: more)` 块
+- [x] 高对比模式下 fg 色提升亮度/降低亮度，确保对比度 ≥ 7:1
+- [x] 高对比模式下边框可见性增强
+- [x] 验证：`grep 'prefers-contrast' design/system/01-tokens.css` ≥ 1
 
 ### Task 3.3: 最终验证
 

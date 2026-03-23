@@ -25,14 +25,14 @@
 
 ### T0.1 阅读规范与确认覆盖缺口
 
-- [ ] 阅读 `AGENTS.md`、`docs/references/testing/README.md`
-- [ ] 阅读 `design/DESIGN_DECISIONS.md`（前端任务必读）
-- [ ] 确认 3 个无 Story 的功能目录组件结构：
+- [x] 阅读 `AGENTS.md`、`docs/references/testing/README.md`
+- [x] 阅读 `design/DESIGN_DECISIONS.md`（前端任务必读）
+- [x] 确认 3 个无 Story 的功能目录组件结构：
   - `rightpanel/`：InfoPanel、QualityPanel、QualityPanelSections（均依赖 IPC，需 mock）
   - `settings/`：AiSettingsSection、AppearanceSection、JudgeSection（均依赖 store/IPC）
   - `shortcuts/`：ShortcutsPanel（纯展示，依赖 `getAllShortcuts()` 配置）
-- [ ] 确认巨石 Story 拆分边界（见 Phase 2 分析）
-- [ ] 运行 `pnpm -C apps/desktop storybook:build` 确认基线构建通过
+- [x] 确认巨石 Story 拆分边界（见 Phase 2 分析）
+- [x] 运行 `pnpm -C apps/desktop storybook:build` 确认基线构建通过
 
 ### T0.2 规划拆分策略
 

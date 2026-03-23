@@ -1,3 +1,5 @@
+> ⚠️ 本 change 已拆分为 micro-changes: v1-09a, v1-09b, v1-09c。以下为历史记录。
+
 # Tasks: V1-09 命令面板与搜索面板 视觉精修
 
 - **GitHub Issue**: 待创建

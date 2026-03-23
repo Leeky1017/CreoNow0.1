@@ -1,3 +1,5 @@
+> ⚠️ 本 change 已拆分为 micro-changes: v1-18a, v1-18b, v1-18c, v1-18d, v1-18e, v1-18f, v1-18g, v1-18h, v1-18i, v1-18j。以下为历史记录。
+
 # V1-18 Arbitrary Value Cleanup — Tasks
 
 > 「堂已成，钉未拔。」——此 change 是前序六波重塑的收尾工程。

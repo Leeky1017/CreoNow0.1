@@ -229,381 +229,224 @@ v1-24 → v1-25 (density, 新组件需密度支持)
 
 ---
 
-## 一、当前真相（实测）
+
+## 一、当前真相
 
 ### 1.1 完成状态
 
-| 状态                    | Change 数 | 列表                         | 级联状态                  |
-| ----------------------- | --------- | ---------------------------- | ------------------------- |
-| ✅ 已合并               | 15        | v1-01 ~ v1-12, v1-14 ~ v1-16 | ✅ R6 已刷新              |
-| ❌ 未开始（已解除阻断） | 1         | v1-13                        | 🟡 待启动                 |
-| 📝 proposal 已建立      | 6         | v1-17 ~ v1-22                | ⏳ tasks/specs/issue 待补 |
-| 📋 待创建               | 5         | v1-23 ~ v1-27                | ⏳ 等待上游刷新           |
-| **总计**                | **27**    |                              |                           |
+| 状态 | 数量 | 列表 |
+|------|------|------|
+| ✅ 已合并 | 16 | v1-01~v1-12, v1-14~v1-16 (不含 v1-13) |
+| 🟡 待启动（已解除阻断）| 1 | v1-13 |
+| 📋 已拆分为 micro-changes | 12 | v1-06~v1-09, v1-12~v1-13, v1-14, v1-16, v1-18~v1-19, v1-21~v1-22, v1-24~v1-25 |
+| 📝 未拆分（直接执行） | 4 | v1-17, v1-20, v1-23, v1-26, v1-27 |
 
-### 1.2 关键基线数字
+### 1.2 Micro-Change 总览（40 个）
 
-| 指标                                              | 当前值 | 目标          |
-| ------------------------------------------------- | ------ | ------------- |
-| eslint-disable（features/）                       | 146    | ≤ 20          |
-| no-native-html-element disable                    | 121    | ≤ 10          |
-| 原生 button in features/                          | 153    | 0             |
-| text-[Npx] arbitrary 字号                         | 1000   | 0             |
-| arbitrary spacing (p-[]/m-[]/gap-[])              | 9      | 0             |
-| hardcoded hex 色值                                | 25     | 0             |
-| inline style 对象                                 | 897    | ≤ 30          |
-| AppShell.tsx 行数                                 | 1,267  | ≤ 250         |
-| SkillManagerDialog.tsx 行数                       | 624    | ≤ 300         |
-| woff2 字体文件数                                  | 0      | ≥ 6           |
-| axe-core 测试覆盖                                 | 0      | ≥ 10 关键页面 |
-| Storybook play function                           | 256    | ≥ 80          |
-| v1-02 变体在 features 层使用 (pill/bento/compact) | 0      | ≥ 30          |
+已合并父 change 的残留清理：
+| ID | 名称 | 任务数 | 父 change 状态 |
+|----|------|--------|---------------|
+| v1-06a | AiMessageList 拆分 | — | v1-06 ✅ |
+| v1-06b | AI hover/focus | — | v1-06 ✅ |
+| v1-07a | Settings 硬编码字号 | 5 | v1-07 ✅ |
+| v1-07b | Settings 交互动效 | 7 | v1-07 ✅ |
+| v1-08a | FileTree arbitrary 清理 | — | v1-08 ✅ |
+| v1-08b | FileTree 动画 | — | v1-08 ✅ |
+| v1-09a | Command token 修复 | — | v1-09 ✅ |
+| v1-09b | Search arbitrary 清理 | — | v1-09 ✅ |
+| v1-09c | Search 交互精修 | — | v1-09 ✅ |
+| v1-12a | SkillManager 拆分 | 6 | v1-12 ✅ |
+| v1-12b | Transition 铺设 | 10 | v1-12 ✅ |
+| v1-12c | Scroll-shadow 铺设 | 9 | v1-12 ✅ |
+| v1-13a | ESLint 审计标签 | — | v1-13 🟡 |
+| v1-14a | Dialog 残留 | — | v1-14 ✅ |
+| v1-16a | PanelHeader 铺设 | — | v1-16 ✅ |
+| v1-16b | Quality/RightPanel 清理 | — | v1-16 ✅ |
 
-### 1.3 已完成 Changes 质量排名
+v1-18 Arbitrary 值清理（10 个）：
+| ID | 名称 | 任务数 |
+|----|------|--------|
+| v1-18a | AI 字号清理 | 7 |
+| v1-18b | Character 字号清理 | 11 |
+| v1-18c | VersionHistory/Diff 字号 | 10 |
+| v1-18d | Quality/Search 字号 | 7 |
+| v1-18e | 其他 features 字号 | 11 |
+| v1-18f | Components 字号 | 13 |
+| v1-18g | Primitives 审计（text） | 14 |
+| v1-18h | Primitives 审计（dimension） | 13 |
+| v1-18i | Shadow token 简化 | 12 |
+| v1-18j | Tracking 清理 | 9 |
 
-| 排名 | Change               | 评级       | 备注                               |
-| ---- | -------------------- | ---------- | ---------------------------------- |
-| 🥇   | v1-02 Primitive      | ⭐⭐⭐⭐⭐ | 7/7 AC，专属行为测试，标杆         |
-| 🥇   | v1-05 Editor 拆分    | ⭐⭐⭐⭐⭐ | 85%↓，教科书级解体                 |
-| 🥇   | v1-11 状态组件       | ⭐⭐⭐⭐⭐ | 53 处集成，行为测试典范            |
-| 🥈   | v1-04 编辑器排版     | ⭐⭐⭐⭐   | CSS 层约束正确，CJK 精妙           |
-| 🥈   | v1-01 Token          | ⭐⭐⭐⭐   | 完整体系，26 处 pixel 残留         |
-| 🥈   | v1-03 Dashboard      | ⭐⭐⭐⭐   | 71%↓，guard 测试好                 |
-| 🥈   | v1-07 Settings       | ⭐⭐⭐⭐   | hex 清零                           |
-| 🥈   | v1-09 CommandPalette | ⭐⭐⭐⭐   | 双组件达标                         |
-| 🥈   | v1-10 侧面板         | ⭐⭐⭐⭐   | PanelHeader 7 处统一               |
-| 🥉   | v1-06 AI Panel       | ⭐⭐⭐     | **SkillManagerDialog 624行必须拆** |
-| 🥉   | v1-16 Quality/Misc   | ⭐⭐⭐     | pixel 残留 + DiffView 超标         |
-| 🥉   | v1-08 FileTree       | ⭐⭐⭐     | **4/8 AC 未满足**                  |
-
-### 1.4 测试体系评分：6.5/10
-
-| 优势                             | 短板                                             |
-| -------------------------------- | ------------------------------------------------ |
-| 314 文件、2589 通过、0 失败      | 查询优先级倒挂（getByTestId:getByRole = 5.45:1） |
-| pattern-states 测试标杆级        | className 断言 264 处泛滥                        |
-| 83 Stories，54% 有 play function | axe-core **零覆盖**                              |
-| 交互测试丰富（804 event）        | readFileSync 源码断言在 contract test 中滥用     |
-
----
-
-## 二、V1 完整编排（27 个 Changes · 10 个 Phase）
-
-### Phase 0：总控与地基（🔄 已合并 · 待优化）
-
-> v1-00 需重写设计愿景/质量标尺；v1-01 有 26 处 pixel 残留；v1-02 变体使用率为零。
-
-| 顺位 | Change                           | 状态 | 说明                                                                                                       |
-| ---- | -------------------------------- | ---- | ---------------------------------------------------------------------------------------------------------- |
-| 0    | v1-00-visual-overhaul-program    | ✅   | 总控文档 — **需重写**：补设计愿景、质量标尺、度量体系<br>→ 🔄 刷新: 所有下游 change 的质量标尺引用         |
-| 1    | v1-01-design-token-completion    | ✅   | Token 三层体系 — 26 处 pixel 残留归 v1-18 清理<br>→ 🔄 刷新: v1-02, v1-17, v1-23, v1-25                    |
-| 2    | v1-02-primitive-visual-evolution | ✅   | 组件变体 — **pill/bento/compact 使用率为零**，归 v1-18 推广<br>→ 🔄 刷新: v1-03~v1-09, v1-12, v1-14, v1-24 |
-
-### Phase 1：核心页面（🔄 已合并 · 待级联刷新）
-
-> 代码已合并，但需要在 P0 优化后重新审视 scope。
-
-| 顺位 | Change                             | 状态 | 说明                                                           |
-| ---- | ---------------------------------- | ---- | -------------------------------------------------------------- |
-| 3    | v1-03-dashboard-visual-rewrite     | ✅   | 929→268 行<br>→ 🔄 刷新: v1-18（DashboardEmptyState 回补确认） |
-| 4    | v1-04-editor-typography-and-layout | ✅   | 760px/48px/CJK<br>→ 🔄 无直接下游需刷新                        |
-| 5    | v1-05-editor-decomposition         | ✅   | 1550→232 行<br>→ 🔄 无直接下游需刷新                           |
-
-### Phase 2：AI + 设置（🔄 已合并 · 待级联刷新）
-
-> 代码已合并，但需要在 P0/P1 级联刷新后重新审视 scope。v1-06 有 SkillManagerDialog 624 行遗留。
-
-| 顺位 | Change                       | 状态 | 说明                                                                                                                     |
-| ---- | ---------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------ |
-| 6    | v1-06-ai-panel-overhaul      | ✅   | 2100→281 行 — **SkillManagerDialog 624行遗留归 v1-12 回补**<br>→ 🔄 刷新: v1-12（SkillManagerDialog 回补）, v1-15, v1-18 |
-| 7    | v1-07-settings-visual-polish | ✅   | hex 清零<br>→ 🔄 刷新: v1-14                                                                                             |
-
-### Phase 3：布局精度（🔄 已合并 · 待级联刷新）
-
-> v1-08 有 4 项 AC 未满足（icon bar/handle/chevron/colors），需在级联刷新中确认归属。
-
-| 顺位 | Change                           | 状态 | 说明                                                                                 |
-| ---- | -------------------------------- | ---- | ------------------------------------------------------------------------------------ |
-| 8    | v1-08-file-tree-precision        | ✅   | 1320→126 — **4 项 AC 未满足，归 v1-12 回补**<br>→ 🔄 刷新: v1-12（FileTree AC 回补） |
-| 9    | v1-09-command-palette-and-search | ✅   | 283/294 行<br>→ 🔄 无直接下游需刷新                                                  |
-
-### Phase 4：侧面板 + 标准化（🔄 已合并 · 待级联刷新）
-
-> OutlinePanel 326 行超标 26 行，需在级联刷新中确认归属。
-
-| 顺位 | Change                             | 状态 | 说明                                                                                           |
-| ---- | ---------------------------------- | ---- | ---------------------------------------------------------------------------------------------- |
-| 10   | v1-10-side-panels-visual-coherence | ✅   | PanelHeader 统一 — OutlinePanel 326 超标 26 行<br>→ 🔄 刷新: v1-12（OutlinePanel 回补）, v1-16 |
-| 11   | v1-11-empty-loading-error-states   | ✅   | 三状态组件，53 处集成<br>→ 🔄 刷新: v1-10, v1-15, v1-16                                        |
-| 16   | v1-16-quality-rightpanel-and-misc  | ✅   | 提前完成（与 v1-12 无实质依赖）<br>→ 🔄 刷新: v1-12（DiffView 回补）                           |
-
-### 二.1 级联优化路径
-
-V1 采用"逐层级联"策略——不是一次性重做所有 change，而是：
-
-1. **P0 再优化**：重写 v1-00（补设计愿景）、审视 v1-01/v1-02 遗留项
-   → P0 agent 完成后，按依赖图刷新 P1 的 v1-03/04/05 的 proposal/tasks
-2. **P1 审计**：v1-03/04/05 按刷新后的 proposal 审视是否需要补充实现
-   → P1 agent 完成后，刷新 P2 的 v1-06/07
-3. **P2 审计**：v1-06/07 审视 + SkillManagerDialog 回补确认归属
-   → P2 agent 完成后，刷新 P3
-4. **P3 审计**：v1-08/09 审视 + FileTree 4 项 AC 回补确认归属
-   → P3 agent 完成后，刷新 P4
-5. **P4 审计**：v1-10/11/16 审视 + OutlinePanel 超标回补确认归属
-   → P4 agent 完成后，刷新 P5
-6. **P5 实施**：v1-12（彻底重写 proposal 后）+ v1-13
-   → P5 agent 完成后，刷新 P6/P7
-7. **P6~P9**：逐步实施新 changes
-
-关键约束：
-
-- 每个 Phase 的 agent **不得跳过级联刷新步骤**
-- 审计 agent 对"级联刷新"的质量与对代码变更的质量要求相同
-- 如果级联刷新发现某个已合并 change 的实现偏差 >30%，必须上报 Owner 决定是否需要补充 PR
+新特性 micro-changes（14 个）：
+| ID | 名称 | 任务数 |
+|----|------|--------|
+| v1-19a | ARIA 补缺 | — |
+| v1-19b | 键盘导航 | — |
+| v1-21a | 渐进加载 | — |
+| v1-22a | Onboarding 动画 | — |
+| v1-24a | Table primitive | 4 |
+| v1-24b | Separator primitive | 4 |
+| v1-24c | Alert primitive | 5 |
+| v1-24d | SegmentedControl | 4 |
+| v1-24e | Progress primitive | 4 |
+| v1-24f | Input prefix/suffix | 3 |
+| v1-24g | Integration export | 5 |
+| v1-25a | Component tokens | — |
+| v1-25b | DensityProvider | — |
+| v1-25c | Primitive token 迁移 | — |
+| v1-25d | Density stories | — |
 
 ---
 
-### Phase 5：交互收口 + 审计（✅ v1-12 已合并 · v1-13 已解除阻断）
+## 二、执行波次（6 Wave）
 
-> **v1-12 已于 2026-03-22 合并（PR #1213）。** AppShell 1267→153 行，button/select 主阻断已清零，v1-13 的硬依赖已解除。
+> 「善战者，求之于势，不责于人。」——《孙子兵法》
+> 每波 ≤8 并行。上一波全部合并后启动下一波。单个 micro-change = 1 Issue + 1 PR。
 
-| 顺位 | Change                                      | 状态                      | 依赖  | 说明                                                                                                                               |
-| ---- | ------------------------------------------- | ------------------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| 12   | v1-12-interaction-motion-and-native-cleanup | ✅ **已合并（PR #1213）** | v1-10 | 拆为三部分：A 动效标准 + B 原生替换+SkillMgr回补 + C AppShell 解耦<br>→ ✅ R6 刷新: v1-13, v1-14, v1-15, v1-18, v1-19, v1-21       |
-| 13   | v1-13-eslint-disable-audit                  | 🟡 **已解除阻断，待启动** | v1-12 | features 层当前 25 处 `eslint-disable`，其中 2 处 `no-native-html-element` 为合理保留；可正式启动逐条审计<br>→ 🔄 无直接下游需刷新 |
+### Wave 1：核心清理（8 并行）
 
-### Phase 6：对话框与 AI Overlay（✅ 已完成）
+**目标**：消灭 text-[Npx] 硬编码主体 + 最高优先级结构回补
 
-> v1-14/15 均已合并。v1-12 R6 级联刷新确认无回归影响。
+| # | Micro-Change | 内容 | 依赖 |
+|---|-------------|------|------|
+| 1 | v1-18a | features/ai/ 字号 → token（7 tasks） | 无 |
+| 2 | v1-18b | features/character/ 字号 → token（11 tasks） | 无 |
+| 3 | v1-18c | features/vhistory+diff/ 字号 → token（10 tasks） | 无 |
+| 4 | v1-18d | features/quality+search/ 字号 → token（7 tasks） | 无 |
+| 5 | v1-18e | 其他 features/ 字号 → token（11 tasks） | 无 |
+| 6 | v1-18f | components/ 字号 → token（13 tasks） | 无 |
+| 7 | v1-12a | SkillManager 624行 → 拆分为 types+utils（6 tasks） | 无 |
+| 8 | v1-13a | ESLint disable 逐条审计标签 | 无 |
 
-| 顺位 | Change                       | 状态 | 真实依赖                    | 说明                                                                                                                                                                   |
-| ---- | ---------------------------- | ---- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 14   | v1-14-dialog-and-entry-pages | ✅   | v1-02 + v1-07 (SOFT: v1-12) | Export 993→178、CreateProject 732→139、Onboarding 369→142、SettingsGeneral 330→154；CreateTemplate 381→270 并拆出 `TemplateMetadataForm.tsx` 92 行<br>→ 🔄 刷新: v1-20 |
-| 15   | v1-15-ai-overlay-components  | ✅   | v1-06 + v1-11 (SOFT: v1-12) | AiDiff 893→199、AiError 855→177、SystemDialog 638→241、AiInlineConfirm 398→164<br>→ 🔄 刷新: v1-20                                                                     |
+**完成标准**：`grep -rn 'text-\[[0-9]' SRC/features/ --include='*.tsx' | grep -v test | grep -v stories | wc -l` < 50
 
-### Phase 7：补全到 9.0（新增 changes）
+### Wave 2：深度清理 + 基础设施（8 并行）
 
-> 从「结构化收口」到「专业级设计系统」。
-> ⏳ 需等待 P5/P6 级联刷新完成后再启动。
+**目标**：完成 arbitrary 值清零 + 启动基础设施 change
 
-| 顺位 | Change                                             | 依赖  | 说明                                                                                                       |
-| ---- | -------------------------------------------------- | ----- | ---------------------------------------------------------------------------------------------------------- |
-| 17   | v1-17-font-bundling-and-visual-regression          | v1-01 | woff2 字体打包（Inter/Lora/JetBrains）+ 视觉回归测试基础设施 + shadow token xs/2xl<br>→ 🔄 刷新: v1-22     |
-| 18   | v1-18-arbitrary-value-cleanup-and-variant-adoption | v1-12 | 667 处 text-[Npx]→token + 28 处 spacing→token + v1-02 变体推广 + pixel 硬编码清理<br>→ 🔄 无直接下游需刷新 |
+| # | Micro-Change | 内容 | 依赖 |
+|---|-------------|------|------|
+| 1 | v1-18g | Primitives text 审计（14 tasks） | 无 |
+| 2 | v1-18h | Primitives dimension 审计（13 tasks） | 无 |
+| 3 | v1-18i | shadow-[var(--shadow-*)] → shadow-sm/md/lg/xl（12 tasks） | 无 |
+| 4 | v1-18j | tracking-[0.1em] → token（9 tasks） | 无 |
+| 5 | v1-07a | Settings 字号清理（5 tasks） | 无 |
+| 6 | v1-09a | Command token 修复 | 无 |
+| 7 | v1-17 | Font bundling + visual regression（父 change 直接执行） | 无 |
+| 8 | v1-23 | Color system upgrade（父 change 直接执行） | 无 |
 
-### Phase 8：补全到 9.5（新增 changes，可高度并行）
+**完成标准**：
+- `grep -rn 'text-\[[0-9]' SRC/ --include='*.tsx' | grep -v test | grep -v stories | wc -l` → 0
+- `grep -rn 'shadow-\[var(--shadow' SRC/ --include='*.tsx' | grep -v test | grep -v stories | wc -l` → 0
+- `grep -rn 'tracking-\[' SRC/ --include='*.tsx' | grep -v test | grep -v stories | grep -v 'tracking-\[var' | wc -l` → 0
 
-> ⏳ 需等待 P7 级联刷新完成后再启动。
+### Wave 3：交互精修 + 动效铺设（8 并行）
 
-| 顺位 | Change                                      | 依赖         | 说明                                                                                                        |
-| ---- | ------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------- |
-| 19   | v1-19-accessibility-and-keyboard-navigation | v1-12        | WCAG AA 对比度修复 + 键盘导航 100% + axe-core CI + 高对比模式 + skip navigation<br>→ 🔄 无直接下游需刷新    |
-| 20   | v1-20-storybook-excellence                  | v1-14, v1-15 | 100% Story 覆盖 + play function + Props 文档 + usage guidelines + Token playground<br>→ 🔄 无直接下游需刷新 |
-| 21   | v1-21-performance-and-microinteractions     | v1-12        | 虚拟化长列表 + page skeleton + CSS micro-interaction + spring 物理动画 + exit animation<br>→ 🔄 刷新: v1-26 |
-| 22   | v1-22-brand-identity-and-polish             | v1-17        | 品牌色渐变系统 + illustration 框架 + motion signature + micro-copy tone<br>→ 🔄 刷新: v1-27                 |
-| 23   | v1-23-color-system-upgrade                  | v1-01        | HSL 色阶系统生成 + 对比度修复 + 功能色 hover/active 补全 + 高对比模式<br>→ 🔄 无直接下游需刷新              |
+**目标**：补全 hover/focus/transition + 结构优化
 
-### Phase 9：极致打磨（冲刺 10.0）
+| # | Micro-Change | 内容 | 依赖 |
+|---|-------------|------|------|
+| 1 | v1-06a | AiMessageList 拆分 | 无 |
+| 2 | v1-06b | AI hover/focus 精修 | 无 |
+| 3 | v1-07b | Settings 交互动效（7 tasks） | 无 |
+| 4 | v1-08a | FileTree arbitrary 清理 | 无 |
+| 5 | v1-08b | FileTree 动画 | 无 |
+| 6 | v1-09b | Search arbitrary 清理 | 无 |
+| 7 | v1-09c | Search 交互精修 | 无 |
+| 8 | v1-12b | Transition class 铺设（10 tasks） | 无 |
 
-> ⏳ 需等待 P8 级联刷新完成后再启动。
+### Wave 4：结构补全 + 无障碍（8 并行）
 
-| 顺位 | Change                                         | 依赖         | 说明                                                                                                           |
-| ---- | ---------------------------------------------- | ------------ | -------------------------------------------------------------------------------------------------------------- |
-| 24   | v1-24-component-library-expansion              | v1-02        | Table + Separator + Alert + SegmentedControl + Progress + Input prefix/suffix slot<br>→ 🔄 刷新: v1-25         |
-| 25   | v1-25-density-system-and-component-tokens      | v1-01, v1-24 | compact/comfortable 双密度 + component-level token 层 + DensityProvider<br>→ 🔄 无直接下游需刷新（终端节点）   |
-| 26   | v1-26-virtualization-and-perceived-performance | v1-21        | @tanstack/virtual 集成 + CSS containment + optimistic UI + code splitting<br>→ 🔄 无直接下游需刷新（终端节点） |
-| 27   | v1-27-icon-system-and-custom-assets            | v1-22        | Icon wrapper + size token 映射 + stroke-width 统一 + 品牌自定义图标<br>→ 🔄 无直接下游需刷新（终端节点）       |
+**目标**：PanelHeader 统一 + scroll-shadow + 无障碍 + Storybook
+
+| # | Micro-Change | 内容 | 依赖 |
+|---|-------------|------|------|
+| 1 | v1-12c | Scroll-shadow 铺设（9 tasks） | 无 |
+| 2 | v1-14a | Dialog 残留修复 | 无 |
+| 3 | v1-16a | PanelHeader 铺设 | 无 |
+| 4 | v1-16b | Quality/RightPanel 清理 | 无 |
+| 5 | v1-19a | ARIA 补缺 | 无 |
+| 6 | v1-19b | 键盘导航 | 无 |
+| 7 | v1-20 | Storybook excellence（父 change 直接执行） | 无 |
+| 8 | v1-21a | 渐进加载 | 无 |
+
+### Wave 5：新组件 + 品牌（8 并行）
+
+**目标**：组件库扩展 + 品牌精修
+
+| # | Micro-Change | 内容 | 依赖 |
+|---|-------------|------|------|
+| 1 | v1-22a | Onboarding 动画 | **v1-17**（Wave 2） |
+| 2 | v1-24a | Table primitive（4 tasks） | 无 |
+| 3 | v1-24b | Separator primitive（4 tasks） | 无 |
+| 4 | v1-24c | Alert primitive（5 tasks） | 无 |
+| 5 | v1-24d | SegmentedControl（4 tasks） | 无 |
+| 6 | v1-24e | Progress primitive（4 tasks） | 无 |
+| 7 | v1-24f | Input prefix/suffix（3 tasks） | 无 |
+| 8 | v1-24g | Integration export（5 tasks） | v1-24a~f 全部 |
+
+**注意**：v1-24g 需等 v1-24a~f 全部完成后才能执行（集成导出依赖所有新组件）。前 7 个可并行，v1-24g 串行在最后。
+
+### Wave 6：终端节点（6 并行）
+
+**目标**：密度系统 + 虚拟化 + 图标系统
+
+| # | Micro-Change | 内容 | 依赖 |
+|---|-------------|------|------|
+| 1 | v1-25a | Component tokens | **v1-24**（Wave 5） |
+| 2 | v1-25b | DensityProvider | **v1-24**（Wave 5） |
+| 3 | v1-25c | Primitive token 迁移 | v1-25a |
+| 4 | v1-25d | Density stories | v1-25a + v1-25b |
+| 5 | v1-26 | Virtualization（父 change 直接执行） | **v1-21**（Wave 4） |
+| 6 | v1-27 | Icon system（父 change 直接执行） | **v1-22**（Wave 5） |
+
+**注意**：v1-25c/d 需等 v1-25a/b 完成。执行顺序：v1-25a + v1-25b 并行 → v1-25c + v1-25d 并行。v1-26/v1-27 可与 v1-25 系列并行。
 
 ---
 
-## 三、真实依赖图
-
-### 3.1 依赖矩阵（仅 HARD 依赖）
+## 三、依赖图（跨 Wave 阻断关系）
 
 ```
-Phase 0 ─── v1-01 (Tokens) → v1-02 (Primitives)
-              │
-Phase 1 ─── v1-03 ║ v1-04 ║ v1-05          （3 并行，均依赖 v1-02）
-              │
-Phase 2 ─── v1-06 ║ v1-07                    （2 并行）
-              │
-Phase 3 ─── v1-08 ║ v1-09                    （2 并行）
-              │
-Phase 4 ─── v1-11 → v1-10 → v1-16           （v1-11 先行，v1-10 需状态组件）
-              │
-Phase 5 ─── v1-12 (需 v1-10) → v1-13 (需 v1-12)   ← ✅ v1-12 已合并，v1-13 已解除阻断
-              │
-Phase 6 ─── v1-14 (需 v1-02)  ║ v1-15 (需 v1-06 + v1-11)  ← SOFT 依赖 v1-12
-              │
-Phase 7 ─── v1-17 (需 v1-01)  ║ v1-18 (需 v1-12)
-              │
-Phase 8 ─── v1-19 ║ v1-20 ║ v1-21 ║ v1-22 ║ v1-23    （5 并行）
-              │
-Phase 9 ─── v1-24 → v1-25  ║ v1-26 (需 v1-21) ║ v1-27 (需 v1-22)
+Wave 1 ─── 无外部阻断 ──────────────────────────────────────→ 全部可立即开始
+Wave 2 ─── 无外部阻断 ──────────────────────────────────────→ 全部可立即开始
+Wave 3 ─── 无外部阻断 ──────────────────────────────────────→ 全部可立即开始
+Wave 4 ─── 无外部阻断 ──────────────────────────────────────→ 全部可立即开始
+Wave 5 ─── v1-22a 需 v1-17 (Wave 2) ─── v1-24g 需 v1-24a~f ─→ 部分阻断
+Wave 6 ─── v1-25 需 v1-24 (Wave 5) ─── v1-26 需 v1-21 (Wave 4) ─── v1-27 需 v1-22 (Wave 5)
 ```
 
-### 3.2 关键路径（最长链）
-
-```
-v1-01 → v1-02 → v1-11 → v1-10 → v1-12 → v1-13 → v1-18 → Phase 8
-  P0      P0      P4      P4      P5      P5      P7      P8
-```
+**关键路径**：v1-17 (W2) → v1-22a (W5) → v1-27 (W6)
+**最宽并行**：Wave 1~4 理论上可同时启动（32 micro-changes），但建议按 Wave 顺序分批启动以控制质量。
 
 ---
 
-## 四、分数路线图
+## 四、执行规则
 
-| Phase 完成           | 预期综合分  | 增量来源                                  |
-| -------------------- | ----------- | ----------------------------------------- |
-| Phase 0-4 (已完成)   | **6.5**     | Token 体系、组件拆分、状态标准化          |
-| + Phase 5 (v1-12/13) | **7.5**     | 动效铺开、原生 HTML 收口、AppShell 解耦   |
-| + Phase 6 (v1-14/15) | **8.0**     | 100% 用户路径视觉覆盖                     |
-| + Phase 7 (v1-17/18) | **8.5**     | 字体打包、arbitrary 收口、变体推广        |
-| + Phase 8 (v1-19~23) | **9.0-9.5** | 无障碍、Storybook、微交互、品牌、色彩系统 |
-| + Phase 9 (v1-24~27) | **9.5-10**  | 组件库扩展、密度系统、虚拟化、图标系统    |
+1. **每个 micro-change = 1 Issue + 1 Branch + 1 PR**。命名：`task/<N>-<slug>`。
+2. **每个 PR 不超过 300 行代码变更**（不含测试/锁文件）。超过则继续拆分。
+3. **Wave 内可跳序**：Wave 1 中 v1-18a 和 v1-12a 无依赖关系，谁先完成谁先合并。
+4. **Wave 间建议顺序执行**：Wave 2 在 Wave 1 大部分合并后启动。但 Wave 1~4 无硬依赖，紧急时可并行。
+5. **每个 micro-change 完成后不触发级联刷新**——级联刷新仅在父 change 的所有 micro-changes 全部合并后执行。
+6. **父 change 闭环标准**：所有子 micro-change 已合并 → 父 tasks.md 标记全部 `[x]` → 执行级联刷新 → 归档到 `archive/`。
 
 ---
 
-## 五、已完成 Changes 回补清单
+## 五、分数路线图
 
-> 以下是已合并 changes 中发现的遗留问题，应在后续 change 中回补，不再重开原 change。
-
-| 遗留项                                                     | 原 Change   | 归入                        | 优先级 |
-| ---------------------------------------------------------- | ----------- | --------------------------- | ------ |
-| SkillManagerDialog 624 行拆分                              | v1-06       | **v1-12**                   | 🔴 P0  |
-| FileTree 4 项 AC 未满足（icon bar/handle/chevron/colors）  | v1-08       | **v1-12**                   | 🟡 P1  |
-| OutlinePanel 326→≤300                                      | v1-10       | **v1-12**                   | 🟢 P2  |
-| DiffView 345→≤300                                          | v1-16       | **v1-12**                   | 🟢 P2  |
-| DashboardEmptyState/AiEmptyState 迁移到标准组件            | v1-03/v1-06 | **v1-18**                   | 🟢 P2  |
-| 26 处 pixel 硬编码（v1-01/07/16 共性）                     | v1-01       | **v1-18**                   | 🟡 P1  |
-| v1-02 变体推广（pill/bento/compact 使用率=0）              | v1-02       | **v1-18**                   | 🟡 P1  |
-| CreateProjectDialog 新建模板后未自动选中新模板             | v1-14       | **#1199 / v1-14 follow-up** | 🟡 P1  |
-| ExportDialog progress 态 Cancel 仅关闭前端，未真实中止导出 | v1-14       | **#1199 / v1-14 follow-up** | 🟡 P1  |
+| 阶段 | 预期分 | 增量来源 |
+|------|--------|---------|
+| 当前（P0~P6 已合并） | **7.5** | Token + 组件拆分 + 动效收口 + AppShell 解耦 |
+| + Wave 1~2（清理） | **8.0** | 265 处 arbitrary 清零 + shadow/tracking token 化 |
+| + Wave 3（交互） | **8.5** | hover/focus/transition 全覆盖 |
+| + Wave 4（无障碍+Storybook） | **9.0** | WCAG AA + Storybook 100% + scroll-shadow |
+| + Wave 5（新组件+品牌） | **9.5** | 组件库扩展 + 品牌 polish |
+| + Wave 6（密度+性能） | **10.0** | 密度系统 + 虚拟化 + 图标系统 |
 
 ---
 
-## 六、新增 Changes 概要（v1-17 ~ v1-27）
+## 六、A1 / T-MIG 暂存区
 
-### v1-17: Font Bundling & Visual Regression Testing
-
-- Inter/Lora/JetBrains Mono woff2 本地打包 + @font-face
-- 视觉回归测试基础设施激活
-- shadow token xs/2xl 补全
-- **预估工作量**：0.4x v1-02
-
-### v1-18: Arbitrary Value Cleanup & Variant Adoption
-
-- 667 处 text-[Npx] → token 替换
-- 28 处 arbitrary spacing 收口
-- v1-02 变体在 features 层推广（当前使用=0）
-- pixel 硬编码清理（26 处跨模块）
-- **预估工作量**：0.8x v1-02
-
-### v1-19: Accessibility & Keyboard Navigation
-
-- WCAG AA 对比度修复（--color-fg-subtle 3.49:1→≥4.5:1）
-- 键盘导航 100% 覆盖 + skip navigation
-- axe-core CI 集成
-- 高对比模式 prefers-contrast: more
-- ARIA live region 系统化
-- **预估工作量**：1.5x v1-02
-
-### v1-20: Storybook Excellence & Component Documentation
-
-- Story 覆盖 71%→100%
-- play function 覆盖关键交互
-- Props 文档化 + usage guidelines
-- Token playground Story
-- **预估工作量**：0.6x v1-05
-
-### v1-21: Performance Perception & Micro-interactions
-
-- @tanstack/virtual 虚拟化（文件树/搜索/KG）
-- page skeleton 全面铺开
-- CSS micro-interaction（button scale/toggle bounce/drag inertia）
-- spring 物理动画引入
-- exit animation 系统
-- **预估工作量**：1.2x v1-02
-
-### v1-22: Brand Identity & Polish
-
-- 品牌色渐变系统（不再纯黑/纯白）
-- illustration 框架（空状态品牌插画）
-- motion signature（独特的动画风格）
-- micro-copy tone guide
-- **预估工作量**：0.5x v1-05
-
-### v1-23: Color System Upgrade
-
-- HSL 色阶系统生成（类 Radix Colors 10-step）
-- 功能色 hover/active 状态补全
-- 系统性色彩派生能力
-- **预估工作量**：0.8x v1-02
-
-### v1-24: Component Library Expansion
-
-- Table/DataTable + Separator + Alert/Banner + SegmentedControl
-- Progress (determinate) + Input prefix/suffix slot
-- compound pattern 重构
-- **预估工作量**：1.5x v1-02
-
-### v1-25: Density System & Component Tokens
-
-- DensityProvider (compact/comfortable)
-- component-level token 层（--button-bg, --input-border-radius）
-- 面板区 compact / 编辑区 comfortable 双模式
-- **预估工作量**：0.6x v1-02
-
-### v1-26: Virtualization & Perceived Performance
-
-- @tanstack/virtual 深度集成
-- CSS containment + content-visibility
-- optimistic UI（AI 交互乐观更新）
-- panel code splitting
-- **预估工作量**：0.8x v1-02
-
-### v1-27: Icon System & Custom Assets
-
-- Icon wrapper 组件 + size token 映射
-- stroke-width 全局统一
-- 品牌自定义图标
-- **预估工作量**：0.3x v1-02
-
----
-
-## 七、文档刷新协议
-
-### 已完成 Changes (v1-01~v1-12, v1-14~v1-16)
-
-所有已完成 change 的 tasks.md **全部未勾选**（0% 文档更新率）。需要：
-
-1. 批量勾选已达成的 AC
-2. 更新基线数字为实际值
-3. 标注实现方式与原始设计的偏差
-4. 标注 scope creep（做了但不在原 AC 中的工作）
-
-### 未完成 Changes (v1-13)
-
-| Change | 需要                      | 原因                                                                                  |
-| ------ | ------------------------- | ------------------------------------------------------------------------------------- |
-| v1-13  | 🟡 **已解除阻断，待启动** | features 层当前 25 处 `eslint-disable`，其中 2 处 `no-native-html-element` 为合理保留 |
-
-### 新 Changes (v1-17~v1-27)
-
-在 Phase 7 启动前创建 proposal/tasks。每个 proposal 必须包含：
-
-1. 当日实测的基线数字
-2. 精确的 AC（含数字目标）
-3. 依赖声明
-4. 回补清单（来自上游 change 的遗留项）
-
----
-
-## 八、A1 / T-MIG 暂存区
-
-> 以下 changes 已从本 EO 移出。它们仍然是活跃 change，但不在 V1 执行编排中。待 V1 Phase 5 完成后（或根据优先级需要）再单独编排。
+> A1（能力收口）和 T-MIG（测试迁移）已移出本 EO。它们仍然是活跃 change，但不在 V1 执行编排中。
 
 - a1-capability-closure-program（#1122）及其 15 个 child changes
 - t-mig-test-structure-migration
-
-这些 change 的原始编排内容已归档至 EXECUTION_ORDER_A1.md（待创建）。

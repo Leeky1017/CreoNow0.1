@@ -1,5 +1,7 @@
 # Tasks: V1-24 Component Library Expansion
 
+> ⚠️ 本 change 已拆分为 micro-changes: v1-24a, v1-24b, v1-24c, v1-24d, v1-24e, v1-24f, v1-24g。以下为历史记录。
+
 - **状态**: 📋 已建档（待实施）
 - **分支**: `task/<N>-component-library-expansion`
 - **Delta Spec**: `openspec/specs/design-system/spec.md`（需更新新增组件定义）

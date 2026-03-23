@@ -1,8 +1,11 @@
+> ⚠️ 本 change 已拆分为 micro-changes: v1-16a, v1-16b。以下为历史记录。
+
 # Tasks: V1-16 Quality 面板、右面板与杂项页面补完
 
 - **GitHub Issue**: 待创建
 - **分支**: `task/<N>-quality-rightpanel-and-misc`
 - **Delta Spec**: `openspec/changes/v1-16-quality-rightpanel-and-misc/specs/`
+- **状态**: 🟡 部分完成；未完成项已拆分为 `v1-16a-panelheader-rollout`（9 任务）、`v1-16b-quality-rightpanel-cleanup`（5 任务）
 
 ---
 
