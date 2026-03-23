@@ -214,7 +214,9 @@ export function AddRelationshipPopover({
                       <div className="text-sm text-[var(--color-fg-default)] truncate">
                         {character.name}
                       </div>
-                      <div className={`text-(--text-label) ${roleConfig.color}`}>
+                      <div
+                        className={`text-(--text-label) ${roleConfig.color}`}
+                      >
                         {roleConfig.label}
                       </div>
                     </div>

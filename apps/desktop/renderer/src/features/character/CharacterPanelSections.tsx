@@ -83,7 +83,9 @@ function EmptyGroupState({ onClick }: { onClick?: () => void }) {
         "hover:!bg-[var(--color-bg-surface)]",
       ].join(" ")}
     >
-      <span className="text-(--text-status)">{t("character.panel.noCharacters")}</span>
+      <span className="text-(--text-status)">
+        {t("character.panel.noCharacters")}
+      </span>
     </Button>
   );
 }
