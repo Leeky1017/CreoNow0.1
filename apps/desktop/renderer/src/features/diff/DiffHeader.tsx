@@ -93,7 +93,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
                 onClick={() => setBeforeDropdownOpen(false)}
               />
               <div className="absolute top-full left-0 mt-2 w-64 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-lg shadow-[0_18px_48px_var(--color-shadow)] z-[var(--z-popover)] p-1 overflow-hidden">
-                <div className="px-3 py-2 text-[10px] text-[var(--color-fg-subtle)] uppercase tracking-wider font-medium">
+                <div className="px-3 py-2 text-(--text-label) text-[var(--color-fg-subtle)] uppercase tracking-wider font-medium">
                   {t("diff.header.history")}
                 </div>
                 {props.versions
@@ -126,7 +126,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
                           >
                             {version.label}
                           </div>
-                          <div className="text-[10px] text-[var(--color-fg-subtle)]">
+                          <div className="text-(--text-label) text-[var(--color-fg-subtle)]">
                             {version.type === "auto"
                               ? t("diff.header.autoSaved")
                               : t("diff.header.manualSave")}

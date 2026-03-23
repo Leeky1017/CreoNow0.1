@@ -159,11 +159,11 @@ export function SplitDiffView(props: SplitDiffViewProps): JSX.Element {
   }
 
   return (
-    <div className="flex-1 flex overflow-hidden font-[var(--font-family-mono)] text-[13px] leading-6">
+    <div className="flex-1 flex overflow-hidden font-[var(--font-family-mono)] text-(--text-body) leading-6">
       {/* Before pane */}
       <div className="w-1/2 flex flex-col border-r border-[var(--color-separator)]">
         {/* Pane header */}
-        <div className="h-8 flex items-center px-4 bg-[var(--color-bg-hover)] border-b border-[var(--color-separator)] text-[10px] text-[var(--color-fg-muted)] font-medium tracking-wide uppercase">
+        <div className="h-8 flex items-center px-4 bg-[var(--color-bg-hover)] border-b border-[var(--color-separator)] text-(--text-label) text-[var(--color-fg-muted)] font-medium tracking-wide uppercase">
           {t("diff.split.before")}
         </div>
         {/* Content */}
@@ -173,7 +173,7 @@ export function SplitDiffView(props: SplitDiffViewProps): JSX.Element {
           className="flex-1 overflow-y-auto flex bg-[var(--color-bg-base)]"
         >
           {/* Line numbers */}
-          <div className="w-12 shrink-0 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] flex flex-col text-right py-2 select-none text-[var(--color-fg-subtle)] text-[11px]">
+          <div className="w-12 shrink-0 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] flex flex-col text-right py-2 select-none text-[var(--color-fg-subtle)] text-(--text-status)">
             {beforeLines.map((line, idx) => (
               <div key={idx} className="px-3 leading-6">
                 {line.lineNumber ?? ""}
@@ -203,7 +203,7 @@ export function SplitDiffView(props: SplitDiffViewProps): JSX.Element {
       {/* After pane */}
       <div className="w-1/2 flex flex-col bg-[var(--color-bg-base)]">
         {/* Pane header */}
-        <div className="h-8 flex items-center px-4 bg-[var(--color-bg-hover)] border-b border-[var(--color-separator)] text-[10px] text-[var(--color-fg-muted)] font-medium tracking-wide uppercase">
+        <div className="h-8 flex items-center px-4 bg-[var(--color-bg-hover)] border-b border-[var(--color-separator)] text-(--text-label) text-[var(--color-fg-muted)] font-medium tracking-wide uppercase">
           {t("diff.split.after")}
         </div>
         {/* Content */}
@@ -213,7 +213,7 @@ export function SplitDiffView(props: SplitDiffViewProps): JSX.Element {
           className="flex-1 overflow-y-auto flex"
         >
           {/* Line numbers */}
-          <div className="w-12 shrink-0 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] flex flex-col text-right py-2 select-none text-[var(--color-fg-subtle)] text-[11px]">
+          <div className="w-12 shrink-0 bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)] flex flex-col text-right py-2 select-none text-[var(--color-fg-subtle)] text-(--text-status)">
             {afterLines.map((line, idx) => (
               <div key={idx} className="px-3 leading-6">
                 {line.lineNumber ?? ""}

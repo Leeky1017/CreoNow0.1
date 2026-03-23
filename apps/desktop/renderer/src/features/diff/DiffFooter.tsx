@@ -71,7 +71,7 @@ export function DiffFooter(props: DiffFooterProps): JSX.Element {
       {hasAiActions ? (
         <div className="flex items-center gap-2">
           {hasCurrentHunk ? (
-            <span className="text-[11px] text-[var(--color-fg-muted)]">
+            <span className="text-(--text-status) text-[var(--color-fg-muted)]">
               {t("diff.footer.hunkLabel", {
                 current: currentHunkLabel,
                 total: props.totalChanges,

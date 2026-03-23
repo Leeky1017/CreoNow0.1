@@ -75,7 +75,7 @@ export function MultiVersionCompare(
             {t("diff.multiVersion.comparingVersions", { count })}
           </span>
           {syncScroll && (
-            <span className="text-[10px] text-[var(--color-fg-subtle)] px-2 py-0.5 bg-[var(--color-bg-hover)] rounded">
+            <span className="text-(--text-label) text-[var(--color-fg-subtle)] px-2 py-0.5 bg-[var(--color-bg-hover)] rounded">
               {t("diff.multiVersion.syncScroll")}
             </span>
           )}
