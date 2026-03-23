@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { ErrorState } from "./ErrorState";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof ErrorState> = {
   title: "Patterns/ErrorState",
@@ -34,6 +35,9 @@ export const Inline: Story = {
     severity: "error",
     message: "此字段为必填项",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** variant="banner" — 页面/区域级错误横幅 */
@@ -45,6 +49,9 @@ export const Banner: Story = {
     message: "部分功能可能受影响",
     dismissible: true,
     onDismiss: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -58,6 +65,9 @@ export const Card: Story = {
     actionLabel: "重试",
     onAction: () => {},
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** variant="fullPage" — 全页错误状态 */
@@ -70,6 +80,9 @@ export const FullPage: Story = {
     actionLabel: "返回首页",
     onAction: () => {},
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** severity="info" — 信息级提示 */
@@ -81,5 +94,8 @@ export const InfoBanner: Story = {
     message: "系统将在 5 分钟后进行维护",
     actionLabel: "了解详情",
     onAction: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

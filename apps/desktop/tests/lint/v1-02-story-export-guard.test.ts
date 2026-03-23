@@ -29,7 +29,7 @@ function readStory(component: string): string {
 
 describe("v1-02 variant story export guard", () => {
   describe("Button", () => {
-    const source = readStory("Button");
+    const source = readStory("ButtonBasic");
 
     it("exports a dedicated Pill story", () => {
       expect(source).toMatch(/export\s+const\s+Pill\s*:\s*Story/);
@@ -41,7 +41,7 @@ describe("v1-02 variant story export guard", () => {
   });
 
   describe("Card", () => {
-    const source = readStory("Card");
+    const source = readStory("CardBasic");
 
     it("exports a dedicated Bento story", () => {
       expect(source).toMatch(/export\s+const\s+Bento\s*:\s*Story/);
@@ -53,7 +53,7 @@ describe("v1-02 variant story export guard", () => {
   });
 
   describe("Tabs", () => {
-    const source = readStory("Tabs");
+    const source = readStory("TabsVariants");
 
     it("exports a dedicated Underline story", () => {
       expect(source).toMatch(/export\s+const\s+Underline\s*:\s*Story/);

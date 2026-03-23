@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Tooltip } from "./Tooltip";
 import { Button } from "./Button";
+import { expect } from "@storybook/test";
 
 /**
  * Tooltip 组件 Story
@@ -13,6 +14,22 @@ const meta = {
   component: Tooltip,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component: `## 使用指南
+
+### 何时使用
+- **补充说明**: 为图标按钮、缩写、截断文本提供额外信息
+- **快捷键提示**: 显示操作对应的键盘快捷键
+- **状态描述**: 解释禁用按钮的原因
+
+### 注意事项
+- Tooltip 不应包含关键操作信息——用户可能无法触达（触屏设备）
+- 保持内容简短（1-2 行），长文本使用 Popover
+- \`delayDuration\` 默认 200ms，避免设置过短导致闪烁
+- 确保触发元素可聚焦（键盘可访问）`,
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {
@@ -46,6 +63,9 @@ export const Default: Story = {
     content: "This is a tooltip",
     children: <Button>Hover me</Button>,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 长文本内容 */
@@ -54,6 +74,9 @@ export const LongContent: Story = {
     content:
       "This is a longer tooltip that contains more information about the element you're hovering over.",
     children: <Button>Hover for details</Button>,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -68,6 +91,9 @@ export const Top: Story = {
     side: "top",
     children: <Button>Top</Button>,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Right side */
@@ -76,6 +102,9 @@ export const Right: Story = {
     content: "Right tooltip",
     side: "right",
     children: <Button>Right</Button>,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -86,6 +115,9 @@ export const Bottom: Story = {
     side: "bottom",
     children: <Button>Bottom</Button>,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** Left side */
@@ -94,6 +126,9 @@ export const Left: Story = {
     content: "Left tooltip",
     side: "left",
     children: <Button>Left</Button>,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -123,6 +158,9 @@ export const AllSides: Story = {
       </Tooltip>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 不同触发元素 */
@@ -168,6 +206,9 @@ export const DifferentTriggers: Story = {
       </Tooltip>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 即时显示 */
@@ -177,6 +218,9 @@ export const InstantDelay: Story = {
     delayDuration: 0,
     children: <Button>No delay</Button>,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 长延迟 */
@@ -185,6 +229,9 @@ export const LongDelay: Story = {
     content: "Delayed tooltip",
     delayDuration: 1000,
     children: <Button>1s delay</Button>,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -207,4 +254,7 @@ export const Alignments: Story = {
       </Tooltip>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

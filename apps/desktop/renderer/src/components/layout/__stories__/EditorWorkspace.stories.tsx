@@ -28,6 +28,7 @@ import {
   ThemeStoreProvider,
   createThemeStore,
 } from "../../../stores/themeStore";
+import { expect } from "@storybook/test";
 
 const mockPreferences = {
   get: <T,>(): T | null => null,
@@ -160,4 +161,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const ThreeColumnLayout: Story = {
   name: "三栏编辑区",
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

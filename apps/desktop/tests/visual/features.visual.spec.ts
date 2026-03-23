@@ -48,12 +48,12 @@ const FEATURE_STORIES: FeatureStory[] = [
   },
   {
     component: "ai-panel",
-    storyId: "features-aipanel--default",
+    storyId: "features-ai-chat--default",
     story: "default",
   },
   {
     component: "ai-panel",
-    storyId: "features-aipanel--empty-state",
+    storyId: "features-ai-chat--empty-state",
     story: "empty-state",
   },
   {
@@ -72,27 +72,27 @@ const FEATURE_STORIES: FeatureStory[] = [
   },
   {
     component: "command-palette",
-    storyId: "features-commandpalette--default",
+    storyId: "features-commandpalette-basic--default",
     story: "default",
   },
   {
     component: "file-tree",
-    storyId: "features-filetreepanel--default",
+    storyId: "features-filetree-navigation--default",
     story: "default",
   },
   {
     component: "outline",
-    storyId: "features-outlinepanel--default-multi-level",
+    storyId: "features-outline-basic--default-multi-level",
     story: "default-multi-level",
   },
   {
     component: "version-history",
-    storyId: "features-versionhistorypanel--default-with-history",
+    storyId: "features-versionhistory-list--default-with-history",
     story: "default-with-history",
   },
   {
     component: "search",
-    storyId: "features-searchpanel--default",
+    storyId: "features-search-results--default",
     story: "default",
   },
 ];

@@ -5,6 +5,7 @@ import {
   MemoryStoreProvider,
   createMemoryStore,
 } from "../../stores/memoryStore";
+import { within, expect } from "@storybook/test";
 
 // =============================================================================
 // Mock IPC
@@ -138,6 +139,10 @@ export const GlobalScope: Story = {
   render: () => (
     <CreateDialogWrapper open={true} scope="global" scopeLabel="全局" />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -152,6 +157,10 @@ export const ProjectScope: Story = {
   render: () => (
     <CreateDialogWrapper open={true} scope="project" scopeLabel="项目" />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -166,6 +175,10 @@ export const DocumentScope: Story = {
   render: () => (
     <CreateDialogWrapper open={true} scope="document" scopeLabel="文档" />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -182,4 +195,8 @@ export const Interactive: Story = {
   render: () => (
     <CreateDialogWrapper open={false} scope="global" scopeLabel="全局" />
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };

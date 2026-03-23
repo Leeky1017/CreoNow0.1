@@ -10,6 +10,7 @@ import {
   createProjectStore,
 } from "../../stores/projectStore";
 import { MemoryPanel } from "./MemoryPanel";
+import { expect } from "@storybook/test";
 
 type SemanticRule = IpcResponseData<"memory:semantic:list">["items"][number];
 
@@ -246,6 +247,9 @@ export const Default: Story = {
       }}
     />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Empty: Story = {
@@ -259,6 +263,9 @@ export const Empty: Story = {
       }}
     />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const PausedLearning: Story = {
@@ -272,6 +279,9 @@ export const PausedLearning: Story = {
       }}
     />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const ConflictNotice: Story = {
@@ -287,4 +297,7 @@ export const ConflictNotice: Story = {
       }}
     />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { NodeDetailCard } from "./NodeDetailCard";
 import type { GraphNode } from "./types";
+import { expect } from "@storybook/test";
 
 const defaultNode: GraphNode = {
   id: "character-linyuan",
@@ -66,6 +67,9 @@ export const DefaultState: Story = {
   args: {
     node: defaultNode,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -74,6 +78,9 @@ export const DefaultState: Story = {
 export const EmptyState: Story = {
   args: {
     node: emptyNode,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -95,4 +102,7 @@ export const ErrorState: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

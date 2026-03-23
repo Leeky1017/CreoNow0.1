@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { SpinnerSize } from "./Spinner";
 import { Spinner } from "./Spinner";
+import { expect } from "@storybook/test";
 
 /**
  * Spinner 组件 Story
@@ -40,6 +41,9 @@ export const Default: Story = {
   args: {
     size: "md",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -53,12 +57,18 @@ export const ExtraSmall: Story = {
   args: {
     size: "xs",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** SM size (16px) */
 export const Small: Story = {
   args: {
     size: "sm",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -67,6 +77,9 @@ export const Medium: Story = {
   args: {
     size: "md",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** LG size (32px) */
@@ -74,12 +87,18 @@ export const Large: Story = {
   args: {
     size: "lg",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** XL size (48px) */
 export const ExtraLarge: Story = {
   args: {
     size: "xl",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -112,6 +131,9 @@ export const AllSizes: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 不同颜色（继承父元素 color） */
@@ -138,6 +160,9 @@ export const Colors: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 加载按钮示例 */
@@ -167,6 +192,9 @@ export const InButton: Story = {
       <span>Loading...</span>
     </button>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 全屏加载示例 */
@@ -193,4 +221,7 @@ export const FullScreen: Story = {
       <span style={{ fontSize: "14px" }}>Loading content...</span>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

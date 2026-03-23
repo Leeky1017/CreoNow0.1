@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { CreateTemplateDialog } from "./CreateTemplateDialog";
 import { Button } from "../../components/primitives/Button";
+import { within, expect } from "@storybook/test";
 
 /**
  * CreateTemplateDialog 组件 Story
@@ -31,6 +32,10 @@ export const Open: Story = {
     open: true,
     onOpenChange: () => {},
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 /** 关闭状态 */
@@ -38,6 +43,10 @@ export const Closed: Story = {
   args: {
     open: false,
     onOpenChange: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
   },
 };
 
@@ -85,6 +94,10 @@ function InteractiveDemo() {
 
 export const Interactive: Story = {
   render: () => <InteractiveDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 // ============================================================================
@@ -148,4 +161,8 @@ function FullFlowDemo() {
 
 export const FullFlow: Story = {
   render: () => <FullFlowDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };

@@ -7,6 +7,7 @@ import {
   RadioCardGroup,
   RadioCardItem,
 } from "./Radio";
+import { within, expect } from "@storybook/test";
 
 /**
  * Radio 组件 Story
@@ -77,6 +78,10 @@ export const Default: Story = {
     options: themeOptions,
     defaultValue: "dark",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("radio")).toBeInTheDocument();
+  },
 };
 
 /** 水平布局 */
@@ -86,6 +91,10 @@ export const Horizontal: Story = {
     orientation: "horizontal",
     defaultValue: "dark",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("radio")).toBeInTheDocument();
+  },
 };
 
 /** 带描述 */
@@ -93,6 +102,10 @@ export const WithDescriptions: Story = {
   args: {
     options: planOptions,
     defaultValue: "pro",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("radio")).toBeInTheDocument();
   },
 };
 

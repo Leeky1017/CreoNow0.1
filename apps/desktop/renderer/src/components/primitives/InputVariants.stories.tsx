@@ -1,204 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Input } from "./Input";
+import { within, expect } from "@storybook/test";
 
-/**
- * Input 组件 Story
- *
- * 设计规范 §6.2
- * 单行文本输入框，支持 error、disabled、readonly 等状态。
- *
- * 状态矩阵（MUST 全部实现）：
- * - default: 正常边框颜色
- * - hover: 边框颜色变化（需要交互触发）
- * - focus-visible: 边框颜色 + focus ring（聚焦触发）
- * - error: 红色边框
- * - disabled: opacity: 0.5，不可编辑
- * - readonly: 轻微区分背景，可聚焦但不可编辑
- */
 const meta = {
-  title: "Primitives/Input",
+  title: "Primitives/Input/Variants",
   component: Input,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { layout: "centered" },
   tags: ["autodocs"],
-  argTypes: {
-    error: {
-      control: "boolean",
-      description: "Show error state styling",
-    },
-    fullWidth: {
-      control: "boolean",
-      description: "Full width input",
-    },
-    disabled: {
-      control: "boolean",
-      description: "Disable the input",
-    },
-    readOnly: {
-      control: "boolean",
-      description: "Make input read-only",
-    },
-    placeholder: {
-      control: "text",
-      description: "Placeholder text",
-    },
-  },
 } satisfies Meta<typeof Input>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-// ============================================================================
-// 基础 Stories
-// ============================================================================
-
-/** 默认状态：标准输入框 */
-export const Default: Story = {
-  args: {
-    placeholder: "Enter text...",
-  },
-};
-
-/** 带默认值 */
-export const WithValue: Story = {
-  args: {
-    defaultValue: "Hello World",
-  },
-};
-
-/** 带 placeholder */
-export const WithPlaceholder: Story = {
-  args: {
-    placeholder: "Type something here...",
-  },
-};
-
-// ============================================================================
-// 状态 Stories
-// ============================================================================
-
-/** Error 状态：验证失败 */
-export const Error: Story = {
-  args: {
-    error: true,
-    defaultValue: "Invalid input",
-  },
-};
-
-/** Disabled 状态：禁用输入 */
-export const Disabled: Story = {
-  args: {
-    disabled: true,
-    defaultValue: "Disabled input",
-  },
-};
-
-/** ReadOnly 状态：只读输入 */
-export const ReadOnly: Story = {
-  args: {
-    readOnly: true,
-    defaultValue: "Read only input",
-  },
-};
-
-/** Full Width：全宽输入框 */
-export const FullWidth: Story = {
-  args: {
-    fullWidth: true,
-    placeholder: "Full width input",
-  },
-  parameters: {
-    layout: "padded",
-  },
-};
-
-// ============================================================================
-// 组合展示 Stories
-// ============================================================================
-
-/** 所有状态展示 */
-export const AllStates: Story = {
-  args: {
-    placeholder: "Input",
-  },
-  render: () => (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        width: "300px",
-      }}
-    >
-      <div>
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.25rem",
-            fontSize: "12px",
-            color: "var(--color-fg-muted)",
-          }}
-        >
-          Default
-        </label>
-        <Input placeholder="Enter text..." fullWidth />
-      </div>
-      <div>
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.25rem",
-            fontSize: "12px",
-            color: "var(--color-fg-muted)",
-          }}
-        >
-          With Value
-        </label>
-        <Input defaultValue="Hello World" fullWidth />
-      </div>
-      <div>
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.25rem",
-            fontSize: "12px",
-            color: "var(--color-fg-muted)",
-          }}
-        >
-          Error
-        </label>
-        <Input error defaultValue="Invalid input" fullWidth />
-      </div>
-      <div>
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.25rem",
-            fontSize: "12px",
-            color: "var(--color-fg-muted)",
-          }}
-        >
-          Disabled
-        </label>
-        <Input disabled defaultValue="Disabled input" fullWidth />
-      </div>
-      <div>
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.25rem",
-            fontSize: "12px",
-            color: "var(--color-fg-muted)",
-          }}
-        >
-          Read Only
-        </label>
-        <Input readOnly defaultValue="Read only input" fullWidth />
-      </div>
-    </div>
-  ),
-};
 
 // ============================================================================
 // 输入类型 Stories
@@ -210,6 +22,10 @@ export const Password: Story = {
     type: "password",
     placeholder: "Enter password...",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /** Email 输入 */
@@ -217,6 +33,10 @@ export const Email: Story = {
   args: {
     type: "email",
     placeholder: "Enter email...",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 
@@ -226,6 +46,10 @@ export const Number: Story = {
     type: "number",
     placeholder: "Enter number...",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /** Search 输入 */
@@ -233,6 +57,10 @@ export const Search: Story = {
   args: {
     type: "search",
     placeholder: "Search...",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 
@@ -317,6 +145,10 @@ export const AllTypes: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 // ============================================================================
@@ -332,6 +164,10 @@ export const LongText: Story = {
   args: {
     defaultValue:
       "This is a very long text that should scroll horizontally when it exceeds the input width",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 
@@ -360,6 +196,10 @@ export const LongTextConstrained: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -371,6 +211,10 @@ export const ShortText: Story = {
   args: {
     defaultValue: "Hi",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -381,6 +225,10 @@ export const ShortText: Story = {
 export const WithEmoji: Story = {
   args: {
     defaultValue: "Hello 🌍 World 🚀",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 

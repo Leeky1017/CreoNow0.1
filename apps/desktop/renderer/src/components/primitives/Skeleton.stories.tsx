@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Skeleton } from "./Skeleton";
+import { expect } from "@storybook/test";
 
 /**
  * Skeleton 组件 Story
@@ -48,6 +49,9 @@ export const Default: Story = {
     variant: "text",
     width: "200px",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 文本占位 */
@@ -55,6 +59,9 @@ export const Text: Story = {
   args: {
     variant: "text",
     width: "80%",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -65,6 +72,9 @@ export const Circular: Story = {
     width: 48,
     height: 48,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 矩形占位（图片/卡片） */
@@ -73,6 +83,9 @@ export const Rectangular: Story = {
     variant: "rectangular",
     width: "100%",
     height: 120,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -83,6 +96,9 @@ export const NoAnimation: Story = {
     width: 200,
     height: 100,
     animate: false,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -142,6 +158,9 @@ export const AllVariants: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 用户卡片骨架 */
@@ -176,6 +195,9 @@ export const UserCardSkeleton: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 文章列表骨架 */
@@ -220,6 +242,9 @@ export const ArticleListSkeleton: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 表单骨架 */
@@ -248,4 +273,7 @@ export const FormSkeleton: Story = {
       <Skeleton variant="rectangular" width="100%" height={36} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

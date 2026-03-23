@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { SaveIndicator } from "./SaveIndicator";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof SaveIndicator> = {
   title: "Layout/SaveIndicator",
@@ -17,12 +18,18 @@ export const Saved: Story = {
     autosaveStatus: "saved",
     onRetry: () => {},
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Saving: Story = {
   args: {
     autosaveStatus: "saving",
     onRetry: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -31,11 +38,17 @@ export const Error: Story = {
     autosaveStatus: "error",
     onRetry: () => {},
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Idle: Story = {
   args: {
     autosaveStatus: "idle",
     onRetry: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

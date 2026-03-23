@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { LoadingState, Skeleton, ProgressBar } from "./LoadingState";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof LoadingState> = {
   title: "Patterns/LoadingState",
@@ -17,6 +18,9 @@ export const SpinnerDefault: Story = {
     variant: "spinner",
     text: "Loading...",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const SpinnerLarge: Story = {
@@ -24,6 +28,9 @@ export const SpinnerLarge: Story = {
     variant: "spinner",
     text: "Preparing your workspace...",
     size: "lg",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -33,6 +40,9 @@ export const SkeletonText: Story = {
       <Skeleton type="text" lines={3} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const SkeletonCard: Story = {
@@ -45,6 +55,9 @@ export const SkeletonCard: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const ProgressIndeterminate: Story = {
@@ -53,6 +66,9 @@ export const ProgressIndeterminate: Story = {
       <ProgressBar indeterminate />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const ProgressDeterminate: Story = {
@@ -64,6 +80,9 @@ export const ProgressDeterminate: Story = {
       <ProgressBar value={100} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 品牌 Spinner — CreoNow "C" 字母脉冲 + 渐变光环 */

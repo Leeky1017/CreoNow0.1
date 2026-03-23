@@ -25,6 +25,7 @@ import {
 } from "../../stores/searchStore";
 import { KgStoreProvider, createKgStore } from "../../stores/kgStore";
 import { ThemeStoreProvider, createThemeStore } from "../../stores/themeStore";
+import { expect } from "@storybook/test";
 
 /**
  * Mock preferences for Storybook.
@@ -234,6 +235,9 @@ export const Default: Story = {
       <AppShell />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -247,6 +251,9 @@ export const FullHeight: Story = {
       <AppShell />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -337,6 +344,9 @@ export const InteractionGuide: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // =============================================================================

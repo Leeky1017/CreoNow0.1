@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect } from "@storybook/test";
 
 import { AppToastProvider } from "../../components/providers/AppToastProvider";
 import { createPreferenceStore } from "../../lib/preferences";
@@ -110,24 +111,52 @@ type Story = StoryObj<typeof SettingsDialog>;
 
 export const General: Story = {
   args: { open: true, defaultTab: "general" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByTestId("settings-dialog"),
+    ).toBeInTheDocument();
+  },
 };
 
 export const Appearance: Story = {
   args: { open: true, defaultTab: "appearance" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(
+      await canvas.findByTestId("settings-dialog"),
+    ).toBeInTheDocument();
+  },
 };
 
 export const AI: Story = {
   args: { open: true, defaultTab: "ai" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const Judge: Story = {
   args: { open: true, defaultTab: "judge" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const Analytics: Story = {
   args: { open: true, defaultTab: "analytics" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };
 
 export const Account: Story = {
   args: { open: true, defaultTab: "account" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+  },
 };

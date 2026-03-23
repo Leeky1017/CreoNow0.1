@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { FileText, BookOpen, Settings, Users, Brain } from "lucide-react";
 
 import { SidebarItem } from "./SidebarItem";
+import { within, expect } from "@storybook/test";
 
 const meta: Meta<typeof SidebarItem> = {
   title: "Composites/SidebarItem",
@@ -33,6 +34,10 @@ export const Default: Story = {
     label: "Files",
     onClick: () => {},
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 export const Active: Story = {
@@ -41,6 +46,10 @@ export const Active: Story = {
     label: "Editor",
     active: true,
     onClick: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
   },
 };
 
@@ -54,6 +63,10 @@ export const WithTrailing: Story = {
       </span>
     ),
     onClick: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
   },
 };
 
@@ -93,4 +106,8 @@ export const SidebarList: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };

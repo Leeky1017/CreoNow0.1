@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { SearchInput } from "./SearchInput";
+import { within, expect } from "@storybook/test";
 
 const meta: Meta<typeof SearchInput> = {
   title: "Composites/SearchInput",
@@ -26,6 +27,10 @@ export const Default: Story = {
     onClear: () => {},
     placeholder: "Search files...",
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
+  },
 };
 
 export const WithValue: Story = {
@@ -34,6 +39,10 @@ export const WithValue: Story = {
     onChange: () => {},
     onClear: () => {},
     placeholder: "Search files...",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };
 
@@ -44,5 +53,9 @@ export const WithShortcutHint: Story = {
     onClear: () => {},
     placeholder: "Search...",
     shortcutHint: "⌘K",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox")).toBeInTheDocument();
   },
 };

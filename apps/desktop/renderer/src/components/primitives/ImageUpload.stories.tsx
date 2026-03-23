@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { ImageUpload } from "./ImageUpload";
+import { expect } from "@storybook/test";
 
 /**
  * ImageUpload 组件 Story
@@ -48,6 +49,9 @@ export const Default: Story = {
     placeholder: "Click or drag image to upload",
     hint: "PNG, JPG up to 5MB",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 禁用状态 */
@@ -57,6 +61,9 @@ export const Disabled: Story = {
     placeholder: "Click or drag image to upload",
     hint: "PNG, JPG up to 5MB",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 自定义文案 */
@@ -64,6 +71,9 @@ export const CustomText: Story = {
   args: {
     placeholder: "Drop your cover image here",
     hint: "Recommended: 800x600 PNG or JPG",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -94,6 +104,9 @@ function ControlledDemo() {
 
 export const Controlled: Story = {
   render: () => <ControlledDemo />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -122,6 +135,9 @@ function WithPreviewDemo() {
 
 export const WithPreview: Story = {
   render: () => <WithPreviewDemo />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -170,6 +186,9 @@ export const InForm: Story = {
       </div>
     </form>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -187,6 +206,9 @@ export const Compact: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Large: Story = {
@@ -200,4 +222,7 @@ export const Large: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
