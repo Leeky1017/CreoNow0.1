@@ -74,6 +74,7 @@ export function CharacterCard({
       {/* Selected indicator (blue left border) */}
       {selected && (
         <div
+          // 审计：v1-18b #1240 KEEP — w-[3px] 无标准 token，角色卡片装饰线宽度为设计规范固定值
           // eslint-disable-next-line creonow/no-hardcoded-dimension -- 3px has no standard Tailwind utility
           className="absolute left-[-1px] top-1 bottom-1 w-[3px] bg-[var(--color-info)] rounded-r-sm"
           data-testid="character-card-selected-indicator"
