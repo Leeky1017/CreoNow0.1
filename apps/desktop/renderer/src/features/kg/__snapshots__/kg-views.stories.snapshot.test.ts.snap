@@ -36,7 +36,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
                 林远
               </p>
               <span
-                class="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
+                class="text-(--text-label) px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
               >
                 角色
               </span>
@@ -97,7 +97,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
                 张薇
               </p>
               <span
-                class="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
+                class="text-(--text-label) px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
               >
                 角色
               </span>
@@ -240,7 +240,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
                 神秘老人
               </p>
               <span
-                class="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
+                class="text-(--text-label) px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]"
               >
                 角色
               </span>
