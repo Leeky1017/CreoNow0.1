@@ -1,8 +1,10 @@
+import React from "react";
 import { X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { Button } from "../../components/primitives/Button";
 import { PanelHeader } from "../../components/patterns/PanelHeader";
-import { TimeGroupSection } from "./VersionCard";
+import { TimeGroupSection, VersionCard } from "./VersionCard";
 
 // Re-export all types for backward compatibility
 export type {
@@ -15,6 +17,7 @@ export type {
 } from "./versionHistoryTypes";
 
 import type {
+  VersionEntry,
   VersionHistoryPanelProps,
   VersionHistoryPanelContentProps,
 } from "./versionHistoryTypes";
@@ -61,6 +64,13 @@ const footerStyles = [
 // Main Components
 // ============================================================================
 
+type VirtualVersionRow =
+  | { type: "header"; label: string }
+  | { type: "version"; version: VersionEntry };
+
+const VERSION_ROW_HEIGHT = 100;
+const HEADER_ROW_HEIGHT = 32;
+
 export function VersionHistoryPanelContent({
   documentTitle = "Untitled Document",
   timeGroups,
@@ -77,6 +87,35 @@ export function VersionHistoryPanelContent({
   showCloseButton = true,
 }: VersionHistoryPanelContentProps): JSX.Element {
   const { t } = useTranslation();
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  const flatRows = React.useMemo(() => {
+    const rows: VirtualVersionRow[] = [];
+    for (const group of timeGroups) {
+      if (group.label !== "") {
+        rows.push({ type: "header", label: group.label });
+      }
+      for (const version of group.versions) {
+        rows.push({ type: "version", version });
+      }
+    }
+    return rows;
+  }, [timeGroups]);
+
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const virtualizer = useVirtualizer({
+    count: flatRows.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: (index) =>
+      flatRows[index].type === "header"
+        ? HEADER_ROW_HEIGHT
+        : VERSION_ROW_HEIGHT,
+    overscan: 5,
+  });
+
+  const virtualItems = virtualizer.getVirtualItems();
+  const useVirtual = virtualItems.length > 0;
+
   return (
     <div
       className={panelContentStyles}
@@ -101,19 +140,61 @@ export function VersionHistoryPanelContent({
       />
 
       {/* Scrollable content */}
-      <div className={scrollAreaStyles}>
-        {timeGroups.map((group, index) => (
-          <TimeGroupSection
-            key={group.label || `group-${index}`}
-            group={group}
-            selectedId={selectedId}
-            onSelect={onSelect}
-            onRestore={onRestore}
-            onCompare={onCompare}
-            onPreview={onPreview}
-            showAiMarks={showAiMarks}
-          />
-        ))}
+      <div ref={scrollRef} className={scrollAreaStyles}>
+        {useVirtual ? (
+          <div
+            className="relative"
+            style={{ height: `${virtualizer.getTotalSize()}px` }}
+          >
+            {virtualItems.map((virtualRow) => {
+              const row = flatRows[virtualRow.index];
+              return (
+                <div
+                  key={virtualRow.index}
+                  ref={virtualizer.measureElement}
+                  data-index={virtualRow.index}
+                  className="absolute left-0 right-0 list-item-enter"
+                  style={{
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                >
+                  {row.type === "header" ? (
+                    <div className="px-2 py-1">
+                      <span className="text-[10px] font-medium text-[var(--color-fg-placeholder)] uppercase tracking-wider">
+                        {row.label}
+                      </span>
+                    </div>
+                  ) : (
+                    <VersionCard
+                      version={row.version}
+                      isSelected={selectedId === row.version.id}
+                      onSelect={onSelect}
+                      onRestore={onRestore}
+                      onCompare={onCompare}
+                      onPreview={onPreview}
+                      showAiMarks={showAiMarks}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <>
+            {timeGroups.map((group, index) => (
+              <TimeGroupSection
+                key={group.label || `group-${index}`}
+                group={group}
+                selectedId={selectedId}
+                onSelect={onSelect}
+                onRestore={onRestore}
+                onCompare={onCompare}
+                onPreview={onPreview}
+                showAiMarks={showAiMarks}
+              />
+            ))}
+          </>
+        )}
         <div className="h-2" />
       </div>
 

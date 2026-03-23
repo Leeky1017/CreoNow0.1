@@ -14,8 +14,8 @@ import { RESTORE_VERSION_CONFIRM_COPY } from "./restoreConfirmCopy";
 import { useVersionPreferencesStore } from "../../stores/versionPreferencesStore";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { EmptyState } from "../../components/patterns/EmptyState";
-import { LoadingState } from "../../components/patterns/LoadingState";
 import { ErrorState } from "../../components/patterns/ErrorState";
+import { VersionHistorySkeleton } from "./VersionHistorySkeleton";
 import { formatTimestamp, convertToTimeGroups } from "./versionHistoryHelpers";
 import { useConflictResolution } from "./useConflictResolution";
 import { BranchMergeSection } from "./BranchMergeSection";
@@ -199,14 +199,7 @@ export function VersionHistoryContainer(
   }
 
   if (status === "loading") {
-    return (
-      <LoadingState
-        variant="spinner"
-        size="sm"
-        text={t("versionHistory.container.loadingVersions")}
-        className="p-3"
-      />
-    );
+    return <VersionHistorySkeleton />;
   }
 
   if (status === "error") {

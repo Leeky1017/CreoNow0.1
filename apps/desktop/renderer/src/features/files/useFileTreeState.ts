@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 import type { useTranslation } from "react-i18next";
 
 import type { DocumentListItem, DocumentType } from "./fileTreeTypes";
@@ -12,6 +12,27 @@ import {
 import { handleTreeKeyDown } from "./useFileTreeKeyboard";
 import { useFileTreeCore } from "./useFileTreeCore";
 
+export const FILE_TREE_EXIT_ANIMATION_MS = 150;
+
+function shouldReduceMotion(): boolean {
+  if (
+    typeof window === "undefined" ||
+    typeof window.matchMedia !== "function"
+  ) {
+    return false;
+  }
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function waitForListItemExit(): Promise<void> {
+  if (shouldReduceMotion()) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    setTimeout(resolve, FILE_TREE_EXIT_ANIMATION_MS);
+  });
+}
+
 // 审计：v1-13 #010 KEEP
 // eslint-disable-next-line max-lines-per-function -- 技术原因：聚合 useFileTreeCore 与 CRUD handlers，已拆分核心逻辑至 useFileTreeCore，进一步拆分会破坏 API 内聚性
 export function useFileTreeState(
@@ -20,6 +41,46 @@ export function useFileTreeState(
   initialRenameDocumentId?: string,
 ) {
   const core = useFileTreeCore(projectId, t, initialRenameDocumentId);
+  const [exitingDocumentIds, setExitingDocumentIds] = React.useState<
+    Set<string>
+  >(new Set());
+  const exitingDocumentIdsRef = React.useRef(exitingDocumentIds);
+
+  React.useEffect(() => {
+    exitingDocumentIdsRef.current = exitingDocumentIds;
+  }, [exitingDocumentIds]);
+
+  function markDocumentExiting(documentId: string): boolean {
+    if (exitingDocumentIdsRef.current.has(documentId)) {
+      return false;
+    }
+    exitingDocumentIdsRef.current = new Set(exitingDocumentIdsRef.current).add(
+      documentId,
+    );
+    setExitingDocumentIds((prev) => {
+      const next = new Set(prev);
+      next.add(documentId);
+      return next;
+    });
+    return true;
+  }
+
+  function clearExitingDocument(documentId: string): void {
+    if (!exitingDocumentIdsRef.current.has(documentId)) {
+      return;
+    }
+    const nextIds = new Set(exitingDocumentIdsRef.current);
+    nextIds.delete(documentId);
+    exitingDocumentIdsRef.current = nextIds;
+    setExitingDocumentIds((prev) => {
+      if (!prev.has(documentId)) {
+        return prev;
+      }
+      const next = new Set(prev);
+      next.delete(documentId);
+      return next;
+    });
+  }
 
   function resolveMoveTargetFolder(documentId: string): string | null {
     const sourceNode = core.tree.nodeById.get(documentId);
@@ -75,6 +136,7 @@ export function useFileTreeState(
   }
 
   async function onDelete(documentId: string): Promise<void> {
+    if (exitingDocumentIdsRef.current.has(documentId)) return;
     const confirmed = await core.confirm({
       title: t("files.tree.deleteTitle"),
       description: t("files.tree.deleteDescription"),
@@ -82,8 +144,14 @@ export function useFileTreeState(
       secondaryLabel: t("files.tree.deleteCancel"),
     });
     if (!confirmed) return;
-    const res = await core.deleteDocument({ projectId, documentId });
-    if (res.ok) await core.openCurrentForProject(projectId);
+    if (!markDocumentExiting(documentId)) return;
+    try {
+      await waitForListItemExit();
+      const res = await core.deleteDocument({ projectId, documentId });
+      if (res.ok) await core.openCurrentForProject(projectId);
+    } finally {
+      clearExitingDocument(documentId);
+    }
   }
 
   async function onToggleStatus(args: {
@@ -168,6 +236,7 @@ export function useFileTreeState(
     inputRef: core.inputRef,
     tree: core.tree,
     visibleNodes: core.visibleNodes,
+    exitingDocumentIds,
     dialogProps: core.dialogProps,
     toggleFolderExpanded: core.toggleFolderExpanded,
     resolveMoveTargetFolder,

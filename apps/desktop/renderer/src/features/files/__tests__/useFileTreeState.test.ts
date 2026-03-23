@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 
 import type { DocumentListItem, TreeSnapshot } from "../fileTreeTypes";
@@ -97,7 +97,8 @@ vi.mock("../useFileTreeKeyboard", () => ({
 }));
 
 // Must import AFTER mocks are registered
-const { useFileTreeState } = await import("../useFileTreeState");
+const { useFileTreeState, FILE_TREE_EXIT_ANIMATION_MS } =
+  await import("../useFileTreeState");
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -107,6 +108,10 @@ describe("useFileTreeState — shape & CRUD", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     coreMockReturn = buildCoreMock();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   // =========================================================================
@@ -123,6 +128,7 @@ describe("useFileTreeState — shape & CRUD", () => {
       expect(state.items).toEqual([]);
       expect(state.currentDocumentId).toEqual(null);
       expect(state.bootstrapStatus).toEqual("ready");
+      expect(state.exitingDocumentIds).toEqual(new Set());
       expect(typeof state.onCreate).toEqual("function");
       expect(typeof state.onCopy).toEqual("function");
       expect(typeof state.onSelect).toEqual("function");
@@ -196,14 +202,19 @@ describe("useFileTreeState — shape & CRUD", () => {
   // =========================================================================
 
   describe("onDelete", () => {
-    it("should show confirm dialog and delete when confirmed", async () => {
+    it("should defer delete until exit animation finishes and clear exiting state after success", async () => {
+      vi.useFakeTimers();
       mockConfirm.mockResolvedValueOnce(true);
 
       const { result } = renderHook(() =>
         useFileTreeState("test-project", ((k: string) => k) as never),
       );
 
-      await act(() => result.current.onDelete("doc-1"));
+      let deletePromise!: Promise<void>;
+      await act(async () => {
+        deletePromise = result.current.onDelete("doc-1");
+        await Promise.resolve();
+      });
 
       expect(mockConfirm).toHaveBeenCalledWith({
         title: "files.tree.deleteTitle",
@@ -211,11 +222,27 @@ describe("useFileTreeState — shape & CRUD", () => {
         primaryLabel: "files.tree.deleteConfirm",
         secondaryLabel: "files.tree.deleteCancel",
       });
+      expect(result.current.exitingDocumentIds).toEqual(new Set(["doc-1"]));
+      expect(mockDeleteDocument).not.toHaveBeenCalled();
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(FILE_TREE_EXIT_ANIMATION_MS - 1);
+      });
+
+      expect(mockDeleteDocument).not.toHaveBeenCalled();
+      expect(result.current.exitingDocumentIds).toEqual(new Set(["doc-1"]));
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1);
+        await deletePromise;
+      });
+
       expect(mockDeleteDocument).toHaveBeenCalledWith({
         projectId: "test-project",
         documentId: "doc-1",
       });
       expect(mockOpenCurrentForProject).toHaveBeenCalledWith("test-project");
+      expect(result.current.exitingDocumentIds).toEqual(new Set());
     });
 
     it("should not delete when user cancels confirmation", async () => {
@@ -228,9 +255,11 @@ describe("useFileTreeState — shape & CRUD", () => {
       await act(() => result.current.onDelete("doc-1"));
 
       expect(mockDeleteDocument).not.toHaveBeenCalled();
+      expect(result.current.exitingDocumentIds).toEqual(new Set());
     });
 
-    it("should not open current document when deletion fails", async () => {
+    it("should clear exiting state when deletion fails", async () => {
+      vi.useFakeTimers();
       mockConfirm.mockResolvedValueOnce(true);
       mockDeleteDocument.mockResolvedValueOnce({ ok: false });
 
@@ -238,10 +267,22 @@ describe("useFileTreeState — shape & CRUD", () => {
         useFileTreeState("test-project", ((k: string) => k) as never),
       );
 
-      await act(() => result.current.onDelete("doc-1"));
+      let deletePromise!: Promise<void>;
+      await act(async () => {
+        deletePromise = result.current.onDelete("doc-1");
+        await Promise.resolve();
+      });
+
+      expect(result.current.exitingDocumentIds).toEqual(new Set(["doc-1"]));
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(FILE_TREE_EXIT_ANIMATION_MS);
+        await deletePromise;
+      });
 
       expect(mockDeleteDocument).toHaveBeenCalled();
       expect(mockOpenCurrentForProject).not.toHaveBeenCalled();
+      expect(result.current.exitingDocumentIds).toEqual(new Set());
     });
   });
 

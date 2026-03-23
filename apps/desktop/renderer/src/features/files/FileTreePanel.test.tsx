@@ -111,7 +111,7 @@ describe("FileTreePanel", () => {
 
       render(<FileTreePanel projectId="test-project" />);
 
-      expect(screen.getByText("Loading files…")).toBeInTheDocument();
+      expect(screen.getByTestId("file-tree-skeleton")).toBeInTheDocument();
     });
   });
 
