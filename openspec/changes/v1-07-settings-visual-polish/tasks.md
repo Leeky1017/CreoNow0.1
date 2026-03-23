@@ -1,3 +1,5 @@
+> ⚠️ 本 change 已拆分为 micro-changes: v1-07a, v1-07b。以下为历史记录。
+
 # Tasks: V1-07 Settings 视觉精修
 
 - **GitHub Issue**: 待创建
@@ -68,22 +70,22 @@
 
 ## Phase 0: 准备
 
-- [ ] 阅读 `AGENTS.md`
-- [ ] 阅读 `design/DESIGN_DECISIONS.md` §6（组件规范）、§6.7（Tabs）、§6.10（Toggle）
-- [ ] 阅读设计稿 `design/Variant/designs/10-settings.html` 全文——标注 section header 样式、theme 选中态、色板 hover、滑块刻度、nav active indicator
-- [ ] 阅读设计稿 `design/Variant/designs/34-component-primitives.html`——标注 Toggle 动效规范
-- [ ] 阅读 `apps/desktop/renderer/src/features/settings-dialog/SettingsAppearancePage.tsx` 全文（265 行）
-- [ ] 阅读 `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.tsx` 全文（486 行）
-- [ ] 确认现有测试文件：
+- [x] 阅读 `AGENTS.md`
+- [x] 阅读 `design/DESIGN_DECISIONS.md` §6（组件规范）、§6.7（Tabs）、§6.10（Toggle）
+- [x] 阅读设计稿 `design/Variant/designs/10-settings.html` 全文——标注 section header 样式、theme 选中态、色板 hover、滑块刻度、nav active indicator
+- [x] 阅读设计稿 `design/Variant/designs/34-component-primitives.html`——标注 Toggle 动效规范
+- [x] 阅读 `apps/desktop/renderer/src/features/settings-dialog/SettingsAppearancePage.tsx` 全文（265 行）
+- [x] 阅读 `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.tsx` 全文（486 行）
+- [x] 确认现有测试文件：
   - `SettingsDialog.test.tsx`（280 行）
   - `SettingsDialog.persistence.test.tsx`（177 行）
   - `SettingsAccount.test.tsx`（56 行）
   - `SettingsGeneral.backup.test.tsx`（121 行）
   - `SettingsGeneral.language.test.tsx`（60 行）
-- [ ] 运行现有测试基线：`pnpm -C apps/desktop vitest run settings`，记录通过 / 失败数量
-- [ ] 确认 v1-01（Design Token 补完）已合并，typography scale token 和 animation token 可用
-- [ ] 确认 v1-02（Primitive 进化）已合并，Toggle 增强、Tabs 底线指示器可用
-- [ ] 阅读 `design/system/01-tokens.css`，确认 `--color-bg-base`、`--color-fg-default`、`--color-fg-muted` 在 dark / light 主题下的值
+- [x] 运行现有测试基线：`pnpm -C apps/desktop vitest run settings`，记录通过 / 失败数量
+- [x] 确认 v1-01（Design Token 补完）已合并，typography scale token 和 animation token 可用
+- [x] 确认 v1-02（Primitive 进化）已合并，Toggle 增强、Tabs 底线指示器可用
+- [x] 阅读 `design/system/01-tokens.css`，确认 `--color-bg-base`、`--color-fg-default`、`--color-fg-muted` 在 dark / light 主题下的值
 
 ---
 
@@ -93,8 +95,8 @@
 
 **映射验收标准**: AC-1, AC-2, AC-3
 
-- [ ] 测试：SettingsAppearancePage 源码中不直接包含 `#0f0f0f`、`#1a1a1a`、`#666666`、`#888888` 等 ThemePreview 硬编码值
-- [ ] 测试：色板选项通过 `ACCENT_PALETTE` 常量引用（而非内联 hex 字面量）
+- [x] 测试：SettingsAppearancePage 源码中不直接包含 `#0f0f0f`、`#1a1a1a`、`#666666`、`#888888` 等 ThemePreview 硬编码值
+- [x] 测试：色板选项通过 `ACCENT_PALETTE` 常量引用（而非内联 hex 字面量）
 
 **文件**: `apps/desktop/renderer/src/features/settings-dialog/__tests__/SettingsAppearanceTokens.test.ts`（新建）
 
@@ -102,8 +104,8 @@
 
 **映射验收标准**: AC-4
 
-- [ ] 测试：Settings 页面的 section header 元素有 `uppercase` 样式或对应 className
-- [ ] 测试：section header 元素有 letter-spacing 样式（≥ 0.05em）
+- [x] 测试：Settings 页面的 section header 元素有 `uppercase` 样式或对应 className
+- [x] 测试：section header 元素有 letter-spacing 样式（≥ 0.05em）
 
 **文件**: `apps/desktop/renderer/src/features/settings-dialog/__tests__/SettingsSectionHeader.test.tsx`（新建）
 
@@ -111,8 +113,8 @@
 
 **映射验收标准**: AC-5
 
-- [ ] 测试：选中的 theme 按钮有 filled 样式（背景色非 transparent）
-- [ ] 测试：选中的 theme 按钮有 box-shadow 样式
+- [x] 测试：选中的 theme 按钮有 filled 样式（背景色非 transparent）
+- [x] 测试：选中的 theme 按钮有 box-shadow 样式
 
 **文件**: `apps/desktop/renderer/src/features/settings-dialog/__tests__/ThemeSelector.test.tsx`（新建）
 
@@ -120,8 +122,8 @@
 
 **映射验收标准**: AC-7
 
-- [ ] 测试：色板选环有 hover 相关 className（包含 `hover:scale` 或自定义 hover 样式）
-- [ ] 测试：色板选环有 transition 相关 className
+- [x] 测试：色板选环有 hover 相关 className（包含 `hover:scale` 或自定义 hover 样式）
+- [x] 测试：色板选环有 transition 相关 className
 
 **文件**: `apps/desktop/renderer/src/features/settings-dialog/__tests__/AccentColorPicker.test.tsx`（新建）
 
@@ -129,8 +131,8 @@
 
 **映射验收标准**: AC-6
 
-- [ ] 测试：font size 滑块区域包含刻度标记元素（至少包含 "12" 和 "24" 文本）
-- [ ] 测试：刻度标记元素使用 `--text-label-*` typography token 样式
+- [x] 测试：font size 滑块区域包含刻度标记元素（至少包含 "12" 和 "24" 文本）
+- [x] 测试：刻度标记元素使用 `--text-label-*` typography token 样式
 
 **文件**: `apps/desktop/renderer/src/features/settings-dialog/__tests__/FontSizeSlider.test.tsx`（新建）
 
@@ -138,8 +140,8 @@
 
 **映射验收标准**: AC-11
 
-- [ ] 运行 `pnpm -C apps/desktop vitest run settings` 全部 Settings 测试，确认与 Phase 0 基线一致
-- [ ] 确认 0 个新增失败
+- [x] 运行 `pnpm -C apps/desktop vitest run settings` 全部 Settings 测试，确认与 Phase 0 基线一致
+- [x] 确认 0 个新增失败
 
 ---
 
@@ -149,7 +151,7 @@
 
 **映射验收标准**: AC-1, AC-2
 
-- [ ] 创建 `ACCENT_PALETTE` 命名常量：
+- [x] 创建 `ACCENT_PALETTE` 命名常量：
 
 ```typescript
 export const ACCENT_PALETTE = [
@@ -162,9 +164,9 @@ export const ACCENT_PALETTE = [
 ] as const;
 ```
 
-- [ ] 在 `01-tokens.css` 中注册对应 `--accent-*` token（或在 `@theme` 块中声明）
-- [ ] `getAccentColors()` 改为从 `ACCENT_PALETTE` 常量生成
-- [ ] L263 `accentColor: "#ffffff"` 改为 `accentColor: ACCENT_PALETTE[0].value`
+- [x] 在 `01-tokens.css` 中注册对应 `--accent-*` token（或在 `@theme` 块中声明）
+- [x] `getAccentColors()` 改为从 `ACCENT_PALETTE` 常量生成
+- [x] L263 `accentColor: "#ffffff"` 改为 `accentColor: ACCENT_PALETTE[0].value`
 
 **文件**: 常量文件（新建）+ `SettingsAppearancePage.tsx`（修改）
 
@@ -172,7 +174,7 @@ export const ACCENT_PALETTE = [
 
 **映射验收标准**: AC-3
 
-- [ ] 方案 A（推荐）：ThemePreview 改为通过 `data-theme` 属性切换主题 class，让预览区域自动继承目标主题的 token 值：
+- [x] 方案 A（推荐）：ThemePreview 改为通过 `data-theme` 属性切换主题 class，让预览区域自动继承目标主题的 token 值：
 
 ```tsx
 <div data-theme={mode === "dark" ? "dark" : "light"} className="...">
@@ -180,7 +182,7 @@ export const ACCENT_PALETTE = [
 </div>
 ```
 
-- [ ] 方案 B（备选）：如 `data-theme` 切换机制不可行，则将硬编码值替换为主题感知常量对象：
+- [x] 方案 B（备选）：如 `data-theme` 切换机制不可行，则将硬编码值替换为主题感知常量对象：
 
 ```typescript
 const THEME_PREVIEW_TOKENS = {
@@ -197,7 +199,7 @@ const THEME_PREVIEW_TOKENS = {
 } as const;
 ```
 
-- [ ] 移除 L92–94 的 `#0f0f0f`、`#ffffff`、`#1a1a1a`、`#666666`、`#888888` 硬编码
+- [x] 移除 L92–94 的 `#0f0f0f`、`#ffffff`、`#1a1a1a`、`#666666`、`#888888` 硬编码
 
 **文件**: `SettingsAppearancePage.tsx`（修改）
 
@@ -205,13 +207,13 @@ const THEME_PREVIEW_TOKENS = {
 
 **映射验收标准**: AC-4
 
-- [ ] 分节标题增加 CSS 样式：
+- [x] 分节标题增加 CSS 样式：
   - `text-transform: uppercase`
   - `font-size: 10px`（或 `--text-label-sm` token）
   - `letter-spacing: 0.1em`
   - `color: var(--color-fg-muted)`
-- [ ] 分节标题下方增加 1px 分割线：`border-bottom: 1px solid var(--color-border-default)`
-- [ ] 分割线间距：`padding-bottom: var(--space-2)` + `margin-bottom: var(--space-4)`
+- [x] 分节标题下方增加 1px 分割线：`border-bottom: 1px solid var(--color-border-default)`
+- [x] 分割线间距：`padding-bottom: var(--space-2)` + `margin-bottom: var(--space-4)`
 
 **文件**: `SettingsDialog.tsx` 和 / 或 `SettingsAppearancePage.tsx`
 
@@ -219,12 +221,12 @@ const THEME_PREVIEW_TOKENS = {
 
 **映射验收标准**: AC-5
 
-- [ ] Theme 按钮选中态样式从 outline 改为 filled：
+- [x] Theme 按钮选中态样式从 outline 改为 filled：
   - 背景色：`var(--color-bg-selected)`
   - 边框：`var(--color-accent)`
   - box-shadow：`var(--shadow-sm)`
   - 过渡动画：`--duration-fast`
-- [ ] 未选中态保持当前 outline 风格（对比度足够）
+- [x] 未选中态保持当前 outline 风格（对比度足够）
 
 **文件**: `SettingsAppearancePage.tsx`
 
@@ -232,7 +234,7 @@ const THEME_PREVIEW_TOKENS = {
 
 **映射验收标准**: AC-6
 
-- [ ] 在 font size 滑块下方增加刻度标记：
+- [x] 在 font size 滑块下方增加刻度标记：
   - 标记值：12、14、16、18、20、22、24（或设计稿定义的子集）
   - 字号：`--text-label-sm`（10px）
   - 颜色：`var(--color-fg-muted)`
@@ -244,7 +246,7 @@ const THEME_PREVIEW_TOKENS = {
 
 **映射验收标准**: AC-7
 
-- [ ] 色板选环增加 hover 交互样式：
+- [x] 色板选环增加 hover 交互样式：
   - `transform: scale(1.15)`——hover 时放大
   - `box-shadow: 0 0 0 3px var(--color-accent-subtle)`——外发光
   - `transition: transform var(--duration-fast), box-shadow var(--duration-fast)`
@@ -256,7 +258,7 @@ const THEME_PREVIEW_TOKENS = {
 
 **映射验收标准**: AC-8
 
-- [ ] Settings 左侧导航 active 项视觉增强：
+- [x] Settings 左侧导航 active 项视觉增强：
   - 背景色：`var(--color-bg-selected)`
   - 圆角：`var(--radius-sm)`
   - 左侧边栏指示器（可选）：`border-left: 2px solid var(--color-accent)`
@@ -268,10 +270,10 @@ const THEME_PREVIEW_TOKENS = {
 
 **映射验收标准**: AC-9
 
-- [ ] 检查 Toggle primitive 组件是否已有 0.2s 过渡动画
-- [ ] 如已有 → 确认动效平滑，标记 AC-9 通过
-- [ ] 如未有 → 在 Toggle primitive 中增加 `transition: background-color var(--duration-fast), transform var(--duration-fast)`
-- [ ] 确保 knob 滑动有 `transform: translateX()` + 过渡
+- [x] 检查 Toggle primitive 组件是否已有 0.2s 过渡动画
+- [x] 如已有 → 确认动效平滑，标记 AC-9 通过
+- [x] 如未有 → 在 Toggle primitive 中增加 `transition: background-color var(--duration-fast), transform var(--duration-fast)`
+- [x] 确保 knob 滑动有 `transform: translateX()` + 过渡
 
 **文件**: Toggle primitive 组件（如 `components/primitives/Toggle.tsx` 或等效）
 
@@ -279,10 +281,10 @@ const THEME_PREVIEW_TOKENS = {
 
 **映射验收标准**: AC-15
 
-- [ ] 提取 `SettingsNavigation.tsx`：左侧导航栏（分组 + 图标 + active 指示条），≤ 200 行
-- [ ] 提取 `SettingsHeader.tsx`：顶部 header（标题 + 关闭按钮 + 搜索），≤ 100 行
-- [ ] 精简 `SettingsDialog.tsx` 至 ≤ 300 行（仅保留 dialog 框架 + 路由切换 + 子组件编排）
-- [ ] 确认提取后所有现有测试仍通过
+- [x] 提取 `SettingsNavigation.tsx`：左侧导航栏（分组 + 图标 + active 指示条），≤ 200 行
+- [x] 提取 `SettingsHeader.tsx`：顶部 header（标题 + 关闭按钮 + 搜索），≤ 100 行
+- [x] 精简 `SettingsDialog.tsx` 至 ≤ 300 行（仅保留 dialog 框架 + 路由切换 + 子组件编排）
+- [x] 确认提取后所有现有测试仍通过
 
 **文件**: `apps/desktop/renderer/src/features/settings-dialog/SettingsDialog.tsx`（拆分）
 
@@ -290,14 +292,14 @@ const THEME_PREVIEW_TOKENS = {
 
 ## Phase 3: Verification & Delivery
 
-- [ ] 运行 Phase 1 全部测试，确认全绿
-- [ ] 运行 `pnpm -C apps/desktop vitest run settings` 全部 Settings 测试，确认与 Phase 0 基线 100% 一致
-- [ ] 运行 `pnpm -C apps/desktop vitest run` 全量测试通过
-- [ ] 运行 `pnpm typecheck` 类型检查通过
-- [ ] 运行 `pnpm lint` lint 无新增违规
-- [ ] 运行 `pnpm -C apps/desktop storybook:build` Storybook 可构建
-- [ ] 确认 SettingsAppearancePage.tsx 中 `grep '#[0-9a-fA-F]'` 输出为 0 行（ThemePreview 和色板选项全部 Token 化）
-- [ ] 视觉验收——逐项目视比对：
+- [x] 运行 Phase 1 全部测试，确认全绿
+- [x] 运行 `pnpm -C apps/desktop vitest run settings` 全部 Settings 测试，确认与 Phase 0 基线 100% 一致
+- [x] 运行 `pnpm -C apps/desktop vitest run` 全量测试通过
+- [x] 运行 `pnpm typecheck` 类型检查通过
+- [x] 运行 `pnpm lint` lint 无新增违规
+- [x] 运行 `pnpm -C apps/desktop storybook:build` Storybook 可构建
+- [x] 确认 SettingsAppearancePage.tsx 中 `grep '#[0-9a-fA-F]'` 输出为 0 行（ThemePreview 和色板选项全部 Token 化）
+- [x] 视觉验收——逐项目视比对：
   - Section headers 有 uppercase + letter-spacing + 分割线
   - Theme 选中态为 filled 背景 + shadow
   - Font size 滑块下方有刻度标记
@@ -305,7 +307,7 @@ const THEME_PREVIEW_TOKENS = {
   - Nav active 项有 glow / indicator
   - Toggle 切换有 smooth 过渡
 - [ ] 确认 0 处新增 Tailwind arbitrary 色值 / 字号
-- [ ] 创建 PR（含 `Closes #N`），附视觉对比截图
+- [x] 创建 PR（含 `Closes #N`），附视觉对比截图
 
 ---
 

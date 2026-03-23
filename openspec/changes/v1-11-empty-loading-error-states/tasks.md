@@ -70,12 +70,12 @@
 
 ## Phase 0: 准备
 
-- [ ] 阅读 `AGENTS.md`
-- [ ] 阅读 `design/DESIGN_DECISIONS.md` §12（状态显示）
-- [ ] 阅读设计稿 `design/Variant/designs/26-empty-states.html` 全文——标注 icon 尺寸、字号、间距、布局
-- [ ] 阅读设计稿 `design/Variant/designs/27-loading-states.html` 全文——标注 spinner / skeleton 规范
-- [ ] 确认 `renderer/src/components/patterns/` 目录是否已有 EmptyState / LoadingState 相关文件
-- [ ] 遍历全 Features 层，整理上方清单中各模块实际的空 / 加载 / 错误状态实现位置和行号
+- [x] 阅读 `AGENTS.md`
+- [x] 阅读 `design/DESIGN_DECISIONS.md` §12（状态显示）
+- [x] 阅读设计稿 `design/Variant/designs/26-empty-states.html` 全文——标注 icon 尺寸、字号、间距、布局
+- [x] 阅读设计稿 `design/Variant/designs/27-loading-states.html` 全文——标注 spinner / skeleton 规范
+- [x] 确认 `renderer/src/components/patterns/` 目录是否已有 EmptyState / LoadingState 相关文件
+- [x] 遍历全 Features 层，整理上方清单中各模块实际的空 / 加载 / 错误状态实现位置和行号
 
 ---
 
@@ -85,12 +85,12 @@
 
 **映射验收标准**: AC-1, AC-4
 
-- [ ] 测试：渲染 `<EmptyState icon={<TestIcon />} title="标题" />` 时，icon 和标题均出现在 DOM 中
-- [ ] 测试：传入 `description` prop 时渲染描述文字
-- [ ] 测试：传入 `action` prop 时渲染按钮，点击触发 `onClick`
-- [ ] 测试：未传 `description` 和 `action` 时不渲染对应元素
-- [ ] 测试：icon 容器有 `opacity-60` 或等效 muted class
-- [ ] 测试：描述文字有 `max-w-[280px]` 或等效 max-width 约束
+- [x] 测试：渲染 `<EmptyState icon={<TestIcon />} title="标题" />` 时，icon 和标题均出现在 DOM 中
+- [x] 测试：传入 `description` prop 时渲染描述文字
+- [x] 测试：传入 `action` prop 时渲染按钮，点击触发 `onClick`
+- [x] 测试：未传 `description` 和 `action` 时不渲染对应元素
+- [x] 测试：icon 容器有 `opacity-60` 或等效 muted class
+- [x] 测试：描述文字有 `max-w-[280px]` 或等效 max-width 约束
 
 **文件**: `renderer/src/components/patterns/__tests__/EmptyState.test.tsx`（新建）
 
@@ -98,11 +98,11 @@
 
 **映射验收标准**: AC-2, AC-5, AC-6
 
-- [ ] 测试：`variant="spinner"` 时渲染 spinner 元素（role="status" 或 aria-label="加载中"）
-- [ ] 测试：`variant="skeleton"` 时渲染指定数量的骨架行（默认 3 行）
-- [ ] 测试：传入 `skeletonRows={5}` 时渲染 5 行骨架
-- [ ] 测试：传入 `message` 时渲染加载提示文字
-- [ ] 测试：spinner 有 animation class（`animate-spin` 或自定义动画）
+- [x] 测试：`variant="spinner"` 时渲染 spinner 元素（role="status" 或 aria-label="加载中"）
+- [x] 测试：`variant="skeleton"` 时渲染指定数量的骨架行（默认 3 行）
+- [x] 测试：传入 `skeletonRows={5}` 时渲染 5 行骨架
+- [x] 测试：传入 `message` 时渲染加载提示文字
+- [x] 测试：spinner 有 animation class（`animate-spin` 或自定义动画）
 
 **文件**: `renderer/src/components/patterns/__tests__/LoadingState.test.tsx`（新建）
 
@@ -110,11 +110,11 @@
 
 **映射验收标准**: AC-3, AC-7
 
-- [ ] 测试：`severity="error"` 时渲染 danger 色条和 AlertCircle icon
-- [ ] 测试：`severity="warning"` 时渲染 warning 色条和 AlertTriangle icon
-- [ ] 测试：`severity="info"` 时渲染 info 色条和 Info icon
-- [ ] 测试：传入 `action` prop 时渲染按钮，点击触发 `onClick`
-- [ ] 测试：title 和 description 正常渲染
+- [x] 测试：`severity="error"` 时渲染 danger 色条和 AlertCircle icon
+- [x] 测试：`severity="warning"` 时渲染 warning 色条和 AlertTriangle icon
+- [x] 测试：`severity="info"` 时渲染 info 色条和 Info icon
+- [x] 测试：传入 `action` prop 时渲染按钮，点击触发 `onClick`
+- [x] 测试：title 和 description 正常渲染
 
 **文件**: `renderer/src/components/patterns/__tests__/ErrorState.test.tsx`（新建）
 
@@ -126,53 +126,53 @@
 
 **映射验收标准**: AC-1, AC-4
 
-- [ ] 创建 `renderer/src/components/patterns/EmptyState.tsx`
-- [ ] Props 接口：`{ icon: ReactNode; title: string; description?: string; action?: { label: string; onClick: () => void }; className?: string }`
-- [ ] 布局：flex column 居中、gap `var(--space-item-gap)`
-- [ ] Icon 容器：48px+、`opacity: 0.6`、`var(--color-text-muted)`
-- [ ] 标题：`var(--text-card-title-size)`、`var(--weight-semibold)`、居中
-- [ ] 描述：`var(--text-body-size)`、`var(--color-text-muted)`、`max-width: 280px`、居中
-- [ ] Action：`<Button variant="ghost">`
-- [ ] 所有文本走 `t()` i18n（标题/描述由调用方传入已翻译文本）
-- [ ] 导出至 `renderer/src/components/patterns/index.ts`
+- [x] 创建 `renderer/src/components/patterns/EmptyState.tsx`
+- [x] Props 接口：`{ icon: ReactNode; title: string; description?: string; action?: { label: string; onClick: () => void }; className?: string }`
+- [x] 布局：flex column 居中、gap `var(--space-item-gap)`
+- [x] Icon 容器：48px+、`opacity: 0.6`、`var(--color-text-muted)`
+- [x] 标题：`var(--text-card-title-size)`、`var(--weight-semibold)`、居中
+- [x] 描述：`var(--text-body-size)`、`var(--color-text-muted)`、`max-width: 280px`、居中
+- [x] Action：`<Button variant="ghost">`
+- [x] 所有文本走 `t()` i18n（标题/描述由调用方传入已翻译文本）
+- [x] 导出至 `renderer/src/components/patterns/index.ts`
 
 ### Task 2.2: 实现 `<LoadingState>` 组件
 
 **映射验收标准**: AC-2, AC-5, AC-6
 
-- [ ] 创建 `renderer/src/components/patterns/LoadingState.tsx`
-- [ ] Props 接口：`{ variant: 'spinner' | 'skeleton'; skeletonRows?: number; message?: string; className?: string }`
-- [ ] Spinner 模式：24px 圆环、`var(--color-accent)` 描边、`animate-spin`、`role="status"` + `aria-label`
-- [ ] Skeleton 模式：指定行数的圆角矩形（高度 16px、间距 8px）、`var(--color-bg-hover)` 底色 + shimmer 动画
-- [ ] Message：`var(--text-caption-size)`、`var(--color-text-muted)`
-- [ ] 导出至 `renderer/src/components/patterns/index.ts`
+- [x] 创建 `renderer/src/components/patterns/LoadingState.tsx`
+- [x] Props 接口：`{ variant: 'spinner' | 'skeleton'; skeletonRows?: number; message?: string; className?: string }`
+- [x] Spinner 模式：24px 圆环、`var(--color-accent)` 描边、`animate-spin`、`role="status"` + `aria-label`
+- [x] Skeleton 模式：指定行数的圆角矩形（高度 16px、间距 8px）、`var(--color-bg-hover)` 底色 + shimmer 动画
+- [x] Message：`var(--text-caption-size)`、`var(--color-text-muted)`
+- [x] 导出至 `renderer/src/components/patterns/index.ts`
 
 ### Task 2.3: 实现 `<ErrorState>` 组件
 
 **映射验收标准**: AC-3, AC-7
 
-- [ ] 创建 `renderer/src/components/patterns/ErrorState.tsx`
-- [ ] Props 接口：`{ severity: 'error' | 'warning' | 'info'; title: string; description?: string; action?: { label: string; onClick: () => void }; className?: string }`
-- [ ] 左侧色条 3px：error → `var(--color-danger)`、warning → `var(--color-warning)`、info → `var(--color-info)`
-- [ ] 背景：error → `var(--color-danger-subtle)`、warning → `var(--color-warning-subtle)`、info → `var(--color-info-subtle)`
-- [ ] Icon：error → AlertCircle、warning → AlertTriangle、info → Info（来自 lucide-react）
-- [ ] 布局：水平排列 icon + 文字区（title + description），action 按钮右对齐或底部
-- [ ] 导出至 `renderer/src/components/patterns/index.ts`
+- [x] 创建 `renderer/src/components/patterns/ErrorState.tsx`
+- [x] Props 接口：`{ severity: 'error' | 'warning' | 'info'; title: string; description?: string; action?: { label: string; onClick: () => void }; className?: string }`
+- [x] 左侧色条 3px：error → `var(--color-danger)`、warning → `var(--color-warning)`、info → `var(--color-info)`
+- [x] 背景：error → `var(--color-danger-subtle)`、warning → `var(--color-warning-subtle)`、info → `var(--color-info-subtle)`
+- [x] Icon：error → AlertCircle、warning → AlertTriangle、info → Info（来自 lucide-react）
+- [x] 布局：水平排列 icon + 文字区（title + description），action 按钮右对齐或底部
+- [x] 导出至 `renderer/src/components/patterns/index.ts`
 
 ### Task 2.4: Storybook Stories
 
 **映射验收标准**: AC-8
 
-- [ ] 创建 `renderer/src/components/patterns/EmptyState.stories.tsx`
+- [x] 创建 `renderer/src/components/patterns/EmptyState.stories.tsx`
   - Story：Default（icon + title + description + action）
   - Story：Minimal（icon + title only）
   - Story：WithAction（icon + title + action button）
-- [ ] 创建 `renderer/src/components/patterns/LoadingState.stories.tsx`
+- [x] 创建 `renderer/src/components/patterns/LoadingState.stories.tsx`
   - Story：Spinner（默认）
   - Story：SpinnerWithMessage
   - Story：Skeleton3Rows（默认）
   - Story：Skeleton5Rows
-- [ ] 创建 `renderer/src/components/patterns/ErrorState.stories.tsx`
+- [x] 创建 `renderer/src/components/patterns/ErrorState.stories.tsx`
   - Story：Error（severity=error）
   - Story：Warning（severity=warning）
   - Story：Info（severity=info）
@@ -182,34 +182,34 @@
 
 **映射验收标准**: AC-9, AC-10, AC-11
 
-- [ ] CharacterPanel：空列表 → `<EmptyState>` + 对应 icon / 文案
-- [ ] MemoryPanel：无 rules → `<EmptyState>`；Distilling → `<LoadingState variant="spinner">`
-- [ ] OutlinePanel：无大纲 → `<EmptyState>` + outline icon
-- [ ] KnowledgeGraphPanel：空图谱 → `<EmptyState>`；数据加载中 → `<LoadingState>`；JSON 解析失败 → `<ErrorState severity="error">`
-- [ ] VersionHistoryPanel：无历史 → `<EmptyState>`
+- [x] CharacterPanel：空列表 → `<EmptyState>` + 对应 icon / 文案
+- [x] MemoryPanel：无 rules → `<EmptyState>`；Distilling → `<LoadingState variant="spinner">`
+- [x] OutlinePanel：无大纲 → `<EmptyState>` + outline icon
+- [x] KnowledgeGraphPanel：空图谱 → `<EmptyState>`；数据加载中 → `<LoadingState>`；JSON 解析失败 → `<ErrorState severity="error">`
+- [x] VersionHistoryPanel：无历史 → `<EmptyState>`
 
 ### Task 2.6: 模块迁移 — 其他模块
 
 **映射验收标准**: AC-9, AC-10, AC-11
 
-- [ ] Dashboard：各卡片空状态 → `<EmptyState>`（如未在 v1-03 中已处理）
-- [ ] FileTree：无文件 → `<EmptyState>`
-- [ ] Search：无结果 → `<EmptyState>`
-- [ ] Settings：加载中 → `<LoadingState>`；错误 → `<ErrorState>`（如适用）
-- [ ] 逐模块验证替换后的渲染效果，确认 icon / 文案 / action 正确
+- [x] Dashboard：各卡片空状态 → `<EmptyState>`（如未在 v1-03 中已处理）
+- [x] FileTree：无文件 → `<EmptyState>`
+- [x] Search：无结果 → `<EmptyState>`
+- [x] Settings：加载中 → `<LoadingState>`；错误 → `<ErrorState>`（如适用）
+- [x] 逐模块验证替换后的渲染效果，确认 icon / 文案 / action 正确
 
 ---
 
 ## Phase 3: Verification（验证）
 
-- [ ] 运行 Phase 1 全部测试，确认全绿
-- [ ] 运行 `pnpm -C apps/desktop vitest run` 全量测试通过
-- [ ] 运行 `pnpm typecheck` 类型检查通过
-- [ ] 运行 `pnpm lint` lint 无新增违规
-- [ ] 运行 `pnpm -C apps/desktop storybook:build` Storybook 可构建
-- [ ] grep 确认 Features 层无残留的内联空状态实现（排除已确认的例外）
-- [ ] grep 确认 0 处新增 Tailwind arbitrary 值
-- [ ] Storybook 中浏览 3 个标准组件的所有 Story，视觉验收
+- [x] 运行 Phase 1 全部测试，确认全绿
+- [x] 运行 `pnpm -C apps/desktop vitest run` 全量测试通过
+- [x] 运行 `pnpm typecheck` 类型检查通过
+- [x] 运行 `pnpm lint` lint 无新增违规
+- [x] 运行 `pnpm -C apps/desktop storybook:build` Storybook 可构建
+- [x] grep 确认 Features 层无残留的内联空状态实现（排除已确认的例外）
+- [x] grep 确认 0 处新增 Tailwind arbitrary 值
+- [x] Storybook 中浏览 3 个标准组件的所有 Story，视觉验收
 
 ---
 

@@ -1,3 +1,5 @@
+> ⚠️ 本 change 已拆分为 micro-changes: v1-06a, v1-06b。以下为历史记录。
+
 # Tasks: V1-06 AI 面板大整修
 
 - **GitHub Issue**: 待创建
@@ -34,12 +36,12 @@
 
 ## Phase 0: 准备
 
-- [ ] 阅读 `AGENTS.md`
-- [ ] 阅读 `design/DESIGN_DECISIONS.md` §22（AI 面板规范）
-- [ ] 阅读设计稿 `design/Variant/designs/14-ai-panel.html` 全文——标注 Tab 布局、消息气泡样式、空状态规范、输入区结构
-- [ ] 阅读设计稿 `design/Variant/designs/32-ai-streaming-states.html`——标注流式输出动效、状态切换视觉
-- [ ] 阅读设计稿 `design/Variant/designs/33-ai-dialogs.html`——标注 ErrorGuideCard 等级化视觉
-- [ ] 阅读 `apps/desktop/renderer/src/features/ai/AiPanel.tsx` 全文（2,100 行），绘制职责分区图：
+- [x] 阅读 `AGENTS.md`
+- [x] 阅读 `design/DESIGN_DECISIONS.md` §22（AI 面板规范）
+- [x] 阅读设计稿 `design/Variant/designs/14-ai-panel.html` 全文——标注 Tab 布局、消息气泡样式、空状态规范、输入区结构
+- [x] 阅读设计稿 `design/Variant/designs/32-ai-streaming-states.html`——标注流式输出动效、状态切换视觉
+- [x] 阅读设计稿 `design/Variant/designs/33-ai-dialogs.html`——标注 ErrorGuideCard 等级化视觉
+- [x] 阅读 `apps/desktop/renderer/src/features/ai/AiPanel.tsx` 全文（2,100 行），绘制职责分区图：
   - 标注 Tab 切换逻辑区域（行号范围）
   - 标注消息流渲染区域（行号范围）
   - 标注输入区域（行号范围）
@@ -48,8 +50,8 @@
   - 标注 ErrorGuideCard 区域（行号范围）
   - 标注使用量统计区域（行号范围）
   - 标注流式输出状态管理区域（行号范围）
-- [ ] 识别各区域之间的数据依赖——哪些 store state / props 跨区域共享
-- [ ] 列出现有测试文件：
+- [x] 识别各区域之间的数据依赖——哪些 store state / props 跨区域共享
+- [x] 列出现有测试文件：
   - `AiPanel.aria-live.test.tsx`
   - `AiPanel.db-error.test.tsx`
   - `AiPanel.error-guide.test.tsx`
@@ -64,9 +66,9 @@
   - `AiPanel.test.tsx`
   - `SkillManagerDialog.test.tsx`
   - `SkillPicker.test.tsx`
-- [ ] 运行现有测试基线：`pnpm -C apps/desktop vitest run ai`，记录通过 / 失败数量——此基线在拆分全程不可退步
-- [ ] 确认 `--color-accent` 和 `--font-mono` token 可用
-- [ ] 确认 v1-02（Primitive 进化）已合并，Tabs 底线指示器 primitive 可用
+- [x] 运行现有测试基线：`pnpm -C apps/desktop vitest run ai`，记录通过 / 失败数量——此基线在拆分全程不可退步
+- [x] 确认 `--color-accent` 和 `--font-mono` token 可用
+- [x] 确认 v1-02（Primitive 进化）已合并，Tabs 底线指示器 primitive 可用
 
 ---
 
@@ -88,8 +90,8 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-1, AC-15
 
-- [ ] 测试：`AiPanel.tsx` 仅导入子组件（AiPanelTabBar、AiMessageList、AiInputArea、AiProposalView、AiEmptyState、AiUsageStats），不直接包含消息渲染 / 输入逻辑代码
-- [ ] 测试：`AiPanel` 渲染后包含 `AiPanelTabBar`、`AiMessageList`（或 `AiEmptyState`）、`AiInputArea` 子组件
+- [x] 测试：`AiPanel.tsx` 仅导入子组件（AiPanelTabBar、AiMessageList、AiInputArea、AiProposalView、AiEmptyState、AiUsageStats），不直接包含消息渲染 / 输入逻辑代码
+- [x] 测试：`AiPanel` 渲染后包含 `AiPanelTabBar`、`AiMessageList`（或 `AiEmptyState`）、`AiInputArea` 子组件
 
 **文件**: `apps/desktop/renderer/src/features/ai/__tests__/AiPanelDecomposition.test.tsx`（新建）
 
@@ -97,9 +99,9 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-2
 
-- [ ] 测试：AiPanelTabBar 渲染包含 "Chat" 和 "History" 两个 tab（通过 `getByRole('tab')`）
-- [ ] 测试：点击 "History" tab 触发 `onTabChange('history')` 回调
-- [ ] 测试：活跃 tab 有底线指示器样式
+- [x] 测试：AiPanelTabBar 渲染包含 "Chat" 和 "History" 两个 tab（通过 `getByRole('tab')`）
+- [x] 测试：点击 "History" tab 触发 `onTabChange('history')` 回调
+- [x] 测试：活跃 tab 有底线指示器样式
 
 **文件**: `apps/desktop/renderer/src/features/ai/__tests__/AiPanelTabBar.test.tsx`（新建）
 
@@ -107,9 +109,9 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-3, AC-8, AC-9
 
-- [ ] 测试：AiMessageList 接收消息列表 prop 后正确渲染用户消息和 AI 消息
-- [ ] 测试：AI 回复消息的容器有 `border-left: 2px solid` accent 边框样式（通过 computed style 或 className 验证）
-- [ ] 测试：代码块元素有 `font-family` 包含 monospace / `var(--font-mono)` 的样式
+- [x] 测试：AiMessageList 接收消息列表 prop 后正确渲染用户消息和 AI 消息
+- [x] 测试：AI 回复消息的容器有 `border-left: 2px solid` accent 边框样式（通过 computed style 或 className 验证）
+- [x] 测试：代码块元素有 `font-family` 包含 monospace / `var(--font-mono)` 的样式
 
 **文件**: `apps/desktop/renderer/src/features/ai/__tests__/AiMessageList.test.tsx`（新建）
 
@@ -117,9 +119,9 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-4, AC-10
 
-- [ ] 测试：AiInputArea 渲染包含 textarea 输入区（通过 `getByRole('textbox')`）
-- [ ] 测试：Model / Mode / Skill 选择器有 chevron icon 元素
-- [ ] 测试：选择器 hover 后有高亮视觉反馈（className 变化）
+- [x] 测试：AiInputArea 渲染包含 textarea 输入区（通过 `getByRole('textbox')`）
+- [x] 测试：Model / Mode / Skill 选择器有 chevron icon 元素
+- [x] 测试：选择器 hover 后有高亮视觉反馈（className 变化）
 
 **文件**: `apps/desktop/renderer/src/features/ai/__tests__/AiInputArea.test.tsx`（新建）
 
@@ -127,9 +129,9 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-6
 
-- [ ] 测试：AiEmptyState 渲染包含 sunburst icon（48px 尺寸验证）
-- [ ] 测试：AiEmptyState 包含引导文案文本
-- [ ] 测试：AiEmptyState 的 icon 有旋转动画 className
+- [x] 测试：AiEmptyState 渲染包含 sunburst icon（48px 尺寸验证）
+- [x] 测试：AiEmptyState 包含引导文案文本
+- [x] 测试：AiEmptyState 的 icon 有旋转动画 className
 
 **文件**: `apps/desktop/renderer/src/features/ai/__tests__/AiEmptyState.test.tsx`（新建）
 
@@ -137,8 +139,8 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-7
 
-- [ ] 测试：AiUsageStats 接收 token count 和 cost 后分行展示（不在同一行）
-- [ ] 测试：AiUsageStats 包含小字注释元素
+- [x] 测试：AiUsageStats 接收 token count 和 cost 后分行展示（不在同一行）
+- [x] 测试：AiUsageStats 包含小字注释元素
 
 **文件**: `apps/desktop/renderer/src/features/ai/__tests__/AiUsageStats.test.tsx`（新建）
 
@@ -146,8 +148,8 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-13, AC-14
 
-- [ ] 运行 `pnpm -C apps/desktop vitest run ai` 全部 AI 测试，确认与 Phase 0 基线 100% 一致
-- [ ] 确认 0 个新增失败
+- [x] 运行 `pnpm -C apps/desktop vitest run ai` 全部 AI 测试，确认与 Phase 0 基线 100% 一致
+- [x] 确认 0 个新增失败
 
 **注意**: 此 Task 在 Phase 2 每个子任务完成后立即执行——不是"拆完再验"，而是"拆一个验一个"。
 
@@ -169,27 +171,13 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-6
 
-- [ ] 从 AiPanel.tsx 中提取空状态渲染代码
-- [ ] 实现 48px sunburst icon（使用 Lucide icon 或 SVG）+ CSS `@keyframes` 旋转动画
-- [ ] 居中引导文案（走 `t()` i18n）
-- [ ] icon 渐入动画：`opacity 0 → 1`，`--duration-normal`（200ms）+ `--ease-default`
-- [ ] 组件 props：`{ className?: string }`
-- [ ] AiPanel 中替换为 `<AiEmptyState />`
-- [ ] **立即运行 Task 1.7 回归门禁**
-
-**文件**: `apps/desktop/renderer/src/features/ai/AiEmptyState.tsx`（新建）
-
-### Task 2.2: 提取 `AiUsageStats.tsx`
-
-**映射验收标准**: AC-7
-
-- [ ] 从 AiPanel.tsx 中提取 token / cost 统计渲染代码
-- [ ] 重新布局：token count 和 cost 分行展示
-- [ ] 增加小字注释说明（如 "本轮对话消耗"，走 `t()` i18n）
-- [ ] 使用 `--text-label-*` typography token
-- [ ] 组件 props：`{ tokenCount: number; cost: number; className?: string }`
-- [ ] AiPanel 中替换为 `<AiUsageStats tokenCount={...} cost={...} />`
-- [ ] **立即运行 Task 1.7 回归门禁**
+- [x] 从 AiPanel.tsx 中提取空状态渲染代码
+- [x] 实现 48px sunburst icon（使用 Lucide icon 或 SVG）+ CSS `@keyframes` 旋转动画
+- [x] 居中引导文案（走 `t()` i18n）
+- [x] icon 渐入动画：`opacity 0 → 1`，`--duration-normal`（200ms）+ `--ease-default`
+- [x] 组件 props：`{ className?: string }`
+- [x] AiPanel 中替换为 `<AiEmptyState />`
+- [x] **立即运行 Task 1.7 回归门禁**
 
 **文件**: `apps/desktop/renderer/src/features/ai/AiUsageStats.tsx`（新建）
 
@@ -197,12 +185,12 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-2
 
-- [ ] 从 AiPanel.tsx 中提取 Tab 切换逻辑
-- [ ] 实现 Chat / History 双标签页 UI，使用 Tabs primitive（底线指示器）
-- [ ] 对齐 `14-ai-panel.html` 设计稿的 Tab 视觉——active tab 底线使用 `--color-accent`
-- [ ] 组件 props：`{ activeTab: 'chat' | 'history'; onTabChange: (tab: string) => void }`
-- [ ] AiPanel 中替换为 `<AiPanelTabBar activeTab={...} onTabChange={...} />`
-- [ ] **立即运行 Task 1.7 回归门禁**
+- [x] 从 AiPanel.tsx 中提取 Tab 切换逻辑
+- [x] 实现 Chat / History 双标签页 UI，使用 Tabs primitive（底线指示器）
+- [x] 对齐 `14-ai-panel.html` 设计稿的 Tab 视觉——active tab 底线使用 `--color-accent`
+- [x] 组件 props：`{ activeTab: 'chat' | 'history'; onTabChange: (tab: string) => void }`
+- [x] AiPanel 中替换为 `<AiPanelTabBar activeTab={...} onTabChange={...} />`
+- [x] **立即运行 Task 1.7 回归门禁**
 
 **文件**: `apps/desktop/renderer/src/features/ai/AiPanelTabBar.tsx`（新建）
 
@@ -210,16 +198,16 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-3, AC-8, AC-9
 
-- [ ] 从 AiPanel.tsx 中提取消息流渲染代码——用户消息、AI 消息、系统消息
-- [ ] AI 回复消息容器增加左侧 2px accent 边框：`border-left: 2px solid var(--color-accent)`
-- [ ] 代码块增加 `font-family: var(--font-mono)`——确保 JetBrains Mono 或等宽回退
-- [ ] 流式输出动效实现：
+- [x] 从 AiPanel.tsx 中提取消息流渲染代码——用户消息、AI 消息、系统消息
+- [x] AI 回复消息容器增加左侧 2px accent 边框：`border-left: 2px solid var(--color-accent)`
+- [x] 代码块增加 `font-family: var(--font-mono)`——确保 JetBrains Mono 或等宽回退
+- [x] 流式输出动效实现：
   - 打字机效果：逐字渲染，使用 `requestAnimationFrame` 或 CSS animation
   - 脉冲光标：`@keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: 0 } }` 配合 `--duration-normal`
   - 对齐 `32-ai-streaming-states.html` 设计稿
-- [ ] 组件 props：`{ messages: Message[]; isStreaming: boolean; ... }`
-- [ ] AiPanel 中替换为 `<AiMessageList messages={...} isStreaming={...} />`
-- [ ] **立即运行 Task 1.7 回归门禁**
+- [x] 组件 props：`{ messages: Message[]; isStreaming: boolean; ... }`
+- [x] AiPanel 中替换为 `<AiMessageList messages={...} isStreaming={...} />`
+- [x] **立即运行 Task 1.7 回归门禁**
 
 **文件**: `apps/desktop/renderer/src/features/ai/AiMessageList.tsx`（新建）
 
@@ -227,14 +215,14 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-4, AC-10
 
-- [ ] 从 AiPanel.tsx 中提取输入区代码——textarea、emoji 选择、文件上传
-- [ ] Model / Mode / Skill 选择器增加交互增强：
+- [x] 从 AiPanel.tsx 中提取输入区代码——textarea、emoji 选择、文件上传
+- [x] Model / Mode / Skill 选择器增加交互增强：
   - 每个选择器增加 chevron icon（使用 Lucide `ChevronDown`）
   - hover 时背景色变为 `var(--color-bg-hover)`
   - 点击展开状态下 chevron 旋转 180°，使用 `--duration-fast` transition
-- [ ] 组件 props：接收 store state + 回调函数
-- [ ] AiPanel 中替换为 `<AiInputArea ... />`
-- [ ] **立即运行 Task 1.7 回归门禁**
+- [x] 组件 props：接收 store state + 回调函数
+- [x] AiPanel 中替换为 `<AiInputArea ... />`
+- [x] **立即运行 Task 1.7 回归门禁**
 
 **文件**: `apps/desktop/renderer/src/features/ai/AiInputArea.tsx`（新建）
 
@@ -242,11 +230,11 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-5
 
-- [ ] 从 AiPanel.tsx 中提取 Proposal 预览代码——accept / reject / undo 操作、inline diff 展示
-- [ ] 保持现有交互逻辑不变
-- [ ] 组件 props：`{ proposal: Proposal; onAccept: () => void; onReject: () => void; onUndo: () => void; ... }`
-- [ ] AiPanel 中替换为 `<AiProposalView proposal={...} ... />`
-- [ ] **立即运行 Task 1.7 回归门禁**
+- [x] 从 AiPanel.tsx 中提取 Proposal 预览代码——accept / reject / undo 操作、inline diff 展示
+- [x] 保持现有交互逻辑不变
+- [x] 组件 props：`{ proposal: Proposal; onAccept: () => void; onReject: () => void; onUndo: () => void; ... }`
+- [x] AiPanel 中替换为 `<AiProposalView proposal={...} ... />`
+- [x] **立即运行 Task 1.7 回归门禁**
 
 **文件**: `apps/desktop/renderer/src/features/ai/AiProposalView.tsx`（新建）
 
@@ -254,13 +242,13 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-12
 
-- [ ] 修改 ErrorGuideCard 组件（位于 AiPanel 内或独立文件），增加 `severity` prop：`'error' | 'warning' | 'info'`
-- [ ] 左边框颜色映射：
+- [x] 修改 ErrorGuideCard 组件（位于 AiPanel 内或独立文件），增加 `severity` prop：`'error' | 'warning' | 'info'`
+- [x] 左边框颜色映射：
   - `error` → `border-left: 3px solid var(--color-danger)`（红色）
   - `warning` → `border-left: 3px solid var(--color-warning)`（黄色）
   - `info` → `border-left: 3px solid var(--color-info)`（蓝色）
-- [ ] 对齐 `33-ai-dialogs.html` 设计稿
-- [ ] **立即运行 Task 1.7 回归门禁**
+- [x] 对齐 `33-ai-dialogs.html` 设计稿
+- [x] **立即运行 Task 1.7 回归门禁**
 
 **文件**: AiPanel 内 ErrorGuideCard 部分（或独立文件）
 
@@ -268,13 +256,13 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 **映射验收标准**: AC-1
 
-- [ ] 移除已提取到子组件的所有代码
-- [ ] 保留面板框架 JSX：Tab 切换编排、组件条件渲染、store 消费分发
-- [ ] 导入并组合子组件：AiPanelTabBar、AiMessageList、AiInputArea、AiProposalView、AiEmptyState、AiUsageStats
-- [ ] 确保 store state 通过 props 传递给各子组件
-- [ ] 目标行数 ≤ 300 行
-- [ ] 清理不再需要的 import 语句
-- [ ] **最终运行 Task 1.7 回归门禁**
+- [x] 移除已提取到子组件的所有代码
+- [x] 保留面板框架 JSX：Tab 切换编排、组件条件渲染、store 消费分发
+- [x] 导入并组合子组件：AiPanelTabBar、AiMessageList、AiInputArea、AiProposalView、AiEmptyState、AiUsageStats
+- [x] 确保 store state 通过 props 传递给各子组件
+- [x] 目标行数 ≤ 300 行
+- [x] 清理不再需要的 import 语句
+- [x] **最终运行 Task 1.7 回归门禁**
 
 **文件**: `apps/desktop/renderer/src/features/ai/AiPanel.tsx`（重构）
 
@@ -282,13 +270,13 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
 
 ## Phase 3: Verification & Delivery
 
-- [ ] 运行 Phase 1 全部新测试（Task 1.1–1.6），确认全绿
-- [ ] 运行 `pnpm -C apps/desktop vitest run ai` 全部 AI 测试，确认与 Phase 0 基线 100% 一致
-- [ ] 运行 `pnpm -C apps/desktop vitest run` 全量测试通过
-- [ ] 运行 `pnpm typecheck` 类型检查通过
-- [ ] 运行 `pnpm lint` lint 无新增违规
-- [ ] 运行 `pnpm -C apps/desktop storybook:build` Storybook 可构建
-- [ ] 确认文件行数：
+- [x] 运行 Phase 1 全部新测试（Task 1.1–1.6），确认全绿
+- [x] 运行 `pnpm -C apps/desktop vitest run ai` 全部 AI 测试，确认与 Phase 0 基线 100% 一致
+- [x] 运行 `pnpm -C apps/desktop vitest run` 全量测试通过
+- [x] 运行 `pnpm typecheck` 类型检查通过
+- [x] 运行 `pnpm lint` lint 无新增违规
+- [x] 运行 `pnpm -C apps/desktop storybook:build` Storybook 可构建
+- [x] 确认文件行数：
   - `AiPanel.tsx` ≤ 300 行
   - `AiPanelTabBar.tsx` ≤ 200 行
   - `AiMessageList.tsx` ≤ 300 行
@@ -296,8 +284,8 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
   - `AiProposalView.tsx` ≤ 300 行
   - `AiEmptyState.tsx` ≤ 100 行
   - `AiUsageStats.tsx` ≤ 100 行
-- [ ] 确认拆分后各文件之间无循环依赖
-- [ ] 视觉验收——逐项目视比对：
+- [x] 确认拆分后各文件之间无循环依赖
+- [x] 视觉验收——逐项目视比对：
   - Tab UI 对齐 `14-ai-panel.html`
   - AI 消息 accent 左边框可见
   - 空状态 sunburst icon 渲染且有旋转动画
@@ -307,7 +295,7 @@ AiPanel 的拆分测试采用 **三层防护** 策略：
   - ErrorGuideCard 三色等级可见
   - 使用量统计分行展示
 - [ ] 确认 0 处新增 Tailwind arbitrary 色值 / 字号
-- [ ] 创建 PR（含 `Closes #N`），附视觉对比截图 + 拆分前后文件结构对比
+- [x] 创建 PR（含 `Closes #N`），附视觉对比截图 + 拆分前后文件结构对比
 
 ---
 

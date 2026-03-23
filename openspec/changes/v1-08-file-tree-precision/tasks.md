@@ -1,3 +1,5 @@
+> ⚠️ 本 change 已拆分为 micro-changes: v1-08a, v1-08b。以下为历史记录。
+
 # Tasks: V1-08 文件树像素精修
 
 - **GitHub Issue**: 待创建

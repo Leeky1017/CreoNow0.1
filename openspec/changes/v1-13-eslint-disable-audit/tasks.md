@@ -1,5 +1,7 @@
 # Tasks: V1-13 eslint-disable 审计清扫
 
+> ⚠️ 本 change 已拆分为 micro-changes: v1-13a。以下为历史记录。
+
 - **GitHub Issue**: 待创建
 - **分支**: `task/<N>-eslint-disable-audit`
 - **Delta Spec**: `openspec/changes/v1-13-eslint-disable-audit/specs/`

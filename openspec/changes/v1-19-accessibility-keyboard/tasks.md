@@ -1,6 +1,8 @@
 # Tasks: V1-19 Accessibility & Keyboard Navigation
 
-- **状态**: 待启动
+> ⚠️ 已拆分为 v1-19a-aria-gaps + v1-19b-keyboard-nav，本文件仅保留状态标记。
+
+- **状态**: 🔀 已拆分
 - **GitHub Issue**: 待创建
 - **分支**: `task/<N>-accessibility-keyboard`
 - **Delta Spec**: `renderer/src/`（ARIA 标记 + 键盘导航 + 高对比模式 + axe-core CI）
@@ -39,22 +41,24 @@
 
 ### 1A. 树形结构语义化
 
-- [ ] **P1A-1**: `FileTreePanel.tsx` — 容器添加 `role="tree"` + `aria-label="文件树"`
+- [x] **P1A-1**: `FileTreePanel.tsx` — 容器添加 `role="tree"` + `aria-label="文件树"` ✅ (line 85)
   - 文件：`renderer/src/features/files/FileTreePanel.tsx`
   - 测试：单元测试 `features/files/FileTreePanel.a11y.test.tsx`，验证 tree role 和 aria-label 渲染
-- [ ] **P1A-2**: `FileTreeNodeRow.tsx` — 节点添加 `role="treeitem"` + `aria-expanded` + `aria-level` + `aria-selected`
+- [ ] **P1A-2**: `FileTreeNodeRow.tsx` — 节点添加 `role="treeitem"` + `aria-expanded` + `aria-level` + `aria-selected` → **v1-19a**
   - 文件：`renderer/src/features/files/FileTreeNodeRow.tsx`
+  - 现状：仅有 aria-selected (line 123)，缺少 role="treeitem"、aria-expanded、aria-level
   - 测试：单元测试，验证各属性随节点状态（展开/折叠/选中/层级）正确变化
-- [ ] **P1A-3**: `OutlinePanel.tsx` — 容器添加 `role="tree"` + `aria-label="文档大纲"`，子节点添加 `role="treeitem"` + `aria-expanded` + `aria-level`
-  - 文件：`renderer/src/features/outline/OutlinePanel.tsx`
+- [x] **P1A-3**: `OutlinePanel.tsx` — 容器 `role="tree"` + 子节点 `role="treeitem"` + `aria-expanded` ✅
+  - 文件：`renderer/src/features/outline/OutlinePanel.tsx` (role="tree" line 204)
+  - 文件：`renderer/src/features/outline/OutlineNodeItem.tsx` (role="treeitem" line 257, aria-expanded line 259)
   - 测试：单元测试 `features/outline/OutlinePanel.a11y.test.tsx`
 
 ### 1B. 列表与动态区域语义化
 
-- [ ] **P1B-1**: `AiMessageList.tsx` — 容器添加 `role="log"` + `aria-live="polite"` + `aria-label`；加载中状态添加 `aria-busy="true"`
+- [x] **P1B-1**: `AiMessageList.tsx` — 容器添加 `role="log"` + `aria-live="polite"` + `aria-label`；加载中状态添加 `aria-busy="true"` ✅ (aria-live line 396)
   - 文件：`renderer/src/features/ai/AiMessageList.tsx`
   - 测试：单元测试 `features/ai/AiMessageList.a11y.test.tsx`，验证 aria-live 和 aria-busy 随状态变化
-- [ ] **P1B-2**: 搜索结果列表 — 确认 `role="list"` / `role="listitem"` 正确标记
+- [ ] **P1B-2**: 搜索结果列表 — 确认 `role="list"` / `role="listitem"` 正确标记 → **v1-19a**
   - 文件：`renderer/src/features/search/` 下相关组件
   - 测试：单元测试，验证列表语义
 - [ ] **P1B-3**: 版本历史列表 — 确认 `role="list"` / `role="listitem"` 正确标记
@@ -146,11 +150,11 @@
 
 ### 3A. `prefers-contrast: more` 支持
 
-- [ ] **P3A-1**: 在 `tokens.css` 中添加 `@media (prefers-contrast: more)` 规则，覆盖核心 Design Token
+- [x] **P3A-1**: 在 `tokens.css` 中添加 `@media (prefers-contrast: more)` 规则 ✅ (line 517)
   - 文件：`renderer/src/styles/tokens.css`
   - 覆盖内容：`--color-border-*`（增强边框可见性）、`--color-text-muted`（提升弱文本对比度）、`--color-bg-hover`（增强悬停反馈）、`--shadow-*`（增强阴影可见性）
   - 测试：单元测试 `styles/high-contrast.test.ts`——验证 `prefers-contrast: more` media query 存在且覆盖关键 token
-- [ ] **P3A-2**: 在 `design/system/01-tokens.css` 中同步添加高对比模式 token 定义（如 design 层维护 token 源）
+- [x] **P3A-2**: 在 `design/system/01-tokens.css` 中同步添加高对比模式 token 定义 ✅ (line 646)
   - 文件：`design/system/01-tokens.css`
 
 ### 3B. `forced-colors: active` 支持（Windows 高对比模式）

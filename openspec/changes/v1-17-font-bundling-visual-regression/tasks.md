@@ -30,15 +30,15 @@
 
 ## Phase 0: 准备
 
-- [ ] 阅读 `AGENTS.md` 和 `design/DESIGN_DECISIONS.md` §4 Typography 映射表
-- [ ] 阅读 `docs/references/design-ui-architecture.md` 字体与阴影相关章节
-- [ ] 阅读 `apps/desktop/renderer/src/styles/fonts.css` 全文（当前 251 字节，仅有 `:root` CSS 变量，无 `@font-face`）
-- [ ] 阅读 `apps/desktop/renderer/src/styles/main.css` 全文，关注 `@theme` 块中字体/阴影导出现状
-- [ ] 阅读 `design/system/01-tokens.css`，关注阴影 token 区段（L168-171：sm/md/lg/xl）
-- [ ] 阅读 `apps/desktop/renderer/src/styles/tokens.css`，确认与 `01-tokens.css` 的 shadow 同步关系
-- [ ] 阅读 `apps/desktop/tests/visual/playwright.visual.config.ts`，理解现有视觉回归配置（maxDiffPixelRatio: 0.01）
-- [ ] 阅读 `apps/desktop/tests/visual/*.visual.spec.ts`（3 个 spec 文件），理解现有 106 个基线截图的覆盖范围
-- [ ] 阅读 `docs/references/testing/README.md` 了解测试规范
+- [x] 阅读 `AGENTS.md` 和 `design/DESIGN_DECISIONS.md` §4 Typography 映射表
+- [x] 阅读 `docs/references/design-ui-architecture.md` 字体与阴影相关章节
+- [x] 阅读 `apps/desktop/renderer/src/styles/fonts.css` 全文（当前 251 字节，仅有 `:root` CSS 变量，无 `@font-face`）
+- [x] 阅读 `apps/desktop/renderer/src/styles/main.css` 全文，关注 `@theme` 块中字体/阴影导出现状
+- [x] 阅读 `design/system/01-tokens.css`，关注阴影 token 区段（L168-171：sm/md/lg/xl）
+- [x] 阅读 `apps/desktop/renderer/src/styles/tokens.css`，确认与 `01-tokens.css` 的 shadow 同步关系
+- [x] 阅读 `apps/desktop/tests/visual/playwright.visual.config.ts`，理解现有视觉回归配置（maxDiffPixelRatio: 0.01）
+- [x] 阅读 `apps/desktop/tests/visual/*.visual.spec.ts`（3 个 spec 文件），理解现有 106 个基线截图的覆盖范围
+- [x] 阅读 `docs/references/testing/README.md` 了解测试规范
 
 ---
 
@@ -50,11 +50,11 @@
 
 编写测试验证 `apps/desktop/renderer/src/assets/fonts/` 下 woff2 文件的存在性和大小：
 
-- [ ] 测试：`Inter-Regular.woff2`、`Inter-Medium.woff2`、`Inter-SemiBold.woff2`、`Inter-Light.woff2` 存在
-- [ ] 测试：`Lora-Regular.woff2`、`Lora-Medium.woff2`、`Lora-SemiBold.woff2`、`Lora-Bold.woff2` 存在
-- [ ] 测试：`Lora-Italic.woff2`、`Lora-MediumItalic.woff2`、`Lora-SemiBoldItalic.woff2`、`Lora-BoldItalic.woff2` 存在
-- [ ] 测试：`JetBrainsMono-Regular.woff2`、`JetBrainsMono-Medium.woff2` 存在
-- [ ] 测试：所有 woff2 文件总大小 ≤ 500KB
+- [x] 测试：`Inter-Regular.woff2`、`Inter-Medium.woff2`、`Inter-SemiBold.woff2`、`Inter-Light.woff2` 存在
+- [x] 测试：`Lora-Regular.woff2`、`Lora-Medium.woff2`、`Lora-SemiBold.woff2`、`Lora-Bold.woff2` 存在
+- [x] 测试：`Lora-Italic.woff2`、`Lora-MediumItalic.woff2`、`Lora-SemiBoldItalic.woff2`、`Lora-BoldItalic.woff2` 存在
+- [x] 测试：`JetBrainsMono-Regular.woff2`、`JetBrainsMono-Medium.woff2` 存在
+- [x] 测试：所有 woff2 文件总大小 ≤ 500KB
 
 **文件**: `apps/desktop/tests/lint/font-bundling-v1-17.test.ts`
 
@@ -64,12 +64,12 @@
 
 编写测试验证 `fonts.css` 的 `@font-face` 声明完整且字体声明一致：
 
-- [ ] 测试：`fonts.css` 包含 ≥ 12 条 `@font-face` 声明
-- [ ] 测试：每条 `@font-face` 使用 `font-display: swap`
-- [ ] 测试：`fonts.css` 的 `--font-family-body` 包含 `Lora`（修复当前缺失）
-- [ ] 测试：`fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-ui` 值相同
-- [ ] 测试：`fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-body` 值相同
-- [ ] 测试：`fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-mono` 值相同
+- [x] 测试：`fonts.css` 包含 ≥ 12 条 `@font-face` 声明
+- [x] 测试：每条 `@font-face` 使用 `font-display: swap`
+- [x] 测试：`fonts.css` 的 `--font-family-body` 包含 `Lora`（修复当前缺失）
+- [x] 测试：`fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-ui` 值相同
+- [x] 测试：`fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-body` 值相同
+- [x] 测试：`fonts.css`、`main.css`、`tokens.css` 三处 `--font-family-mono` 值相同
 
 **文件**: `apps/desktop/tests/lint/font-bundling-v1-17.test.ts`（同 Task 1.1）
 
@@ -79,10 +79,10 @@
 
 编写测试验证 shadow token xs/2xl 的定义和 @theme 导出：
 
-- [ ] 测试：`01-tokens.css` 包含 `--shadow-xs`，值格式正确
-- [ ] 测试：`01-tokens.css` 包含 `--shadow-2xl`，值格式正确
-- [ ] 测试：`tokens.css`（renderer）包含 `--shadow-xs` 和 `--shadow-2xl`（同步）
-- [ ] 测试：`main.css` @theme 块导出 `--shadow-xs` 和 `--shadow-2xl`
+- [x] 测试：`01-tokens.css` 包含 `--shadow-xs`，值格式正确
+- [x] 测试：`01-tokens.css` 包含 `--shadow-2xl`，值格式正确
+- [x] 测试：`tokens.css`（renderer）包含 `--shadow-xs` 和 `--shadow-2xl`（同步）
+- [x] 测试：`main.css` @theme 块导出 `--shadow-xs` 和 `--shadow-2xl`
 
 **文件**: `apps/desktop/tests/lint/font-bundling-v1-17.test.ts`（同 Task 1.1）
 
@@ -90,7 +90,7 @@
 
 **映射验收标准**: AC-6
 
-- [ ] 测试：`apps/desktop/renderer/src/` 中 `shadow-[var(--shadow-2xl)]` 的匹配数为 0（当前 3 处需替换为 `shadow-2xl`）
+- [x] 测试：`apps/desktop/renderer/src/` 中 `shadow-[var(--shadow-2xl)]` 的匹配数为 0（当前 3 处需替换为 `shadow-2xl`）
 
 **文件**: `apps/desktop/tests/lint/font-bundling-v1-17.test.ts`（同 Task 1.1）
 
@@ -102,10 +102,10 @@
 
 在 `apps/desktop/renderer/src/assets/fonts/` 下放置以下字体文件（自 Google Fonts 获取 woff2 子集）：
 
-- [ ] **Inter**：Regular (400) / Medium (500) / SemiBold (600) / Light (300)，latin + latin-ext 子集
-- [ ] **Lora**：Regular (400) / Medium (500) / SemiBold (600) / Bold (700) + 对应 Italic variants，latin 子集
-- [ ] **JetBrains Mono**：Regular (400) / Medium (500)，latin 子集
-- [ ] 验证总大小 ≤ 500KB
+- [x] **Inter**：Regular (400) / Medium (500) / SemiBold (600) / Light (300)，latin + latin-ext 子集
+- [x] **Lora**：Regular (400) / Medium (500) / SemiBold (600) / Bold (700) + 对应 Italic variants，latin 子集
+- [x] **JetBrains Mono**：Regular (400) / Medium (500)，latin 子集
+- [x] 验证总大小 ≤ 500KB
 
 **文件**: `apps/desktop/renderer/src/assets/fonts/*.woff2`（新增 12-16 个文件）
 
@@ -113,11 +113,11 @@
 
 在 `apps/desktop/renderer/src/styles/fonts.css` 中重写：
 
-- [ ] 为每个字重编写 `@font-face` 声明，`src: url('../assets/fonts/XXX.woff2') format('woff2')`，使用 `font-display: swap`
-- [ ] 统一 `--font-family-body` 为 `"Lora", "Crimson Pro", Georgia, serif`（与 `main.css` 对齐，修复当前 `ui-serif, Georgia, serif` 的错误）
-- [ ] 统一 `--font-family-ui` 为 `"Inter", system-ui, sans-serif`
-- [ ] 统一 `--font-family-mono` 为 `"JetBrains Mono", "Fira Code", Consolas, monospace`
-- [ ] 确认 Vite 正确处理 woff2 资源的 asset hash 和路径（检查构建产物）
+- [x] 为每个字重编写 `@font-face` 声明，`src: url('../assets/fonts/XXX.woff2') format('woff2')`，使用 `font-display: swap`
+- [x] 统一 `--font-family-body` 为 `"Lora", "Crimson Pro", Georgia, serif`（与 `main.css` 对齐，修复当前 `ui-serif, Georgia, serif` 的错误）
+- [x] 统一 `--font-family-ui` 为 `"Inter", system-ui, sans-serif`
+- [x] 统一 `--font-family-mono` 为 `"JetBrains Mono", "Fira Code", Consolas, monospace`
+- [x] 确认 Vite 正确处理 woff2 资源的 asset hash 和路径（检查构建产物）
 
 **文件**: `apps/desktop/renderer/src/styles/fonts.css`
 
@@ -125,8 +125,8 @@
 
 在 `design/system/01-tokens.css` 中新增（L168 附近，sm 之前 / xl 之后）：
 
-- [ ] `--shadow-xs: 0 1px 1px var(--color-shadow);`——细微阴影，用于 Badge、Chip 等小型元素
-- [ ] `--shadow-2xl: 0 24px 48px var(--color-shadow);`——强浮层阴影，用于 Modal / Dialog / Dropdown
+- [x] `--shadow-xs: 0 1px 1px var(--color-shadow);`——细微阴影，用于 Badge、Chip 等小型元素
+- [x] `--shadow-2xl: 0 24px 48px var(--color-shadow);`——强浮层阴影，用于 Modal / Dialog / Dropdown
 
 **文件**: `design/system/01-tokens.css`
 
@@ -134,8 +134,8 @@
 
 在 `apps/desktop/renderer/src/styles/main.css` 的 `@theme` 块中追加 shadow 导出（当前 @theme 无 shadow 条目）：
 
-- [ ] 追加 `--shadow-xs`、`--shadow-sm`、`--shadow-md`、`--shadow-lg`、`--shadow-xl`、`--shadow-2xl` 的 Tailwind 映射
-- [ ] 使 `shadow-xs` / `shadow-sm` / ... / `shadow-2xl` 成为有效 Tailwind utility class
+- [x] 追加 `--shadow-xs`、`--shadow-sm`、`--shadow-md`、`--shadow-lg`、`--shadow-xl`、`--shadow-2xl` 的 Tailwind 映射
+- [x] 使 `shadow-xs` / `shadow-sm` / ... / `shadow-2xl` 成为有效 Tailwind utility class
 
 **文件**: `apps/desktop/renderer/src/styles/main.css`
 
@@ -143,15 +143,15 @@
 
 将 3 处 `shadow-[var(--shadow-2xl)]` 替换为标准 `shadow-2xl`：
 
-- [ ] `VersionHistoryPanel.stories.tsx` L182
-- [ ] `VersionHistoryPanel.stories.tsx` L344
-- [ ] `QualityGatesPanel.stories.tsx` L267
+- [x] `VersionHistoryPanel.stories.tsx` L182
+- [x] `VersionHistoryPanel.stories.tsx` L344
+- [x] `QualityGatesPanel.stories.tsx` L267
 
 **文件**: 3 个 `.stories.tsx` 文件
 
 ### Task 2.6: `apps/desktop/renderer/src/styles/tokens.css` 同步
 
-- [ ] 将 `--shadow-xs` 和 `--shadow-2xl` 同步到 `apps/desktop/renderer/src/styles/tokens.css` 的阴影区段
+- [x] 将 `--shadow-xs` 和 `--shadow-2xl` 同步到 `apps/desktop/renderer/src/styles/tokens.css` 的阴影区段
 
 **文件**: `apps/desktop/renderer/src/styles/tokens.css`
 
@@ -159,9 +159,9 @@
 
 字体打包后重建全部视觉基线截图：
 
-- [ ] 运行 `pnpm -C apps/desktop storybook:build` 生成最新 Storybook 静态产物
-- [ ] 运行 `pnpm -C apps/desktop test:visual:update` 重新生成所有 106+ 个基线截图
-- [ ] 抽查 ≥ 5 个基线截图，确认字体已从系统字体变为 Inter/Lora/JetBrains Mono
+- [x] 运行 `pnpm -C apps/desktop storybook:build` 生成最新 Storybook 静态产物
+- [x] 运行 `pnpm -C apps/desktop test:visual:update` 重新生成所有 106+ 个基线截图
+- [x] 抽查 ≥ 5 个基线截图，确认字体已从系统字体变为 Inter/Lora/JetBrains Mono
 
 **文件**: `apps/desktop/tests/visual/__screenshots__/*.png`（全部更新）
 
@@ -169,15 +169,15 @@
 
 ## Phase 3: Verification（验证）
 
-- [ ] 运行 Phase 1 全部测试（`font-bundling-v1-17.test.ts`），确认全绿
-- [ ] 运行 `pnpm -C apps/desktop vitest run` 全量测试通过
-- [ ] 运行 `pnpm typecheck` 类型检查通过
-- [ ] 运行 `pnpm lint` lint 无新增违规
-- [ ] 运行 `pnpm -C apps/desktop storybook:build` Storybook 可构建
-- [ ] 运行 `pnpm -C apps/desktop test:visual` 视觉回归测试通过（新基线 vs 新基线，应 0 diff）
-- [ ] 确认 `fonts.css` / `main.css` / `tokens.css` 三处 `--font-family-*` 完全一致
-- [ ] 确认 `01-tokens.css` shadow 档数从 4 增至 6（sm/md/lg/xl → xs/sm/md/lg/xl/2xl）
-- [ ] 确认 `shadow-[var(--shadow-2xl)]` 残留 = 0
+- [x] 运行 Phase 1 全部测试（`font-bundling-v1-17.test.ts`），确认全绿
+- [x] 运行 `pnpm -C apps/desktop vitest run` 全量测试通过
+- [x] 运行 `pnpm typecheck` 类型检查通过
+- [x] 运行 `pnpm lint` lint 无新增违规
+- [x] 运行 `pnpm -C apps/desktop storybook:build` Storybook 可构建
+- [x] 运行 `pnpm -C apps/desktop test:visual` 视觉回归测试通过（新基线 vs 新基线，应 0 diff）
+- [x] 确认 `fonts.css` / `main.css` / `tokens.css` 三处 `--font-family-*` 完全一致
+- [x] 确认 `01-tokens.css` shadow 档数从 4 增至 6（sm/md/lg/xl → xs/sm/md/lg/xl/2xl）
+- [x] 确认 `shadow-[var(--shadow-2xl)]` 残留 = 0
 
 ---
 
