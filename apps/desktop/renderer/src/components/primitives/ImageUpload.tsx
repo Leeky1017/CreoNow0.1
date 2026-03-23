@@ -160,19 +160,7 @@ export function ImageUpload({
     .join(" ");
 
   return (
-    <div
-      role="button"
-      tabIndex={disabled ? -1 : 0}
-      className={containerStyles}
-      onDragEnter={handleDragActivate}
-      onDragLeave={handleDragLeave}
-      onDragOver={handleDragActivate}
-      onDrop={handleDrop}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      aria-disabled={disabled}
-      data-testid="image-upload"
-    >
+    <>
       {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: hidden file <input> for native file picker */}
       <input
         ref={fileInputRef}
@@ -181,20 +169,36 @@ export function ImageUpload({
         onChange={handleFileChange}
         disabled={disabled}
         className="hidden"
+        aria-hidden="true"
+        tabIndex={-1}
         data-testid="image-upload-input"
       />
-      {previewUrl ? (
-        <ImagePreview
-          previewUrl={previewUrl}
-          disabled={disabled}
-          onRemove={handleRemove}
-        />
-      ) : (
-        <ImageUploadPlaceholder
-          placeholder={resolvedPlaceholder}
-          hint={resolvedHint}
-        />
-      )}
-    </div>
+      <div
+        role="button"
+        tabIndex={disabled ? -1 : 0}
+        className={containerStyles}
+        onDragEnter={handleDragActivate}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragActivate}
+        onDrop={handleDrop}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        aria-disabled={disabled}
+        data-testid="image-upload"
+      >
+        {previewUrl ? (
+          <ImagePreview
+            previewUrl={previewUrl}
+            disabled={disabled}
+            onRemove={handleRemove}
+          />
+        ) : (
+          <ImageUploadPlaceholder
+            placeholder={resolvedPlaceholder}
+            hint={resolvedHint}
+          />
+        )}
+      </div>
+    </>
   );
 }
