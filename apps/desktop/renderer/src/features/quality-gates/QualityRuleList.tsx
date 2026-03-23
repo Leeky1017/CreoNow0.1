@@ -118,9 +118,10 @@ function SettingsToggle({
             : "bg-[var(--color-bg-hover)] border-[var(--color-border-default)]"
         } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
       >
-        {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：toggle knob 非标尺寸 left-[3px] w-[18px] h-[18px]，无对应 Design Token */}
+        {/* 审计：v1-18d #1243 KEEP — left-[3px] 无标准 token，指示器偏移为设计规范固定值 */}
+        {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：toggle knob 非标尺寸 left-[3px]，无对应 Design Token */}
         <span
-          className={`absolute left-[3px] w-[18px] h-[18px] rounded-full transition-transform duration-[var(--duration-slow)] pointer-events-none ${
+          className={`absolute left-[3px] w-4.5 h-4.5 rounded-full transition-transform duration-[var(--duration-slow)] pointer-events-none ${
             checked
               ? "translate-x-[20px] bg-[var(--color-fg-inverse)]"
               : "translate-x-0 bg-[var(--color-fg-subtle)]"

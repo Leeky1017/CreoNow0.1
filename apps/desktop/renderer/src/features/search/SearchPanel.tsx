@@ -194,7 +194,8 @@ export function SearchPanel(props: {
         onClick={onClose}
       />
       {/* 审计：v1-13 #007 KEEP */}
-      {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：search modal width per design spec (w-[640px]) */}
+      {/* 审计：v1-18d #1243 KEEP — max-h-[80vh] 无标准 token，搜索面板最大高度为视口相对值 */}
+      {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：search modal width per design spec (w-[640px]), max-h-[80vh] 无标准 Tailwind utility */}
       <div className="relative w-[640px] max-h-[80vh] flex flex-col rounded-xl overflow-hidden z-[var(--z-modal)] bg-[var(--color-bg-surface)] border border-[var(--color-separator)] shadow-[0_24px_48px_-12px_var(--color-shadow)] motion-safe:animate-[slideDown_0.3s_ease-out]">
         {/* Header */}
         <div className="flex flex-col border-b border-[var(--color-separator)] bg-[var(--color-bg-surface)]">

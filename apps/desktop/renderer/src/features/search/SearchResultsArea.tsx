@@ -190,6 +190,8 @@ export function SearchResultsArea(props: {
   const useVirtual = virtualItems.length > 0;
 
   if (useVirtual) {
+    // 审计：v1-18d #1243 KEEP — max-h-[60vh] 无标准 token，搜索结果区域最大高度为视口相对值
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：max-h-[60vh] 无标准 Tailwind utility
     return (
       <div ref={scrollRef} className="overflow-y-auto max-h-[60vh]">
         <div
