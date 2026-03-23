@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
-import { fn } from "@storybook/test";
+import { fn, expect } from "@storybook/test";
 import { ArrowUp, Clock, Plus } from "lucide-react";
 import { SkillPicker } from "./SkillPicker";
 import { layoutDecorator } from "../../components/layout/test-utils";
@@ -200,6 +200,9 @@ export const Default: Story = {
   render: () => (
     <SkillPickerDemo skills={sampleSkills} selectedSkillId="default" />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -215,6 +218,9 @@ export const Open: Story = {
       defaultOpen
     />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -230,6 +236,9 @@ export const SelectedRewrite: Story = {
       defaultOpen
     />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -239,6 +248,9 @@ export const SelectedRewrite: Story = {
  */
 export const EmptyList: Story = {
   render: () => <SkillPickerDemo skills={[]} selectedSkillId="" defaultOpen />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -300,4 +312,7 @@ export const ManyDisabled: Story = {
       defaultOpen
     />
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

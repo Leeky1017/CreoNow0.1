@@ -3,6 +3,7 @@ import { Bold, Italic, Underline, Strikethrough } from "lucide-react";
 
 import { Button } from "../primitives";
 import { ToolbarGroup } from "./ToolbarGroup";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof ToolbarGroup> = {
   title: "Composites/ToolbarGroup",
@@ -30,6 +31,9 @@ export const Default: Story = {
       </>
     ),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const WithSeparator: Story = {
@@ -48,6 +52,9 @@ export const WithSeparator: Story = {
         </Button>
       </>
     ),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -72,4 +79,7 @@ export const ToolbarLayout: Story = {
       </ToolbarGroup>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

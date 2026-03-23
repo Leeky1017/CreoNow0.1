@@ -2361,51 +2361,44 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-testid="right-panel-scroll-viewport"
       >
         <div
-          class="flex flex-col gap-4 p-4 h-full overflow-auto"
-          data-testid="quality-panel"
+          class="p-4 space-y-3"
         >
-          <h3
-            class="font-[var(--font-family-ui)] text-sm font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] font-bold text-[15px]"
-          >
-            Quality
-          </h3>
           <div
-            class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-4 rounded-[var(--radius-md)]"
-          >
-            <span
-              class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] text-center"
-              data-testid="quality-panel-no-project"
-            >
-              No project selected
-            </span>
-          </div>
-          <section>
-            <h4
-              class="font-[var(--font-family-ui)] text-[13px] font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] mb-2 font-semibold text-[13px]"
-            >
-              Quality Check
-            </h4>
-            <div
-              class="rounded-[var(--radius-xl)] bg-[var(--color-bg-surface)] transition-all duration-[var(--duration-fast)] ease-[var(--ease-default)] border border-[var(--color-border-default)] p-[var(--space-section-gap)] p-3 rounded-[var(--radius-md)]"
-            >
-              <div
-                class="flex items-center justify-between"
-              >
-                <div
-                  class="flex items-center gap-2"
-                >
-                  <span
-                    class="inline-block w-2 h-2 rounded-full bg-[var(--color-fg-muted)]"
-                  />
-                  <span
-                    class="text-xs leading-[1.4] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)]"
-                  >
-                    Loading quality check status...
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
+            aria-busy="true"
+            aria-label="Loading..."
+            aria-valuemax="100"
+            aria-valuemin="0"
+            class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-5 w-32"
+            role="progressbar"
+            style="width: 100%; height: 1em;"
+          />
+          <div
+            aria-busy="true"
+            aria-label="Loading..."
+            aria-valuemax="100"
+            aria-valuemin="0"
+            class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-20 w-full"
+            role="progressbar"
+            style="width: 100%; height: 1em;"
+          />
+          <div
+            aria-busy="true"
+            aria-label="Loading..."
+            aria-valuemax="100"
+            aria-valuemin="0"
+            class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-5 w-24"
+            role="progressbar"
+            style="width: 100%; height: 1em;"
+          />
+          <div
+            aria-busy="true"
+            aria-label="Loading..."
+            aria-valuemax="100"
+            aria-valuemin="0"
+            class="bg-[var(--color-bg-hover)] overflow-hidden relative rounded-[var(--radius-sm)] before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-[var(--color-bg-active)] before:to-transparent before:animate-shimmer h-20 w-full"
+            role="progressbar"
+            style="width: 100%; height: 1em;"
+          />
         </div>
       </div>
     </div>
@@ -2471,7 +2464,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-testid="right-panel-scroll-viewport"
       >
         <div
-          class="flex flex-col h-full"
+          class="tab-crossfade flex flex-col h-full"
           data-testid="info-panel"
         >
           <div
@@ -2593,7 +2586,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-testid="right-panel-scroll-viewport"
       >
         <div
-          class="flex flex-col h-full"
+          class="tab-crossfade flex flex-col h-full"
           data-testid="info-panel"
         >
           <div

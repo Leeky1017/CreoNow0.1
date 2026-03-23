@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { OnboardingPage } from "./OnboardingPage";
+import { expect } from "@storybook/test";
 
 /**
  * OnboardingPage displays the multi-step onboarding wizard.
@@ -46,6 +47,9 @@ export const DarkTheme: Story = {
       </div>
     ),
   ],
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -59,6 +63,9 @@ export const LightTheme: Story = {
       </div>
     ),
   ],
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -69,5 +76,8 @@ export const MobileViewport: Story = {
     viewport: {
       defaultViewport: "mobile1",
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

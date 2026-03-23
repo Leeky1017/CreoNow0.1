@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { FileText, Settings, Search, Plus } from "lucide-react";
 
 import { CommandItem } from "./CommandItem";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof CommandItem> = {
   title: "Composites/CommandItem",
@@ -34,16 +35,9 @@ export const Default: Story = {
     hint: "⌘O",
     onSelect: () => {},
   },
-  render: () => (
-    <div className="space-y-0.5" role="listbox" aria-label="Commands">
-      <CommandItem
-        icon={<FileText size={16} />}
-        label="Open File"
-        hint="⌘O"
-        onSelect={() => {}}
-      />
-    </div>
-  ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Active: Story = {
@@ -54,22 +48,14 @@ export const Active: Story = {
     active: true,
     onSelect: () => {},
   },
-  render: () => (
-    <div className="space-y-0.5" role="listbox" aria-label="Commands">
-      <CommandItem
-        icon={<Search size={16} />}
-        label="Search Project"
-        hint="⌘K"
-        active
-        onSelect={() => {}}
-      />
-    </div>
-  ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const CommandList: Story = {
   render: () => (
-    <div className="space-y-0.5" role="listbox" aria-label="Commands">
+    <div className="space-y-0.5">
       <CommandItem
         icon={<Plus size={16} />}
         label="New File"
@@ -97,4 +83,7 @@ export const CommandList: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

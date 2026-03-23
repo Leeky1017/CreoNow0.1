@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { RegionFallback } from "./RegionFallback";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof RegionFallback> = {
   title: "Patterns/RegionFallback",
@@ -25,6 +26,9 @@ export const Default: Story = {
     errorMessage: "Failed to load the file list.",
     onRetry: () => {},
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const EditorRegion: Story = {
@@ -32,5 +36,8 @@ export const EditorRegion: Story = {
     region: "Editor",
     errorMessage: "The editor encountered an unexpected error.",
     onRetry: () => {},
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

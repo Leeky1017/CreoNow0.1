@@ -171,7 +171,7 @@ describe("MemoryPanel", () => {
     );
 
     expect(
-      await screen.findByText("Distilling preferences..."),
+      await screen.findByTestId("memory-panel-skeleton"),
     ).toBeInTheDocument();
   });
 

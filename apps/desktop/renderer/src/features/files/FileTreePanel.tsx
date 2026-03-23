@@ -1,10 +1,12 @@
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 import { Button, Text } from "../../components/primitives";
 import { PanelContainer } from "../../components/composites/PanelContainer";
 import { EmptyState } from "../../components/patterns/EmptyState";
-import { LoadingState } from "../../components/patterns/LoadingState";
 import { getHumanErrorMessage } from "../../lib/errorMessages";
+import { FileTreeSkeleton } from "./FileTreeSkeleton";
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 
 import type { FileTreePanelProps } from "./fileTreeTypes";
@@ -14,6 +16,8 @@ import { useFileTreeState } from "./useFileTreeState";
 // Re-export types for backward compatibility
 export type { FileTreePanelProps } from "./fileTreeTypes";
 
+const FILE_TREE_ROW_HEIGHT = 36;
+
 export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
   const { t } = useTranslation();
   const state = useFileTreeState(
@@ -21,6 +25,16 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
     t,
     props.initialRenameDocumentId,
   );
+
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const virtualizer = useVirtualizer({
+    count: state.visibleNodes.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => FILE_TREE_ROW_HEIGHT,
+    overscan: 10,
+  });
 
   return (
     <PanelContainer
@@ -66,16 +80,21 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
       ) : null}
 
       <div
+        ref={scrollRef}
         data-testid="file-tree-list"
-        className="flex-1 overflow-auto scroll-shadow-y min-h-0 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-ring-focus)]"
+        role="tree"
+        aria-label={t("files.tree.panelTitle")}
+        aria-activedescendant={
+          (state.focusedDocumentId ?? state.currentDocumentId)
+            ? `tree-node-${state.focusedDocumentId ?? state.currentDocumentId}`
+            : undefined
+        }
+        tabIndex={0}
+        onKeyDown={state.onTreeKeyDown}
+        className="flex-1 overflow-y-auto scroll-shadow-y min-h-0 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-ring-focus)]"
       >
         {state.bootstrapStatus !== "ready" ? (
-          <LoadingState
-            variant="spinner"
-            size="sm"
-            text={t("files.tree.loading")}
-            className="p-3"
-          />
+          <FileTreeSkeleton />
         ) : state.items.length === 0 ? (
           <EmptyState
             variant="files"
@@ -85,46 +104,96 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
             onAction={() => void state.onCreate("chapter")}
           />
         ) : (
-          <div
-            role="tree"
-            aria-label={t("files.tree.panelTitle")}
-            aria-activedescendant={
-              (state.focusedDocumentId ?? state.currentDocumentId)
-                ? `tree-node-${state.focusedDocumentId ?? state.currentDocumentId}`
-                : undefined
+          (() => {
+            const virtualItems = virtualizer.getVirtualItems();
+            const useVirtual = virtualItems.length > 0;
+            if (useVirtual) {
+              return (
+                <div
+                  className="relative p-2"
+                  style={{ height: `${virtualizer.getTotalSize()}px` }}
+                >
+                  {virtualItems.map((virtualRow) => {
+                    const entry = state.visibleNodes[virtualRow.index];
+                    return (
+                      <div
+                        key={entry.node.documentId}
+                        className="absolute left-0 right-0 px-0 list-item-enter"
+                        style={{
+                          height: `${virtualRow.size}px`,
+                          transform: `translateY(${virtualRow.start}px)`,
+                        }}
+                      >
+                        <FileTreeNodeRow
+                          ref={state.inputRef}
+                          entry={entry}
+                          focusedDocumentId={state.focusedDocumentId}
+                          currentDocumentId={state.currentDocumentId}
+                          editing={state.editing}
+                          setEditing={state.setEditing}
+                          draggingDocumentId={state.draggingDocumentId}
+                          isExiting={state.exitingDocumentIds.has(
+                            entry.node.documentId,
+                          )}
+                          setDraggingDocumentId={state.setDraggingDocumentId}
+                          dropTarget={state.dropTarget}
+                          setDropTarget={state.setDropTarget}
+                          setFocusedDocumentId={state.setFocusedDocumentId}
+                          expandedFolderIds={state.expandedFolderIds}
+                          toggleFolderExpanded={state.toggleFolderExpanded}
+                          resolveMoveTargetFolder={
+                            state.resolveMoveTargetFolder
+                          }
+                          onSelect={state.onSelect}
+                          onCopy={state.onCopy}
+                          onDelete={state.onDelete}
+                          onCommitRename={state.onCommitRename}
+                          onToggleStatus={state.onToggleStatus}
+                          onDropOnDocument={state.onDropOnDocument}
+                          onMoveDocumentToFolder={state.onMoveDocumentToFolder}
+                          onOpenVersionHistory={props.onOpenVersionHistory}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              );
             }
-            tabIndex={0}
-            onKeyDown={state.onTreeKeyDown}
-            className="flex flex-col gap-1 p-2"
-          >
-            {state.visibleNodes.map((entry) => (
-              <FileTreeNodeRow
-                key={entry.node.documentId}
-                ref={state.inputRef}
-                entry={entry}
-                focusedDocumentId={state.focusedDocumentId}
-                currentDocumentId={state.currentDocumentId}
-                editing={state.editing}
-                setEditing={state.setEditing}
-                draggingDocumentId={state.draggingDocumentId}
-                setDraggingDocumentId={state.setDraggingDocumentId}
-                dropTarget={state.dropTarget}
-                setDropTarget={state.setDropTarget}
-                setFocusedDocumentId={state.setFocusedDocumentId}
-                expandedFolderIds={state.expandedFolderIds}
-                toggleFolderExpanded={state.toggleFolderExpanded}
-                resolveMoveTargetFolder={state.resolveMoveTargetFolder}
-                onSelect={state.onSelect}
-                onCopy={state.onCopy}
-                onDelete={state.onDelete}
-                onCommitRename={state.onCommitRename}
-                onToggleStatus={state.onToggleStatus}
-                onDropOnDocument={state.onDropOnDocument}
-                onMoveDocumentToFolder={state.onMoveDocumentToFolder}
-                onOpenVersionHistory={props.onOpenVersionHistory}
-              />
-            ))}
-          </div>
+            return (
+              <div className="flex flex-col gap-1 p-2">
+                {state.visibleNodes.map((entry) => (
+                  <FileTreeNodeRow
+                    key={entry.node.documentId}
+                    ref={state.inputRef}
+                    entry={entry}
+                    focusedDocumentId={state.focusedDocumentId}
+                    currentDocumentId={state.currentDocumentId}
+                    editing={state.editing}
+                    setEditing={state.setEditing}
+                    draggingDocumentId={state.draggingDocumentId}
+                    isExiting={state.exitingDocumentIds.has(
+                      entry.node.documentId,
+                    )}
+                    setDraggingDocumentId={state.setDraggingDocumentId}
+                    dropTarget={state.dropTarget}
+                    setDropTarget={state.setDropTarget}
+                    setFocusedDocumentId={state.setFocusedDocumentId}
+                    expandedFolderIds={state.expandedFolderIds}
+                    toggleFolderExpanded={state.toggleFolderExpanded}
+                    resolveMoveTargetFolder={state.resolveMoveTargetFolder}
+                    onSelect={state.onSelect}
+                    onCopy={state.onCopy}
+                    onDelete={state.onDelete}
+                    onCommitRename={state.onCommitRename}
+                    onToggleStatus={state.onToggleStatus}
+                    onDropOnDocument={state.onDropOnDocument}
+                    onMoveDocumentToFolder={state.onMoveDocumentToFolder}
+                    onOpenVersionHistory={props.onOpenVersionHistory}
+                  />
+                ))}
+              </div>
+            );
+          })()
         )}
       </div>
 

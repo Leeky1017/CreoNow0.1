@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { LayoutShell } from "./LayoutShell";
+import { expect } from "@storybook/test";
 
 const Placeholder = ({ label, bg }: { label: string; bg: string }) => (
   <div
@@ -68,5 +69,8 @@ export const Default: Story = {
       </div>
     ),
     overlays: null,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

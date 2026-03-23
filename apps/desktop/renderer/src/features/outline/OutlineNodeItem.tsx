@@ -177,7 +177,7 @@ export interface OutlineItemRowProps {
   draggable: boolean;
 }
 
-export function OutlineItemRow({
+export const OutlineItemRow = React.memo(function OutlineItemRow({
   item,
   isActive,
   isSelected,
@@ -313,4 +313,4 @@ export function OutlineItemRow({
       </div>
     </div>
   );
-}
+});

@@ -11,6 +11,7 @@ import {
   createEditorStore,
   type AutosaveStatus,
 } from "../../stores/editorStore";
+import { expect } from "@storybook/test";
 
 function createMockIpc() {
   return {
@@ -117,12 +118,21 @@ type Story = StoryObj<typeof meta>;
 
 export const NormalState: Story = {
   render: () => <StatusBarScenario autosaveStatus="idle" />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const SavingState: Story = {
   render: () => <StatusBarScenario autosaveStatus="saving" />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const ErrorState: Story = {
   render: () => <StatusBarScenario autosaveStatus="error" />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

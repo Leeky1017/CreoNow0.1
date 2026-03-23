@@ -153,7 +153,7 @@ export function QualityPanel(): JSX.Element {
     return (
       <div
         data-testid="quality-panel"
-        className="flex flex-col gap-4 p-4 h-full overflow-auto"
+        className="tab-crossfade flex flex-col gap-4 p-4 h-full overflow-auto"
       >
         <Heading level="h3" className="font-bold text-[15px]">
           {t("rightPanel.quality.panelTitle")}
@@ -187,7 +187,10 @@ export function QualityPanel(): JSX.Element {
   }
 
   return (
-    <div data-testid="quality-panel" className="flex flex-col h-full">
+    <div
+      data-testid="quality-panel"
+      className="tab-crossfade flex flex-col h-full"
+    >
       {/* Summary section with real status */}
       <div className="p-4 space-y-4 border-b border-[var(--color-separator)]">
         <section>

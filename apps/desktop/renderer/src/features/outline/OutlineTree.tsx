@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { ScrollArea } from "../../components/primitives";
 import { EmptyState as EmptyStatePattern } from "../../components/patterns/EmptyState";
 import { File } from "lucide-react";
@@ -210,6 +211,8 @@ export interface OutlineTreeProps {
   onDrop: (e: React.DragEvent, targetId: string) => void;
 }
 
+const OUTLINE_ROW_HEIGHT = 36;
+
 export function OutlineTree({
   items,
   visibleItems,
@@ -241,6 +244,105 @@ export function OutlineTree({
   onDragLeave,
   onDrop,
 }: OutlineTreeProps) {
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const virtualizer = useVirtualizer({
+    count: visibleItems.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => OUTLINE_ROW_HEIGHT,
+    overscan: 10,
+  });
+
+  if (items.length === 0) {
+    return (
+      <ScrollArea
+        data-testid="outline-scroll"
+        viewportTestId="outline-scroll-viewport"
+        className="flex-1 min-h-0"
+        viewportClassName="h-full w-full overflow-y-auto scroll-shadow-y py-2"
+      >
+        <EmptyState />
+      </ScrollArea>
+    );
+  }
+
+  if (visibleItems.length === 0 && searchQuery) {
+    return (
+      <ScrollArea
+        data-testid="outline-scroll"
+        viewportTestId="outline-scroll-viewport"
+        className="flex-1 min-h-0"
+        viewportClassName="h-full w-full overflow-y-auto scroll-shadow-y py-2"
+      >
+        <NoResultsState query={searchQuery} />
+      </ScrollArea>
+    );
+  }
+
+  const virtualItems = virtualizer.getVirtualItems();
+  const useVirtual = virtualItems.length > 0;
+
+  if (useVirtual) {
+    return (
+      <div
+        ref={scrollRef}
+        data-testid="outline-scroll"
+        tabIndex={0}
+        onKeyDown={onTreeKeyDown}
+        className="flex-1 min-h-0 overflow-y-auto scroll-shadow-y py-2"
+      >
+        <div
+          className="relative flex flex-col"
+          role="tree"
+          aria-label={treeAriaLabel}
+          style={{ height: `${virtualizer.getTotalSize()}px` }}
+        >
+          {virtualItems.map((virtualRow) => {
+            const item = visibleItems[virtualRow.index];
+            return (
+              <div
+                key={item.id}
+                className="absolute left-0 right-0 list-item-enter"
+                style={{
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <OutlineItemRow
+                  item={item}
+                  isActive={activeId === item.id}
+                  isSelected={selectedIds.has(item.id)}
+                  isDragging={draggingId === item.id}
+                  dropPosition={dragOverId === item.id ? dropPosition : null}
+                  isEditing={editingId === item.id}
+                  editValue={editValue}
+                  wordCount={wordCounts?.[item.id]}
+                  hasChildItems={hasChildren(item, flatItems)}
+                  isCollapsed={collapsed.has(item.id)}
+                  onNavigate={() => onNavigate(item.id)}
+                  onDelete={() => onDelete(item.id)}
+                  onEditStart={() => onEditStart(item)}
+                  onEditChange={onEditChange}
+                  onEditCommit={onEditCommit}
+                  onEditCancel={onEditCancel}
+                  onToggleCollapse={() => onToggleCollapse(item.id)}
+                  onToggleSelect={(e) => onToggleSelect(item.id, e)}
+                  onDragStart={(e) => onDragStart(e, item.id)}
+                  onDragEnd={onDragEnd}
+                  onDragOver={(e) => onDragOver(e, item.id, item.level)}
+                  onDragLeave={onDragLeave}
+                  onDrop={(e) => onDrop(e, item.id)}
+                  draggable={draggable}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <ScrollArea
       data-testid="outline-scroll"
@@ -248,49 +350,43 @@ export function OutlineTree({
       className="flex-1 min-h-0"
       viewportClassName="h-full w-full overflow-y-auto scroll-shadow-y py-2"
     >
-      {items.length === 0 ? (
-        <EmptyState />
-      ) : visibleItems.length === 0 && searchQuery ? (
-        <NoResultsState query={searchQuery} />
-      ) : (
-        <div
-          className="flex flex-col"
-          role="tree"
-          aria-label={treeAriaLabel}
-          tabIndex={0}
-          onKeyDown={onTreeKeyDown}
-        >
-          {visibleItems.map((item) => (
-            <OutlineItemRow
-              key={item.id}
-              item={item}
-              isActive={activeId === item.id}
-              isSelected={selectedIds.has(item.id)}
-              isDragging={draggingId === item.id}
-              dropPosition={dragOverId === item.id ? dropPosition : null}
-              isEditing={editingId === item.id}
-              editValue={editValue}
-              wordCount={wordCounts?.[item.id]}
-              hasChildItems={hasChildren(item, flatItems)}
-              isCollapsed={collapsed.has(item.id)}
-              onNavigate={() => onNavigate(item.id)}
-              onDelete={() => onDelete(item.id)}
-              onEditStart={() => onEditStart(item)}
-              onEditChange={onEditChange}
-              onEditCommit={onEditCommit}
-              onEditCancel={onEditCancel}
-              onToggleCollapse={() => onToggleCollapse(item.id)}
-              onToggleSelect={(e) => onToggleSelect(item.id, e)}
-              onDragStart={(e) => onDragStart(e, item.id)}
-              onDragEnd={onDragEnd}
-              onDragOver={(e) => onDragOver(e, item.id, item.level)}
-              onDragLeave={onDragLeave}
-              onDrop={(e) => onDrop(e, item.id)}
-              draggable={draggable}
-            />
-          ))}
-        </div>
-      )}
+      <div
+        className="flex flex-col"
+        role="tree"
+        aria-label={treeAriaLabel}
+        tabIndex={0}
+        onKeyDown={onTreeKeyDown}
+      >
+        {visibleItems.map((item) => (
+          <OutlineItemRow
+            key={item.id}
+            item={item}
+            isActive={activeId === item.id}
+            isSelected={selectedIds.has(item.id)}
+            isDragging={draggingId === item.id}
+            dropPosition={dragOverId === item.id ? dropPosition : null}
+            isEditing={editingId === item.id}
+            editValue={editValue}
+            wordCount={wordCounts?.[item.id]}
+            hasChildItems={hasChildren(item, flatItems)}
+            isCollapsed={collapsed.has(item.id)}
+            onNavigate={() => onNavigate(item.id)}
+            onDelete={() => onDelete(item.id)}
+            onEditStart={() => onEditStart(item)}
+            onEditChange={onEditChange}
+            onEditCommit={onEditCommit}
+            onEditCancel={onEditCancel}
+            onToggleCollapse={() => onToggleCollapse(item.id)}
+            onToggleSelect={(e) => onToggleSelect(item.id, e)}
+            onDragStart={(e) => onDragStart(e, item.id)}
+            onDragEnd={onDragEnd}
+            onDragOver={(e) => onDragOver(e, item.id, item.level)}
+            onDragLeave={onDragLeave}
+            onDrop={(e) => onDrop(e, item.id)}
+            draggable={draggable}
+          />
+        ))}
+      </div>
     </ScrollArea>
   );
 }

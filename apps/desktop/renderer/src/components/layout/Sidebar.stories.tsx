@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Sidebar } from "./Sidebar";
 import { layoutDecorator } from "./test-utils";
 import { LAYOUT_DEFAULTS, type LeftPanelType } from "../../stores/layoutStore";
+import { within, expect } from "@storybook/test";
 
 /**
  * Sidebar (LeftPanel) 组件 Story
@@ -82,6 +83,10 @@ export const Default: Story = {
     activePanel: "files",
   },
   render: RenderWrapper,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -97,6 +102,10 @@ export const Collapsed: Story = {
     activePanel: "files",
   },
   render: RenderWrapper,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -110,6 +119,10 @@ export const OutlinePanel: Story = {
     activePanel: "outline",
   },
   render: RenderWrapper,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -125,6 +138,10 @@ export const MaxWidth: Story = {
     activePanel: "files",
   },
   render: RenderWrapper,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -140,4 +157,8 @@ export const WithProject: Story = {
     activePanel: "files",
   },
   render: RenderWrapper,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("navigation")).toBeInTheDocument();
+  },
 };

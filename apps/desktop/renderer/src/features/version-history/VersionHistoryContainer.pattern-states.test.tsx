@@ -67,9 +67,8 @@ describe("VersionHistoryContainer pattern state rendering", () => {
 
     renderWithStore(<VersionHistoryContainer projectId="proj-1" />);
 
-    // LoadingState spinner variant renders a role="status" element
-    expect(screen.getByRole("status")).toBeInTheDocument();
-    expect(screen.getByText("Loading versions...")).toBeInTheDocument();
+    // Skeleton fallback renders during loading
+    expect(screen.getByTestId("version-history-skeleton")).toBeInTheDocument();
   });
 
   it("renders ErrorState when version fetch fails", async () => {

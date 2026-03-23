@@ -6,6 +6,7 @@ import {
   CharacterCardList,
   type CharacterCardSummary,
 } from "../character/CharacterCardList";
+import { expect } from "@storybook/test";
 
 const graphMultiNodeData: GraphData = {
   nodes: [
@@ -95,6 +96,9 @@ export const GraphMultiNode: Story = {
       <KnowledgeGraph data={graphMultiNodeData} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const GraphMinimal: Story = {
@@ -103,6 +107,9 @@ export const GraphMinimal: Story = {
       <KnowledgeGraph data={graphMinimalData} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const GraphEmpty: Story = {
@@ -111,6 +118,9 @@ export const GraphEmpty: Story = {
       <KnowledgeGraph data={graphEmptyData} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const CharacterCardComplete: Story = {
@@ -119,6 +129,9 @@ export const CharacterCardComplete: Story = {
       <CharacterCardList cards={completeCharacterCards} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const CharacterCardPartial: Story = {
@@ -127,6 +140,9 @@ export const CharacterCardPartial: Story = {
       <CharacterCardList cards={partialCharacterCards} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const CharacterCardEmpty: Story = {
@@ -135,4 +151,7 @@ export const CharacterCardEmpty: Story = {
       <CharacterCardList cards={[]} />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

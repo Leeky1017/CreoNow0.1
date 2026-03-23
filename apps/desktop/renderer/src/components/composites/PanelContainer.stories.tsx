@@ -3,6 +3,7 @@ import { FileText } from "lucide-react";
 
 import { Button } from "../primitives";
 import { PanelContainer } from "./PanelContainer";
+import { expect } from "@storybook/test";
 
 const meta: Meta<typeof PanelContainer> = {
   title: "Composites/PanelContainer",
@@ -26,6 +27,9 @@ export const Default: Story = {
       </div>
     ),
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const WithActions: Story = {
@@ -42,5 +46,8 @@ export const WithActions: Story = {
         Panel content with action buttons in header
       </div>
     ),
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import type { HeadingLevel, HeadingColor } from "./Heading";
 import { Heading } from "./Heading";
+import { expect } from "@storybook/test";
 
 /**
  * Heading 组件 Story
@@ -73,6 +74,9 @@ export const Default: Story = {
   args: {
     children: "Default Heading",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -82,6 +86,9 @@ export const H1: Story = {
   args: {
     level: "h1",
     children: "Page Title (H1)",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -93,6 +100,9 @@ export const H2: Story = {
     level: "h2",
     children: "Section Header (H2)",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -103,6 +113,9 @@ export const H3: Story = {
     level: "h3",
     children: "Subsection (H3)",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -112,6 +125,9 @@ export const H4: Story = {
   args: {
     level: "h4",
     children: "Small Header (H4)",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -149,6 +165,9 @@ export const AllLevels: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -173,6 +192,9 @@ export const AllColors: Story = {
       ))}
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -208,6 +230,9 @@ export const SemanticVsVisual: Story = {
       </div>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 // ============================================================================
@@ -273,6 +298,9 @@ export const PageLayout: Story = {
       </p>
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**
@@ -307,6 +335,9 @@ export const CardTitle: Story = {
       </div>
     ),
   ],
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /**

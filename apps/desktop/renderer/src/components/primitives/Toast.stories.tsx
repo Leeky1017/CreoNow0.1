@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import type { ToastVariant } from "./Toast";
 import { Toast, ToastProvider, ToastViewport, useToast } from "./Toast";
 import { Button } from "./Button";
+import { expect } from "@storybook/test";
 
 /**
  * Toast 组件 Story
@@ -54,6 +55,9 @@ export const Default: Story = {
     description: "This is a toast notification.",
     open: true,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 成功状态 */
@@ -63,6 +67,9 @@ export const Success: Story = {
     description: "Your changes have been saved successfully.",
     variant: "success",
     open: true,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -74,6 +81,9 @@ export const Error: Story = {
     variant: "error",
     open: true,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 警告状态 */
@@ -84,6 +94,9 @@ export const Warning: Story = {
     variant: "warning",
     open: true,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 只有标题 */
@@ -91,6 +104,9 @@ export const TitleOnly: Story = {
   args: {
     title: "File uploaded",
     open: true,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -104,6 +120,9 @@ export const WithAction: Story = {
       onClick: () => console.log("Undo clicked"),
     },
     open: true,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -161,6 +180,9 @@ export const AllVariants: Story = {
     open: true,
   },
   render: () => <AllVariantsDemo />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 使用 Hook 触发 */
@@ -204,6 +226,9 @@ export const WithHook: Story = {
     open: false,
   },
   render: () => <ToastDemo />,
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 不自动关闭 */
@@ -214,6 +239,9 @@ export const Persistent: Story = {
     duration: 0,
     open: true,
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 /** 快速自动关闭 */
@@ -223,5 +251,8 @@ export const QuickDismiss: Story = {
     description: "This will disappear in 2 seconds.",
     duration: 2000,
     open: true,
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

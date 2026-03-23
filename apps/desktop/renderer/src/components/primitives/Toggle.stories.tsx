@@ -1,5 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { within, expect, userEvent } from "@storybook/test";
 import { Toggle } from "./Toggle";
 
 /**
@@ -44,6 +45,13 @@ export const Default: Story = {
   args: {
     defaultChecked: false,
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toggle = canvas.getByRole("switch");
+    await expect(toggle).not.toBeChecked();
+    await userEvent.click(toggle);
+    await expect(toggle).toBeChecked();
+  },
 };
 
 /**
@@ -52,6 +60,10 @@ export const Default: Story = {
 export const Checked: Story = {
   args: {
     checked: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("switch")).toBeInTheDocument();
   },
 };
 
@@ -62,6 +74,10 @@ export const WithLabel: Story = {
   args: {
     label: "Enable notifications",
     defaultChecked: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("switch")).toBeInTheDocument();
   },
 };
 
@@ -75,6 +91,10 @@ export const WithLabelAndDescription: Story = {
       "Dims all interface elements except the editor when you start typing to reduce distractions.",
     defaultChecked: true,
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("switch")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -87,6 +107,10 @@ export const Disabled: Story = {
     disabled: true,
     defaultChecked: false,
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("switch")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -98,6 +122,10 @@ export const DisabledChecked: Story = {
     description: "This option is enabled but cannot be changed.",
     disabled: true,
     checked: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("switch")).toBeInTheDocument();
   },
 };
 
@@ -138,4 +166,8 @@ function ToggleGroupDemo(): JSX.Element {
  */
 export const ToggleGroup: Story = {
   render: () => <ToggleGroupDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("switch")).toBeInTheDocument();
+  },
 };

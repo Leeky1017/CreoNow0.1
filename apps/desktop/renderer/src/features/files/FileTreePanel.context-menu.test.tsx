@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   act,
   fireEvent,
@@ -31,6 +31,7 @@ const clearError = vi.fn();
 const moveToFolder = vi.fn();
 const openDocument = vi.fn();
 const openCurrentDocumentForProject = vi.fn();
+const FILE_TREE_EXIT_DELAY_MS = 150;
 
 let fileItems: FileItem[] = [];
 
@@ -119,6 +120,10 @@ describe("FileTreePanel context menu actions", () => {
     openCurrentDocumentForProject.mockReset().mockResolvedValue({ ok: true });
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("should show rename/delete/copy/move/status actions and invoke corresponding operations", async () => {
     await renderFileTreePanel("proj-1");
 
@@ -168,6 +173,61 @@ describe("FileTreePanel context menu actions", () => {
       projectId: "proj-1",
       documentId: "doc-1",
       parentId: "folder-1",
+    });
+  });
+
+  it("should apply exit animation before delete completes", async () => {
+    deleteDoc.mockImplementation(
+      async ({ documentId }: { documentId: string }) => {
+        fileItems = fileItems.filter((item) => item.documentId !== documentId);
+        return { ok: true };
+      },
+    );
+
+    await renderFileTreePanel("proj-1");
+
+    await act(async () => {
+      fireEvent.contextMenu(screen.getByTestId("file-row-doc-1"));
+    });
+
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Delete" }));
+    const confirmDeleteButton = await screen.findByTestId(
+      "system-dialog-primary",
+    );
+
+    vi.useFakeTimers();
+    fireEvent.click(confirmDeleteButton);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(0);
+    });
+
+    const rowContainer = screen.getByTestId("file-row-doc-1")
+      .parentElement as HTMLElement;
+    expect(rowContainer).toHaveClass("list-item-exit");
+    expect(deleteDoc).not.toHaveBeenCalled();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(FILE_TREE_EXIT_DELAY_MS - 1);
+    });
+
+    expect(deleteDoc).not.toHaveBeenCalled();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1);
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    expect(deleteDoc).toHaveBeenCalledWith({
+      projectId: "proj-1",
+      documentId: "doc-1",
+    });
+    expect(screen.queryByTestId("file-row-doc-1")).not.toBeInTheDocument();
+    expect(openCurrentDocumentForProject).toHaveBeenCalledWith("proj-1");
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(300);
     });
   });
 });

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import { fn, expect } from "@storybook/test";
 import { ZenMode } from "./ZenMode";
 
 const defaultStats = {
@@ -43,6 +43,9 @@ type Story = StoryObj<typeof ZenMode>;
 
 export const DefaultZenMode: Story = {
   name: "Default Zen Mode",
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const EmptyDocument: Story = {
@@ -51,6 +54,9 @@ export const EmptyDocument: Story = {
     title: "Untitled Document",
     isEmpty: true,
     stats: { wordCount: 0, saveStatus: "Saved", readTimeMinutes: 1 },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -62,6 +68,9 @@ export const HoverTopShowExit: Story = {
         story: "Move mouse to top edge to see exit button fade in.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -78,19 +87,31 @@ export const HoverBottomShowStatus: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const ExitByEscape: Story = {
   name: "Exit By Escape",
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const ExitByClick: Story = {
   name: "Exit By Click",
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const Closed: Story = {
   name: "Closed State",
   args: { open: false },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const UnsavedChanges: Story = {
@@ -98,6 +119,9 @@ export const UnsavedChanges: Story = {
   args: {
     stats: { wordCount: 1243, saveStatus: "Unsaved", readTimeMinutes: 6 },
     currentTime: "11:35 PM",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };
 
@@ -107,6 +131,9 @@ export const SavingState: Story = {
     stats: { wordCount: 1245, saveStatus: "Saving...", readTimeMinutes: 6 },
     currentTime: "11:36 PM",
   },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };
 
 export const SavedConfirmation: Story = {
@@ -114,5 +141,8 @@ export const SavedConfirmation: Story = {
   args: {
     stats: { wordCount: 1245, saveStatus: "Saved", readTimeMinutes: 6 },
     currentTime: "11:36 PM",
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
   },
 };

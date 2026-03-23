@@ -15,19 +15,41 @@ import "../renderer/src/styles/main.css";
  * Decorator that sets data-theme on documentElement to enable CSS variable theming.
  * CSS tokens use :root[data-theme="dark"] selector, so data-theme must be on <html>.
  */
-function ThemeDecorator({ children }: { children: React.ReactNode }) {
+function ThemeDecorator({
+  theme,
+  children,
+}: {
+  theme: string;
+  children: React.ReactNode;
+}) {
   useEffect(() => {
-    // Set theme on :root (html element) so CSS variables activate
-    document.documentElement.setAttribute("data-theme", "dark");
+    document.documentElement.setAttribute("data-theme", theme);
     return () => {
       document.documentElement.removeAttribute("data-theme");
     };
-  }, []);
+  }, [theme]);
 
   return <div style={{ padding: "1rem" }}>{children}</div>;
 }
 
 const preview: Preview = {
+  globalTypes: {
+    theme: {
+      description: "Global theme for components",
+      toolbar: {
+        title: "Theme",
+        icon: "paintbrush",
+        items: [
+          { value: "dark", title: "Dark", icon: "moon" },
+          { value: "light", title: "Light", icon: "sun" },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
+  initialGlobals: {
+    theme: "dark",
+  },
   parameters: {
     controls: {
       matchers: {
@@ -38,21 +60,24 @@ const preview: Preview = {
     backgrounds: {
       default: "dark",
       values: [
-        { name: "dark", value: "#080808" },
-        { name: "light", value: "#ffffff" },
+        { name: "dark", value: "hsl(0 0% 3.1%)" },
+        { name: "light", value: "hsl(0 0% 100%)" },
       ],
     },
   },
   decorators: [
-    (Story) => (
-      <I18nextProvider i18n={i18n}>
-        <AppToastProvider>
-          <ThemeDecorator>
-            <Story />
-          </ThemeDecorator>
-        </AppToastProvider>
-      </I18nextProvider>
-    ),
+    (Story, context) => {
+      const theme = (context.globals.theme as string) || "dark";
+      return (
+        <I18nextProvider i18n={i18n}>
+          <AppToastProvider>
+            <ThemeDecorator theme={theme}>
+              <Story />
+            </ThemeDecorator>
+          </AppToastProvider>
+        </I18nextProvider>
+      );
+    },
   ],
 };
 

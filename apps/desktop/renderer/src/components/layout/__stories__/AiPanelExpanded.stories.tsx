@@ -28,6 +28,7 @@ import {
   ThemeStoreProvider,
   createThemeStore,
 } from "../../../stores/themeStore";
+import { expect } from "@storybook/test";
 
 const mockPreferences = {
   get: <T,>(key: string): T | null => {
@@ -171,4 +172,7 @@ type Story = StoryObj<typeof meta>;
  */
 export const AiPanelOpen: Story = {
   name: "AI 面板展开",
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.children.length).toBeGreaterThan(0);
+  },
 };

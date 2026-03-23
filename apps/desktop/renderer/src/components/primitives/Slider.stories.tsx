@@ -1,6 +1,7 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Slider } from "./Slider";
+import { within, expect } from "@storybook/test";
 
 /**
  * Slider component stories
@@ -54,6 +55,10 @@ export const Default: Story = {
     max: 100,
     step: 1,
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("slider")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -66,6 +71,10 @@ export const WithLabels: Story = {
     max: 120,
     step: 10,
     showLabels: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("slider")).toBeInTheDocument();
   },
 };
 
@@ -102,6 +111,10 @@ function InterfaceScaleSlider(): JSX.Element {
  */
 export const InterfaceScale: Story = {
   render: () => <InterfaceScaleSlider />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("slider")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -138,6 +151,10 @@ function FontSizeSlider(): JSX.Element {
  */
 export const FontSize: Story = {
   render: () => <FontSizeSlider />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("slider")).toBeInTheDocument();
+  },
 };
 
 /**
@@ -150,6 +167,10 @@ export const Disabled: Story = {
     max: 100,
     disabled: true,
     showLabels: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("slider")).toBeInTheDocument();
   },
 };
 
@@ -193,4 +214,8 @@ function VolumeSlider(): JSX.Element {
  */
 export const Volume: Story = {
   render: () => <VolumeSlider />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("slider")).toBeInTheDocument();
+  },
 };

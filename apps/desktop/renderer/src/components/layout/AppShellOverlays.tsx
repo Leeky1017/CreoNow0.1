@@ -1,14 +1,14 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { DialogType } from "../../stores/layoutStore";
 import { useEditorStore } from "../../stores/editorStore";
 import { LeftPanelDialogShell } from "./LeftPanelDialogShell";
-import { CharacterCardListContainer } from "../../features/character/CharacterCardListContainer";
-import { KnowledgeGraphPanel } from "../../features/kg/KnowledgeGraphPanel";
-import { MemoryPanel } from "../../features/memory/MemoryPanel";
+import { KgPanelSkeleton } from "../../features/kg/KgPanelSkeleton";
+import { VersionHistorySkeleton } from "../../features/version-history/VersionHistorySkeleton";
+import { MemoryPanelSkeleton } from "../../features/memory/MemoryPanelSkeleton";
+import { CharacterPanelSkeleton } from "../../features/character/CharacterPanelSkeleton";
 import { SearchPanel } from "../../features/search/SearchPanel";
-import { VersionHistoryContainer } from "../../features/version-history/VersionHistoryContainer";
 import { ZenMode } from "../../features/zen-mode/ZenMode";
 import {
   SettingsDialog,
@@ -26,6 +26,30 @@ import type {
 import { SystemDialog } from "../../components/features/AiDialogs/SystemDialog";
 import type { UseConfirmDialogReturn } from "../../hooks/useConfirmDialog";
 import { extractZenModeContent } from "./appShellLayoutHelpers";
+
+const LazyCharacterCardListContainer = lazy(() =>
+  import("../../features/character/CharacterCardListContainer").then((m) => ({
+    default: m.CharacterCardListContainer,
+  })),
+);
+
+const LazyKnowledgeGraphPanel = lazy(() =>
+  import("../../features/kg/KnowledgeGraphPanel").then((m) => ({
+    default: m.KnowledgeGraphPanel,
+  })),
+);
+
+const LazyMemoryPanel = lazy(() =>
+  import("../../features/memory/MemoryPanel").then((m) => ({
+    default: m.MemoryPanel,
+  })),
+);
+
+const LazyVersionHistoryContainer = lazy(() =>
+  import("../../features/version-history/VersionHistoryContainer").then(
+    (m) => ({ default: m.VersionHistoryContainer }),
+  ),
+);
 
 let hasWarnedInvalidZenContent = false;
 
@@ -130,7 +154,13 @@ export function renderDialogContent(
 ): JSX.Element {
   switch (activeDialogType) {
     case "memory":
-      return <MemoryPanel />;
+      return (
+        <Suspense fallback={<MemoryPanelSkeleton />}>
+          <div className="progressive-load">
+            <LazyMemoryPanel />
+          </div>
+        </Suspense>
+      );
     case "characters":
       if (!currentProjectId) {
         return (
@@ -139,7 +169,13 @@ export function renderDialogContent(
           </div>
         );
       }
-      return <CharacterCardListContainer projectId={currentProjectId} />;
+      return (
+        <Suspense fallback={<CharacterPanelSkeleton />}>
+          <div className="progressive-load">
+            <LazyCharacterCardListContainer projectId={currentProjectId} />
+          </div>
+        </Suspense>
+      );
     case "knowledgeGraph":
       if (!currentProjectId) {
         return (
@@ -148,7 +184,13 @@ export function renderDialogContent(
           </div>
         );
       }
-      return <KnowledgeGraphPanel projectId={currentProjectId} />;
+      return (
+        <Suspense fallback={<KgPanelSkeleton />}>
+          <div className="progressive-load">
+            <LazyKnowledgeGraphPanel projectId={currentProjectId} />
+          </div>
+        </Suspense>
+      );
     case "versionHistory":
       if (!currentProjectId) {
         return (
@@ -157,7 +199,13 @@ export function renderDialogContent(
           </div>
         );
       }
-      return <VersionHistoryContainer projectId={currentProjectId} />;
+      return (
+        <Suspense fallback={<VersionHistorySkeleton />}>
+          <div className="progressive-load">
+            <LazyVersionHistoryContainer projectId={currentProjectId} />
+          </div>
+        </Suspense>
+      );
     default:
       return assertNeverDialogType(activeDialogType);
   }
