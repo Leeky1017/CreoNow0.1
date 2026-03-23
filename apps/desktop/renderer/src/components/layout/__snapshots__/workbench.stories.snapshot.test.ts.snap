@@ -2072,7 +2072,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
             class="flex items-center justify-between p-3 border-b border-[color:var(--color-separator)]"
           >
             <div
-              class="flex items-center gap-2 text-[13px] text-[color:var(--color-fg-muted)] font-medium"
+              class="flex items-center gap-2 text-(--text-body) text-[color:var(--color-fg-muted)] font-medium"
             >
               <span>
                 AI
