@@ -113,14 +113,14 @@ export function CommandItem({
       )}
 
       {/* Label */}
-      <span className="flex-1 text-[13px] truncate">
+      <span className="flex-1 text-(--text-body) truncate">
         {labelContent ?? label}
       </span>
 
       {/* Shortcut hint */}
       {hint && (
         <div
-          className={`ml-2 px-1.5 py-0.5 text-[11px] rounded bg-[color:var(--color-bg-selected)] border border-[color:var(--color-separator)] ${
+          className={`ml-2 px-1.5 py-0.5 text-(--text-status) rounded bg-[color:var(--color-bg-selected)] border border-[color:var(--color-separator)] ${
             active
               ? "text-[color:var(--color-fg-default)] border-[color:var(--color-border-default)]"
               : "text-[color:var(--color-fg-muted)]"

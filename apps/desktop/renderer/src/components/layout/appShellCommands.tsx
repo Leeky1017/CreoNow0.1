@@ -169,7 +169,7 @@ export function buildFileEntries(args: {
       icon: (
         <span
           aria-hidden="true"
-          className="inline-flex h-4 w-4 items-center justify-center text-[9px] font-semibold text-[var(--color-fg-muted)]"
+          className="inline-flex h-4 w-4 items-center justify-center text-(--text-label) font-semibold text-[var(--color-fg-muted)]"
         >
           {item.type[0]?.toUpperCase() ?? "D"}
         </span>

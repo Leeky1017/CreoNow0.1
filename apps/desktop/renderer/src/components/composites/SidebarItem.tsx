@@ -32,7 +32,7 @@ const baseStyles = [
   "px-3",
   "h-8",
   "rounded-[var(--radius-sm)]",
-  "text-[13px]",
+  "text-(--text-body)",
   "text-[color:var(--color-fg-default)]",
   "cursor-pointer",
   "select-none",

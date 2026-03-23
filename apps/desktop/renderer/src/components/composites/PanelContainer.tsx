@@ -44,7 +44,7 @@ const titleGroupStyles = [
   "flex",
   "items-center",
   "gap-2",
-  "text-[13px]",
+  "text-(--text-body)",
   "text-[color:var(--color-fg-muted)]",
   "font-medium",
 ].join(" ");

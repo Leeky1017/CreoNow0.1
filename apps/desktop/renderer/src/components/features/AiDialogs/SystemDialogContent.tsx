@@ -154,7 +154,7 @@ export const keyboardHintStyles = [
 ].join(" ");
 export const kbdStyles = [
   "px-1.5 py-0.5 rounded bg-[var(--color-bg-hover)]",
-  "border border-[var(--color-separator)] text-[9px] font-mono",
+  "border border-[var(--color-separator)] text-(--text-label) font-mono",
   "text-(--color-fg-muted)",
 ].join(" ");
 export const buttonContainerStyles = [

@@ -350,7 +350,7 @@ export function LoadingState({
             <span className={`brand-spinner-letter ${bs.letter}`}>C</span>
           </div>
           {text && (
-            <span className="text-[13px] text-[var(--color-fg-muted)]">
+            <span className="text-(--text-body) text-[var(--color-fg-muted)]">
               {text}
             </span>
           )}
@@ -374,7 +374,7 @@ export function LoadingState({
         >
           <Spinner size={size} />
           {text && (
-            <span className="text-[13px] text-[var(--color-fg-muted)]">
+            <span className="text-(--text-body) text-[var(--color-fg-muted)]">
               {text}
             </span>
           )}

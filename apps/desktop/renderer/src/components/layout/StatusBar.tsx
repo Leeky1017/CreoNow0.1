@@ -81,7 +81,7 @@ export function StatusBar(): JSX.Element {
       role="status"
       aria-live="polite"
       aria-atomic="true"
-      className="shrink-0 flex items-center justify-between gap-3 px-3 text-[11px] font-[var(--font-family-ui)] text-[var(--color-fg-muted)] bg-[var(--color-bg-surface)] border-t border-[var(--color-separator-bold)]"
+      className="shrink-0 flex items-center justify-between gap-3 px-3 text-(--text-status) font-[var(--font-family-ui)] text-[var(--color-fg-muted)] bg-[var(--color-bg-surface)] border-t border-[var(--color-separator-bold)]"
       style={{ height: LAYOUT_DEFAULTS.statusBarHeight }}
     >
       <div className="min-w-0 flex items-center gap-2">
