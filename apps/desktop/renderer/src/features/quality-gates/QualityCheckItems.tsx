@@ -136,10 +136,10 @@ export function IssueCard({
   if (issue.ignored) {
     return (
       <div className="p-3 bg-[var(--color-bg-raised)] rounded-lg border border-[var(--color-separator)] opacity-50">
-        <p className="text-[12px] text-[var(--color-fg-muted)] line-through">
+        <p className="text-(--text-caption) text-[var(--color-fg-muted)] line-through">
           {issue.description}
         </p>
-        <span className="text-[10px] text-[var(--color-fg-placeholder)] mt-1 inline-block">
+        <span className="text-(--text-label) text-[var(--color-fg-placeholder)] mt-1 inline-block">
           {t("qualityGates.ignored")}
         </span>
       </div>
@@ -154,11 +154,11 @@ export function IssueCard({
       }`}
       data-testid={`issue-card-${issue.id}`}
     >
-      <p className="text-[12px] text-[var(--color-fg-default)] leading-relaxed">
+      <p className="text-(--text-caption) text-[var(--color-fg-default)] leading-relaxed">
         {issue.description}
       </p>
       {issue.location && (
-        <div className="flex items-center gap-1 mt-2 text-[10px] text-[var(--color-fg-muted)]">
+        <div className="flex items-center gap-1 mt-2 text-(--text-label) text-[var(--color-fg-muted)]">
           <LocationIcon />
           <Button
             type="button"
@@ -175,7 +175,7 @@ export function IssueCard({
           size="sm"
           onClick={() => onFix?.(checkId, issue.id)}
           loading={isFixing}
-          className="!h-6 !text-[10px] !px-2"
+          className="!h-6 !text-(--text-label) !px-2"
         >
           {t("qualityGates.fixIssue")}
         </Button>
@@ -183,7 +183,7 @@ export function IssueCard({
           variant="ghost"
           size="sm"
           onClick={() => onIgnore?.(checkId, issue.id)}
-          className="!h-6 !text-[10px] !px-2"
+          className="!h-6 !text-(--text-label) !px-2"
         >
           {t("qualityGates.ignore")}
         </Button>
@@ -191,7 +191,7 @@ export function IssueCard({
           variant="ghost"
           size="sm"
           onClick={() => onViewInEditor?.(checkId, issue.id)}
-          className="!h-6 !text-[10px] !px-2"
+          className="!h-6 !text-(--text-label) !px-2"
         >
           {t("qualityGates.viewInEditor")}
         </Button>
@@ -242,12 +242,12 @@ export function CheckItemRow({
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-[13px] font-medium text-[var(--color-fg-default)]">
+            <span className="text-(--text-body) font-medium text-[var(--color-fg-default)]">
               {check.name}
             </span>
             {issueCount > 0 && (
               <span
-                className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full ${
+                className={`text-(--text-label) font-medium px-1.5 py-0.5 rounded-full ${
                   check.status === "error"
                     ? "bg-[var(--color-error-subtle)] text-[var(--color-error)]"
                     : "bg-[var(--color-warning-subtle)] text-[var(--color-warning)]"
@@ -257,16 +257,16 @@ export function CheckItemRow({
               </span>
             )}
             {check.ignoredCount && check.ignoredCount > 0 && (
-              <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+              <span className="text-(--text-label) text-[var(--color-fg-placeholder)]">
                 {t("qualityGates.ignoredCount", { count: check.ignoredCount })}
               </span>
             )}
           </div>
-          <p className="text-[11px] text-[var(--color-fg-muted)] mt-0.5 leading-relaxed">
+          <p className="text-(--text-status) text-[var(--color-fg-muted)] mt-0.5 leading-relaxed">
             {check.description}
           </p>
           {check.resultValue && check.status === "passed" && (
-            <span className="text-[11px] text-[var(--color-success)] mt-1 inline-block">
+            <span className="text-(--text-status) text-[var(--color-success)] mt-1 inline-block">
               {check.resultValue}
             </span>
           )}

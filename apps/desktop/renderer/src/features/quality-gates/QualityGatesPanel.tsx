@@ -67,7 +67,7 @@ export function QualityGatesPanelContent({
     >
       <div className={headerStyles}>
         <div>
-          <h2 className="text-[15px] font-semibold text-[var(--color-fg-default)] tracking-tight">
+          <h2 className="text-(--text-subtitle) font-semibold text-[var(--color-fg-default)] tracking-tight">
             {t("qualityGates.title")}
           </h2>
           <div className="mt-2">
@@ -106,7 +106,7 @@ export function QualityGatesPanelContent({
         {panelStatus === "all-passed" && (
           <div className="p-4 bg-[var(--color-success-subtle)] border border-[var(--color-success)]/20 rounded-[var(--radius-lg)] text-center">
             <CheckCircleIcon />
-            <p className="text-[13px] text-[var(--color-success)] mt-2">
+            <p className="text-(--text-body) text-[var(--color-success)] mt-2">
               {t("qualityGates.allPassedMessage")}
             </p>
           </div>

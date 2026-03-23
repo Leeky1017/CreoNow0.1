@@ -168,7 +168,7 @@ export function SearchResultsArea(props: {
           })}
         />
         <div className="mt-6 p-4 bg-[var(--color-separator)] rounded-lg border border-[var(--color-separator)]">
-          <p className="text-[10px] text-[var(--color-fg-placeholder)] font-medium uppercase tracking-wider mb-2">
+          <p className="text-(--text-label) text-[var(--color-fg-placeholder)] font-medium uppercase tracking-wider mb-2">
             {t("search.suggestionsTitle")}
           </p>
           <p className="text-xs text-[var(--color-fg-muted)]">
@@ -213,10 +213,10 @@ export function SearchResultsArea(props: {
                     className={`py-2 ${row.hasBorderTop ? "border-t border-[var(--color-separator)]" : ""}`}
                   >
                     <div className="px-4 py-1.5 flex items-center justify-between">
-                      <span className="text-[10px] font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-widest">
+                      <span className="text-(--text-label) font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-widest">
                         {row.category}
                       </span>
-                      <span className="text-[10px] font-mono text-[var(--color-fg-placeholder)]">
+                      <span className="text-(--text-label) font-mono text-[var(--color-fg-placeholder)]">
                         {t("search.results.match", { count: row.count })}
                       </span>
                     </div>
