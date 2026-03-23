@@ -116,16 +116,16 @@ describe("V1-21 Performance Guard", () => {
     expect(rightPanelSrc).not.toMatch(/animation:\s*tab-crossfade/);
   });
 
-  it("tab-crossfade transition is used in AiPanel", async () => {
+  it("tab-crossfade must NOT be used in AiPanel (has dropdown children)", async () => {
     const fs = await import("node:fs");
     const path = await import("node:path");
     const aiPanelSrc = fs.readFileSync(
       path.resolve(__dirname, "../features/ai/AiPanel.tsx"),
       "utf-8",
     );
-    expect(aiPanelSrc).toContain("tab-crossfade");
-    // Must NOT use CSS animation property
-    expect(aiPanelSrc).not.toMatch(/animation:\s*tab-crossfade/);
+    // AiPanel contains SkillPicker (Radix dropdown) — opacity transition
+    // creates stacking context that traps fixed-position backdrop overlays
+    expect(aiPanelSrc).not.toContain("tab-crossfade");
   });
 
   it("countup class is used in StatusBar word count", async () => {
