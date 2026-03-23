@@ -11,6 +11,8 @@ const meta: Meta<typeof CommandItem> = {
   decorators: [
     (Story) => (
       <div
+        role="listbox"
+        aria-label="Command options"
         style={{
           width: 480,
           background: "var(--color-bg-raised)",

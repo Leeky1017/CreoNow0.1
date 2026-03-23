@@ -82,6 +82,7 @@ function HistoryDropdownDemo(): JSX.Element {
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-default)] bg-[var(--color-bg-selected)] rounded"
               title="History"
+              aria-label="History"
             >
               <svg
                 width="12"
@@ -98,6 +99,7 @@ function HistoryDropdownDemo(): JSX.Element {
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="New Chat"
+              aria-label="New Chat"
             >
               <svg
                 width="12"
@@ -220,7 +222,10 @@ function HistoryDropdownDemo(): JSX.Element {
                   SKILL
                 </span>
               </div>
-              <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)]">
+              <button
+                aria-label="Send message"
+                className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)]"
+              >
                 <svg
                   width="16"
                   height="16"

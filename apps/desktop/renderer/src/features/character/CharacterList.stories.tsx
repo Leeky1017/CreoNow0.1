@@ -144,9 +144,9 @@ export const AvatarHoverState: Story = {
     return (
       <div className="h-screen flex items-center justify-center bg-[var(--color-bg-base)]">
         <div className="p-8 bg-[var(--color-bg-surface)] rounded-lg border border-[var(--color-border-default)]">
-          <h3 className="text-sm font-medium text-[var(--color-fg-default)] mb-6">
+          <h2 className="text-sm font-medium text-[var(--color-fg-default)] mb-6">
             Avatar Hover States
-          </h3>
+          </h2>
           <div className="flex gap-8">
             {/* With avatar */}
             <div className="text-center">

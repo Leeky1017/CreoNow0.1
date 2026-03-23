@@ -43,6 +43,7 @@ const meta = {
       description: "Number of visible text rows",
     },
   },
+  args: { "aria-label": "Text area" },
 } satisfies Meta<typeof Textarea>;
 
 export default meta;
@@ -96,8 +97,8 @@ export const FocusTest: Story = {
       <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
         Tab →
       </span>
-      <Textarea placeholder="First textarea" />
-      <Textarea placeholder="Second textarea" />
+      <Textarea aria-label="First textarea" placeholder="First textarea" />
+      <Textarea aria-label="Second textarea" placeholder="Second textarea" />
     </div>
   ),
 };
@@ -150,22 +151,31 @@ export const StateMatrix: Story = {
       <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
         Enabled
       </div>
-      <Textarea placeholder="Enter text..." />
-      <Textarea placeholder="Invalid input" error />
+      <Textarea aria-label="Enter text..." placeholder="Enter text..." />
+      <Textarea aria-label="Invalid input" placeholder="Invalid input" error />
 
       {/* Disabled row */}
       <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
         Disabled
       </div>
-      <Textarea placeholder="Read only" disabled />
-      <Textarea placeholder="Error disabled" error disabled />
+      <Textarea aria-label="Read only" placeholder="Read only" disabled />
+      <Textarea
+        aria-label="Error disabled"
+        placeholder="Error disabled"
+        error
+        disabled
+      />
 
       {/* With Value row */}
       <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
         With Value
       </div>
-      <Textarea defaultValue="Some content here" />
-      <Textarea defaultValue="Invalid content" error />
+      <Textarea aria-label="Textarea input" defaultValue="Some content here" />
+      <Textarea
+        aria-label="Textarea input"
+        defaultValue="Invalid content"
+        error
+      />
     </div>
   ),
 };
@@ -236,6 +246,7 @@ export const ResizeBehavior: Story = {
           Normal (resize-y enabled)
         </div>
         <Textarea
+          aria-label="Resizable textarea"
           placeholder="Drag the bottom-right corner to resize"
           rows={4}
         />
@@ -250,7 +261,12 @@ export const ResizeBehavior: Story = {
         >
           Disabled (resize disabled)
         </div>
-        <Textarea placeholder="Cannot resize when disabled" rows={4} disabled />
+        <Textarea
+          aria-label="Cannot resize when disabled"
+          placeholder="Cannot resize when disabled"
+          rows={4}
+          disabled
+        />
       </div>
     </div>
   ),
@@ -311,7 +327,7 @@ export const FullMatrix: Story = {
             >
               Default
             </div>
-            <Textarea placeholder="Enter text..." />
+            <Textarea aria-label="Enter text..." placeholder="Enter text..." />
           </div>
           <div>
             <div
@@ -323,7 +339,10 @@ export const FullMatrix: Story = {
             >
               With Value
             </div>
-            <Textarea defaultValue="Some content here" />
+            <Textarea
+              aria-label="Textarea input"
+              defaultValue="Some content here"
+            />
           </div>
           <div>
             <div
@@ -335,7 +354,11 @@ export const FullMatrix: Story = {
             >
               Error
             </div>
-            <Textarea placeholder="Invalid input" error />
+            <Textarea
+              aria-label="Invalid input"
+              placeholder="Invalid input"
+              error
+            />
           </div>
           <div>
             <div
@@ -347,7 +370,7 @@ export const FullMatrix: Story = {
             >
               Disabled
             </div>
-            <Textarea placeholder="Read only" disabled />
+            <Textarea aria-label="Read only" placeholder="Read only" disabled />
           </div>
         </div>
       </section>
@@ -364,7 +387,11 @@ export const FullMatrix: Story = {
           Full Width
         </h3>
         <div style={{ maxWidth: "400px" }}>
-          <Textarea placeholder="Full width textarea..." fullWidth />
+          <Textarea
+            aria-label="Full width textarea..."
+            placeholder="Full width textarea..."
+            fullWidth
+          />
         </div>
       </section>
 
@@ -390,7 +417,7 @@ export const FullMatrix: Story = {
             >
               2 rows
             </div>
-            <Textarea placeholder="2 rows" rows={2} />
+            <Textarea aria-label="2 rows" placeholder="2 rows" rows={2} />
           </div>
           <div>
             <div
@@ -402,7 +429,7 @@ export const FullMatrix: Story = {
             >
               4 rows (default)
             </div>
-            <Textarea placeholder="4 rows" rows={4} />
+            <Textarea aria-label="4 rows" placeholder="4 rows" rows={4} />
           </div>
           <div>
             <div
@@ -414,7 +441,7 @@ export const FullMatrix: Story = {
             >
               8 rows
             </div>
-            <Textarea placeholder="8 rows" rows={8} />
+            <Textarea aria-label="8 rows" placeholder="8 rows" rows={8} />
           </div>
         </div>
       </section>
@@ -447,7 +474,11 @@ export const FullMatrix: Story = {
             >
               Error + Value
             </div>
-            <Textarea defaultValue="Invalid content here" error />
+            <Textarea
+              aria-label="Textarea input"
+              defaultValue="Invalid content here"
+              error
+            />
           </div>
           <div>
             <div
@@ -459,7 +490,11 @@ export const FullMatrix: Story = {
             >
               Disabled + Value
             </div>
-            <Textarea defaultValue="Read-only content" disabled />
+            <Textarea
+              aria-label="Textarea input"
+              defaultValue="Read-only content"
+              disabled
+            />
           </div>
           <div>
             <div
@@ -471,7 +506,12 @@ export const FullMatrix: Story = {
             >
               Error + Disabled
             </div>
-            <Textarea defaultValue="Error and disabled" error disabled />
+            <Textarea
+              aria-label="Textarea input"
+              defaultValue="Error and disabled"
+              error
+              disabled
+            />
           </div>
           <div>
             <div
@@ -483,7 +523,12 @@ export const FullMatrix: Story = {
             >
               Full Width + Error
             </div>
-            <Textarea placeholder="Full width error" error fullWidth />
+            <Textarea
+              aria-label="Full width error"
+              placeholder="Full width error"
+              error
+              fullWidth
+            />
           </div>
         </div>
       </section>

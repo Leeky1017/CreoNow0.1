@@ -5,6 +5,7 @@ import { within, expect } from "@storybook/test";
 const meta = {
   title: "Primitives/Input/Variants",
   component: Input,
+  args: { "aria-label": "Text input" },
   parameters: { layout: "centered" },
   tags: ["autodocs"],
 } satisfies Meta<typeof Input>;
@@ -89,7 +90,12 @@ export const AllTypes: Story = {
         >
           Text
         </label>
-        <Input type="text" placeholder="Text input" fullWidth />
+        <Input
+          aria-label="Text input"
+          type="text"
+          placeholder="Text input"
+          fullWidth
+        />
       </div>
       <div>
         <label
@@ -102,7 +108,12 @@ export const AllTypes: Story = {
         >
           Password
         </label>
-        <Input type="password" placeholder="Password input" fullWidth />
+        <Input
+          aria-label="Password input"
+          type="password"
+          placeholder="Password input"
+          fullWidth
+        />
       </div>
       <div>
         <label
@@ -115,7 +126,12 @@ export const AllTypes: Story = {
         >
           Email
         </label>
-        <Input type="email" placeholder="Email input" fullWidth />
+        <Input
+          aria-label="Email input"
+          type="email"
+          placeholder="Email input"
+          fullWidth
+        />
       </div>
       <div>
         <label
@@ -128,7 +144,12 @@ export const AllTypes: Story = {
         >
           Number
         </label>
-        <Input type="number" placeholder="Number input" fullWidth />
+        <Input
+          aria-label="Number input"
+          type="number"
+          placeholder="Number input"
+          fullWidth
+        />
       </div>
       <div>
         <label
@@ -141,7 +162,12 @@ export const AllTypes: Story = {
         >
           Search
         </label>
-        <Input type="search" placeholder="Search input" fullWidth />
+        <Input
+          aria-label="Search input"
+          type="search"
+          placeholder="Search input"
+          fullWidth
+        />
       </div>
     </div>
   ),
@@ -191,6 +217,7 @@ export const LongTextConstrained: Story = {
       }}
     >
       <Input
+        aria-label="Long text overflow input"
         fullWidth
         defaultValue="Very long text that should handle overflow properly without breaking layout"
       />
@@ -259,8 +286,8 @@ export const FocusTest: Story = {
       <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
         Tab →
       </span>
-      <Input placeholder="Default Focus" />
-      <Input error placeholder="Error Focus" />
+      <Input aria-label="Default Focus" placeholder="Default Focus" />
+      <Input aria-label="Error Focus" error placeholder="Error Focus" />
     </div>
   ),
 };
@@ -294,7 +321,7 @@ export const FormScenario: Story = {
         >
           用户名
         </label>
-        <Input placeholder="请输入用户名" fullWidth />
+        <Input aria-label="请输入用户名" placeholder="请输入用户名" fullWidth />
       </div>
       <div>
         <label
@@ -307,7 +334,12 @@ export const FormScenario: Story = {
         >
           密码
         </label>
-        <Input type="password" placeholder="请输入密码" fullWidth />
+        <Input
+          aria-label="请输入密码"
+          type="password"
+          placeholder="请输入密码"
+          fullWidth
+        />
       </div>
       <div>
         <label
@@ -320,7 +352,13 @@ export const FormScenario: Story = {
         >
           邮箱 <span style={{ color: "var(--color-error)" }}>*</span>
         </label>
-        <Input type="email" error placeholder="请输入有效邮箱" fullWidth />
+        <Input
+          aria-label="请输入有效邮箱"
+          type="email"
+          error
+          placeholder="请输入有效邮箱"
+          fullWidth
+        />
         <span
           style={{
             display: "block",
@@ -380,27 +418,50 @@ export const FullMatrix: Story = {
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             default
           </span>
-          <Input placeholder="Default input" fullWidth />
+          <Input
+            aria-label="Default input"
+            placeholder="Default input"
+            fullWidth
+          />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             with value
           </span>
-          <Input defaultValue="Hello World" fullWidth />
+          <Input
+            aria-label="Input input"
+            defaultValue="Hello World"
+            fullWidth
+          />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             error
           </span>
-          <Input error defaultValue="Invalid" fullWidth />
+          <Input
+            aria-label="Input input"
+            error
+            defaultValue="Invalid"
+            fullWidth
+          />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             disabled
           </span>
-          <Input disabled defaultValue="Disabled" fullWidth />
+          <Input
+            aria-label="Input input"
+            disabled
+            defaultValue="Disabled"
+            fullWidth
+          />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             readonly
           </span>
-          <Input readOnly defaultValue="Read only" fullWidth />
+          <Input
+            aria-label="Input input"
+            readOnly
+            defaultValue="Read only"
+            fullWidth
+          />
         </div>
       </section>
 
@@ -427,27 +488,47 @@ export const FullMatrix: Story = {
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             text
           </span>
-          <Input type="text" placeholder="Text" fullWidth />
+          <Input aria-label="Text" type="text" placeholder="Text" fullWidth />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             password
           </span>
-          <Input type="password" placeholder="Password" fullWidth />
+          <Input
+            aria-label="Password"
+            type="password"
+            placeholder="Password"
+            fullWidth
+          />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             email
           </span>
-          <Input type="email" placeholder="Email" fullWidth />
+          <Input
+            aria-label="Email"
+            type="email"
+            placeholder="Email"
+            fullWidth
+          />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             number
           </span>
-          <Input type="number" placeholder="Number" fullWidth />
+          <Input
+            aria-label="Number"
+            type="number"
+            placeholder="Number"
+            fullWidth
+          />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             search
           </span>
-          <Input type="search" placeholder="Search" fullWidth />
+          <Input
+            aria-label="Search"
+            type="search"
+            placeholder="Search"
+            fullWidth
+          />
         </div>
       </section>
 
@@ -475,6 +556,7 @@ export const FullMatrix: Story = {
             long text
           </span>
           <Input
+            aria-label="Long scrolling text input"
             defaultValue="This is a very long text that should scroll horizontally"
             fullWidth
           />
@@ -482,12 +564,16 @@ export const FullMatrix: Story = {
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             short
           </span>
-          <Input defaultValue="Hi" fullWidth />
+          <Input aria-label="Input input" defaultValue="Hi" fullWidth />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             emoji
           </span>
-          <Input defaultValue="Hello 🌍 World 🚀" fullWidth />
+          <Input
+            aria-label="Input input"
+            defaultValue="Hello 🌍 World 🚀"
+            fullWidth
+          />
         </div>
       </section>
     </div>

@@ -45,6 +45,7 @@ const meta = {
       description: "Number of visible text rows",
     },
   },
+  args: { "aria-label": "Text area" },
 } satisfies Meta<typeof Textarea>;
 
 export default meta;
@@ -180,6 +181,7 @@ export const Controlled: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         <Textarea
+          aria-label="Controlled textarea"
           placeholder="Type something..."
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -210,6 +212,7 @@ export const WithCharacterLimit: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         <Textarea
+          aria-label="Character limited textarea"
           placeholder="Max 100 characters..."
           value={value}
           onChange={(e) => setValue(e.target.value)}

@@ -82,13 +82,16 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
       <div
         ref={scrollRef}
         data-testid="file-tree-list"
-        role="tree"
+        {...(state.bootstrapStatus === "ready" && state.items.length > 0
+          ? {
+              role: "tree" as const,
+              "aria-activedescendant":
+                (state.focusedDocumentId ?? state.currentDocumentId)
+                  ? `tree-node-${state.focusedDocumentId ?? state.currentDocumentId}`
+                  : undefined,
+            }
+          : {})}
         aria-label={t("files.tree.panelTitle")}
-        aria-activedescendant={
-          (state.focusedDocumentId ?? state.currentDocumentId)
-            ? `tree-node-${state.focusedDocumentId ?? state.currentDocumentId}`
-            : undefined
-        }
         tabIndex={0}
         onKeyDown={state.onTreeKeyDown}
         className="flex-1 overflow-y-auto scroll-shadow-y min-h-0 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-ring-focus)]"
