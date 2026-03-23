@@ -17,12 +17,12 @@ export function AiUsageStats(props: AiUsageStatsProps): JSX.Element {
       className={`w-full rounded-[var(--radius-md)] bg-[var(--color-bg-base)] px-3 py-2 ${props.className ?? ""}`}
     >
       <div
-        className="text-[10px] text-[var(--color-fg-muted)] mb-1"
+        className="text-(--text-label) text-[var(--color-fg-muted)] mb-1"
         data-testid="ai-usage-annotation"
       >
         {t("ai.usageAnnotation")}
       </div>
-      <div className="space-y-0.5 text-[11px] text-[var(--color-fg-muted)]">
+      <div className="space-y-0.5 text-(--text-status) text-[var(--color-fg-muted)]">
         <div>
           {t("ai.panel.usagePrompt")}{" "}
           <span data-testid="ai-usage-prompt-tokens">

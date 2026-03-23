@@ -81,7 +81,7 @@ function ToolButton(props: {
       data-testid={props.testId}
       type="button"
       className={[
-        "focus-ring px-1.5 py-0.5 text-[11px] font-medium rounded-[var(--radius-sm)]",
+        "focus-ring px-1.5 py-0.5 text-(--text-status) font-medium rounded-[var(--radius-sm)]",
         "transition-colors cursor-pointer",
         props.active
           ? "text-[var(--color-fg-default)] bg-[var(--color-bg-selected)]"
@@ -153,12 +153,12 @@ export const AiInputArea = React.forwardRef<
           >
             <div className="flex items-start gap-2">
               <div className="min-w-0 flex-1">
-                <div className="text-[10px] uppercase tracking-wide text-[var(--color-fg-muted)]">
+                <div className="text-(--text-label) uppercase tracking-wide text-[var(--color-fg-muted)]">
                   {t("ai.panel.selectionFromEditor")}
                 </div>
                 <div
                   data-testid="ai-selection-reference-preview"
-                  className="text-[12px] text-[var(--color-fg-default)] whitespace-pre-wrap break-words"
+                  className="text-(--text-caption) text-[var(--color-fg-default)] whitespace-pre-wrap break-words"
                 >
                   {props.selectionPreview}
                 </div>
@@ -186,7 +186,7 @@ export const AiInputArea = React.forwardRef<
           onChange={(e) => props.setInput(e.target.value)}
           onKeyDown={props.handleKeyDown}
           placeholder={t("ai.panel.inputPlaceholder")}
-          className="w-full min-h-15 max-h-40 px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
+          className="w-full min-h-15 max-h-40 px-3 py-2 bg-transparent border-none resize-none text-(--text-body) text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
         />
         <div className="flex items-center justify-between px-2 pb-2">
           <div className="flex items-center gap-1">

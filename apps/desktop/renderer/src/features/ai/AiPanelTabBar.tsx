@@ -38,7 +38,7 @@ function TabButton(props: {
       role="tab"
       aria-selected={props.active}
       onClick={props.onClick}
-      className={`px-3 py-2 text-[13px] font-medium transition-colors duration-[var(--duration-fast)] relative focus-ring ${
+      className={`px-3 py-2 text-(--text-body) font-medium transition-colors duration-[var(--duration-fast)] relative focus-ring ${
         props.active
           ? "text-[var(--color-fg-default)] border-b-2 border-[var(--color-accent)]"
           : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"

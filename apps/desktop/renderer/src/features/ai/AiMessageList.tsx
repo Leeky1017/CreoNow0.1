@@ -77,26 +77,26 @@ export function ErrorGuideCard(props: {
           className={`w-1.5 rounded-l-[var(--radius-md)] ${borderColorMap[sev]}`}
         />
         <div className="flex-1 px-3 py-2.5">
-          <h4 className="text-[13px] font-semibold text-[var(--color-fg-default)]">
+          <h4 className="text-(--text-body) font-semibold text-[var(--color-fg-default)]">
             {props.title}
           </h4>
-          <p className="mt-1 text-[12px] leading-snug text-[var(--color-fg-muted)] whitespace-pre-wrap">
+          <p className="mt-1 text-(--text-caption) leading-snug text-[var(--color-fg-muted)] whitespace-pre-wrap">
             {props.description}
           </p>
-          <ol className="mt-2 list-decimal pl-4 space-y-1 text-[12px] leading-snug text-[var(--color-fg-default)]">
+          <ol className="mt-2 list-decimal pl-4 space-y-1 text-(--text-caption) leading-snug text-[var(--color-fg-default)]">
             {props.steps.map((step, index) => (
               <li key={`${props.testId}-step-${index}`}>{step}</li>
             ))}
           </ol>
           {props.command ? (
             <div className="mt-2 flex items-center gap-2">
-              <code className="rounded-[var(--radius-sm)] bg-[var(--color-bg-base)] px-2 py-1 text-[11px] text-[var(--color-fg-default)]">
+              <code className="rounded-[var(--radius-sm)] bg-[var(--color-bg-base)] px-2 py-1 text-(--text-status) text-[var(--color-fg-default)]">
                 {props.command}
               </code>
               <Button
                 type="button"
                 data-testid={`${props.testId}-copy-command`}
-                className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default"
+                className="focus-ring text-(--text-status) px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default"
                 onClick={() => void handleCopyCommand()}
               >
                 {copied ? t("ai.panel.copied") : t("ai.panel.copy")}
@@ -108,13 +108,13 @@ export function ErrorGuideCard(props: {
               <Button
                 type="button"
                 data-testid={props.actionTestId}
-                className="focus-ring text-[11px] px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default"
+                className="focus-ring text-(--text-status) px-2 py-1 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default"
                 onClick={props.onAction}
               >
                 {props.actionLabel}
               </Button>
             ) : null}
-            <span className="text-[10px] font-mono text-[var(--color-error)]">
+            <span className="text-(--text-label) font-mono text-[var(--color-error)]">
               {/* 审计：v1-13 #013 KEEP */}
               {/* eslint-disable-next-line creonow/no-raw-error-code-in-ui -- 技术原因：diagnostic code reference for AI error display; user-friendly description shown above */}
               {props.errorCode}
@@ -263,7 +263,7 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
                         ref={virtualizer.measureElement}
                         data-index={virtualRow.index}
                         data-testid={`ai-history-message-${message.role}`}
-                        className={`absolute left-0 right-0 w-full rounded-[var(--radius-md)] p-3 text-[13px] whitespace-pre-wrap list-item-enter ${
+                        className={`absolute left-0 right-0 w-full rounded-[var(--radius-md)] p-3 text-(--text-body) whitespace-pre-wrap list-item-enter ${
                           message.role === "user"
                             ? "bg-[var(--color-bg-base)] text-[var(--color-fg-default)]"
                             : "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)] border-l-2 border-[var(--color-accent)]"
@@ -288,7 +288,7 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
                   <div
                     key={message.messageId}
                     data-testid={`ai-history-message-${message.role}`}
-                    className={`w-full rounded-[var(--radius-md)] p-3 text-[13px] whitespace-pre-wrap ${
+                    className={`w-full rounded-[var(--radius-md)] p-3 text-(--text-body) whitespace-pre-wrap ${
                       message.role === "user"
                         ? "bg-[var(--color-bg-base)] text-[var(--color-fg-default)]"
                         : "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)] border-l-2 border-[var(--color-accent)]"
@@ -304,14 +304,14 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
 
       {!hasHistoryReplay && props.lastRequest ? (
         <div className="w-full p-3 rounded-[var(--radius-md)] bg-[var(--color-bg-base)]">
-          <div className="text-[13px] text-[var(--color-fg-default)] whitespace-pre-wrap">
+          <div className="text-(--text-body) text-[var(--color-fg-default)] whitespace-pre-wrap">
             {props.lastRequest}
           </div>
         </div>
       ) : null}
 
       {props.working && (
-        <div className="flex items-center gap-2 text-[12px] text-[var(--color-fg-muted)]">
+        <div className="flex items-center gap-2 text-(--text-caption) text-[var(--color-fg-muted)]">
           <Spinner size="sm" />
           <span>
             {props.status === "streaming"
@@ -356,11 +356,11 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[12px] font-semibold text-[var(--color-fg-default)]">
+                  <span className="text-(--text-caption) font-semibold text-[var(--color-fg-default)]">
                     {t("ai.candidate", { index: index + 1 })}
                   </span>
                   {isSelected ? (
-                    <span className="text-[11px] text-[var(--color-fg-accent)]">
+                    <span className="text-(--text-status) text-[var(--color-fg-accent)]">
                       {t("ai.candidateSelected")}
                     </span>
                   ) : null}
@@ -399,7 +399,7 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
           aria-live="polite"
           aria-atomic="false"
         >
-          <div className="text-[13px] leading-relaxed text-[var(--color-fg-default)] whitespace-pre-wrap">
+          <div className="text-(--text-body) leading-relaxed text-[var(--color-fg-default)] whitespace-pre-wrap">
             {props.activeOutputText}
             {props.status === "streaming" && <span className="typing-cursor" />}
           </div>
@@ -421,14 +421,14 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
           <div className="flex items-center gap-2 flex-wrap">
             <span
               data-testid="ai-judge-severity"
-              className={`text-[11px] font-semibold uppercase tracking-wide ${judgeSeverityClass(props.judgeResult.severity)}`}
+              className={`text-(--text-status) font-semibold uppercase tracking-wide ${judgeSeverityClass(props.judgeResult.severity)}`}
             >
               {props.judgeResult.severity}
             </span>
             {props.judgeResult.labels.length === 0 ? (
               <span
                 data-testid="ai-judge-pass"
-                className="text-[12px] text-[var(--color-fg-default)]"
+                className="text-(--text-caption) text-[var(--color-fg-default)]"
               >
                 {t("ai.judgePass")}
               </span>
@@ -436,7 +436,7 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
               props.judgeResult.labels.map((label) => (
                 <span
                   key={label}
-                  className="text-[12px] text-[var(--color-fg-default)]"
+                  className="text-(--text-caption) text-[var(--color-fg-default)]"
                 >
                   {label}
                 </span>
