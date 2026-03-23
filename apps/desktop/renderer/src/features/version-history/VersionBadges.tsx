@@ -210,7 +210,9 @@ export function WordChangeBadge({ change }: { change: WordChange }) {
   const sign = isAdded ? "+" : "-";
 
   return (
-    <span className={`text-(--text-label) font-mono px-1 rounded ${colorClasses}`}>
+    <span
+      className={`text-(--text-label) font-mono px-1 rounded ${colorClasses}`}
+    >
       {t("versionHistory.panel.wordsCount", { sign, count: change.count })}
     </span>
   );

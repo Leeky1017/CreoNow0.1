@@ -194,7 +194,10 @@ export function BranchMergeSection({
           </div>
         ) : null}
         {branchMergeStatus === "error" && branchMergeError ? (
-          <div role="alert" className="text-(--text-status) text-[var(--color-error)]">
+          <div
+            role="alert"
+            className="text-(--text-status) text-[var(--color-error)]"
+          >
             {getHumanErrorMessage(branchMergeError)}
           </div>
         ) : null}
