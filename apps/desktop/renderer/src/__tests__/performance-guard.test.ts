@@ -78,7 +78,7 @@ describe("V1-21 Performance Guard", () => {
     expect(seconds).toBeLessThanOrEqual(0.3);
   });
 
-  it("tab-crossfade transition exists in main.css (not animation)", async () => {
+  it("tab-crossfade animation exists in main.css", async () => {
     const fs = await import("node:fs");
     const path = await import("node:path");
     const mainCss = fs.readFileSync(
@@ -86,10 +86,8 @@ describe("V1-21 Performance Guard", () => {
       "utf-8",
     );
     expect(mainCss).toContain(".tab-crossfade");
-    expect(mainCss).toContain("transition: opacity");
-    // Must NOT use @keyframes animation — it creates stacking context
-    expect(mainCss).not.toContain("@keyframes tab-crossfade");
-    expect(mainCss).not.toMatch(/animation:\s*tab-crossfade/);
+    expect(mainCss).toContain("@keyframes tab-crossfade");
+    expect(mainCss).toMatch(/animation:\s*tab-crossfade/);
   });
 
   it("animations respect prefers-reduced-motion", async () => {
@@ -100,20 +98,25 @@ describe("V1-21 Performance Guard", () => {
       "utf-8",
     );
     expect(mainCss).toContain("prefers-reduced-motion");
-    // Verify our new animations/transitions are also disabled
     expect(mainCss).toContain("tab-crossfade");
   });
 
-  it("tab-crossfade transition is used in RightPanel", async () => {
+  it("tab-crossfade is applied directly to InfoPanel or QualityPanel", async () => {
     const fs = await import("node:fs");
     const path = await import("node:path");
-    const rightPanelSrc = fs.readFileSync(
-      path.resolve(__dirname, "../components/layout/RightPanel.tsx"),
+    const infoPanelSrc = fs.readFileSync(
+      path.resolve(__dirname, "../features/rightpanel/InfoPanel.tsx"),
       "utf-8",
     );
-    expect(rightPanelSrc).toContain("tab-crossfade");
-    // Must NOT use CSS animation property
-    expect(rightPanelSrc).not.toMatch(/animation:\s*tab-crossfade/);
+    const qualityPanelSrc = fs.readFileSync(
+      path.resolve(__dirname, "../features/rightpanel/QualityPanel.tsx"),
+      "utf-8",
+    );
+    // At least one of the non-dropdown panels must use tab-crossfade
+    const hasTabCrossfade =
+      infoPanelSrc.includes("tab-crossfade") ||
+      qualityPanelSrc.includes("tab-crossfade");
+    expect(hasTabCrossfade).toBe(true);
   });
 
   it("tab-crossfade must NOT be used in AiPanel (has dropdown children)", async () => {

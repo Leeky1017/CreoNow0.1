@@ -240,7 +240,10 @@ export function InfoPanel(props: InfoPanelProps = {}): JSX.Element {
   }, []);
 
   return (
-    <div data-testid="info-panel" className="flex flex-col h-full">
+    <div
+      data-testid="info-panel"
+      className="tab-crossfade flex flex-col h-full"
+    >
       <PanelHeader title={t("rightPanel.info.panelTitle")} />
 
       <div className="flex flex-col gap-[var(--space-section-gap)] p-4 overflow-auto">

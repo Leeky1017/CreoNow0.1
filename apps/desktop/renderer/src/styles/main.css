@@ -625,15 +625,19 @@ textarea:focus-visible {
   }
 }
 
-/* === V1-21: Tab crossfade — transition (not animation) to avoid stacking context === */
+/* === V1-21: Tab crossfade animation === */
 
-.tab-crossfade {
-  opacity: 1;
-  transition: opacity var(--duration-normal) var(--ease-default);
-
-  @starting-style {
+@keyframes tab-crossfade {
+  from {
     opacity: 0;
   }
+  to {
+    opacity: 1;
+  }
+}
+
+.tab-crossfade {
+  animation: tab-crossfade var(--duration-normal) var(--ease-default);
 }
 
 /* === V1-21: Countup / number animation === */
@@ -671,10 +675,7 @@ textarea:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tab-crossfade {
-    transition: none;
-  }
-
+  .tab-crossfade,
   .countup,
   .progressive-load {
     animation: none;
