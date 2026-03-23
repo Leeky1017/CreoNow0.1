@@ -3,16 +3,11 @@
  *
  * Extracted from ImageUpload.tsx to satisfy AC-20 (≤200 lines per file).
  */
-import React from "react";
 import { useTranslation } from "react-i18next";
 
 export interface ImagePreviewProps {
   /** URL to display */
   previewUrl: string;
-  /** Whether interaction is disabled */
-  disabled: boolean;
-  /** Called when remove button is clicked */
-  onRemove: (e: React.MouseEvent) => void;
 }
 
 /**
@@ -20,8 +15,6 @@ export interface ImagePreviewProps {
  */
 export function ImagePreview({
   previewUrl,
-  disabled,
-  onRemove,
 }: ImagePreviewProps): JSX.Element {
   const { t } = useTranslation();
 
@@ -32,19 +25,6 @@ export function ImagePreview({
         alt={t("primitives.imageUpload.previewAlt")}
         className="w-full h-full object-cover opacity-80 group-hover:opacity-40 transition-opacity"
       />
-      {/* Remove button overlay */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-        {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: ImageUpload remove button is internal */}
-        <button
-          type="button"
-          onClick={onRemove}
-          disabled={disabled}
-          className="bg-[var(--color-error)]/20 hover:bg-[var(--color-error)]/40 text-[var(--color-error)] px-3 py-1.5 rounded-[var(--radius-sm)] text-xs font-medium border border-[var(--color-error)]/30 transition-colors backdrop-blur-sm"
-          data-testid="image-upload-remove"
-        >
-          {t("primitives.imageUpload.remove")}
-        </button>
-      </div>
     </div>
   );
 }

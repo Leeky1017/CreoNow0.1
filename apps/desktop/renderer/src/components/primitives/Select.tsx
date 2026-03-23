@@ -98,6 +98,9 @@ export function Select({
 }: SelectProps): JSX.Element {
   const { t } = useTranslation();
   const resolvedPlaceholder = placeholder ?? t("primitives.select.placeholder");
+  const resolvedAriaLabel =
+    triggerProps["aria-label"] ??
+    (!triggerProps["aria-labelledby"] ? resolvedPlaceholder : undefined);
   const triggerClasses = [triggerStyles, fullWidth ? "w-full" : "", className]
     .filter(Boolean)
     .join(" ");
@@ -114,6 +117,7 @@ export function Select({
         {...triggerProps}
         disabled={disabled}
         className={triggerClasses}
+        aria-label={resolvedAriaLabel}
       >
         <SelectPrimitive.Value placeholder={resolvedPlaceholder} />
         <SelectPrimitive.Icon>

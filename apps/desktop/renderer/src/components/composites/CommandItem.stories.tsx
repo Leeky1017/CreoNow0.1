@@ -34,6 +34,16 @@ export const Default: Story = {
     hint: "⌘O",
     onSelect: () => {},
   },
+  render: () => (
+    <div className="space-y-0.5" role="listbox" aria-label="Commands">
+      <CommandItem
+        icon={<FileText size={16} />}
+        label="Open File"
+        hint="⌘O"
+        onSelect={() => {}}
+      />
+    </div>
+  ),
 };
 
 export const Active: Story = {
@@ -44,11 +54,22 @@ export const Active: Story = {
     active: true,
     onSelect: () => {},
   },
+  render: () => (
+    <div className="space-y-0.5" role="listbox" aria-label="Commands">
+      <CommandItem
+        icon={<Search size={16} />}
+        label="Search Project"
+        hint="⌘K"
+        active
+        onSelect={() => {}}
+      />
+    </div>
+  ),
 };
 
 export const CommandList: Story = {
   render: () => (
-    <div className="space-y-0.5">
+    <div className="space-y-0.5" role="listbox" aria-label="Commands">
       <CommandItem
         icon={<Plus size={16} />}
         label="New File"

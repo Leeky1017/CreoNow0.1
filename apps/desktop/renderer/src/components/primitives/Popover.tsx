@@ -26,6 +26,8 @@ export interface PopoverProps {
   trigger: React.ReactNode;
   /** Popover content */
   children: React.ReactNode;
+  /** Accessible name for popover content when it behaves like a dialog */
+  contentLabel?: string;
   /** Preferred side of the trigger to render. Default: "bottom" */
   side?: "top" | "right" | "bottom" | "left";
   /** Offset from trigger in pixels. Default: 8 */
@@ -93,6 +95,7 @@ export function Popover({
   portalContainer,
   trigger,
   children,
+  contentLabel,
   side = "bottom",
   sideOffset = 8,
   align = "center",
@@ -109,6 +112,7 @@ export function Popover({
       <PopoverPrimitive.Portal container={portalContainer ?? undefined}>
         <PopoverPrimitive.Content
           className={contentClassName}
+          aria-label={contentLabel ?? "Popover"}
           side={side}
           sideOffset={sideOffset}
           align={align}

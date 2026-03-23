@@ -11,6 +11,9 @@ import { Slider } from "./Slider";
 const meta: Meta<typeof Slider> = {
   title: "Primitives/Slider",
   component: Slider,
+  args: {
+    "aria-label": "Slider control",
+  },
   parameters: {
     layout: "centered",
     backgrounds: {
@@ -82,6 +85,7 @@ function InterfaceScaleSlider(): JSX.Element {
         </span>
       </div>
       <Slider
+        aria-label="Interface scale"
         min={80}
         max={120}
         step={10}
@@ -116,6 +120,7 @@ function FontSizeSlider(): JSX.Element {
         </span>
       </div>
       <Slider
+        aria-label="Font size"
         min={12}
         max={24}
         step={1}
@@ -169,6 +174,7 @@ function VolumeSlider(): JSX.Element {
         />
       </svg>
       <Slider
+        aria-label="Volume"
         min={0}
         max={100}
         step={1}

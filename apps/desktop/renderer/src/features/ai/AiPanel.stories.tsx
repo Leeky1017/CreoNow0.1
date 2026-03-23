@@ -86,6 +86,8 @@ function ConversationDemo(): JSX.Element {
           </div>
           <div className="ml-auto flex items-center gap-1">
             <button
+              type="button"
+              aria-label="History"
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="History"
             >
@@ -102,6 +104,8 @@ function ConversationDemo(): JSX.Element {
               </svg>
             </button>
             <button
+              type="button"
+              aria-label="New Chat"
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="New Chat"
             >
@@ -141,10 +145,16 @@ function ConversationDemo(): JSX.Element {
                 typescript
               </span>
               <div className="flex items-center gap-1">
-                <button className="px-2 py-0.5 text-[11px] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded">
+                <button
+                  type="button"
+                  className="px-2 py-0.5 text-[11px] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded"
+                >
                   Copy
                 </button>
-                <button className="px-2 py-0.5 text-[11px] text-[var(--color-fg-accent)] hover:bg-[var(--color-bg-hover)] rounded">
+                <button
+                  type="button"
+                  className="px-2 py-0.5 text-[11px] text-[var(--color-fg-accent)] hover:bg-[var(--color-bg-hover)] rounded"
+                >
                   Apply
                 </button>
               </div>
@@ -163,22 +173,36 @@ function ConversationDemo(): JSX.Element {
         <div className="shrink-0 p-3 border-t border-[var(--color-separator)]">
           <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)]">
             <textarea
+              aria-label="AI request"
               placeholder="Ask the AI to help with your writing..."
               className="w-full min-h-[60px] max-h-[160px] p-3 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
             />
             <div className="flex items-center justify-between px-2 pb-2">
               <div className="flex items-center gap-1.5">
-                <button className="px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded">
+                <button
+                  type="button"
+                  className="px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded"
+                >
                   Ask
                 </button>
-                <button className="px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded">
+                <button
+                  type="button"
+                  className="px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded"
+                >
                   GPT-5.2
                 </button>
-                <button className="px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded">
+                <button
+                  type="button"
+                  className="px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded"
+                >
                   SKILL
                 </button>
               </div>
-              <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
+              <button
+                type="button"
+                aria-label="Send prompt"
+                className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+              >
                 <svg
                   width="16"
                   height="16"
@@ -232,6 +256,8 @@ function StreamingDemo(): JSX.Element {
           </div>
           <div className="ml-auto flex items-center gap-1">
             <button
+              type="button"
+              aria-label="History"
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="History"
             >
@@ -248,6 +274,8 @@ function StreamingDemo(): JSX.Element {
               </svg>
             </button>
             <button
+              type="button"
+              aria-label="New Chat"
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="New Chat"
             >
@@ -292,6 +320,7 @@ function StreamingDemo(): JSX.Element {
         <div className="shrink-0 p-3 border-t border-[var(--color-separator)]">
           <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)]">
             <textarea
+              aria-label="AI request"
               placeholder="Ask the AI..."
               className="w-full min-h-[60px] p-3 bg-transparent border-none resize-none text-[13px] focus:outline-none"
               disabled
@@ -309,7 +338,7 @@ function StreamingDemo(): JSX.Element {
                 </span>
               </div>
               {/* Stop button */}
-              <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]">
+              <button type="button" aria-label="Stop generation" className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]">
                 <div className="w-5 h-5 rounded-full border-2 border-current flex items-center justify-center">
                   <div className="w-2 h-2 bg-current rounded-[1px]" />
                 </div>
@@ -418,6 +447,7 @@ function EmptyConversationDemo(): JSX.Element {
           <div className="ml-auto flex items-center gap-1">
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
+              aria-label="History"
               title="History"
             >
               <svg
@@ -434,6 +464,7 @@ function EmptyConversationDemo(): JSX.Element {
             </button>
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
+              aria-label="New Chat"
               title="New Chat"
             >
               <svg
@@ -480,6 +511,7 @@ function EmptyConversationDemo(): JSX.Element {
         <div className="shrink-0 p-3 border-t border-[var(--color-separator)]">
           <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)]">
             <textarea
+              aria-label="AI request"
               placeholder="Ask the AI to help with your writing..."
               className="w-full min-h-[60px] p-3 bg-transparent border-none resize-none text-[13px] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
             />
@@ -497,6 +529,8 @@ function EmptyConversationDemo(): JSX.Element {
               </div>
               {/* Disabled send button */}
               <button
+                type="button"
+                aria-label="Send prompt"
                 className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-placeholder)] cursor-not-allowed opacity-50"
                 disabled
                 title="输入内容后可发送"
@@ -646,6 +680,8 @@ function SendButtonStatesDemo(): JSX.Element {
         {/* State 1: Disabled */}
         <div style={{ textAlign: "center" }}>
           <button
+            type="button"
+            aria-label="Send prompt"
             className={`${buttonBaseStyle} text-[var(--color-fg-placeholder)] cursor-not-allowed opacity-50`}
             disabled
             style={{
@@ -683,6 +719,8 @@ function SendButtonStatesDemo(): JSX.Element {
         {/* State 2: Send */}
         <div style={{ textAlign: "center" }}>
           <button
+            type="button"
+            aria-label="Send button preview"
             className={`${buttonBaseStyle} text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]`}
             style={{
               outline:
@@ -719,6 +757,8 @@ function SendButtonStatesDemo(): JSX.Element {
         {/* State 3: Stop */}
         <div style={{ textAlign: "center" }}>
           <button
+            type="button"
+            aria-label="Stop generation"
             className={`${buttonBaseStyle} text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]`}
             style={{
               outline:
@@ -798,6 +838,7 @@ function ErrorStateDemo(): JSX.Element {
           <div className="ml-auto flex items-center gap-1">
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
+              aria-label="History"
               title="History"
             >
               <svg
@@ -814,6 +855,7 @@ function ErrorStateDemo(): JSX.Element {
             </button>
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
+              aria-label="New Chat"
               title="New Chat"
             >
               <svg
@@ -867,6 +909,7 @@ function ErrorStateDemo(): JSX.Element {
         <div className="shrink-0 p-3 border-t border-[var(--color-separator)]">
           <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)]">
             <textarea
+              aria-label="AI request"
               placeholder="Ask the AI to help with your writing..."
               className="w-full min-h-[60px] p-3 bg-transparent border-none resize-none text-[13px] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
             />
@@ -882,7 +925,7 @@ function ErrorStateDemo(): JSX.Element {
                   SKILL
                 </button>
               </div>
-              <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
+              <button type="button" aria-label="Send prompt" className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
                 <svg
                   width="16"
                   height="16"
@@ -976,6 +1019,7 @@ function LongConversationDemo(): JSX.Element {
           <div className="ml-auto flex items-center gap-1">
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
+              aria-label="History"
               title="History"
             >
               <svg
@@ -992,6 +1036,7 @@ function LongConversationDemo(): JSX.Element {
             </button>
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
+              aria-label="New Chat"
               title="New Chat"
             >
               <svg
@@ -1036,6 +1081,7 @@ function LongConversationDemo(): JSX.Element {
         <div className="shrink-0 p-3 border-t border-[var(--color-separator)]">
           <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)]">
             <textarea
+              aria-label="AI request"
               placeholder="Ask the AI to help with your writing..."
               className="w-full min-h-[60px] p-3 bg-transparent border-none resize-none text-[13px] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
             />
@@ -1051,7 +1097,7 @@ function LongConversationDemo(): JSX.Element {
                   SKILL
                 </button>
               </div>
-              <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
+              <button type="button" aria-label="Send prompt" className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
                 <svg
                   width="16"
                   height="16"
@@ -1104,6 +1150,7 @@ function HistoryDropdownDemo(): JSX.Element {
           <div className="ml-auto flex items-center gap-1 relative">
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-default)] bg-[var(--color-bg-selected)] rounded"
+              aria-label="History"
               title="History"
             >
               <svg
@@ -1120,6 +1167,7 @@ function HistoryDropdownDemo(): JSX.Element {
             </button>
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
+              aria-label="New Chat"
               title="New Chat"
             >
               <svg
@@ -1228,6 +1276,7 @@ function HistoryDropdownDemo(): JSX.Element {
         <div className="shrink-0 p-3 border-t border-[var(--color-separator)]">
           <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)]">
             <textarea
+              aria-label="AI request"
               placeholder="Ask the AI to help with your writing..."
               className="w-full min-h-[60px] p-3 bg-transparent border-none resize-none text-[13px] focus:outline-none"
             />
@@ -1243,7 +1292,7 @@ function HistoryDropdownDemo(): JSX.Element {
                   SKILL
                 </span>
               </div>
-              <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)]">
+              <button type="button" aria-label="Send prompt" className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)]">
                 <svg
                   width="16"
                   height="16"

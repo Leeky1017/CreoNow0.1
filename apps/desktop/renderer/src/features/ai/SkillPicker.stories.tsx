@@ -104,6 +104,7 @@ function SkillPickerDemo(props: {
             {/* History button */}
             <button
               type="button"
+              aria-label="History"
               title="History"
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] rounded transition-colors"
             >
@@ -112,6 +113,7 @@ function SkillPickerDemo(props: {
             {/* New Chat button */}
             <button
               type="button"
+              aria-label="New Chat"
               title="New Chat"
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] rounded transition-colors"
             >
@@ -131,20 +133,28 @@ function SkillPickerDemo(props: {
         <div className="shrink-0 px-1.5 pb-1.5 pt-2 border-t border-[var(--color-separator)]">
           <div className="border border-[var(--color-border-default)] rounded-[var(--radius-md)] bg-[var(--color-bg-base)]">
             <textarea
+              aria-label="AI request"
               placeholder="Ask the AI to help with your writing..."
               className="w-full min-h-[60px] px-3 py-2 bg-transparent border-none resize-none text-[13px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] focus:outline-none"
             />
             <div className="flex items-center justify-between px-2 pb-2">
               <div className="flex items-center gap-1">
-                <button className="px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded">
+                <button
+                  type="button"
+                  className="px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded"
+                >
                   Ask
                 </button>
-                <button className="px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded">
+                <button
+                  type="button"
+                  className="px-1.5 py-0.5 text-[11px] font-medium text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] rounded"
+                >
                   GPT-5.2
                 </button>
                 {/* SKILL button with picker */}
                 <div className="relative">
                   <button
+                    type="button"
                     onClick={() => setOpen((v) => !v)}
                     className={`px-1.5 py-0.5 text-[11px] font-medium rounded transition-colors cursor-pointer ${
                       open
@@ -166,7 +176,11 @@ function SkillPickerDemo(props: {
                   />
                 </div>
               </div>
-              <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
+              <button
+                type="button"
+                aria-label="Send prompt"
+                className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+              >
                 <ArrowUp size={16} strokeWidth={1.5} />
               </button>
             </div>

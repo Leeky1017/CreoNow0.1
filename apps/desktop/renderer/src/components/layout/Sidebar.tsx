@@ -54,7 +54,7 @@ export function Sidebar(props: {
   const { t } = useTranslation();
 
   if (props.collapsed) {
-    return <aside data-testid="layout-sidebar" className="hidden w-0" />;
+    return <div data-testid="layout-sidebar" className="hidden w-0" aria-hidden="true" />;
   }
 
   /**
@@ -96,6 +96,7 @@ export function Sidebar(props: {
   return (
     <aside
       data-testid="layout-sidebar"
+      aria-label={t(PANEL_TITLES[props.activePanel])}
       className="flex flex-col bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)]"
       style={{
         width: props.width,

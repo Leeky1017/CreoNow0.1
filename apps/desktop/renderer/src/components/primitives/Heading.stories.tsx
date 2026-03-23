@@ -23,6 +23,22 @@ const meta = {
   parameters: {
     layout: "centered",
   },
+  decorators: [
+    (Story) => (
+      <div>
+        <Heading level="h1" style={{ display: "none" }}>
+          Story heading level 1
+        </Heading>
+        <Heading level="h2" style={{ display: "none" }}>
+          Story heading level 2
+        </Heading>
+        <Heading level="h3" style={{ display: "none" }}>
+          Story heading level 3
+        </Heading>
+        <Story />
+      </div>
+    ),
+  ],
   tags: ["autodocs"],
   argTypes: {
     level: {
@@ -243,7 +259,7 @@ export const PageLayout: Story = {
         Advanced configuration options.
       </p>
 
-      <Heading level="h4" color="muted">
+      <Heading level="h3" color="muted">
         Experimental Features
       </Heading>
       <p

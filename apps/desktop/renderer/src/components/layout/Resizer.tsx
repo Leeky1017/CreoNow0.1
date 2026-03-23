@@ -15,6 +15,9 @@ type ResizerProps = {
   onDrag: (deltaX: number, startWidth: number) => number;
   onCommit: (nextWidth: number) => void;
   onDoubleClick: () => void;
+  minWidth?: number;
+  maxWidth?: number;
+  ariaLabel?: string;
 };
 
 /**
@@ -74,6 +77,10 @@ export function Resizer(props: ResizerProps): JSX.Element {
       onDoubleClick={() => props.onDoubleClick()}
       role="separator"
       aria-orientation="vertical"
+      aria-label={props.ariaLabel ?? "Resize panel"}
+      aria-valuemin={props.minWidth ?? 0}
+      aria-valuemax={props.maxWidth ?? 1000}
+      aria-valuenow={props.getStartWidth()}
       tabIndex={0}
     />
   );

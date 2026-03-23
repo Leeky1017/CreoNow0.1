@@ -26,6 +26,9 @@ function SingleResizerDemo(): JSX.Element {
       </div>
       <Resizer
         testId="demo-resizer"
+        ariaLabel="Resize left panel"
+        minWidth={100}
+        maxWidth={400}
         getStartWidth={() => width}
         onDrag={(deltaX, startWidth) => {
           const next = startWidth + deltaX;
@@ -75,6 +78,9 @@ function DualResizerDemo(): JSX.Element {
       </div>
       <Resizer
         testId="left-resizer"
+        ariaLabel="Resize left panel"
+        minWidth={100}
+        maxWidth={300}
         getStartWidth={() => leftWidth}
         onDrag={(deltaX, startWidth) => {
           const next = startWidth + deltaX;
@@ -98,6 +104,9 @@ function DualResizerDemo(): JSX.Element {
       </div>
       <Resizer
         testId="right-resizer"
+        ariaLabel="Resize right panel"
+        minWidth={200}
+        maxWidth={400}
         getStartWidth={() => rightWidth}
         onDrag={(deltaX, startWidth) => {
           const next = startWidth - deltaX;
@@ -170,6 +179,9 @@ function InteractionGuideDemo(): JSX.Element {
         </div>
         <Resizer
           testId="guide-resizer"
+          ariaLabel="Resize example panel"
+          minWidth={100}
+          maxWidth={400}
           getStartWidth={() => width}
           onDrag={(deltaX, startWidth) => {
             const next = startWidth + deltaX;

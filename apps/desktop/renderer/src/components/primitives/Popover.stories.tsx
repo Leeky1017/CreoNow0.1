@@ -98,6 +98,7 @@ export const DefaultOpen: Story = {
   args: {
     trigger: <Button>Already Open</Button>,
     children: <div>This popover is open by default</div>,
+    contentLabel: "Default popover example",
     defaultOpen: true,
   },
 };

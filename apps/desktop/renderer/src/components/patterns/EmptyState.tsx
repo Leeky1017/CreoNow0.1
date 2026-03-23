@@ -186,7 +186,7 @@ export function EmptyState({
       {illustration ?? <DefaultIllustration variant={variant} />}
 
       {/* Title */}
-      <Heading level="h3" className="mb-2">
+      <Heading level="h2" className="mb-2">
         {displayTitle}
       </Heading>
 

@@ -67,15 +67,6 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
 
       <div
         data-testid="file-tree-list"
-        role="tree"
-        aria-label={t("files.tree.panelTitle")}
-        aria-activedescendant={
-          (state.focusedDocumentId ?? state.currentDocumentId)
-            ? `tree-node-${state.focusedDocumentId ?? state.currentDocumentId}`
-            : undefined
-        }
-        tabIndex={0}
-        onKeyDown={state.onTreeKeyDown}
         className="flex-1 overflow-auto scroll-shadow-y min-h-0 focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-ring-focus)]"
       >
         {state.bootstrapStatus !== "ready" ? (
@@ -94,7 +85,18 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
             onAction={() => void state.onCreate("chapter")}
           />
         ) : (
-          <div className="flex flex-col gap-1 p-2">
+          <div
+            role="tree"
+            aria-label={t("files.tree.panelTitle")}
+            aria-activedescendant={
+              state.focusedDocumentId ?? state.currentDocumentId
+                ? `tree-node-${state.focusedDocumentId ?? state.currentDocumentId}`
+                : undefined
+            }
+            tabIndex={0}
+            onKeyDown={state.onTreeKeyDown}
+            className="flex flex-col gap-1 p-2"
+          >
             {state.visibleNodes.map((entry) => (
               <FileTreeNodeRow
                 key={entry.node.documentId}

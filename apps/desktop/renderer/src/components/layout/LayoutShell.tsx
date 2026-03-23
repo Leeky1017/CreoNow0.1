@@ -39,9 +39,9 @@ export function LayoutShell(props: LayoutShellProps): JSX.Element {
       <div className="flex flex-1 flex-col min-w-0">
         <div className="flex flex-1 min-w-0">
           {props.left}
-          {props.leftResizer}
+          <section aria-label={t("layout.sidebarResizer")}>{props.leftResizer}</section>
           {props.main}
-          {props.rightResizer}
+          <section aria-label={t("layout.panelResizer")}>{props.rightResizer}</section>
           {props.right}
         </div>
 

@@ -19,9 +19,13 @@ export const FileTreeRenameRow = React.forwardRef<
   const { item, entry, editing, dropBefore, setEditing } = props;
   return (
     <div
+      id={`tree-node-${item.documentId}`}
       key={item.documentId}
       className="relative"
       style={{ paddingLeft: `${entry.depth * 16}px` }}
+      role="treeitem"
+      aria-level={entry.depth + 1}
+      aria-selected={true}
     >
       {dropBefore ? (
         <div
@@ -38,6 +42,7 @@ export const FileTreeRenameRow = React.forwardRef<
         <Input
           ref={ref}
           data-testid={`file-rename-input-${item.documentId}`}
+          aria-label={t("files.tree.rename")}
           value={editing.title}
           onChange={(e) =>
             setEditing({

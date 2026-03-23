@@ -18,6 +18,9 @@ import { Input } from "./Input";
 const meta = {
   title: "Primitives/Input",
   component: Input,
+  args: {
+    "aria-label": "Input field",
+  },
   parameters: {
     layout: "centered",
   },
@@ -142,7 +145,7 @@ export const AllStates: Story = {
         >
           Default
         </label>
-        <Input placeholder="Enter text..." fullWidth />
+         <Input aria-label="Default input" placeholder="Enter text..." fullWidth />
       </div>
       <div>
         <label
@@ -155,7 +158,7 @@ export const AllStates: Story = {
         >
           With Value
         </label>
-        <Input defaultValue="Hello World" fullWidth />
+         <Input aria-label="Input with value" defaultValue="Hello World" fullWidth />
       </div>
       <div>
         <label
@@ -168,7 +171,12 @@ export const AllStates: Story = {
         >
           Error
         </label>
-        <Input error defaultValue="Invalid input" fullWidth />
+         <Input
+           aria-label="Input with error"
+           error
+           defaultValue="Invalid input"
+           fullWidth
+         />
       </div>
       <div>
         <label
@@ -181,7 +189,12 @@ export const AllStates: Story = {
         >
           Disabled
         </label>
-        <Input disabled defaultValue="Disabled input" fullWidth />
+         <Input
+           aria-label="Disabled input"
+           disabled
+           defaultValue="Disabled input"
+           fullWidth
+         />
       </div>
       <div>
         <label
@@ -194,7 +207,12 @@ export const AllStates: Story = {
         >
           Read Only
         </label>
-        <Input readOnly defaultValue="Read only input" fullWidth />
+         <Input
+           aria-label="Read only input"
+           readOnly
+           defaultValue="Read only input"
+           fullWidth
+         />
       </div>
     </div>
   ),
@@ -354,10 +372,11 @@ export const LongTextConstrained: Story = {
         border: "1px dashed var(--color-border-default)",
       }}
     >
-      <Input
-        fullWidth
-        defaultValue="Very long text that should handle overflow properly without breaking layout"
-      />
+       <Input
+         aria-label="Constrained long text input"
+         fullWidth
+         defaultValue="Very long text that should handle overflow properly without breaking layout"
+       />
     </div>
   ),
 };
@@ -532,27 +551,37 @@ export const FullMatrix: Story = {
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             default
           </span>
-          <Input placeholder="Default input" fullWidth />
+           <Input aria-label="Default input" placeholder="Default input" fullWidth />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             with value
           </span>
-          <Input defaultValue="Hello World" fullWidth />
+           <Input aria-label="Input with value" defaultValue="Hello World" fullWidth />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             error
           </span>
-          <Input error defaultValue="Invalid" fullWidth />
+           <Input aria-label="Input with error" error defaultValue="Invalid" fullWidth />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             disabled
           </span>
-          <Input disabled defaultValue="Disabled" fullWidth />
+           <Input
+             aria-label="Disabled input"
+             disabled
+             defaultValue="Disabled"
+             fullWidth
+           />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             readonly
           </span>
-          <Input readOnly defaultValue="Read only" fullWidth />
+           <Input
+             aria-label="Read only input"
+             readOnly
+             defaultValue="Read only"
+             fullWidth
+           />
         </div>
       </section>
 
@@ -626,20 +655,25 @@ export const FullMatrix: Story = {
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             long text
           </span>
-          <Input
-            defaultValue="This is a very long text that should scroll horizontally"
-            fullWidth
-          />
+           <Input
+             aria-label="Long text input"
+             defaultValue="This is a very long text that should scroll horizontally"
+             fullWidth
+           />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             short
           </span>
-          <Input defaultValue="Hi" fullWidth />
+           <Input aria-label="Short text input" defaultValue="Hi" fullWidth />
 
           <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
             emoji
           </span>
-          <Input defaultValue="Hello 🌍 World 🚀" fullWidth />
+           <Input
+             aria-label="Input with emoji"
+             defaultValue="Hello 🌍 World 🚀"
+             fullWidth
+           />
         </div>
       </section>
     </div>

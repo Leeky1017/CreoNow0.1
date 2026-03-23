@@ -11,6 +11,9 @@ import { Toggle } from "./Toggle";
 const meta: Meta<typeof Toggle> = {
   title: "Primitives/Toggle",
   component: Toggle,
+  args: {
+    "aria-label": "Toggle switch",
+  },
   parameters: {
     layout: "centered",
     backgrounds: {

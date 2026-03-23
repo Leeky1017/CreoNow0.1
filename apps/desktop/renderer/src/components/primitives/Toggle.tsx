@@ -23,6 +23,10 @@ export interface ToggleProps {
   description?: string;
   /** Custom class name */
   className?: string;
+  /** Accessible label when no visible label is rendered */
+  "aria-label"?: string;
+  /** Accessible label reference */
+  "aria-labelledby"?: string;
 }
 
 /**
@@ -118,6 +122,8 @@ export function Toggle({
   label,
   description,
   className = "",
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
 }: ToggleProps): JSX.Element {
   const generatedId = React.useId();
   const toggleId = id ?? generatedId;
@@ -173,6 +179,8 @@ export function Toggle({
       type="button"
       role="switch"
       aria-checked={isChecked}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledBy}
       id={toggleId}
       disabled={disabled}
       className={trackClasses}

@@ -135,19 +135,11 @@ export function ImageUpload({
     [handleFile],
   );
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        handleClick();
-      }
-    },
-    [handleClick],
-  );
+  const wrapperStyles = ["group", "relative"].join(" ");
 
-  const containerStyles = [
+  const triggerStyles = [
     // eslint-disable-next-line creonow/no-hardcoded-dimension -- Primitive: minimum upload area for usability
-    "relative group cursor-pointer border-2 border-dashed rounded-[var(--radius-sm)] min-h-[140px] flex flex-col items-center justify-center",
+    "relative w-full cursor-pointer border-2 border-dashed rounded-[var(--radius-sm)] min-h-[140px] flex flex-col items-center justify-center",
     "transition-all duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)]",
     disabled
       ? "border-[var(--color-border-default)] bg-[var(--color-bg-disabled)] cursor-not-allowed opacity-50"
@@ -173,31 +165,43 @@ export function ImageUpload({
         tabIndex={-1}
         data-testid="image-upload-input"
       />
-      <div
-        role="button"
-        tabIndex={disabled ? -1 : 0}
-        className={containerStyles}
-        onDragEnter={handleDragActivate}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragActivate}
-        onDrop={handleDrop}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
-        aria-disabled={disabled}
-        data-testid="image-upload"
-      >
+      <div className={wrapperStyles}>
+        {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: upload surface is a native button while remove remains a separate sibling button */}
+        <button
+          type="button"
+          className={triggerStyles}
+          onDragEnter={handleDragActivate}
+          onDragLeave={handleDragLeave}
+          onDragOver={handleDragActivate}
+          onDrop={handleDrop}
+          onClick={handleClick}
+          aria-disabled={disabled}
+          disabled={disabled}
+          data-testid="image-upload"
+        >
+          {previewUrl ? (
+            <ImagePreview previewUrl={previewUrl} />
+          ) : (
+            <ImageUploadPlaceholder
+              placeholder={resolvedPlaceholder}
+              hint={resolvedHint}
+            />
+          )}
+        </button>
         {previewUrl ? (
-          <ImagePreview
-            previewUrl={previewUrl}
-            disabled={disabled}
-            onRemove={handleRemove}
-          />
-        ) : (
-          <ImageUploadPlaceholder
-            placeholder={resolvedPlaceholder}
-            hint={resolvedHint}
-          />
-        )}
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            {/* eslint-disable-next-line creonow/no-native-html-element -- Primitive: remove affordance must remain a separate native button outside the upload trigger */}
+            <button
+              type="button"
+              onClick={handleRemove}
+              disabled={disabled}
+              className="pointer-events-auto bg-[var(--color-error)]/20 hover:bg-[var(--color-error)]/40 text-[var(--color-error)] px-3 py-1.5 rounded-[var(--radius-sm)] text-xs font-medium border border-[var(--color-error)]/30 transition-colors backdrop-blur-sm"
+              data-testid="image-upload-remove"
+            >
+              {t("primitives.imageUpload.remove")}
+            </button>
+          </div>
+        ) : null}
       </div>
     </>
   );

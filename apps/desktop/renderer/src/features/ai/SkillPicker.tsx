@@ -121,6 +121,7 @@ export function SkillPicker(props: {
               onClick={() => {
                 props.onOpenSettings?.();
               }}
+              aria-label={t("ai.skillPicker.openSettings")}
             >
               <Plus size={16} strokeWidth={1.5} />
             </Button>

@@ -356,6 +356,7 @@ export const HeightVariations: Story = {
           高度: 400px
         </div>
         <div
+          aria-hidden="true"
           style={{
             height: "150px",
             width: "100%",

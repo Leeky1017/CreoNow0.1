@@ -170,9 +170,9 @@ export function AddRelationshipPopover({
       <div className="w-70 -mx-2 -my-2">
         {/* Header */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
-          <h3 className="text-sm font-medium text-[var(--color-fg-default)]">
+          <h2 className="text-sm font-medium text-[var(--color-fg-default)]">
             {t("character.addRelation.title")}
-          </h3>
+          </h2>
         </div>
 
         {/* Character Selection */}

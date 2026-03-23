@@ -1,4 +1,3 @@
-import React from "react";
 import { Avatar } from "../../components/primitives";
 import type { Character, CharacterRole } from "./types";
 import { ROLE_DISPLAY } from "./types";
@@ -70,63 +69,8 @@ export function CharacterCard({
   const roleLabel = ROLE_DISPLAY[character.role]?.label ?? character.role;
   const roleColorClass = getRoleColorClass(character.role);
 
-  const handleEditClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onEdit?.();
-  };
-
-  const handleDeleteClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDelete?.();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onClick?.();
-    }
-  };
-
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={handleKeyDown}
-      className={[
-        "group",
-        "flex",
-        "items-center",
-        "gap-3",
-        "p-2",
-        "rounded-[var(--radius-md)]",
-        "border",
-        "cursor-pointer",
-        "relative",
-        "transition-colors",
-        "duration-[var(--duration-normal)]",
-        // Focus visible
-        "focus-visible:outline",
-        "focus-visible:outline-[length:var(--ring-focus-width)]",
-        "focus-visible:outline-offset-[var(--ring-focus-offset)]",
-        "focus-visible:outline-[var(--color-ring-focus)]",
-        // Selected vs default state
-        selected
-          ? [
-              "bg-[var(--color-bg-hover)]",
-              "border-[var(--color-border-hover)]",
-            ].join(" ")
-          : [
-              "border-transparent",
-              "hover:bg-[var(--color-bg-raised)]",
-              "hover:border-[var(--color-border-default)]",
-            ].join(" "),
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      data-testid="character-card"
-      aria-selected={selected}
-    >
+    <div className="group relative">
       {/* Selected indicator (blue left border) */}
       {selected && (
         <div
@@ -134,58 +78,94 @@ export function CharacterCard({
           data-testid="character-card-selected-indicator"
         />
       )}
-
-      {/* Avatar */}
-      <Avatar
-        src={character.avatarUrl}
-        fallback={character.name}
-        size="sm"
+      {/* eslint-disable-next-line creonow/no-native-html-element -- CharacterCard uses a primary native button with sibling actions so edit/delete controls are not nested inside another interactive element */}
+      <button
+        type="button"
+        onClick={onClick}
         className={[
+          "flex",
+          "w-full",
+          "items-center",
+          "gap-3",
+          "p-2",
+          "rounded-[var(--radius-md)]",
           "border",
-          "border-[var(--color-border-default)]",
+          "cursor-pointer",
+          "relative",
+          "transition-colors",
+          "duration-[var(--duration-normal)]",
+          "focus-visible:outline",
+          "focus-visible:outline-[length:var(--ring-focus-width)]",
+          "focus-visible:outline-offset-[var(--ring-focus-offset)]",
+          "focus-visible:outline-[var(--color-ring-focus)]",
+          onEdit || onDelete ? "pr-20" : "",
           selected
-            ? "opacity-90"
-            : "opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100",
-          "transition-[filter,opacity]",
-        ].join(" ")}
-      />
-
-      {/* Name and Role */}
-      <div className="flex flex-col min-w-0 flex-1">
-        <span
+            ? [
+                "bg-[var(--color-bg-hover)]",
+                "border-[var(--color-border-hover)]",
+              ].join(" ")
+            : [
+                "border-transparent",
+                "hover:bg-[var(--color-bg-raised)]",
+                "hover:border-[var(--color-border-default)]",
+              ].join(" "),
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        data-testid="character-card"
+        aria-pressed={selected}
+      >
+        <Avatar
+          src={character.avatarUrl}
+          fallback={character.name}
+          size="sm"
           className={[
-            "text-sm",
-            "font-medium",
-            "leading-none",
-            "truncate",
-            "transition-colors",
+            "border",
+            "border-[var(--color-border-default)]",
             selected
-              ? "text-[var(--color-fg-default)]"
-              : "text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)]",
+              ? "opacity-90"
+              : "opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100",
+            "transition-[filter,opacity]",
           ].join(" ")}
-        >
-          {character.name}
-        </span>
-        <span
-          className={[
-            "text-[11px]",
-            "mt-1.5",
-            "truncate",
-            "transition-colors",
-            selected
-              ? roleColorClass
-              : "text-[var(--color-fg-subtle)] group-hover:text-[var(--color-fg-muted)]",
-          ].join(" ")}
-        >
-          {roleLabel}
-        </span>
-      </div>
+        />
 
-      {/* Action buttons (shown on hover or when selected) */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          <span
+            className={[
+              "text-sm",
+              "font-medium",
+              "leading-none",
+              "truncate",
+              "transition-colors",
+              selected
+                ? "text-[var(--color-fg-default)]"
+                : "text-[var(--color-fg-muted)] group-hover:text-[var(--color-fg-default)]",
+            ].join(" ")}
+          >
+            {character.name}
+          </span>
+          <span
+            className={[
+              "text-[11px]",
+              "mt-1.5",
+              "truncate",
+              "transition-colors",
+              selected
+                ? roleColorClass
+                : "text-[var(--color-fg-subtle)] group-hover:text-[var(--color-fg-muted)]",
+            ].join(" ")}
+          >
+            {roleLabel}
+          </span>
+        </div>
+      </button>
+
       <div
         className={[
           "absolute",
           "right-2",
+          "top-1/2",
+          "-translate-y-1/2",
           "flex",
           "gap-1",
           "transition-opacity",
@@ -199,7 +179,7 @@ export function CharacterCard({
         {onEdit && (
           <Button
             type="button"
-            onClick={handleEditClick}
+            onClick={onEdit}
             className={[
               "focus-ring",
               "p-1.5",
@@ -217,7 +197,7 @@ export function CharacterCard({
         {onDelete && (
           <Button
             type="button"
-            onClick={handleDeleteClick}
+            onClick={onDelete}
             className={[
               "focus-ring",
               "p-1.5",

@@ -244,6 +244,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
           type="button"
           onClick={props.onClose}
           className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors p-2 rounded hover:bg-[var(--color-bg-hover)]"
+          aria-label={t("diff.header.close")}
         >
           <X size={20} strokeWidth={1.5} />
         </Button>

@@ -20,6 +20,9 @@ import { Checkbox } from "./Checkbox";
 const meta = {
   title: "Primitives/Checkbox",
   component: Checkbox,
+  args: {
+    "aria-label": "Checkbox option",
+  },
   parameters: {
     layout: "centered",
   },
@@ -286,17 +289,25 @@ export const StateMatrix: Story = {
       <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
         Normal
       </div>
-      <Checkbox />
-      <Checkbox checked={true} />
-      <Checkbox checked="indeterminate" />
+      <Checkbox aria-label="Enabled unchecked checkbox" />
+      <Checkbox aria-label="Enabled checked checkbox" checked={true} />
+      <Checkbox aria-label="Enabled indeterminate checkbox" checked="indeterminate" />
 
       {/* Disabled row */}
       <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
         Disabled
       </div>
-      <Checkbox disabled />
-      <Checkbox disabled checked={true} />
-      <Checkbox disabled checked="indeterminate" />
+      <Checkbox aria-label="Disabled unchecked checkbox" disabled />
+      <Checkbox
+        aria-label="Disabled checked checkbox"
+        disabled
+        checked={true}
+      />
+      <Checkbox
+        aria-label="Disabled indeterminate checkbox"
+        disabled
+        checked="indeterminate"
+      />
 
       {/* With Label row */}
       <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
@@ -354,15 +365,15 @@ export const NoLabelList: Story = {
   render: () => (
     <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <Checkbox />
+        <Checkbox aria-label="First checkbox" />
         <span style={{ fontSize: "13px" }}>Custom content 1</span>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <Checkbox checked={true} />
+        <Checkbox aria-label="Second checkbox" checked={true} />
         <span style={{ fontSize: "13px" }}>Custom content 2</span>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-        <Checkbox />
+        <Checkbox aria-label="Third checkbox" />
         <span style={{ fontSize: "13px" }}>Custom content 3</span>
       </div>
     </div>
@@ -485,11 +496,11 @@ export const FullMatrix: Story = {
           Without Label
         </h3>
         <div style={{ display: "flex", gap: "1.5rem" }}>
-          <Checkbox />
-          <Checkbox checked={true} />
-          <Checkbox checked="indeterminate" />
-          <Checkbox disabled />
-          <Checkbox disabled checked={true} />
+          <Checkbox aria-label="Unchecked checkbox" />
+          <Checkbox aria-label="Checked checkbox" checked={true} />
+          <Checkbox aria-label="Indeterminate checkbox" checked="indeterminate" />
+          <Checkbox aria-label="Disabled unchecked checkbox" disabled />
+          <Checkbox aria-label="Disabled checked checkbox" disabled checked={true} />
         </div>
       </section>
     </div>

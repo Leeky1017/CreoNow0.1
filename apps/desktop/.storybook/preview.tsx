@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react";
 import React, { useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
 import { i18n, initializeI18n } from "../renderer/src/i18n";
+import { AppToastProvider } from "../renderer/src/components/providers/AppToastProvider";
 
 // Initialize i18n for Storybook — async but i18next renders synchronously with fallbacks
 initializeI18n();
@@ -45,9 +46,11 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <I18nextProvider i18n={i18n}>
-        <ThemeDecorator>
-          <Story />
-        </ThemeDecorator>
+        <AppToastProvider>
+          <ThemeDecorator>
+            <Story />
+          </ThemeDecorator>
+        </AppToastProvider>
       </I18nextProvider>
     ),
   ],

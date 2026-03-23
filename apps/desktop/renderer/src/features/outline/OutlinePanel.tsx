@@ -68,8 +68,6 @@ export function OutlinePanel({
   const [editingId, setEditingId] = React.useState<string | null>(null);
   const [editValue, setEditValue] = React.useState("");
   const [focusedIndex, setFocusedIndex] = React.useState<number>(-1);
-  const containerRef = React.useRef<HTMLDivElement>(null);
-
   const filteredItems = React.useMemo(() => {
     if (!searchQuery.trim()) return flatItems;
     const query = searchQuery.toLowerCase();
@@ -197,15 +195,7 @@ export function OutlinePanel({
   };
 
   return (
-    <aside
-      ref={containerRef}
-      className="flex flex-col h-full bg-[var(--color-bg-surface)]"
-      data-testid="outline-panel"
-      role="tree"
-      aria-label={t("outline.ariaLabel")}
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-    >
+    <div className="flex flex-col h-full bg-[var(--color-bg-surface)]" data-testid="outline-panel">
       <PanelHeader
         title={t("outline.title")}
         actions={
@@ -285,6 +275,7 @@ export function OutlinePanel({
         visibleItems={visibleItems}
         flatItems={flatItems}
         searchQuery={searchQuery}
+        treeAriaLabel={t("outline.ariaLabel")}
         activeId={activeId}
         selectedIds={selectedIds}
         editingId={editingId}
@@ -306,6 +297,7 @@ export function OutlinePanel({
         onEditCancel={cancelEdit}
         onToggleCollapse={toggleCollapse}
         onToggleSelect={toggleSelect}
+        onTreeKeyDown={handleKeyDown}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         onDragOver={handleDragOver}
@@ -321,6 +313,6 @@ export function OutlinePanel({
           </span>
         </div>
       )}
-    </aside>
+    </div>
   );
 }
