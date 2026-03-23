@@ -14,7 +14,7 @@ describe("HeroCard responsive guard", () => {
     // The test must target this specific line to avoid matching max-w-[500px] in the text area
     const decorationLine = heroCardSrc
       .split("\n")
-      .find((line) => line.includes("w-[35%]"));
+      .find((line) => line.includes("w-[35%]") && line.includes("className"));
     expect(
       decorationLine,
       "decoration div with w-[35%] not found in HeroCard",
