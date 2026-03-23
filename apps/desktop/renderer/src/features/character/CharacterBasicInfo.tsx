@@ -70,7 +70,7 @@ export function CharacterBasicInfo(
               ? t("character.detail.collapseProfile")
               : t("character.detail.expandProfile")
           }
-          className="!px-1.5 !py-0.5 !h-auto text-[10px] text-[var(--color-fg-placeholder)] hover:text-[var(--color-fg-muted)] inline-flex items-center gap-1 font-medium"
+          className="!px-1.5 !py-0.5 !h-auto text-(--text-label) text-[var(--color-fg-placeholder)] hover:text-[var(--color-fg-muted)] inline-flex items-center gap-1 font-medium"
         >
           <span aria-hidden="true">
             {props.isExpanded

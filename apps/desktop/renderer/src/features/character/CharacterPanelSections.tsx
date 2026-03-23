@@ -83,7 +83,7 @@ function EmptyGroupState({ onClick }: { onClick?: () => void }) {
         "hover:!bg-[var(--color-bg-surface)]",
       ].join(" ")}
     >
-      <span className="text-[11px]">{t("character.panel.noCharacters")}</span>
+      <span className="text-(--text-status)">{t("character.panel.noCharacters")}</span>
     </Button>
   );
 }
@@ -115,10 +115,10 @@ export function CharacterGroupSection({
     <div>
       {/* Group header */}
       <div className="px-2 mb-3 flex items-center justify-between group">
-        <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold">
+        <div className="text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold">
           {config.label}
         </div>
-        <span className="text-[10px] text-[var(--color-fg-placeholder)] group-hover:text-[var(--color-fg-muted)] transition-colors">
+        <span className="text-(--text-label) text-[var(--color-fg-placeholder)] group-hover:text-[var(--color-fg-muted)] transition-colors">
           {characters.length}
         </span>
       </div>

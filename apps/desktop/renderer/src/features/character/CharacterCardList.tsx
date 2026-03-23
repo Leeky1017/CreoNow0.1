@@ -88,7 +88,7 @@ export function CharacterCardList({
                 <p className="text-sm font-medium text-[var(--color-fg-default)] truncate">
                   {card.name}
                 </p>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]">
+                <span className="text-(--text-label) px-2 py-0.5 rounded-full bg-[var(--color-bg-hover)] text-[var(--color-fg-subtle)] border border-[var(--color-border-default)]">
                   {card.typeLabel}
                 </span>
               </div>
