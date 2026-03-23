@@ -102,6 +102,7 @@ export function VersionHistoryPanelContent({
     return rows;
   }, [timeGroups]);
 
+  // 审计：v1-13 #1237 KEEP — useVirtualizer 三方 hook 签名不兼容 react-hooks 规则
   // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: flatRows.length,
