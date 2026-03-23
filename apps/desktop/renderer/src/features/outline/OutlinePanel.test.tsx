@@ -79,9 +79,9 @@ describe("OutlinePanel", () => {
     fireEvent.click(expandAllButton);
     fireEvent.click(collapseAllButton);
 
-    const panel = screen.getByTestId("outline-panel");
-    panel.focus();
-    fireEvent.keyDown(panel, { key: "ArrowDown" });
+    const tree = screen.getByRole("tree", { name: "Document outline" });
+    tree.focus();
+    fireEvent.keyDown(tree, { key: "ArrowDown" });
 
     expect(searchInput).toHaveValue("Heading 120");
     expect(screen.getByText("Heading 120")).toBeInTheDocument();
@@ -342,8 +342,8 @@ describe("OutlinePanel", () => {
     );
 
     // Focus the panel
-    const panel = screen.getByTestId("outline-panel");
-    panel.focus();
+    const tree = screen.getByRole("tree", { name: "Document outline" });
+    tree.focus();
 
     // Press ArrowDown
     await user.keyboard("{ArrowDown}");
@@ -356,8 +356,8 @@ describe("OutlinePanel", () => {
     render(<OutlinePanel items={SAMPLE_ITEMS} activeId="h1-title" />);
 
     // Focus the panel
-    const panel = screen.getByTestId("outline-panel");
-    panel.focus();
+    const tree = screen.getByRole("tree", { name: "Document outline" });
+    tree.focus();
 
     // Press F2
     await user.keyboard("{F2}");
@@ -380,8 +380,8 @@ describe("OutlinePanel", () => {
     );
 
     // Focus the panel
-    const panel = screen.getByTestId("outline-panel");
-    panel.focus();
+    const tree = screen.getByRole("tree", { name: "Document outline" });
+    tree.focus();
 
     // Press Delete
     await user.keyboard("{Delete}");
@@ -394,8 +394,8 @@ describe("OutlinePanel", () => {
     render(<OutlinePanel items={SAMPLE_ITEMS} />);
 
     // Focus the panel
-    const panel = screen.getByTestId("outline-panel");
-    panel.focus();
+    const tree = screen.getByRole("tree", { name: "Document outline" });
+    tree.focus();
 
     // Press Ctrl+A
     await user.keyboard("{Control>}a{/Control}");

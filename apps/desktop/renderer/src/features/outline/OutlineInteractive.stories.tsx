@@ -108,19 +108,22 @@ const meta: Meta<typeof OutlinePanel> = {
     (Story) => (
       <div className="h-screen min-h-[600px] flex bg-[var(--color-bg-base)]">
         {/* Sidebar */}
-        <div className="w-[260px] border-r border-[var(--color-separator)] shrink-0">
+        <aside
+          className="w-[260px] border-r border-[var(--color-separator)] shrink-0"
+          aria-label="Outline sidebar"
+        >
           <Story />
-        </div>
+        </aside>
 
         {/* Main content area placeholder */}
-        <div className="flex-1 h-full flex flex-col relative overflow-hidden">
-          <header className="h-14 border-b border-[var(--color-separator)] flex items-center justify-between px-8 bg-[var(--color-bg-base)]">
+        <main className="flex-1 h-full flex flex-col relative overflow-hidden">
+          <div className="h-14 border-b border-[var(--color-separator)] flex items-center justify-between px-8 bg-[var(--color-bg-base)]">
             <div className="flex items-center gap-4 text-[var(--color-fg-placeholder)]">
               <span className="text-xs uppercase tracking-widest">
                 Draft / The Aesthetics of Silence
               </span>
             </div>
-          </header>
+          </div>
 
           <div className="flex-1 overflow-y-auto bg-[var(--color-bg-base)]">
             <div className="max-w-[720px] mx-auto py-16 px-8">
@@ -135,7 +138,7 @@ const meta: Meta<typeof OutlinePanel> = {
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     ),
   ],

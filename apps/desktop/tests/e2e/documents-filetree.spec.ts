@@ -199,7 +199,7 @@ test("documents filetree: create/switch/rename/delete + current restore", async 
   await page
     .getByTestId(`file-row-${docAId}`)
     .click({ position: { x: 5, y: 5 } });
-  await expect(page.getByTestId(`file-row-${docAId}`)).toHaveAttribute(
+  await expect(page.locator(`#tree-node-${docAId}`)).toHaveAttribute(
     "aria-selected",
     "true",
   );
@@ -217,7 +217,7 @@ test("documents filetree: create/switch/rename/delete + current restore", async 
   await page
     .getByTestId(`file-row-${docBId}`)
     .click({ position: { x: 5, y: 5 } });
-  await expect(page.getByTestId(`file-row-${docBId}`)).toHaveAttribute(
+  await expect(page.locator(`#tree-node-${docBId}`)).toHaveAttribute(
     "aria-selected",
     "true",
   );
@@ -303,7 +303,7 @@ test("documents filetree: create/switch/rename/delete + current restore", async 
   }
   expect(currentDoc2.data.documentId).toBe(docAId);
 
-  await expect(page2.getByTestId(`file-row-${docAId}`)).toHaveAttribute(
+  await expect(page2.locator(`#tree-node-${docAId}`)).toHaveAttribute(
     "aria-selected",
     "true",
   );

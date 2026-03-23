@@ -181,6 +181,7 @@ export interface OutlineTreeProps {
   visibleItems: OutlineItem[];
   flatItems: OutlineItem[];
   searchQuery: string;
+  treeAriaLabel: string;
   activeId?: string | null;
   selectedIds: Set<string>;
   editingId: string | null;
@@ -202,6 +203,7 @@ export interface OutlineTreeProps {
     itemId: string,
     e: React.MouseEvent | React.KeyboardEvent,
   ) => void;
+  onTreeKeyDown: (e: React.KeyboardEvent) => void;
   onDragStart: (e: React.DragEvent, itemId: string) => void;
   onDragEnd: (e: React.DragEvent) => void;
   onDragOver: (e: React.DragEvent, itemId: string, level: OutlineLevel) => void;
@@ -216,6 +218,7 @@ export function OutlineTree({
   visibleItems,
   flatItems,
   searchQuery,
+  treeAriaLabel,
   activeId,
   selectedIds,
   editingId,
@@ -234,6 +237,7 @@ export function OutlineTree({
   onEditCancel,
   onToggleCollapse,
   onToggleSelect,
+  onTreeKeyDown,
   onDragStart,
   onDragEnd,
   onDragOver,
@@ -284,10 +288,14 @@ export function OutlineTree({
       <div
         ref={scrollRef}
         data-testid="outline-scroll"
+        tabIndex={0}
+        onKeyDown={onTreeKeyDown}
         className="flex-1 min-h-0 overflow-y-auto scroll-shadow-y py-2"
       >
         <div
           className="relative flex flex-col"
+          role="tree"
+          aria-label={treeAriaLabel}
           style={{ height: `${virtualizer.getTotalSize()}px` }}
         >
           {virtualItems.map((virtualRow) => {
@@ -342,7 +350,13 @@ export function OutlineTree({
       className="flex-1 min-h-0"
       viewportClassName="h-full w-full overflow-y-auto scroll-shadow-y py-2"
     >
-      <div className="flex flex-col">
+      <div
+        className="flex flex-col"
+        role="tree"
+        aria-label={treeAriaLabel}
+        tabIndex={0}
+        onKeyDown={onTreeKeyDown}
+      >
         {visibleItems.map((item) => (
           <OutlineItemRow
             key={item.id}

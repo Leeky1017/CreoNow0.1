@@ -243,9 +243,9 @@ function RoleSelectorOpenRender() {
   return (
     <div className="h-screen flex items-center justify-center bg-[var(--color-bg-base)]">
       <div className="p-8 bg-[var(--color-bg-surface)] rounded-lg border border-[var(--color-border-default)]">
-        <h3 className="text-sm font-medium text-[var(--color-fg-default)] mb-4">
+        <h2 className="text-sm font-medium text-[var(--color-fg-default)] mb-4">
           Role Selector Demo
-        </h3>
+        </h2>
         <div className="flex items-center gap-3">
           <span className="text-xs text-[var(--color-fg-muted)]">
             Current Role:
@@ -283,9 +283,9 @@ function GroupSelectorOpenRender() {
   return (
     <div className="h-screen flex items-center justify-center bg-[var(--color-bg-base)]">
       <div className="p-8 bg-[var(--color-bg-surface)] rounded-lg border border-[var(--color-border-default)]">
-        <h3 className="text-sm font-medium text-[var(--color-fg-default)] mb-4">
+        <h2 className="text-sm font-medium text-[var(--color-fg-default)] mb-4">
           Group Selector Demo
-        </h3>
+        </h2>
         <div className="flex items-center gap-3">
           <span className="text-xs text-[var(--color-fg-muted)]">
             Current Group:
@@ -341,9 +341,9 @@ function AddingRelationshipFlowRender() {
   return (
     <div className="h-screen flex items-center justify-center bg-[var(--color-bg-base)]">
       <div className="p-8 bg-[var(--color-bg-surface)] rounded-lg border border-[var(--color-border-default)] max-w-md">
-        <h3 className="text-sm font-medium text-[var(--color-fg-default)] mb-4">
+        <h2 className="text-sm font-medium text-[var(--color-fg-default)] mb-4">
           Add Relationship Demo
-        </h3>
+        </h2>
         <div className="mb-4">
           <div className="text-xs text-[var(--color-fg-muted)] mb-2">
             Current relationships: {character.relationships.length}

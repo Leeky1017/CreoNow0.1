@@ -60,6 +60,7 @@ const meta = {
       description: "Placeholder text",
     },
   },
+  args: { "aria-label": "Text input" },
 } satisfies Meta<typeof Input>;
 
 export default meta;
@@ -189,7 +190,11 @@ export const AllStates: Story = {
         >
           Default
         </label>
-        <Input placeholder="Enter text..." fullWidth />
+        <Input
+          aria-label="Default text input"
+          placeholder="Enter text..."
+          fullWidth
+        />
       </div>
       <div>
         <label
@@ -202,7 +207,11 @@ export const AllStates: Story = {
         >
           With Value
         </label>
-        <Input defaultValue="Hello World" fullWidth />
+        <Input
+          aria-label="With value input"
+          defaultValue="Hello World"
+          fullWidth
+        />
       </div>
       <div>
         <label
@@ -215,7 +224,12 @@ export const AllStates: Story = {
         >
           Error
         </label>
-        <Input error defaultValue="Invalid input" fullWidth />
+        <Input
+          aria-label="Error input"
+          error
+          defaultValue="Invalid input"
+          fullWidth
+        />
       </div>
       <div>
         <label
@@ -228,7 +242,12 @@ export const AllStates: Story = {
         >
           Disabled
         </label>
-        <Input disabled defaultValue="Disabled input" fullWidth />
+        <Input
+          aria-label="Disabled input"
+          disabled
+          defaultValue="Disabled input"
+          fullWidth
+        />
       </div>
       <div>
         <label
@@ -241,7 +260,12 @@ export const AllStates: Story = {
         >
           Read Only
         </label>
-        <Input readOnly defaultValue="Read only input" fullWidth />
+        <Input
+          aria-label="Read only input"
+          readOnly
+          defaultValue="Read only input"
+          fullWidth
+        />
       </div>
     </div>
   ),

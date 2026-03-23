@@ -60,6 +60,7 @@ function HoverActions({
           size="icon"
           onClick={() => onRestore?.(versionId)}
           className="focus-ring p-1.5 rounded-md hover:bg-[var(--color-bg-overlay)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+          aria-label={t("versionHistory.panel.restore")}
         >
           <RestoreIcon />
         </Button>
@@ -70,6 +71,7 @@ function HoverActions({
           size="icon"
           onClick={() => onCompare?.(versionId)}
           className="focus-ring p-1.5 rounded-md hover:bg-[var(--color-bg-overlay)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+          aria-label={t("versionHistory.panel.compare")}
         >
           <CompareIcon />
         </Button>
@@ -80,6 +82,7 @@ function HoverActions({
           size="icon"
           onClick={() => onPreview?.(versionId)}
           className="focus-ring p-1.5 rounded-md hover:bg-[var(--color-bg-overlay)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors"
+          aria-label={t("versionHistory.panel.preview")}
         >
           <PreviewIcon />
         </Button>

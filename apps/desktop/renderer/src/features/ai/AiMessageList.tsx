@@ -239,6 +239,9 @@ export function AiMessageList(props: AiMessageListProps): JSX.Element {
   return (
     <div
       ref={scrollRef}
+      role="log"
+      aria-live="polite"
+      aria-label={t("ai.panel.messageArea")}
       className="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4"
     >
       {hasHistoryReplay

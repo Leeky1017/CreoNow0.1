@@ -85,6 +85,7 @@ export function MultiVersionCompare(
             type="button"
             onClick={props.onClose}
             className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-colors p-1.5 rounded hover:bg-[var(--color-bg-hover)]"
+            aria-label={t("diff.header.close")}
           >
             <X size={16} strokeWidth={1.5} />
           </Button>

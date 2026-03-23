@@ -130,6 +130,7 @@ type AppShellMainAreaProps = AppShellMainContentProps & {
 export function AppShellMainArea(props: AppShellMainAreaProps): JSX.Element {
   return (
     <main
+      id="main-content"
       className={`relative flex flex-1 bg-[var(--color-bg-base)] text-[var(--color-fg-muted)] text-[13px] ${
         props.currentProject
           ? "items-stretch justify-stretch"

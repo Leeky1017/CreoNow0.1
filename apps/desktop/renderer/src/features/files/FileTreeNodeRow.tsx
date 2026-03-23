@@ -89,6 +89,10 @@ export const FileTreeNodeRow = React.memo(
         },
       );
 
+      const isExpanded = hasChildren
+        ? props.expandedFolderIds.has(item.documentId)
+        : undefined;
+
       if (isRenaming) {
         return (
           <FileTreeRenameRow
@@ -105,7 +109,12 @@ export const FileTreeNodeRow = React.memo(
 
       return (
         <div
+          id={`tree-node-${item.documentId}`}
           key={item.documentId}
+          role="treeitem"
+          aria-expanded={isExpanded}
+          aria-level={entry.depth + 1}
+          aria-selected={selected}
           className={`relative ${isExiting ? "list-item-exit pointer-events-none" : ""}`}
           style={{ paddingLeft: `${entry.depth * 16}px` }}
         >
@@ -120,11 +129,10 @@ export const FileTreeNodeRow = React.memo(
           <ContextMenu items={contextMenuItems}>
             <ListItem
               data-testid={`file-row-${item.documentId}`}
-              aria-selected={selected}
               selected={selected}
-              interactive
               compact
               draggable
+              tabIndex={0}
               onDragStart={(e) => {
                 props.setDraggingDocumentId(item.documentId);
                 props.setDropTarget(null);
@@ -157,7 +165,7 @@ export const FileTreeNodeRow = React.memo(
                 props.setDraggingDocumentId(null);
               }}
               onClick={() => void props.onSelect(item.documentId)}
-              className={`h-8 border ${selected ? "border-[var(--color-border-focus)]" : "border-transparent"} group ${dropInto ? "bg-[var(--color-bg-hover)]" : ""} ${isDragging ? "opacity-50" : ""}`}
+              className={`h-8 border ${selected ? "border-[var(--color-border-focus)]" : "border-transparent"} group ${dropInto ? "bg-[var(--color-bg-hover)]" : ""} ${isDragging ? "opacity-50" : ""} cursor-pointer select-none hover:bg-[var(--color-bg-hover)] active:bg-[var(--color-bg-active)]`}
             >
               {hasChildren ? (
                 <Button

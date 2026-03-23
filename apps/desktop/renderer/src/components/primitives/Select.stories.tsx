@@ -22,6 +22,9 @@ import { within, expect } from "@storybook/test";
 const meta = {
   title: "Primitives/Select",
   component: Select,
+  args: {
+    "aria-label": "Select field",
+  },
   parameters: {
     layout: "centered",
     docs: {
@@ -254,6 +257,7 @@ export const Controlled: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         <Select
+          aria-label="Controlled select"
           placeholder="Select a color..."
           options={simpleOptions}
           value={value}
@@ -298,12 +302,14 @@ export const LinkedSelects: Story = {
     return (
       <div style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
         <Select
+          aria-label="Category select"
           placeholder="Select category..."
           options={categoryOptions}
           value={category}
           onValueChange={setCategory}
         />
         <Select
+          aria-label="Item select"
           placeholder="Select item..."
           options={category ? itemOptions[category] : []}
           disabled={!category}

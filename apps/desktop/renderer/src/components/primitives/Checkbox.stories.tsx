@@ -56,6 +56,7 @@ const meta = {
       description: "Disable the checkbox",
     },
   },
+  args: { label: "Checkbox option" },
 } satisfies Meta<typeof Checkbox>;
 
 export default meta;

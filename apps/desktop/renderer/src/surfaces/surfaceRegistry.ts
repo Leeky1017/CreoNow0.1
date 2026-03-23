@@ -290,6 +290,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     storybookTitle: "Primitives/Heading",
   },
   {
+    id: "headingMatrix",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Heading matrix showcase" },
+    ],
+    testId: "heading-matrix",
+    storybookTitle: "Primitives/Heading/Matrix",
+  },
+  {
     id: "imageUpload",
     kind: "primitive",
     entryPoints: [
@@ -313,6 +322,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     ],
     testId: "input-variants",
     storybookTitle: "Primitives/Input/Variants",
+  },
+  {
+    id: "inputMatrix",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Input matrix showcase" },
+    ],
+    testId: "input-matrix",
+    storybookTitle: "Primitives/Input/Matrix",
   },
   {
     id: "listItem",
@@ -455,6 +473,15 @@ export const surfaceRegistry: SurfaceRegistryItem[] = [
     ],
     testId: "textarea-advanced",
     storybookTitle: "Primitives/Textarea/Advanced",
+  },
+  {
+    id: "textareaMatrix",
+    kind: "primitive",
+    entryPoints: [
+      { type: "storybookOnly", description: "Textarea matrix showcase" },
+    ],
+    testId: "textarea-matrix",
+    storybookTitle: "Primitives/Textarea/Matrix",
   },
   {
     id: "toast",

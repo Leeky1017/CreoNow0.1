@@ -60,6 +60,7 @@ export function AppToastProvider({
 }: {
   children: React.ReactNode;
 }): JSX.Element {
+  const parentContext = React.useContext(AppToastContext);
   const [toasts, setToasts] = React.useState<ToastItem[]>([]);
 
   const showToast = React.useCallback((options: ShowToastOptions) => {
@@ -84,6 +85,10 @@ export function AppToastProvider({
 
   const contextValue = React.useMemo(() => ({ showToast }), [showToast]);
 
+  if (parentContext) {
+    return <>{children}</>;
+  }
+
   return (
     <AppToastContext.Provider value={contextValue}>
       <ToastProvider>
@@ -104,7 +109,7 @@ export function AppToastProvider({
             }}
           />
         ))}
-        <ToastViewport />
+        {toasts.length > 0 ? <ToastViewport /> : null}
       </ToastProvider>
     </AppToastContext.Provider>
   );

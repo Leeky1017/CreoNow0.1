@@ -43,6 +43,7 @@ const meta = {
       description: "Number of visible text rows",
     },
   },
+  args: { "aria-label": "Text area" },
 } satisfies Meta<typeof Textarea>;
 
 export default meta;
@@ -96,76 +97,8 @@ export const FocusTest: Story = {
       <span style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
         Tab →
       </span>
-      <Textarea placeholder="First textarea" />
-      <Textarea placeholder="Second textarea" />
-    </div>
-  ),
-};
-
-// ============================================================================
-// 完整状态矩阵
-// ============================================================================
-
-/**
- * 完整状态矩阵
- *
- * 展示所有状态组合：error × disabled
- */
-export const StateMatrix: Story = {
-  args: {},
-  parameters: {
-    layout: "padded",
-  },
-  render: () => (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "auto 1fr 1fr",
-        gap: "1.5rem",
-        alignItems: "start",
-      }}
-    >
-      {/* Headers */}
-      <div />
-      <div
-        style={{
-          fontSize: "12px",
-          color: "var(--color-fg-muted)",
-          textAlign: "center",
-        }}
-      >
-        Normal
-      </div>
-      <div
-        style={{
-          fontSize: "12px",
-          color: "var(--color-fg-muted)",
-          textAlign: "center",
-        }}
-      >
-        Error
-      </div>
-
-      {/* Enabled row */}
-      <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
-        Enabled
-      </div>
-      <Textarea placeholder="Enter text..." />
-      <Textarea placeholder="Invalid input" error />
-
-      {/* Disabled row */}
-      <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
-        Disabled
-      </div>
-      <Textarea placeholder="Read only" disabled />
-      <Textarea placeholder="Error disabled" error disabled />
-
-      {/* With Value row */}
-      <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
-        With Value
-      </div>
-      <Textarea defaultValue="Some content here" />
-      <Textarea defaultValue="Invalid content" error />
+      <Textarea aria-label="First textarea" placeholder="First textarea" />
+      <Textarea aria-label="Second textarea" placeholder="Second textarea" />
     </div>
   ),
 };
@@ -236,6 +169,7 @@ export const ResizeBehavior: Story = {
           Normal (resize-y enabled)
         </div>
         <Textarea
+          aria-label="Resizable textarea"
           placeholder="Drag the bottom-right corner to resize"
           rows={4}
         />
@@ -250,7 +184,12 @@ export const ResizeBehavior: Story = {
         >
           Disabled (resize disabled)
         </div>
-        <Textarea placeholder="Cannot resize when disabled" rows={4} disabled />
+        <Textarea
+          aria-label="Cannot resize when disabled"
+          placeholder="Cannot resize when disabled"
+          rows={4}
+          disabled
+        />
       </div>
     </div>
   ),
@@ -262,231 +201,4 @@ export const MinHeight: Story = {
     placeholder: "Minimum height textarea",
     rows: 1,
   },
-};
-
-/**
- * 完整展示（用于 AI 自检）
- *
- * 包含所有状态的完整矩阵，便于一次性检查
- */
-export const FullMatrix: Story = {
-  args: {},
-  parameters: {
-    layout: "fullscreen",
-  },
-  render: () => (
-    <div
-      style={{
-        padding: "2rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "2rem",
-      }}
-    >
-      {/* Basic States */}
-      <section>
-        <h3
-          style={{
-            margin: "0 0 1rem",
-            fontSize: "14px",
-            color: "var(--color-fg-default)",
-          }}
-        >
-          Basic States
-        </h3>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "1.5rem",
-          }}
-        >
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              Default
-            </div>
-            <Textarea placeholder="Enter text..." />
-          </div>
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              With Value
-            </div>
-            <Textarea defaultValue="Some content here" />
-          </div>
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              Error
-            </div>
-            <Textarea placeholder="Invalid input" error />
-          </div>
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              Disabled
-            </div>
-            <Textarea placeholder="Read only" disabled />
-          </div>
-        </div>
-      </section>
-
-      {/* Full Width */}
-      <section>
-        <h3
-          style={{
-            margin: "0 0 1rem",
-            fontSize: "14px",
-            color: "var(--color-fg-default)",
-          }}
-        >
-          Full Width
-        </h3>
-        <div style={{ maxWidth: "400px" }}>
-          <Textarea placeholder="Full width textarea..." fullWidth />
-        </div>
-      </section>
-
-      {/* Rows Variation */}
-      <section>
-        <h3
-          style={{
-            margin: "0 0 1rem",
-            fontSize: "14px",
-            color: "var(--color-fg-default)",
-          }}
-        >
-          Different Row Counts
-        </h3>
-        <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              2 rows
-            </div>
-            <Textarea placeholder="2 rows" rows={2} />
-          </div>
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              4 rows (default)
-            </div>
-            <Textarea placeholder="4 rows" rows={4} />
-          </div>
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              8 rows
-            </div>
-            <Textarea placeholder="8 rows" rows={8} />
-          </div>
-        </div>
-      </section>
-
-      {/* State Combinations */}
-      <section>
-        <h3
-          style={{
-            margin: "0 0 1rem",
-            fontSize: "14px",
-            color: "var(--color-fg-default)",
-          }}
-        >
-          State Combinations
-        </h3>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "1.5rem",
-          }}
-        >
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              Error + Value
-            </div>
-            <Textarea defaultValue="Invalid content here" error />
-          </div>
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              Disabled + Value
-            </div>
-            <Textarea defaultValue="Read-only content" disabled />
-          </div>
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              Error + Disabled
-            </div>
-            <Textarea defaultValue="Error and disabled" error disabled />
-          </div>
-          <div>
-            <div
-              style={{
-                marginBottom: "0.5rem",
-                fontSize: "12px",
-                color: "var(--color-fg-muted)",
-              }}
-            >
-              Full Width + Error
-            </div>
-            <Textarea placeholder="Full width error" error fullWidth />
-          </div>
-        </div>
-      </section>
-    </div>
-  ),
 };

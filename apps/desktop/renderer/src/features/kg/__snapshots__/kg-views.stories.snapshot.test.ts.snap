@@ -189,11 +189,11 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           />
         </svg>
       </div>
-      <h3
-        class="font-[var(--font-family-ui)] text-sm font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] mb-2"
+      <h2
+        class="font-[var(--font-family-ui)] text-base font-semibold leading-[1.3] tracking-[-0.01em] text-[var(--color-fg-default)] mb-2"
       >
         No Characters
-      </h3>
+      </h2>
       <p
         class="text-[13px] leading-[1.5] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] mb-6 max-w-xs"
       >
@@ -280,11 +280,11 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       <div
         class="flex items-center gap-4 w-60"
       >
-        <h1
+        <h2
           class="text-sm font-medium tracking-wide text-(--color-fg-default)"
         >
           Knowledge Graph
-        </h1>
+        </h2>
       </div>
       <div
         class="flex items-center gap-2"
@@ -514,11 +514,11 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
             />
           </svg>
         </div>
-        <h3
-          class="font-[var(--font-family-ui)] text-sm font-medium leading-[1.4] tracking-normal text-[var(--color-fg-default)] mb-2"
+        <h2
+          class="font-[var(--font-family-ui)] text-base font-semibold leading-[1.3] tracking-[-0.01em] text-[var(--color-fg-default)] mb-2"
         >
           No entities yet. Click to add your first character or location
-        </h3>
+        </h2>
         <p
           class="text-[13px] leading-[1.5] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] mb-6 max-w-xs"
         >
@@ -557,11 +557,11 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       <div
         class="flex items-center gap-4 w-60"
       >
-        <h1
+        <h2
           class="text-sm font-medium tracking-wide text-(--color-fg-default)"
         >
           Knowledge Graph
-        </h1>
+        </h2>
       </div>
       <div
         class="flex items-center gap-2"
@@ -946,11 +946,11 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
       <div
         class="flex items-center gap-4 w-60"
       >
-        <h1
+        <h2
           class="text-sm font-medium tracking-wide text-(--color-fg-default)"
         >
           Knowledge Graph
-        </h1>
+        </h2>
       </div>
       <div
         class="flex items-center gap-2"

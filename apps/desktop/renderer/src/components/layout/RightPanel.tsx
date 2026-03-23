@@ -142,13 +142,21 @@ export function RightPanel(props: {
   };
 
   const openSettings = props.onOpenSettings ?? (() => {});
+  const activeTab = RIGHT_PANEL_TABS.find(
+    ({ type }) => type === activeRightPanel,
+  );
 
   // Always wrap in Provider to maintain consistent DOM structure for React reconciliation.
   // This ensures element references remain valid across collapsed/expanded state changes.
   if (props.collapsed) {
     return (
       <OpenSettingsContext.Provider value={openSettings}>
-        <aside data-testid="layout-panel" className="hidden w-0" />
+        <aside
+          data-testid="layout-panel"
+          aria-label={activeTab ? t(activeTab.labelKey) : undefined}
+          className="hidden w-0"
+          aria-hidden="true"
+        />
       </OpenSettingsContext.Provider>
     );
   }
@@ -157,6 +165,7 @@ export function RightPanel(props: {
     <OpenSettingsContext.Provider value={openSettings}>
       <aside
         data-testid="layout-panel"
+        aria-label={activeTab ? t(activeTab.labelKey) : undefined}
         className="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
         style={{
           width: props.width,

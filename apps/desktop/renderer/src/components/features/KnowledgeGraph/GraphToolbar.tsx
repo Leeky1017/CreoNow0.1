@@ -140,9 +140,9 @@ export function GraphToolbar({
             <div className="h-4 w-px bg-[var(--color-border-hover)]" />
           </>
         )}
-        <h1 className="text-sm font-medium tracking-wide text-(--color-fg-default)">
+        <h2 className="text-sm font-medium tracking-wide text-(--color-fg-default)">
           {t("kg.toolbar.title")}
-        </h1>
+        </h2>
       </div>
 
       {/* Center section: Filter buttons */}

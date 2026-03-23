@@ -204,7 +204,12 @@ export function CommandPalette({
           // 审计：v1-13 #017 KEEP
           // eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：command list height per design spec (max-h-[424px])
           className="max-h-[424px] overflow-y-auto p-2"
-          role="listbox"
+          role={flatItems.length > 0 ? "listbox" : undefined}
+          aria-label={
+            flatItems.length > 0
+              ? t("workbench.commandPalette.resultsAriaLabel")
+              : undefined
+          }
           data-active-index={activeIndex}
           onScroll={handleListScroll}
         >

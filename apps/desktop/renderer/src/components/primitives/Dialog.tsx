@@ -133,6 +133,11 @@ const closeButtonStyles = [
  * A modal dialog built on Radix UI Dialog for proper accessibility and focus management.
  * Uses z-index modal (400), shadow-xl, and scrim overlay.
  *
+ * Radix UI Dialog provides built-in focus management (WCAG 2.4.3):
+ * - Focus trap: Tab/Shift+Tab cycle stays within the dialog content
+ * - Esc key: Closes the dialog (configurable via `closeOnEscape`)
+ * - Focus restoration: Focus returns to the trigger element after close
+ *
  * @example
  * ```tsx
  * <Dialog
@@ -162,6 +167,27 @@ export function Dialog({
   closeOnOverlayClick = true,
 }: DialogProps): JSX.Element {
   const { t } = useTranslation();
+
+  // Manual focus restoration: Radix Dialog's built-in restoration relies on
+  // Dialog.Trigger. For controlled dialogs opened via external state, we
+  // track the previously focused element ourselves (WCAG 2.4.3).
+  const previouslyFocusedRef = React.useRef<HTMLElement | null>(null);
+  const wasOpenRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (open && !wasOpenRef.current) {
+      previouslyFocusedRef.current =
+        document.activeElement as HTMLElement | null;
+    } else if (!open && wasOpenRef.current && previouslyFocusedRef.current) {
+      const el = previouslyFocusedRef.current;
+      previouslyFocusedRef.current = null;
+      if (el.isConnected) {
+        el.focus();
+      }
+    }
+    wasOpenRef.current = open;
+  }, [open]);
+
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
       <DialogPrimitive.Portal>

@@ -99,6 +99,7 @@ function SendButtonStatesDemo(): JSX.Element {
         {/* State 1: Disabled */}
         <div style={{ textAlign: "center" }}>
           <button
+            aria-label="Send message (disabled)"
             className={`${buttonBaseStyle} text-[var(--color-fg-placeholder)] cursor-not-allowed opacity-50`}
             disabled
             style={{
@@ -136,6 +137,7 @@ function SendButtonStatesDemo(): JSX.Element {
         {/* State 2: Send */}
         <div style={{ textAlign: "center" }}>
           <button
+            aria-label="Send message"
             className={`${buttonBaseStyle} text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]`}
             style={{
               outline:
@@ -172,6 +174,7 @@ function SendButtonStatesDemo(): JSX.Element {
         {/* State 3: Stop */}
         <div style={{ textAlign: "center" }}>
           <button
+            aria-label="Stop generating"
             className={`${buttonBaseStyle} text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]`}
             style={{
               outline:
@@ -239,6 +242,7 @@ function ErrorStateDemo(): JSX.Element {
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="History"
+              aria-label="History"
             >
               <svg
                 width="12"
@@ -255,6 +259,7 @@ function ErrorStateDemo(): JSX.Element {
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="New Chat"
+              aria-label="New Chat"
             >
               <svg
                 width="12"
@@ -319,7 +324,10 @@ function ErrorStateDemo(): JSX.Element {
                   SKILL
                 </button>
               </div>
-              <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
+              <button
+                aria-label="Send message"
+                className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+              >
                 <svg
                   width="16"
                   height="16"

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 import { FileTreePanel } from "./FileTreePanel";
 
@@ -103,31 +103,39 @@ describe("FileTreePanel keyboard navigation", () => {
   it("should support Arrow/Enter/F2/Delete keyboard interactions for tree navigation", async () => {
     render(<FileTreePanel projectId="proj-1" />);
 
-    const tree = screen.getByTestId("file-tree-list");
+    const tree = screen.getByRole("tree");
     tree.focus();
 
     fireEvent.keyDown(tree, { key: "ArrowRight" });
-    expect(screen.getByTestId("file-row-doc-in-folder")).toHaveAttribute(
-      "aria-selected",
-      "true",
+    await waitFor(() =>
+      expect(
+        screen
+          .getByTestId("file-row-doc-in-folder")
+          .closest('[role="treeitem"]'),
+      ).toHaveAttribute("aria-selected", "true"),
     );
 
     fireEvent.keyDown(tree, { key: "ArrowDown" });
-    expect(screen.getByTestId("file-row-doc-root")).toHaveAttribute(
-      "aria-selected",
-      "true",
+    await waitFor(() =>
+      expect(
+        screen.getByTestId("file-row-doc-root").closest('[role="treeitem"]'),
+      ).toHaveAttribute("aria-selected", "true"),
     );
 
     fireEvent.keyDown(tree, { key: "ArrowUp" });
-    expect(screen.getByTestId("file-row-doc-in-folder")).toHaveAttribute(
-      "aria-selected",
-      "true",
+    await waitFor(() =>
+      expect(
+        screen
+          .getByTestId("file-row-doc-in-folder")
+          .closest('[role="treeitem"]'),
+      ).toHaveAttribute("aria-selected", "true"),
     );
 
     fireEvent.keyDown(tree, { key: "ArrowLeft" });
-    expect(screen.getByTestId("file-row-folder-1")).toHaveAttribute(
-      "aria-selected",
-      "true",
+    await waitFor(() =>
+      expect(
+        screen.getByTestId("file-row-folder-1").closest('[role="treeitem"]'),
+      ).toHaveAttribute("aria-selected", "true"),
     );
 
     fireEvent.keyDown(tree, { key: "Enter" });

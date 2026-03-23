@@ -1961,6 +1961,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
     Main Content Area
   </div>
   <aside
+    aria-label="AI"
     class="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
     data-testid="layout-panel"
     style="width: 320px; min-width: 280px; max-width: 480px;"
@@ -2117,7 +2118,10 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                 class="flex-1 flex flex-col min-h-0"
               >
                 <div
+                  aria-label="AI message area"
+                  aria-live="polite"
                   class="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4"
+                  role="log"
                 >
                   <div
                     aria-atomic="false"
@@ -2290,6 +2294,8 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
     Main Content Area
   </div>
   <aside
+    aria-hidden="true"
+    aria-label="AI"
     class="hidden w-0"
     data-testid="layout-panel"
   />
@@ -2307,6 +2313,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
     Main Content Area
   </div>
   <aside
+    aria-label="Quality"
     class="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
     data-testid="layout-panel"
     style="width: 320px; min-width: 280px; max-width: 480px;"
@@ -2409,6 +2416,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
     Main Content Area
   </div>
   <aside
+    aria-label="Info"
     class="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
     data-testid="layout-panel"
     style="width: 320px; min-width: 280px; max-width: 480px;"
@@ -2530,6 +2538,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
     Main Content Area
   </div>
   <aside
+    aria-label="Info"
     class="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
     data-testid="layout-panel"
     style="width: 320px; min-width: 280px; max-width: 480px;"

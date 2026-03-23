@@ -72,6 +72,7 @@ function ConversationDemo(): JSX.Element {
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="History"
+              aria-label="History"
             >
               <svg
                 width="12"
@@ -88,6 +89,7 @@ function ConversationDemo(): JSX.Element {
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="New Chat"
+              aria-label="New Chat"
             >
               <svg
                 width="12"
@@ -162,7 +164,10 @@ function ConversationDemo(): JSX.Element {
                   SKILL
                 </button>
               </div>
-              <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
+              <button
+                aria-label="Send message"
+                className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+              >
                 <svg
                   width="16"
                   height="16"
@@ -212,6 +217,7 @@ function StreamingDemo(): JSX.Element {
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="History"
+              aria-label="History"
             >
               <svg
                 width="12"
@@ -228,6 +234,7 @@ function StreamingDemo(): JSX.Element {
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="New Chat"
+              aria-label="New Chat"
             >
               <svg
                 width="12"
@@ -287,7 +294,10 @@ function StreamingDemo(): JSX.Element {
                 </span>
               </div>
               {/* Stop button */}
-              <button className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]">
+              <button
+                aria-label="Stop generating"
+                className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+              >
                 <div className="w-5 h-5 rounded-full border-2 border-current flex items-center justify-center">
                   <div className="w-2 h-2 bg-current rounded-[1px]" />
                 </div>
@@ -322,6 +332,7 @@ function EmptyConversationDemo(): JSX.Element {
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="History"
+              aria-label="History"
             >
               <svg
                 width="12"
@@ -338,6 +349,7 @@ function EmptyConversationDemo(): JSX.Element {
             <button
               className="w-5 h-5 flex items-center justify-center text-[var(--color-fg-muted)]"
               title="New Chat"
+              aria-label="New Chat"
             >
               <svg
                 width="12"
@@ -403,6 +415,7 @@ function EmptyConversationDemo(): JSX.Element {
                 className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-placeholder)] cursor-not-allowed opacity-50"
                 disabled
                 title="输入内容后可发送"
+                aria-label="输入内容后可发送"
               >
                 <svg
                   width="16"

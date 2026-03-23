@@ -53,6 +53,8 @@ export interface ProgressBarProps {
   indeterminate?: boolean;
   /** Progress value (0-100) for determinate mode */
   value?: number;
+  /** Accessible label */
+  "aria-label"?: string;
   /** Additional CSS classes */
   className?: string;
 }
@@ -118,6 +120,7 @@ function Spinner({
 export function ProgressBar({
   indeterminate = true,
   value = 0,
+  "aria-label": ariaLabel = "Loading progress",
   className = "",
 }: ProgressBarProps): JSX.Element {
   return (
@@ -133,6 +136,7 @@ export function ProgressBar({
       aria-valuenow={indeterminate ? undefined : value}
       aria-valuemin={0}
       aria-valuemax={100}
+      aria-label={ariaLabel}
     >
       {indeterminate ? (
         <div

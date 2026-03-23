@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CharacterPanel } from "./CharacterPanel";
 import { CharacterCard } from "./CharacterCard";
@@ -134,7 +134,7 @@ describe("CharacterPanel", () => {
     const elaraCard = screen
       .getByText("Elara Vance")
       .closest('[data-testid="character-card"]');
-    expect(elaraCard).toHaveAttribute("aria-selected", "true");
+    expect(elaraCard).toHaveAttribute("aria-pressed", "true");
 
     const indicator = screen.getByTestId("character-card-selected-indicator");
     expect(indicator).toBeInTheDocument();
@@ -221,20 +221,18 @@ describe("CharacterCard", () => {
   });
 
   it("is keyboard accessible", async () => {
+    const user = userEvent.setup();
     const onClickMock = vi.fn();
 
     render(<CharacterCard character={character} onClick={onClickMock} />);
 
     const card = screen.getByTestId("character-card");
-    expect(card).toHaveAttribute("tabIndex", "0");
-    expect(card).toHaveAttribute("role", "button");
+    expect(card.tagName).toBe("BUTTON");
+    expect(card).toHaveAttribute("aria-pressed", "false");
 
-    // Simulate keyboard interaction
     card.focus();
-    fireEvent.keyDown(card, { key: "Enter" });
-    expect(onClickMock).toHaveBeenCalledTimes(1);
-
-    fireEvent.keyDown(card, { key: " " });
+    await user.keyboard("{Enter}");
+    await user.keyboard(" ");
     expect(onClickMock).toHaveBeenCalledTimes(2);
   });
 

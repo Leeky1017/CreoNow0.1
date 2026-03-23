@@ -225,10 +225,6 @@ describe("VersionHistoryPanel", () => {
       />,
     );
 
-    expect(
-      screen.queryByRole("button", { name: /Restore/i }),
-    ).not.toBeInTheDocument();
-
     fireEvent.click(screen.getByTestId("version-card-v-1042"));
 
     expect(onSelect).toHaveBeenCalledWith("v-1042");

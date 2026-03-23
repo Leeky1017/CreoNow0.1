@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
+import { Button } from "../primitives";
 import { InfoBar } from "./InfoBar";
 import { expect } from "@storybook/test";
 
@@ -44,7 +45,11 @@ export const Error: Story = {
   args: {
     variant: "error",
     message: "Failed to connect to AI service. Please check your API key.",
-    action: { label: "Settings", onClick: () => {} },
+    action: (
+      <Button type="button" size="sm" variant="ghost">
+        Settings
+      </Button>
+    ),
   },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.children.length).toBeGreaterThan(0);

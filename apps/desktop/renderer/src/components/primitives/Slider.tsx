@@ -27,6 +27,10 @@ export interface SliderProps {
   formatLabel?: (value: number) => string;
   /** Custom class name */
   className?: string;
+  /** Accessible label for the slider */
+  "aria-label"?: string;
+  /** ID of element that labels this slider */
+  "aria-labelledby"?: string;
 }
 
 /**
@@ -105,6 +109,8 @@ export function Slider({
   showLabels = false,
   formatLabel = defaultFormatLabel,
   className = "",
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
 }: SliderProps): JSX.Element {
   // Internal state for uncontrolled usage
   const [internalValue, setInternalValue] = React.useState(defaultValue ?? min);
@@ -166,6 +172,8 @@ export function Slider({
           aria-valuemin={min}
           aria-valuemax={max}
           aria-valuenow={currentValue}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
         />
 
         {/* Custom thumb */}
