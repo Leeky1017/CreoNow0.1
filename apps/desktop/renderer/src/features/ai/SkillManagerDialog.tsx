@@ -9,7 +9,10 @@ import { getHumanErrorMessage } from "../../lib/errorMessages";
 import { Button } from "../../components/primitives/Button";
 import { Textarea } from "../../components/primitives/Textarea";
 
-import type { CustomSkillListItem, SkillFormState } from "./skill-manager.types";
+import type {
+  CustomSkillListItem,
+  SkillFormState,
+} from "./skill-manager.types";
 import {
   DEFAULT_FORM,
   buildSkillDraftFromDescription,
