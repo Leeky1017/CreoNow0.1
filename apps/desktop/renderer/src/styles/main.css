@@ -619,8 +619,23 @@ textarea:focus-visible {
   animation: list-item-enter 0.2s ease-out;
 }
 
+@keyframes list-item-exit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.list-item-exit {
+  animation: list-item-exit 0.15s ease-in forwards;
+  will-change: opacity;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .list-item-enter {
+  .list-item-enter,
+  .list-item-exit {
     animation: none;
   }
 }

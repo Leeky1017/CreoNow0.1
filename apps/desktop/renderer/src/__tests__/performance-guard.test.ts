@@ -78,6 +78,48 @@ describe("V1-21 Performance Guard", () => {
     expect(seconds).toBeLessThanOrEqual(0.3);
   });
 
+  it("list-item-exit animation class should exist, stay within 0.3s, and support reduced motion", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const mainCss = fs.readFileSync(
+      path.resolve(__dirname, "../styles/main.css"),
+      "utf-8",
+    );
+    const listItemExitMatch = mainCss.match(
+      /\.list-item-exit\s*\{[^}]*animation:\s*list-item-exit\s+([\d.]+)s/,
+    );
+    expect(mainCss).toContain("@keyframes list-item-exit");
+    expect(listItemExitMatch).not.toBeNull();
+    const seconds = parseFloat(listItemExitMatch![1]);
+    expect(seconds).toBeLessThanOrEqual(0.3);
+    expect(mainCss).toMatch(
+      /@media\s*\(prefers-reduced-motion: reduce\)[\s\S]*\.list-item-exit/,
+    );
+  });
+
+  it("file tree delete path wires list-item-exit into runtime usage", async () => {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const useFileTreeStateSrc = fs.readFileSync(
+      path.resolve(__dirname, "../features/files/useFileTreeState.ts"),
+      "utf-8",
+    );
+    const fileTreePanelSrc = fs.readFileSync(
+      path.resolve(__dirname, "../features/files/FileTreePanel.tsx"),
+      "utf-8",
+    );
+    const fileTreeNodeRowSrc = fs.readFileSync(
+      path.resolve(__dirname, "../features/files/FileTreeNodeRow.tsx"),
+      "utf-8",
+    );
+
+    expect(useFileTreeStateSrc).toContain("exitingDocumentIds");
+    expect(useFileTreeStateSrc).toContain("FILE_TREE_EXIT_ANIMATION_MS");
+    expect(useFileTreeStateSrc).toContain("setTimeout");
+    expect(fileTreePanelSrc).toContain("state.exitingDocumentIds");
+    expect(fileTreeNodeRowSrc).toContain("list-item-exit");
+  });
+
   it("tab-crossfade animation exists in main.css", async () => {
     const fs = await import("node:fs");
     const path = await import("node:path");

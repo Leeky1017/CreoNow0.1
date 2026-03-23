@@ -126,6 +126,9 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                           editing={state.editing}
                           setEditing={state.setEditing}
                           draggingDocumentId={state.draggingDocumentId}
+                          isExiting={state.exitingDocumentIds.has(
+                            entry.node.documentId,
+                          )}
                           setDraggingDocumentId={state.setDraggingDocumentId}
                           dropTarget={state.dropTarget}
                           setDropTarget={state.setDropTarget}
@@ -162,6 +165,9 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
                     editing={state.editing}
                     setEditing={state.setEditing}
                     draggingDocumentId={state.draggingDocumentId}
+                    isExiting={state.exitingDocumentIds.has(
+                      entry.node.documentId,
+                    )}
                     setDraggingDocumentId={state.setDraggingDocumentId}
                     dropTarget={state.dropTarget}
                     setDropTarget={state.setDropTarget}

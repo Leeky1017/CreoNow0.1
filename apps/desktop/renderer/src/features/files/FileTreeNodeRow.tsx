@@ -27,6 +27,7 @@ export interface FileTreeNodeRowProps {
   editing: EditingState;
   setEditing: (state: EditingState) => void;
   draggingDocumentId: string | null;
+  isExiting: boolean;
   setDraggingDocumentId: (id: string | null) => void;
   dropTarget: DropTargetState | null;
   setDropTarget: (target: DropTargetState | null) => void;
@@ -64,6 +65,7 @@ export const FileTreeNodeRow = React.memo(
       const isRenaming =
         editing.mode === "rename" && editing.documentId === item.documentId;
       const isDragging = props.draggingDocumentId === item.documentId;
+      const isExiting = props.isExiting;
       const dropBefore =
         props.dropTarget?.documentId === item.documentId &&
         props.dropTarget?.mode === "before";
@@ -104,7 +106,7 @@ export const FileTreeNodeRow = React.memo(
       return (
         <div
           key={item.documentId}
-          className="relative"
+          className={`relative ${isExiting ? "list-item-exit pointer-events-none" : ""}`}
           style={{ paddingLeft: `${entry.depth * 16}px` }}
         >
           {dropBefore ? (
