@@ -2063,9 +2063,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
         data-slot="scroll-area-viewport"
         data-testid="right-panel-scroll-viewport"
       >
-        <div
-          class="tab-crossfade"
-        >
+        <div>
           <section
             class="flex flex-col h-full min-h-0 bg-[color:var(--color-bg-surface)] "
             data-testid="ai-panel"
@@ -2117,7 +2115,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
                   </button>
                 </div>
                 <div
-                  class="tab-crossfade flex-1 flex flex-col min-h-0"
+                  class="flex-1 flex flex-col min-h-0"
                 >
                   <div
                     class="flex-1 overflow-y-auto scroll-shadow-y p-3 space-y-4"
