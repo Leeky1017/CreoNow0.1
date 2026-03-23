@@ -28,22 +28,22 @@ grep -rn 'text-\[[0-9]' apps/desktop/renderer/src/features/outline/ \
 
 ## 字号映射规则
 
-| 硬编码 | token | Tailwind v4 |
-|--------|-------|-------------|
-| `text-[9px]`  | 无精确 token，需审计 | 查 tokens.css |
-| `text-[10px]` | `--text-label`    | `text-(--text-label)` |
-| `text-[11px]` | `--text-status`   | `text-(--text-status)` |
-| `text-[13px]` | `--text-body`     | `text-(--text-body)` |
-| `text-[15px]` | 无精确 token，需审计 | 查 tokens.css |
+| 硬编码        | token                | Tailwind v4            |
+| ------------- | -------------------- | ---------------------- |
+| `text-[9px]`  | 无精确 token，需审计 | 查 tokens.css          |
+| `text-[10px]` | `--text-label`       | `text-(--text-label)`  |
+| `text-[11px]` | `--text-status`      | `text-(--text-status)` |
+| `text-[13px]` | `--text-body`        | `text-(--text-body)`   |
+| `text-[15px]` | 无精确 token，需审计 | 查 tokens.css          |
 
 ## 非字号 arbitrary
 
-| 实例 | 文件 | 说明 |
-|------|------|------|
-| `h-[2px]` | FileTreeNodeRow, FileTreeRenameRow, ProjectSwitcher | 分隔线 → `h-0.5` |
-| `-top-[3px]` | OutlineNodeItem | 微调偏移 |
-| `min-w-[180px]` | EditorContextMenu | 已豁免（eslint-disable） |
-| `w-[35%]` | DashboardHero | 百分比宽度 |
+| 实例            | 文件                                                | 说明                     |
+| --------------- | --------------------------------------------------- | ------------------------ |
+| `h-[2px]`       | FileTreeNodeRow, FileTreeRenameRow, ProjectSwitcher | 分隔线 → `h-0.5`         |
+| `-top-[3px]`    | OutlineNodeItem                                     | 微调偏移                 |
+| `min-w-[180px]` | EditorContextMenu                                   | 已豁免（eslint-disable） |
+| `w-[35%]`       | DashboardHero                                       | 百分比宽度               |
 
 ## 不做什么
 

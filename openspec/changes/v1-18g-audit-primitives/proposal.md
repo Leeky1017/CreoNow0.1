@@ -29,11 +29,11 @@ grep -rn 'text-\[[0-9]' apps/desktop/renderer/src/components/primitives/ --inclu
 
 ## 字号映射规则
 
-| 硬编码 | token | Tailwind v4 |
-|--------|-------|-------------|
-| `text-[10px]` | `--text-label`    | `text-(--text-label)` |
-| `text-[11px]` | `--text-status`   | `text-(--text-status)` |
-| `text-[13px]` | `--text-body`     | `text-(--text-body)` |
+| 硬编码        | token             | Tailwind v4              |
+| ------------- | ----------------- | ------------------------ |
+| `text-[10px]` | `--text-label`    | `text-(--text-label)`    |
+| `text-[11px]` | `--text-status`   | `text-(--text-status)`   |
+| `text-[13px]` | `--text-body`     | `text-(--text-body)`     |
 | `text-[14px]` | `--text-subtitle` | `text-(--text-subtitle)` |
 
 ## 不做什么

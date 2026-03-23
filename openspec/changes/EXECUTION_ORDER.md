@@ -229,17 +229,16 @@ v1-24 → v1-25 (density, 新组件需密度支持)
 
 ---
 
-
 ## 一、当前真相
 
 ### 1.1 完成状态
 
-| 状态 | 数量 | 列表 |
-|------|------|------|
-| ✅ 已合并 | 16 | v1-01~v1-12, v1-14~v1-16 (不含 v1-13) |
-| 🟡 待启动（已解除阻断）| 1 | v1-13 |
-| 📋 已拆分为 micro-changes | 12 | v1-06~v1-09, v1-12~v1-13, v1-14, v1-16, v1-18~v1-19, v1-21~v1-22, v1-24~v1-25 |
-| 📝 未拆分（直接执行） | 4 | v1-17, v1-20, v1-23, v1-26, v1-27 |
+| 状态                      | 数量 | 列表                                                                          |
+| ------------------------- | ---- | ----------------------------------------------------------------------------- |
+| ✅ 已合并                 | 16   | v1-01~v1-12, v1-14~v1-16 (不含 v1-13)                                         |
+| 🟡 待启动（已解除阻断）   | 1    | v1-13                                                                         |
+| 📋 已拆分为 micro-changes | 12   | v1-06~v1-09, v1-12~v1-13, v1-14, v1-16, v1-18~v1-19, v1-21~v1-22, v1-24~v1-25 |
+| 📝 未拆分（直接执行）     | 4    | v1-17, v1-20, v1-23, v1-26, v1-27                                             |
 
 ### 1.2 Micro-Change 总览（40 个）
 
@@ -307,16 +306,16 @@ v1-18 Arbitrary 值清理（10 个）：
 
 **目标**：消灭 text-[Npx] 硬编码主体 + 最高优先级结构回补
 
-| # | Micro-Change | 内容 | 依赖 |
-|---|-------------|------|------|
-| 1 | v1-18a | features/ai/ 字号 → token（7 tasks） | 无 |
-| 2 | v1-18b | features/character/ 字号 → token（11 tasks） | 无 |
-| 3 | v1-18c | features/vhistory+diff/ 字号 → token（10 tasks） | 无 |
-| 4 | v1-18d | features/quality+search/ 字号 → token（7 tasks） | 无 |
-| 5 | v1-18e | 其他 features/ 字号 → token（11 tasks） | 无 |
-| 6 | v1-18f | components/ 字号 → token（13 tasks） | 无 |
-| 7 | v1-12a | SkillManager 624行 → 拆分为 types+utils（6 tasks） | 无 |
-| 8 | v1-13a | ESLint disable 逐条审计标签 | 无 |
+| #   | Micro-Change | 内容                                               | 依赖 |
+| --- | ------------ | -------------------------------------------------- | ---- |
+| 1   | v1-18a       | features/ai/ 字号 → token（7 tasks）               | 无   |
+| 2   | v1-18b       | features/character/ 字号 → token（11 tasks）       | 无   |
+| 3   | v1-18c       | features/vhistory+diff/ 字号 → token（10 tasks）   | 无   |
+| 4   | v1-18d       | features/quality+search/ 字号 → token（7 tasks）   | 无   |
+| 5   | v1-18e       | 其他 features/ 字号 → token（11 tasks）            | 无   |
+| 6   | v1-18f       | components/ 字号 → token（13 tasks）               | 无   |
+| 7   | v1-12a       | SkillManager 624行 → 拆分为 types+utils（6 tasks） | 无   |
+| 8   | v1-13a       | ESLint disable 逐条审计标签                        | 无   |
 
 **完成标准**：`grep -rn 'text-\[[0-9]' SRC/features/ --include='*.tsx' | grep -v test | grep -v stories | wc -l` < 50
 
@@ -324,18 +323,19 @@ v1-18 Arbitrary 值清理（10 个）：
 
 **目标**：完成 arbitrary 值清零 + 启动基础设施 change
 
-| # | Micro-Change | 内容 | 依赖 |
-|---|-------------|------|------|
-| 1 | v1-18g | Primitives text 审计（14 tasks） | 无 |
-| 2 | v1-18h | Primitives dimension 审计（13 tasks） | 无 |
-| 3 | v1-18i | shadow-[var(--shadow-*)] → shadow-sm/md/lg/xl（12 tasks） | 无 |
-| 4 | v1-18j | tracking-[0.1em] → token（9 tasks） | 无 |
-| 5 | v1-07a | Settings 字号清理（5 tasks） | 无 |
-| 6 | v1-09a | Command token 修复 | 无 |
-| 7 | v1-17 | Font bundling + visual regression（父 change 直接执行） | 无 |
-| 8 | v1-23 | Color system upgrade（父 change 直接执行） | 无 |
+| #   | Micro-Change | 内容                                                      | 依赖 |
+| --- | ------------ | --------------------------------------------------------- | ---- |
+| 1   | v1-18g       | Primitives text 审计（14 tasks）                          | 无   |
+| 2   | v1-18h       | Primitives dimension 审计（13 tasks）                     | 无   |
+| 3   | v1-18i       | shadow-[var(--shadow-*)] → shadow-sm/md/lg/xl（12 tasks） | 无   |
+| 4   | v1-18j       | tracking-[0.1em] → token（9 tasks）                       | 无   |
+| 5   | v1-07a       | Settings 字号清理（5 tasks）                              | 无   |
+| 6   | v1-09a       | Command token 修复                                        | 无   |
+| 7   | v1-17        | Font bundling + visual regression（父 change 直接执行）   | 无   |
+| 8   | v1-23        | Color system upgrade（父 change 直接执行）                | 无   |
 
 **完成标准**：
+
 - `grep -rn 'text-\[[0-9]' SRC/ --include='*.tsx' | grep -v test | grep -v stories | wc -l` → 0
 - `grep -rn 'shadow-\[var(--shadow' SRC/ --include='*.tsx' | grep -v test | grep -v stories | wc -l` → 0
 - `grep -rn 'tracking-\[' SRC/ --include='*.tsx' | grep -v test | grep -v stories | grep -v 'tracking-\[var' | wc -l` → 0
@@ -344,46 +344,46 @@ v1-18 Arbitrary 值清理（10 个）：
 
 **目标**：补全 hover/focus/transition + 结构优化
 
-| # | Micro-Change | 内容 | 依赖 |
-|---|-------------|------|------|
-| 1 | v1-06a | AiMessageList 拆分 | 无 |
-| 2 | v1-06b | AI hover/focus 精修 | 无 |
-| 3 | v1-07b | Settings 交互动效（7 tasks） | 无 |
-| 4 | v1-08a | FileTree arbitrary 清理 | 无 |
-| 5 | v1-08b | FileTree 动画 | 无 |
-| 6 | v1-09b | Search arbitrary 清理 | 无 |
-| 7 | v1-09c | Search 交互精修 | 无 |
-| 8 | v1-12b | Transition class 铺设（10 tasks） | 无 |
+| #   | Micro-Change | 内容                              | 依赖 |
+| --- | ------------ | --------------------------------- | ---- |
+| 1   | v1-06a       | AiMessageList 拆分                | 无   |
+| 2   | v1-06b       | AI hover/focus 精修               | 无   |
+| 3   | v1-07b       | Settings 交互动效（7 tasks）      | 无   |
+| 4   | v1-08a       | FileTree arbitrary 清理           | 无   |
+| 5   | v1-08b       | FileTree 动画                     | 无   |
+| 6   | v1-09b       | Search arbitrary 清理             | 无   |
+| 7   | v1-09c       | Search 交互精修                   | 无   |
+| 8   | v1-12b       | Transition class 铺设（10 tasks） | 无   |
 
 ### Wave 4：结构补全 + 无障碍（8 并行）
 
 **目标**：PanelHeader 统一 + scroll-shadow + 无障碍 + Storybook
 
-| # | Micro-Change | 内容 | 依赖 |
-|---|-------------|------|------|
-| 1 | v1-12c | Scroll-shadow 铺设（9 tasks） | 无 |
-| 2 | v1-14a | Dialog 残留修复 | 无 |
-| 3 | v1-16a | PanelHeader 铺设 | 无 |
-| 4 | v1-16b | Quality/RightPanel 清理 | 无 |
-| 5 | v1-19a | ARIA 补缺 | 无 |
-| 6 | v1-19b | 键盘导航 | 无 |
-| 7 | v1-20 | Storybook excellence（父 change 直接执行） | 无 |
-| 8 | v1-21a | 渐进加载 | 无 |
+| #   | Micro-Change | 内容                                       | 依赖 |
+| --- | ------------ | ------------------------------------------ | ---- |
+| 1   | v1-12c       | Scroll-shadow 铺设（9 tasks）              | 无   |
+| 2   | v1-14a       | Dialog 残留修复                            | 无   |
+| 3   | v1-16a       | PanelHeader 铺设                           | 无   |
+| 4   | v1-16b       | Quality/RightPanel 清理                    | 无   |
+| 5   | v1-19a       | ARIA 补缺                                  | 无   |
+| 6   | v1-19b       | 键盘导航                                   | 无   |
+| 7   | v1-20        | Storybook excellence（父 change 直接执行） | 无   |
+| 8   | v1-21a       | 渐进加载                                   | 无   |
 
 ### Wave 5：新组件 + 品牌（8 并行）
 
 **目标**：组件库扩展 + 品牌精修
 
-| # | Micro-Change | 内容 | 依赖 |
-|---|-------------|------|------|
-| 1 | v1-22a | Onboarding 动画 | **v1-17**（Wave 2） |
-| 2 | v1-24a | Table primitive（4 tasks） | 无 |
-| 3 | v1-24b | Separator primitive（4 tasks） | 无 |
-| 4 | v1-24c | Alert primitive（5 tasks） | 无 |
-| 5 | v1-24d | SegmentedControl（4 tasks） | 无 |
-| 6 | v1-24e | Progress primitive（4 tasks） | 无 |
-| 7 | v1-24f | Input prefix/suffix（3 tasks） | 无 |
-| 8 | v1-24g | Integration export（5 tasks） | v1-24a~f 全部 |
+| #   | Micro-Change | 内容                           | 依赖                |
+| --- | ------------ | ------------------------------ | ------------------- |
+| 1   | v1-22a       | Onboarding 动画                | **v1-17**（Wave 2） |
+| 2   | v1-24a       | Table primitive（4 tasks）     | 无                  |
+| 3   | v1-24b       | Separator primitive（4 tasks） | 无                  |
+| 4   | v1-24c       | Alert primitive（5 tasks）     | 无                  |
+| 5   | v1-24d       | SegmentedControl（4 tasks）    | 无                  |
+| 6   | v1-24e       | Progress primitive（4 tasks）  | 无                  |
+| 7   | v1-24f       | Input prefix/suffix（3 tasks） | 无                  |
+| 8   | v1-24g       | Integration export（5 tasks）  | v1-24a~f 全部       |
 
 **注意**：v1-24g 需等 v1-24a~f 全部完成后才能执行（集成导出依赖所有新组件）。前 7 个可并行，v1-24g 串行在最后。
 
@@ -391,14 +391,14 @@ v1-18 Arbitrary 值清理（10 个）：
 
 **目标**：密度系统 + 虚拟化 + 图标系统
 
-| # | Micro-Change | 内容 | 依赖 |
-|---|-------------|------|------|
-| 1 | v1-25a | Component tokens | **v1-24**（Wave 5） |
-| 2 | v1-25b | DensityProvider | **v1-24**（Wave 5） |
-| 3 | v1-25c | Primitive token 迁移 | v1-25a |
-| 4 | v1-25d | Density stories | v1-25a + v1-25b |
-| 5 | v1-26 | Virtualization（父 change 直接执行） | **v1-21**（Wave 4） |
-| 6 | v1-27 | Icon system（父 change 直接执行） | **v1-22**（Wave 5） |
+| #   | Micro-Change | 内容                                 | 依赖                |
+| --- | ------------ | ------------------------------------ | ------------------- |
+| 1   | v1-25a       | Component tokens                     | **v1-24**（Wave 5） |
+| 2   | v1-25b       | DensityProvider                      | **v1-24**（Wave 5） |
+| 3   | v1-25c       | Primitive token 迁移                 | v1-25a              |
+| 4   | v1-25d       | Density stories                      | v1-25a + v1-25b     |
+| 5   | v1-26        | Virtualization（父 change 直接执行） | **v1-21**（Wave 4） |
+| 6   | v1-27        | Icon system（父 change 直接执行）    | **v1-22**（Wave 5） |
 
 **注意**：v1-25c/d 需等 v1-25a/b 完成。执行顺序：v1-25a + v1-25b 并行 → v1-25c + v1-25d 并行。v1-26/v1-27 可与 v1-25 系列并行。
 
@@ -433,14 +433,14 @@ Wave 6 ─── v1-25 需 v1-24 (Wave 5) ─── v1-26 需 v1-21 (Wave 4) ─
 
 ## 五、分数路线图
 
-| 阶段 | 预期分 | 增量来源 |
-|------|--------|---------|
-| 当前（P0~P6 已合并） | **7.5** | Token + 组件拆分 + 动效收口 + AppShell 解耦 |
-| + Wave 1~2（清理） | **8.0** | 265 处 arbitrary 清零 + shadow/tracking token 化 |
-| + Wave 3（交互） | **8.5** | hover/focus/transition 全覆盖 |
-| + Wave 4（无障碍+Storybook） | **9.0** | WCAG AA + Storybook 100% + scroll-shadow |
-| + Wave 5（新组件+品牌） | **9.5** | 组件库扩展 + 品牌 polish |
-| + Wave 6（密度+性能） | **10.0** | 密度系统 + 虚拟化 + 图标系统 |
+| 阶段                         | 预期分   | 增量来源                                         |
+| ---------------------------- | -------- | ------------------------------------------------ |
+| 当前（P0~P6 已合并）         | **7.5**  | Token + 组件拆分 + 动效收口 + AppShell 解耦      |
+| + Wave 1~2（清理）           | **8.0**  | 265 处 arbitrary 清零 + shadow/tracking token 化 |
+| + Wave 3（交互）             | **8.5**  | hover/focus/transition 全覆盖                    |
+| + Wave 4（无障碍+Storybook） | **9.0**  | WCAG AA + Storybook 100% + scroll-shadow         |
+| + Wave 5（新组件+品牌）      | **9.5**  | 组件库扩展 + 品牌 polish                         |
+| + Wave 6（密度+性能）        | **10.0** | 密度系统 + 虚拟化 + 图标系统                     |
 
 ---
 

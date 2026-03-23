@@ -1,6 +1,6 @@
 # Tasks: v1-24e Progress Primitive
 
-- **父 change**: v1-24-*
+- **父 change**: v1-24-\*
 - **状态**: 📋 待实施
 - **任务数**: 4
 
@@ -16,12 +16,10 @@
       — variantStyles：default → `--color-accent`，success/warning/error → 对应功能色
       — sizeStyles：sm → h-1（4px），md → h-2（8px）
       — `value` prop：百分比，clamp 到 0-100
-      — 填充条宽度：`style={{ width: \`${clampedValue}%\` }}`
-      — `label` prop：可选进度文本
-      — ARIA：`role="progressbar"` + `aria-valuenow` + `aria-valuemin="0"` + `aria-valuemax="100"`
-      — transition：`transition-[width] var(--duration-normal) var(--ease-default)`
-      — 从 `primitives/index.ts` 导出
-      验证: `pnpm typecheck && grep 'Progress' SRC/components/primitives/index.ts`
+      — 填充条宽度：`style={{ width: \`${clampedValue}%\` }}`    —`label` prop：可选进度文本
+    — ARIA：`role="progressbar"`+`aria-valuenow`+`aria-valuemin="0"`+`aria-valuemax="100"`
+    — transition：`transition-[width] var(--duration-normal) var(--ease-default)`    — 从`primitives/index.ts`导出
+    验证:`pnpm typecheck && grep 'Progress' SRC/components/primitives/index.ts`
 
 - [ ] 为 `Progress` 编写单元测试
       覆盖:

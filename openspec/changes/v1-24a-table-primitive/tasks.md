@@ -1,6 +1,6 @@
 # Tasks: v1-24a Table Primitive
 
-- **父 change**: v1-24-*
+- **父 change**: v1-24-\*
 - **状态**: 📋 待实施
 - **任务数**: 4
 

@@ -26,8 +26,8 @@ grep -rn 'shadow-\[0' apps/desktop/renderer/src/ --include='*.tsx' \
 
 ## 映射规则
 
-| 硬编码 | 简写 |
-|--------|------|
+| 硬编码                      | 简写        |
+| --------------------------- | ----------- |
 | `shadow-[var(--shadow-sm)]` | `shadow-sm` |
 | `shadow-[var(--shadow-md)]` | `shadow-md` |
 | `shadow-[var(--shadow-lg)]` | `shadow-lg` |

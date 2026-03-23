@@ -24,18 +24,18 @@ grep -rn 'text-\[[0-9]' apps/desktop/renderer/src/components/composites/ \
 
 ## 字号映射规则
 
-| 硬编码 | token | Tailwind v4 |
-|--------|-------|-------------|
-| `text-[9px]`  | 无精确 token，需审计 | 查 tokens.css |
-| `text-[10px]` | `--text-label`    | `text-(--text-label)` |
-| `text-[11px]` | `--text-status`   | `text-(--text-status)` |
-| `text-[12px]` | `--text-caption`  | `text-(--text-caption)` |
-| `text-[13px]` | `--text-body`     | `text-(--text-body)` |
+| 硬编码        | token                | Tailwind v4             |
+| ------------- | -------------------- | ----------------------- |
+| `text-[9px]`  | 无精确 token，需审计 | 查 tokens.css           |
+| `text-[10px]` | `--text-label`       | `text-(--text-label)`   |
+| `text-[11px]` | `--text-status`      | `text-(--text-status)`  |
+| `text-[12px]` | `--text-caption`     | `text-(--text-caption)` |
+| `text-[13px]` | `--text-body`        | `text-(--text-body)`    |
 
 ## 非字号 arbitrary
 
-| 实例 | 文件 | 说明 |
-|------|------|------|
+| 实例            | 文件           | 说明                             |
+| --------------- | -------------- | -------------------------------- |
 | `max-w-[240px]` | EmptyState.tsx | → `max-w-60`（240px = 60 × 4px） |
 | `min-h-[24rem]` | ErrorState.tsx | → `min-h-96`（24rem = 96 × 4px） |
 

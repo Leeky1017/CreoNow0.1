@@ -10,28 +10,28 @@
 
 - [ ] `SettingsAppearancePage.tsx` 全部 `text-[10px]` → 语义 token
       实例（1 处）:
-        :36 `text-[10px]` → `text-(--text-label)`
+      :36 `text-[10px]` → `text-(--text-label)`
       验证: `grep 'text-\[[0-9]' SRC/features/settings-dialog/SettingsAppearancePage.tsx | wc -l` → 0
 
 - [ ] `SettingsAccount.tsx` 全部 `text-[10px]` → 语义 token
       实例（1 处）:
-        :37 `text-[10px]` → `text-(--text-label)`
+      :37 `text-[10px]` → `text-(--text-label)`
       验证: `grep 'text-\[[0-9]' SRC/features/settings-dialog/SettingsAccount.tsx | wc -l` → 0
 
 - [ ] `SettingsExport.tsx` 全部 `text-[10px]` → 语义 token
       实例（1 处）:
-        :34 `text-[10px]` → `text-(--text-label)`
+      :34 `text-[10px]` → `text-(--text-label)`
       验证: `grep 'text-\[[0-9]' SRC/features/settings-dialog/SettingsExport.tsx | wc -l` → 0
 
 - [ ] `SettingsGeneralSections.tsx` + `SettingsGeneral.tsx` 全部 `text-[10px]` → 语义 token
       实例（2 处）:
-        SettingsGeneralSections.tsx:9 `text-[10px]` → `text-(--text-label)`
-        SettingsGeneral.tsx:46 `text-[10px]` → `text-(--text-label)`
+      SettingsGeneralSections.tsx:9 `text-[10px]` → `text-(--text-label)`
+      SettingsGeneral.tsx:46 `text-[10px]` → `text-(--text-label)`
       验证: `grep 'text-\[[0-9]' SRC/features/settings-dialog/SettingsGeneral*.tsx | wc -l` → 0
 
 - [ ] `SettingsNavigation.tsx` 全部 `text-[13px]` → 语义 token
       实例（1 处）:
-        :27 `text-[13px]` → `text-(--text-body)`
+      :27 `text-[13px]` → `text-(--text-body)`
       验证: `grep 'text-\[[0-9]' SRC/features/settings-dialog/SettingsNavigation.tsx | wc -l` → 0
 
 ---

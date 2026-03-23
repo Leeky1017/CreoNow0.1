@@ -21,26 +21,26 @@
 
 ## 一、关键度量（真实数据，已验证）
 
-| 指标 | 数值 | 说明 |
-|------|------|------|
-| tasks.md 总任务 | ~1,300 | 20 个 change |
-| 已勾选 `[x]` | 2 | 0.15% |
-| 硬编码 arbitrary 像素值 | **265** | `text-[13px]` 这类（注：features/settings/ 6 处实为 token 引用已扣除，features/settings-dialog/ 12 处已归入 v1-07a，components/layout/ 修正为 3 处） |
-| `[var(--*)]` token 引用 | 1,315 | **合法**，不算 arbitrary |
-| features/ 原生 HTML | 2 | 几乎已清完 |
-| eslint-disable 无审计标记 | 29 条 | features/ 下全裸 |
-| 无 PanelHeader 的面板 | 9 个 | 应接入 |
+| 指标                      | 数值    | 说明                                                                                                                                                 |
+| ------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| tasks.md 总任务           | ~1,300  | 20 个 change                                                                                                                                         |
+| 已勾选 `[x]`              | 2       | 0.15%                                                                                                                                                |
+| 硬编码 arbitrary 像素值   | **265** | `text-[13px]` 这类（注：features/settings/ 6 处实为 token 引用已扣除，features/settings-dialog/ 12 处已归入 v1-07a，components/layout/ 修正为 3 处） |
+| `[var(--*)]` token 引用   | 1,315   | **合法**，不算 arbitrary                                                                                                                             |
+| features/ 原生 HTML       | 2       | 几乎已清完                                                                                                                                           |
+| eslint-disable 无审计标记 | 29 条   | features/ 下全裸                                                                                                                                     |
+| 无 PanelHeader 的面板     | 9 个    | 应接入                                                                                                                                               |
 
 ### 字号 token 映射表（全局适用）
 
 来自 `SRC/styles/tokens.css`：
 
-| 硬编码 | token | 实际值 | Tailwind v4 写法 |
-|--------|-------|--------|-----------------|
-| `text-[10px]` | `--text-label` | 10px | `text-(--text-label)` |
-| `text-[11px]` | `--text-status` | 11px | `text-(--text-status)` |
-| `text-[12px]` | `--text-caption` | 12px | `text-(--text-caption)` |
-| `text-[13px]` | `--text-body` | 13px | `text-(--text-body)` |
+| 硬编码        | token            | 实际值 | Tailwind v4 写法        |
+| ------------- | ---------------- | ------ | ----------------------- |
+| `text-[10px]` | `--text-label`   | 10px   | `text-(--text-label)`   |
+| `text-[11px]` | `--text-status`  | 11px   | `text-(--text-status)`  |
+| `text-[12px]` | `--text-caption` | 12px   | `text-(--text-caption)` |
+| `text-[13px]` | `--text-body`    | 13px   | `text-(--text-body)`    |
 
 > `text-(--token)` 是 Tailwind v4 的 CSS 变量简写语法。
 
@@ -55,10 +55,10 @@
 ```markdown
 - [ ] `AiMessageList.tsx` 全部 `text-[Npx]` → 语义 token
       实例（17 处）:
-        :80 text-[13px]→text-(--text-body)
-        :83 text-[12px]→text-(--text-caption)
-        :86 text-[12px]→text-(--text-caption)
-        ...（完整列出每行）
+      :80 text-[13px]→text-(--text-body)
+      :83 text-[12px]→text-(--text-caption)
+      :86 text-[12px]→text-(--text-caption)
+      ...（完整列出每行）
       验证: `grep 'text-\[[0-9]' SRC/features/ai/AiMessageList.tsx | wc -l` → 0
 ```
 
@@ -95,21 +95,26 @@
 ```markdown
 # v1-XXy: [3 字动词] + [范围]
 
-> 属于 v1-XX-*（父 change），详细设计见父 change 的 proposal.md。
+> 属于 v1-XX-\*（父 change），详细设计见父 change 的 proposal.md。
 
 ## 语境（3 行以内）
+
 为什么要做、做了什么效果、不做有什么风险。
 
 ## 当前状态
+
 - `<scan command>` → <当前值>
 
 ## 目标状态
+
 - `<scan command>` → <目标值>
 
 ## 不做什么
+
 - <明确排除项>
 
 ## 完成验证
+
 1. `<command>` → <期望>
 2. `pnpm typecheck` → 0 errors
 3. `pnpm -C apps/desktop exec vitest run <相关pattern>` → all pass
@@ -122,7 +127,7 @@
 ```markdown
 # Tasks: v1-XXy [标题]
 
-- **父 change**: v1-XX-*
+- **父 change**: v1-XX-\*
 - **状态**: 📋 待实施
 - **任务数**: N
 
@@ -175,17 +180,18 @@ openspec/changes/
 
 ### 跳过的 Changes
 
-| Change | 原因 |
-|--------|------|
-| v1-00 | 主计划，不是代码 change |
-| v1-01~v1-05 | 已归档，271/271 勾选，代码验证通过 |
-| v1-26, v1-27 | 目录不存在，未规划 |
+| Change       | 原因                               |
+| ------------ | ---------------------------------- |
+| v1-00        | 主计划，不是代码 change            |
+| v1-01~v1-05  | 已归档，271/271 勾选，代码验证通过 |
+| v1-26, v1-27 | 目录不存在，未规划                 |
 
 ---
 
 ### v1-06 AI 面板整修 [~85% done, 88 tasks → 拆]
 
 **扫描**:
+
 ```bash
 wc -l SRC/features/ai/AiMessageList.tsx  # 484 行，需拆
 wc -l SRC/features/ai/SkillPicker.tsx    # 339 行，边缘
@@ -205,6 +211,7 @@ grep -rn 'hover.*glow\|focus.*ring' SRC/features/ai/ --include='*.tsx' | grep -v
 ### v1-07 Settings 精修 [~75% done, 56 tasks → 拆]
 
 **扫描**:
+
 ```bash
 grep -rn '\(w\|h\|p\|gap\)-\[[0-9]' SRC/features/settings/ --include='*.tsx' | grep -v test | grep -v stories | wc -l
 grep -rn 'hover\|transition' SRC/features/settings/ --include='*.tsx' | grep -v test | grep -v stories | wc -l
@@ -221,6 +228,7 @@ grep -rn 'hover\|transition' SRC/features/settings/ --include='*.tsx' | grep -v 
 ### v1-08 文件树像素精修 [~65% done, 68 tasks → 拆]
 
 **扫描**:
+
 ```bash
 grep -rn '\(w\|h\|p\|gap\)-\[[0-9]' SRC/features/files/ --include='*.tsx' | grep -v test | grep -v stories | wc -l
 grep -rn 'rotate\|spin\|animation' SRC/features/files/ --include='*.tsx' | grep -v test | grep -v stories | wc -l
@@ -238,6 +246,7 @@ grep -rn 'IconBar\|icon-bar\|w-12\|48px' SRC/features/files/ --include='*.tsx' |
 ### v1-09 命令面板搜索 [~70% done, 84 tasks → 拆]
 
 **扫描**:
+
 ```bash
 grep -rn 'color-accent-blue' SRC/ --include='*.tsx' | grep -v test | grep -v stories  # 已知 1 处
 grep -rn '\(w\|h\|p\|gap\)-\[[0-9]' SRC/features/search/ --include='*.tsx' | grep -v test | grep -v stories | wc -l
@@ -256,6 +265,7 @@ grep -rn '\(w\|h\|p\|gap\)-\[[0-9]' SRC/components/composites/Command*.tsx | gre
 ### v1-10 侧面板统一 [~95% done, 73 tasks → 验证为主]
 
 **扫描**:
+
 ```bash
 # 几乎全部完成，重点验证
 grep -rn 'PanelHeader' SRC/features/ --include='*.tsx' | grep -v test | grep -v stories | wc -l
@@ -268,6 +278,7 @@ grep -rn 'PanelHeader' SRC/features/ --include='*.tsx' | grep -v test | grep -v 
 ### v1-11 空/加载/错误状态 [~90% done, 65 tasks → 验证为主]
 
 **扫描**:
+
 ```bash
 grep -rn 'EmptyState' SRC/ --include='*.tsx' | grep -v test | grep -v stories | wc -l  # 47
 grep -rn 'LoadingState\|Skeleton' SRC/ --include='*.tsx' | grep -v test | grep -v stories | wc -l
@@ -280,6 +291,7 @@ grep -rn 'LoadingState\|Skeleton' SRC/ --include='*.tsx' | grep -v test | grep -
 ### v1-12 交互动效+原生 HTML [~85% done（纠偏后）, 88 tasks → 拆]
 
 **关键纠偏**: 之前报 40%，实际 85%。
+
 - ✅ CSS 工具类 `.transition-default/.transition-slow/.scroll-shadow-y` 已在 `SRC/styles/main.css:357-384`
 - ✅ AppShell 已从 1,267 行拆到 153 行
 - ✅ features/ 原生 HTML 仅剩 2 处（AiInputArea textarea，合法限制）
@@ -287,6 +299,7 @@ grep -rn 'LoadingState\|Skeleton' SRC/ --include='*.tsx' | grep -v test | grep -
 - 🔲 transition class 仅 7 处使用，应铺到更多面板
 
 **扫描**:
+
 ```bash
 wc -l SRC/features/ai/SkillManagerDialog.tsx  # 617
 grep -rn 'transition-default\|transition-slow' SRC/ --include='*.tsx' | grep -v test | grep -v stories | wc -l  # 7
@@ -307,6 +320,7 @@ grep -rn 'scroll-shadow' SRC/ --include='*.tsx' | grep -v test | grep -v stories
 ### v1-13 eslint-disable 审计 [审计标记 0%, 33 tasks → 拆]
 
 **扫描**:
+
 ```bash
 grep -rn 'eslint-disable' SRC/features/ --include='*.tsx' | grep -v test | grep -v stories | wc -l  # 29
 grep -rn '審計\|审计' SRC/features/ --include='*.tsx' | grep -v test | grep -v stories | wc -l  # 预期 0
@@ -324,6 +338,7 @@ grep -rn '審計\|审计' SRC/features/ --include='*.tsx' | grep -v test | grep 
 ### v1-14 对话框系统 [~88% done, 60 tasks → 验证+小拆]
 
 **扫描**:
+
 ```bash
 grep -rn 'Dialog' SRC/components/primitives/ --include='*.tsx' -l
 find SRC/ -name '*Dialog*.tsx' | grep -v test | grep -v stories | wc -l
@@ -342,6 +357,7 @@ find SRC/ -name '*Dialog*.tsx' | grep -v test | grep -v stories | wc -l
 ### v1-16 Quality + RightPanel + 杂项 [~65% done, 71 tasks → 拆]
 
 **扫描**:
+
 ```bash
 # 缺少 PanelHeader 的面板（已知 9 个）:
 grep -rLn 'PanelHeader' SRC/features/*/ --include='*Panel.tsx' | grep -v test | grep -v stories
@@ -367,31 +383,32 @@ grep -rn '\(w\|h\|p\|gap\)-\[[0-9]' SRC/features/quality-gates/ SRC/features/rig
 
 **这是最大的真实欠账。** 声称 100% 但实际 0%。265 个硬编码像素值分布如下：
 
-| 目录 | 数量 | 类型 |
-|------|------|------|
-| features/ai/ | 38 | 主要 text-[Npx] |
-| features/character/ | 30 | text-[Npx] + p-[Npx] |
-| features/version-history/ | 29 | text-[Npx] |
-| features/quality-gates/ | 21 | text-[Npx] |
-| features/search/ | 19 | text-[Npx] |
-| features/diff/ | 16 | text-[Npx] |
-| features/outline/ | 6 | text-[Npx] |
-| features/rightpanel/ | 6 | text-[Npx] |
-| features/settings/ | 0 | ~~6~~ 全为 `[var(--*)]` token 引用 |
-| features/settings-dialog/ | 12 | text-[Npx] + max-w-[Npx]（已归入 v1-07a） |
-| features/projects/ | 4 | text-[Npx] |
-| features/editor/ | 3 | text-[Npx] |
-| features/files/ | 3 | text-[Npx] |
-| features/dashboard/ | 1 | text-[Npx] |
-| features/memory/ | 1 | text-[Npx] |
-| features/kg/ | 2 | text-[Npx] |
-| components/primitives/ | 35 | 需逐个审计合法性 |
-| components/composites/ | 8 | text-[Npx] |
-| components/patterns/ | 4 | text-[Npx] |
-| components/layout/ | 3 | ~~33~~ 实际仅 3 处硬编码（text-[11px]、text-[13px]、text-[9px]），其余为 `[var(--*)]` token 引用 |
-| components/features/ | 2 | text-[Npx] |
+| 目录                      | 数量 | 类型                                                                                             |
+| ------------------------- | ---- | ------------------------------------------------------------------------------------------------ |
+| features/ai/              | 38   | 主要 text-[Npx]                                                                                  |
+| features/character/       | 30   | text-[Npx] + p-[Npx]                                                                             |
+| features/version-history/ | 29   | text-[Npx]                                                                                       |
+| features/quality-gates/   | 21   | text-[Npx]                                                                                       |
+| features/search/          | 19   | text-[Npx]                                                                                       |
+| features/diff/            | 16   | text-[Npx]                                                                                       |
+| features/outline/         | 6    | text-[Npx]                                                                                       |
+| features/rightpanel/      | 6    | text-[Npx]                                                                                       |
+| features/settings/        | 0    | ~~6~~ 全为 `[var(--*)]` token 引用                                                               |
+| features/settings-dialog/ | 12   | text-[Npx] + max-w-[Npx]（已归入 v1-07a）                                                        |
+| features/projects/        | 4    | text-[Npx]                                                                                       |
+| features/editor/          | 3    | text-[Npx]                                                                                       |
+| features/files/           | 3    | text-[Npx]                                                                                       |
+| features/dashboard/       | 1    | text-[Npx]                                                                                       |
+| features/memory/          | 1    | text-[Npx]                                                                                       |
+| features/kg/              | 2    | text-[Npx]                                                                                       |
+| components/primitives/    | 35   | 需逐个审计合法性                                                                                 |
+| components/composites/    | 8    | text-[Npx]                                                                                       |
+| components/patterns/      | 4    | text-[Npx]                                                                                       |
+| components/layout/        | 3    | ~~33~~ 实际仅 3 处硬编码（text-[11px]、text-[13px]、text-[9px]），其余为 `[var(--*)]` token 引用 |
+| components/features/      | 2    | text-[Npx]                                                                                       |
 
 **扫描命令（Agent 必须跑，用实际行号生成任务）**:
+
 ```bash
 # 对每个目标目录执行
 grep -rn '\(text\|w\|h\|p\|m\|gap\|rounded\)-\[[0-9]' SRC/features/<dir>/ --include='*.tsx' | grep -v test | grep -v stories | grep -v __tests__
@@ -409,6 +426,7 @@ grep -rn '\(text\|w\|h\|p\|m\|gap\|rounded\)-\[[0-9]' SRC/features/<dir>/ --incl
 | `v1-18g-audit-primitives` | components/primitives/（逐个判定：Primitive 内部用硬编码可能合法） | ~10 文件 |
 
 **重要区分**:
+
 - `text-[13px]` → `text-(--text-body)` ← **要改**（硬编码像素）
 - `text-[var(--color-fg-muted)]` ← **不改**（token 引用，合法）
 - `rounded-[var(--radius-lg)]` ← **不改**（token 引用，合法）
@@ -421,6 +439,7 @@ Golden Case 见 `openspec/changes/v1-18a-cleanup-ai-font-sizes/`。
 ### v1-19 无障碍键盘 [~60% done, 38 tasks → 小拆]
 
 **扫描**:
+
 ```bash
 grep -rn 'aria-label' SRC/ --include='*.tsx' | grep -v test | grep -v stories | wc -l  # 70
 grep -rn 'role=' SRC/ --include='*.tsx' | grep -v test | grep -v stories | wc -l  # 70
@@ -445,6 +464,7 @@ find apps/desktop -name '*axe*' -o -name '*a11y*' | head -10
 ### v1-21 性能微交互 [~75% done, 无 tasks → 需创建]
 
 **扫描**:
+
 ```bash
 grep -rn 'useVirtualizer\|react-virtual' SRC/ --include='*.tsx' | grep -v test | wc -l  # 10
 grep -rn 'Suspense\|lazy(' SRC/ --include='*.tsx' | grep -v test | grep -v stories | wc -l  # 17
@@ -469,6 +489,7 @@ grep -rn 'Suspense\|lazy(' SRC/ --include='*.tsx' | grep -v test | grep -v stori
 ### v1-24 组件库扩展 [0% done, 148 tasks → 彻底重拆]
 
 **扫描**:
+
 ```bash
 # 确认哪些组件已存在
 find SRC/components/primitives -maxdepth 1 -name '*.tsx' ! -name '*.test.*' ! -name '*.stories.*' | sort
@@ -513,6 +534,7 @@ find SRC/components/primitives -maxdepth 1 -name '*.tsx' ! -name '*.test.*' ! -n
 ### 步骤 3：标记父 change
 
 对需要拆分的 change，在其 tasks.md 第一行插入：
+
 ```markdown
 > ⚠️ 本 change 已拆分为 micro-changes: v1-XXa, v1-XXb, ...。以下为历史记录。
 ```
@@ -520,6 +542,7 @@ find SRC/components/primitives -maxdepth 1 -name '*.tsx' ! -name '*.test.*' ! -n
 ### 步骤 4：创建 micro-change 目录
 
 对每个 micro-change：
+
 1. `mkdir -p openspec/changes/<micro-change-name>/`
 2. 写 `proposal.md`（≤ 80 行，格式见第三节）
 3. 写 `tasks.md`（≤ 15 任务，格式见第二节）

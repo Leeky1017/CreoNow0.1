@@ -1,6 +1,6 @@
 # Tasks: v1-24f Input prefix/suffix
 
-- **父 change**: v1-24-*
+- **父 change**: v1-24-\*
 - **状态**: 📋 待实施
 - **任务数**: 3
 

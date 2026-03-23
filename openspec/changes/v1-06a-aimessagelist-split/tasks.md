@@ -11,8 +11,8 @@
 - [ ] `AiMessageList.tsx` 提取 ErrorGuideCard + AiPanelErrorDisplay 到新文件
       操作：将 L32–197（ErrorGuideCard 组件 + AiPanelErrorDisplay 组件）移至 `ErrorGuideCard.tsx`
       实例（2 处组件定义）:
-        :32 `export function ErrorGuideCard` → 移至 ErrorGuideCard.tsx
-        :133 `function AiPanelErrorDisplay` → 移至 ErrorGuideCard.tsx（同文件，供 ErrorGuideCard 内部使用）
+      :32 `export function ErrorGuideCard` → 移至 ErrorGuideCard.tsx
+      :133 `function AiPanelErrorDisplay` → 移至 ErrorGuideCard.tsx（同文件，供 ErrorGuideCard 内部使用）
       验证: `wc -l SRC/features/ai/AiMessageList.tsx` → ≤250
 
 - [ ] `ErrorGuideCard.tsx` 创建新文件，接收提取的 ErrorGuideCard + AiPanelErrorDisplay

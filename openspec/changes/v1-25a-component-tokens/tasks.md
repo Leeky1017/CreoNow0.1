@@ -1,6 +1,6 @@
 # Tasks: v1-25a Component Tokens
 
-- **父 change**: v1-25-*
+- **父 change**: v1-25-\*
 - **状态**: 📋 待实施
 - **任务数**: 5
 

@@ -21,20 +21,20 @@ grep -rn 'text-\[[0-9]' apps/desktop/renderer/src/features/character/ --include=
 
 ## 字号映射规则
 
-| 硬编码 | token | Tailwind v4 |
-|--------|-------|-------------|
-| `text-[10px]` | `--text-label` | `text-(--text-label)` |
+| 硬编码        | token           | Tailwind v4            |
+| ------------- | --------------- | ---------------------- |
+| `text-[10px]` | `--text-label`  | `text-(--text-label)`  |
 | `text-[11px]` | `--text-status` | `text-(--text-status)` |
 
 ## 非字号 arbitrary
 
-| 实例 | 说明 |
-|------|------|
-| `w-[560px]` | 已有 eslint-disable 豁免（design spec），不处理 |
-| `p-[2px]` | → `p-0.5`（0.5 × 4px = 2px） |
-| `w-[3px]` | 指示条宽度，查 tokens.css 确定映射 |
-| `h-[1px]` / `w-[1px]` / `p-[1px]` | → `h-px` / `w-px` / `p-px` |
-| `max-h-[92vh]` | viewport 相对值，查 tokens.css 确定 |
+| 实例                              | 说明                                            |
+| --------------------------------- | ----------------------------------------------- |
+| `w-[560px]`                       | 已有 eslint-disable 豁免（design spec），不处理 |
+| `p-[2px]`                         | → `p-0.5`（0.5 × 4px = 2px）                    |
+| `w-[3px]`                         | 指示条宽度，查 tokens.css 确定映射              |
+| `h-[1px]` / `w-[1px]` / `p-[1px]` | → `h-px` / `w-px` / `p-px`                      |
+| `max-h-[92vh]`                    | viewport 相对值，查 tokens.css 确定             |
 
 ## 不做什么
 

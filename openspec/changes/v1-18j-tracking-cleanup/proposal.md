@@ -21,12 +21,12 @@ grep -rn 'tracking-\[' apps/desktop/renderer/src/ --include='*.tsx' \
 
 ## 映射规则
 
-| 硬编码 | 方案 |
-|--------|------|
-| `tracking-[0.1em]` | 评估映射到 `--tracking-wide` 或新增 `--tracking-label` token |
-| `tracking-[0.15em]` | 评估映射到 `--tracking-wide` 或新增 token |
-| `tracking-[-0.01em]` | 新增 `--tracking-tight` token |
-| `tracking-[-0.02em]` | 新增 `--tracking-tighter` token |
+| 硬编码               | 方案                                                         |
+| -------------------- | ------------------------------------------------------------ |
+| `tracking-[0.1em]`   | 评估映射到 `--tracking-wide` 或新增 `--tracking-label` token |
+| `tracking-[0.15em]`  | 评估映射到 `--tracking-wide` 或新增 token                    |
+| `tracking-[-0.01em]` | 新增 `--tracking-tight` token                                |
+| `tracking-[-0.02em]` | 新增 `--tracking-tighter` token                              |
 
 ## 不做什么
 

@@ -22,12 +22,12 @@ grep -rn 'text-\[[0-9]' apps/desktop/renderer/src/features/version-history/ \
 
 ## 字号映射规则
 
-| 硬编码 | token | Tailwind v4 |
-|--------|-------|-------------|
-| `text-[9px]`  | 无精确 token，需审计 | 查 tokens.css |
-| `text-[10px]` | `--text-label`  | `text-(--text-label)` |
-| `text-[11px]` | `--text-status` | `text-(--text-status)` |
-| `text-[13px]` | `--text-body`   | `text-(--text-body)` |
+| 硬编码        | token                | Tailwind v4            |
+| ------------- | -------------------- | ---------------------- |
+| `text-[9px]`  | 无精确 token，需审计 | 查 tokens.css          |
+| `text-[10px]` | `--text-label`       | `text-(--text-label)`  |
+| `text-[11px]` | `--text-status`      | `text-(--text-status)` |
+| `text-[13px]` | `--text-body`        | `text-(--text-body)`   |
 
 ## 不做什么
 

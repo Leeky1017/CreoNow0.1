@@ -21,12 +21,12 @@ grep -rn 'text-\[[0-9]' apps/desktop/renderer/src/features/ai/ --include='*.tsx'
 
 ## 映射规则
 
-| 硬编码 | token | 值 | Tailwind v4 |
-|--------|-------|-----|-------------|
-| `text-[10px]` | `--text-label` | 10px | `text-(--text-label)` |
-| `text-[11px]` | `--text-status` | 11px | `text-(--text-status)` |
+| 硬编码        | token            | 值   | Tailwind v4             |
+| ------------- | ---------------- | ---- | ----------------------- |
+| `text-[10px]` | `--text-label`   | 10px | `text-(--text-label)`   |
+| `text-[11px]` | `--text-status`  | 11px | `text-(--text-status)`  |
 | `text-[12px]` | `--text-caption` | 12px | `text-(--text-caption)` |
-| `text-[13px]` | `--text-body` | 13px | `text-(--text-body)` |
+| `text-[13px]` | `--text-body`    | 13px | `text-(--text-body)`    |
 
 ## 不做什么
 
