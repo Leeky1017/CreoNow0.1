@@ -89,7 +89,7 @@ export function FileTreePanel(props: FileTreePanelProps): JSX.Element {
             role="tree"
             aria-label={t("files.tree.panelTitle")}
             aria-activedescendant={
-              state.focusedDocumentId ?? state.currentDocumentId
+              (state.focusedDocumentId ?? state.currentDocumentId)
                 ? `tree-node-${state.focusedDocumentId ?? state.currentDocumentId}`
                 : undefined
             }

@@ -338,7 +338,11 @@ function StreamingDemo(): JSX.Element {
                 </span>
               </div>
               {/* Stop button */}
-              <button type="button" aria-label="Stop generation" className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]">
+              <button
+                type="button"
+                aria-label="Stop generation"
+                className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+              >
                 <div className="w-5 h-5 rounded-full border-2 border-current flex items-center justify-center">
                   <div className="w-2 h-2 bg-current rounded-[1px]" />
                 </div>
@@ -925,7 +929,11 @@ function ErrorStateDemo(): JSX.Element {
                   SKILL
                 </button>
               </div>
-              <button type="button" aria-label="Send prompt" className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
+              <button
+                type="button"
+                aria-label="Send prompt"
+                className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+              >
                 <svg
                   width="16"
                   height="16"
@@ -1097,7 +1105,11 @@ function LongConversationDemo(): JSX.Element {
                   SKILL
                 </button>
               </div>
-              <button type="button" aria-label="Send prompt" className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]">
+              <button
+                type="button"
+                aria-label="Send prompt"
+                className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+              >
                 <svg
                   width="16"
                   height="16"
@@ -1292,7 +1304,11 @@ function HistoryDropdownDemo(): JSX.Element {
                   SKILL
                 </span>
               </div>
-              <button type="button" aria-label="Send prompt" className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)]">
+              <button
+                type="button"
+                aria-label="Send prompt"
+                className="w-7 h-7 rounded flex items-center justify-center text-[var(--color-fg-muted)]"
+              >
                 <svg
                   width="16"
                   height="16"

@@ -1961,6 +1961,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
     Main Content Area
   </div>
   <aside
+    aria-label="AI"
     class="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
     data-testid="layout-panel"
     style="width: 320px; min-width: 280px; max-width: 480px;"
@@ -2293,6 +2294,8 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
     Main Content Area
   </div>
   <aside
+    aria-hidden="true"
+    aria-label="AI"
     class="hidden w-0"
     data-testid="layout-panel"
   />
@@ -2310,6 +2313,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
     Main Content Area
   </div>
   <aside
+    aria-label="Quality"
     class="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
     data-testid="layout-panel"
     style="width: 320px; min-width: 280px; max-width: 480px;"
@@ -2419,6 +2423,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
     Main Content Area
   </div>
   <aside
+    aria-label="Info"
     class="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
     data-testid="layout-panel"
     style="width: 320px; min-width: 280px; max-width: 480px;"
@@ -2540,6 +2545,7 @@ exports[`workbench stories snapshots > [WB-TEST-01] should cover icon bar + righ
     Main Content Area
   </div>
   <aside
+    aria-label="Info"
     class="flex flex-col bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)]"
     data-testid="layout-panel"
     style="width: 320px; min-width: 280px; max-width: 480px;"

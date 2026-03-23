@@ -39,9 +39,19 @@ export function LayoutShell(props: LayoutShellProps): JSX.Element {
       <div className="flex flex-1 flex-col min-w-0">
         <div className="flex flex-1 min-w-0">
           {props.left}
-          <section aria-label={t("layout.sidebarResizer")}>{props.leftResizer}</section>
+          <section
+            aria-label={t("layout.sidebarResizer")}
+            className="flex shrink-0 self-stretch"
+          >
+            {props.leftResizer}
+          </section>
           {props.main}
-          <section aria-label={t("layout.panelResizer")}>{props.rightResizer}</section>
+          <section
+            aria-label={t("layout.panelResizer")}
+            className="flex shrink-0 self-stretch"
+          >
+            {props.rightResizer}
+          </section>
           {props.right}
         </div>
 

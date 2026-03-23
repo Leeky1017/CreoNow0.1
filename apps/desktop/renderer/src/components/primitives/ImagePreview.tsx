@@ -13,9 +13,7 @@ export interface ImagePreviewProps {
 /**
  * Preview image with hover-to-remove overlay.
  */
-export function ImagePreview({
-  previewUrl,
-}: ImagePreviewProps): JSX.Element {
+export function ImagePreview({ previewUrl }: ImagePreviewProps): JSX.Element {
   const { t } = useTranslation();
 
   return (

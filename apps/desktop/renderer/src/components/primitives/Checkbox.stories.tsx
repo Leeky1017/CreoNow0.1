@@ -291,7 +291,10 @@ export const StateMatrix: Story = {
       </div>
       <Checkbox aria-label="Enabled unchecked checkbox" />
       <Checkbox aria-label="Enabled checked checkbox" checked={true} />
-      <Checkbox aria-label="Enabled indeterminate checkbox" checked="indeterminate" />
+      <Checkbox
+        aria-label="Enabled indeterminate checkbox"
+        checked="indeterminate"
+      />
 
       {/* Disabled row */}
       <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
@@ -498,9 +501,16 @@ export const FullMatrix: Story = {
         <div style={{ display: "flex", gap: "1.5rem" }}>
           <Checkbox aria-label="Unchecked checkbox" />
           <Checkbox aria-label="Checked checkbox" checked={true} />
-          <Checkbox aria-label="Indeterminate checkbox" checked="indeterminate" />
+          <Checkbox
+            aria-label="Indeterminate checkbox"
+            checked="indeterminate"
+          />
           <Checkbox aria-label="Disabled unchecked checkbox" disabled />
-          <Checkbox aria-label="Disabled checked checkbox" disabled checked={true} />
+          <Checkbox
+            aria-label="Disabled checked checkbox"
+            disabled
+            checked={true}
+          />
         </div>
       </section>
     </div>

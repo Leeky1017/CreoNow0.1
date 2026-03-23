@@ -52,9 +52,17 @@ export function Sidebar(props: {
   onOpenVersionHistoryDocument?: (documentId: string) => void;
 }): JSX.Element {
   const { t } = useTranslation();
+  const sidebarLabel = t(PANEL_TITLES[props.activePanel]);
 
   if (props.collapsed) {
-    return <div data-testid="layout-sidebar" className="hidden w-0" aria-hidden="true" />;
+    return (
+      <aside
+        data-testid="layout-sidebar"
+        aria-label={sidebarLabel}
+        className="hidden w-0"
+        aria-hidden="true"
+      />
+    );
   }
 
   /**
@@ -96,7 +104,7 @@ export function Sidebar(props: {
   return (
     <aside
       data-testid="layout-sidebar"
-      aria-label={t(PANEL_TITLES[props.activePanel])}
+      aria-label={sidebarLabel}
       className="flex flex-col bg-[var(--color-bg-surface)] border-r border-[var(--color-separator)]"
       style={{
         width: props.width,

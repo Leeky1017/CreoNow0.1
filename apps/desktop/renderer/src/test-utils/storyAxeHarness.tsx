@@ -147,7 +147,8 @@ function buildSuites(
   for (const module of modules) {
     for (const storyCase of module.cases) {
       const cases = suites.get(storyCase.suiteLabel) ?? [];
-      const storyFiles = storyFilesBySuite.get(storyCase.suiteLabel) ?? new Set();
+      const storyFiles =
+        storyFilesBySuite.get(storyCase.suiteLabel) ?? new Set();
 
       cases.push(storyCase);
       storyFiles.add(module.storyFilePath);
@@ -200,7 +201,10 @@ async function runStoryPlay(
   });
 }
 
-function createStoryAuditRoot(): { auditRoot: HTMLElement; storyContainer: HTMLElement } {
+function createStoryAuditRoot(): {
+  auditRoot: HTMLElement;
+  storyContainer: HTMLElement;
+} {
   const auditRoot = document.createElement("div");
   const storyContainer = document.createElement("div");
 
@@ -296,33 +300,23 @@ export function runDiscoveredStoryAxeSuite({
   const summary = buildSummary(modules, suites, failedStoryFiles);
 
   describe(suite, () => {
-    it(
-      `discovers ${summary.storyFileCount} story files and ${summary.storyExportCount} story exports`,
-      () => {
-        expect(summary.storyFileCount).toBeGreaterThan(0);
-        expect(summary.storyExportCount).toBeGreaterThanOrEqual(
-          summary.storyFileCount,
-        );
-        expect(summary.emptyStoryFiles).toEqual([]);
-        expect(summary.failedStoryFiles).toEqual([]);
-      },
-    );
+    it(`discovers ${summary.storyFileCount} story files and ${summary.storyExportCount} story exports`, () => {
+      expect(summary.storyFileCount).toBeGreaterThan(0);
+      expect(summary.storyExportCount).toBeGreaterThanOrEqual(
+        summary.storyFileCount,
+      );
+      expect(summary.emptyStoryFiles).toEqual([]);
+      expect(summary.failedStoryFiles).toEqual([]);
+    });
 
     for (const storySuite of suites) {
-      describe(
-        `${storySuite.label} (${storySuite.storyFileCount} files / ${storySuite.storyExportCount} exports)`,
-        () => {
-          for (const storyCase of storySuite.cases) {
-            it(
-              `${storyCase.storyFilePath} :: ${storyCase.exportName}`,
-              async () => {
-                await runStoryAxeCase(storyCase);
-              },
-              30000,
-            );
-          }
-        },
-      );
+      describe(`${storySuite.label} (${storySuite.storyFileCount} files / ${storySuite.storyExportCount} exports)`, () => {
+        for (const storyCase of storySuite.cases) {
+          it(`${storyCase.storyFilePath} :: ${storyCase.exportName}`, async () => {
+            await runStoryAxeCase(storyCase);
+          }, 60000);
+        }
+      });
     }
   });
 

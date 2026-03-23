@@ -195,7 +195,10 @@ export function OutlinePanel({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[var(--color-bg-surface)]" data-testid="outline-panel">
+    <div
+      className="flex flex-col h-full bg-[var(--color-bg-surface)]"
+      data-testid="outline-panel"
+    >
       <PanelHeader
         title={t("outline.title")}
         actions={

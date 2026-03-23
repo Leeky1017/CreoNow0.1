@@ -286,7 +286,11 @@ export const StateMatrix: Story = {
       <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
         Disabled
       </div>
-      <Textarea aria-label="Disabled textarea" placeholder="Read only" disabled />
+      <Textarea
+        aria-label="Disabled textarea"
+        placeholder="Read only"
+        disabled
+      />
       <Textarea
         aria-label="Disabled textarea with error"
         placeholder="Error disabled"
@@ -298,7 +302,10 @@ export const StateMatrix: Story = {
       <div style={{ fontSize: "12px", color: "var(--color-fg-muted)" }}>
         With Value
       </div>
-      <Textarea aria-label="Textarea with value" defaultValue="Some content here" />
+      <Textarea
+        aria-label="Textarea with value"
+        defaultValue="Some content here"
+      />
       <Textarea
         aria-label="Textarea with value and error"
         defaultValue="Invalid content"
@@ -449,7 +456,10 @@ export const FullMatrix: Story = {
             >
               Default
             </div>
-            <Textarea aria-label="Default textarea" placeholder="Enter text..." />
+            <Textarea
+              aria-label="Default textarea"
+              placeholder="Enter text..."
+            />
           </div>
           <div>
             <div
