@@ -29,7 +29,7 @@ export function ViewModeToggle(props: {
           className={
             props.viewMode === entry.mode
               ? "bg-[var(--color-bg-selected)] text-[var(--color-fg-default)]"
-              : "text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)]"
+              : "text-[var(--color-fg-muted)] hover:bg-[var(--color-bg-hover)] transition-default"
           }
         >
           {entry.label}

@@ -48,7 +48,7 @@ export function EntityCompletionPanel(
                 role="option"
                 aria-selected={session.selectedIndex === index}
                 data-testid={`entity-completion-item-${index}`}
-                className="w-full rounded-[var(--radius-sm)] px-2 py-1.5 text-left text-sm text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                className="w-full rounded-[var(--radius-sm)] px-2 py-1.5 text-left text-sm text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default"
                 onMouseDown={(event) => {
                   event.preventDefault();
                 }}

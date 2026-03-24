@@ -215,7 +215,7 @@ export function VersionHistoryPanelContent({
           variant="ghost"
           size="sm"
           onClick={onConfigureAutoSave}
-          className="!p-0 !h-auto !text-(--text-status) text-[var(--color-accent-muted)] hover:text-[var(--color-accent)] hover:underline"
+          className="!p-0 !h-auto !text-(--text-status) text-[var(--color-accent-muted)] hover:text-[var(--color-accent)] hover:underline transition-default"
         >
           {t("versionHistory.panel.configureAutoSave")}
         </Button>

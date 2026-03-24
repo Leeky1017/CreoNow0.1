@@ -163,7 +163,7 @@ export function BubbleMenuFormatActions(props: {
             aria-label={t("editor.link.apply")}
             variant="ghost"
             size="sm"
-            className="h-6 min-w-0 px-1 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+            className="h-6 min-w-0 px-1 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] transition-default"
           >
             <Check size={16} strokeWidth={1.5} />
           </Button>
@@ -174,7 +174,7 @@ export function BubbleMenuFormatActions(props: {
               aria-label={t("editor.link.remove")}
               variant="ghost"
               size="sm"
-              className="h-6 min-w-0 px-1 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-danger)]"
+              className="h-6 min-w-0 px-1 text-[var(--color-fg-muted)] hover:text-[var(--color-fg-danger)] transition-default"
             >
               <X size={16} strokeWidth={1.5} />
             </Button>

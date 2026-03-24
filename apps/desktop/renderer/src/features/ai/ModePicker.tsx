@@ -97,7 +97,7 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
                 onClick={() => props.onSelectMode(mode.id)}
                 className={`
                   !h-auto !px-2.5 !py-1.5 !justify-start !text-left !rounded-[var(--radius-sm)]
-                  text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]
+                  text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default
                   [&>span]:w-full [&>span]:items-center [&>span]:justify-between
                   ${selected ? "bg-[var(--color-bg-selected)]" : ""}
                 `}

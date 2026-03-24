@@ -100,7 +100,7 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
             chatSessions.map((session) => (
               <div
                 key={session.sessionId}
-                className="group flex items-center gap-1 px-3 py-2 hover:bg-[var(--color-bg-hover)] cursor-pointer"
+                className="group flex items-center gap-1 px-3 py-2 hover:bg-[var(--color-bg-hover)] transition-default cursor-pointer"
               >
                 <Button
                   type="button"
@@ -116,7 +116,7 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
                   variant="ghost"
                   size="sm"
                   aria-label={t("ai.chatHistory.deleteSession")}
-                  className="opacity-0 group-hover:opacity-100 shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-danger)] text-xs focus-visible:opacity-100"
+                  className="opacity-0 group-hover:opacity-100 shrink-0 text-[var(--color-text-muted)] hover:text-[var(--color-text-danger)] text-xs focus-visible:opacity-100 transition-default"
                   onClick={() => handleDelete(session.sessionId)}
                 >
                   <span aria-hidden="true">{"\u2715"}</span>

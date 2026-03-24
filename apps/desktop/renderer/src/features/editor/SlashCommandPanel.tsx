@@ -66,7 +66,7 @@ export function SlashCommandPanel(
                 type="button"
                 data-testid={`slash-command-item-${candidate.id}`}
                 onClick={() => props.onSelectCommand(candidate.id)}
-                className="w-full rounded-[var(--radius-sm)] px-2 py-2 text-left hover:bg-[var(--color-bg-hover)]"
+                className="w-full rounded-[var(--radius-sm)] px-2 py-2 text-left hover:bg-[var(--color-bg-hover)] transition-default"
               >
                 <p className="text-sm text-[var(--color-fg-default)]">
                   {candidate.label}
