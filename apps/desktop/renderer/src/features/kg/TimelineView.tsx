@@ -149,7 +149,7 @@ export function TimelineView({
                 "transition-[border-color,box-shadow,transform,opacity]",
                 "duration-[var(--duration-fast)]",
                 draggingId === event.id
-                  ? "shadow-[var(--shadow-xl)] scale-[1.02] opacity-90"
+                  ? "shadow-xl scale-[1.02] opacity-90"
                   : "",
               ].join(" ")}
             >

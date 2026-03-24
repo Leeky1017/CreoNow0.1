@@ -80,7 +80,7 @@ export function EditorToolbar({
           {overflowMenuOpen ? (
             <div
               data-testid="toolbar-overflow-menu"
-              className="absolute right-0 top-full z-[var(--z-overlay)] mt-1 flex flex-col gap-0.5 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-1.5 shadow-[var(--shadow-md)]"
+              className="absolute right-0 top-full z-[var(--z-overlay)] mt-1 flex flex-col gap-0.5 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] p-1.5 shadow-md"
             >
               {TOOLBAR_ITEMS.map((item, i) =>
                 renderToolbarItem(

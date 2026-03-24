@@ -106,7 +106,7 @@ export function EditorBubbleMenu(props: {
     <div
       data-testid="editor-bubble-menu"
       data-bubble-placement={placement}
-      className="z-[var(--z-dropdown)] flex items-center gap-0.5 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-1 shadow-[var(--shadow-lg)]"
+      className="z-[var(--z-dropdown)] flex items-center gap-0.5 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-1 shadow-lg"
     >
       <BubbleMenuFormatActions
         editor={editor}

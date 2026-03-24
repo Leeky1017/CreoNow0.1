@@ -22,7 +22,7 @@ export function EntityCompletionPanel(
       data-testid="entity-completion-panel"
       role="listbox"
       aria-label={t("editor.entityCompletion.ariaLabel")}
-      className="min-w-60 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-1 shadow-[var(--shadow-lg)]"
+      className="min-w-60 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] p-1 shadow-lg"
       style={{
         position: "fixed",
         top: `${session.anchorTop}px`,

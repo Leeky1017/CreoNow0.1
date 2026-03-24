@@ -43,7 +43,7 @@ const contentStyles = [
   "border",
   "border-[var(--color-border-default)]",
   "rounded-[var(--radius-md)]",
-  "shadow-[var(--shadow-md)]",
+  "shadow-md",
   // Sizing
   "min-w-40",
   "max-w-60",

@@ -61,6 +61,8 @@ const thumbStyles = [
   "transition-shadow",
   "duration-[var(--duration-fast)]",
   // Hover and focus
+  // 审计：v1-18i #1255 KEEP
+  // eslint-disable-next-line creonow/no-raw-tailwind-tokens -- 技术原因：滑块轨道需要使用特殊 focus ring shadow 实现焦点视觉反馈，无法用标准 shadow token 替代
   "hover:shadow-[0_0_0_4px_var(--color-bg-surface)]",
   // Focus visible
   "focus-visible:outline",

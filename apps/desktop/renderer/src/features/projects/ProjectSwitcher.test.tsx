@@ -93,7 +93,7 @@ describe("ProjectSwitcher", () => {
     const options = screen.getByTestId("project-switcher-options");
     const searchInput = screen.getByTestId("project-switcher-search");
 
-    expect(dropdown.className).toContain("shadow-[var(--shadow-md)]");
+    expect(dropdown.className).toContain("shadow-md");
     expect(dropdown.className).toContain("z-[var(--z-dropdown)]");
     expect(options).toHaveClass("max-h-80");
     expect(options).toHaveClass("overflow-y-auto");

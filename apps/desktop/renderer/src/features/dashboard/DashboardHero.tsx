@@ -29,7 +29,7 @@ export function HeroCard(props: {
       onKeyDown={(e) => e.key === "Enter" && onClick()}
       role="button"
       tabIndex={0}
-      className="group border border-transparent min-h-0 flex cursor-pointer transition-[border-color,box-shadow] duration-[var(--duration-slow)] ease-[var(--ease-default)] hover:border-[var(--color-border-hover)] hover:shadow-[var(--shadow-md)] animate-fade-in-up"
+      className="group border border-transparent min-h-0 flex cursor-pointer transition-[border-color,box-shadow] duration-[var(--duration-slow)] ease-[var(--ease-default)] hover:border-[var(--color-border-hover)] hover:shadow-md animate-fade-in-up"
     >
       <div className="flex-1 min-w-0 p-[var(--space-10)] flex flex-col justify-center">
         <div

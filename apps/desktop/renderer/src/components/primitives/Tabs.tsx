@@ -103,7 +103,7 @@ const triggerStyles = [
   // Active/Selected state
   "data-[state=active]:text-[var(--color-fg-default)]",
   "data-[state=active]:bg-[var(--color-bg-raised)]",
-  "data-[state=active]:shadow-[var(--shadow-sm)]",
+  "data-[state=active]:shadow-sm",
   // Focus visible
   "focus-visible:outline",
   "focus-visible:outline-[length:var(--ring-focus-width)]",

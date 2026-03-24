@@ -22,7 +22,7 @@ export function isGrouped(
 const contentStyles = [
   "pointer-events-auto overflow-hidden",
   "bg-[var(--color-bg-raised)] border border-[var(--color-border-default)]",
-  "rounded-[var(--radius-md)] shadow-[var(--shadow-md)]",
+  "rounded-[var(--radius-md)] shadow-md",
   "transition-[opacity,transform] duration-[var(--duration-fast)] ease-[var(--ease-default)]",
   "data-[state=open]:opacity-100 data-[state=open]:scale-100",
   "data-[state=closed]:opacity-0 data-[state=closed]:scale-95",

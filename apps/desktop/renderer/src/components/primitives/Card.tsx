@@ -48,8 +48,7 @@ const baseStyles = [
  */
 const variantStyles: Record<CardVariant, string> = {
   default: "border border-[var(--color-border-default)]",
-  raised:
-    "border border-[var(--color-border-default)] shadow-[var(--shadow-md)]",
+  raised: "border border-[var(--color-border-default)] shadow-md",
   bordered: "border-2 border-[var(--color-border-default)]",
   bento: [
     "rounded-[var(--radius-2xl)]",
@@ -74,7 +73,7 @@ const variantStyles: Record<CardVariant, string> = {
 const hoverableStyles = [
   "cursor-pointer",
   "hover:border-[var(--color-border-hover)]",
-  "hover:shadow-[var(--shadow-sm)]",
+  "hover:shadow-sm",
 ].join(" ");
 
 /**

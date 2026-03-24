@@ -76,7 +76,7 @@ const viewportStyles = [
 const toastStyles = [
   "bg-[var(--color-bg-raised)]",
   "rounded-[var(--radius-lg)]",
-  "shadow-[var(--shadow-lg)]",
+  "shadow-lg",
   "border",
   "p-4",
   "flex",

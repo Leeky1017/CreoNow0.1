@@ -60,7 +60,7 @@ describe("Card", () => {
       const { container } = render(<Card variant="raised">Raised</Card>);
 
       const card = container.firstChild as HTMLElement;
-      expect(card.className).toContain("shadow-[var(--shadow-md)]");
+      expect(card.className).toContain("shadow-md");
     });
 
     it("bordered variant 应该有加粗边框", () => {
@@ -102,7 +102,7 @@ describe("Card", () => {
       render(<Card hoverable>Hoverable</Card>);
 
       const card = screen.getByText("Hoverable").closest("div");
-      expect(card?.className).toContain("hover:shadow-[var(--shadow-sm)]");
+      expect(card?.className).toContain("hover:shadow-sm");
     });
   });
 
@@ -160,7 +160,7 @@ describe("Card", () => {
 
       const card = screen.getByText("Default").closest("div");
       // 检查 class 中不包含 shadow 相关的静态样式
-      expect(card?.className).not.toContain("shadow-[var(--shadow-md)]");
+      expect(card?.className).not.toContain("shadow-md");
       // 但可以有 hover 时的阴影（如果是 hoverable）
     });
 
@@ -168,7 +168,7 @@ describe("Card", () => {
       render(<Card variant="raised">Raised</Card>);
 
       const card = screen.getByText("Raised").closest("div");
-      expect(card?.className).toContain("shadow-[var(--shadow-md)]");
+      expect(card?.className).toContain("shadow-md");
     });
 
     it("hoverable 时 hover 状态可以添加轻微阴影", () => {
@@ -176,7 +176,7 @@ describe("Card", () => {
 
       const card = screen.getByText("Hoverable").closest("div");
       // hover 状态的阴影是 --shadow-sm
-      expect(card?.className).toContain("hover:shadow-[var(--shadow-sm)]");
+      expect(card?.className).toContain("hover:shadow-sm");
     });
   });
 

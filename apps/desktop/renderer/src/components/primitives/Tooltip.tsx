@@ -34,7 +34,7 @@ const contentStyles = [
   "rounded-[var(--radius-md)]",
   "bg-[var(--color-fg-default)]",
   "text-[var(--color-fg-inverse)]",
-  "shadow-[var(--shadow-md)]",
+  "shadow-md",
   // Animation
   "animate-in",
   "fade-in-0",

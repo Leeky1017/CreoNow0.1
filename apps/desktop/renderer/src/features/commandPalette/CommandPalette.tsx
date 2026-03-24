@@ -174,7 +174,7 @@ export function CommandPalette({
         onClick={(e) => e.stopPropagation()}
         // 审计：v1-13 #016 KEEP
         // eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：command palette modal width per design spec (w-[600px])
-        className="w-[600px] max-w-[90vw] flex flex-col bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
+        className="w-[600px] max-w-[90vw] flex flex-col bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-xl overflow-hidden"
       >
         {/* Header */}
         <div className="h-14 flex items-center px-4 border-b border-[var(--color-border-default)]">

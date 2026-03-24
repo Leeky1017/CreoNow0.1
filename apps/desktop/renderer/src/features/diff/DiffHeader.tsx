@@ -92,7 +92,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
                 className="fixed inset-0 z-[var(--z-dropdown)]"
                 onClick={() => setBeforeDropdownOpen(false)}
               />
-              <div className="absolute top-full left-0 mt-2 w-64 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-lg shadow-[0_18px_48px_var(--color-shadow)] z-[var(--z-popover)] p-1 overflow-hidden">
+              <div className="absolute top-full left-0 mt-2 w-64 bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-lg shadow-xl z-[var(--z-popover)] p-1 overflow-hidden">
                 <div className="px-3 py-2 text-(--text-label) text-[var(--color-fg-subtle)] uppercase tracking-wider font-medium">
                   {t("diff.header.history")}
                 </div>
@@ -153,6 +153,8 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
           className="flex items-center gap-2 px-3 py-1.5 bg-[var(--color-bg-hover)] rounded border border-[var(--color-border-default)] text-xs text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)] transition-colors whitespace-nowrap"
         >
           {/* Green dot */}
+          {/* 审计：v1-18i #1255 KEEP */}
+          {/* eslint-disable-next-line creonow/no-raw-tailwind-tokens -- 技术原因：diff 头部使用自定义 glow effect 提供视觉状态区分，无标准 shadow token 对应 */}
           <div className="w-2 h-2 rounded-full bg-[var(--color-success)] shadow-[0_0_8px_var(--color-success-subtle)]" />
           <span>{selectedAfter?.label ?? t("diff.header.currentVersion")}</span>
           <ChevronDown
@@ -174,7 +176,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               px-3 py-1 text-xs font-medium rounded transition-colors
               ${
                 props.viewMode === "split"
-                  ? "bg-[var(--color-bg-raised)] shadow-[var(--shadow-sm)] text-[var(--color-fg-default)] border border-[var(--color-border-default)]"
+                  ? "bg-[var(--color-bg-raised)] shadow-sm text-[var(--color-fg-default)] border border-[var(--color-border-default)]"
                   : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
               }
             `}
@@ -188,7 +190,7 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
               px-3 py-1 text-xs font-medium rounded transition-colors
               ${
                 props.viewMode === "unified"
-                  ? "bg-[var(--color-bg-raised)] shadow-[var(--shadow-sm)] text-[var(--color-fg-default)] border border-[var(--color-border-default)]"
+                  ? "bg-[var(--color-bg-raised)] shadow-sm text-[var(--color-fg-default)] border border-[var(--color-border-default)]"
                   : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
               }
             `}
