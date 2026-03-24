@@ -51,6 +51,7 @@ export interface FileTreeNodeRowProps {
   onOpenVersionHistory?: (documentId: string) => void;
 }
 
+// 审计：v1-13 #1237 KEEP — 组件 props 已有 TypeScript 类型，无需 prop-types
 /* eslint-disable react/prop-types -- TypeScript interface provides type safety; React.memo(forwardRef()) confuses prop-types plugin */
 export const FileTreeNodeRow = React.memo(
   React.forwardRef<HTMLInputElement, FileTreeNodeRowProps>(
