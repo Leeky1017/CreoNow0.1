@@ -82,8 +82,8 @@ const variantStyles: Record<BadgeVariant, string> = {
  * Size-specific styles
  */
 const sizeStyles: Record<BadgeSize, string> = {
-  sm: "h-[18px] px-1.5 text-[var(--text-label-size)]",
-  md: "h-[22px] px-2 text-[var(--text-caption-size)]",
+  sm: "h-4.5 px-1.5 text-[var(--text-label-size)]",
+  md: "h-5.5 px-2 text-[var(--text-caption-size)]",
 };
 
 /**

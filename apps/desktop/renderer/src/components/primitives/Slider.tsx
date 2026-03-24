@@ -39,7 +39,7 @@ export interface SliderProps {
 const trackStyles = [
   "relative",
   "flex-1",
-  "h-[2px]",
+  "h-0.5",
   "bg-[var(--color-border-default)]",
   "rounded-full",
 ].join(" ");

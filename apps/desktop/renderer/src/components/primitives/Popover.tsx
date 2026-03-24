@@ -50,10 +50,8 @@ const contentStyles = [
   "rounded-[var(--radius-md)]",
   "shadow-[var(--shadow-md)]",
   // Sizing
-  // eslint-disable-next-line creonow/no-hardcoded-dimension -- Design spec §6.11: Popover min/max width
-  "min-w-[200px]",
-  // eslint-disable-next-line creonow/no-hardcoded-dimension -- Design spec §6.11: Popover max width
-  "max-w-[320px]",
+  "min-w-50",
+  "max-w-80",
   "p-4",
   // Animation via CSS transition
   "transition-[opacity,transform]",

@@ -138,8 +138,7 @@ export function ImageUpload({
   const wrapperStyles = ["group", "relative"].join(" ");
 
   const triggerStyles = [
-    // eslint-disable-next-line creonow/no-hardcoded-dimension -- Primitive: minimum upload area for usability
-    "relative w-full cursor-pointer border-2 border-dashed rounded-[var(--radius-sm)] min-h-[140px] flex flex-col items-center justify-center",
+    "relative w-full cursor-pointer border-2 border-dashed rounded-[var(--radius-sm)] min-h-35 flex flex-col items-center justify-center",
     "transition-all duration-[var(--duration-fast)] focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)] focus-visible:outline-offset-[var(--ring-focus-offset)] focus-visible:outline-[var(--color-ring-focus)]",
     disabled
       ? "border-[var(--color-border-default)] bg-[var(--color-bg-disabled)] cursor-not-allowed opacity-50"

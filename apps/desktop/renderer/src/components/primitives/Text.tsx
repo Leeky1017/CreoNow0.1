@@ -58,14 +58,16 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
  * - code: 13px, 400, 1.5
  */
 const sizeStyles: Record<TextSize, string> = {
-  body: "text-(--text-body) leading-[1.5] font-normal font-[var(--font-family-ui)]",
+  body:
+    "text-(--text-body) leading-[var(--leading-normal)] font-normal font-[var(--font-family-ui)]",
   bodyLarge:
-    "text-base leading-[1.8] font-normal font-[var(--font-family-body)]",
-  small: "text-xs leading-[1.4] font-normal font-[var(--font-family-ui)]",
-  tiny: "text-(--text-status) leading-[1.2] font-normal font-[var(--font-family-ui)]",
+    "text-base leading-[var(--leading-relaxed)] font-normal font-[var(--font-family-body)]",
+  small: "text-xs leading-[1.4] font-normal font-[var(--font-family-ui)]", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.4 line-height
+  tiny: "text-(--text-status) leading-[1.2] font-normal font-[var(--font-family-ui)]", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.2 line-height
   label:
-    "text-(--text-label) leading-[1.2] font-medium tracking-[0.1em] uppercase font-[var(--font-family-ui)]",
-  code: "text-(--text-mono) leading-[1.5] font-normal font-[var(--font-family-mono)]",
+    "text-(--text-label) leading-[1.2] font-medium tracking-[0.1em] uppercase font-[var(--font-family-ui)]", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.2 line-height
+  code:
+    "text-(--text-mono) leading-[var(--leading-normal)] font-normal font-[var(--font-family-mono)]",
 };
 
 /**

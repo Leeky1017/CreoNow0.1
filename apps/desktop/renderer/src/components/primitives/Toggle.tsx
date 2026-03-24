@@ -66,8 +66,8 @@ const trackStyles = [
 const thumbStyles = [
   "absolute",
   "left-[3px]",
-  "w-[18px]",
-  "h-[18px]",
+  "w-4.5",
+  "h-4.5",
   "rounded-full",
   "transition-all",
   "duration-[var(--duration-slow)]",

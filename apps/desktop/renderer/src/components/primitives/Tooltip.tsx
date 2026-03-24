@@ -30,8 +30,7 @@ const contentStyles = [
   "text-xs",
   "font-normal",
   "leading-tight",
-  // eslint-disable-next-line creonow/no-hardcoded-dimension -- Design spec §6.11: Tooltip max width
-  "max-w-[200px]",
+  "max-w-50",
   "rounded-[var(--radius-md)]",
   "bg-[var(--color-fg-default)]",
   "text-[var(--color-fg-inverse)]",
