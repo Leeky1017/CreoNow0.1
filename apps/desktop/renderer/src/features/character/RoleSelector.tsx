@@ -82,7 +82,7 @@ export function RoleSelector({
             "px-2",
             "py-0.5",
             "rounded",
-            "text-[11px]",
+            "text-(--text-status)",
             "font-medium",
             "uppercase",
             "tracking-wide",
@@ -98,7 +98,7 @@ export function RoleSelector({
       sideOffset={4}
     >
       <div className="min-w-40 py-1 -mx-2 -my-2">
-        <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
+        <div className="text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
           {t("character.roleSelector.selectRole")}
         </div>
         {ROLE_OPTIONS.map((role) => {

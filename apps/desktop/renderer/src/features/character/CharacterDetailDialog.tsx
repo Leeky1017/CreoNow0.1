@@ -176,12 +176,12 @@ export function CharacterDetailDialog({
       <DialogPrimitive.Portal container={container}>
         <DialogPrimitive.Overlay className={getOverlayStyles(hasContainer)} />
         <DialogPrimitive.Content className={getContentStyles(hasContainer)}>
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[var(--color-border-hover)] to-transparent opacity-50" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--color-border-hover)] to-transparent opacity-50" />
 
           {/* Header: Avatar + Name + Role */}
           <div className="p-6 pb-0 flex items-start gap-6 shrink-0">
             <div className="relative group cursor-pointer shrink-0">
-              <div className="w-16 h-16 rounded-full p-[1px] bg-gradient-to-b from-[var(--color-border-hover)] to-[var(--color-bg-surface)]">
+              <div className="w-16 h-16 rounded-full p-px bg-gradient-to-b from-[var(--color-border-hover)] to-[var(--color-bg-surface)]">
                 <Avatar
                   src={editedCharacter.avatarUrl}
                   fallback={editedCharacter.name}
@@ -219,7 +219,7 @@ export function CharacterDetailDialog({
                   onChange={(role) => handleFieldChange("role", role)}
                   layer="modal"
                 />
-                <div className="h-3 w-[1px] bg-[var(--color-border-hover)]" />
+                <div className="h-3 w-px bg-[var(--color-border-hover)]" />
                 <GroupSelector
                   value={editedCharacter.group}
                   onChange={(group) => handleFieldChange("group", group)}

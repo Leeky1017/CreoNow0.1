@@ -157,7 +157,7 @@ export function AddRelationshipPopover({
         trigger ?? (
           <Button
             type="button"
-            className="text-[10px] text-[var(--color-info)] hover:text-[var(--color-info)]/80 flex items-center gap-1 font-medium transition-colors"
+            className="text-(--text-label) text-[var(--color-info)] hover:text-[var(--color-info)]/80 flex items-center gap-1 font-medium transition-colors"
           >
             <PlusIcon />
             {t("character.addRelation.triggerLabel")}
@@ -177,7 +177,7 @@ export function AddRelationshipPopover({
 
         {/* Character Selection */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
-          <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold mb-2">
+          <div className="text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold mb-2">
             {t("character.addRelation.selectCharacter")}
           </div>
           {selectableCharacters.length > 0 ? (
@@ -214,7 +214,9 @@ export function AddRelationshipPopover({
                       <div className="text-sm text-[var(--color-fg-default)] truncate">
                         {character.name}
                       </div>
-                      <div className={`text-[10px] ${roleConfig.color}`}>
+                      <div
+                        className={`text-(--text-label) ${roleConfig.color}`}
+                      >
                         {roleConfig.label}
                       </div>
                     </div>
@@ -234,7 +236,7 @@ export function AddRelationshipPopover({
 
         {/* Relationship Type Selection */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
-          <div className="text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold mb-2">
+          <div className="text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold mb-2">
             {t("character.addRelation.relationshipType")}
           </div>
           <div className="flex flex-wrap gap-2">
@@ -249,7 +251,7 @@ export function AddRelationshipPopover({
                   className={[
                     "px-2.5",
                     "py-1",
-                    "text-[11px]",
+                    "text-(--text-status)",
                     "font-medium",
                     "rounded",
                     "border",

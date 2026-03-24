@@ -54,7 +54,7 @@ export function CharacterAppearances(
         <Label className={labelStyles}>
           {t("character.detail.appearances")}
         </Label>
-        <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+        <span className="text-(--text-label) text-[var(--color-fg-placeholder)]">
           {props.appearances.length} {t("character.detail.chapters")}
         </span>
       </div>
@@ -82,7 +82,7 @@ export function CharacterAppearances(
           <div className="text-xs text-[var(--color-fg-placeholder)] py-4 text-center border border-dashed border-[var(--color-border-default)] rounded-lg">
             {t("character.detail.noAppearances")}
           </div>
-          <p className="text-[11px] text-[var(--color-fg-placeholder)]">
+          <p className="text-(--text-status) text-[var(--color-fg-placeholder)]">
             {t("character.detail.noAppearancesFallbackHint")}
           </p>
         </>

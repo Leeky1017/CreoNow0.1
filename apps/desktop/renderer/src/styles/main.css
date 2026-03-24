@@ -161,9 +161,11 @@
   --shadow-lg: 0 8px 16px var(--color-shadow);
   --shadow-xl: 0 16px 32px var(--color-shadow);
 
-  /* Dimension tokens — component-specific fixed values (v1-18d) */
+  /* Dimension tokens — component-specific fixed values */
   --dimension-rule-indicator-offset: 3px;
   --dimension-search-results-max-h: 60vh;
+  --dimension-character-accent: 3px;
+  --dimension-character-dialog-max-h: 92vh;
 }
 
 /* === 全局基础样式 === */

@@ -74,7 +74,7 @@ export function CharacterCard({
       {/* Selected indicator (blue left border) */}
       {selected && (
         <div
-          className="absolute left-[-1px] top-1 bottom-1 w-[3px] bg-[var(--color-info)] rounded-r-sm"
+          className="absolute left-[-1px] top-1 bottom-1 w-(--dimension-character-accent) bg-[var(--color-info)] rounded-r-sm"
           data-testid="character-card-selected-indicator"
         />
       )}
@@ -147,7 +147,7 @@ export function CharacterCard({
           </span>
           <span
             className={[
-              "text-[11px]",
+              "text-(--text-status)",
               "mt-1.5",
               "truncate",
               "transition-colors",

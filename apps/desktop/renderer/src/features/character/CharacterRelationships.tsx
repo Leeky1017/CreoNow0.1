@@ -26,7 +26,7 @@ function RelationshipItem({
             size="sm"
             className="grayscale opacity-60 border border-[var(--color-border-default)]"
           />
-          <div className="absolute -bottom-1 -right-1 bg-[var(--color-bg-hover)] rounded-full p-[2px] border border-[var(--color-border-default)]">
+          <div className="absolute -bottom-1 -right-1 bg-[var(--color-bg-hover)] rounded-full p-0.5 border border-[var(--color-border-default)]">
             <div className={`w-2 h-2 rounded-full ${typeConfig.color}`} />
           </div>
         </div>
@@ -34,7 +34,7 @@ function RelationshipItem({
           <span className="text-xs font-medium text-[var(--color-fg-muted)]">
             {relationship.characterName}
           </span>
-          <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+          <span className="text-(--text-label) text-[var(--color-fg-placeholder)]">
             {relationship.characterRole
               ? ROLE_DISPLAY[relationship.characterRole]?.label
               : ""}
@@ -42,7 +42,7 @@ function RelationshipItem({
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <span className="text-[10px] font-medium text-[var(--color-fg-muted)] bg-[var(--color-bg-hover)] px-2 py-1 rounded border border-[var(--color-border-default)]">
+        <span className="text-(--text-label) font-medium text-[var(--color-fg-muted)] bg-[var(--color-bg-hover)] px-2 py-1 rounded border border-[var(--color-border-default)]">
           {typeConfig.label}
         </span>
         {onRemove && (
@@ -101,7 +101,7 @@ export function CharacterRelationships(
             layer="modal"
           />
         ) : (
-          <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+          <span className="text-(--text-label) text-[var(--color-fg-placeholder)]">
             {t("character.detail.noOtherCharacters")}
           </span>
         )}

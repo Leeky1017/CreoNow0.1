@@ -38,7 +38,10 @@ export function getContentStyles(hasContainer: boolean): string {
     // 审计：v1-13 #001 KEEP
     // eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：dialog content width per design spec (w-[560px])
     "w-[560px]",
-    hasContainer ? "max-h-[calc(100%-3.5rem)]" : "max-h-[92vh]",
+    // eslint-disable-next-line creonow/no-hardcoded-dimension -- calc expression, no standard token
+    hasContainer
+      ? "max-h-[calc(100%-3.5rem)]"
+      : "max-h-(--dimension-character-dialog-max-h)",
     "bg-[var(--color-bg-surface)]",
     "border",
     "border-[var(--color-border-default)]",
@@ -92,7 +95,7 @@ export function getZodiacFromBirthDate(
 }
 
 export const labelStyles = [
-  "text-[10px]",
+  "text-(--text-label)",
   "uppercase",
   "tracking-[0.1em]",
   "text-[var(--color-fg-placeholder)]",
@@ -119,7 +122,7 @@ export function ProfileTableRow({
 }) {
   return (
     <div className="grid grid-cols-[160px_1fr]">
-      <div className="px-4 py-3 bg-[var(--color-bg-base)] border-r border-[var(--color-border-default)] text-[10px] uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold">
+      <div className="px-4 py-3 bg-[var(--color-bg-base)] border-r border-[var(--color-border-default)] text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold">
         {label}
       </div>
       <div className="px-4 py-3 min-w-0">{children}</div>
@@ -136,7 +139,7 @@ export function ProfileSummaryItem({
   value: string;
 }): JSX.Element {
   return (
-    <div className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 py-1 text-[11px]">
+    <div className="inline-flex items-center gap-1.5 rounded-md border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 py-1 text-(--text-status)">
       <span className="text-[var(--color-fg-placeholder)]">{label}</span>
       <span className="text-[var(--color-fg-default)]">{value}</span>
     </div>
