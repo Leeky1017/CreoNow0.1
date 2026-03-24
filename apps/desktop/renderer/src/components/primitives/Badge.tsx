@@ -72,7 +72,7 @@ const variantStyles: Record<BadgeVariant, string> = {
     "bg-[var(--color-bg-hover)]",
     "text-[var(--color-fg-muted)]",
     "uppercase",
-    "tracking-[var(--tracking-wide)]",
+    "tracking-(--tracking-wide)",
     "font-[var(--weight-semibold)]",
     "rounded-[var(--radius-full)]",
   ].join(" "),

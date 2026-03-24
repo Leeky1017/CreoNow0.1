@@ -81,7 +81,7 @@ export const panelContainerStyles = [
   "bg-[var(--color-bg-surface)]",
   "border-l border-[var(--color-separator)]",
   "flex flex-col h-full",
-  "shadow-[var(--shadow-xl)] shrink-0",
+  "shadow-xl shrink-0",
 ].join(" ");
 
 export const headerStyles = [

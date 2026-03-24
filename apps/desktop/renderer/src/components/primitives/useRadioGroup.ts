@@ -33,7 +33,7 @@ export const sizeStyles = {
   sm: {
     radio: "w-4 h-4",
     label: "text-xs",
-    description: "text-[10px]",
+    description: "text-(--text-label)",
     gap: "gap-2",
   },
   md: {
