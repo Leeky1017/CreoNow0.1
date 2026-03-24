@@ -56,7 +56,7 @@ export function AuthorBadge({
     "flex",
     "items-center",
     "gap-1.5",
-    "text-[10px]",
+    "text-(--text-label)",
     "font-medium",
     "leading-none",
   ].join(" ");
@@ -100,7 +100,7 @@ export function AiMarkTag(props: { versionId: string }): JSX.Element {
   return (
     <span
       data-testid={`ai-mark-tag-${props.versionId}`}
-      className="inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium leading-none bg-[var(--color-info)] text-[var(--color-bg-surface)]"
+      className="inline-flex items-center rounded px-1.5 py-0.5 text-(--text-label) font-medium leading-none bg-[var(--color-info)] text-[var(--color-bg-surface)]"
     >
       {t("versionHistory.panel.aiModify")}
     </span>
@@ -132,7 +132,7 @@ export function VersionMeta({
   };
 
   return (
-    <div className="flex items-center gap-2 text-[10px] text-[var(--color-fg-placeholder)] mt-1">
+    <div className="flex items-center gap-2 text-(--text-label) text-[var(--color-fg-placeholder)] mt-1">
       {reason && (
         <span className="flex items-center gap-1">
           <span className="opacity-60">{t("versionHistory.panel.reason")}</span>
@@ -162,8 +162,8 @@ export function DiffSummaryPreview({ summary }: { summary?: string }) {
   if (!summary) return null;
 
   return (
-    <div className="mt-2 p-2 bg-[var(--color-bg-raised)] rounded border border-[var(--color-separator)] text-[11px] text-[var(--color-fg-muted)] font-mono leading-relaxed">
-      <span className="text-[var(--color-fg-placeholder)] text-[9px] uppercase tracking-wider block mb-1">
+    <div className="mt-2 p-2 bg-[var(--color-bg-raised)] rounded border border-[var(--color-separator)] text-(--text-status) text-[var(--color-fg-muted)] font-mono leading-relaxed">
+      <span className="text-[var(--color-fg-placeholder)] text-(--text-label) uppercase tracking-wider block mb-1">
         {t("versionHistory.panel.changePreview")}
       </span>
       <span
@@ -175,7 +175,7 @@ export function DiffSummaryPreview({ summary }: { summary?: string }) {
       <Button
         variant="ghost"
         size="sm"
-        className="!mt-2 !h-auto !px-0 !py-0 text-[10px]"
+        className="!mt-2 !h-auto !px-0 !py-0 text-(--text-label)"
         onClick={() => setExpanded((value) => !value)}
         aria-expanded={expanded}
       >
@@ -196,7 +196,7 @@ export function WordChangeBadge({ change }: { change: WordChange }) {
     return (
       <span
         data-testid="version-no-changes-badge"
-        className="text-[10px] text-[var(--color-fg-default)] font-mono bg-[var(--color-bg-overlay)] border border-[var(--color-separator)] px-1 rounded"
+        className="text-(--text-label) text-[var(--color-fg-default)] font-mono bg-[var(--color-bg-overlay)] border border-[var(--color-separator)] px-1 rounded"
       >
         {t("versionHistory.panel.noChanges")}
       </span>
@@ -210,7 +210,9 @@ export function WordChangeBadge({ change }: { change: WordChange }) {
   const sign = isAdded ? "+" : "-";
 
   return (
-    <span className={`text-[10px] font-mono px-1 rounded ${colorClasses}`}>
+    <span
+      className={`text-(--text-label) font-mono px-1 rounded ${colorClasses}`}
+    >
       {t("versionHistory.panel.wordsCount", { sign, count: change.count })}
     </span>
   );

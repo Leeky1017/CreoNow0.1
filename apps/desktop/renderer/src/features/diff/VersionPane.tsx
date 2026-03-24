@@ -75,7 +75,7 @@ export function VersionPane(props: VersionPaneProps): JSX.Element {
           </span>
         </div>
         {props.version.type && (
-          <span className="text-[10px] text-[var(--color-fg-subtle)] uppercase tracking-wide">
+          <span className="text-(--text-label) text-[var(--color-fg-subtle)] uppercase tracking-wide">
             {props.version.type === "current"
               ? "Current"
               : props.version.type === "auto"

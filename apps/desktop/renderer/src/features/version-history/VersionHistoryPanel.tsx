@@ -161,7 +161,7 @@ export function VersionHistoryPanelContent({
                 >
                   {row.type === "header" ? (
                     <div className="px-2 py-1">
-                      <span className="text-[10px] font-medium text-[var(--color-fg-placeholder)] uppercase tracking-wider">
+                      <span className="text-(--text-label) font-medium text-[var(--color-fg-placeholder)] uppercase tracking-wider">
                         {row.label}
                       </span>
                     </div>
@@ -215,7 +215,7 @@ export function VersionHistoryPanelContent({
           variant="ghost"
           size="sm"
           onClick={onConfigureAutoSave}
-          className="!p-0 !h-auto !text-[11px] text-[var(--color-accent-muted)] hover:text-[var(--color-accent)] hover:underline"
+          className="!p-0 !h-auto !text-(--text-status) text-[var(--color-accent-muted)] hover:text-[var(--color-accent)] hover:underline"
         >
           {t("versionHistory.panel.configureAutoSave")}
         </Button>

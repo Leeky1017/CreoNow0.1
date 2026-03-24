@@ -144,7 +144,7 @@ export function VersionCard({
           reason={version.reason}
           affectedParagraphs={version.affectedParagraphs}
         />
-        <p className="text-[13px] text-[var(--color-fg-default)] leading-snug mt-2 mb-2">
+        <p className="text-(--text-body) text-[var(--color-fg-default)] leading-snug mt-2 mb-2">
           {version.description}
         </p>
         <DiffSummaryPreview summary={version.diffSummary} />
@@ -154,7 +154,7 @@ export function VersionCard({
               variant="secondary"
               size="sm"
               onClick={() => onRestore?.(version.id)}
-              className="!h-7 !text-[10px] !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
+              className="!h-7 !text-(--text-label) !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
             >
               {t("versionHistory.panel.restore")}
             </Button>
@@ -163,7 +163,7 @@ export function VersionCard({
             variant="secondary"
             size="sm"
             onClick={() => onCompare?.(version.id)}
-            className="!h-7 !text-[10px] !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
+            className="!h-7 !text-(--text-label) !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
           >
             {t("versionHistory.panel.compare")}
           </Button>
@@ -171,7 +171,7 @@ export function VersionCard({
             variant="secondary"
             size="sm"
             onClick={() => onPreview?.(version.id)}
-            className="!h-7 !text-[10px] !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
+            className="!h-7 !text-(--text-label) !px-0 !bg-[var(--color-bg-active)] hover:!bg-[var(--color-bg-selected)]"
           >
             {t("versionHistory.panel.preview")}
           </Button>
@@ -189,7 +189,7 @@ export function VersionCard({
       >
         <div className="flex justify-between items-start mb-2">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-accent)] bg-[var(--color-accent-subtle)] px-1.5 py-0.5 rounded">
+            <span className="text-(--text-label) font-bold uppercase tracking-wider text-[var(--color-accent)] bg-[var(--color-accent-subtle)] px-1.5 py-0.5 rounded">
               {t("versionHistory.panel.current")}
             </span>
             <span className="text-xs text-[var(--color-fg-placeholder)]">
@@ -203,10 +203,10 @@ export function VersionCard({
             <AiMarkTag versionId={version.id} />
           ) : null}
         </div>
-        <p className="text-[13px] text-[var(--color-fg-muted)] leading-snug mb-2 font-light">
+        <p className="text-(--text-body) text-[var(--color-fg-muted)] leading-snug mb-2 font-light">
           {version.description}
         </p>
-        <div className="flex items-center justify-between text-[11px]">
+        <div className="flex items-center justify-between text-(--text-status)">
           <span className="text-[var(--color-fg-placeholder)] font-medium">
             {version.wordChange.count === 0
               ? t("versionHistory.panel.wordsChanged", { value: "0" })
@@ -239,13 +239,13 @@ export function VersionCard({
       </div>
       {version.affectedParagraphs !== undefined &&
         version.affectedParagraphs > 0 && (
-          <div className="text-[10px] text-[var(--color-fg-placeholder)] mt-1 mb-1">
+          <div className="text-(--text-label) text-[var(--color-fg-placeholder)] mt-1 mb-1">
             {t("versionHistory.panel.affectedParagraphs", {
               count: version.affectedParagraphs,
             })}
           </div>
         )}
-      <p className="text-[13px] text-[var(--color-fg-placeholder)] group-hover:text-[var(--color-fg-muted)] leading-snug mb-1">
+      <p className="text-(--text-body) text-[var(--color-fg-placeholder)] group-hover:text-[var(--color-fg-muted)] leading-snug mb-1">
         {version.description}
       </p>
       <HoverActions
@@ -285,7 +285,7 @@ export function TimeGroupSection({
     <>
       {showLabel && (
         <div className="px-2 py-1">
-          <span className="text-[10px] font-medium text-[var(--color-fg-placeholder)] uppercase tracking-wider">
+          <span className="text-(--text-label) font-medium text-[var(--color-fg-placeholder)] uppercase tracking-wider">
             {group.label}
           </span>
         </div>

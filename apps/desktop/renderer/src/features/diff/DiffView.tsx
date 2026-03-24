@@ -169,7 +169,7 @@ function renderHeaderLine(line: DiffLine, index: number): JSX.Element {
       className="flex bg-[var(--color-bg-raised)] border-y border-[var(--color-separator)]"
     >
       <div className="w-20 shrink-0 bg-[var(--color-bg-base)] border-r border-[var(--color-separator)]" />
-      <div className="flex-1 px-4 py-1 text-[var(--color-fg-subtle)] font-medium text-[11px]">
+      <div className="flex-1 px-4 py-1 text-[var(--color-fg-subtle)] font-medium text-(--text-status)">
         {line.content}
       </div>
     </div>
@@ -212,7 +212,7 @@ function renderDiffLine(
       {/* Gutter: +/- indicator + old line number + new line number */}
       <div
         className={`
-          w-20 shrink-0 flex select-none text-[11px] border-r border-[var(--color-separator)]
+          w-20 shrink-0 flex select-none text-(--text-status) border-r border-[var(--color-separator)]
           ${isRemoved ? "bg-[var(--color-diff-removed-gutter-bg)]" : ""}
           ${isAdded ? "bg-[var(--color-diff-added-gutter-bg)]" : ""}
           ${isContext ? "bg-[var(--color-bg-base)]" : ""}
@@ -310,7 +310,7 @@ export function UnifiedDiffView(props: {
       data-testid={testId}
       viewportTestId={`${testId}-scroll-viewport`}
       viewportRef={scrollRef}
-      className="flex-1 font-[var(--font-family-mono)] text-[13px] leading-6"
+      className="flex-1 font-[var(--font-family-mono)] text-(--text-body) leading-6"
       viewportClassName="h-full w-full overflow-y-auto"
     >
       {props.lines.map((line, index) =>

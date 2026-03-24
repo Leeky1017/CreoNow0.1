@@ -34,14 +34,14 @@ function BranchConflictItem(props: {
       data-testid={`branch-conflict-item-${conflict.conflictId}`}
       className="space-y-2 rounded border border-[var(--color-border-default)] bg-[var(--color-bg-base)] p-2"
     >
-      <div className="text-[11px] text-[var(--color-fg-muted)]">
+      <div className="text-(--text-status) text-[var(--color-fg-muted)]">
         {t("versionHistory.container.conflictNumber", {
           number: conflict.index + 1,
         })}
       </div>
       <div className="grid grid-cols-1 gap-2 text-xs text-[var(--color-fg-default)]">
         <div>
-          <div className="text-[11px] text-[var(--color-fg-muted)]">
+          <div className="text-(--text-status) text-[var(--color-fg-muted)]">
             {t("versionHistory.container.base")}
           </div>
           <pre className="whitespace-pre-wrap font-mono text-xs">
@@ -49,7 +49,7 @@ function BranchConflictItem(props: {
           </pre>
         </div>
         <div>
-          <div className="text-[11px] text-[var(--color-fg-muted)]">
+          <div className="text-(--text-status) text-[var(--color-fg-muted)]">
             {t("versionHistory.container.ours")}
           </div>
           <pre className="whitespace-pre-wrap font-mono text-xs">
@@ -57,7 +57,7 @@ function BranchConflictItem(props: {
           </pre>
         </div>
         <div>
-          <div className="text-[11px] text-[var(--color-fg-muted)]">
+          <div className="text-(--text-status) text-[var(--color-fg-muted)]">
             {t("versionHistory.container.theirs")}
           </div>
           <pre className="whitespace-pre-wrap font-mono text-xs">
@@ -77,7 +77,7 @@ function BranchConflictItem(props: {
         }
         orientation="horizontal"
         size="sm"
-        className="text-[11px] text-[var(--color-fg-default)]"
+        className="text-(--text-status) text-[var(--color-fg-default)]"
         options={[
           {
             value: "ours",
@@ -154,7 +154,7 @@ export function BranchMergeSection({
           {t("versionHistory.container.branchMerge")}
         </div>
         <div className="grid grid-cols-1 gap-2">
-          <Label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
+          <Label className="flex flex-col gap-1 text-(--text-status) text-[var(--color-fg-muted)]">
             {t("versionHistory.container.sourceBranch")}
             <Input
               data-testid="branch-merge-source-input"
@@ -163,7 +163,7 @@ export function BranchMergeSection({
               onChange={(event) => onSourceChange(event.target.value)}
             />
           </Label>
-          <Label className="flex flex-col gap-1 text-[11px] text-[var(--color-fg-muted)]">
+          <Label className="flex flex-col gap-1 text-(--text-status) text-[var(--color-fg-muted)]">
             {t("versionHistory.container.targetBranch")}
             <Input
               data-testid="branch-merge-target-input"
@@ -189,12 +189,15 @@ export function BranchMergeSection({
             : t("versionHistory.container.mergeBranches")}
         </Button>
         {branchMergeStatus === "ready" ? (
-          <div className="text-[11px] text-[var(--color-success)]">
+          <div className="text-(--text-status) text-[var(--color-success)]">
             {t("versionHistory.container.branchMergeCompleted")}
           </div>
         ) : null}
         {branchMergeStatus === "error" && branchMergeError ? (
-          <div role="alert" className="text-[11px] text-[var(--color-error)]">
+          <div
+            role="alert"
+            className="text-(--text-status) text-[var(--color-error)]"
+          >
             {getHumanErrorMessage(branchMergeError)}
           </div>
         ) : null}
