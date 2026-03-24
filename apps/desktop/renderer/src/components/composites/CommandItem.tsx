@@ -102,7 +102,7 @@ export function CommandItem({
     >
       {/* Active indicator bar */}
       {active && (
-        <div className="absolute left-0 top-2.5 bottom-2.5 w-0.5 bg-[var(--color-accent-blue)] rounded-r-sm" />
+        <div className="absolute left-0 top-2.5 bottom-2.5 w-0.5 bg-[var(--color-info)] rounded-r-sm" />
       )}
 
       {/* Icon */}

@@ -741,7 +741,7 @@ describe("CommandPalette — indicators and validation", () => {
       const firstItem = screen.getByTestId("command-item-open-settings");
       // 检查 active 项内部有指示器元素
       const indicator = firstItem.querySelector(
-        ".bg-\\[var\\(--color-accent-blue\\)\\]",
+        ".bg-\\[var\\(--color-info\\)\\]",
       );
       expect(indicator).toBeInTheDocument();
     });
