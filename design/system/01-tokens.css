@@ -544,9 +544,12 @@
    ============================================ */
 :root {
   --tracking-tight: -0.03em; /* 大号展示文字 */
+  --tracking-semi-tight: -0.02em; /* 标题稍紧 (h1) */
+  --tracking-snug: -0.01em; /* 标题微紧 (h2/Dialog) */
   --tracking-normal: 0; /* 正文默认 */
   --tracking-wide: 0.05em; /* 宽松间距 */
   --tracking-wider: 0.1em; /* 大写标签 */
+  --tracking-widest: 0.15em; /* 设置分节标签 */
 }
 
 /* ============================================
