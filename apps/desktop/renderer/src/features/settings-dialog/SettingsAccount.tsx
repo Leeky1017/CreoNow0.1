@@ -34,7 +34,7 @@ export interface SettingsAccountProps {
  * Section label styles
  */
 const sectionLabelStyles = [
-  "text-[10px]",
+  "text-(--text-label)",
   "uppercase",
   "tracking-[0.15em]",
   "text-[var(--color-fg-placeholder)]",

@@ -43,7 +43,7 @@ export interface SettingsGeneralProps {
 }
 
 const sectionLabelStyles =
-  "text-[10px] uppercase tracking-[0.15em] text-[var(--color-fg-placeholder)] font-semibold mb-6";
+  "text-(--text-label) uppercase tracking-[0.15em] text-[var(--color-fg-placeholder)] font-semibold mb-6";
 const dividerStyles = "w-full h-px bg-[var(--color-separator)] my-12";
 
 export function SettingsGeneral({
