@@ -78,7 +78,7 @@ const thumbStyles = [
  * Label styles
  */
 const labelStyles = [
-  "text-[14px]",
+  "text-(--text-subtitle)",
   "text-[var(--color-fg-default)]",
   "font-medium",
   "select-none",
@@ -88,7 +88,7 @@ const labelStyles = [
  * Description styles
  */
 const descriptionStyles = [
-  "text-[13px]",
+  "text-(--text-body)",
   "text-[var(--color-fg-subtle)]",
   "leading-relaxed",
 ].join(" ");

@@ -41,7 +41,7 @@ const levelStyles: Record<HeadingLevel, string> = {
   h1: "text-2xl font-semibold leading-[1.2] tracking-[-0.02em]",
   h2: "text-base font-semibold leading-[1.3] tracking-[-0.01em]",
   h3: "text-sm font-medium leading-[1.4] tracking-normal",
-  h4: "text-[13px] font-medium leading-[1.4] tracking-normal",
+  h4: "text-(--text-body) font-medium leading-[1.4] tracking-normal",
 };
 
 /**

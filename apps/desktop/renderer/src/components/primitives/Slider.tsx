@@ -72,9 +72,10 @@ const thumbStyles = [
 /**
  * Label styles
  */
-const labelStyles = ["text-[11px]", "text-[var(--color-fg-placeholder)]"].join(
-  " ",
-);
+const labelStyles = [
+  "text-(--text-status)",
+  "text-[var(--color-fg-placeholder)]",
+].join(" ");
 
 /**
  * Default format function for percentage

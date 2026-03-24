@@ -33,7 +33,7 @@ const viewportStyles = "p-1 max-h-[300px] overflow-y-auto";
 
 const itemStyles = [
   "relative flex items-center h-8 px-8 pr-3",
-  "text-[13px] text-[var(--color-fg-default)]",
+  "text-(--text-body) text-[var(--color-fg-default)]",
   "rounded-[var(--radius-sm)] cursor-pointer select-none outline-none",
   "data-[highlighted]:bg-[var(--color-bg-hover)]",
   "data-[state=checked]:text-[var(--color-fg-default)] data-[state=checked]:font-medium",

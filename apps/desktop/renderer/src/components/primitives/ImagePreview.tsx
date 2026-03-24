@@ -44,7 +44,9 @@ export function ImageUploadPlaceholder({
       </div>
       <div className="text-center">
         <p className="text-xs font-medium">{placeholder}</p>
-        <p className="text-[10px] text-[var(--color-fg-subtle)] mt-1">{hint}</p>
+        <p className="text-(--text-label) text-[var(--color-fg-subtle)] mt-1">
+          {hint}
+        </p>
       </div>
     </div>
   );
