@@ -58,14 +58,14 @@ export interface TextProps extends React.HTMLAttributes<HTMLSpanElement> {
  * - code: 13px, 400, 1.5
  */
 const sizeStyles: Record<TextSize, string> = {
-  body: "text-[13px] leading-[1.5] font-normal font-[var(--font-family-ui)]",
+  body: "text-(--text-body) leading-[1.5] font-normal font-[var(--font-family-ui)]",
   bodyLarge:
     "text-base leading-[1.8] font-normal font-[var(--font-family-body)]",
   small: "text-xs leading-[1.4] font-normal font-[var(--font-family-ui)]",
-  tiny: "text-[11px] leading-[1.2] font-normal font-[var(--font-family-ui)]",
+  tiny: "text-(--text-status) leading-[1.2] font-normal font-[var(--font-family-ui)]",
   label:
-    "text-[10px] leading-[1.2] font-medium tracking-[0.1em] uppercase font-[var(--font-family-ui)]",
-  code: "text-[13px] leading-[1.5] font-normal font-[var(--font-family-mono)]",
+    "text-(--text-label) leading-[1.2] font-medium tracking-[0.1em] uppercase font-[var(--font-family-ui)]",
+  code: "text-(--text-mono) leading-[1.5] font-normal font-[var(--font-family-mono)]",
 };
 
 /**

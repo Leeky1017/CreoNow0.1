@@ -18,7 +18,7 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 const baseStyles = [
   "min-h-20",
   "p-3",
-  "text-[13px]",
+  "text-(--text-body)",
   "leading-[1.5]",
   "rounded-[var(--radius-sm)]",
   "bg-[var(--color-bg-surface)]",

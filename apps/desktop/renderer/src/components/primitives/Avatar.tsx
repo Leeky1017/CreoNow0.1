@@ -28,7 +28,7 @@ export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
  * Size-specific styles
  */
 const sizeStyles: Record<AvatarSize, { container: string; text: string }> = {
-  xs: { container: "w-6 h-6", text: "text-[10px]" },
+  xs: { container: "w-6 h-6", text: "text-(--text-label)" },
   sm: { container: "w-8 h-8", text: "text-xs" },
   md: { container: "w-10 h-10", text: "text-sm" },
   lg: { container: "w-14 h-14", text: "text-lg" },

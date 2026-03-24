@@ -96,7 +96,7 @@ const titleStyles = [
  * Description styles - muted text
  */
 const descriptionStyles = [
-  "text-[13px]",
+  "text-(--text-body)",
   "text-[var(--color-fg-muted)]",
   "leading-[1.5]",
   "mt-2",

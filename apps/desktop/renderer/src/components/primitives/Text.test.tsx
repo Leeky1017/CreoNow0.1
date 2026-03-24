@@ -62,7 +62,7 @@ describe("Text", () => {
       render(<Text>Default</Text>);
 
       const element = screen.getByText("Default");
-      expect(element).toHaveClass("text-[13px]");
+      expect(element).toHaveClass("text-(--text-body)");
     });
 
     it("bodyLarge 应该是 16px", () => {
@@ -83,14 +83,14 @@ describe("Text", () => {
       render(<Text size="tiny">Tiny</Text>);
 
       const element = screen.getByText("Tiny");
-      expect(element).toHaveClass("text-[11px]");
+      expect(element).toHaveClass("text-(--text-status)");
     });
 
     it("label 应该是 10px 且 uppercase", () => {
       render(<Text size="label">Label</Text>);
 
       const element = screen.getByText("Label");
-      expect(element).toHaveClass("text-[10px]");
+      expect(element).toHaveClass("text-(--text-label)");
       expect(element).toHaveClass("uppercase");
     });
 

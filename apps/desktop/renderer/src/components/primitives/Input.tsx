@@ -18,7 +18,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 const baseStyles = [
   "h-10",
   "px-3",
-  "text-[13px]",
+  "text-(--text-body)",
   "leading-10",
   "rounded-[var(--radius-sm)]",
   "bg-[var(--color-bg-surface)]",

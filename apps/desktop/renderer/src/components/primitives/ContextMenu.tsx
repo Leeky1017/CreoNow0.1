@@ -148,7 +148,7 @@ export function ContextMenu({
               {item.shortcut ? (
                 <span
                   aria-hidden="true"
-                  className="ml-auto pl-4 text-[11px] text-[var(--color-fg-muted)]"
+                  className="ml-auto pl-4 text-(--text-status) text-[var(--color-fg-muted)]"
                 >
                   {item.shortcut}
                 </span>

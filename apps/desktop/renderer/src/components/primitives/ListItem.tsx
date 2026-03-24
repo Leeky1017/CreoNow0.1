@@ -27,7 +27,7 @@ const baseStyles = [
   "gap-2",
   "px-3",
   "rounded-[var(--radius-sm)]",
-  "text-[13px]",
+  "text-(--text-body)",
   "text-[var(--color-fg-default)]",
   "transition-colors",
   "duration-[var(--duration-fast)]",

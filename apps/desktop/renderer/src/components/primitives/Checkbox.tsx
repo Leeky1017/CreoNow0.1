@@ -67,7 +67,7 @@ const indicatorStyles = [
  * Label styles
  */
 const labelStyles = [
-  "text-[13px]",
+  "text-(--text-body)",
   "text-[var(--color-fg-default)]",
   "select-none",
   "cursor-pointer",

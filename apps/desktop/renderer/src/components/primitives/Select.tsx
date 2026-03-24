@@ -38,7 +38,7 @@ export interface SelectProps extends Omit<
 const triggerStyles = [
   "inline-flex items-center justify-between gap-2 h-10 px-3",
   "bg-[var(--color-bg-surface)] border border-[var(--color-border-default)]",
-  "rounded-[var(--radius-sm)] text-[13px] text-[var(--color-fg-default)]",
+  "rounded-[var(--radius-sm)] text-(--text-body) text-[var(--color-fg-default)]",
   "cursor-pointer select-none transition-colors duration-[var(--duration-fast)]",
   "hover:border-[var(--color-border-hover)]",
   "focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)]",
