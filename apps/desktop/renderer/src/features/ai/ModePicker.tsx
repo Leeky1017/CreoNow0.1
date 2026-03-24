@@ -75,7 +75,7 @@ export function ModePicker(props: ModePickerProps): JSX.Element | null {
         role="dialog"
         aria-label={t("ai.modePicker.selectMode")}
         onClick={(e) => e.stopPropagation()}
-        className="absolute bottom-full left-0 right-0 mb-1 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
+        className="absolute bottom-full left-0 right-0 mb-1 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-xl overflow-hidden"
       >
         <div className="px-2.5 py-2 border-b border-[var(--color-separator)]">
           <Text size="tiny" color="muted" className="uppercase tracking-wide">

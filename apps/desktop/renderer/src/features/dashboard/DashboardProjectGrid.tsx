@@ -127,7 +127,7 @@ export function ProjectCard(props: {
       onKeyDown={(e) => e.key === "Enter" && onClick()}
       role="button"
       tabIndex={0}
-      className="border border-transparent p-[var(--space-6)] h-50 flex flex-col cursor-pointer transition-[border-color,background-color,box-shadow] duration-[var(--duration-slow)] ease-[var(--ease-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] hover:shadow-[var(--shadow-sm)]"
+      className="border border-transparent p-[var(--space-6)] h-50 flex flex-col cursor-pointer transition-[border-color,background-color,box-shadow] duration-[var(--duration-slow)] ease-[var(--ease-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] hover:shadow-sm"
     >
       <div className="flex justify-between items-start mb-[var(--space-4)]">
         <div

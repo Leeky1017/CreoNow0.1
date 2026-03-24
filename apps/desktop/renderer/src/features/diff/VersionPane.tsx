@@ -67,6 +67,7 @@ export function VersionPane(props: VersionPaneProps): JSX.Element {
       <div className="h-8 flex items-center justify-between px-3 bg-[var(--color-bg-raised)] border-b border-[var(--color-separator)] shrink-0">
         <div className="flex items-center gap-2">
           {/* Version type indicator */}
+          {/* eslint-disable-next-line creonow/no-raw-tailwind-tokens -- glow effect, no matching token */}
           {props.version.type === "current" && (
             <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] shadow-[0_0_6px_var(--color-success-subtle)]" />
           )}

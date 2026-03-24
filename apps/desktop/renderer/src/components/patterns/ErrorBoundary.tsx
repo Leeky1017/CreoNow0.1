@@ -115,7 +115,7 @@ function ErrorBoundaryFallbackUI(props: {
       data-testid="app-error-boundary"
       className="h-full w-full bg-[var(--color-bg-base)] p-6"
     >
-      <div className="mx-auto max-w-2xl rounded-[var(--radius-lg)] border border-[var(--color-separator)] bg-[var(--color-bg-surface)] p-6 shadow-[var(--shadow-lg)]">
+      <div className="mx-auto max-w-2xl rounded-[var(--radius-lg)] border border-[var(--color-separator)] bg-[var(--color-bg-surface)] p-6 shadow-lg">
         <h1 className="text-lg font-semibold text-[var(--color-fg-default)]">
           {t("patterns.error.title")}
         </h1>

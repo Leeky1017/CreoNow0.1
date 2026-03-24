@@ -70,7 +70,7 @@ export function ChatHistory(props: ChatHistoryProps): JSX.Element | null {
         role="dialog"
         aria-label={t("ai.chatHistory.ariaLabel")}
         onClick={(e) => e.stopPropagation()}
-        className="absolute top-full right-0 mt-1 w-64 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] overflow-hidden"
+        className="absolute top-full right-0 mt-1 w-64 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-xl overflow-hidden"
       >
         {/* Search input */}
         <div className="px-3 py-2 border-b border-[var(--color-separator)]">

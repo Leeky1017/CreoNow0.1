@@ -40,7 +40,7 @@ const panelStyles = [
   "flex",
   "flex-col",
   "h-full",
-  "shadow-[var(--shadow-xl)]",
+  "shadow-xl",
   "shrink-0",
 ].join(" ");
 

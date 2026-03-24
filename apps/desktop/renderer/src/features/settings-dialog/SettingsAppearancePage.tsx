@@ -155,7 +155,7 @@ export function SettingsAppearancePage({
                 onClick={() => updateSetting("themeMode", mode)}
                 className={`${themeButtonBaseStyles} ${
                   isSelected
-                    ? "border-[var(--color-fg-default)] bg-[var(--color-bg-selected)] shadow-[var(--shadow-sm)]"
+                    ? "border-[var(--color-fg-default)] bg-[var(--color-bg-selected)] shadow-sm"
                     : "border-[var(--color-border-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)]"
                 }`}
               >

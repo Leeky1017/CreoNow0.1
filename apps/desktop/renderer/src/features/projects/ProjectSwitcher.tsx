@@ -216,7 +216,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
       {open ? (
         <div
           data-testid="project-switcher-dropdown"
-          className="absolute left-0 top-[calc(100%+4px)] z-[var(--z-dropdown)] w-full rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] shadow-[var(--shadow-md)]"
+          className="absolute left-0 top-[calc(100%+4px)] z-[var(--z-dropdown)] w-full rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] shadow-md"
         >
           <div className="border-b border-[var(--color-separator)] p-2">
             <Input

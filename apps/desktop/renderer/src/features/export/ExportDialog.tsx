@@ -47,7 +47,7 @@ const overlayStyles =
   "fixed inset-0 z-[var(--z-modal)] bg-[var(--color-scrim)] backdrop-blur-sm transition-opacity duration-[var(--duration-normal)] ease-[var(--ease-default)] data-[state=open]:opacity-100 data-[state=closed]:opacity-0";
 
 const contentStyles =
-  "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[var(--z-modal)] w-[calc(100vw-2rem)] max-w-xl bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)] flex flex-col max-h-[90vh] overflow-hidden transition-[opacity,transform] duration-[var(--duration-normal)] ease-[var(--ease-default)] data-[state=open]:opacity-100 data-[state=open]:scale-100 data-[state=closed]:opacity-0 data-[state=closed]:scale-95 focus:outline-none";
+  "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[var(--z-modal)] w-[calc(100vw-2rem)] max-w-xl bg-[var(--color-bg-surface)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-xl flex flex-col max-h-[90vh] overflow-hidden transition-[opacity,transform] duration-[var(--duration-normal)] ease-[var(--ease-default)] data-[state=open]:opacity-100 data-[state=open]:scale-100 data-[state=closed]:opacity-0 data-[state=closed]:scale-95 focus:outline-none";
 
 const closeButtonStyles =
   "p-1 rounded-[var(--radius-sm)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors duration-[var(--duration-fast)]";

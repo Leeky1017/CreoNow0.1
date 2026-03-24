@@ -43,7 +43,7 @@ export function InlineAiInput(props: InlineAiInputProps): JSX.Element {
   return (
     <div
       data-testid="inline-ai-input"
-      className="absolute z-[var(--z-popover)] min-w-80 max-w-lg rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] shadow-[var(--shadow-lg)] animate-[inline-ai-appear_200ms_var(--ease-out)]"
+      className="absolute z-[var(--z-popover)] min-w-80 max-w-lg rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] shadow-lg animate-[inline-ai-appear_200ms_var(--ease-out)]"
       style={{
         bottom: "calc(100% + var(--space-2))",
         left: "50%",

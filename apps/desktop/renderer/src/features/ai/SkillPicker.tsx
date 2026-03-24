@@ -107,7 +107,7 @@ export function SkillPicker(props: {
         role="dialog"
         aria-label={t("ai.skillPicker.ariaLabel")}
         onClick={(e) => e.stopPropagation()}
-        className="absolute bottom-full left-0 right-0 mb-1 p-2.5 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-[var(--shadow-xl)]"
+        className="absolute bottom-full left-0 right-0 mb-1 p-2.5 z-[var(--z-popover)] bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-[var(--radius-lg)] shadow-xl"
       >
         <div className="flex items-center justify-between">
           <Text size="label" color="muted">

@@ -46,7 +46,7 @@ export function getContentStyles(hasContainer: boolean): string {
     "border",
     "border-[var(--color-border-default)]",
     "rounded-[var(--radius-xl)]",
-    "shadow-[var(--shadow-xl)]",
+    "shadow-xl",
     "flex",
     "flex-col",
     "overflow-hidden",

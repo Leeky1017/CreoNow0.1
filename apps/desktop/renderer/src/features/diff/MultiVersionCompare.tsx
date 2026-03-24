@@ -62,7 +62,7 @@ export function MultiVersionCompare(
   return (
     <div
       data-testid="multi-version-compare"
-      className="flex flex-col bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-xl shadow-[var(--shadow-xl)] overflow-hidden"
+      className="flex flex-col bg-[var(--color-bg-raised)] border border-[var(--color-border-default)] rounded-xl shadow-xl overflow-hidden"
       style={{
         width: props.width ?? "100%",
         height: props.height ?? "100%",

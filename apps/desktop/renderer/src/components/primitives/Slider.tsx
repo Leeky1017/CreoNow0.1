@@ -61,7 +61,7 @@ const thumbStyles = [
   "transition-shadow",
   "duration-[var(--duration-fast)]",
   // Hover and focus
-  "hover:shadow-[0_0_0_4px_var(--color-bg-surface)]",
+  "hover:shadow-[0_0_0_4px_var(--color-bg-surface)]", // eslint-disable-line creonow/no-raw-tailwind-tokens -- focus ring, no matching token
   // Focus visible
   "focus-visible:outline",
   "focus-visible:outline-[length:var(--ring-focus-width)]",

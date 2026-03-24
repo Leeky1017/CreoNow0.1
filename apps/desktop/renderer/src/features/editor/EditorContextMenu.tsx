@@ -46,7 +46,7 @@ const menuContentClass = [
   "bg-[var(--color-bg-raised)]",
   "border",
   "border-[var(--color-border-default)]",
-  "shadow-[var(--shadow-lg)]",
+  "shadow-lg",
   "p-1",
   "z-[var(--z-popover)]",
   // Animation

@@ -21,7 +21,7 @@ export function CategoryButton(props: {
       onClick={props.onClick}
       className={`!px-3 !py-1 !h-auto !text-xs !font-medium !rounded-full whitespace-nowrap ${
         props.active
-          ? "!bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] shadow-[var(--shadow-lg)] shadow-[var(--color-info-subtle)]"
+          ? "!bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] shadow-lg shadow-[var(--color-info-subtle)]"
           : "!bg-[var(--color-separator)] !text-[var(--color-fg-muted)] !border !border-transparent hover:!border-[var(--color-bg-overlay)] hover:!text-[var(--color-fg-default)] hover:!bg-[var(--color-bg-overlay)]"
       }`}
     >
