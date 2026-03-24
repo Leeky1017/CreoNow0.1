@@ -45,10 +45,10 @@ export function ResultGroup(props: {
       className={`py-2 ${props.hasBorderTop ? "border-t border-[var(--color-separator)]" : ""}`}
     >
       <div className="px-4 py-1.5 flex items-center justify-between">
-        <span className="text-[10px] font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-widest">
+        <span className="text-(--text-label) font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-widest">
           {props.title}
         </span>
-        <span className="text-[10px] font-mono text-[var(--color-fg-placeholder)]">
+        <span className="text-(--text-label) font-mono text-[var(--color-fg-placeholder)]">
           {t("search.results.match", { count: props.count })}
         </span>
       </div>
@@ -67,10 +67,10 @@ export function KeyHint(props: {
 }): JSX.Element {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="flex items-center justify-center min-w-[20px] h-5 px-1 rounded bg-[var(--color-bg-overlay)] border border-[var(--color-separator)] text-[10px] text-[var(--color-fg-muted)] font-mono">
+      <span className="flex items-center justify-center min-w-5 h-5 px-1 rounded bg-[var(--color-bg-overlay)] border border-[var(--color-separator)] text-(--text-label) text-[var(--color-fg-muted)] font-mono">
         {props.icon || props.text}
       </span>
-      <span className="text-[10px] text-[var(--color-fg-placeholder)] ml-1">
+      <span className="text-(--text-label) text-[var(--color-fg-placeholder)] ml-1">
         {props.label}
       </span>
     </div>
@@ -111,7 +111,7 @@ export function SearchFilterBar(props: {
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-[10px] text-[var(--color-fg-placeholder)] uppercase tracking-wider font-medium">
+        <span className="text-(--text-label) text-[var(--color-fg-placeholder)] uppercase tracking-wider font-medium">
           {t("search.filters.scope")}
         </span>
         <Button

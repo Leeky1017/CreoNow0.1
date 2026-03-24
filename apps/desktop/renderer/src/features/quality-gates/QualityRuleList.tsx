@@ -55,10 +55,10 @@ export function CheckGroupAccordion({
     >
       <div className="px-4 py-3 bg-[var(--color-bg-raised)] border-b border-[var(--color-separator)]">
         <div className="flex items-center justify-between">
-          <span className="text-[13px] font-medium text-[var(--color-fg-default)]">
+          <span className="text-(--text-body) font-medium text-[var(--color-fg-default)]">
             {group.name}
           </span>
-          <span className="text-[11px] text-[var(--color-fg-muted)]">
+          <span className="text-(--text-status) text-[var(--color-fg-muted)]">
             {t("qualityGates.checksCount", {
               passed: passedCount,
               total: checkCount,
@@ -101,7 +101,7 @@ function SettingsToggle({
     <div className="flex items-center justify-between">
       <Label
         htmlFor={id}
-        className={`text-[13px] text-[var(--color-fg-default)] select-none cursor-pointer ${disabled ? "opacity-50" : ""}`}
+        className={`text-(--text-body) text-[var(--color-fg-default)] select-none cursor-pointer ${disabled ? "opacity-50" : ""}`}
       >
         {label}
       </Label>
@@ -119,9 +119,9 @@ function SettingsToggle({
         } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         <span
-          className={`absolute left-[3px] w-[18px] h-[18px] rounded-full transition-transform duration-[var(--duration-slow)] pointer-events-none ${
+          className={`absolute left-(--dimension-rule-indicator-offset) w-4.5 h-4.5 rounded-full transition-transform duration-[var(--duration-slow)] pointer-events-none ${
             checked
-              ? "translate-x-[20px] bg-[var(--color-fg-inverse)]"
+              ? "translate-x-5 bg-[var(--color-fg-inverse)]"
               : "translate-x-0 bg-[var(--color-fg-subtle)]"
           }`}
         />
@@ -157,7 +157,7 @@ export function SettingsSection({
       >
         <div className="flex items-center gap-2">
           <SettingsIcon />
-          <span className="text-[13px] font-medium text-[var(--color-fg-default)]">
+          <span className="text-(--text-body) font-medium text-[var(--color-fg-default)]">
             {t("qualityGates.settings")}
           </span>
         </div>
@@ -185,7 +185,7 @@ export function SettingsSection({
             <div className="flex items-center justify-between">
               <Label
                 htmlFor="check-frequency"
-                className="text-[13px] text-[var(--color-fg-default)]"
+                className="text-(--text-body) text-[var(--color-fg-default)]"
               >
                 {t("qualityGates.checkFrequency")}
               </Label>
@@ -199,7 +199,7 @@ export function SettingsSection({
                   })
                 }
                 options={frequencyOptions}
-                className="text-[12px]"
+                className="text-(--text-caption)"
               />
             </div>
           </div>

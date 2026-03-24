@@ -103,7 +103,7 @@ export const DocumentResultItem = React.memo(
               <HighlightText text={item.title} query={query} />
             </h4>
             {item.matchScore && (
-              <span className="text-[10px] font-mono text-[var(--color-info)] bg-[var(--color-info-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-info-subtle)] shrink-0">
+              <span className="text-(--text-label) font-mono text-[var(--color-info)] bg-[var(--color-info-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-info-subtle)] shrink-0">
                 {t("search.matchScore", { score: item.matchScore })}
               </span>
             )}
@@ -124,17 +124,17 @@ export const DocumentResultItem = React.memo(
                 size={16}
                 strokeWidth={1.5}
               />
-              <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+              <span className="text-(--text-label) text-[var(--color-fg-placeholder)]">
                 {item.path}
               </span>
               {item.editedTime && (
                 <>
-                  <span className="text-[10px] text-[var(--color-fg-placeholder)] mx-1">
+                  <span className="text-(--text-label) text-[var(--color-fg-placeholder)] mx-1">
                     {/* 审计：v1-13 #006 KEEP */}
                     {/* eslint-disable-next-line i18next/no-literal-string -- 技术原因：decorative separator dot, not user-facing translatable text */}
                     •
                   </span>
-                  <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+                  <span className="text-(--text-label) text-[var(--color-fg-placeholder)]">
                     {item.editedTime}
                   </span>
                 </>
@@ -183,7 +183,7 @@ export const MemoryResultItem = React.memo(function MemoryResultItem(props: {
             <HighlightText text={item.title} query={query} />
           </h4>
           <div className="flex items-center gap-2 shrink-0">
-            <span className="text-[10px] font-mono text-[var(--color-success)] bg-[var(--color-success-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-success-subtle)] opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="text-(--text-label) font-mono text-[var(--color-success)] bg-[var(--color-success-subtle)] px-1.5 py-0.5 rounded border border-[var(--color-success-subtle)] opacity-0 group-hover:opacity-100 transition-opacity">
               {t("search.resultTypes.highRelevance")}
             </span>
           </div>
@@ -198,7 +198,7 @@ export const MemoryResultItem = React.memo(function MemoryResultItem(props: {
               size={16}
               strokeWidth={1.5}
             />
-            <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+            <span className="text-(--text-label) text-[var(--color-fg-placeholder)]">
               {item.meta}
             </span>
           </div>
@@ -235,11 +235,11 @@ export const KnowledgeResultItem = React.memo(
             <HighlightText text={item.title} query={query} />
           </h4>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-[var(--color-fg-placeholder)] border border-[var(--color-separator)] px-1.5 py-0.5 rounded">
+            <span className="text-(--text-label) text-[var(--color-fg-placeholder)] border border-[var(--color-separator)] px-1.5 py-0.5 rounded">
               {t("search.resultTypes.entity")}
             </span>
             {item.meta ? (
-              <span className="text-[10px] text-[var(--color-fg-placeholder)]">
+              <span className="text-(--text-label) text-[var(--color-fg-placeholder)]">
                 {item.meta}
               </span>
             ) : null}
