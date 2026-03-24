@@ -155,11 +155,7 @@
   --leading-normal: var(--leading-normal);
   --leading-relaxed: var(--leading-relaxed);
 
-  /* 阴影 → utility: shadow-sm / shadow-md / shadow-lg / shadow-xl */
-  --shadow-sm: 0 1px 2px var(--color-shadow);
-  --shadow-md: 0 4px 8px var(--color-shadow);
-  --shadow-lg: 0 8px 16px var(--color-shadow);
-  --shadow-xl: 0 16px 32px var(--color-shadow);
+  /* 阴影 → 已统一到上方 @theme 静态块（shadow-xs ~ shadow-2xl） */
 
   /* Dimension tokens — component-specific fixed values */
   --dimension-rule-indicator-offset: 3px;
