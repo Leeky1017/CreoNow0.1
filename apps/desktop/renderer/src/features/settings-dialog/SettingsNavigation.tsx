@@ -89,7 +89,7 @@ export function SettingsNavigation({
               variant="ghost"
               className={`${navButtonBaseStyles} ${
                 isActive
-                  ? "text-[var(--color-fg-default)] bg-[var(--color-bg-selected)]"
+                  ? "text-[var(--color-fg-default)] bg-[var(--color-bg-selected)] font-medium"
                   : "text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-surface)] border-transparent"
               }`}
             >
