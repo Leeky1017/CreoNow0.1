@@ -33,7 +33,7 @@ export function HeroCard(props: {
     >
       <div className="flex-1 min-w-0 p-[var(--space-10)] flex flex-col justify-center">
         <div
-          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-faint)] mb-[var(--space-3)] font-[var(--text-label-weight)]"
+          className="uppercase tracking-(--text-label-letter-spacing) text-(--color-fg-faint) mb-(--space-3) font-(--text-label-weight)"
           style={{
             fontSize: "var(--text-label-size)",
             lineHeight: "var(--text-label-line-height)",
@@ -58,7 +58,7 @@ export function HeroCard(props: {
         </p>
         <div className="flex items-center gap-[var(--space-3)]">
           <span
-            className="uppercase text-[var(--color-fg-faint)] border border-[var(--color-separator)] px-[var(--space-3)] py-[var(--space-1)] rounded-full"
+            className="uppercase text-(--color-fg-faint) border border-[var(--color-separator)] px-[var(--space-3)] py-[var(--space-1)] rounded-full"
             style={{
               fontSize: "var(--text-status-size)",
               letterSpacing: "var(--tracking-wide)",
@@ -67,7 +67,7 @@ export function HeroCard(props: {
             {formatStageTag(project.stage, t)}
           </span>
           <ArrowRight
-            className="w-[var(--space-4)] h-[var(--space-4)] text-[var(--color-fg-faint)] transition-transform duration-[var(--duration-normal)] ease-[var(--ease-default)] group-hover:rotate-[-45deg]"
+            className="w-[var(--space-4)] h-[var(--space-4)] text-(--color-fg-faint) transition-transform duration-[var(--duration-normal)] ease-[var(--ease-default)] group-hover:rotate-[-45deg]"
             strokeWidth={1.5}
           />
         </div>
@@ -76,7 +76,7 @@ export function HeroCard(props: {
       {/* 审计：v1-13 #028 KEEP */}
       {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：百分比布局无标准 Tailwind 工具类可替代 */}
       <div className="w-[35%] max-w-70 hidden lg:block bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)] relative overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center text-[var(--color-fg-faint)]">
+        <div className="absolute inset-0 flex items-center justify-center text-(--color-fg-faint)">
           <PenTool
             className="w-[var(--space-16)] h-[var(--space-16)] opacity-20"
             strokeWidth={1.5}

@@ -129,9 +129,9 @@ export function ProjectCard(props: {
       tabIndex={0}
       className="border border-transparent p-[var(--space-6)] h-50 flex flex-col cursor-pointer transition-[border-color,background-color,box-shadow] duration-[var(--duration-slow)] ease-[var(--ease-default)] hover:border-[var(--color-border-hover)] hover:bg-[var(--color-bg-hover)] hover:shadow-sm"
     >
-      <div className="flex justify-between items-start mb-[var(--space-4)]">
+      <div className="flex justify-between items-start mb-(--space-4)">
         <div
-          className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] font-[var(--text-label-weight)]"
+          className="uppercase tracking-(--text-label-letter-spacing) text-(--color-fg-muted) font-(--text-label-weight)"
           style={{ fontSize: "var(--text-label-size)" }}
         >
           {dateStr}
@@ -163,7 +163,7 @@ export function ProjectCard(props: {
       </h3>
 
       <p
-        className="text-[var(--color-fg-muted)] leading-relaxed line-clamp-3 flex-1"
+        className="text-(--color-fg-muted) leading-relaxed line-clamp-3 flex-1"
         style={{ fontSize: "var(--text-body-size)" }}
       >
         {t("dashboard.openProjectHint")}
@@ -222,7 +222,7 @@ export function NewDraftCard(props: { onClick: () => void }): JSX.Element {
         strokeWidth={1.5}
       />
       <div
-        className="uppercase tracking-[var(--text-label-letter-spacing)] text-[var(--color-fg-muted)] relative font-[var(--text-label-weight)]"
+        className="uppercase tracking-(--text-label-letter-spacing) text-(--color-fg-muted) relative font-(--text-label-weight)"
         style={{ fontSize: "var(--text-label-size)" }}
       >
         {t("dashboard.newDraft")}

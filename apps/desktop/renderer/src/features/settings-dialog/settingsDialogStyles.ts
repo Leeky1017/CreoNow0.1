@@ -36,7 +36,7 @@ export const contentStyles = [
   "border",
   "border-[var(--color-border-default)]",
   "rounded-[var(--radius-lg)]",
-  "shadow-[var(--shadow-xl)]",
+  "shadow-xl",
   "flex",
   "overflow-hidden",
   // Animation
