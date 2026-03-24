@@ -156,7 +156,7 @@ export function SkillPicker(props: {
                         <Button
                           type="button"
                           data-testid={`ai-skill-toggle-${item.id}`}
-                          className="px-2 py-1 text-[10px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+                          className="px-2 py-1 text-(--text-label) rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
                           onClick={() =>
                             props.onToggleSkill?.(item.id, !item.enabled)
                           }
@@ -185,7 +185,7 @@ export function SkillPicker(props: {
                 </Text>
                 <Button
                   type="button"
-                  className="mt-2 px-2 py-1 text-[11px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-default)]"
+                  className="mt-2 px-2 py-1 text-(--text-status) rounded border border-[var(--color-border-default)] text-[var(--color-fg-default)]"
                   onClick={() => {
                     if (props.onCreateSkill) {
                       props.onCreateSkill();
@@ -230,7 +230,7 @@ export function SkillPicker(props: {
                                   <Button
                                     type="button"
                                     data-testid={`ai-skill-demote-${item.id}`}
-                                    className="px-2 py-1 text-[10px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+                                    className="px-2 py-1 text-(--text-label) rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
                                     onClick={() =>
                                       props.onUpdateScope?.(item.id, "project")
                                     }
@@ -242,7 +242,7 @@ export function SkillPicker(props: {
                                   <Button
                                     type="button"
                                     data-testid={`ai-skill-toggle-${item.id}`}
-                                    className="px-2 py-1 text-[10px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+                                    className="px-2 py-1 text-(--text-label) rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
                                     onClick={() =>
                                       props.onToggleSkill?.(
                                         item.id,
@@ -297,7 +297,7 @@ export function SkillPicker(props: {
                                   <Button
                                     type="button"
                                     data-testid={`ai-skill-promote-${item.id}`}
-                                    className="px-2 py-1 text-[10px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+                                    className="px-2 py-1 text-(--text-label) rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
                                     onClick={() =>
                                       props.onUpdateScope?.(item.id, "global")
                                     }
@@ -309,7 +309,7 @@ export function SkillPicker(props: {
                                   <Button
                                     type="button"
                                     data-testid={`ai-skill-toggle-${item.id}`}
-                                    className="px-2 py-1 text-[10px] rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
+                                    className="px-2 py-1 text-(--text-label) rounded border border-[var(--color-border-default)] text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)]"
                                     onClick={() =>
                                       props.onToggleSkill?.(
                                         item.id,
