@@ -24,7 +24,7 @@ const navButtonBaseStyles = [
   "text-left",
   "px-8",
   "py-3",
-  "text-[13px]",
+  "text-(--text-body)",
   "rounded-[var(--radius-sm)]",
   "transition-colors",
   "duration-[var(--duration-fast)]",
