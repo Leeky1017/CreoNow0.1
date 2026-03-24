@@ -90,7 +90,7 @@ const titleStyles = [
   "font-semibold",
   "text-[var(--color-fg-default)]",
   "leading-[1.3]",
-  "tracking-[-0.01em]",
+  "tracking-(--tracking-snug)",
 ].join(" ");
 
 /**

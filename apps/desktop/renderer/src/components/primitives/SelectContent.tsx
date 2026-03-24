@@ -40,7 +40,7 @@ const itemStyles = [
 ].join(" ");
 
 const groupLabelStyles =
-  "px-8 py-2 text-xs font-medium text-[var(--color-fg-subtle)] uppercase tracking-[0.1em]";
+  "px-8 py-2 text-xs font-medium text-[var(--color-fg-subtle)] uppercase tracking-(--tracking-wider)";
 const separatorStyles = "h-px my-1 bg-[var(--color-separator)]";
 
 function CheckIcon() {

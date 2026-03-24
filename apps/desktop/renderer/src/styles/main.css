@@ -144,11 +144,14 @@
   --font-weight-medium: var(--weight-medium);
   --font-weight-semibold: var(--weight-semibold);
 
-  /* 独立字间距 → utility: tracking-tight / tracking-normal / tracking-wide / tracking-wider */
+  /* 独立字间距 → utility: tracking-semi-tight / tracking-snug / tracking-tight / tracking-normal / tracking-wide / tracking-wider / tracking-widest */
+  --tracking-semi-tight: var(--tracking-semi-tight);
+  --tracking-snug: var(--tracking-snug);
   --tracking-tight: var(--tracking-tight);
   --tracking-normal: var(--tracking-normal);
   --tracking-wide: var(--tracking-wide);
   --tracking-wider: var(--tracking-wider);
+  --tracking-widest: var(--tracking-widest);
 
   /* 独立行高 → utility: leading-tight / leading-normal / leading-relaxed */
   --leading-tight: var(--leading-tight);

@@ -22,7 +22,7 @@ const labelStyles = [
   "font-semibold",
   "text-[var(--color-fg-placeholder)]",
   "uppercase",
-  "tracking-[0.1em]",
+  "tracking-(--tracking-wider)",
   "mb-3",
   "block",
 ].join(" ");

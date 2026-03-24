@@ -97,7 +97,7 @@ export function getZodiacFromBirthDate(
 export const labelStyles = [
   "text-(--text-label)",
   "uppercase",
-  "tracking-[0.1em]",
+  "tracking-(--tracking-wider)",
   "text-[var(--color-fg-placeholder)]",
   "font-semibold",
   "pl-0.5",
@@ -122,7 +122,7 @@ export function ProfileTableRow({
 }) {
   return (
     <div className="grid grid-cols-[160px_1fr]">
-      <div className="px-4 py-3 bg-[var(--color-bg-base)] border-r border-[var(--color-border-default)] text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold">
+      <div className="px-4 py-3 bg-[var(--color-bg-base)] border-r border-[var(--color-border-default)] text-(--text-label) uppercase tracking-(--tracking-wider) text-[var(--color-fg-placeholder)] font-semibold">
         {label}
       </div>
       <div className="px-4 py-3 min-w-0">{children}</div>

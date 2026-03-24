@@ -117,7 +117,7 @@ export function CharacterGroupSection({
     <div>
       {/* Group header */}
       <div className="px-2 mb-3 flex items-center justify-between group">
-        <div className="text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold">
+        <div className="text-(--text-label) uppercase tracking-(--tracking-wider) text-[var(--color-fg-placeholder)] font-semibold">
           {config.label}
         </div>
         <span className="text-(--text-label) text-[var(--color-fg-placeholder)] group-hover:text-[var(--color-fg-muted)] transition-colors">

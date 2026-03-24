@@ -12,7 +12,7 @@ const labelStyles = [
   "font-semibold",
   "text-[var(--color-fg-placeholder)]",
   "uppercase",
-  "tracking-[0.1em]",
+  "tracking-(--tracking-wider)",
   "mb-3",
   "block",
 ].join(" ");
@@ -151,7 +151,7 @@ export function SuccessView({ result, onDone }: SuccessViewProps) {
       </p>
 
       <div className="w-full max-w-sm mb-8 text-left">
-        <div className="text-[10px] font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-[0.1em] mb-2">
+        <div className="text-[10px] font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-(--tracking-wider) mb-2">
           {t("export.success.resultLabel")}
         </div>
         <div className="p-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] space-y-1">

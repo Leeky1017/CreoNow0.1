@@ -35,7 +35,7 @@ export interface SettingsAppearancePageProps {
 const sectionLabelStyles = [
   "text-(--text-label)",
   "uppercase",
-  "tracking-[0.15em]",
+  "tracking-(--tracking-widest)",
   "text-[var(--color-fg-placeholder)]",
   "font-semibold",
   "mb-6",
