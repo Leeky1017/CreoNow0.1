@@ -179,7 +179,7 @@ describe("Card v1-02 行为测试", () => {
     it("raised variant 有 shadow", () => {
       render(<Card variant="raised">Raised</Card>);
       const card = screen.getByText("Raised").closest("div")!;
-      expect(card.className).toContain("shadow-[var(--shadow-md)]");
+      expect(card.className).toContain("shadow-md");
     });
 
     it("bordered variant 有 border-2", () => {

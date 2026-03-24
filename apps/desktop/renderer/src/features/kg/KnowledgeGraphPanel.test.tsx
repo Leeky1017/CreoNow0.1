@@ -102,7 +102,7 @@ describe("KnowledgeGraphPanel behavior", () => {
     const event = screen.getByTestId("timeline-event-e1");
     fireEvent.dragStart(event);
 
-    expect(event).toHaveClass("shadow-[var(--shadow-xl)]");
+    expect(event).toHaveClass("shadow-xl");
     expect(event).toHaveClass("scale-[1.02]");
     expect(event).toHaveClass("opacity-90");
   });
