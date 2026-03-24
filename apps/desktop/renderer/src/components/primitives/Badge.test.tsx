@@ -173,7 +173,7 @@ describe("Badge", () => {
       render(<Badge variant="pill">Tag</Badge>);
 
       const badge = screen.getByText("Tag");
-      expect(badge.className).toContain("tracking-[var(--tracking-wide)]");
+      expect(badge.className).toContain("tracking-(--tracking-wide)");
     });
 
     it("pill 应该有 weight-semibold", () => {

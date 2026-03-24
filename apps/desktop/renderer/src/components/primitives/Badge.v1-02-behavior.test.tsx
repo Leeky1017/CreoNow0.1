@@ -27,7 +27,7 @@ describe("Badge v1-02 行为测试", () => {
     it("使用 tracking-wide 字间距", () => {
       render(<Badge variant="pill">Tag</Badge>);
       const badge = screen.getByText("Tag");
-      expect(badge.className).toContain("tracking-[var(--tracking-wide)]");
+      expect(badge.className).toContain("tracking-(--tracking-wide)");
     });
 
     it("使用 weight-semibold 字重", () => {
