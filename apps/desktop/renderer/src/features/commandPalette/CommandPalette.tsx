@@ -193,7 +193,7 @@ export function CommandPalette({
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={t("workbench.commandPalette.searchPlaceholder")}
-            className="flex-1 bg-transparent border-none text-[15px] text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] outline-none"
+            className="flex-1 bg-transparent border-none text-(--text-subtitle) text-[var(--color-fg-default)] placeholder:text-[var(--color-fg-placeholder)] outline-none"
             aria-label={t("workbench.commandPalette.searchAriaLabel")}
           />
         </div>

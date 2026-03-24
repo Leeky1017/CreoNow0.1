@@ -73,6 +73,7 @@ export function HeroCard(props: {
         </div>
       </div>
       {/* 审计：v1-18e #1241 KEEP — 百分比宽度无标准 token，百分比布局为设计规范值 */}
+      {/* 审计：v1-13 #028 KEEP */}
       {/* eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：百分比布局无标准 Tailwind 工具类可替代 */}
       <div className="w-[35%] max-w-70 hidden lg:block bg-[var(--color-bg-surface)] border-l border-[var(--color-separator)] relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center text-[var(--color-fg-faint)]">
