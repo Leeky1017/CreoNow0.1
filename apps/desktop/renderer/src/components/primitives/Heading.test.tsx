@@ -82,7 +82,7 @@ describe("Heading", () => {
       render(<Heading level="h4">H4</Heading>);
 
       const element = screen.getByText("H4");
-      expect(element).toHaveClass("text-[13px]");
+      expect(element).toHaveClass("text-(--text-body)");
       expect(element).toHaveClass("font-medium");
     });
   });
