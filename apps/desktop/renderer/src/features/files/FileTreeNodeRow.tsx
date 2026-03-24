@@ -176,12 +176,7 @@ export const FileTreeNodeRow = React.memo(
                     e.stopPropagation();
                     props.toggleFolderExpanded(item.documentId);
                   }}
-                  className="shrink-0 w-4 text-(--text-label) text-[var(--color-fg-muted)] transition-transform duration-[var(--duration-fast)]"
-                  style={{
-                    transform: props.expandedFolderIds.has(item.documentId)
-                      ? "rotate(90deg)"
-                      : "rotate(0deg)",
-                  }}
+                  className={`shrink-0 w-4 text-(--text-label) text-[var(--color-fg-muted)] transition-transform duration-[var(--duration-fast)] ${props.expandedFolderIds.has(item.documentId) ? "rotate-90" : "rotate-0"}`}
                   aria-label={
                     props.expandedFolderIds.has(item.documentId)
                       ? t("files.tree.collapse")
