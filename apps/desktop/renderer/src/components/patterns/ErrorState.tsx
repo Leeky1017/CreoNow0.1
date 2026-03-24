@@ -282,7 +282,7 @@ function BannerError({
             type="button"
             onClick={onAction}
             className={[
-              "mt-2 text-[12px] font-medium underline",
+              "mt-2 text-(--text-caption) font-medium underline",
               colors.text,
               "hover:opacity-80",
               "focus-visible:outline focus-visible:outline-[length:var(--ring-focus-width)]",
@@ -407,7 +407,7 @@ function FullPageError({
     <div
       className={[
         "flex flex-col items-center justify-center",
-        "min-h-[24rem] p-8",
+        "min-h-96 p-8",
         "text-center",
         className,
       ]

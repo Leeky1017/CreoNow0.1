@@ -69,7 +69,7 @@ const shortcutHintStyles = [
   "right-2",
   "top-1/2",
   "-translate-y-1/2",
-  "text-[10px]",
+  "text-(--text-label)",
   "text-[color:var(--color-fg-placeholder)]",
   "pointer-events-none",
 ].join(" ");

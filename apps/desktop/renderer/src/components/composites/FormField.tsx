@@ -27,12 +27,13 @@ export interface FormFieldProps {
 
 const containerStyles = ["flex", "flex-col", "gap-2"].join(" ");
 
-const labelStyles = ["text-[13px]", "text-[color:var(--color-fg-muted)]"].join(
-  " ",
-);
+const labelStyles = [
+  "text-(--text-body)",
+  "text-[color:var(--color-fg-muted)]",
+].join(" ");
 
 const labelErrorStyles = [
-  "text-[13px]",
+  "text-(--text-body)",
   "text-[color:var(--color-error)]",
 ].join(" ");
 

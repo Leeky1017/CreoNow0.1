@@ -51,7 +51,7 @@ const descriptionStyles = [
   "text-xs",
   "text-[color:var(--color-fg-muted)]",
   // eslint-disable-next-line creonow/no-hardcoded-dimension -- Composite: max-width for text readability
-  "max-w-[240px]",
+  "max-w-60",
   "leading-relaxed",
 ].join(" ");
 
