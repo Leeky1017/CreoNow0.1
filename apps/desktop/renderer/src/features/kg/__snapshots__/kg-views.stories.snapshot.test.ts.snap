@@ -190,7 +190,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         </svg>
       </div>
       <h2
-        class="font-[var(--font-family-ui)] text-base font-semibold leading-[1.3] tracking-[-0.01em] text-[var(--color-fg-default)] mb-2"
+        class="font-[var(--font-family-ui)] text-base font-semibold leading-[1.3] tracking-(--tracking-snug) text-[var(--color-fg-default)] mb-2"
       >
         No Characters
       </h2>
@@ -515,7 +515,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           </svg>
         </div>
         <h2
-          class="font-[var(--font-family-ui)] text-base font-semibold leading-[1.3] tracking-[-0.01em] text-[var(--color-fg-default)] mb-2"
+          class="font-[var(--font-family-ui)] text-base font-semibold leading-[1.3] tracking-(--tracking-snug) text-[var(--color-fg-default)] mb-2"
         >
           No entities yet. Click to add your first character or location
         </h2>
