@@ -195,7 +195,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
         No Characters
       </h2>
       <p
-        class="text-(--text-body) leading-[1.5] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] mb-6 max-w-xs"
+        class="text-(--text-body) leading-[var(--leading-normal)] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] mb-6 max-w-xs"
       >
         Create your first character
       </p>
@@ -520,7 +520,7 @@ exports[`kg-views.stories snapshots > should cover graph(3 states) and character
           No entities yet. Click to add your first character or location
         </h2>
         <p
-          class="text-(--text-body) leading-[1.5] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] mb-6 max-w-xs"
+          class="text-(--text-body) leading-[var(--leading-normal)] font-normal font-[var(--font-family-ui)] text-[var(--color-fg-muted)] mb-6 max-w-xs"
         >
           You can drag nodes and create relationships in the graph
         </p>

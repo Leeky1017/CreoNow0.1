@@ -38,10 +38,10 @@ export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
  * - h4: 13px, 500, 1.4, 0
  */
 const levelStyles: Record<HeadingLevel, string> = {
-  h1: "text-2xl font-semibold leading-[1.2] tracking-[-0.02em]",
-  h2: "text-base font-semibold leading-[1.3] tracking-[-0.01em]",
-  h3: "text-sm font-medium leading-[1.4] tracking-normal",
-  h4: "text-(--text-body) font-medium leading-[1.4] tracking-normal",
+  h1: "text-2xl font-semibold leading-[1.2] tracking-[-0.02em]", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.2 line-height
+  h2: "text-base font-semibold leading-[1.3] tracking-[-0.01em]", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.3 line-height
+  h3: "text-sm font-medium leading-[1.4] tracking-normal", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.4 line-height
+  h4: "text-(--text-body) font-medium leading-[1.4] tracking-normal", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.4 line-height
 };
 
 /**

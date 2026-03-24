@@ -28,8 +28,7 @@ const contentStyles = [
   "data-[state=closed]:opacity-0 data-[state=closed]:scale-95",
 ].join(" ");
 
-// eslint-disable-next-line creonow/no-hardcoded-dimension -- Design spec §6.6: max dropdown height
-const viewportStyles = "p-1 max-h-[300px] overflow-y-auto";
+const viewportStyles = "p-1 max-h-75 overflow-y-auto";
 
 const itemStyles = [
   "relative flex items-center h-8 px-8 pr-3",

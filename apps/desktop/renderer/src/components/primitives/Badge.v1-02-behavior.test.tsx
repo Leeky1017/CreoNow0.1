@@ -159,7 +159,7 @@ describe("Badge v1-02 行为测试", () => {
     it("默认 size 为 md", () => {
       render(<Badge>None</Badge>);
       const badge = screen.getByText("None");
-      expect(badge).toHaveClass("h-[22px]");
+      expect(badge).toHaveClass("h-5.5");
     });
 
     it("现有 variant 不应有 uppercase", () => {

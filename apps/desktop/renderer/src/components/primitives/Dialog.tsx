@@ -67,6 +67,7 @@ const contentStyles = [
   // Sizing
   "w-full",
   "max-w-md",
+  // eslint-disable-next-line creonow/no-hardcoded-dimension -- viewport-relative height; no design token available
   "max-h-[85vh]",
   "overflow-hidden",
   // Animation via CSS transition
