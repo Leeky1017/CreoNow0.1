@@ -18,7 +18,7 @@ import { ExportPreview } from "./ExportPreview";
 // ============================================================================
 
 const labelStyles = [
-  "text-[10px]",
+  "text-(--text-label)",
   "font-semibold",
   "text-[var(--color-fg-placeholder)]",
   "uppercase",
@@ -119,7 +119,7 @@ function FormatCard({
       className={formatCardStyles({ isSelected, disabled })}
     >
       {disabled ? (
-        <div className="absolute top-3 left-3 text-[10px] px-1.5 py-0.5 rounded bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]">
+        <div className="absolute top-3 left-3 text-(--text-label) px-1.5 py-0.5 rounded bg-[var(--color-bg-hover)] text-[var(--color-fg-muted)]">
           {t("export.format.unsupported")}
         </div>
       ) : null}

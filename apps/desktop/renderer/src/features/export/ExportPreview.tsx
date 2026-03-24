@@ -8,7 +8,7 @@ import { Check, FileOutput } from "lucide-react";
 // ============================================================================
 
 const labelStyles = [
-  "text-[10px]",
+  "text-(--text-label)",
   "font-semibold",
   "text-[var(--color-fg-placeholder)]",
   "uppercase",
@@ -39,7 +39,7 @@ export function ExportPreview({
     <div>
       <div className="flex items-center justify-between mb-2">
         <span className={labelStyles}>{t("export.config.previewLabel")}</span>
-        <span className="text-[10px] text-[var(--color-fg-placeholder)] bg-[var(--color-bg-hover)] px-1.5 py-0.5 rounded">
+        <span className="text-(--text-label) text-[var(--color-fg-placeholder)] bg-[var(--color-bg-hover)] px-1.5 py-0.5 rounded">
           {formatLabel} • {pageSizeLabel}
         </span>
       </div>
@@ -151,7 +151,7 @@ export function SuccessView({ result, onDone }: SuccessViewProps) {
       </p>
 
       <div className="w-full max-w-sm mb-8 text-left">
-        <div className="text-[10px] font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-(--tracking-wider) mb-2">
+        <div className="text-(--text-label) font-semibold text-[var(--color-fg-placeholder)] uppercase tracking-(--tracking-wider) mb-2">
           {t("export.success.resultLabel")}
         </div>
         <div className="p-3 rounded-[var(--radius-md)] border border-[var(--color-border-default)] bg-[var(--color-bg-raised)] space-y-1">

@@ -38,6 +38,7 @@ export function getContentStyles(hasContainer: boolean): string {
     // 审计：v1-13 #001 KEEP
     // eslint-disable-next-line creonow/no-hardcoded-dimension -- 技术原因：dialog content width per design spec (w-[560px])
     "w-[560px]",
+    // 审计：v1-13 #029 KEEP
     // eslint-disable-next-line creonow/no-hardcoded-dimension -- calc expression, no standard token
     hasContainer
       ? "max-h-[calc(100%-3.5rem)]"
