@@ -72,7 +72,7 @@ export function SettingsNavigation({
           size="label"
           color="placeholder"
           weight="semibold"
-          className="tracking-[0.15em]"
+          className="tracking-(--tracking-widest)"
         >
           {t("settingsDialog.dialog.title")}
         </Text>

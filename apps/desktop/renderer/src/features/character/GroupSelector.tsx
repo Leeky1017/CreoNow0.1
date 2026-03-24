@@ -84,7 +84,7 @@ export function GroupSelector({
       sideOffset={4}
     >
       <div className="min-w-35 py-1 -mx-2 -my-2">
-        <div className="text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
+        <div className="text-(--text-label) uppercase tracking-(--tracking-wider) text-[var(--color-fg-placeholder)] px-3 py-2 font-semibold">
           {t("character.groupSelector.selectGroup")}
         </div>
         {GROUP_OPTIONS.map((group) => {

@@ -177,7 +177,7 @@ export function AddRelationshipPopover({
 
         {/* Character Selection */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
-          <div className="text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold mb-2">
+          <div className="text-(--text-label) uppercase tracking-(--tracking-wider) text-[var(--color-fg-placeholder)] font-semibold mb-2">
             {t("character.addRelation.selectCharacter")}
           </div>
           {selectableCharacters.length > 0 ? (
@@ -236,7 +236,7 @@ export function AddRelationshipPopover({
 
         {/* Relationship Type Selection */}
         <div className="px-4 py-3 border-b border-[var(--color-border-default)]">
-          <div className="text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-placeholder)] font-semibold mb-2">
+          <div className="text-(--text-label) uppercase tracking-(--tracking-wider) text-[var(--color-fg-placeholder)] font-semibold mb-2">
             {t("character.addRelation.relationshipType")}
           </div>
           <div className="flex flex-wrap gap-2">

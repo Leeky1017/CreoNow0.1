@@ -244,7 +244,7 @@ export function CommandPalette({
               <div key={group.title} className="mb-1">
                 {/* Group header (AC-1): uppercase + separator line */}
                 <div className="px-3 pt-3 pb-1.5 first:pt-1">
-                  <span className="text-(--text-label) uppercase tracking-[0.1em] text-[var(--color-fg-muted)]">
+                  <span className="text-(--text-label) uppercase tracking-(--tracking-wider) text-[var(--color-fg-muted)]">
                     {t(GROUP_TRANSLATION_KEYS[group.title] ?? group.title)}
                   </span>
                   {groupIndex > 0 && (

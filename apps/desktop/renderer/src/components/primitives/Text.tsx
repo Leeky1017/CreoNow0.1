@@ -64,7 +64,7 @@ const sizeStyles: Record<TextSize, string> = {
   small: "text-xs leading-[1.4] font-normal font-[var(--font-family-ui)]", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.4 line-height
   tiny: "text-(--text-status) leading-[1.2] font-normal font-[var(--font-family-ui)]", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.2 line-height
   label:
-    "text-(--text-label) leading-[1.2] font-medium tracking-[0.1em] uppercase font-[var(--font-family-ui)]", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.2 line-height
+    "text-(--text-label) leading-[1.2] font-medium tracking-(--tracking-wider) uppercase font-[var(--font-family-ui)]", // eslint-disable-line creonow/no-hardcoded-dimension -- no design token for 1.2 line-height
   code: "text-(--text-mono) leading-[var(--leading-normal)] font-normal font-[var(--font-family-mono)]",
 };
 

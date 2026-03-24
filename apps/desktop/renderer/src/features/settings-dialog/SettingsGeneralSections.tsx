@@ -6,7 +6,7 @@ import { FormField } from "../../components/composites/FormField";
 import type { GeneralSettings } from "./SettingsGeneral";
 
 const sectionLabelStyles =
-  "text-(--text-label) uppercase tracking-[0.15em] text-[var(--color-fg-placeholder)] font-semibold mb-6";
+  "text-(--text-label) uppercase tracking-(--tracking-widest) text-[var(--color-fg-placeholder)] font-semibold mb-6";
 
 const BACKUP_INTERVAL_VALUES = ["5min", "15min", "1hour"] as const;
 
