@@ -167,7 +167,7 @@ export const AiInputArea = React.forwardRef<
                 <Button
                   type="button"
                   data-testid="ai-selection-reference-close"
-                  className="focus-ring h-5 w-5 shrink-0 rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                  className="focus-ring h-5 w-5 shrink-0 rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-colors"
                   onClick={() => props.setSelectionSnapshot(null)}
                 >
                   ×
