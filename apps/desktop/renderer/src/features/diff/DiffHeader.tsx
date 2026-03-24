@@ -153,7 +153,8 @@ export function DiffHeader(props: DiffHeaderProps): JSX.Element {
           className="flex items-center gap-2 px-3 py-1.5 bg-[var(--color-bg-hover)] rounded border border-[var(--color-border-default)] text-xs text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)] transition-colors whitespace-nowrap"
         >
           {/* Green dot */}
-          {/* eslint-disable-next-line creonow/no-raw-tailwind-tokens -- glow effect, no matching token */}
+          {/* 审计：v1-18i #1255 KEEP */}
+          {/* eslint-disable-next-line creonow/no-raw-tailwind-tokens -- 技术原因：diff 头部使用自定义 glow effect 提供视觉状态区分，无标准 shadow token 对应 */}
           <div className="w-2 h-2 rounded-full bg-[var(--color-success)] shadow-[0_0_8px_var(--color-success-subtle)]" />
           <span>{selectedAfter?.label ?? t("diff.header.currentVersion")}</span>
           <ChevronDown
