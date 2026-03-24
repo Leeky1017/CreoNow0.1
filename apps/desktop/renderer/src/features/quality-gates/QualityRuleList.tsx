@@ -121,7 +121,7 @@ function SettingsToggle({
         <span
           className={`absolute left-(--dimension-rule-indicator-offset) w-4.5 h-4.5 rounded-full transition-transform duration-[var(--duration-slow)] pointer-events-none ${
             checked
-              ? "translate-x-[20px] bg-[var(--color-fg-inverse)]"
+              ? "translate-x-5 bg-[var(--color-fg-inverse)]"
               : "translate-x-0 bg-[var(--color-fg-subtle)]"
           }`}
         />
