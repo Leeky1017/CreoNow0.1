@@ -59,7 +59,7 @@ function DragIndicator({ position }: { position: DropPosition | null }) {
       ) : (
         <>
           <div className="h-0.5 bg-[var(--color-info)]" />
-          <div className="absolute -left-1 -top-[3px] w-1.5 h-1.5 rounded-full bg-[var(--color-info)]" />
+          <div className="absolute -left-1 -top-(--dimension-outline-node-offset) w-1.5 h-1.5 rounded-full bg-[var(--color-info)]" />
         </>
       )}
     </div>
@@ -144,7 +144,7 @@ function HoverActions({
 
 function WordCountBadge({ count }: { count: number }) {
   return (
-    <span className="ml-auto text-[10px] text-[var(--color-fg-placeholder)] font-mono tabular-nums shrink-0 mr-1">
+    <span className="ml-auto text-(--text-label) text-[var(--color-fg-placeholder)] font-mono tabular-nums shrink-0 mr-1">
       {formatWordCount(count)}
     </span>
   );

@@ -249,7 +249,7 @@ export function OutlinePanel({
 
       {selectedIds.size > 0 && (
         <div className="px-3 py-1.5 bg-[var(--color-bg-selected)] border-b border-[var(--color-separator)] flex items-center justify-between">
-          <span className="text-[10px] text-[var(--color-fg-muted)]">
+          <span className="text-(--text-label) text-[var(--color-fg-muted)]">
             {t("outline.selectedCount", { count: selectedIds.size })}
           </span>
           <div className="flex gap-2">
@@ -257,7 +257,7 @@ export function OutlinePanel({
               variant="ghost"
               size="sm"
               onClick={() => onDelete?.([...selectedIds])}
-              className="!h-auto !px-0 !text-[10px] text-[var(--color-error)] hover:underline"
+              className="!h-auto !px-0 !text-(--text-label) text-[var(--color-error)] hover:underline"
             >
               {t("outline.delete")}
             </Button>
@@ -265,7 +265,7 @@ export function OutlinePanel({
               variant="ghost"
               size="sm"
               onClick={clearSelection}
-              className="!h-auto !px-0 !text-[10px] text-[var(--color-fg-muted)] hover:underline"
+              className="!h-auto !px-0 !text-(--text-label) text-[var(--color-fg-muted)] hover:underline"
             >
               {t("outline.clearSelection")}
             </Button>
@@ -311,7 +311,7 @@ export function OutlinePanel({
       {scrollSyncEnabled && (
         <div className="px-3 py-1.5 border-t border-[var(--color-separator)] flex items-center gap-2">
           <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)]" />
-          <span className="text-[10px] text-[var(--color-fg-muted)]">
+          <span className="text-(--text-label) text-[var(--color-fg-muted)]">
             {t("outline.syncWithEditor")}
           </span>
         </div>

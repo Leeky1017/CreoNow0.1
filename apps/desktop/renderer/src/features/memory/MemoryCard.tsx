@@ -62,7 +62,7 @@ export function MemoryCard({ t, rule, state }: MemoryCardProps): JSX.Element {
                 {rule.rule}
               </Text>
               <div className="mt-2 flex items-center gap-2 text-xs text-[var(--color-fg-muted)]">
-                <span className="rounded border border-[var(--color-separator)] bg-[var(--color-bg-overlay)] px-1.5 py-0.5 text-[10px] font-medium">
+                <span className="rounded border border-[var(--color-separator)] bg-[var(--color-bg-overlay)] px-1.5 py-0.5 text-(--text-label) font-medium">
                   {originLabel}
                 </span>
                 <span>

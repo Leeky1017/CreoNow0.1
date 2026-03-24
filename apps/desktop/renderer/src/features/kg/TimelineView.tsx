@@ -117,7 +117,7 @@ export function TimelineView({
           {chapterAxis.map((chapter) => (
             <span
               key={chapter}
-              className="text-[11px] text-[var(--color-fg-subtle)] uppercase tracking-wide"
+              className="text-(--text-status) text-[var(--color-fg-subtle)] uppercase tracking-wide"
             >
               {chapter}
             </span>
@@ -157,7 +157,7 @@ export function TimelineView({
                 <span className="text-sm text-[var(--color-fg-default)] font-medium">
                   {event.title}
                 </span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--color-node-event)] text-[var(--color-fg-inverse)]">
+                <span className="text-(--text-label) px-2 py-0.5 rounded-full bg-[var(--color-node-event)] text-[var(--color-fg-inverse)]">
                   {event.chapter}
                 </span>
               </div>

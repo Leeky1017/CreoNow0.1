@@ -122,7 +122,7 @@ export const FileTreeNodeRow = React.memo(
           {dropBefore ? (
             <div
               data-testid={`file-drop-indicator-${item.documentId}`}
-              className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--color-accent)]"
+              className="absolute top-0 left-0 right-0 h-0.5 bg-[var(--color-accent)]"
             >
               <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[var(--color-info)]" />
             </div>
@@ -176,7 +176,7 @@ export const FileTreeNodeRow = React.memo(
                     e.stopPropagation();
                     props.toggleFolderExpanded(item.documentId);
                   }}
-                  className="shrink-0 w-4 text-[10px] text-[var(--color-fg-muted)] transition-transform duration-[var(--duration-fast)]"
+                  className="shrink-0 w-4 text-(--text-label) text-[var(--color-fg-muted)] transition-transform duration-[var(--duration-fast)]"
                   style={{
                     transform: props.expandedFolderIds.has(item.documentId)
                       ? "rotate(90deg)"

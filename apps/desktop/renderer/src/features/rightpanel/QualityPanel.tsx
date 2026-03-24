@@ -155,7 +155,7 @@ export function QualityPanel(): JSX.Element {
         data-testid="quality-panel"
         className="tab-crossfade flex flex-col gap-4 p-4 h-full overflow-auto"
       >
-        <Heading level="h3" className="font-bold text-[15px]">
+        <Heading level="h3" className="font-bold text-(--text-subtitle)">
           {t("rightPanel.quality.panelTitle")}
         </Heading>
 
@@ -171,7 +171,7 @@ export function QualityPanel(): JSX.Element {
         </Card>
 
         <section>
-          <Heading level="h4" className="mb-2 font-semibold text-[13px]">
+          <Heading level="h4" className="mb-2 font-semibold text-(--text-body)">
             {t("rightPanel.quality.judgeModelHeading")}
           </Heading>
           <JudgeStatusSection
@@ -194,7 +194,7 @@ export function QualityPanel(): JSX.Element {
       {/* Summary section with real status */}
       <div className="p-4 space-y-4 border-b border-[var(--color-separator)]">
         <section>
-          <Heading level="h4" className="mb-2 font-semibold text-[13px]">
+          <Heading level="h4" className="mb-2 font-semibold text-(--text-body)">
             {t("rightPanel.quality.judgeModelHeading")}
           </Heading>
           <JudgeStatusSection
@@ -207,7 +207,7 @@ export function QualityPanel(): JSX.Element {
         </section>
 
         <section>
-          <Heading level="h4" className="mb-2 font-semibold text-[13px]">
+          <Heading level="h4" className="mb-2 font-semibold text-(--text-body)">
             {t("rightPanel.quality.projectConstraints")}
           </Heading>
           <ConstraintsSection

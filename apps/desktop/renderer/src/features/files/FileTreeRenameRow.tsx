@@ -30,7 +30,7 @@ export const FileTreeRenameRow = React.forwardRef<
       {dropBefore ? (
         <div
           data-testid={`file-drop-indicator-${item.documentId}`}
-          className="absolute top-0 left-0 right-0 h-[2px] bg-[var(--color-accent)]"
+          className="absolute top-0 left-0 right-0 h-0.5 bg-[var(--color-accent)]"
         >
           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[var(--color-info)]" />
         </div>

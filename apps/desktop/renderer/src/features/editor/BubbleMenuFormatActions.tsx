@@ -155,7 +155,7 @@ export function BubbleMenuFormatActions(props: {
             onKeyDown={handleLinkKeyDown}
             placeholder={t("editor.link.placeholder")}
             aria-label={t("editor.link.placeholder")}
-            className="h-6 w-40 px-2 text-[11px] rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] border border-[var(--color-border-default)] focus-visible:border-[var(--color-border-focus)] focus-visible:outline-none"
+            className="h-6 w-40 px-2 text-(--text-status) rounded-[var(--radius-sm)] bg-[var(--color-bg-surface)] text-[var(--color-fg-default)] border border-[var(--color-border-default)] focus-visible:border-[var(--color-border-focus)] focus-visible:outline-none"
           />
           <Button
             data-testid="link-apply"
