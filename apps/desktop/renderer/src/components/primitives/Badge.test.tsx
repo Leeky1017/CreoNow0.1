@@ -63,8 +63,8 @@ describe("Badge", () => {
   // ===========================================================================
   describe("sizes", () => {
     const sizeClasses: Record<BadgeSize, string> = {
-      sm: "h-[18px]",
-      md: "h-[22px]",
+      sm: "h-4.5",
+      md: "h-5.5",
     };
 
     it.each(Object.entries(sizeClasses))(
@@ -79,7 +79,7 @@ describe("Badge", () => {
     it("默认应该是 md size", () => {
       render(<Badge>Default</Badge>);
 
-      expect(screen.getByText("Default")).toHaveClass("h-[22px]");
+      expect(screen.getByText("Default")).toHaveClass("h-5.5");
     });
   });
 
