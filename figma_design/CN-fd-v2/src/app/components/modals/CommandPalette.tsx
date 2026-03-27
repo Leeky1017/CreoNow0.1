@@ -2,7 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Command } from "cmdk";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { cn } from "../ui/utils";
-import { Search, FileText, Folder, Users, CheckSquare, Hash, AlignLeft, Calendar, User, Clock, ChevronRight, X, Command as CommandIcon } from "lucide-react";
+import {
+  Search,
+  FileText,
+  Folder,
+  Users,
+  CheckSquare,
+  Hash,
+  AlignLeft,
+  Calendar,
+  User,
+  Clock,
+  ChevronRight,
+  X,
+  Command as CommandIcon,
+} from "lucide-react";
 import { useNavigate } from "react-router";
 
 interface CommandPaletteProps {
@@ -17,7 +31,7 @@ const MOCK_RESULTS = [
     type: "Document",
     icon: <FileText className="w-[16px] h-[16px] text-[#888888]" />,
     path: "/app/editor/draft-1",
-    shortcut: "↵"
+    shortcut: "↵",
   },
   {
     id: "2",
@@ -25,7 +39,7 @@ const MOCK_RESULTS = [
     type: "Project",
     icon: <Folder className="w-[16px] h-[16px] text-[#888888]" />,
     path: "/app/editor/draft-1",
-    shortcut: "↵"
+    shortcut: "↵",
   },
   {
     id: "3",
@@ -33,7 +47,7 @@ const MOCK_RESULTS = [
     type: "Character",
     icon: <User className="w-[16px] h-[16px] text-[#888888]" />,
     path: "/app/characters",
-    shortcut: "↵"
+    shortcut: "↵",
   },
   {
     id: "4",
@@ -41,8 +55,8 @@ const MOCK_RESULTS = [
     type: "Task",
     icon: <CheckSquare className="w-[16px] h-[16px] text-[#888888]" />,
     path: "/app/editor/draft-1",
-    shortcut: "↵"
-  }
+    shortcut: "↵",
+  },
 ];
 
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
@@ -106,7 +120,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                   onMouseEnter={() => setSelectedResultId(item.id)}
                   className={cn(
                     "flex items-center h-[40px] px-[16px] cursor-pointer transition-colors duration-100 outline-none",
-                    selectedResultId === item.id ? "bg-[#1E1E1E]" : ""
+                    selectedResultId === item.id ? "bg-[#1E1E1E]" : "",
                   )}
                 >
                   <div className="shrink-0 mr-[12px] flex items-center justify-center">

@@ -19,7 +19,13 @@ export function AppLayout() {
   // Draggable FAB state
   const [fabPos, setFabPos] = useState({ x: 0, y: 0 }); // offset from default bottom-right
   const [isDragging, setIsDragging] = useState(false);
-  const dragRef = useRef<{ startX: number; startY: number; startPosX: number; startPosY: number; moved: boolean } | null>(null);
+  const dragRef = useRef<{
+    startX: number;
+    startY: number;
+    startPosX: number;
+    startPosY: number;
+    moved: boolean;
+  } | null>(null);
 
   const location = useLocation();
   const isEditor = location.pathname.includes("/editor");
@@ -53,17 +59,20 @@ export function AppLayout() {
   }, [location.pathname]);
 
   // FAB drag handlers
-  const handleFabMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    dragRef.current = {
-      startX: e.clientX,
-      startY: e.clientY,
-      startPosX: fabPos.x,
-      startPosY: fabPos.y,
-      moved: false,
-    };
-    setIsDragging(true);
-  }, [fabPos]);
+  const handleFabMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      dragRef.current = {
+        startX: e.clientX,
+        startY: e.clientY,
+        startPosX: fabPos.x,
+        startPosY: fabPos.y,
+        moved: false,
+      };
+      setIsDragging(true);
+    },
+    [fabPos],
+  );
 
   useEffect(() => {
     if (!isDragging) return;
@@ -134,7 +143,13 @@ export function AppLayout() {
               className="absolute top-[16px] right-[16px] z-[20] p-[6px] rounded-[6px] hover:bg-[#1E1E1E] transition-colors duration-150 border border-[#2A2A2A] bg-[#1A1A1A] text-[#888888] hover:text-[#F0F0F0]"
               aria-label="打开 Creo 面板"
             >
-              <svg className="w-[16px] h-[16px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                className="w-[16px] h-[16px]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M15 3h6v18h-6M10 17l5-5-5-5" />
               </svg>
             </button>

@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { cn } from "../ui/utils";
-import {
-  Clock,
-  Copy,
-  RefreshCw,
-  FileInput,
-  ArrowUp,
-  Bot,
-} from "lucide-react";
+import { Clock, Copy, RefreshCw, FileInput, ArrowUp, Bot } from "lucide-react";
 
 interface RightSidebarProps {
   onToggleCollapse: () => void;
@@ -31,7 +24,7 @@ export function RightSidebar({ onToggleCollapse }: RightSidebarProps) {
               "text-[11px] font-medium tracking-[0.06em] uppercase transition-all h-[44px] border-b-[2px]",
               activeTab === "AGENT"
                 ? "border-[#7AA2F7] text-[#F0F0F0]"
-                : "border-transparent text-[#555555] hover:text-[#888888]"
+                : "border-transparent text-[#555555] hover:text-[#888888]",
             )}
           >
             AGENT
@@ -42,7 +35,7 @@ export function RightSidebar({ onToggleCollapse }: RightSidebarProps) {
               "text-[11px] font-medium tracking-[0.06em] uppercase transition-all h-[44px] border-b-[2px]",
               activeTab === "INFO"
                 ? "border-[#7AA2F7] text-[#F0F0F0]"
-                : "border-transparent text-[#555555] hover:text-[#888888]"
+                : "border-transparent text-[#555555] hover:text-[#888888]",
             )}
           >
             INFO
@@ -169,7 +162,7 @@ function AgentTab() {
             >
               {chip}
             </button>
-          )
+          ),
         )}
       </div>
 
@@ -188,7 +181,7 @@ function AgentTab() {
               "w-[24px] h-[24px] rounded-full flex items-center justify-center transition-colors duration-100 ml-[8px]",
               inputValue
                 ? "text-[#7AA2F7] hover:text-[#8BB3F8]"
-                : "text-[#555555]"
+                : "text-[#555555]",
             )}
             aria-label="发送"
           >

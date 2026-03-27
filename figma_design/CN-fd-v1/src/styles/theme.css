@@ -2,8 +2,8 @@
 
 :root {
   --font-size: 16px;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
 
   /* CreoNow Dark-first Design Tokens */
   --background: #050505;

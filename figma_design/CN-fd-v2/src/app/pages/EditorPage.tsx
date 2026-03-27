@@ -30,7 +30,9 @@ export function EditorPage() {
           {/* Title */}
           <h1
             className="text-[32px] font-bold text-[#F0F0F0] leading-[1.25] tracking-[-0.01em]"
-            style={{ fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif" }}
+            style={{
+              fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif",
+            }}
           >
             The Aesthetics of Silence
           </h1>
@@ -49,7 +51,9 @@ export function EditorPage() {
           {/* Body text */}
           <div
             className="mt-[32px] space-y-[16px]"
-            style={{ fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif" }}
+            style={{
+              fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif",
+            }}
           >
             <p className="text-[16px] font-normal text-[#CCCCCC] leading-[1.8]">
               In a world of noise, silence is a luxury. Our interfaces recede,
@@ -61,15 +65,17 @@ export function EditorPage() {
             {/* H1 */}
             <h2
               className="text-[28px] font-bold text-[#F0F0F0] leading-[1.2] tracking-[-0.01em] mt-[40px] mb-[16px]"
-              style={{ fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif" }}
+              style={{
+                fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif",
+              }}
             >
               1. Introduction
             </h2>
 
             <p className="text-[16px] font-normal text-[#CCCCCC] leading-[1.8]">
-              Silence in design is not merely the absence of sound or content; it
-              is a structural element that shapes perception. Just as a pause in
-              music defines the melody, empty space defines the interface.
+              Silence in design is not merely the absence of sound or content;
+              it is a structural element that shapes perception. Just as a pause
+              in music defines the melody, empty space defines the interface.
             </p>
 
             <p className="text-[16px] font-normal text-[#CCCCCC] leading-[1.8]">
@@ -81,7 +87,9 @@ export function EditorPage() {
             {/* H2 */}
             <h3
               className="text-[22px] font-semibold text-[#F0F0F0] leading-[1.3] mt-[32px] mb-[12px]"
-              style={{ fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif" }}
+              style={{
+                fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif",
+              }}
             >
               2. Historical Context
             </h3>
@@ -89,7 +97,9 @@ export function EditorPage() {
             {/* H3 */}
             <h4
               className="text-[18px] font-semibold text-[#F0F0F0] leading-[1.35] mt-[24px] mb-[8px]"
-              style={{ fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif" }}
+              style={{
+                fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif",
+              }}
             >
               2.1 Early 20th Century
             </h4>
@@ -102,7 +112,13 @@ export function EditorPage() {
 
             {/* Blockquote */}
             <blockquote className="border-l-[3px] border-[#3A3A3A] pl-[16px] my-[16px]">
-              <p className="text-[16px] italic text-[#888888] leading-[1.8]" style={{ fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif" }}>
+              <p
+                className="text-[16px] italic text-[#888888] leading-[1.8]"
+                style={{
+                  fontFamily:
+                    "'Source Serif 4', 'Noto Serif SC', Georgia, serif",
+                }}
+              >
                 "Less is more" — the reduction of visual elements to their
                 essence was not a limitation, but a liberation.
               </p>
@@ -110,26 +126,40 @@ export function EditorPage() {
 
             <h4
               className="text-[18px] font-semibold text-[#F0F0F0] leading-[1.35] mt-[24px] mb-[8px]"
-              style={{ fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif" }}
+              style={{
+                fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif",
+              }}
             >
               2.2 Post-War Minimalism
             </h4>
 
             <p className="text-[16px] font-normal text-[#CCCCCC] leading-[1.8]">
               Artists like Donald Judd and Agnes Martin demonstrated that
-              reduction could lead to profound emotional resonance. This principle
-              applies directly to interface design: by removing distractions, we
-              amplify the signal.
+              reduction could lead to profound emotional resonance. This
+              principle applies directly to interface design: by removing
+              distractions, we amplify the signal.
             </p>
 
             {/* Agent generated inline block */}
             <div className="relative bg-[rgba(122,162,247,0.06)] border-l-[2px] border-[#7AA2F7] rounded-l-[1px] pl-[16px] py-[12px]">
               <div className="flex items-center gap-[16px] mb-[8px]">
-                <button className="text-[13px] font-medium text-[#4ADE80]">✓ Accept</button>
-                <button className="text-[13px] font-medium text-[#F87171]">✕ Reject</button>
-                <button className="text-[13px] font-medium text-[#555555]">↻ Regenerate</button>
+                <button className="text-[13px] font-medium text-[#4ADE80]">
+                  ✓ Accept
+                </button>
+                <button className="text-[13px] font-medium text-[#F87171]">
+                  ✕ Reject
+                </button>
+                <button className="text-[13px] font-medium text-[#555555]">
+                  ↻ Regenerate
+                </button>
               </div>
-              <p className="text-[16px] font-normal text-[#CCCCCC] leading-[1.8]" style={{ fontFamily: "'Source Serif 4', 'Noto Serif SC', Georgia, serif" }}>
+              <p
+                className="text-[16px] font-normal text-[#CCCCCC] leading-[1.8]"
+                style={{
+                  fontFamily:
+                    "'Source Serif 4', 'Noto Serif SC', Georgia, serif",
+                }}
+              >
                 The convergence of technology and artistic expression found its
                 most powerful voice in the digital age, where the canvas became
                 infinite yet the need for restraint grew ever more urgent.
@@ -138,8 +168,13 @@ export function EditorPage() {
 
             {/* Code block */}
             <div className="bg-[#111111] rounded-[6px] p-[16px] overflow-x-auto">
-              <pre className="text-[14px] text-[#CCCCCC] leading-[1.6]" style={{ fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}>
-{`const silence = {
+              <pre
+                className="text-[14px] text-[#CCCCCC] leading-[1.6]"
+                style={{
+                  fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+                }}
+              >
+                {`const silence = {
   visual: "negative space",
   temporal: "deliberate pause",
   cognitive: "reduced load"
@@ -154,7 +189,7 @@ export function EditorPage() {
       <div
         className={cn(
           "h-[32px] bg-[#1A1A1A] border-t border-[#2A2A2A] flex items-center justify-between px-[16px] shrink-0 z-[10] transition-opacity duration-300",
-          zenMode ? "opacity-30 hover:opacity-100" : "opacity-100"
+          zenMode ? "opacity-30 hover:opacity-100" : "opacity-100",
         )}
       >
         <div className="flex items-center gap-[8px] text-[12px] text-[#888888] leading-[1.4]">
@@ -165,18 +200,22 @@ export function EditorPage() {
           <span>第 12 章 — 觉醒</span>
         </div>
         <div className="flex items-center gap-[8px]">
-          <span className="text-[12px] text-[#888888] leading-[1.4]">专注模式</span>
+          <span className="text-[12px] text-[#888888] leading-[1.4]">
+            专注模式
+          </span>
           <button
             onClick={() => setZenMode(!zenMode)}
             className={cn(
               "w-[24px] h-[14px] rounded-full relative transition-colors duration-150",
-              zenMode ? "bg-[#F0F0F0]" : "bg-[#2A2A2A]"
+              zenMode ? "bg-[#F0F0F0]" : "bg-[#2A2A2A]",
             )}
           >
             <div
               className={cn(
                 "w-[10px] h-[10px] rounded-full absolute top-[2px] transition-all duration-150",
-                zenMode ? "left-[12px] bg-[#0D0D0D]" : "left-[2px] bg-[#888888]"
+                zenMode
+                  ? "left-[12px] bg-[#0D0D0D]"
+                  : "left-[2px] bg-[#888888]",
               )}
             />
           </button>

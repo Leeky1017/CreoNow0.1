@@ -2,7 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Command } from "cmdk";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { cn } from "../ui/utils";
-import { Search, FileText, Folder, Users, CheckSquare, Hash, AlignLeft, Calendar, User, Clock, ChevronRight, X } from "lucide-react";
+import {
+  Search,
+  FileText,
+  Folder,
+  Users,
+  CheckSquare,
+  Hash,
+  AlignLeft,
+  Calendar,
+  User,
+  Clock,
+  ChevronRight,
+  X,
+} from "lucide-react";
 import { useNavigate } from "react-router";
 
 interface CommandPaletteProps {
@@ -12,10 +25,26 @@ interface CommandPaletteProps {
 
 const TABS = [
   { id: "all", label: "All" },
-  { id: "docs", label: "Documents", icon: <FileText className="w-3.5 h-3.5" /> },
-  { id: "projects", label: "Projects", icon: <Folder className="w-3.5 h-3.5" /> },
-  { id: "characters", label: "Characters", icon: <Users className="w-3.5 h-3.5" /> },
-  { id: "tasks", label: "Tasks", icon: <CheckSquare className="w-3.5 h-3.5" /> },
+  {
+    id: "docs",
+    label: "Documents",
+    icon: <FileText className="w-3.5 h-3.5" />,
+  },
+  {
+    id: "projects",
+    label: "Projects",
+    icon: <Folder className="w-3.5 h-3.5" />,
+  },
+  {
+    id: "characters",
+    label: "Characters",
+    icon: <Users className="w-3.5 h-3.5" />,
+  },
+  {
+    id: "tasks",
+    label: "Tasks",
+    icon: <CheckSquare className="w-3.5 h-3.5" />,
+  },
 ];
 
 const MOCK_RESULTS = [
@@ -25,8 +54,9 @@ const MOCK_RESULTS = [
     type: "Document",
     icon: <FileText className="w-4 h-4 text-blue-400" />,
     path: "/app/editor/1",
-    excerpt: "Chapter 4 explores the latency issues in direct cortical stimulation. Currently at 4,200 words.",
-    meta: { author: "Alex M.", date: "2h ago", tags: ["Research", "Draft"] }
+    excerpt:
+      "Chapter 4 explores the latency issues in direct cortical stimulation. Currently at 4,200 words.",
+    meta: { author: "Alex M.", date: "2h ago", tags: ["Research", "Draft"] },
   },
   {
     id: "2",
@@ -34,8 +64,9 @@ const MOCK_RESULTS = [
     type: "Project",
     icon: <Folder className="w-4 h-4 text-emerald-400" />,
     path: "/app/projects/phoenix",
-    excerpt: "Main hub for the sci-fi novel including world-building, character arcs, and timeline.",
-    meta: { status: "Active", deadline: "Dec 2026", progress: "45%" }
+    excerpt:
+      "Main hub for the sci-fi novel including world-building, character arcs, and timeline.",
+    meta: { status: "Active", deadline: "Dec 2026", progress: "45%" },
   },
   {
     id: "3",
@@ -43,8 +74,9 @@ const MOCK_RESULTS = [
     type: "Character",
     icon: <User className="w-4 h-4 text-pink-400" />,
     path: "/app/characters/elara",
-    excerpt: "Lead protagonist. Former neural engineer turned rogue operative after the Nexus incident.",
-    meta: { role: "Protagonist", faction: "The Silenced", age: "28" }
+    excerpt:
+      "Lead protagonist. Former neural engineer turned rogue operative after the Nexus incident.",
+    meta: { role: "Protagonist", faction: "The Silenced", age: "28" },
   },
   {
     id: "4",
@@ -52,9 +84,10 @@ const MOCK_RESULTS = [
     type: "Task",
     icon: <CheckSquare className="w-4 h-4 text-orange-400" />,
     path: "/app/tasks/123",
-    excerpt: "Ensure Elara's motivation is clear during the confrontation with Dr. Aris.",
-    meta: { priority: "High", due: "Tomorrow", assignedTo: "Self" }
-  }
+    excerpt:
+      "Ensure Elara's motivation is clear during the confrontation with Dr. Aris.",
+    meta: { priority: "High", due: "Tomorrow", assignedTo: "Self" },
+  },
 ];
 
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
@@ -83,7 +116,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
     if (path) navigate(path);
   };
 
-  const selectedResult = MOCK_RESULTS.find(r => r.id === selectedResultId);
+  const selectedResult = MOCK_RESULTS.find((r) => r.id === selectedResultId);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -109,7 +142,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                 placeholder="Search across workspace..."
               />
               <div className="flex items-center gap-4">
-                <button 
+                <button
                   onClick={() => onOpenChange(false)}
                   className="p-1.5 rounded-md hover:bg-white/10 text-gray-500 transition-all hover:text-white"
                 >
@@ -121,24 +154,24 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
             {/* Tabs & Filters */}
             <div className="flex items-center px-6 h-12 gap-6 bg-[#050505]/50 overflow-x-auto scrollbar-hide">
               <div className="flex items-center gap-6">
-                {TABS.map(tab => (
+                {TABS.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={cn(
                       "flex items-center gap-2 text-xs font-medium h-full border-b-2 transition-colors whitespace-nowrap py-3.5",
-                      activeTab === tab.id 
-                        ? "border-white text-white" 
-                        : "border-transparent text-gray-500 hover:text-gray-300"
+                      activeTab === tab.id
+                        ? "border-white text-white"
+                        : "border-transparent text-gray-500 hover:text-gray-300",
                     )}
                   >
                     {tab.icon}
                     {tab.label}
                   </button>
                 ))}
-                
+
                 <div className="w-px h-3 bg-white/10 mx-2" />
-                
+
                 <button className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-300 transition-colors px-2 py-1 rounded hover:bg-white/5 whitespace-nowrap">
                   <Hash className="w-3.5 h-3.5" /> Tags
                 </button>
@@ -167,7 +200,9 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                       onMouseEnter={() => setSelectedResultId(item.id)}
                       className={cn(
                         "flex items-start gap-4 px-4 py-4 rounded-xl cursor-pointer transition-colors group",
-                        selectedResultId === item.id ? "bg-white/[0.08]" : "hover:bg-white/[0.04]"
+                        selectedResultId === item.id
+                          ? "bg-white/[0.08]"
+                          : "hover:bg-white/[0.04]",
                       )}
                     >
                       <div className="mt-0.5 shrink-0 bg-[#0a0a0a] p-2.5 rounded-lg border border-white/5 shadow-sm group-hover:border-white/10 transition-colors">
@@ -175,10 +210,14 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                       </div>
                       <div className="flex flex-col flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-4 mb-1.5">
-                          <span className={cn(
-                            "text-base font-medium truncate",
-                            selectedResultId === item.id ? "text-white" : "text-gray-200"
-                          )}>
+                          <span
+                            className={cn(
+                              "text-base font-medium truncate",
+                              selectedResultId === item.id
+                                ? "text-white"
+                                : "text-gray-200",
+                            )}
+                          >
                             {item.title}
                           </span>
                           <span className="text-[11px] text-gray-500 shrink-0 px-2 py-0.5 rounded-md border border-white/5 bg-white/5">
@@ -200,13 +239,17 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
               {selectedResult ? (
                 <div className="animate-in fade-in slide-in-from-right-4 duration-200">
                   <div className="flex items-center gap-4 mb-6">
-                     <div className="p-3 rounded-xl border border-white/10 bg-[#0a0a0a] shadow-lg">
-                        {selectedResult.icon}
-                     </div>
-                     <div>
-                       <div className="text-[10px] text-gray-500 font-semibold mb-0.5 tracking-[0.15em] uppercase">{selectedResult.type}</div>
-                       <div className="text-lg text-white font-medium leading-tight">{selectedResult.title}</div>
-                     </div>
+                    <div className="p-3 rounded-xl border border-white/10 bg-[#0a0a0a] shadow-lg">
+                      {selectedResult.icon}
+                    </div>
+                    <div>
+                      <div className="text-[10px] text-gray-500 font-semibold mb-0.5 tracking-[0.15em] uppercase">
+                        {selectedResult.type}
+                      </div>
+                      <div className="text-lg text-white font-medium leading-tight">
+                        {selectedResult.title}
+                      </div>
+                    </div>
                   </div>
 
                   <div className="space-y-6">
@@ -224,27 +267,42 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                         <Calendar className="w-3 h-3" /> METADATA
                       </h4>
                       <div className="bg-[#0a0a0a] rounded-xl border border-white/5 overflow-hidden shadow-sm">
-                        {Object.entries(selectedResult.meta).map(([key, value], idx, arr) => (
-                          <div key={key} className={cn(
-                            "flex items-center justify-between px-4 py-3 text-[13px]",
-                            idx !== arr.length - 1 && "border-b border-white/5"
-                          )}>
-                            <span className="text-gray-500 capitalize">{key}</span>
-                            {Array.isArray(value) ? (
-                              <div className="flex gap-2">
-                                {value.map(v => (
-                                  <span key={v} className="px-2 py-0.5 rounded-lg bg-white/10 text-gray-300 text-[11px]">{v}</span>
-                                ))}
-                              </div>
-                            ) : (
-                              <span className="text-gray-300 font-medium">{value}</span>
-                            )}
-                          </div>
-                        ))}
+                        {Object.entries(selectedResult.meta).map(
+                          ([key, value], idx, arr) => (
+                            <div
+                              key={key}
+                              className={cn(
+                                "flex items-center justify-between px-4 py-3 text-[13px]",
+                                idx !== arr.length - 1 &&
+                                  "border-b border-white/5",
+                              )}
+                            >
+                              <span className="text-gray-500 capitalize">
+                                {key}
+                              </span>
+                              {Array.isArray(value) ? (
+                                <div className="flex gap-2">
+                                  {value.map((v) => (
+                                    <span
+                                      key={v}
+                                      className="px-2 py-0.5 rounded-lg bg-white/10 text-gray-300 text-[11px]"
+                                    >
+                                      {v}
+                                    </span>
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className="text-gray-300 font-medium">
+                                  {value}
+                                </span>
+                              )}
+                            </div>
+                          ),
+                        )}
                       </div>
                     </section>
 
-                    <button 
+                    <button
                       onClick={() => handleSelect(selectedResult.path)}
                       className="w-full py-3 rounded-xl bg-white text-black text-[13px] font-semibold hover:bg-zinc-200 transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 mt-4"
                     >
@@ -256,7 +314,11 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-4 opacity-50">
                   <Search className="w-10 h-10" />
-                  <p className="text-xs text-center">Select an item to view<br/>details and metadata</p>
+                  <p className="text-xs text-center">
+                    Select an item to view
+                    <br />
+                    details and metadata
+                  </p>
                 </div>
               )}
             </div>

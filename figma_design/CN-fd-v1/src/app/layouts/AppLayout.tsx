@@ -10,7 +10,7 @@ import { SettingsModal } from "../modals/SettingsModal";
 export function AppLayout() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  
+
   const [leftSidebarSize, setLeftSidebarSize] = useState(15);
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
 
@@ -39,7 +39,9 @@ export function AppLayout() {
   }, []);
 
   // Default to show right sidebar on editor or specific pages
-  const defaultShowRight = location.pathname.includes("/editor") || location.pathname.includes("/graph");
+  const defaultShowRight =
+    location.pathname.includes("/editor") ||
+    location.pathname.includes("/graph");
 
   useEffect(() => {
     if (defaultShowRight) {
@@ -64,8 +66,8 @@ export function AppLayout() {
               onResize={setLeftSidebarSize}
               className="bg-sidebar border-r border-sidebar-border flex flex-col relative"
             >
-              <LeftSidebar 
-                onSettingsClick={() => setIsSettingsOpen(true)} 
+              <LeftSidebar
+                onSettingsClick={() => setIsSettingsOpen(true)}
                 onSearchClick={() => setIsSearchOpen(true)}
                 onToggleCollapse={toggleLeftSidebar}
               />
@@ -82,10 +84,10 @@ export function AppLayout() {
             leftSidebarCollapsed && rightSidebarCollapsed
               ? 100
               : !leftSidebarCollapsed && !rightSidebarCollapsed
-              ? 60
-              : leftSidebarCollapsed
-              ? 75  // only right sidebar open: 100 - 25 = 75
-              : 85  // only left sidebar open: 100 - 15 = 85
+                ? 60
+                : leftSidebarCollapsed
+                  ? 75 // only right sidebar open: 100 - 25 = 75
+                  : 85 // only left sidebar open: 100 - 15 = 85
           }
           className="flex flex-col relative min-w-0 bg-[#0a0a0a]"
         >
@@ -95,7 +97,17 @@ export function AppLayout() {
               className="absolute top-1/2 -translate-y-1/2 left-0 z-50 p-1.5 rounded-r-md hover:bg-white/10 transition-all border-y border-r border-white/10 bg-black/50 backdrop-blur-md group w-6 hover:w-8 flex items-center justify-center overflow-hidden"
               title="Expand Sidebar"
             >
-              <svg className="w-3.5 h-3.5 text-gray-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              <svg
+                className="w-3.5 h-3.5 text-gray-400 group-hover:text-white transition-colors"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
             </button>
           )}
           {rightSidebarCollapsed && defaultShowRight && (
@@ -103,7 +115,15 @@ export function AppLayout() {
               onClick={toggleRightSidebar}
               className="absolute top-4 right-4 z-50 p-1.5 rounded-md hover:bg-white/10 transition-colors border border-white/10 bg-black/50 backdrop-blur-md"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v18h-6M10 17l5-5-5-5" /></svg>
+              <svg
+                className="w-4 h-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M15 3h6v18h-6M10 17l5-5-5-5" />
+              </svg>
             </button>
           )}
           <main className="flex-1 flex flex-col overflow-y-auto">

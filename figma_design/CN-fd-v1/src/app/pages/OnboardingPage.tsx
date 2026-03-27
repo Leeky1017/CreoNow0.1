@@ -3,7 +3,12 @@ import { useNavigate } from "react-router";
 import { ArrowRight, Brain, Users, Share2, Clock } from "lucide-react";
 
 const options = [
-  { id: 1, title: "AI 智能写作", icon: Brain, desc: "AI-powered writing assistant" },
+  {
+    id: 1,
+    title: "AI 智能写作",
+    icon: Brain,
+    desc: "AI-powered writing assistant",
+  },
   { id: 2, title: "个人工作区", icon: Users, desc: "Personal workspace" },
   { id: 3, title: "团队协作", icon: Share2, desc: "Shared collaboration" },
   { id: 4, title: "历史同步", icon: Clock, desc: "Cloud history sync" },
@@ -46,7 +51,9 @@ export function OnboardingPage() {
       <div className="max-w-2xl w-full flex flex-col items-center space-y-12 relative z-10">
         {/* Title */}
         <div className="text-center space-y-3">
-          <h1 className="text-5xl font-serif text-white tracking-tight">CreoNow</h1>
+          <h1 className="text-5xl font-serif text-white tracking-tight">
+            CreoNow
+          </h1>
           <p className="text-muted-foreground text-sm tracking-[0.2em] uppercase">
             AI Native Content Creation IDE
           </p>
@@ -79,7 +86,9 @@ export function OnboardingPage() {
                   <div className="text-foreground group-hover:text-white transition-colors">
                     {opt.title}
                   </div>
-                  <div className="text-xs text-muted-foreground mt-1">{opt.desc}</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {opt.desc}
+                  </div>
                 </div>
               </button>
             );

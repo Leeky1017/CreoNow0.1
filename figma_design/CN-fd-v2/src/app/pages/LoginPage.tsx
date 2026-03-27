@@ -32,7 +32,8 @@ export function LoginPage() {
             The Creator's IDE
           </h1>
           <p className="text-[14px] text-[#888888] leading-[1.6]">
-            Focus on what matters. A distraction-free environment designed to help you capture your thoughts with clarity and precision.
+            Focus on what matters. A distraction-free environment designed to
+            help you capture your thoughts with clarity and precision.
           </p>
         </div>
 
@@ -57,14 +58,20 @@ export function LoginPage() {
           </div>
 
           <div>
-            <h2 className="text-[28px] font-bold text-[#F0F0F0] leading-[1.2] tracking-[-0.01em] mb-[8px]">Welcome back</h2>
-            <p className="text-[14px] text-[#888888] leading-[1.6]">Enter your workspace credentials to continue.</p>
+            <h2 className="text-[28px] font-bold text-[#F0F0F0] leading-[1.2] tracking-[-0.01em] mb-[8px]">
+              Welcome back
+            </h2>
+            <p className="text-[14px] text-[#888888] leading-[1.6]">
+              Enter your workspace credentials to continue.
+            </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-[16px]">
             <div className="space-y-[12px]">
               <div className="space-y-[4px]">
-                <label className="text-[12px] text-[#888888] tracking-[0.05em] uppercase">Email Address</label>
+                <label className="text-[12px] text-[#888888] tracking-[0.05em] uppercase">
+                  Email Address
+                </label>
                 <input
                   type="email"
                   placeholder="name@example.com"
@@ -75,8 +82,15 @@ export function LoginPage() {
               </div>
               <div className="space-y-[4px]">
                 <div className="flex items-center justify-between">
-                  <label className="text-[12px] text-[#888888] tracking-[0.05em] uppercase">Password</label>
-                  <button type="button" className="text-[12px] text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150">Forgot?</button>
+                  <label className="text-[12px] text-[#888888] tracking-[0.05em] uppercase">
+                    Password
+                  </label>
+                  <button
+                    type="button"
+                    className="text-[12px] text-[#888888] hover:text-[#F0F0F0] transition-colors duration-150"
+                  >
+                    Forgot?
+                  </button>
                 </div>
                 <input
                   type="password"
@@ -92,25 +106,44 @@ export function LoginPage() {
               <div
                 onClick={() => setKeepSignedIn(!keepSignedIn)}
                 className={`h-[16px] w-[16px] rounded-[4px] border flex items-center justify-center transition-all duration-150 ${
-                  keepSignedIn ? "bg-[#F0F0F0] border-[#F0F0F0]" : "border-[#2A2A2A] group-hover:border-[#3A3A3A]"
+                  keepSignedIn
+                    ? "bg-[#F0F0F0] border-[#F0F0F0]"
+                    : "border-[#2A2A2A] group-hover:border-[#3A3A3A]"
                 }`}
               >
                 {keepSignedIn && (
-                  <svg className="h-[12px] w-[12px] text-[#0D0D0D]" viewBox="0 0 12 12" fill="none">
-                    <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    className="h-[12px] w-[12px] text-[#0D0D0D]"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                  >
+                    <path
+                      d="M2.5 6L5 8.5L9.5 3.5"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 )}
               </div>
-              <span className="text-[14px] text-[#888888] group-hover:text-[#F0F0F0] transition-colors duration-150">Keep me signed in</span>
+              <span className="text-[14px] text-[#888888] group-hover:text-[#F0F0F0] transition-colors duration-150">
+                Keep me signed in
+              </span>
             </label>
 
-            <button type="submit" className="w-full h-[44px] rounded-[6px] bg-[#F0F0F0] text-[#0D0D0D] flex items-center justify-center gap-[8px] text-[14px] font-medium hover:bg-[#CCCCCC] transition-colors duration-150">
+            <button
+              type="submit"
+              className="w-full h-[44px] rounded-[6px] bg-[#F0F0F0] text-[#0D0D0D] flex items-center justify-center gap-[8px] text-[14px] font-medium hover:bg-[#CCCCCC] transition-colors duration-150"
+            >
               Sign In <ArrowRight className="h-[16px] w-[16px]" />
             </button>
           </form>
 
           <div className="relative">
-            <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-[#2A2A2A]" /></div>
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-[#2A2A2A]" />
+            </div>
             <div className="relative flex justify-center text-[12px] uppercase tracking-[0.05em]">
               <span className="bg-[#0D0D0D] px-[16px] text-[#888888]">Or</span>
             </div>
@@ -127,7 +160,9 @@ export function LoginPage() {
 
           <p className="text-center text-[14px] text-[#888888]">
             Don't have an account?{" "}
-            <button className="text-[#F0F0F0] hover:underline underline-offset-4">Apply for access</button>
+            <button className="text-[#F0F0F0] hover:underline underline-offset-4">
+              Apply for access
+            </button>
           </p>
         </div>
       </div>
