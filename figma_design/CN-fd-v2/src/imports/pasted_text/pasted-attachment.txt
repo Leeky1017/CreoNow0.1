@@ -1,0 +1,229 @@
+## 第 2 段：App Shell 与侧边导航
+
+> 这是全局骨架，所有界面共享这一套外壳。采用 IDE 的双层侧边栏结构。以下所有尺寸为精确规范。
+> 
+
+设计应用的整体布局框架。左侧采用**双层侧边栏结构**，参考 VS Code / Cursor 的标准 IDE 布局。
+
+### 整体布局结构
+
+| 区域 | 宽度 | 背景色 | 说明 |
+| --- | --- | --- | --- |
+| Icon Rail | 52px（固定） | bg-surface (#1A1A1A) | 始终可见，不可折叠 |
+| Context Panel | 200px（可折叠） | bg-surface (#1A1A1A) | 仅「项目」视图时展开，其他视图自动收起 |
+| 主内容区 | calc(100vw - 52px - 200px)（或全屏） | bg-base (#0D0D0D) | Context Panel 收起时占 calc(100vw - 52px) |
+- 应用总高度：100vh，无滚动条（各区域内部独立滚动）
+- Icon Rail 与 Context Panel 之间：1px border-default (#2A2A2A) 分割线
+- Context Panel 与主内容区之间：1px border-default (#2A2A2A) 分割线
+- 无顶部导航栏——页面标题和上下文操作都在内容区内部
+
+### 第一层：Icon Rail（图标轨道）
+
+**尺寸规范：**
+
+| 属性 | 值 |
+| --- | --- |
+| 宽度 | 52px（固定） |
+| 高度 | 100vh |
+| 背景色 | bg-surface (#1A1A1A) |
+| 内边距 | 上下 12px，左右居中 |
+| 图标尺寸 | 20×20px |
+| 图标可点击区域 | 36×36px（图标居中）——注：桌面端可接受，iOS 设计需补足至 44×44pt（Apple HIG） |
+| 图标间距 | 4px（可点击区域之间） |
+| 图标描边粗细 | 1.5px |
+| 图标风格 | outline only（Lucide / Phosphor 参考） |
+
+**图标状态：**
+
+| 状态 | 图标色 | 背景 | 额外指示 |
+| --- | --- | --- | --- |
+| Hover | text-secondary (#CCCCCC) | bg-elevated (#1E1E1E)，圆角 radius-md (6px) | tooltip 在右侧弹出（见 tooltip 规范） |
+| 键盘焦点 | 同 hover | 同 hover | 2px border-active (#F0F0F0) outline，offset 2px |
+
+**Tooltip 规范：**
+
+- 位置：图标右侧，距离图标可点击区域 8px
+- 背景色：bg-elevated (#1E1E1E)
+- 边框：1px border-default (#2A2A2A)
+- 圆角：radius-sm (4px)
+- 内边距：6px 10px
+- 文字：text-caption (12px 400) text-primary (#F0F0F0)
+- 阴影：shadow-sm
+- 延迟：hover 500ms 后显示，离开后 100ms 消失
+- 动画：opacity 0→1，duration-fast (100ms)
+
+**Icon Rail 布局排列（从上到下）：**
+
+**上半区（核心工作流）：**
+
+1. 搜索图标（放大镜）— 点击弹出全局搜索 overlay（Cmd+K），不是跳转到一个页面
+2. 仪表盘图标（网格/仪表盘形状）— 创作指挥中心
+3. 项目图标（文件夹）— 点击后在 Context Panel 中展开项目文件树
+4. 分析图标（图表）— 创作数据分析
+5. 日历图标（日历）— 写作计划和截止日
+
+**分割线：**
+
+- 1px border-default (#2A2A2A)，左右各留 8px 边距，与上下图标间距 8px
+
+**下半区（知识库）：**
+
+1. 角色图标（人物轮廓）— 点击直接切换主内容区为全屏角色管理面板
+2. 知识图谱图标（节点网络）— 点击直接切换主内容区为全屏知识图谱
+
+**底部（系统区），贴底排列：**
+
+1. 设置图标（齿轮）— 包含用户身份信息、账户、偏好等所有设置。不需要单独用户头像入口
+
+**编辑器不显示行号**——行号是代码编辑器的特征，创作者的 IDE 不需要行号。
+
+### AI 入口：悬浮图标
+
+| 属性 | 值 |
+| --- | --- |
+| 按钮尺寸 | 44×44px（符合 Apple HIG 最小可点击区域） |
+| 按钮形状 | 圆形 (radius-full) |
+| 按钮背景色 | ai-accent (#7AA2F7)——整个界面唯一的彩色常亮元素 |
+| 图标内容 | 机器人头像，20×20px，线性描边 2px |
+| 图标色 | bg-base (#0D0D0D)——深色图标在蓝色背景上高对比显示 |
+| 位置 | fixed，right: 24px，bottom: 24px（始终悬浮在右下角） |
+| z-index | z-floating (100)——高于主内容，低于 overlay/modal |
+| 阴影 | shadow-float (0 8px 32px rgba(0,0,0,0.5)) |
+| Hover | 背景色 → ai-accent-hover (#8BB3F8)，scale(1.05)，duration-fast |
+| 点击态 | scale(0.95)，duration-fast |
+| 右键点击 | 屏幕中央弹出 AI 命令面板（全局模态） |
+- 这是整个界面唯一的彩色常亮元素，立刻传达「AI 始终在场」
+- **禁止**用星火/闪电/魔法棒标志——只用机器人头像
+
+### 全局搜索 Overlay（Cmd+K）
+
+| 属性 | 值 |
+| --- | --- |
+| 尺寸 | 宽 560px，最大高 480px，水平居中，距顶部 20vh |
+| 背景色 | bg-surface (#1A1A1A) |
+| 边框 | 1px border-default (#2A2A2A) |
+| 圆角 | radius-xl (12px) |
+| 阴影 | shadow-md (0 4px 16px rgba(0,0,0,0.4)) |
+| 遮罩层 | bg-overlay rgba(0,0,0,0.6)，点击遮罩层关闭 |
+| 输入框高度 | 48px，背景 bg-sunken (#111111)，无边框，内边距 0 16px |
+| 输入文字 | text-body (14px 400) text-primary |
+| 占位文字 | 「搜索文档、命令、AI 指令…」(14px text-disabled #555555) |
+| 进入动画 | opacity 0 + scale(0.98) → opacity 1 + scale(1)，duration-slow (300ms) easing-enter |
+| 退出动画 | opacity 1 → opacity 0，duration-normal (150ms) easing-exit |
+
+**结果列表：**
+
+- 每条结果高度：40px，内边距 0 16px
+- 左侧：类型图标 16×16px (text-tertiary)，距文字 12px
+- 文字：text-body-strong (14px 500 text-primary)
+- 右侧：快捷键提示 text-caption (12px text-tertiary)
+- Hover 态：背景 bg-elevated (#1E1E1E)，duration-fast
+- 激活项（键盘选中）：同 hover 效果
+- 最多显示 8 条结果，超出滚动
+
+### 第二层：Context Panel（上下文面板）
+
+| 属性 | 值 |
+| --- | --- |
+| 高度 | 100vh |
+| 内边距 | 12px 16px |
+| 快捷键 | Cmd+B 切换折叠/展开 |
+
+**当「项目」图标激活时展开**，支持「文件树」和「大纲」两种子视图模式（顶部下拉切换）。大纲模式仅在编辑器中文档打开时可用。其他顶级视图（仪表盘、分析、日历、角色、知识图谱）自动收起 Context Panel，主内容区全屏显示。
+
+**项目文件树规范：**
+
+- 顶部：「项目」标题 (text-h3 16px 600 text-primary) + 右侧「+」新建按钮 (16px 图标，text-tertiary，hover → text-primary)
+- 项目名：text-body-strong (14px 500 text-primary)，左侧 16px 文件夹图标
+- 章节/文档：text-body (14px 400 text-secondary)，每级缩进 16px
+- 树节点高度：32px，垂直居中
+- 展开/折叠箭头：12px 图标，text-tertiary，旋转 90° 表示展开，动画 duration-normal
+- Hover 态：背景 bg-elevated (#1E1E1E)，圆角 radius-sm (4px)
+- 激活文档：背景 rgba(240,240,240,0.08)，文字色 text-primary
+- 底部：当前文档的字数统计 (text-caption 12px text-tertiary)
+
+### Context Panel：Outline 文档大纲模式
+
+当切换到「大纲」视图后，Context Panel 内容区替换为当前文档的标题导航结构。交互范式参考 Notion Outline——自动从文档标题层级（H1/H2/H3）实时生成，滚动联动高亮当前段落，点击跳转。**Outline 不是独立外部面板，而是 Context Panel 的第二种子视图**，与文件树共享同一物理位置和宽度（200px）。
+
+<aside>
+⚠️
+
+**旧版废弃声明**：早期 Figma 设计稿中存在独立于 Context Panel 之外的 Outline 面板（外挂式侧边栏），该方案已**正式废弃**。Outline 必须且仅能作为 Context Panel 的子视图存在，不可作为独立浮动面板、外部侧边栏或弹出窗口实现。如在 Figma 中发现旧版独立 Outline 设计稿，应直接删除并以本节规范替代。
+
+</aside>
+
+**视图切换器（替换原顶部标题行）：**
+
+| 属性 | 值 |
+| --- | --- |
+| 位置 | Context Panel 顶部第一行，高度 32px |
+| 当前模式名 | text-h3 (16px 600 text-primary)，如「OUTLINE」或「文件树」 |
+| 切换指示 | 模式名右侧 4px (space-1)，上下双箭头图标 12px text-tertiary，hover → text-primary |
+| 下拉菜单 | 宽度 160px，bg-surface / 1px #2A2A2A / radius-md (6px) / shadow-sm |
+| 菜单项 | 每项 36px 高，左侧 16px 图标 text-tertiary + 12px + 名称 (14px 400 text-primary) |
+| 选项 | 「文件树」(文件夹图标) ｜ 「OUTLINE」(列表层级图标)——大纲仅编辑器中文档打开时可选，否则置灰 + text-disabled |
+| 切换动画 | 内容区 crossfade opacity 0→1，duration-normal (150ms) |
+
+**大纲节点规范：**
+
+| 属性 | 值 |
+| --- | --- |
+| 数据来源 | 实时解析当前文档中的 H1 / H2 / H3 标题（对应编辑器 text-editor-h1/h2/h3） |
+| 层级缩进 | H1 = 0px，H2 = 16px (space-4)，H3 = 32px (space-8) |
+| 节点高度 | 32px，文字垂直居中 |
+| 节点文字 | text-body (14px 400 text-secondary #CCCCCC)，单行截断 + ellipsis |
+| 展开/折叠箭头 | 有子标题的节点左侧 12px 箭头图标 text-tertiary，展开态旋转 90°，动画 duration-normal (150ms) |
+| 激活节点 | 文字色 text-primary (#F0F0F0) + 左侧 2px text-primary 指示竖线（高度 20px 居中）——注意：指示线用 text-primary 而非 ai-accent，因为大纲是文档导航工具，不是 AI 功能 |
+| Hover | 背景 bg-elevated (#1E1E1E)，圆角 radius-sm (4px)，duration-fast (100ms) |
+| 点击 | 编辑器 smooth scroll 到对应标题位置，大纲立即切换激活项 |
+| 滚动联动 | 编辑器滚动时，Intersection Observer 检测视口顶部最近标题，大纲自动高亮对应节点并确保其在可见区内 |
+| 键盘导航 | ↑/↓ 在节点间移动焦点，Enter 跳转到对应标题，←/→ 折叠/展开子节点 |
+
+**空态设计（文档无标题时）：**
+
+| 属性 | 值 |
+| --- | --- |
+| 布局 | Context Panel 内容区垂直水平居中 |
+| 图标 | 文档轮廓图标 32×32px text-disabled (#555555) |
+| 主文字 | 「还没有大纲」(text-body 14px 400 #888888)，居中 |
+| 副文字 | 「添加标题后自动生成」(text-caption 12px 400 #555555)，居中 |
+| 元素间距 | 图标→主文字 8px (space-2)，主文字→副文字 4px (space-1) |
+
+**Outline 模式 Token 合规要求：**
+
+- **字体**：全部 UI 字体栈 Inter。切换器标签 = text-h3 (16px 600)，节点文字 = text-body (14px 400)，空态主文字 = text-body (14px 400)，空态副文字 = text-caption (12px 400)。禁止衬线体
+- **色彩**：面板背景 = bg-surface (#1A1A1A)，节点默认 = text-secondary (#CCCCCC)，激活 = text-primary (#F0F0F0)。**激活指示线 = text-primary (#F0F0F0)，不是 ai-accent**——大纲属于文档导航工具，不是 AI 功能，蓝色不应出现
+- **间距**：缩进 = space-4 (16px) 倍数，节点高度 32px (space-8)。继承 Context Panel 内边距 12px×16px
+- **圆角**：hover 背景 = radius-sm (4px)，下拉菜单 = radius-md (6px)
+- **ARIA**：大纲容器 `role="navigation"` + `aria-label="文档大纲"`，激活节点 `aria-current="true"`
+
+### 主内容区
+
+- 占据 Icon Rail 和 Context Panel 右侧的全部剩余空间
+- 背景色：bg-base (#0D0D0D)
+- 无顶部导航栏——页面标题和上下文操作都在内容区内部
+- 视图切换动画：新视图从 opacity 0 + translateY(4px) 进入，duration-slow (300ms) easing-enter，旧视图立即隐藏（无退出动画）
+
+### ⚙️ 本段设计约束提醒
+
+<aside>
+🔒
+
+**本段 Token 合规校验清单（生成后逐项检查）：**
+
+**字体**：本段全部使用 UI 字体栈（Inter Sans-serif），禁止出现衬线体。Icon Rail 无文字标签，仅 tooltip 使用 text-caption (12px 400)。Context Panel 标题 = text-h3 (16px 600)，文件树 = text-body / text-body-strong (14px)，底部字数 = text-caption (12px)。禁止出现 13px / 15px / 20px 等非 Token 字号。
+
+**色彩**：Icon Rail 和 Context Panel 背景 = bg-surface (#1A1A1A)，主内容区 = bg-base (#0D0D0D)。图标默认 = text-tertiary (#888888)，激活 = text-primary (#F0F0F0)。唯一彩色 = AI 悬浮按钮的 ai-accent (#7AA2F7)，导航图标激活态不可使用蓝色。
+
+**间距**：所有间距必须为 4px 倍数。Icon Rail 图标间距 4px (space-1)，tooltip 距离 8px (space-2)，Context Panel padding 12px×16px (space-3×space-4)，文件树缩进 16px (space-4)。
+
+**圆角**：tooltip = radius-sm (4px)，Icon Rail hover 背景 = radius-md (6px)，文件树 hover = radius-sm (4px)，搜索 Overlay = radius-xl (12px)，AI 按钮 = radius-full。禁止 16px+ 圆角。
+
+**阴影**：tooltip = shadow-sm，搜索 Overlay = shadow-md，AI 悬浮按钮 = shadow-float。普通面板（Icon Rail / Context Panel）使用 1px 边框不使用阴影。
+
+**z-index**：Icon Rail / Context Panel = z-sidebar (30)，浮动工具栏 = z-toolbar (20)，AI 悬浮按钮 = z-floating (100)，搜索遮罩 = z-overlay (200)，搜索面板 = z-modal (300)。不可使用任意 z-index。
+
+**动画**：tooltip 显示 = duration-fast (100ms)，hover 过渡 = duration-normal (150ms)，面板折叠/展开 = duration-slow (300ms)，视图切换 = duration-slow (300ms) easing-enter。骨架屏周期 = 1500ms。
+
+</aside>
