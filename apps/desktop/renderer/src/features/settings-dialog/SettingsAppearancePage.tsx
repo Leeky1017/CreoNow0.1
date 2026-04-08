@@ -38,7 +38,10 @@ const sectionLabelStyles = [
   "tracking-(--tracking-widest)",
   "text-[var(--color-fg-placeholder)]",
   "font-semibold",
+  "pb-3",
   "mb-6",
+  "border-b",
+  "border-[var(--color-separator)]",
 ].join(" ");
 
 /**
