@@ -179,7 +179,7 @@ export function SearchResultsArea(props: {
         <Button
           variant="ghost"
           onClick={props.onClearQuery}
-          className="mt-3 !h-auto !text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-fg-default)]"
+          className="mt-3 !h-auto !text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-fg-default)] transition-default"
         >
           {t("search.clearSearch")}
         </Button>

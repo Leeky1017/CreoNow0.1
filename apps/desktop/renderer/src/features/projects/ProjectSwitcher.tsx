@@ -194,7 +194,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
         data-testid="project-switcher-trigger"
         onClick={handleToggle}
         disabled={switching}
-        className="flex h-8 w-full items-center justify-between rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 text-xs text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex h-8 w-full items-center justify-between rounded-[var(--radius-sm)] border border-[var(--color-border-default)] bg-[var(--color-bg-surface)] px-2 text-xs text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)] disabled:cursor-not-allowed disabled:opacity-60 transition-default"
       >
         <span className="flex min-w-0 items-center gap-2">
           <ProjectTypeIcon type={currentProject?.type} />
@@ -235,7 +235,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
               <Button
                 type="button"
                 onClick={handleCreateProject}
-                className="h-7 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] px-2 text-xs text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)]"
+                className="h-7 rounded-[var(--radius-sm)] border border-[var(--color-border-default)] px-2 text-xs text-[var(--color-fg-default)] hover:border-[var(--color-border-hover)] transition-default"
               >
                 {t("projects.switcher.createNew")}
               </Button>
@@ -258,7 +258,7 @@ export function ProjectSwitcher(props: ProjectSwitcherProps): JSX.Element {
                     className={`flex w-full items-center justify-between px-2 py-1.5 text-left text-xs ${
                       selected
                         ? "bg-[var(--color-bg-hover)] text-[var(--color-fg-default)]"
-                        : "text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)]"
+                        : "text-[var(--color-fg-default)] hover:bg-[var(--color-bg-hover)] transition-default"
                     }`}
                   >
                     <span className="flex min-w-0 items-center gap-2">

@@ -252,7 +252,7 @@ export function InfoPanel(props: InfoPanelProps = {}): JSX.Element {
 
         <Button
           type="button"
-          className="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline"
+          className="self-start text-xs text-[var(--color-info)] hover:underline disabled:text-[var(--color-fg-placeholder)] disabled:no-underline transition-default"
           disabled={!currentDocument}
           onClick={() => {
             if (!currentDocument) {

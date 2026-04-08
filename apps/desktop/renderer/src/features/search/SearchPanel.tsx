@@ -223,7 +223,7 @@ export function SearchPanel(props: {
                 variant="ghost"
                 size="sm"
                 onClick={onClose}
-                className="!p-1 !h-auto !rounded-md !text-[var(--color-fg-placeholder)] hover:!text-[var(--color-fg-default)] hover:!bg-[var(--color-separator)]"
+                className="!p-1 !h-auto !rounded-md !text-[var(--color-fg-placeholder)] hover:!text-[var(--color-fg-default)] hover:!bg-[var(--color-separator)] transition-default"
               >
                 <X className="w-5 h-5" size={20} strokeWidth={1.5} />
               </Button>

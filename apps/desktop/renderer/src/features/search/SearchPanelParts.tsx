@@ -22,7 +22,7 @@ export function CategoryButton(props: {
       className={`!px-3 !py-1 !h-auto !text-xs !font-medium !rounded-full whitespace-nowrap ${
         props.active
           ? "!bg-[var(--color-info)] !text-[var(--color-fg-on-accent)] shadow-lg shadow-[var(--color-info-subtle)]"
-          : "!bg-[var(--color-separator)] !text-[var(--color-fg-muted)] !border !border-transparent hover:!border-[var(--color-bg-overlay)] hover:!text-[var(--color-fg-default)] hover:!bg-[var(--color-bg-overlay)]"
+          : "!bg-[var(--color-separator)] !text-[var(--color-fg-muted)] !border !border-transparent hover:!border-[var(--color-bg-overlay)] hover:!text-[var(--color-fg-default)] hover:!bg-[var(--color-bg-overlay)] transition-default"
       }`}
     >
       {props.label}
@@ -117,7 +117,7 @@ export function SearchFilterBar(props: {
         <Button
           variant="ghost"
           size="sm"
-          className="!flex !items-center !gap-1.5 !px-2 !py-1 !h-auto !rounded !bg-[var(--color-separator)] !border !border-[var(--color-separator)] !text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-fg-default)] hover:!border-[var(--color-bg-overlay)]"
+          className="!flex !items-center !gap-1.5 !px-2 !py-1 !h-auto !rounded !bg-[var(--color-separator)] !border !border-[var(--color-separator)] !text-xs !text-[var(--color-fg-muted)] hover:!text-[var(--color-fg-default)] hover:!border-[var(--color-bg-overlay)] transition-default"
           onClick={() =>
             props.onScopeChange(props.scope === "all" ? "current" : "all")
           }
